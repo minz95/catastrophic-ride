@@ -18,8 +18,9 @@ ItemTypes.SlotType = {
 
 -- Removed in #88: Stick (BODY), Laptop (BODY), Shovel (ENGINE), Big Gear (ENGINE),
 --                 Leaves (SPECIAL), Scarf (SPECIAL), Rocket Boost (SPECIAL phantom)
--- Added   in #89: Barrel (BODY), Suitcase (BODY), Fan (ENGINE), Wind Turbine (ENGINE),
+-- Added   in #89: Barrel (BODY), Suitcase (BODY), Fan (ENGINE),
 --                 Oil Can (SPECIAL), Magnet (SPECIAL), Firework (SPECIAL)
+-- Wind Turbine was added in #89 then removed: never modeled, dropped from roster
 
 ItemTypes.ALL = {
 	-- ── BODY (13) ─────────────────────────────────────────────────────────────

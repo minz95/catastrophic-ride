@@ -243,19 +243,7 @@ AbilityConfig["Flower"] = {
 }
 
 -- Big Gear removed in #88 (power=8 underwhelming, single gear doesn't read as engine)
-
-AbilityConfig["Wind Turbine"] = {
-	cooldown    = 16,
-	duration    = 3,
-	targetType  = "self",
-	effectKey   = "windHarvest",   -- speed boost scales with current velocity; SKY bonus ×1.5
-	animKey     = "turbineSpin",
-	sfxKey      = "turbine_hum",
-	uiHint      = "🌪️ Harvest!",
-	biomeEffect = {
-		SKY = { effectKey = "windHarvestSky", duration = 4 },
-	},
-}
+-- Wind Turbine removed: never modeled, item not in roster
 
 AbilityConfig["Propeller"] = {
 	cooldown    = 12,
