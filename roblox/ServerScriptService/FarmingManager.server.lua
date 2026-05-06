@@ -161,11 +161,20 @@ local function _spawnItems(biome)
 		-- Position model: align the model's overall bottom (lowest point of any
 		-- BasePart) with baseY, X/Z centered on pos. Pure translation only —
 		-- SetPrimaryPartCFrame/PivotTo don't move FBX-imported nested parts.
+		--
+		-- IMPORTANT: anchor parts BEFORE translating. Preloader leaves parts
+		-- non-anchored with WeldConstraints; setting CFrame on an unanchored
+		-- welded part triggers weld snapping that cascades unpredictably across
+		-- the model, scattering parts thousands of studs apart. Once both ends
+		-- of every weld are anchored, welds become inert and per-part CFrame
+		-- translation moves each part exactly by deltaPos.
 		local minBottomY = math.huge
 		for _, part in ipairs(model:GetDescendants()) do
 			if part:IsA("BasePart") then
 				local b = part.Position.Y - part.Size.Y * 0.5
 				if b < minBottomY then minBottomY = b end
+				part.Anchored   = true
+				part.CanCollide = false
 			end
 		end
 		local deltaPos = Vector3.new(
@@ -175,9 +184,7 @@ local function _spawnItems(biome)
 		)
 		for _, part in ipairs(model:GetDescendants()) do
 			if part:IsA("BasePart") then
-				part.CFrame     = part.CFrame + deltaPos
-				part.Anchored   = true
-				part.CanCollide = false
+				part.CFrame = part.CFrame + deltaPos
 			end
 		end
 
