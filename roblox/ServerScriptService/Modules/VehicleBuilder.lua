@@ -307,45 +307,56 @@ local function buildFlyer(model, stats, palette, slots)
 	local fuseR  = statScale(stats.flyability, 0.45, 0.75)
 	local wingSpan = statScale(stats.flyability, 4.0, 8.0)
 
-	-- Fuselage
-	local fuse = cylinder(
-		fuseR, fuseL,
-		CFrame.new(0, 0, 0) * CFrame.Angles(0, math.pi / 2, 0),
+	-- Fuselage: Block long along Z (LookVector axis), default orientation.
+	-- Roblox's Cylinder Shape locks its long axis to local +X. A previous
+	-- attempt rotated the cylinder 90° around Y to make the body extend
+	-- along Z visually, but that rotation also tilted PrimaryPart.LookVector
+	-- to world -X — and RacingClient pushes the vehicle along LookVector,
+	-- so the airplane slid sideways relative to where the visible body
+	-- pointed. A Block has no shape-axis lock, so default orientation +
+	-- Size.Z=fuseL gives a fuselage that visually extends in the LookVector
+	-- (-Z) direction and matches the motion direction.
+	local fuse = block(
+		Vector3.new(fuseR * 2, fuseR * 2, fuseL),
+		CFrame.new(0, 0, 0),
 		palette.body,
+		Enum.Material.SmoothPlastic,
 		model
 	)
 	fuse.Name = "Chassis"
 	model.PrimaryPart = fuse
 
-	-- Nose cone
-	local nose = Instance.new("SpecialMesh")
-	nose.MeshType = Enum.MeshType.FileMesh
-	-- Use a basic cone fallback via WedgePart
+	-- Nose cone — at front (-Z, where LookVector points). Original code
+	-- placed the nose at +Z; with the cylinder rotation removed, that put
+	-- the visible nose at the back of the LookVector direction (vehicle
+	-- would have flown tail-first). The extra Y180° flip below mirrors the
+	-- wedge so its tip points forward.
 	local nosePart = Instance.new("WedgePart")
 	nosePart.Size   = Vector3.new(fuseR * 2, fuseR * 2, fuseR * 3)
-	nosePart.CFrame = CFrame.new(0, 0, fuseL / 2 + fuseR * 1.5)
-				* CFrame.Angles(math.pi / 2, 0, 0)
+	nosePart.CFrame = CFrame.new(0, 0, -(fuseL / 2 + fuseR * 1.5))
+				* CFrame.Angles(math.pi / 2, math.pi, 0)
 	nosePart.Color  = palette.accent
+	nosePart.Material = Enum.Material.SmoothPlastic
 	nosePart.Parent = model
 	weld(fuse, nosePart)
 
-	-- Wings (WedgeParts for aerodynamic look)
+	-- Wings (sideways, slightly toward the rear)
 	local wingH = fuseR * 0.3
 	for _, side in ipairs({ 1, -1 }) do
 		local wing = Instance.new("WedgePart")
 		wing.Size   = Vector3.new(wingSpan / 2, wingH, fuseR * 2.5)
-		wing.CFrame = CFrame.new(side * (wingSpan / 4 + fuseR), 0, -fuseL * 0.1)
+		wing.CFrame = CFrame.new(side * (wingSpan / 4 + fuseR), 0, fuseL * 0.1)
 		wing.Color  = palette.accent
 		wing.Material = Enum.Material.SmoothPlastic
 		wing.Parent = model
 		weld(fuse, wing)
 	end
 
-	-- Tail fins
+	-- Tail fins (rear, +Z)
 	for _, side in ipairs({ 1, -1 }) do
 		local fin = Instance.new("WedgePart")
 		fin.Size   = Vector3.new(fuseR * 0.2, fuseR * 2.5, fuseR * 2)
-		fin.CFrame = CFrame.new(side * fuseR * 0.6, fuseR * 1.0, -fuseL * 0.4)
+		fin.CFrame = CFrame.new(side * fuseR * 0.6, fuseR * 1.0, fuseL * 0.4)
 		fin.Color  = palette.body
 		fin.Parent = model
 		weld(fuse, fin)
@@ -362,12 +373,13 @@ local function buildFlyer(model, stats, palette, slots)
 	seat.Parent = model
 	weld(fuse, seat)
 
-	attach("BodyMount",    CFrame.new(0,    fuseR,    0),            fuse)
-	attach("EngineMount",  CFrame.new(0,    0,        -fuseL * 0.3), fuse)
-	attach("SpecialMount", CFrame.new(0,    fuseR,    fuseL * 0.2),  fuse)
-	attach("MobilityMount",CFrame.new(0,   -fuseR * 0.5, 0),         fuse)
-	attach("HeadMount",    CFrame.new(0,    fuseR * 0.5, fuseL * 0.5 + fuseR * 1.5), fuse)
-	attach("TailMount",    CFrame.new(0,    0,         -fuseL * 0.5),  fuse)
+	-- Mounts: -Z is front (nose end), +Z is rear (tail end).
+	attach("BodyMount",    CFrame.new(0,    fuseR,    0),                                       fuse)
+	attach("EngineMount",  CFrame.new(0,    0,         fuseL * 0.3),                            fuse)
+	attach("SpecialMount", CFrame.new(0,    fuseR,    -fuseL * 0.2),                            fuse)
+	attach("MobilityMount",CFrame.new(0,   -fuseR * 0.5, 0),                                    fuse)
+	attach("HeadMount",    CFrame.new(0,    fuseR * 0.5, -(fuseL * 0.5 + fuseR * 1.5)),         fuse)
+	attach("TailMount",    CFrame.new(0,    0,          fuseL * 0.5),                           fuse)
 
 	return fuse
 end
