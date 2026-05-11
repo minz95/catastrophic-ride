@@ -158,9 +158,9 @@ local function _spawnItems(biome)
 			continue
 		end
 
-		-- Position model: align the model's overall bottom (lowest point of any
-		-- BasePart) with baseY, X/Z centered on pos. Pure translation only —
-		-- SetPrimaryPartCFrame/PivotTo don't move FBX-imported nested parts.
+		-- Position model: align the model's world-space AABB bottom with baseY,
+		-- X/Z centered on pos. Pure translation only — SetPrimaryPartCFrame /
+		-- PivotTo don't move FBX-imported nested parts.
 		--
 		-- IMPORTANT: anchor parts BEFORE translating. Preloader leaves parts
 		-- non-anchored with WeldConstraints; setting CFrame on an unanchored
@@ -168,13 +168,34 @@ local function _spawnItems(biome)
 		-- the model, scattering parts thousands of studs apart. Once both ends
 		-- of every weld are anchored, welds become inert and per-part CFrame
 		-- translation moves each part exactly by deltaPos.
+		-- Compute the model's world-space AABB bottom Y by checking the 8
+		-- corners of each BasePart. The previous shortcut
+		-- `part.Position.Y - part.Size.Y * 0.5` is correct only for axis-
+		-- aligned parts; FBX-imported models often have rotated subparts
+		-- whose true world-space bottom is lower. Model:GetBoundingBox()
+		-- isn't usable either because its orientation depends on PrimaryPart.
+		--
+		-- The bug shows up most visibly in SKY, where the FarmPlatform is a
+		-- 9-stud-thick opaque rock slab from Y=71 to Y=80. Even a 0.5-stud
+		-- sink hides items inside the slab; FOREST/OCEAN use a thin Baseplate
+		-- so the same sink is still visible from above.
 		local minBottomY = math.huge
 		for _, part in ipairs(model:GetDescendants()) do
 			if part:IsA("BasePart") then
-				local b = part.Position.Y - part.Size.Y * 0.5
-				if b < minBottomY then minBottomY = b end
 				part.Anchored   = true
 				part.CanCollide = false
+				local cf  = part.CFrame
+				local hsx = part.Size.X * 0.5
+				local hsy = part.Size.Y * 0.5
+				local hsz = part.Size.Z * 0.5
+				for sx = -1, 1, 2 do
+					for sy = -1, 1, 2 do
+						for sz = -1, 1, 2 do
+							local corner = cf * Vector3.new(sx * hsx, sy * hsy, sz * hsz)
+							if corner.Y < minBottomY then minBottomY = corner.Y end
+						end
+					end
+				end
 			end
 		end
 		local deltaPos = Vector3.new(
