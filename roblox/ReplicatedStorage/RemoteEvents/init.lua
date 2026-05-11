@@ -20,6 +20,7 @@
 --   RaceFinished        → (finishOrder: {userId:number, time:number}[])
 --   ScreenEffect        → (effectName: string, params: table) -- client-side VFX
 --   DriftCharge         → (amount: number)  -- boost gauge fill from DriftCorner zone
+--   CheckpointPassed    → (cpIndex: number)  -- fires to passing player only (1 or 2)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -49,6 +50,7 @@ local EVENTS = {
 	"RaceFinished",
 	"ScreenEffect",
 	"DriftCharge",
+	"CheckpointPassed",
 }
 
 local FUNCTIONS = {

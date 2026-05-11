@@ -9,11 +9,12 @@ local CollectionService   = game:GetService("CollectionService")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local Constants      = require(ReplicatedStorage.Shared.Constants)
-local RemoteEvents   = require(ReplicatedStorage.RemoteEvents)
-local GameManager    = require(ServerScriptService.GameManager)
-local SessionManager = require(ServerScriptService.SessionManager)
-local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
+local Constants         = require(ReplicatedStorage.Shared.Constants)
+local RemoteEvents      = require(ReplicatedStorage.RemoteEvents)
+local GameManager       = require(ServerScriptService.GameManager)
+local SessionManager    = require(ServerScriptService.SessionManager)
+local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
+local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -452,6 +453,17 @@ local function _setupFinishLine()
 					if entry.userId == player.UserId then return end
 				end
 
+				-- Gate finish on checkpoint completion. If the active map has
+				-- no checkpoints tagged (legacy maps not yet rebuilt), the gate
+				-- is inactive and the finish counts as before.
+				if CheckpointService.isActive()
+					and not CheckpointService.hasCompleted(player) then
+					print(string.format(
+						"[RacingManager] %s touched FinishLine but checkpoints incomplete — ignored",
+						player.Name))
+					return
+				end
+
 				local elapsed = tick() - _startTick
 				table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
 				SessionManager.setFinished(player, elapsed)
@@ -509,6 +521,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end
 
 		_setupKillPlane()   -- applies to all biomes
+
+		CheckpointService.resetAll()
+		CheckpointService.setup()
 
 		_setupFinishLine()
 		_startPositionSync()
