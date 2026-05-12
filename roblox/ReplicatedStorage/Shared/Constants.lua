@@ -56,9 +56,22 @@ Constants.MOBILITY_SLOT_NAMES = {
 Constants.MOBILITY_EMPTY_PENALTY = 0.30  -- 30% reduction to biome core stat
 
 -- ─── Vehicle / Track ──────────────────────────────────────────────────────────
-Constants.TRACK_LENGTH     = 1200
-Constants.TRACK_WIDTH      = 40
-Constants.FINISH_Z         = -1000
+-- Per-biome track dimensions. Races run along -Z from zStart to zFinish.
+-- Lengths derived from the per-biome racetrack spec (90s playtime × avg speed):
+--   FOREST 4700-stud path / 2600-stud Z-extent (figure-3 + U-bend, path/Z ~1.8)
+--   OCEAN  3400-stud path / 2100-stud Z-extent (arc-S + U-bend,    path/Z ~1.6)
+--   SKY    7800-stud path / 3500-stud Z-extent (planar figure-8,   path/Z ~2.2)
+Constants.TRACK = {
+	FOREST = { zStart = 600,  zFinish = -2000, width = 40 },
+	OCEAN  = { zStart = 600,  zFinish = -1500, width = 60 },
+	SKY    = { zStart = 1500, zFinish = -2000, width = 50 },
+}
+
+function Constants.getTrackLength(biome)
+	local t = Constants.TRACK[biome]
+	assert(t, "Constants.getTrackLength: unknown biome " .. tostring(biome))
+	return t.zStart - t.zFinish
+end
 
 -- ─── Racing ───────────────────────────────────────────────────────────────────
 Constants.BOOST_DURATION   = 2    -- seconds
