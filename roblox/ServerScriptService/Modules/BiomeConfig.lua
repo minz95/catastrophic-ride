@@ -39,12 +39,13 @@ BiomeConfig["OCEAN"] = {
 	mapPath        = "Workspace.Maps.OceanMap",
 	vehicleType    = "Boat",
 	mobilitySlot   = "SAIL",
-	raceStartZ     = 175,   -- just before dock node[1] at Z=155
-	raceStartY     = 3,     -- WATER_Y(0) + dock(1.5) + clearance(1.5)
+	raceStartZ     = 590,   -- just before track node[1] at Z=600 (Constants.TRACK.OCEAN.zStart)
+	raceStartY     = 3,     -- WATER_Y(2) + dock(1) clearance
 	skyboxId       = "rbxassetid://0",
 	ambientSoundId = "rbxassetid://0",
 
-	waterPlaneY    = 2,                         -- Y coordinate of water surface (raised above baseplate)
+	waterPlaneY    = 2,                         -- Y coordinate of water surface
+	killPlaneY     = -10,                       -- boat that sinks below water surface = respawn (belt-and-suspenders OOB)
 
 	hazards = {
 		{
