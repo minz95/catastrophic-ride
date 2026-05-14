@@ -1,11 +1,13 @@
 -- SkyMapBuilder.server.lua
--- Procedurally builds the SKY biome map:
---   - Floating platform farm area with crystal pillar supports
---   - Sky race track: stepping-stone platforms with dramatic height variance (±25 studs)
---   - Crystal cluster formations between platforms
---   - Updraft zones, ring arch obstacles, boost pads
---   - Multi-layer clouds (large flat slabs + small puff balls)
--- Resolves: Issue #10, #97
+-- Procedurally builds the SKY biome map per racetrack spec §4:
+--   - ~7500-stud planar figure-8 centerline (two 360° loops + plaza + canyon)
+--     along Z=1500 → -2000 at altitude Y=80
+--   - 50-wide corridor with continuous solid floor (no inter-platform gaps)
+--   - Invisible vertical side walls at ±25 studs offset, Y 54 → 114
+--   - Invisible ceiling at Y=120
+--   - Crystal clusters relocated outside invisible barriers (decorative)
+--   - CP1 inside S2 Loop A western extent, CP2 inside S4 Loop B eastern extent
+-- Resolves: Issue #10, #97, #130
 
 local CollectionService = game:GetService("CollectionService")
 
@@ -24,6 +26,7 @@ local C = {
 	ARCH         = Color3.fromRGB(175, 95, 255),
 	ARCH_RING    = Color3.fromRGB(255, 200, 80),
 	UPDRAFT      = Color3.fromRGB(115, 200, 255),
+	DRIFT_GLOW   = Color3.fromRGB(255, 130, 220),
 }
 
 local MAT = {
@@ -32,10 +35,15 @@ local MAT = {
 	CRYSTAL = Enum.Material.Neon,
 	NEON    = Enum.Material.Neon,
 	METAL   = Enum.Material.Metal,
-	ICE     = Enum.Material.Ice,
 }
 
-local SKY_BASE_Y = 80
+local SKY_BASE_Y = 80      -- floor top surface
+local FLOOR_TH   = 4       -- floor thickness
+local CORRIDOR_W = 50      -- matches Constants.TRACK.SKY.width
+local WALL_Y_LO  = 54      -- invisible side wall bottom (spec §4.4)
+local WALL_Y_HI  = 114     -- invisible side wall top
+local CEILING_Y  = 120
+local FINISH_Z   = -2000   -- matches Constants.TRACK.SKY.zFinish
 
 local function _part(parent, props)
 	local p = Instance.new("Part")
@@ -55,9 +63,7 @@ local function _wedge(parent, props)
 	return p
 end
 
-local function _tag(part, tagName)
-	CollectionService:AddTag(part, tagName)
-end
+local function _tag(part, tagName) CollectionService:AddTag(part, tagName) end
 
 local function _getOrCreateMap()
 	local maps = workspace:FindFirstChild("Maps") or (function()
@@ -71,564 +77,502 @@ local function _getOrCreateMap()
 	return model
 end
 
--- ─── Multi-layer clouds ────────────────────────────────────────────────────────
--- Two layers: large flat slabs below the track, small puff balls at/above track level.
+-- ─── Track centerline nodes (figure-8 per spec §4.1) ─────────────────────────
+-- Two 360° loops (A west, B east) connected by a plaza, then canyon + descent.
+
+local NODES = {
+	-- S1 Launch Tunnel (~700, Z 1500 → 800, straight)
+	{   0, 1500 }, -- N1  start of corridor
+	{   0, 1200 }, -- N2
+	{   0,  950 }, -- N3
+	{   0,  800 }, -- N4  entry to Loop A
+
+	-- S2 Cloud Loop A (CW, ~1840, around center (-300, 800), R=300)
+	{ -88,  588 }, -- N5
+	{-300,  500 }, -- N6
+	{-512,  588 }, -- N7
+	{-600,  800 }, -- N8  CP1 (western extent — unreachable on straight-line path)
+	{-512, 1012 }, -- N9
+	{-300, 1100 }, -- N10 (Loop A apex / drift corner)
+	{ -88, 1012 }, -- N11
+	{   0,  800 }, -- N12 loop close (returns to N4 position)
+
+	-- S3 Crossover Plaza (~400, Z 800 → 400, straight)
+	{   0,  600 }, -- N13
+	{   0,  400 }, -- N14 entry to Loop B
+
+	-- S4 Cloud Loop B (CCW, ~1840, around center (300, 400), R=300)
+	{  88,  188 }, -- N15
+	{ 300,  100 }, -- N16 (Loop B apex / drift corner)
+	{ 512,  188 }, -- N17
+	{ 600,  400 }, -- N18 CP2 (eastern extent)
+	{ 512,  612 }, -- N19
+	{ 300,  700 }, -- N20
+	{  88,  612 }, -- N21
+	{   0,  400 }, -- N22 loop close
+
+	-- S5 Crystal Canyon (~1800, zigzag Z 400 → -1000)
+	{ -80,  220 }, -- N23
+	{  80,   40 }, -- N24
+	{ -80, -140 }, -- N25
+	{  80, -320 }, -- N26
+	{ -80, -500 }, -- N27
+	{  80, -680 }, -- N28
+	{ -80, -860 }, -- N29
+	{   0,-1000 }, -- N30 end S5
+
+	-- S6 Final Descent (~1000, straight Z -1000 → -2000)
+	{   0,-1400 }, -- N31
+	{   0,-1700 }, -- N32
+	{   0,-2000 }, -- N33 FinishLine
+}
+
+local function _segCF(ax, az, bx, bz, y)
+	local mx, mz = (ax + bx) * 0.5, (az + bz) * 0.5
+	local rotY   = math.atan2(bx - ax, bz - az)
+	return CFrame.new(mx, y, mz) * CFrame.Angles(0, rotY, 0)
+end
+
+local function _segLen(ax, az, bx, bz)
+	local dx, dz = bx - ax, bz - az
+	return math.sqrt(dx * dx + dz * dz)
+end
+
+-- ─── Sky backdrop + clouds ───────────────────────────────────────────────────
 
 local function _buildClouds(root)
-	-- Sky background floor: large opaque plane that blocks the Roblox Baseplate (at Y=0)
-	-- from showing through when players look down from the platforms at Y≈80.
+	-- Sky backdrop blocks the Baseplate from showing through
 	_part(root, {
-		Name         = "SkyBackdrop",
-		Size         = Vector3.new(3000, 6, 3000),
-		Position     = Vector3.new(0, SKY_BASE_Y - 55, 0),
-		Color        = Color3.fromRGB(140, 165, 220),
-		Material     = Enum.Material.SmoothPlastic,
-		CanCollide   = false,
-		CastShadow   = false,
-		Transparency = 0,
+		Name = "SkyBackdrop", Size = Vector3.new(3000, 6, 5000),
+		Position = Vector3.new(0, SKY_BASE_Y - 55, -250),
+		Color = Color3.fromRGB(140, 165, 220),
+		Material = Enum.Material.SmoothPlastic,
+		CanCollide = false, CastShadow = false,
 	})
-	-- Haze layer just above the backdrop (soft gradient effect)
 	_part(root, {
-		Name         = "SkyHaze",
-		Size         = Vector3.new(3000, 4, 3000),
-		Position     = Vector3.new(0, SKY_BASE_Y - 48, 0),
-		Color        = Color3.fromRGB(175, 195, 235),
-		Material     = Enum.Material.SmoothPlastic,
-		CanCollide   = false,
-		CastShadow   = false,
-		Transparency = 0.5,
+		Name = "SkyHaze", Size = Vector3.new(3000, 4, 5000),
+		Position = Vector3.new(0, SKY_BASE_Y - 48, -250),
+		Color = Color3.fromRGB(175, 195, 235),
+		Material = Enum.Material.SmoothPlastic,
+		CanCollide = false, CastShadow = false, Transparency = 0.5,
 	})
 
 	local rng = Random.new(77)
-
-	-- Large flat slab clouds (background layer, well below track)
-	for _ = 1, 20 do
-		local cx  = rng:NextNumber(-250, 250)
-		local cy  = SKY_BASE_Y + rng:NextNumber(-45, -20)
-		local cz  = rng:NextNumber(-650, 650)
-		local cw  = rng:NextNumber(50, 140)
-		local cd  = rng:NextNumber(25, 70)
+	for _ = 1, 35 do
+		local cx = rng:NextNumber(-1200, 1200)
+		local cy = SKY_BASE_Y + rng:NextNumber(-45, -20)
+		local cz = rng:NextNumber(-2200, 1800)
+		local cw = rng:NextNumber(50, 140)
+		local cd = rng:NextNumber(25, 70)
 		_part(root, {
-			Name         = "CloudSlab",
-			Size         = Vector3.new(cw, rng:NextNumber(4, 8), cd),
-			Position     = Vector3.new(cx, cy, cz),
-			Color        = C.CLOUD_SHADOW,
-			Material     = MAT.CLOUD,
-			CanCollide   = false,
-			CastShadow   = false,
-			Transparency = 0.55,
+			Name = "CloudSlab", Size = Vector3.new(cw, rng:NextNumber(4, 8), cd),
+			Position = Vector3.new(cx, cy, cz),
+			Color = C.CLOUD_SHADOW, Material = MAT.CLOUD,
+			CanCollide = false, CastShadow = false, Transparency = 0.55,
 		})
-		-- Top highlight
 		_part(root, {
-			Name         = "CloudSlabTop",
-			Size         = Vector3.new(cw * 0.85, 3, cd * 0.85),
-			Position     = Vector3.new(cx, cy + 4, cz),
-			Color        = C.CLOUD_FLAT,
-			Material     = MAT.CLOUD,
-			CanCollide   = false,
-			CastShadow   = false,
-			Transparency = 0.45,
+			Name = "CloudSlabTop", Size = Vector3.new(cw * 0.85, 3, cd * 0.85),
+			Position = Vector3.new(cx, cy + 4, cz),
+			Color = C.CLOUD_FLAT, Material = MAT.CLOUD,
+			CanCollide = false, CastShadow = false, Transparency = 0.45,
 		})
 	end
-
-	-- Small puff balls around platform level
-	for _ = 1, 25 do
-		local px  = rng:NextNumber(-200, 200)
-		local py  = SKY_BASE_Y + rng:NextNumber(-12, 25)
-		local pz  = rng:NextNumber(-650, 650)
-		local pr  = rng:NextNumber(10, 28)
-		-- Core puff
+	for _ = 1, 45 do
+		local px = rng:NextNumber(-1100, 1100)
+		local py = SKY_BASE_Y + rng:NextNumber(-12, 25)
+		local pz = rng:NextNumber(-2100, 1700)
+		local pr = rng:NextNumber(10, 28)
 		_part(root, {
-			Name         = "CloudPuff",
-			Size         = Vector3.new(pr * 2, pr, pr * 1.3),
-			Position     = Vector3.new(px, py, pz),
-			Color        = C.CLOUD_PUFF,
-			Material     = MAT.CLOUD,
-			CanCollide   = false,
-			CastShadow   = false,
-			Transparency = 0.4,
-		})
-		-- Side blob
-		_part(root, {
-			Name         = "CloudPuffBlob",
-			Size         = Vector3.new(pr * 1.3, pr * 0.8, pr * 0.9),
-			Position     = Vector3.new(px + rng:NextNumber(-pr, pr) * 0.6, py + 2, pz + rng:NextNumber(-pr, pr) * 0.4),
-			Color        = C.CLOUD_FLAT,
-			Material     = MAT.CLOUD,
-			CanCollide   = false,
-			CastShadow   = false,
-			Transparency = 0.5,
+			Name = "CloudPuff", Size = Vector3.new(pr * 2, pr, pr * 1.3),
+			Position = Vector3.new(px, py, pz),
+			Color = C.CLOUD_PUFF, Material = MAT.CLOUD,
+			CanCollide = false, CastShadow = false, Transparency = 0.4,
 		})
 	end
 end
 
--- ─── Farm platform (Z = 300 to 510) ───────────────────────────────────────────
+-- ─── Continuous track floor (spec §4.4: no inter-platform gaps) ──────────────
+
+local function _buildFloor(root)
+	local colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }
+	for i = 1, #NODES - 1 do
+		local a, b = NODES[i], NODES[i + 1]
+		local segLen = _segLen(a[1], a[2], b[1], b[2])
+		if segLen < 0.1 then continue end
+		local cf = _segCF(a[1], a[2], b[1], b[2], SKY_BASE_Y - FLOOR_TH / 2)
+		local floor = _part(root, {
+			Name     = "TrackFloor_" .. i,
+			Size     = Vector3.new(CORRIDOR_W, FLOOR_TH, segLen + 8),
+			Color    = colors[((i - 1) % 3) + 1],
+			Material = MAT.ROCK,
+		})
+		floor.CFrame = cf
+
+		-- Edge glow stripes on both sides for visibility
+		for _, side in ipairs({ -1, 1 }) do
+			local stripe = _part(root, {
+				Name = "EdgeGlow_" .. i .. (side > 0 and "R" or "L"),
+				Size = Vector3.new(1.2, 0.6, segLen + 8),
+				Color = (i % 2 == 0) and C.CRYSTAL or C.CRYSTAL2,
+				Material = MAT.NEON, CanCollide = false, CastShadow = false,
+			})
+			stripe.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 - 0.8), FLOOR_TH / 2 + 0.4, 0)
+		end
+	end
+end
+
+-- ─── Invisible side walls (spec §4.4: ±25, Y 54→114) ─────────────────────────
+
+local function _buildInvisibleWalls(root)
+	local wallH = WALL_Y_HI - WALL_Y_LO
+	for i = 1, #NODES - 1 do
+		local a, b = NODES[i], NODES[i + 1]
+		local segLen = _segLen(a[1], a[2], b[1], b[2])
+		if segLen < 0.1 then continue end
+		local cf = _segCF(a[1], a[2], b[1], b[2], (WALL_Y_LO + WALL_Y_HI) / 2)
+		for _, side in ipairs({ -1, 1 }) do
+			local wall = _part(root, {
+				Name = "InvisibleWall_" .. i .. (side > 0 and "R" or "L"),
+				Size = Vector3.new(2, wallH, segLen + 8),
+				CanCollide = true, Transparency = 1, CastShadow = false,
+			})
+			wall.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + 1), 0, 0)
+		end
+	end
+end
+
+-- ─── Invisible ceiling (spec §4.4: Y=120) ────────────────────────────────────
+
+local function _buildInvisibleCeiling(root)
+	_part(root, {
+		Name = "InvisibleCeiling",
+		Size = Vector3.new(2800, 2, 5000),
+		Position = Vector3.new(0, CEILING_Y, -250),
+		CanCollide = true, Transparency = 1, CastShadow = false,
+	})
+end
+
+-- ─── Decorative crystal clusters (outside walls per spec §4.7) ───────────────
+
+local function _buildCrystalClusters(root)
+	local seeds = {
+		-- S1 area decoration (X = ±90, north of N1)
+		{  90, 1380 }, { -90, 1380 }, {  90, 1080 }, { -90, 1080 },
+		-- Loop A outer ring (west of west boundary)
+		{ -700,  800 }, { -680,  500 }, { -680, 1100 }, { -560, 1240 }, { -560,  360 },
+		-- Loop B outer ring (east of east boundary)
+		{  700,  400 }, {  680,  100 }, {  680,  700 }, {  560,  840 }, {  560,  -40 },
+		-- S5 canyon outer (X ≈ ±150)
+		{ -160,  100 }, {  160, -100 }, { -160, -340 }, {  160, -560 },
+		{ -160, -800 }, {  160, -940 },
+		-- S6 descent decoration
+		{   90, -1500 }, {  -90, -1500 }, {   90, -1800 }, {  -90, -1800 },
+	}
+	local crystalColors = { C.CRYSTAL, C.CRYSTAL2, C.CRYSTAL3 }
+	local rng = Random.new(33)
+	for ci, cs in ipairs(seeds) do
+		local baseY = SKY_BASE_Y - 5
+		for s = 1, rng:NextInteger(3, 5) do
+			local ox = cs[1] + rng:NextNumber(-12, 12)
+			local oz = cs[2] + rng:NextNumber(-10, 10)
+			local sh = rng:NextNumber(20, 50)
+			local sw = rng:NextNumber(2, 5)
+			local color = crystalColors[rng:NextInteger(1, 3)]
+			_part(root, {
+				Name = "CrystalSpire_" .. ci .. "_" .. s,
+				Size = Vector3.new(sw, sh, sw),
+				Position = Vector3.new(ox, baseY + sh / 2, oz),
+				Color = color, Material = MAT.CRYSTAL,
+				CanCollide = false, CastShadow = false,
+			})
+			local tip = _wedge(root, {
+				Name = "CrystalTip_" .. ci .. "_" .. s,
+				Size = Vector3.new(sw, sh * 0.35, sw),
+				Color = color, Material = MAT.CRYSTAL,
+				CanCollide = false, CastShadow = false,
+			})
+			tip.CFrame = CFrame.new(ox, baseY + sh + sh * 0.18, oz)
+				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+		end
+	end
+end
+
+-- ─── Updraft zones (kept as physics zones; floor is now continuous) ──────────
+
+local function _buildUpdraftZones(root)
+	local zones = {
+		{ -300,  800 },  -- inside Loop A center
+		{  300,  400 },  -- inside Loop B center
+		{    0, -1200 }, -- mid canyon recovery
+	}
+	for i, uz in ipairs(zones) do
+		local ux, uz2 = uz[1], uz[2]
+		local baseY = SKY_BASE_Y - 18
+		_part(root, {
+			Name = "UpdraftVisual_" .. i,
+			Size = Vector3.new(14, 55, 14),
+			Position = Vector3.new(ux, baseY, uz2),
+			Color = C.UPDRAFT, Material = MAT.NEON,
+			CanCollide = false, Transparency = 0.72, CastShadow = false,
+		})
+		local trigger = _part(root, {
+			Name = "UpdraftZone_" .. i,
+			Size = Vector3.new(18, 70, 18),
+			Position = Vector3.new(ux, baseY, uz2),
+			CanCollide = false, Transparency = 1,
+		})
+		_tag(trigger, "UpdraftZone")
+	end
+end
+
+-- ─── Drift corners (3 per spec §4.3: loop apexes + canyon entry) ─────────────
+
+local function _buildDriftCorners(root)
+	local corners = {
+		{ -300, 1100 },  -- N10 Loop A north apex
+		{  300,  100 },  -- N16 Loop B south apex
+		{  -80, -140 },  -- N25 canyon zigzag mid-entry
+	}
+	for i, c in ipairs(corners) do
+		local rx, rz = c[1], c[2]
+		local ry = SKY_BASE_Y + 4
+		local ringR = 14
+		for seg = 0, 7 do
+			local angle = (seg / 8) * math.pi * 2
+			local arc = _part(root, {
+				Name = "DriftRingArc_" .. i .. "_" .. seg,
+				Size = Vector3.new(2, 2, 8),
+				Color = C.DRIFT_GLOW, Material = MAT.CRYSTAL,
+				CanCollide = false, CastShadow = false,
+			})
+			arc.CFrame = CFrame.new(rx + math.cos(angle) * ringR, ry + math.sin(angle) * ringR, rz)
+				* CFrame.Angles(0, 0, angle)
+		end
+		_part(root, {
+			Name = "DriftRingStar_" .. i,
+			Size = Vector3.new(4, 4, 0.5),
+			Position = Vector3.new(rx, ry, rz),
+			Color = C.STAR, Material = MAT.NEON,
+			CanCollide = false, CastShadow = false,
+		})
+		local trigger = _part(root, {
+			Name = "DriftCorner_" .. i,
+			Size = Vector3.new(ringR * 2 + 4, ringR * 2 + 4, 50),
+			Position = Vector3.new(rx, ry, rz),
+			CanCollide = false, Transparency = 1,
+		})
+		_tag(trigger, "DriftCorner")
+	end
+end
+
+-- ─── Jump zones (3 per spec §4.3: S5 XZ boost dressed as ramps) ──────────────
+-- Flyer is Y-locked at 84, so these apply forward-velocity boost (not vertical).
+
+local function _buildJumpRamps(root)
+	local ramps = {
+		{  80,   40 },  -- N24 S5 entry
+		{ -80, -500 },  -- N27 S5 mid
+		{  80, -680 },  -- N28 S5 late
+	}
+	for i, r in ipairs(ramps) do
+		local rx, rz = r[1], r[2]
+		_part(root, {
+			Name = "JumpRamp_" .. i,
+			Size = Vector3.new(CORRIDOR_W - 14, 1.2, 14),
+			Position = Vector3.new(rx, SKY_BASE_Y + 0.8, rz),
+			Color = C.CLOUD_PUFF, Material = MAT.NEON,
+			CanCollide = false, CastShadow = false, Transparency = 0.3,
+		})
+		local jz = _part(root, {
+			Name = "JumpZone_" .. i,
+			Size = Vector3.new(CORRIDOR_W - 6, 8, 12),
+			Position = Vector3.new(rx, SKY_BASE_Y + 4, rz),
+			CanCollide = false, Transparency = 1,
+		})
+		_tag(jz, "JumpZone")
+	end
+end
+
+-- ─── Boost pads (5 per spec §4.3) ────────────────────────────────────────────
+
+local function _buildBoostPads(root)
+	local pads = {
+		{   0, 1300 },  -- S1 launch
+		{-300,  500 },  -- N6 Loop A south apex (rewards tight line)
+		{   0,  600 },  -- S3 plaza
+		{ 300,  700 },  -- N20 Loop B north apex
+		{   0,-1400 },  -- S6 mid descent
+	}
+	for i, pd in ipairs(pads) do
+		local pad = _part(root, {
+			Name = "BoostPad_" .. i,
+			Size = Vector3.new(12, 0.4, 8),
+			Position = Vector3.new(pd[1], SKY_BASE_Y + 0.4, pd[2]),
+			Color = C.BOOST, Material = MAT.NEON, CanCollide = false,
+		})
+		_tag(pad, "BoostPad")
+		_part(root, {
+			Name = "BoostRing_" .. i,
+			Size = Vector3.new(16, 0.2, 12),
+			Position = Vector3.new(pd[1], SKY_BASE_Y + 0.3, pd[2]),
+			Color = Color3.fromRGB(255, 200, 240), Material = MAT.NEON,
+			Transparency = 0.5, CanCollide = false,
+		})
+	end
+end
+
+-- ─── Checkpoints (spec §4.6) ─────────────────────────────────────────────────
+
+local function _buildCheckpoints(root)
+	local cp1 = _part(root, {
+		Name = "Checkpoint1",
+		Size = Vector3.new(CORRIDOR_W, 50, 6),
+		Position = Vector3.new(-600, SKY_BASE_Y + 25, 800),  -- N8 Loop A western extent
+		CanCollide = false, Transparency = 1,
+	})
+	_tag(cp1, "Checkpoint1")
+	local cp2 = _part(root, {
+		Name = "Checkpoint2",
+		Size = Vector3.new(CORRIDOR_W, 50, 6),
+		Position = Vector3.new(600, SKY_BASE_Y + 25, 400),  -- N18 Loop B eastern extent
+		CanCollide = false, Transparency = 1,
+	})
+	_tag(cp2, "Checkpoint2")
+end
+
+-- ─── Farm platform (relocated north of start, beyond track Z extent) ─────────
 
 local function _buildFarmPlatform(root)
+	local cx, cz = 0, 1850
 	_part(root, {
-		Name     = "FarmPlatform",
-		Size     = Vector3.new(185, 9, 225),
-		Position = Vector3.new(0, SKY_BASE_Y - 4.5, 395),
-		Color    = C.PLATFORM3,
-		Material = MAT.ROCK,
+		Name = "FarmPlatform",
+		Size = Vector3.new(200, 9, 240),
+		Position = Vector3.new(cx, SKY_BASE_Y - 4.5, cz),
+		Color = C.PLATFORM3, Material = MAT.ROCK,
 	})
-	-- Bevelled lower edge decoration
 	for _, side in ipairs({ -1, 1 }) do
 		local bev = _wedge(root, {
-			Name     = "FarmBevel",
-			Size     = Vector3.new(185, 5, 6),
-			Color    = C.PLATFORM2,
-			Material = MAT.ROCK,
-			CanCollide = false,
+			Name = "FarmBevel",
+			Size = Vector3.new(200, 5, 6),
+			Color = C.PLATFORM2, Material = MAT.ROCK, CanCollide = false,
 		})
-		bev.CFrame = CFrame.new(0, SKY_BASE_Y - 7.5, 395 + side * 117)
+		bev.CFrame = CFrame.new(cx, SKY_BASE_Y - 7.5, cz + side * 125)
 			* CFrame.Angles(0, side > 0 and 0 or math.pi, 0)
 	end
 
-	-- Crystal pillar supports (6 pillars in a ring)
 	local pillarPositions = {
-		{ -75, 395 }, {  75, 395 },
-		{ -75, 300 }, {  75, 300 },
-		{ -75, 490 }, {  75, 490 },
+		{ cx - 85, cz - 105 }, { cx + 85, cz - 105 },
+		{ cx - 85, cz       }, { cx + 85, cz       },
+		{ cx - 85, cz + 105 }, { cx + 85, cz + 105 },
 	}
 	for _, pp in ipairs(pillarPositions) do
-		-- Tall main pillar
 		_part(root, {
-			Name         = "CrystalPillar",
-			Size         = Vector3.new(5, 50, 5),
-			Position     = Vector3.new(pp[1], SKY_BASE_Y - 33, pp[2]),
-			Color        = C.CRYSTAL,
-			Material     = MAT.CRYSTAL,
-			CanCollide   = false,
-			CastShadow   = false,
+			Name = "CrystalPillar", Size = Vector3.new(5, 50, 5),
+			Position = Vector3.new(pp[1], SKY_BASE_Y - 33, pp[2]),
+			Color = C.CRYSTAL, Material = MAT.CRYSTAL,
+			CanCollide = false, CastShadow = false,
 		})
-		-- Angled side shard
-		local shard = _wedge(root, {
-			Name     = "CrystalShard",
-			Size     = Vector3.new(2.5, 22, 2.5),
-			Color    = C.CRYSTAL2,
-			Material = MAT.CRYSTAL,
-			CanCollide = false,
-			CastShadow = false,
-		})
-		shard.CFrame = CFrame.new(pp[1] + 4, SKY_BASE_Y - 22, pp[2])
-			* CFrame.Angles(0, 0, math.rad(20))
 	end
 
-	-- Spawn points
 	local cols = { -65, -32, 0, 32, 65 }
-	local rows = { 345, 385 }
-	for _, row in ipairs(rows) do
-		for _, col in ipairs(cols) do
+	local rows = { cz - 45, cz + 45 }
+	for _, rz in ipairs(rows) do
+		for _, ox in ipairs(cols) do
 			local sp = _part(root, {
-				Name         = "FarmSpawnPoint",
-				Size         = Vector3.new(4, 0.5, 4),
-				Position     = Vector3.new(col, SKY_BASE_Y + 4.5, row),
-				Color        = Color3.fromRGB(255, 220, 60),
-				Material     = MAT.NEON,
-				CanCollide   = false,
-				Transparency = 0.5,
+				Name = "FarmSpawnPoint",
+				Size = Vector3.new(4, 0.5, 4),
+				Position = Vector3.new(cx + ox, SKY_BASE_Y + 4.5, rz),
+				Color = Color3.fromRGB(255, 220, 60), Material = MAT.NEON,
+				CanCollide = false, Transparency = 0.5,
 			})
 			_tag(sp, "FarmSpawn")
 		end
 	end
 end
 
--- ─── Sky race track (stepping-stone platforms) ────────────────────────────────
--- Dramatic height variance: y offsets range from -25 to +25 studs.
--- Platforms alternate color and have edge glow strips.
--- { centerX, yOffset, centerZ, width, length }
+-- ─── Start grid (matches BiomeConfig.SKY.raceStartZ = 1490) ──────────────────
 
--- y offsets all 0: vehicle HoverPosition holds constant altitude (raceStartY=84),
--- height variation was unnavigable. Horizontal X offsets kept for zigzag layout.
-local PLATFORM_DATA = {
-	{ 0,   0,   200,  42, 85  },   -- [1] transition from farm
-	{ 0,   0,   105,  36, 65  },   -- [2]
-	{-18,  0,    15,  36, 65  },   -- [3] shift left
-	{ 14,  0,   -90,  36, 65  },   -- [4] shift right
-	{ 0,   0,  -195,  42, 85  },   -- [5] wide section
-	{ 18,  0,  -310,  32, 60  },   -- [6] shift right
-	{-14,  0,  -415,  32, 60  },   -- [7] shift left
-	{  4,  0,  -505,  36, 80  },   -- [8]
-	{  0,  0,  -575,  42, 75  },   -- [9] near finish
-}
-
-local function _buildTrackPlatforms(root)
-	local colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }
-
-	for i, pd in ipairs(PLATFORM_DATA) do
-		local y = SKY_BASE_Y + pd[2]
-		local color = colors[((i - 1) % 3) + 1]
-
-		-- Main platform slab
+local function _buildStartGrid(root)
+	for side = -1, 1, 2 do
 		_part(root, {
-			Name     = "TrackPlatform_" .. i,
-			Size     = Vector3.new(pd[4], 6, pd[5]),
-			Position = Vector3.new(pd[1], y - 3, pd[3]),
-			Color    = color,
-			Material = MAT.ROCK,
-		})
-
-		-- Underside bevel on long edges
-		for _, side in ipairs({ -1, 1 }) do
-			local bev = _wedge(root, {
-				Name     = "PlatformBevel_" .. i,
-				Size     = Vector3.new(pd[4], 3, 4),
-				Color    = C.PLATFORM2,
-				Material = MAT.ROCK,
-				CanCollide = false,
-			})
-			bev.CFrame = CFrame.new(pd[1], y - 5.5, pd[3] + side * (pd[5] / 2))
-				* CFrame.Angles(0, side > 0 and 0 or math.pi, 0)
-		end
-
-		-- Edge glow strips (left/right sides)
-		for _, side in ipairs({ -1, 1 }) do
-			_part(root, {
-				Name     = "TrackGlow_" .. i,
-				Size     = Vector3.new(1.2, 0.6, pd[5]),
-				Position = Vector3.new(pd[1] + side * (pd[4] / 2 - 0.8), y + 0.4, pd[3]),
-				Color    = i % 2 == 0 and C.CRYSTAL or C.CRYSTAL2,
-				Material = MAT.NEON,
-				CanCollide = false,
-				CastShadow = false,
-			})
-		end
-
-		-- Star markers on platform surface
-		if i % 3 == 0 then
-			_part(root, {
-				Name     = "StarDecal_" .. i,
-				Size     = Vector3.new(5, 0.3, 5),
-				Position = Vector3.new(pd[1], y + 0.3, pd[3]),
-				Color    = C.STAR,
-				Material = MAT.NEON,
-				CanCollide = false,
-				CastShadow = false,
-			})
-		end
-	end
-end
-
--- ─── Crystal cluster formations ───────────────────────────────────────────────
--- Groups of 3–5 spires between platforms; purely decorative.
-
-local function _buildCrystalClusters(root)
-	local clusterSeeds = {
-		{  30, -15,  60  },   -- between platforms 1-2
-		{ -30,  -8, -40  },   -- between 3-4
-		{  25, -20, -145 },   -- near platform 5
-		{ -28,  -5, -260 },   -- between 5-6
-		{  22, -15, -365 },   -- near 7
-		{ -20, -10, -460 },   -- between 7-8
-	}
-	local crystalColors = { C.CRYSTAL, C.CRYSTAL2, C.CRYSTAL3 }
-	local rng = Random.new(33)
-
-	for ci, cs in ipairs(clusterSeeds) do
-		local baseY = SKY_BASE_Y + cs[2]
-		for s = 1, rng:NextInteger(3, 5) do
-			local ox = cs[1] + rng:NextNumber(-12, 12)
-			local oz = cs[3] + rng:NextNumber(-10, 10)
-			local sh = rng:NextNumber(15, 45)
-			local sw = rng:NextNumber(1.5, 4)
-			local color = crystalColors[rng:NextInteger(1, 3)]
-
-			-- Main spire (slim wedge/part stack)
-			_part(root, {
-				Name     = "CrystalSpire_" .. ci .. "_" .. s,
-				Size     = Vector3.new(sw, sh, sw),
-				Position = Vector3.new(ox, baseY - sh / 2 + 5, oz),
-				Color    = color,
-				Material = MAT.CRYSTAL,
-				CanCollide = false,
-				CastShadow = false,
-			})
-			-- Tapered tip
-			local tip = _wedge(root, {
-				Name     = "CrystalTip_" .. ci .. "_" .. s,
-				Size     = Vector3.new(sw, sh * 0.35, sw),
-				Color    = color,
-				Material = MAT.CRYSTAL,
-				CanCollide = false,
-				CastShadow = false,
-			})
-			tip.CFrame = CFrame.new(ox, baseY - sh * 0.12 + 5, oz)
-				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
-		end
-	end
-end
-
--- ─── Ring arch obstacles ──────────────────────────────────────────────────────
--- Players must fly/drive through the ring or take a damage/slowdown penalty.
-
-local function _buildRingObstacles(root)
-	local rings = {
-		{ PLATFORM_DATA[3][1], SKY_BASE_Y + PLATFORM_DATA[3][2] + 4, PLATFORM_DATA[3][3] + 15 },
-		{ PLATFORM_DATA[5][1], SKY_BASE_Y + PLATFORM_DATA[5][2] + 4, PLATFORM_DATA[5][3] + 15 },
-		{ PLATFORM_DATA[7][1], SKY_BASE_Y + PLATFORM_DATA[7][2] + 4, PLATFORM_DATA[7][3] + 15 },
-	}
-	for i, rg in ipairs(rings) do
-		local rx, ry, rz = rg[1], rg[2], rg[3]
-		local ringR = 10  -- outer radius
-
-		-- 8-segment ring (using short parts arranged in a circle)
-		for seg = 0, 7 do
-			local angle = (seg / 8) * math.pi * 2
-			local sx = math.cos(angle) * ringR
-			local sy = math.sin(angle) * ringR
-			local arcPart = _part(root, {
-				Name     = "RingArc_" .. i .. "_" .. seg,
-				Size     = Vector3.new(2.5, 2.5, 9),
-				Color    = C.ARCH_RING,
-				Material = MAT.NEON,
-				CanCollide = false,
-				CastShadow = false,
-			})
-			arcPart.CFrame = CFrame.new(rx + sx, ry + sy, rz)
-				* CFrame.Angles(0, 0, angle)
-		end
-
-		-- Ring trigger (invisible, detects pass-through)
-		local trigger = _part(root, {
-			Name         = "RingTrigger_" .. i,
-			Size         = Vector3.new(ringR * 2 - 4, ringR * 2 - 4, 4),
-			Position     = Vector3.new(rx, ry, rz),
-			CanCollide   = false,
-			Transparency = 1,
-		})
-		_tag(trigger, "Obstacle")
-
-		-- Spin decoration (small star in ring center)
-		_part(root, {
-			Name     = "RingStar_" .. i,
-			Size     = Vector3.new(3, 3, 0.5),
-			Position = Vector3.new(rx, ry, rz),
-			Color    = C.STAR,
-			Material = MAT.NEON,
-			CanCollide = false,
-			CastShadow = false,
+			Name = "StartPole" .. (side > 0 and "R" or "L"),
+			Size = Vector3.new(1.5, 18, 1.5),
+			Position = Vector3.new(side * (CORRIDOR_W / 2 - 3), SKY_BASE_Y + 13, 1495),
+			Color = C.ARCH, Material = MAT.METAL,
 		})
 	end
-end
-
--- ─── Updraft zones ─────────────────────────────────────────────────────────────
-
-local function _buildUpdraftZones(root)
-	-- Placed in the gaps between platforms (where height drops)
-	local zones = {
-		{ PLATFORM_DATA[3][1], PLATFORM_DATA[3][3] + 45 },  -- near the big drop at platform 3
-		{ PLATFORM_DATA[7][1], PLATFORM_DATA[7][3] + 45 },  -- near the big drop at platform 7
-		{ 0, -250 },                                         -- mid-track recovery zone
-	}
-	for i, uz in ipairs(zones) do
-		local ux, uz2 = uz[1], uz[2]
-		local baseY = SKY_BASE_Y - 20
-
-		-- Visual column
-		_part(root, {
-			Name         = "UpdraftVisual_" .. i,
-			Size         = Vector3.new(14, 55, 14),
-			Position     = Vector3.new(ux, baseY, uz2),
-			Color        = C.UPDRAFT,
-			Material     = MAT.NEON,
-			CanCollide   = false,
-			Transparency = 0.72,
-			CastShadow   = false,
-		})
-		-- Trigger zone (larger)
-		local trigger = _part(root, {
-			Name         = "UpdraftZone_" .. i,
-			Size         = Vector3.new(18, 70, 18),
-			Position     = Vector3.new(ux, baseY, uz2),
-			CanCollide   = false,
-			Transparency = 1,
-		})
-		_tag(trigger, "UpdraftZone")
-
-		-- Swirl ring at base
-		_part(root, {
-			Name     = "UpdraftRing_" .. i,
-			Size     = Vector3.new(16, 1, 16),
-			Position = Vector3.new(ux, SKY_BASE_Y - 30, uz2),
-			Color    = C.UPDRAFT,
-			Material = MAT.NEON,
-			CanCollide = false,
-			CastShadow = false,
-			Transparency = 0.4,
-		})
-	end
-end
-
--- ─── Boost pads ───────────────────────────────────────────────────────────────
-
-local function _buildBoostPads(root)
-	local pads = {
-		{ PLATFORM_DATA[1][1], SKY_BASE_Y + PLATFORM_DATA[1][2] + 0.8, PLATFORM_DATA[1][3] - 25 },
-		{ PLATFORM_DATA[4][1], SKY_BASE_Y + PLATFORM_DATA[4][2] + 0.8, PLATFORM_DATA[4][3] - 15 },
-		{ PLATFORM_DATA[6][1], SKY_BASE_Y + PLATFORM_DATA[6][2] + 0.8, PLATFORM_DATA[6][3] - 15 },
-		{ PLATFORM_DATA[8][1], SKY_BASE_Y + PLATFORM_DATA[8][2] + 0.8, PLATFORM_DATA[8][3] - 20 },
-		{ PLATFORM_DATA[9][1], SKY_BASE_Y + PLATFORM_DATA[9][2] + 0.8, PLATFORM_DATA[9][3] + 20 },
-	}
-	for i, pd in ipairs(pads) do
-		local pad = _part(root, {
-			Name     = "BoostPad_" .. i,
-			Size     = Vector3.new(10, 0.3, 6),
-			Position = Vector3.new(pd[1], pd[2], pd[3]),
-			Color    = C.BOOST,
-			Material = MAT.NEON,
-			CanCollide = false,
-			CastShadow = false,
-		})
-		_tag(pad, "BoostPad")
-	end
-end
-
--- ─── Drift corner rings (SKY) ─────────────────────────────────────────────────
--- 3 crystal ring gates at the largest platform X-transitions.
--- Tagged "DriftCorner": flying through gives boost gauge charge (no drift required).
--- Pink-purple rings distinguish them from yellow obstacle rings.
-
-local function _buildDriftCorners(root)
-	-- 3 largest lateral transitions between platforms:
-	--   pd[3]→pd[4]: X -18→+14 (Δ32), midZ = (15 + -90)/2 = -37
-	--   pd[5]→pd[6]: X  0→+18 (Δ18), midZ = (-195 + -310)/2 = -252
-	--   pd[6]→pd[7]: X +18→-14 (Δ32), midZ = (-310 + -415)/2 = -362
-	local corners = {
-		{
-			x = (PLATFORM_DATA[3][1] + PLATFORM_DATA[4][1]) / 2,
-			y = SKY_BASE_Y + 4,
-			z = (PLATFORM_DATA[3][3] + PLATFORM_DATA[4][3]) / 2,
-		},
-		{
-			x = (PLATFORM_DATA[5][1] + PLATFORM_DATA[6][1]) / 2,
-			y = SKY_BASE_Y + 4,
-			z = (PLATFORM_DATA[5][3] + PLATFORM_DATA[6][3]) / 2,
-		},
-		{
-			x = (PLATFORM_DATA[6][1] + PLATFORM_DATA[7][1]) / 2,
-			y = SKY_BASE_Y + 4,
-			z = (PLATFORM_DATA[6][3] + PLATFORM_DATA[7][3]) / 2,
-		},
-	}
-
-	for i, c in ipairs(corners) do
-		local rx, ry, rz = c.x, c.y, c.z
-		local ringR = 14
-
-		-- 8-segment crystal ring (pink-purple to distinguish from obstacle rings)
-		for seg = 0, 7 do
-			local angle = (seg / 8) * math.pi * 2
-			local arc = _part(root, {
-				Name     = "DriftRingArc_" .. i .. "_" .. seg,
-				Size     = Vector3.new(2, 2, 8),
-				Color    = C.CRYSTAL3,
-				Material = MAT.CRYSTAL,
-				CanCollide = false, CastShadow = false,
-			})
-			arc.CFrame = CFrame.new(rx + math.cos(angle) * ringR, ry + math.sin(angle) * ringR, rz)
-				* CFrame.Angles(0, 0, angle)
-		end
-
-		-- Center star
-		_part(root, {
-			Name     = "DriftRingStar_" .. i,
-			Size     = Vector3.new(4, 4, 0.5),
-			Position = Vector3.new(rx, ry, rz),
-			Color    = C.STAR, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-
-		-- Invisible trigger (wide box so flyer catches it even at slight Y offset)
-		local trigger = _part(root, {
-			Name         = "DriftCorner_" .. i,
-			Size         = Vector3.new(ringR * 2 + 4, ringR * 2 + 4, 50),
-			Position     = Vector3.new(rx, ry, rz),
-			CanCollide   = false,
-			Transparency = 1,
-		})
-		_tag(trigger, "DriftCorner")
-	end
-end
-
--- ─── Kill plane ────────────────────────────────────────────────────────────────
-
-local function _buildKillPlane(root)
-	local kill = _part(root, {
-		Name         = "KillPlane",
-		Size         = Vector3.new(2000, 4, 2000),
-		Position     = Vector3.new(0, SKY_BASE_Y - 80, 0),
-		CanCollide   = false,
-		Transparency = 1,
+	_part(root, {
+		Name = "StartBanner",
+		Size = Vector3.new(CORRIDOR_W - 4, 2, 1),
+		Position = Vector3.new(0, SKY_BASE_Y + 22, 1495),
+		Color = Color3.fromRGB(255, 220, 40), Material = MAT.NEON, CanCollide = false,
 	})
-	_tag(kill, "KillPlane")
 end
 
--- ─── Finish line ──────────────────────────────────────────────────────────────
+-- ─── Finish line (Z = -2000) ─────────────────────────────────────────────────
 
 local function _buildFinishLine(root)
-	local lastPD = PLATFORM_DATA[#PLATFORM_DATA]
-	local finY   = SKY_BASE_Y + lastPD[2]
-	local finZ   = -599
-
-	for col = -12, 12, 4 do
+	for col = -(CORRIDOR_W / 2), (CORRIDOR_W / 2) - 4, 4 do
 		for row = 0, 1 do
 			_part(root, {
-				Name     = "FinishTile",
-				Size     = Vector3.new(4, 0.3, 4),
-				Position = Vector3.new(col, finY + 0.9, finZ + row * 4),
-				Color    = (math.floor(col / 4) + row) % 2 == 0
-					and Color3.new(1,1,1) or Color3.new(0,0,0),
-				Material = MAT.METAL,
-				CanCollide = false,
+				Name = "FinishTile",
+				Size = Vector3.new(4, 0.4, 4),
+				Position = Vector3.new(col + 2, SKY_BASE_Y + 0.4, FINISH_Z + row * 4),
+				Color = (math.floor((col + CORRIDOR_W / 2) / 4) + row) % 2 == 0
+					and Color3.new(1, 1, 1) or Color3.new(0, 0, 0),
+				Material = MAT.METAL, CanCollide = false,
 			})
 		end
 	end
 
 	local finish = _part(root, {
-		Name         = "FinishLine",
-		Size         = Vector3.new(44, 12, 2),
-		Position     = Vector3.new(0, finY + 6, finZ),
-		CanCollide   = false,
-		Transparency = 1,
+		Name = "FinishLine",
+		Size = Vector3.new(CORRIDOR_W, 12, 2),
+		Position = Vector3.new(0, SKY_BASE_Y + 6, FINISH_Z),
+		CanCollide = false, Transparency = 1,
 	})
 	_tag(finish, "FinishLine")
 
-	-- Arch poles with crystal material
 	for side = -1, 1, 2 do
 		_part(root, {
-			Name     = "FinishPole",
-			Size     = Vector3.new(1.8, 22, 1.8),
-			Position = Vector3.new(side * 22, finY + 11, finZ),
-			Color    = C.ARCH,
-			Material = MAT.CRYSTAL,
+			Name = "FinishPole" .. (side > 0 and "R" or "L"),
+			Size = Vector3.new(1.8, 22, 1.8),
+			Position = Vector3.new(side * (CORRIDOR_W / 2 - 3), SKY_BASE_Y + 11, FINISH_Z),
+			Color = C.ARCH, Material = MAT.CRYSTAL,
 		})
 	end
 	_part(root, {
-		Name     = "FinishArch",
-		Size     = Vector3.new(46, 3, 1.8),
-		Position = Vector3.new(0, finY + 22.5, finZ),
-		Color    = C.ARCH,
-		Material = MAT.NEON,
-		CanCollide = false,
+		Name = "FinishArch",
+		Size = Vector3.new(CORRIDOR_W - 4, 3, 1.8),
+		Position = Vector3.new(0, SKY_BASE_Y + 22.5, FINISH_Z),
+		Color = C.ARCH, Material = MAT.NEON, CanCollide = false,
 	})
-
 	-- Star burst decoration on arch
 	for sx = -20, 20, 5 do
 		local phase = sx * 0.6
 		_part(root, {
-			Name     = "ArchStar",
-			Size     = Vector3.new(2.5, 2.5, 0.6),
-			Position = Vector3.new(sx, finY + 23 + math.sin(phase) * 1.5, finZ - 0.5),
-			Color    = C.STAR,
-			Material = MAT.NEON,
-			CanCollide = false,
-			CastShadow = false,
+			Name = "ArchStar",
+			Size = Vector3.new(2.5, 2.5, 0.6),
+			Position = Vector3.new(sx, SKY_BASE_Y + 23 + math.sin(phase) * 1.5, FINISH_Z - 0.5),
+			Color = C.STAR, Material = MAT.NEON,
+			CanCollide = false, CastShadow = false,
 		})
 	end
 end
 
--- ─── Main build ───────────────────────────────────────────────────────────────
+-- ─── Kill plane (Y = -200 per BiomeConfig.SKY.killPlaneY) ────────────────────
+
+local function _buildKillPlane(root)
+	local kill = _part(root, {
+		Name = "KillPlane",
+		Size = Vector3.new(3000, 4, 5000),
+		Position = Vector3.new(0, -200, -250),
+		CanCollide = false, Transparency = 1,
+	})
+	_tag(kill, "KillPlane")
+end
+
+-- ─── Main build ──────────────────────────────────────────────────────────────
 
 local function buildSky()
 	local root = _getOrCreateMap()
@@ -636,21 +580,26 @@ local function buildSky()
 	local farmSub  = Instance.new("Model"); farmSub.Name  = "FarmArea";  farmSub.Parent  = root
 	local trackSub = Instance.new("Model"); trackSub.Name = "RaceTrack"; trackSub.Parent = root
 
-	_buildClouds(root)             -- shared decoration
-	_buildUpdraftZones(root)       -- shared (physics zones needed in both phases)
+	_buildClouds(root)
+	_buildUpdraftZones(root)
 	_buildFarmPlatform(farmSub)
-	_buildTrackPlatforms(trackSub)
+
+	_buildFloor(trackSub)
+	_buildInvisibleWalls(trackSub)
+	_buildInvisibleCeiling(trackSub)
 	_buildCrystalClusters(trackSub)
-	_buildRingObstacles(trackSub)
 	_buildBoostPads(trackSub)
+	_buildJumpRamps(trackSub)
 	_buildDriftCorners(trackSub)
-	_buildKillPlane(trackSub)
+	_buildCheckpoints(trackSub)
+	_buildStartGrid(trackSub)
 	_buildFinishLine(trackSub)
+	_buildKillPlane(trackSub)
 
 	CollectionService:AddTag(root, "BiomeMap")
 	root:SetAttribute("Biome", "SKY")
 
-	print("[SkyMapBuilder] Built SKY map (" .. #root:GetChildren() .. " objects)")
+	print("[SkyMapBuilder] Built SKY map (" .. #root:GetDescendants() .. " descendants)")
 	return root
 end
 
