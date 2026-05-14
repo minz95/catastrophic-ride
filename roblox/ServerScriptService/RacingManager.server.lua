@@ -33,17 +33,15 @@ local _totalRacers = 0
 local _physState = {}
 
 -- ─── Track axis ───────────────────────────────────────────────────────────────
--- Track runs along the Z axis from +600 (start) to -600 (finish).
--- Progress = distance travelled toward finish (higher = closer to finish).
-
-local TRACK_START_Z = 600
-local TRACK_END_Z   = -600
+-- Track runs along -Z. Per-biome zStart/zFinish live in Constants.TRACK and
+-- are looked up at race start from the active _biome.
 
 local function _trackProgress(vehicle)
-	if not vehicle or not vehicle.PrimaryPart then return 0 end
+	if not vehicle or not vehicle.PrimaryPart or not _biome then return 0 end
+	local track = Constants.TRACK[_biome]
+	if not track then return 0 end
 	local z = vehicle.PrimaryPart.Position.Z
-	-- Map Z from start (+600) toward end (-600) onto 0→1200
-	return math.clamp(TRACK_START_Z - z, 0, Constants.TRACK_LENGTH)
+	return math.clamp(track.zStart - z, 0, track.zStart - track.zFinish)
 end
 
 -- ─── Position sync loop ───────────────────────────────────────────────────────
@@ -224,7 +222,9 @@ local function _respawnVehicle(player)
 	local primary = vehicle.PrimaryPart
 	local progress = _trackProgress(vehicle)
 	-- Step back 30 studs so the player has room to regain speed.
-	local safeZ = TRACK_START_Z - math.max(progress - 30, 0)
+	local track = _biome and Constants.TRACK[_biome]
+	local zStart = track and track.zStart or 600
+	local safeZ = zStart - math.max(progress - 30, 0)
 	local y     = _spawnY() + 3   -- a little above surface to avoid clipping
 
 	-- Briefly anchor so the vehicle doesn't fall while being moved.
