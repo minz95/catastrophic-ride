@@ -33,7 +33,6 @@ local MeshAssetIds = {
 	["Spinning Top"]   = "",   -- assets/items/spinning_top.fbx
 	["V8 Engine"]      = "",   -- assets/items/v8_engine.fbx
 	["Watering Can"]   = "",   -- assets/items/watering_can.fbx
-	["Wind Turbine"]   = "",   -- assets/items/wind_turbine.fbx
 
 	-- ── SPECIAL ───────────────────────────────────────────────────────────────
 	["Balloon Bunch"]  = "",   -- assets/items/Balloon Bunch.fbx

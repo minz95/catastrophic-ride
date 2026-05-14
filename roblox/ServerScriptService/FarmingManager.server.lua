@@ -158,14 +158,44 @@ local function _spawnItems(biome)
 			continue
 		end
 
-		-- Position model: align the model's overall bottom (lowest point of any
-		-- BasePart) with baseY, X/Z centered on pos. Pure translation only —
-		-- SetPrimaryPartCFrame/PivotTo don't move FBX-imported nested parts.
+		-- Position model: align the model's world-space AABB bottom with baseY,
+		-- X/Z centered on pos. Pure translation only — SetPrimaryPartCFrame /
+		-- PivotTo don't move FBX-imported nested parts.
+		--
+		-- IMPORTANT: anchor parts BEFORE translating. Preloader leaves parts
+		-- non-anchored with WeldConstraints; setting CFrame on an unanchored
+		-- welded part triggers weld snapping that cascades unpredictably across
+		-- the model, scattering parts thousands of studs apart. Once both ends
+		-- of every weld are anchored, welds become inert and per-part CFrame
+		-- translation moves each part exactly by deltaPos.
+		-- Compute the model's world-space AABB bottom Y by checking the 8
+		-- corners of each BasePart. The previous shortcut
+		-- `part.Position.Y - part.Size.Y * 0.5` is correct only for axis-
+		-- aligned parts; FBX-imported models often have rotated subparts
+		-- whose true world-space bottom is lower. Model:GetBoundingBox()
+		-- isn't usable either because its orientation depends on PrimaryPart.
+		--
+		-- The bug shows up most visibly in SKY, where the FarmPlatform is a
+		-- 9-stud-thick opaque rock slab from Y=71 to Y=80. Even a 0.5-stud
+		-- sink hides items inside the slab; FOREST/OCEAN use a thin Baseplate
+		-- so the same sink is still visible from above.
 		local minBottomY = math.huge
 		for _, part in ipairs(model:GetDescendants()) do
 			if part:IsA("BasePart") then
-				local b = part.Position.Y - part.Size.Y * 0.5
-				if b < minBottomY then minBottomY = b end
+				part.Anchored   = true
+				part.CanCollide = false
+				local cf  = part.CFrame
+				local hsx = part.Size.X * 0.5
+				local hsy = part.Size.Y * 0.5
+				local hsz = part.Size.Z * 0.5
+				for sx = -1, 1, 2 do
+					for sy = -1, 1, 2 do
+						for sz = -1, 1, 2 do
+							local corner = cf * Vector3.new(sx * hsx, sy * hsy, sz * hsz)
+							if corner.Y < minBottomY then minBottomY = corner.Y end
+						end
+					end
+				end
 			end
 		end
 		local deltaPos = Vector3.new(
@@ -175,9 +205,7 @@ local function _spawnItems(biome)
 		)
 		for _, part in ipairs(model:GetDescendants()) do
 			if part:IsA("BasePart") then
-				part.CFrame     = part.CFrame + deltaPos
-				part.Anchored   = true
-				part.CanCollide = false
+				part.CFrame = part.CFrame + deltaPos
 			end
 		end
 
@@ -199,40 +227,6 @@ local function _spawnItems(biome)
 		if not visualOk then
 			warn("[FarmingManager] VisualUpgrader error for '" .. entry.name .. "': " .. tostring(visualErr))
 		end
-
-		-- Billboard label above item (always visible)
-		local billboard = Instance.new("BillboardGui")
-		billboard.Size         = UDim2.new(0, 120, 0, 44)
-		billboard.StudsOffset  = Vector3.new(0, 3.5, 0)
-		billboard.AlwaysOnTop  = false
-		billboard.ResetOnSpawn = false
-		billboard.Parent       = primary
-
-		local icon = Instance.new("TextLabel")
-		icon.Size             = UDim2.new(1, 0, 0.55, 0)
-		icon.BackgroundTransparency = 1
-		icon.Text             = (cfg.icon or "?")
-		icon.TextScaled       = true
-		icon.Font             = Enum.Font.GothamBold
-		icon.TextColor3       = Color3.new(1, 1, 1)
-		icon.Parent           = billboard
-
-		local nameLbl = Instance.new("TextLabel")
-		nameLbl.Size          = UDim2.new(1, 0, 0.45, 0)
-		nameLbl.Position      = UDim2.new(0, 0, 0.55, 0)
-		nameLbl.BackgroundTransparency = 1
-		nameLbl.Text          = entry.name
-		nameLbl.TextScaled    = true
-		nameLbl.Font          = Enum.Font.Gotham
-		local rarityColour = ({
-			Common   = Color3.fromRGB(200, 200, 200),
-			Uncommon = Color3.fromRGB(80,  200, 80),
-			Rare     = Color3.fromRGB(100, 160, 255),
-			Epic     = Color3.fromRGB(200, 100, 255),
-		})[entry.rarity] or Color3.new(1,1,1)
-		nameLbl.TextColor3    = rarityColour
-		nameLbl.TextStrokeTransparency = 0.4
-		nameLbl.Parent        = billboard
 
 		-- Unique ID per item so _items keys never collide regardless of part name.
 		-- tostring(part) returns the part's Name which is identical for all items

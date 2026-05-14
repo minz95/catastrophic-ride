@@ -196,15 +196,7 @@ ItemConfig["Watering Can"] = {
 }
 
 -- Big Gear removed in #88: power=8 too low for Uncommon, single gear doesn't read as engine visually
-
-ItemConfig["Wind Turbine"] = {
-	slotType   = "ENGINE",
-	rarity     = R.UNCOMMON,
-	power      = 15,
-	icon       = "🌪️",
-	shape      = "windturbine",
-	biomeBonus = { SKY = 1.35 },
-}
+-- Wind Turbine removed: never modeled, item not in roster
 
 ItemConfig["Leaf Blower"] = {
 	slotType   = "ENGINE",
