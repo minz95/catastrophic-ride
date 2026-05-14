@@ -10,7 +10,7 @@ BiomeConfig["FOREST"] = {
 	mapPath        = "Workspace.Maps.ForestMap",
 	vehicleType    = "Car",
 	mobilitySlot   = "WHEELS",
-	raceStartZ     = 195,   -- just before track node[1] at Z=175
+	raceStartZ     = 590,   -- just before track node[1] at Z=600 (Constants.TRACK.FOREST.zStart)
 	raceStartY     = 2,
 	skyboxId       = "rbxassetid://0",          -- TODO: replace with asset IDs
 	ambientSoundId = "rbxassetid://0",          -- TODO
