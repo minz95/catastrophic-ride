@@ -335,24 +335,28 @@ local function buildCar(model, stats, palette, slots)
 		model
 	).Name = "Cabin"
 
-	-- Wheels (scaled by stability → grip feel)
+	-- Wheels (scaled by stability → grip feel). Skipped when MOBILITY filled —
+	-- _attachSlotItem will mount the chosen item via the "wheels4" pattern at
+	-- the four wheel positions instead, so we'd otherwise have duplicates.
 	local wheelR  = statScale(stats.stability, 0.38, 0.58)
 	local wheelW  = 0.28
 	local xOff    = bodyW / 2 + wheelW / 2 + 0.05
 	local zOff    = bodyL / 2 - wheelR - 0.1
 	local wheelColour = Color3.fromRGB(40, 40, 40)
 
-	for _, sign in ipairs({ 1, -1 }) do          -- left / right
-		for _, fwd in ipairs({ 1, -1 }) do        -- front / rear
-			local w = cylinder(
-				wheelR, wheelW,
-				CFrame.new(sign * xOff, wheelR, fwd * zOff)
-					* CFrame.Angles(0, 0, math.pi / 2),
-				wheelColour,
-				model
-			)
-			w.Name = "Wheel"
-			weld(chassis, w)
+	if not (slots and slots.MOBILITY) then
+		for _, sign in ipairs({ 1, -1 }) do          -- left / right
+			for _, fwd in ipairs({ 1, -1 }) do        -- front / rear
+				local w = cylinder(
+					wheelR, wheelW,
+					CFrame.new(sign * xOff, wheelR, fwd * zOff)
+						* CFrame.Angles(0, 0, math.pi / 2),
+					wheelColour,
+					model
+				)
+				w.Name = "Wheel"
+				weld(chassis, w)
+			end
 		end
 	end
 
@@ -375,7 +379,7 @@ local function buildCar(model, stats, palette, slots)
 	attach("HeadMount",    CFrame.new(0,     bodyH,       zOff + 0.4),  chassis)
 	attach("TailMount",    CFrame.new(0,     bodyH,      -zOff - 0.4),  chassis)
 
-	return chassis
+	return chassis, Vector3.new(bodyW, bodyH, bodyL)
 end
 
 -- ─── OCEAN → Boat ─────────────────────────────────────────────────────────────
@@ -415,8 +419,12 @@ local function buildBoat(model, stats, palette, slots)
 		model
 	).Name = "Deck"
 
-	-- Mast (if sail slot filled)
-	if slots and slots.MOBILITY then
+	-- Procedural mast + sail. Built only when MOBILITY is empty so the boat
+	-- still has *something* up top. When MOBILITY is filled, _attachSlotItem
+	-- with the "sail" pattern places the chosen item there instead.
+	-- Pre-PR-C this condition was inverted (built only when MOBILITY filled,
+	-- as a backdrop for the small decoration) — that decoration is gone now.
+	if not (slots and slots.MOBILITY) then
 		local mastH = statScale(stats.floatability, 3.0, 5.5)
 		local mast  = cylinder(
 			0.12, mastH,
@@ -458,7 +466,7 @@ local function buildBoat(model, stats, palette, slots)
 	attach("HeadMount",    CFrame.new(0,    hullH + 0.3,  hullL * 0.5 + 0.2), hull)
 	attach("TailMount",    CFrame.new(0,    hullH * 0.5, -hullL * 0.5 - 0.2), hull)
 
-	return hull
+	return hull, Vector3.new(hullW, hullH, hullL)
 end
 
 -- ─── SKY → Flying Vehicle ─────────────────────────────────────────────────────
@@ -501,16 +509,19 @@ local function buildFlyer(model, stats, palette, slots)
 	nosePart.Parent = model
 	weld(fuse, nosePart)
 
-	-- Wings (sideways, slightly toward the rear)
+	-- Wings (sideways, slightly toward the rear). Skipped when MOBILITY filled —
+	-- _attachSlotItem with the "wings2" pattern mounts the chosen item there.
 	local wingH = fuseR * 0.3
-	for _, side in ipairs({ 1, -1 }) do
-		local wing = Instance.new("WedgePart")
-		wing.Size   = Vector3.new(wingSpan / 2, wingH, fuseR * 2.5)
-		wing.CFrame = CFrame.new(side * (wingSpan / 4 + fuseR), 0, fuseL * 0.1)
-		wing.Color  = palette.accent
-		wing.Material = Enum.Material.SmoothPlastic
-		wing.Parent = model
-		weld(fuse, wing)
+	if not (slots and slots.MOBILITY) then
+		for _, side in ipairs({ 1, -1 }) do
+			local wing = Instance.new("WedgePart")
+			wing.Size   = Vector3.new(wingSpan / 2, wingH, fuseR * 2.5)
+			wing.CFrame = CFrame.new(side * (wingSpan / 4 + fuseR), 0, fuseL * 0.1)
+			wing.Color  = palette.accent
+			wing.Material = Enum.Material.SmoothPlastic
+			wing.Parent = model
+			weld(fuse, wing)
+		end
 	end
 
 	-- Tail fins (rear, +Z)
@@ -542,32 +553,122 @@ local function buildFlyer(model, stats, palette, slots)
 	attach("HeadMount",    CFrame.new(0,    fuseR * 0.5, -(fuseL * 0.5 + fuseR * 1.5)),         fuse)
 	attach("TailMount",    CFrame.new(0,    0,          fuseL * 0.5),                           fuse)
 
-	return fuse
+	-- bbox proxy: width = wingSpan when wings exist, otherwise fuseR*2.
+	-- _attachSlotItem reads X from this to spread wings/wheels — when wings
+	-- are suppressed (MOBILITY filled), the chosen item should be placed at
+	-- the wing extent, so report wingSpan unconditionally.
+	return fuse, Vector3.new(wingSpan, fuseR * 2, fuseL)
 end
 
--- ─── Attach item visuals ──────────────────────────────────────────────────────
+-- ─── Slot mount pattern dispatch ─────────────────────────────────────────────
+-- Each pattern returns a list of local CFrames (relative to anchor) for where
+-- the cloned item should be placed. _attachSlotItem then clones one item per
+-- transform, applies it, and welds to the anchor.
 
-local function _attachItems(model, primaryPart, slots)
-	local mountNames = {
-		BODY     = "BodyMount",
-		ENGINE   = "EngineMount",
-		SPECIAL  = "SpecialMount",
-		MOBILITY = "MobilityMount",
-		HEAD     = "HeadMount",
-		TAIL     = "TailMount",
+local function _rotCF(rot)
+	return CFrame.Angles(math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z))
+end
+
+local function _patternSingle(mount, bboxSize)
+	return { CFrame.new(mount.offset) * _rotCF(mount.rot) }
+end
+
+local function _patternWheels4(mount, bboxSize)
+	-- 4 wheels at corners of bbox X-Z plane, slightly below body bottom.
+	local x = bboxSize.X * 0.55 + mount.scale * 0.1
+	local z = bboxSize.Z * 0.40
+	local y = -bboxSize.Y * 0.5 + mount.offset.Y
+	local rotCF = _rotCF(mount.rot)
+	return {
+		CFrame.new( x, y,  z) * rotCF,
+		CFrame.new( x, y, -z) * rotCF,
+		CFrame.new(-x, y,  z) * rotCF,
+		CFrame.new(-x, y, -z) * rotCF,
 	}
+end
 
-	for slotName, mountName in pairs(mountNames) do
+local function _patternWings2(mount, bboxSize)
+	-- 2 wings extending out on +X and -X. -X wing is mirrored 180° around Y so
+	-- asymmetric wing meshes still point outward.
+	local x = bboxSize.X * 0.5 + mount.scale * 0.5
+	local rotR = _rotCF(mount.rot)
+	local rotL = _rotCF(Vector3.new(mount.rot.X, mount.rot.Y + 180, mount.rot.Z))
+	return {
+		CFrame.new( x, mount.offset.Y, mount.offset.Z) * rotR,
+		CFrame.new(-x, mount.offset.Y, mount.offset.Z) * rotL,
+	}
+end
+
+local PATTERN_DISPATCH = {
+	wheels4 = _patternWheels4,
+	wings2  = _patternWings2,
+	sail    = _patternSingle,  -- sail = single clone, just placed high; scale handles tall look
+	single  = _patternSingle,
+}
+
+local SLOT_TO_MOUNT = {
+	BODY     = "BodyMount",
+	ENGINE   = "EngineMount",
+	SPECIAL  = "SpecialMount",
+	MOBILITY = "MobilityMount",
+	HEAD     = "HeadMount",
+	TAIL     = "TailMount",
+}
+
+local function _attachSlotItem(slotName, itemName, model, anchor, biome, bboxSize)
+	local mount = SlotMountConfig.get(slotName, biome)
+	if not mount or not anchor then return end
+
+	local dispatch = PATTERN_DISPATCH[mount.pattern] or _patternSingle
+	local transforms = dispatch(mount, bboxSize)
+
+	for _, localCF in ipairs(transforms) do
+		local clone = _loadItemModel(itemName, mount.scale)
+		if clone then
+			-- clone is bbox-centred at origin → multiplying each part's CFrame
+			-- by localCF translates+rotates the whole assembly to the target
+			-- local pose. anchor sits at world origin during build, so local
+			-- CFrame == world CFrame here; SetPrimaryPartCFrame later moves
+			-- the welded assembly together.
+			for _, p in ipairs(clone:GetDescendants()) do
+				if p:IsA("BasePart") then
+					p.CFrame     = localCF * p.CFrame
+					p.CanCollide = false
+					p.Anchored   = false
+				end
+			end
+			for _, c in ipairs(clone:GetChildren()) do
+				c.Parent = model
+			end
+			-- Weld every BasePart of the relocated clone to the anchor —
+			-- _attachItems runs *after* the main weld loop in build(), so any
+			-- parts we add here need their own welds.
+			for _, p in ipairs(model:GetDescendants()) do
+				if p:IsA("BasePart") and p ~= anchor then
+					local hasWeld = false
+					for _, ch in ipairs(p:GetChildren()) do
+						if ch:IsA("WeldConstraint") then hasWeld = true; break end
+					end
+					if not hasWeld then weld(anchor, p) end
+				end
+			end
+			clone:Destroy()
+		else
+			-- No FBX template — fall back to a single coloured-block visual at
+			-- the first transform so the slot is at least visually marked.
+			local worldCF = anchor.CFrame * localCF
+			local visPart = itemVisual(itemName, worldCF, model)
+			if visPart then weld(anchor, visPart) end
+			break
+		end
+	end
+end
+
+local function _attachItems(model, primaryPart, slots, biome, bboxSize)
+	for slotName, _ in pairs(SLOT_TO_MOUNT) do
 		local itemName = slots[slotName]
-		if not itemName then continue end
-
-		local att = primaryPart:FindFirstChild(mountName)
-		if not att then continue end
-
-		local worldCF = primaryPart.CFrame * att.CFrame
-		local visPart = itemVisual(itemName, worldCF, model)
-		if visPart then
-			weld(primaryPart, visPart)
+		if itemName then
+			_attachSlotItem(slotName, itemName, model, primaryPart, biome, bboxSize)
 		end
 	end
 end
@@ -613,27 +714,30 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 
 	local palette = BIOME_PALETTE[biome] or BIOME_PALETTE.FOREST
 	local primaryPart
+	local bboxSize
 	local bodyDriven = false
 
 	-- BODY slot drives the chassis when filled and the item has a template.
 	-- Falls through to procedural builders if either condition fails — preserves
 	-- behaviour for empty crafts and item-template gaps.
 	if slots.BODY then
-		primaryPart = _buildChassisFromBody(model, biome, slots, palette, stats)
+		primaryPart, bboxSize = _buildChassisFromBody(model, biome, slots, palette, stats)
 		bodyDriven  = primaryPart ~= nil
 	end
 
 	if not primaryPart then
 		if biome == "FOREST" then
-			primaryPart = buildCar(model, stats, palette, slots)
+			primaryPart, bboxSize = buildCar(model, stats, palette, slots)
 		elseif biome == "OCEAN" then
-			primaryPart = buildBoat(model, stats, palette, slots)
+			primaryPart, bboxSize = buildBoat(model, stats, palette, slots)
 		elseif biome == "SKY" then
-			primaryPart = buildFlyer(model, stats, palette, slots)
+			primaryPart, bboxSize = buildFlyer(model, stats, palette, slots)
 		else
-			primaryPart = buildCar(model, stats, palette, slots)
+			primaryPart, bboxSize = buildCar(model, stats, palette, slots)
 		end
 	end
+
+	bboxSize = bboxSize or Vector3.new(4, 1.5, 5)
 
 	-- Weld all loose parts to chassis; only chassis keeps CanCollide=true.
 	-- Cabin, decorations, and VehicleSeat must be non-collidable so the
@@ -661,7 +765,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 			if k ~= "BODY" then visualSlots[k] = v end
 		end
 	end
-	_attachItems(model, primaryPart, visualSlots)
+	_attachItems(model, primaryPart, visualSlots, biome, bboxSize)
 
 	-- Visual flair from stats
 	_applyStatVisuals(model, stats, palette)
