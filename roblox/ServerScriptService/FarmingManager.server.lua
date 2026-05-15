@@ -228,6 +228,33 @@ local function _spawnItems(biome)
 			warn("[FarmingManager] VisualUpgrader error for '" .. entry.name .. "': " .. tostring(visualErr))
 		end
 
+		-- Name label so players can identify items at a glance. Compact compared
+		-- to the earlier billboard (removed in 386ae87) — single line, rarity-coloured.
+		local cfg = ItemConfig[entry.name] or {}
+		local billboard = Instance.new("BillboardGui")
+		billboard.Name           = "NameTag"
+		billboard.Size           = UDim2.new(0, 110, 0, 22)
+		billboard.StudsOffset    = Vector3.new(0, 2.4, 0)
+		billboard.AlwaysOnTop    = false
+		billboard.MaxDistance    = 35   -- only visible up close so distant items don't clutter
+		billboard.LightInfluence = 0
+		billboard.Parent         = primary
+
+		local nameLbl = Instance.new("TextLabel")
+		nameLbl.Size                    = UDim2.fromScale(1, 1)
+		nameLbl.BackgroundTransparency  = 1
+		nameLbl.Text                    = (cfg.icon and (cfg.icon .. " ") or "") .. entry.name
+		nameLbl.TextScaled              = true
+		nameLbl.Font                    = Enum.Font.GothamBold
+		nameLbl.TextStrokeTransparency  = 0.4
+		nameLbl.TextColor3              = ({
+			Common   = Color3.fromRGB(220, 220, 220),
+			Uncommon = Color3.fromRGB(110, 230, 110),
+			Rare     = Color3.fromRGB(120, 170, 255),
+			Epic     = Color3.fromRGB(210, 130, 255),
+		})[entry.rarity] or Color3.new(1, 1, 1)
+		nameLbl.Parent                  = billboard
+
 		-- Unique ID per item so _items keys never collide regardless of part name.
 		-- tostring(part) returns the part's Name which is identical for all items
 		-- built by the same builder (e.g. every barrel's primary is named "Body").
