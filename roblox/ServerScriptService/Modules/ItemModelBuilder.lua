@@ -1003,19 +1003,24 @@ local BUILDERS = {
 	["Red Sofa"]       = _buildSofa,
 	["Microwave"]      = _buildMicrowave,
 	["Bathtub"]        = _buildBathtub,
-	-- ENGINE (12): Fan + Hand Mixer added in #89/#116; Shovel + Big Gear + Wind Turbine removed
-	["Fan"]            = _buildFan,
-	["Flower"]         = _buildFlower,
-	["Pinwheel"]       = _buildPinwheel,
-	["Watering Can"]   = _buildWateringCan,
-	["Drill"]          = _buildDrill,
-	["Leaf Blower"]    = _buildLeafBlower,
-	["Spinning Top"]   = _buildSpinningTop,
-	["Propeller"]      = _buildPropeller,
-	["V8 Engine"]      = _buildV8Engine,
-	["Rocket"]         = _buildRocket,
-	["Cup Noodle"]     = _buildCupNoodle,
-	["Kettle"]         = _buildKettle,
+	-- ENGINE (12): 6 renamed in 8f35e80 (Leaf Blower→Hair Dryer, Pinwheel→Alarm
+	-- Clock, Propeller→Propeller Hat, Spinning Top→Compass, V8 Engine→Treadmill,
+	-- Watering Can→Magnifying Glass). The procedural builder shapes don't match
+	-- the new names but at least the items have *some* visible mesh now instead
+	-- of falling to the unbuilt grey-cube fallback. Replace these procedurals
+	-- with the matching FBX once each is imported into ServerStorage.ItemMeshes.
+	["Fan"]               = _buildFan,
+	["Flower"]            = _buildFlower,
+	["Alarm Clock"]       = _buildPinwheel,
+	["Magnifying Glass"]  = _buildWateringCan,
+	["Drill"]             = _buildDrill,
+	["Hair Dryer"]        = _buildLeafBlower,
+	["Compass"]           = _buildSpinningTop,
+	["Propeller Hat"]     = _buildPropeller,
+	["Treadmill"]         = _buildV8Engine,
+	["Rocket"]            = _buildRocket,
+	["Cup Noodle"]        = _buildCupNoodle,
+	["Kettle"]            = _buildKettle,
 	-- SPECIAL (14): Oil Can/Boombox/Bubble Wrap/Firework removed in SPECIAL overhaul;
 	-- Gas Can/Lantern/Camera/Magic Wand/Trophy use FBX-only (fallback = labeled cube)
 	["Pizza"]          = _buildPizza,
