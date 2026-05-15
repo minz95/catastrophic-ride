@@ -429,14 +429,28 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 		end
 	end
 
-	-- Distance check
+	-- Distance check — measured to the closest BasePart in the model, not just
+	-- PrimaryPart. FBX-imported models can have PrimaryPart offset from the
+	-- visible mesh; using the model's nearest point matches the client-side
+	-- prompt range and avoids "denied: too far" when the player is clearly
+	-- touching the item.
 	local char = player.Character
 	local root = char and char:FindFirstChild("HumanoidRootPart")
 	if not root then return "denied: no character" end
 
-	local dist = (root.Position - item.part.Position).Magnitude
-	if dist > Constants.PICKUP_RANGE then
-		return "denied: too far (" .. math.floor(dist) .. " studs)"
+	local closestDist = math.huge
+	if item.model then
+		for _, p in ipairs(item.model:GetDescendants()) do
+			if p:IsA("BasePart") then
+				local d = (root.Position - p.Position).Magnitude
+				if d < closestDist then closestDist = d end
+			end
+		end
+	else
+		closestDist = (root.Position - item.part.Position).Magnitude
+	end
+	if closestDist > Constants.PICKUP_RANGE then
+		return "denied: too far (" .. math.floor(closestDist) .. " studs)"
 	end
 
 	-- Check if another player is also in range → start contest

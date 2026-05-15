@@ -202,11 +202,42 @@ end
 
 -- ─── Show toast ───────────────────────────────────────────────────────────────
 
-local _toastTimer = nil
+local _toastTimer  = nil
+local _toastHideTimer = nil
+
+local function _hideToast()
+	if _toastTimer then
+		pcall(task.cancel, _toastTimer)
+		_toastTimer = nil
+	end
+	if _toastHideTimer then
+		pcall(task.cancel, _toastHideTimer)
+		_toastHideTimer = nil
+	end
+	if not toastFrame.Visible then return end
+	TweenService:Create(toastFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		Position = UDim2.new(0.5, -180, 0, 40)
+	}):Play()
+	_toastHideTimer = task.delay(0.25, function()
+		toastFrame.Visible = false
+		_toastHideTimer = nil
+	end)
+end
 
 local function _showToast(phase)
 	local guide = PHASE_GUIDES[phase]
-	if not guide then return end
+	if not guide then
+		-- Phases without a guide (e.g. RESULTS, LOBBY) should clear any
+		-- lingering toast so it doesn't persist across phase changes.
+		_hideToast()
+		return
+	end
+
+	-- Cancel any pending hide so we don't immediately tween the new toast away.
+	if _toastHideTimer then
+		pcall(task.cancel, _toastHideTimer)
+		_toastHideTimer = nil
+	end
 
 	-- Populate content
 	toastAccent.BackgroundColor3 = guide.colour
@@ -227,14 +258,22 @@ local function _showToast(phase)
 	}):Play()
 
 	-- Auto-hide after 7s
-	if _toastTimer then task.cancel(_toastTimer) end
+	if _toastTimer then pcall(task.cancel, _toastTimer) end
 	_toastTimer = task.delay(7, function()
-		TweenService:Create(toastFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-			Position = UDim2.new(0.5, -180, 0, 40)
-		}):Play()
-		task.delay(0.3, function() toastFrame.Visible = false end)
+		_toastTimer = nil
+		_hideToast()
 	end)
 end
+
+-- Click anywhere on the toast to dismiss early.
+local clickCatcher = Instance.new("TextButton")
+clickCatcher.Size                  = UDim2.fromScale(1, 1)
+clickCatcher.BackgroundTransparency = 1
+clickCatcher.Text                  = ""
+clickCatcher.AutoButtonColor       = false
+clickCatcher.ZIndex                = 10
+clickCatcher.Parent                = toastFrame
+clickCatcher.Activated:Connect(_hideToast)
 
 -- ─── Full reference panel (F1 toggle) ────────────────────────────────────────
 

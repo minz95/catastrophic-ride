@@ -172,12 +172,34 @@ GameManager.onPhaseChanged(function(phase, biome)
 					if seat then
 						print(string.format("[CraftingManager] Vehicle for %s spawned at %s | seat=%s",
 							player.Name, tostring(primary and primary.Position), tostring(seat)))
-						-- Seat player BEFORE firing VehicleSpawned so the drive loop
-						-- starts only after the character is already welded to the seat.
-						if player.Character then
-							seat:Sit(player.Character:FindFirstChild("Humanoid"))
+
+						-- Wait for character + humanoid to be ready. RACING can
+						-- start while the player is mid-respawn from the FARMING/
+						-- CRAFTING transition; firing Sit before the humanoid
+						-- exists silently fails and leaves the player standing
+						-- on the spawn pad with the vehicle invisible underneath.
+						local humanoid = nil
+						local deadline = tick() + 2
+						repeat
+							humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+							if not humanoid then task.wait(0.05) end
+						until humanoid or tick() > deadline
+
+						if humanoid then
+							seat:Sit(humanoid)
+							task.wait(0.15)  -- let weld settle
+							-- Verify the sit actually took. Humanoid.Sit becomes
+							-- true once Roblox wires up the SeatWeld; if it's
+							-- still false the seat:Sit silently failed (common
+							-- if the humanoid was mid-Climb/Jump). Retry once.
+							if not humanoid.Sit then
+								seat:Sit(humanoid)
+								task.wait(0.1)
+							end
+						else
+							warn("[CraftingManager] Humanoid never ready for", player.Name)
 						end
-						task.wait(0.1)  -- let weld settle
+
 						RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
 						-- Unanchor after sit takes effect so vehicle can move
 						task.wait(0.1)

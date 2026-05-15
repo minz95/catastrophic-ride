@@ -338,16 +338,22 @@ local function _driveLoop()
 	local turnSpeed = _seat and _seat.TurnSpeed or 1
 	local throttle, steer
 
-	if _biome == "SKY" then
-		throttle = 0
-		if _keys.W or _keys.Up   then throttle =  1 end
-		if _keys.S or _keys.Down then throttle = -0.5 end
-		steer = 0
-		if _keys.A or _keys.Left  then steer =  1 end
-		if _keys.D or _keys.Right then steer = -1 end
-		turnSpeed = math.min(turnSpeed, 1.5)
+	-- Detect SKY mode by the vehicle's HoverPosition constraint rather than
+	-- the _biome client variable. BiomeSelected can race against PhaseChanged
+	-- on client load and leave _biome nil/stale — but the vehicle is
+	-- authoritative about its own physics setup.
+	local hover = primary:FindFirstChild("HoverPosition")
+	local isSky = hover ~= nil
 
-		local hover = primary:FindFirstChild("HoverPosition")
+	throttle = 0
+	if _keys.W or _keys.Up   then throttle =  1 end
+	if _keys.S or _keys.Down then throttle = -0.5 end
+	steer = 0
+	if _keys.A or _keys.Left  then steer =  1 end
+	if _keys.D or _keys.Right then steer = -1 end
+
+	if isSky then
+		turnSpeed = math.min(turnSpeed, 1.5)
 		if hover then
 			local dt = 1 / 60
 			if _keys.Space then
@@ -357,13 +363,6 @@ local function _driveLoop()
 			end
 		end
 	else
-		if not _seat then return end
-		throttle = 0
-		if _keys.W or _keys.Up   then throttle =  1 end
-		if _keys.S or _keys.Down then throttle = -0.5 end
-		steer = 0
-		if _keys.A or _keys.Left  then steer =  1 end
-		if _keys.D or _keys.Right then steer = -1 end
 
 		local isSteering = _keys.A or _keys.D or _keys.Left or _keys.Right
 		if _keys.Shift and isSteering and not _drifting then
