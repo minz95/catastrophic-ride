@@ -6,10 +6,18 @@
 local ItemTypes = {}
 
 -- ─── Slot Types ───────────────────────────────────────────────────────────────
+-- BODY/ENGINE/SPECIAL are item categories (each ItemTypes.ALL entry has one of these).
+-- MOBILITY/HEAD/TAIL are vehicle slots — they accept items from any category and
+-- only differ in where the item gets mounted on the assembled vehicle (see
+-- SlotMountConfig.lua). Declared here so CraftingManager.slotAssignments and
+-- VehicleBuilder._attachSlotItem share identifier strings.
 ItemTypes.SlotType = {
-	BODY    = "BODY",
-	ENGINE  = "ENGINE",
-	SPECIAL = "SPECIAL",
+	BODY     = "BODY",
+	ENGINE   = "ENGINE",
+	SPECIAL  = "SPECIAL",
+	MOBILITY = "MOBILITY",
+	HEAD     = "HEAD",
+	TAIL     = "TAIL",
 }
 
 -- ─── Item Registry ─────────────────────────────────────────────────────────────

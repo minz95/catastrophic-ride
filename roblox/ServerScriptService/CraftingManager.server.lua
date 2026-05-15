@@ -144,7 +144,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 				local model = VehicleBuilder.build(
 					stats,
 					biome,
-					spawnGrid[i] or CFrame.new(i * 6, 2, 0)
+					spawnGrid[i] or CFrame.new(i * 6, 2, 0),
+					stats.slotAssignments
 				)
 
 				if model then
