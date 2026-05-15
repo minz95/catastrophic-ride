@@ -6,9 +6,10 @@
 
 local ServerStorage = game:GetService("ServerStorage")
 
-local Constants  = require(game.ReplicatedStorage.Shared.Constants)
-local ItemConfig = require(game.ServerScriptService.Modules.ItemConfig)
-local VehicleStats = require(game.ReplicatedStorage.Shared.VehicleStats)
+local Constants       = require(game.ReplicatedStorage.Shared.Constants)
+local ItemConfig      = require(game.ServerScriptService.Modules.ItemConfig)
+local VehicleStats    = require(game.ReplicatedStorage.Shared.VehicleStats)
+local SlotMountConfig = require(game.ReplicatedStorage.Shared.SlotMountConfig)
 
 local VehicleBuilder = {}
 
@@ -72,6 +73,166 @@ local function weld(part0, part1)
 	w.Part0  = part0
 	w.Part1  = part1
 	w.Parent = part0
+end
+
+-- ─── Item model loader (for BODY chassis + slot mounts) ──────────────────────
+-- Clones ServerStorage.ItemModels/<name>, rescales so the longest bbox axis
+-- equals targetStud, and returns the clone + final bbox Vector3. Returns nil
+-- if no template exists (caller falls back).
+
+local function _computeBBox(model)
+	local minV = Vector3.new(math.huge, math.huge, math.huge)
+	local maxV = Vector3.new(-math.huge, -math.huge, -math.huge)
+	for _, part in ipairs(model:GetDescendants()) do
+		if part:IsA("BasePart") then
+			local p = part.Position
+			local h = part.Size * 0.5
+			minV = Vector3.new(
+				math.min(minV.X, p.X - h.X),
+				math.min(minV.Y, p.Y - h.Y),
+				math.min(minV.Z, p.Z - h.Z))
+			maxV = Vector3.new(
+				math.max(maxV.X, p.X + h.X),
+				math.max(maxV.Y, p.Y + h.Y),
+				math.max(maxV.Z, p.Z + h.Z))
+		end
+	end
+	return minV, maxV
+end
+
+local function _loadItemModel(itemName, targetStud)
+	local templates = ServerStorage:FindFirstChild("ItemModels")
+	local tmpl      = templates and templates:FindFirstChild(itemName)
+	if not tmpl then return nil end
+
+	local clone = tmpl:Clone()
+
+	local minV, maxV = _computeBBox(clone)
+	if minV.X == math.huge then
+		clone:Destroy()
+		return nil
+	end
+
+	local extent = maxV - minV
+	local maxDim = math.max(extent.X, extent.Y, extent.Z)
+	local factor = (maxDim > 0) and (targetStud / maxDim) or 1
+	local center = (minV + maxV) * 0.5
+
+	-- Rescale around the bbox centroid so the model stays centred at origin.
+	-- Mirrors ItemModelPreloader's TARGET_MAX rescale (L75–112) — Model:ScaleTo()
+	-- breaks FBX-imported nested part positions in this codebase.
+	for _, part in ipairs(clone:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.Size = part.Size * factor
+			local rot = part.CFrame - part.CFrame.Position
+			local newPos = center + (part.Position - center) * factor
+			part.CFrame = rot + newPos
+		end
+	end
+
+	-- Re-centre clone so the bbox midpoint sits at (0,0,0) — anchors and mount
+	-- offsets are expressed relative to anchor origin, so the BODY/decoration
+	-- must start centred to avoid a constant offset bug.
+	local recentre = -((minV + maxV) * 0.5 * factor)
+	for _, part in ipairs(clone:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CFrame = part.CFrame + recentre
+		end
+	end
+
+	local finalSize = extent * factor
+	return clone, finalSize
+end
+
+-- ─── BODY-driven chassis ──────────────────────────────────────────────────────
+-- Replaces the procedural box with the player's BODY item as the visible body.
+-- A small hidden anchor stays as model.PrimaryPart so drive constraints,
+-- LookVector math, and camera follow stay decoupled from arbitrary FBX
+-- orientations (each item has a different "forward" axis).
+
+local function _buildChassisFromBody(model, biome, slots, palette, stats)
+	local mount = SlotMountConfig.get("BODY", biome)
+	if not mount then return nil end
+
+	local bodyName = slots.BODY
+	local bodyClone, bboxSize = _loadItemModel(bodyName, mount.scale)
+	if not bodyClone then return nil end
+
+	-- Hidden anchor at model origin. PrimaryPart for everyone (RacingClient,
+	-- RacingManager, drive loop) — keeps the contract stable regardless of
+	-- which item is BODY (each FBX has a different "forward" axis).
+	local anchor = Instance.new("Part")
+	anchor.Name           = "Chassis"
+	anchor.Size           = Vector3.new(1.6, 0.4, 1.6)
+	anchor.CFrame         = CFrame.new(0, 0, 0)
+	anchor.Transparency   = 1
+	anchor.CanCollide     = true
+	anchor.CanQuery       = false
+	anchor.TopSurface     = Enum.SurfaceType.Smooth
+	anchor.BottomSurface  = Enum.SurfaceType.Smooth
+	anchor.Anchored       = false
+	anchor.Parent         = model
+	model.PrimaryPart     = anchor
+
+	-- bodyClone is bbox-centred at (0,0,0). Translate it by mount.offset so the
+	-- BODY visual sits where SlotMountConfig says it should (typically slightly
+	-- above the anchor so wheels/sail will dangle below).
+	local bodyDelta = mount.offset
+	for _, p in ipairs(bodyClone:GetDescendants()) do
+		if p:IsA("BasePart") then
+			p.CFrame     = p.CFrame + bodyDelta
+			p.CanCollide = false
+			p.Anchored   = false
+		end
+	end
+	-- Re-parent children directly under `model` so SetPrimaryPartCFrame moves
+	-- them with the anchor. Then drop the now-empty wrapper.
+	for _, c in ipairs(bodyClone:GetChildren()) do
+		c.Parent = model
+	end
+	bodyClone:Destroy()
+
+	-- Weld every loose BasePart to the anchor so the assembly moves as one.
+	for _, p in ipairs(model:GetDescendants()) do
+		if p:IsA("BasePart") and p ~= anchor then
+			weld(anchor, p)
+		end
+	end
+
+	-- VehicleSeat — top of BODY bbox + clearance.
+	local seatY    = bodyDelta.Y + bboxSize.Y * 0.5 + 0.15
+	local seat = Instance.new("VehicleSeat")
+	seat.Size   = Vector3.new(1.4, 0.3, 1.4)
+	seat.CFrame = CFrame.new(0, seatY, 0)
+	seat.Color  = Color3.fromRGB(50, 50, 50)
+	seat.MaxSpeed  = math.clamp(stats.speed * 2.5, 20, 120)
+	seat.Torque    = math.clamp(stats.acceleration * 4, 20, 200)
+	seat.TurnSpeed = math.clamp((stats.stability or stats.floatability or stats.flyability or 20) * 0.3, 0.5, 3)
+	seat.Parent = model
+	weld(anchor, seat)
+
+	-- Mount Attachments — sized to bbox so HEAD/TAIL etc. land at silhouette edges.
+	-- Conventions match the legacy procedural builders:
+	--   FOREST/OCEAN: +Z = rear, -Z = front
+	--   SKY:          -Z = forward (LookVector), +Z = rear (see buildFlyer L329)
+	local hx = bboxSize.X * 0.5
+	local hy = bboxSize.Y * 0.5
+	local hz = bboxSize.Z * 0.5
+	local function _att(name, lx, ly, lz)
+		local a = Instance.new("Attachment")
+		a.Name   = name
+		a.CFrame = CFrame.new(lx, ly, lz)
+		a.Parent = anchor
+		return a
+	end
+	_att("BodyMount",     0,  bodyDelta.Y + hy + 0.2, 0)
+	_att("EngineMount",   0,  bodyDelta.Y,            hz * 0.8)
+	_att("SpecialMount",  0,  bodyDelta.Y + hy + 0.2, hz * 0.3)
+	_att("MobilityMount", 0,  bodyDelta.Y - hy + 0.1, 0)
+	_att("HeadMount",     0,  bodyDelta.Y + hy * 0.6, -hz * 1.1)
+	_att("TailMount",     0,  bodyDelta.Y + hy * 0.6,  hz * 1.1)
+
+	return anchor, bboxSize
 end
 
 -- ─── Item visual (coloured block representing the item) ───────────────────────
@@ -452,15 +613,26 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 
 	local palette = BIOME_PALETTE[biome] or BIOME_PALETTE.FOREST
 	local primaryPart
+	local bodyDriven = false
 
-	if biome == "FOREST" then
-		primaryPart = buildCar(model, stats, palette, slots)
-	elseif biome == "OCEAN" then
-		primaryPart = buildBoat(model, stats, palette, slots)
-	elseif biome == "SKY" then
-		primaryPart = buildFlyer(model, stats, palette, slots)
-	else
-		primaryPart = buildCar(model, stats, palette, slots)
+	-- BODY slot drives the chassis when filled and the item has a template.
+	-- Falls through to procedural builders if either condition fails — preserves
+	-- behaviour for empty crafts and item-template gaps.
+	if slots.BODY then
+		primaryPart = _buildChassisFromBody(model, biome, slots, palette, stats)
+		bodyDriven  = primaryPart ~= nil
+	end
+
+	if not primaryPart then
+		if biome == "FOREST" then
+			primaryPart = buildCar(model, stats, palette, slots)
+		elseif biome == "OCEAN" then
+			primaryPart = buildBoat(model, stats, palette, slots)
+		elseif biome == "SKY" then
+			primaryPart = buildFlyer(model, stats, palette, slots)
+		else
+			primaryPart = buildCar(model, stats, palette, slots)
+		end
 	end
 
 	-- Weld all loose parts to chassis; only chassis keeps CanCollide=true.
@@ -479,8 +651,17 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 		end
 	end
 
-	-- Attach item visuals at mount points
-	_attachItems(model, primaryPart, slots)
+	-- Attach item visuals at mount points. When the BODY drove the chassis, the
+	-- BODY model is already mounted as the visible body — don't re-attach it as
+	-- a decoration or it stacks a second copy on the BodyMount attachment.
+	local visualSlots = slots
+	if bodyDriven then
+		visualSlots = {}
+		for k, v in pairs(slots) do
+			if k ~= "BODY" then visualSlots[k] = v end
+		end
+	end
+	_attachItems(model, primaryPart, visualSlots)
 
 	-- Visual flair from stats
 	_applyStatVisuals(model, stats, palette)
