@@ -245,24 +245,24 @@ AbilityConfig["Flower"] = {
 -- Big Gear removed in #88 (power=8 underwhelming, single gear doesn't read as engine)
 -- Wind Turbine removed: never modeled, item not in roster
 
-AbilityConfig["Propeller"] = {
+AbilityConfig["Propeller Hat"] = {
 	cooldown    = 12,
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "hover",        -- BodyForce upward; ignore ground hazards
 	animKey     = "propHover",
 	sfxKey      = "propeller_spin",
-	uiHint      = "🚁 Hover!",
+	uiHint      = "🎩 Hover!",
 }
 
-AbilityConfig["V8 Engine"] = {
+AbilityConfig["Treadmill"] = {
 	cooldown    = 12,
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "redline",      -- instant max speed; A/D disabled
 	animKey     = "v8Rev",
 	sfxKey      = "v8_roar",
-	uiHint      = "🏎️ Redline!",
+	uiHint      = "🏃 Redline!",
 }
 
 AbilityConfig["Kettle"] = {
@@ -295,7 +295,7 @@ AbilityConfig["Rocket"] = {
 	uiHint      = "🚀 IGNITE!",
 }
 
-AbilityConfig["Leaf Blower"] = {
+AbilityConfig["Hair Dryer"] = {
 	cooldown    = 18,
 	duration    = 1,
 	targetType  = "all_in_radius",
@@ -303,40 +303,40 @@ AbilityConfig["Leaf Blower"] = {
 	effectKey   = "windBlast",    -- pushes nearby vehicles laterally
 	animKey     = "leafBlowerOn",
 	sfxKey      = "leafblower_blast",
-	uiHint      = "💨 Blast!",
+	uiHint      = "💇 Blast!",
 }
 
-AbilityConfig["Watering Can"] = {
+AbilityConfig["Magnifying Glass"] = {
 	cooldown    = 15,
 	duration    = 2,
 	targetType  = "track_drop",
 	effectKey   = "waterPuddle",  -- OCEAN bonus: bigger + floatability drain
 	animKey     = "waterPour",
 	sfxKey      = "water_pour",
-	uiHint      = "🚿 Flood!",
+	uiHint      = "🔍 Flood!",
 	biomeEffect = {
 		OCEAN = { effectKey = "waterPuddleLarge", radius = 8, duration = 3 },
 	},
 }
 
-AbilityConfig["Spinning Top"] = {
+AbilityConfig["Compass"] = {
 	cooldown    = 12,
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "spinBurst",    -- high speed burst with random directional wobble
 	animKey     = "topSpin",
 	sfxKey      = "top_spin",
-	uiHint      = "🪀 Spin!",
+	uiHint      = "🧭 Spin!",
 }
 
-AbilityConfig["Pinwheel"] = {
+AbilityConfig["Alarm Clock"] = {
 	cooldown    = 14,
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "windRide",     -- strong biome bonus for SKY/OCEAN
 	animKey     = "pinwheelSpin",
 	sfxKey      = "pinwheel_spin",
-	uiHint      = "🌀 Wind!",
+	uiHint      = "⏰ Wind!",
 }
 
 -- ── BODY tier ─────────────────────────────────────────────────────────────────

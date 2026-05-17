@@ -177,60 +177,68 @@ ItemConfig["Flower"] = {
 	shape      = "flower",
 }
 
-ItemConfig["Pinwheel"] = {
+ItemConfig["Alarm Clock"] = {
 	slotType   = "ENGINE",
 	rarity     = R.COMMON,
 	power      = 13,
-	icon       = "🌀",
-	shape      = "pinwheel",
+	icon       = "⏰",
+	shape      = "alarmclock",
 	biomeBonus = { SKY = 1.40, OCEAN = 1.20 },
 }
 
-ItemConfig["Watering Can"] = {
+ItemConfig["Magnifying Glass"] = {
 	slotType   = "ENGINE",
 	rarity     = R.UNCOMMON,
 	power      = 18,
-	icon       = "🚿",
-	shape      = "wateringcan",
+	icon       = "🔍",
+	shape      = "magnifyingglass",
 	biomeBonus = { OCEAN = 1.35 },
 }
 
 -- Big Gear removed in #88: power=8 too low for Uncommon, single gear doesn't read as engine visually
 -- Wind Turbine removed: never modeled, item not in roster
 
-ItemConfig["Leaf Blower"] = {
+ItemConfig["Hair Dryer"] = {
 	slotType   = "ENGINE",
 	rarity     = R.UNCOMMON,
 	power      = 20,
-	icon       = "💨",
-	shape      = "leafblower",
+	icon       = "💇",
+	shape      = "hairdryer",
 	biomeBonus = { SKY = 1.30 },
 }
 
-ItemConfig["Spinning Top"] = {
+ItemConfig["Compass"] = {
 	slotType   = "ENGINE",
 	rarity     = R.RARE,
 	power      = 22,
-	icon       = "🪀",
-	shape      = "spinningtop",
-	-- high power but direction randomness penalty handled in AbilityConfig
+	icon       = "🧭",
+	shape      = "compass",
 }
 
-ItemConfig["Propeller"] = {
+ItemConfig["Propeller Hat"] = {
 	slotType   = "ENGINE",
 	rarity     = R.RARE,
 	power      = 15,
-	icon       = "🚁",
-	shape      = "propeller",
+	icon       = "🎩",
+	shape      = "propellerhat",
 	biomeBonus = { SKY = 1.20 },
 }
 
-ItemConfig["V8 Engine"] = {
+ItemConfig["Treadmill"] = {
 	slotType   = "ENGINE",
 	rarity     = R.RARE,
 	power      = 25,
-	icon       = "🏎️",
-	shape      = "engine",
+	icon       = "🏃",
+	shape      = "treadmill",
+}
+
+ItemConfig["Drill"] = {
+	slotType   = "ENGINE",
+	rarity     = R.RARE,
+	power      = 22,
+	icon       = "🪛",
+	shape      = "drill",
+	biomeBonus = { FOREST = 1.25 },
 }
 
 ItemConfig["Rocket"] = {
