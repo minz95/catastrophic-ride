@@ -97,6 +97,13 @@ local function itemVisual(itemName, attachCF, model)
 			if p:IsA("BasePart") then
 				p.CFrame     = delta * p.CFrame
 				p.CanCollide = false
+				-- Massless: items are decorations and must not contribute to the
+				-- assembly's mass distribution. FBX items have asymmetric mass
+				-- (e.g. Camera lens to one side); when weighted into the chassis
+				-- they shifted COM laterally, so BodyVelocity along LookVector
+				-- created torque around the offset COM and the vehicle spun in
+				-- place instead of driving forward.
+				p.Massless   = true
 			end
 		end
 		clone.Parent = model
@@ -106,7 +113,9 @@ local function itemVisual(itemName, attachCF, model)
 	-- Fallback: simple coloured block
 	local size = Vector3.new(0.9, 0.9, 0.9)
 	local part = block(size, attachCF, colour, Enum.Material.Neon, model)
-	part.Name  = "Item_" .. itemName
+	part.Name      = "Item_" .. itemName
+	part.CanCollide = false
+	part.Massless   = true
 
 	-- Label billboard
 	local bb = Instance.new("BillboardGui")
