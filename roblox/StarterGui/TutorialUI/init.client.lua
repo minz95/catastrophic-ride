@@ -266,14 +266,17 @@ local function _showToast(phase)
 end
 
 -- Click anywhere on the toast to dismiss early.
-local clickCatcher = Instance.new("TextButton")
-clickCatcher.Size                  = UDim2.fromScale(1, 1)
-clickCatcher.BackgroundTransparency = 1
-clickCatcher.Text                  = ""
-clickCatcher.AutoButtonColor       = false
-clickCatcher.ZIndex                = 10
-clickCatcher.Parent                = toastFrame
-clickCatcher.Activated:Connect(_hideToast)
+-- A child TextButton with Size=fromScale(1,1) would participate in the
+-- toastFrame's UIListLayout and push all the actual content (title, key
+-- rows, tip) out of the visible region — that's exactly the empty-toast
+-- bug introduced in #144. Listen for input on the frame itself instead.
+toastFrame.Active = true
+toastFrame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+		_hideToast()
+	end
+end)
 
 -- ─── Full reference panel (F1 toggle) ────────────────────────────────────────
 
