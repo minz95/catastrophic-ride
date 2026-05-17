@@ -304,9 +304,20 @@ local function _dropItem(player, slotIndex)
 	local mapModel = game.Workspace:FindFirstChild("Maps")
 		and game.Workspace.Maps:FindFirstChild(mapName)
 
+	-- Clone the preloaded FBX template the same way _spawnItems does. The
+	-- previous code went straight to ItemModelBuilder.build, which is the
+	-- procedural-cube fallback — so any item dropped via auto-swap or the
+	-- Q key reappeared as a white block instead of its real mesh.
 	local model
 	local ok, err = pcall(function()
-		model = ItemModelBuilder.build(itemName, mapModel or game.Workspace)
+		local itemModels = ServerStorage:FindFirstChild("ItemModels")
+		local prebuilt   = itemModels and itemModels:FindFirstChild(itemName)
+		if prebuilt then
+			model        = prebuilt:Clone()
+			model.Parent = mapModel or game.Workspace
+		else
+			model = ItemModelBuilder.build(itemName, mapModel or game.Workspace)
+		end
 	end)
 	if not ok or not model or not model.PrimaryPart then
 		if model then model:Destroy() end
@@ -315,11 +326,32 @@ local function _dropItem(player, slotIndex)
 	end
 
 	local primary = model.PrimaryPart
+	-- Anchor before translating: FBX clones come out with WeldConstraints,
+	-- and setting CFrame on an unanchored welded part snaps welds and
+	-- scatters children. Same precaution as _spawnItems.
+	for _, part in ipairs(model:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.Anchored   = true
+			part.CanCollide = false
+		end
+	end
+	-- 8-corner world-space bottom-Y so rotated subparts (common in FBX) sit
+	-- flush on the ground instead of half-buried.
 	local minBottomY = math.huge
 	for _, part in ipairs(model:GetDescendants()) do
 		if part:IsA("BasePart") then
-			local b = part.Position.Y - part.Size.Y * 0.5
-			if b < minBottomY then minBottomY = b end
+			local cf  = part.CFrame
+			local hsx = part.Size.X * 0.5
+			local hsy = part.Size.Y * 0.5
+			local hsz = part.Size.Z * 0.5
+			for sx = -1, 1, 2 do
+				for sy = -1, 1, 2 do
+					for sz = -1, 1, 2 do
+						local corner = cf * Vector3.new(sx * hsx, sy * hsy, sz * hsz)
+						if corner.Y < minBottomY then minBottomY = corner.Y end
+					end
+				end
+			end
 		end
 	end
 	local deltaPos = Vector3.new(
@@ -329,9 +361,7 @@ local function _dropItem(player, slotIndex)
 	)
 	for _, part in ipairs(model:GetDescendants()) do
 		if part:IsA("BasePart") then
-			part.CFrame     = part.CFrame + deltaPos
-			part.Anchored   = true
-			part.CanCollide = false
+			part.CFrame = part.CFrame + deltaPos
 		end
 	end
 
