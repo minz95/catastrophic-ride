@@ -101,31 +101,6 @@ local function _addSurfaceAppearance(part, matType)
 	sa.Parent = part
 end
 
--- ─── Glow ring ────────────────────────────────────────────────────────────────
-
-local function _addGlowRing(model, primary, colour)
-	local ring = Instance.new("Part")
-	ring.Name        = "GlowRing"
-	ring.Size        = Vector3.new(
-		primary.Size.X * 1.15,
-		primary.Size.Y * 0.08,
-		primary.Size.Z * 1.15
-	)
-	ring.CFrame      = primary.CFrame
-	ring.Color       = colour
-	ring.Material    = Enum.Material.Neon
-	ring.CanCollide  = false
-	ring.CastShadow  = false
-	ring.Transparency = 0.4
-	ring.Anchored    = false
-	ring.Parent      = model
-
-	local weld = Instance.new("WeldConstraint")
-	weld.Part0  = primary
-	weld.Part1  = ring
-	weld.Parent = model
-end
-
 -- ─── Particle emitter ────────────────────────────────────────────────────────
 
 local function _addParticleAura(primary, cfg)
@@ -259,10 +234,11 @@ function ItemVisualUpgrader.apply(model, rarity)
 		_upgradeReflectance(model, cfg.reflectance)
 	end
 
-	-- 2. Glow ring (Uncommon+)
-	if cfg.glowParts and cfg.glowColour then
-		_addGlowRing(model, primary, cfg.glowColour)
-	end
+	-- Glow ring removed: the thin neon band sat at primary.CFrame and cut
+	-- visually through FBX-imported items (e.g. a Camera with a bright green
+	-- band slicing through the lens). Rarity is now communicated by particle
+	-- aura (Rare+), reflectance bump (Uncommon+), and the rarity-coloured
+	-- name label rendered by FarmingClient's item label system.
 
 	-- 3. Particle aura (Rare+)
 	if cfg.particles then
