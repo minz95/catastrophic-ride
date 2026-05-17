@@ -80,15 +80,27 @@ local function _scanNearby()
 	local nearestPlayer = nil
 	local nearestPlayerDist = math.huge
 
-	-- Scan items: FarmingManager places a StringValue named "ItemName" on each
-	-- item's PrimaryPart, so we detect items by that value rather than by name prefix.
+	-- Scan items: FarmingManager places a StringValue named "ItemName" on the
+	-- item model's PrimaryPart. FBX-imported items can have the PrimaryPart
+	-- offset from the visible mesh center, so we walk up from any part returned
+	-- by the bounds check and resolve the containing item's PrimaryPart. This
+	-- way ANY part of the model touching the radius triggers detection.
+	local seenPrimary = {}
 	local parts = workspace:GetPartBoundsInRadius(root.Position, Constants.PICKUP_RANGE)
 	for _, part in ipairs(parts) do
-		if part:FindFirstChild("ItemName") then
-			local d = (part.Position - root.Position).Magnitude
-			if d < nearestItemDist then
-				nearestItemDist = d
-				nearestItem = part
+		local node = part
+		while node and node.Parent and not node:IsA("Model") do
+			node = node.Parent
+		end
+		if node and node:IsA("Model") and node.PrimaryPart then
+			local primary = node.PrimaryPart
+			if primary:FindFirstChild("ItemName") and not seenPrimary[primary] then
+				seenPrimary[primary] = true
+				local d = (primary.Position - root.Position).Magnitude
+				if d < nearestItemDist then
+					nearestItemDist = d
+					nearestItem = primary
+				end
 			end
 		end
 	end
