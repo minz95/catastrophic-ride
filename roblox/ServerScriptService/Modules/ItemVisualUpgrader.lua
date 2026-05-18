@@ -229,28 +229,13 @@ function ItemVisualUpgrader.apply(model, rarity)
 	local primary = model.PrimaryPart
 	if not primary then return end
 
-	-- 1. Reflectance
-	if cfg.reflectance > 0 then
-		_upgradeReflectance(model, cfg.reflectance)
-	end
+	-- All rarity-specific visual effects (reflectance bump, glow ring,
+	-- particle aura, Epic orbit orbs) are intentionally disabled. User
+	-- feedback: the highlighting on farmable items was distracting and
+	-- hard to read against FBX-imported geometry. Rarity is now signalled
+	-- only by the name-label colour rendered by FarmingClient.
 
-	-- Glow ring removed: the thin neon band sat at primary.CFrame and cut
-	-- visually through FBX-imported items (e.g. a Camera with a bright green
-	-- band slicing through the lens). Rarity is now communicated by particle
-	-- aura (Rare+), reflectance bump (Uncommon+), and the rarity-coloured
-	-- name label rendered by FarmingClient's item label system.
-
-	-- 3. Particle aura (Rare+)
-	if cfg.particles then
-		_addParticleAura(primary, cfg)
-	end
-
-	-- 4. Epic orbit orbs
-	if cfg.orbits then
-		_addEpicOrbs(model, primary)
-	end
-
-	-- 5. Idle float + rotate
+	-- Idle float + rotate keeps items feeling alive without colour highlight.
 	local floatConn = _addIdleFloat(primary, cfg)
 
 	return floatConn
