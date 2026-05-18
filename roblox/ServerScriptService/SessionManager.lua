@@ -146,6 +146,44 @@ local function _onPlayerRemoving(player)
 	print(string.format("[SessionManager] %s left — data cleaned up", player.Name))
 end
 
+-- ─── Per-round reset ──────────────────────────────────────────────────────────
+-- Destroy spawned vehicles and clear per-round state when a new cycle begins.
+-- Without this, the previous race's vehicle persisted in workspace and the
+-- player stayed seated in it (BodyAngularVelocity / SuspensionHover kept the
+-- chassis spinning in mid-air) when the FARMING phase of the next round
+-- started, so players showed up in the new farm area still glued to the old
+-- car.
+
+local function _resetForNewRound()
+	for _, data in pairs(PlayerData) do
+		if data.vehicleModel and data.vehicleModel.Parent then
+			data.vehicleModel:Destroy()
+		end
+		data.vehicleModel       = nil
+		data.vehicleStats       = nil
+		data.inventory          = {}
+		data.raceProgress       = 0
+		data.raceRank           = 0
+		data.finishTime         = nil
+		data.stealCooldownEnd   = 0
+		data.stealInvincibleEnd = 0
+	end
+
+	-- LoadCharacter respawns at SpawnLocation. Required because destroying the
+	-- VehicleSeat alone leaves the humanoid stranded mid-air where the seat
+	-- used to be (SKY especially — vehicle hovers at Y≈80 with no ground
+	-- beneath the player).
+	for _, player in ipairs(Players:GetPlayers()) do
+		pcall(function() player:LoadCharacter() end)
+	end
+end
+
+GameManager.onPhaseChanged(function(phase)
+	if phase == Constants.PHASES.LOBBY then
+		_resetForNewRound()
+	end
+end)
+
 -- ─── Wire up ──────────────────────────────────────────────────────────────────
 
 Players.PlayerAdded:Connect(_onPlayerAdded)
