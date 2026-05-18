@@ -53,7 +53,7 @@ ItemConfig["Skateboard"] = {
 	rarity         = R.UNCOMMON,
 	weight         = 3,
 	grip           = 0.25,
-	icon           = "🛹",
+	icon           = "⛸️",
 	shape          = "skateboard",
 	mobilityAffinity = { FOREST = true },
 }
@@ -63,7 +63,7 @@ ItemConfig["Log"] = {
 	rarity         = R.UNCOMMON,
 	weight         = 10,
 	grip           = 0.70,
-	icon           = "🪵",
+	icon           = "🌲",
 	shape          = "log",
 	biomeBonus     = { FOREST = 1.10 },
 	mobilityAffinity = { FOREST = true },
@@ -97,7 +97,7 @@ ItemConfig["Kite"] = {
 	weight         = 2,
 	grip           = 0.10,
 	flyabilityBonus = 2.5,     -- 2.5× flyability in SKY
-	icon           = "🪁",
+	icon           = "🎐",
 	shape          = "kite",
 	biomeBonus     = { SKY = 1.20 },
 	mobilityAffinity = { SKY = true },
@@ -110,7 +110,7 @@ ItemConfig["Suitcase"] = {
 	rarity         = R.RARE,
 	weight         = 9,
 	grip           = 0.60,
-	icon           = "🧳",
+	icon           = "💼",
 	shape          = "suitcase",
 	mobilityAffinity = {},
 }
@@ -140,7 +140,7 @@ ItemConfig["Microwave"] = {
 	rarity         = R.EPIC,
 	weight         = 15,
 	grip           = 0.90,
-	icon           = "🧊",
+	icon           = "📺",
 	shape          = "microwave",
 	mobilityAffinity = {},
 }
@@ -211,7 +211,7 @@ ItemConfig["Compass"] = {
 	slotType   = "ENGINE",
 	rarity     = R.RARE,
 	power      = 22,
-	icon       = "🧭",
+	icon       = "➡️",
 	shape      = "compass",
 }
 
@@ -236,7 +236,7 @@ ItemConfig["Drill"] = {
 	slotType   = "ENGINE",
 	rarity     = R.RARE,
 	power      = 22,
-	icon       = "🪛",
+	icon       = "🔧",
 	shape      = "drill",
 	biomeBonus = { FOREST = 1.25 },
 }
@@ -261,7 +261,7 @@ ItemConfig["Kettle"] = {
 	slotType   = "ENGINE",
 	rarity     = R.EPIC,
 	power      = 40,
-	icon       = "🫖",
+	icon       = "☕",
 	shape      = "kettle",
 }
 
@@ -296,7 +296,7 @@ ItemConfig["Toilet Paper"] = {
 	slotType   = "SPECIAL",
 	rarity     = R.COMMON,
 	boost      = 20,
-	icon       = "🧻",
+	icon       = "📜",
 	shape      = "roll",
 }
 
@@ -312,7 +312,7 @@ ItemConfig["Magnet"] = {
 	slotType   = "SPECIAL",
 	rarity     = R.UNCOMMON,
 	boost      = 30,
-	icon       = "🧲",
+	icon       = "📎",
 	shape      = "magnet",
 }
 
@@ -344,7 +344,7 @@ ItemConfig["Magic Wand"] = {
 	slotType   = "SPECIAL",
 	rarity     = R.RARE,
 	boost      = 45,
-	icon       = "🪄",
+	icon       = "✨",
 	shape      = "wand",
 }
 
