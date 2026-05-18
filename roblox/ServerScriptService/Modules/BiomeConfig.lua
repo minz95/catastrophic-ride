@@ -69,8 +69,8 @@ BiomeConfig["SKY"] = {
 	mapPath        = "Workspace.Maps.SkyMap",
 	vehicleType    = "FlyingVehicle",
 	mobilitySlot   = "WINGS",
-	raceStartZ     = 225,   -- just before platform[1] center at Z=200
-	raceStartY     = 84,    -- SKY_BASE_Y(80) + platform top(4)
+	raceStartZ     = 1490,  -- just inside track node[1] at Z=1500 (Constants.TRACK.SKY.zStart)
+	raceStartY     = 84,    -- SKY_BASE_Y(80) + 4 stud clearance above continuous floor
 	skyboxId       = "rbxassetid://0",
 	ambientSoundId = "rbxassetid://0",
 
