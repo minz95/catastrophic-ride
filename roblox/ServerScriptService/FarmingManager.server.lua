@@ -29,6 +29,16 @@ local _phaseTimer = nil
 local _active     = false
 local _itemCounter = 0   -- monotonic ID so every spawned part gets a unique key
 
+-- Per-biome farm zone constants. Hardcoded baseY values match the surface Y
+-- each MapBuilder uses for its farm ground; bounding-box inference is unreliable
+-- (tall trees skew Y, water planes skew X/Z). Lifted to module scope so both
+-- _spawnItems and _dropItem can resolve the correct ground Y for the active biome.
+local BIOME_ZONES = {
+	FOREST = { cx=0, cz=350, halfX=80, halfZ=120, baseY=1.0 },  -- FarmGround surface Y=1
+	OCEAN  = { cx=0, cz=375, halfX=55, halfZ=90,  baseY=5.0 },  -- FarmGrass surface Y=5 (WATER_Y+2.5+0.5)
+	SKY    = { cx=0, cz=390, halfX=35, halfZ=70,  baseY=80.0 }, -- FarmPlatform surface Y=80
+}
+
 -- ─── Weighted spawn pool ──────────────────────────────────────────────────────
 
 local function _buildSpawnPool()
@@ -72,14 +82,6 @@ local function _spawnItems(biome)
 	-- and height for their biome — using them avoids hardcoded coordinates that
 	-- break for SKY (floating platforms) and OCEAN (elevated dock/island).
 	local spawnCX, spawnCZ, halfX, halfZ, baseY
-
-	-- Per-biome hardcoded spawn zones that match each MapBuilder's farm area exactly.
-	-- Bounding-box inference is unreliable (tall trees skew Y; water planes skew X/Z).
-	local BIOME_ZONES = {
-		FOREST = { cx=0, cz=350, halfX=80, halfZ=120, baseY=1.0 },  -- FarmGround surface Y=1
-		OCEAN  = { cx=0, cz=375, halfX=55, halfZ=90,  baseY=5.0 },  -- FarmGrass surface Y=5 (WATER_Y+2.5+0.5)
-		SKY    = { cx=0, cz=390, halfX=35, halfZ=70,  baseY=80.0 }, -- FarmPlatform surface Y=80
-	}
 
 	-- Always use hardcoded baseY: bounding-box Y is skewed by tall objects (barn, trees).
 	local zone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
@@ -291,16 +293,29 @@ local function _dropItem(player, slotIndex)
 	local cfg = ItemConfig[itemName]
 
 	-- Spawn a new world item near the player
-	local char = player.Character
-	local root = char and char:FindFirstChild("HumanoidRootPart")
-	local spawnPos = root and (root.Position + Vector3.new(math.random(-3,3), 0, math.random(-3,3)))
-		or Vector3.new(0, 5, 0)
-
-	local mapName  = (_active and (function()
+	local biome = (_active and (function()
 		local gm = require(game.ServerScriptService.GameManager)
 		return gm.getBiome()
 	end)()) or "FOREST"
-	mapName = mapName:sub(1,1):upper() .. mapName:sub(2):lower() .. "Map"
+	local biomeZone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
+
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	-- Anchor spawn Y to the biome's farm ground. The previous version used
+	-- root.Position.Y, but HumanoidRootPart sits ~2.5 studs above the floor,
+	-- so dropped items reappeared floating in mid-air.
+	local spawnPos
+	if root then
+		spawnPos = Vector3.new(
+			root.Position.X + math.random(-3, 3),
+			biomeZone.baseY,
+			root.Position.Z + math.random(-3, 3)
+		)
+	else
+		spawnPos = Vector3.new(0, biomeZone.baseY, 0)
+	end
+
+	local mapName  = biome:sub(1,1):upper() .. biome:sub(2):lower() .. "Map"
 	local mapModel = game.Workspace:FindFirstChild("Maps")
 		and game.Workspace.Maps:FindFirstChild(mapName)
 
@@ -373,6 +388,32 @@ local function _dropItem(player, slotIndex)
 	rarVal.Name = "Rarity"; rarVal.Value = rarity; rarVal.Parent = primary
 
 	pcall(function() ItemVisualUpgrader.apply(model, rarity) end)
+
+	-- Name label (same widget as _spawnItems). Without this, dropped items
+	-- reappeared as anonymous meshes with no rarity colour cue.
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name           = "NameTag"
+	billboard.Size           = UDim2.new(0, 110, 0, 22)
+	billboard.StudsOffset    = Vector3.new(0, 2.4, 0)
+	billboard.AlwaysOnTop    = false
+	billboard.MaxDistance    = 35
+	billboard.LightInfluence = 0
+	billboard.Parent         = primary
+
+	local nameLbl = Instance.new("TextLabel")
+	nameLbl.Size                    = UDim2.fromScale(1, 1)
+	nameLbl.BackgroundTransparency  = 1
+	nameLbl.Text                    = ((cfg and cfg.icon) and (cfg.icon .. " ") or "") .. itemName
+	nameLbl.TextScaled              = true
+	nameLbl.Font                    = Enum.Font.GothamBold
+	nameLbl.TextStrokeTransparency  = 0.4
+	nameLbl.TextColor3              = ({
+		Common   = Color3.fromRGB(220, 220, 220),
+		Uncommon = Color3.fromRGB(110, 230, 110),
+		Rare     = Color3.fromRGB(120, 170, 255),
+		Epic     = Color3.fromRGB(210, 130, 255),
+	})[rarity] or Color3.new(1, 1, 1)
+	nameLbl.Parent                  = billboard
 
 	_itemCounter = _itemCounter + 1
 	local itemId = tostring(_itemCounter)
