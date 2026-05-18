@@ -22,7 +22,7 @@ ItemConfig["Barrel"] = {
 	rarity         = R.COMMON,
 	weight         = 3,
 	grip           = 0.35,
-	icon           = "🪣",
+	icon           = "🛢️",
 	shape          = "barrel",
 	mobilityAffinity = {},
 }
@@ -85,7 +85,7 @@ ItemConfig["Life Preserver"] = {
 	weight         = 4,
 	grip           = 0.45,
 	floatabilityBonus = 2.0,   -- doubles floatability in OCEAN
-	icon           = "🛟",
+	icon           = "⚓",
 	shape          = "lifepreserver",
 	biomeBonus     = { OCEAN = 1.20 },
 	mobilityAffinity = { OCEAN = true },
@@ -328,7 +328,7 @@ ItemConfig["Lantern"] = {
 	slotType   = "SPECIAL",
 	rarity     = R.COMMON,
 	boost      = 15,
-	icon       = "🏮",
+	icon       = "💡",
 	shape      = "lantern",
 }
 
