@@ -566,6 +566,50 @@ end
 -- geometrically misses the trigger volumes. CheckpointService (#126) gates the
 -- FinishLine on cp1 && cp2.
 
+local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
+	local groundY = 0
+	local archTop = groundY + 18
+	for _, side in ipairs({ -1, 1 }) do
+		_part(root, {
+			Name = "CPGate" .. cpIndex .. "Pillar" .. (side > 0 and "R" or "L"),
+			Size = Vector3.new(2.4, archTop, 2.4),
+			Position = Vector3.new(x + side * (TRACK_W / 2 - 2), groundY + archTop / 2, z),
+			Color = archColor, Material = Enum.Material.Neon,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	for i = -1, 1 do
+		_part(root, {
+			Name = "CPGate" .. cpIndex .. "Top" .. (i + 2),
+			Size = Vector3.new(TRACK_W / 3 + 2, 2, 2.4),
+			Position = Vector3.new(x + i * (TRACK_W / 3), archTop + (i == 0 and 2 or 0.5), z),
+			Color = archColor, Material = Enum.Material.Neon,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	local labelAnchor = _part(root, {
+		Name = "CPGate" .. cpIndex .. "Label",
+		Size = Vector3.new(1, 1, 1),
+		Position = Vector3.new(x, archTop + 8, z),
+		Transparency = 1, CanCollide = false, CastShadow = false,
+	})
+	local bb = Instance.new("BillboardGui")
+	bb.Size           = UDim2.new(0, 120, 0, 32)
+	bb.MaxDistance    = 300
+	bb.LightInfluence = 0
+	bb.Parent         = labelAnchor
+	local lbl = Instance.new("TextLabel")
+	lbl.Size = UDim2.fromScale(1, 1)
+	lbl.BackgroundTransparency = 1
+	lbl.Text = "체크포인트 " .. cpIndex
+	lbl.TextColor3 = archColor
+	lbl.TextStrokeColor3 = Color3.new(0, 0, 0)
+	lbl.TextStrokeTransparency = 0.2
+	lbl.Font = Enum.Font.GothamBlack
+	lbl.TextScaled = true
+	lbl.Parent = bb
+end
+
 local function _buildCheckpoints(root)
 	local cp1 = _part(root, {
 		Name         = "Checkpoint1",
@@ -575,6 +619,7 @@ local function _buildCheckpoints(root)
 		Transparency = 1,
 	})
 	_tag(cp1, "Checkpoint1")
+	_buildCheckpointGate(root, 130, -820, 1, Color3.fromRGB(120, 220, 255))
 
 	local cp2 = _part(root, {
 		Name         = "Checkpoint2",
@@ -584,6 +629,7 @@ local function _buildCheckpoints(root)
 		Transparency = 1,
 	})
 	_tag(cp2, "Checkpoint2")
+	_buildCheckpointGate(root, -470, -1310, 2, Color3.fromRGB(255, 200, 100))
 end
 
 -- ─── Three tree species (relocated OUTSIDE walls per §2.7) ───────────────────
