@@ -6,9 +6,10 @@
 
 local ServerStorage = game:GetService("ServerStorage")
 
-local Constants  = require(game.ReplicatedStorage.Shared.Constants)
-local ItemConfig = require(game.ServerScriptService.Modules.ItemConfig)
-local VehicleStats = require(game.ReplicatedStorage.Shared.VehicleStats)
+local Constants       = require(game.ReplicatedStorage.Shared.Constants)
+local ItemConfig      = require(game.ServerScriptService.Modules.ItemConfig)
+local VehicleStats    = require(game.ReplicatedStorage.Shared.VehicleStats)
+local SlotMountConfig = require(game.ReplicatedStorage.Shared.SlotMountConfig)
 
 local VehicleBuilder = {}
 
@@ -75,8 +76,12 @@ local function weld(part0, part1)
 end
 
 -- ─── Item visual (coloured block representing the item) ───────────────────────
+-- targetScale: longest-axis size in studs the clone should fit into. Required so
+--              BODY items dominate (~6–8 studs) while HEAD/TAIL/SPECIAL/ENGINE
+--              ride small (~1.5–2 studs) and don't visually overwhelm the chassis.
+-- rotDeg     : optional Vector3 of Euler angles (degrees) applied to the clone.
 
-local function itemVisual(itemName, attachCF, model)
+local function itemVisual(itemName, attachCF, model, targetScale, rotDeg)
 	local cfg  = ItemConfig[itemName]
 	if not cfg then return end
 
@@ -89,10 +94,54 @@ local function itemVisual(itemName, attachCF, model)
 	local tmpl      = templates and templates:FindFirstChild(itemName)
 	if tmpl and tmpl.PrimaryPart then
 		local clone = tmpl:Clone()
+		local primary = clone.PrimaryPart
+
+		-- Bbox-normalize before placement. Preloader normalizes to ~4 studs,
+		-- but per-slot targets differ (BODY huge, HEAD/TAIL small). Compute
+		-- current extent from BaseParts and scale all part sizes + positions
+		-- around the primary's center.
+		if targetScale and targetScale > 0 then
+			local minV, maxV
+			for _, p in ipairs(clone:GetDescendants()) do
+				if p:IsA("BasePart") then
+					local half = p.Size * 0.5
+					local lo, hi = p.Position - half, p.Position + half
+					minV = minV and Vector3.new(math.min(minV.X, lo.X), math.min(minV.Y, lo.Y), math.min(minV.Z, lo.Z)) or lo
+					maxV = maxV and Vector3.new(math.max(maxV.X, hi.X), math.max(maxV.Y, hi.Y), math.max(maxV.Z, hi.Z)) or hi
+				end
+			end
+			if minV and maxV then
+				local extent = maxV - minV
+				local longest = math.max(extent.X, extent.Y, extent.Z)
+				if longest > 0 then
+					local factor = targetScale / longest
+					if math.abs(factor - 1) > 0.01 then
+						local center = primary.Position
+						for _, p in ipairs(clone:GetDescendants()) do
+							if p:IsA("BasePart") then
+								p.Size     = p.Size * factor
+								p.Position = center + (p.Position - center) * factor
+							end
+						end
+					end
+				end
+			end
+		end
+
+		-- Optional rotation about the primary's current position.
+		local rotCF = CFrame.new()
+		if rotDeg and (rotDeg.X ~= 0 or rotDeg.Y ~= 0 or rotDeg.Z ~= 0) then
+			rotCF = CFrame.Angles(
+				math.rad(rotDeg.X),
+				math.rad(rotDeg.Y),
+				math.rad(rotDeg.Z)
+			)
+		end
+
 		-- Manual delta translation — SetPrimaryPartCFrame/PivotTo don't move
 		-- FBX-imported nested parts in this codebase's mesh structure.
-		local primary = clone.PrimaryPart
-		local delta   = attachCF * primary.CFrame:Inverse()
+		local targetCF = attachCF * rotCF
+		local delta    = targetCF * primary.CFrame:Inverse()
 		for _, p in ipairs(clone:GetDescendants()) do
 			if p:IsA("BasePart") then
 				p.CFrame     = delta * p.CFrame
@@ -395,7 +444,7 @@ end
 
 -- ─── Attach item visuals ──────────────────────────────────────────────────────
 
-local function _attachItems(model, primaryPart, slots)
+local function _attachItems(model, primaryPart, slots, biome)
 	local mountNames = {
 		BODY     = "BodyMount",
 		ENGINE   = "EngineMount",
@@ -412,8 +461,14 @@ local function _attachItems(model, primaryPart, slots)
 		local att = primaryPart:FindFirstChild(mountName)
 		if not att then continue end
 
+		-- Per-slot/per-biome scale + rotation (silhouette: BODY dominates,
+		-- HEAD/TAIL/ENGINE/SPECIAL stay small so chassis remains readable).
+		local mount = SlotMountConfig.get(slotName, biome)
+		local scale = mount and mount.scale
+		local rot   = mount and mount.rot
+
 		local worldCF = primaryPart.CFrame * att.CFrame
-		local visPart = itemVisual(itemName, worldCF, model)
+		local visPart = itemVisual(itemName, worldCF, model, scale, rot)
 		if visPart then
 			weld(primaryPart, visPart)
 		end
@@ -489,7 +544,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	end
 
 	-- Attach item visuals at mount points
-	_attachItems(model, primaryPart, slots)
+	_attachItems(model, primaryPart, slots, biome)
 
 	-- Visual flair from stats
 	_applyStatVisuals(model, stats, palette)

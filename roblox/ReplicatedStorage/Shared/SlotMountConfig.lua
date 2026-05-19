@@ -20,41 +20,46 @@ local SlotMountConfig = {}
 --   OCEAN  anchor sits at hull center, +Z forward.
 --   SKY    anchor sits at fuselage center, -Z is forward (legacy buildFlyer convention).
 
+-- Sizing strategy: BODY dominates (~4–5 studs, sits prominently above the
+-- procedural chassis), MOBILITY scales to its biome role (wheels, sail, wings),
+-- and ENGINE/SPECIAL/HEAD/TAIL stay small (~1.2–1.8 studs) so the chassis
+-- silhouette remains readable. Tuned so picking different slot items produces
+-- visibly different vehicles without obscuring the base shape.
 SlotMountConfig.MOUNTS = {
 	BODY = {
-		FOREST = { scale = 7.0, offset = V3(0,  0.6, 0), rot = V3(0, 0, 0), pattern = "chassis" },
-		OCEAN  = { scale = 8.0, offset = V3(0,  0.4, 0), rot = V3(0, 0, 0), pattern = "chassis" },
-		SKY    = { scale = 7.5, offset = V3(0,  0.0, 0), rot = V3(0, 0, 0), pattern = "chassis" },
+		FOREST = { scale = 4.5, offset = V3(0,  0.6, 0), rot = V3(0, 0, 0), pattern = "chassis" },
+		OCEAN  = { scale = 5.5, offset = V3(0,  0.4, 0), rot = V3(0, 0, 0), pattern = "chassis" },
+		SKY    = { scale = 5.0, offset = V3(0,  0.0, 0), rot = V3(0, 0, 0), pattern = "chassis" },
 	},
 
 	MOBILITY = {
 		FOREST = { scale = 1.6, offset = V3(0, -0.6, 0), rot = V3(0, 0, 90), pattern = "wheels4" },
-		OCEAN  = { scale = 3.5, offset = V3(0,  2.0, 0), rot = V3(0, 0, 0),  pattern = "sail" },
-		SKY    = { scale = 3.0, offset = V3(0,  0.0, 0), rot = V3(0, 0, 0),  pattern = "wings2" },
+		OCEAN  = { scale = 2.5, offset = V3(0,  2.0, 0), rot = V3(0, 0, 0),  pattern = "sail" },
+		SKY    = { scale = 2.0, offset = V3(0,  0.0, 0), rot = V3(0, 0, 0),  pattern = "wings2" },
 	},
 
 	ENGINE = {
-		FOREST = { scale = 2.0, offset = V3(0,  0.8, -2.5), rot = V3(0, 0, 0), pattern = "single" },
-		OCEAN  = { scale = 2.0, offset = V3(0,  1.0, -3.0), rot = V3(0, 0, 0), pattern = "single" },
-		SKY    = { scale = 1.8, offset = V3(0,  0.0,  2.5), rot = V3(0, 0, 0), pattern = "single" },
+		FOREST = { scale = 1.5, offset = V3(0,  0.8, -2.5), rot = V3(0, 0, 0), pattern = "single" },
+		OCEAN  = { scale = 1.5, offset = V3(0,  1.0, -3.0), rot = V3(0, 0, 0), pattern = "single" },
+		SKY    = { scale = 1.3, offset = V3(0,  0.0,  2.5), rot = V3(0, 0, 0), pattern = "single" },
 	},
 
 	SPECIAL = {
-		FOREST = { scale = 2.0, offset = V3(0,  2.0,  0.5), rot = V3(0, 0, 0), pattern = "single" },
-		OCEAN  = { scale = 2.0, offset = V3(0,  3.5,  0.5), rot = V3(0, 0, 0), pattern = "single" },
-		SKY    = { scale = 1.8, offset = V3(0,  1.0,  0.0), rot = V3(0, 0, 0), pattern = "single" },
+		FOREST = { scale = 1.8, offset = V3(0,  2.0,  0.5), rot = V3(0, 0, 0), pattern = "single" },
+		OCEAN  = { scale = 1.8, offset = V3(0,  3.5,  0.5), rot = V3(0, 0, 0), pattern = "single" },
+		SKY    = { scale = 1.5, offset = V3(0,  1.0,  0.0), rot = V3(0, 0, 0), pattern = "single" },
 	},
 
 	HEAD = {
-		FOREST = { scale = 1.8, offset = V3(0,  1.2,  3.0), rot = V3(0, 0, 0), pattern = "single" },
-		OCEAN  = { scale = 1.8, offset = V3(0,  1.2,  4.0), rot = V3(0, 0, 0), pattern = "single" },
-		SKY    = { scale = 1.8, offset = V3(0,  0.4, -4.0), rot = V3(0, 0, 0), pattern = "single" },
+		FOREST = { scale = 1.2, offset = V3(0,  1.2,  3.0), rot = V3(0, 0, 0), pattern = "single" },
+		OCEAN  = { scale = 1.2, offset = V3(0,  1.2,  4.0), rot = V3(0, 0, 0), pattern = "single" },
+		SKY    = { scale = 1.2, offset = V3(0,  0.4, -4.0), rot = V3(0, 0, 0), pattern = "single" },
 	},
 
 	TAIL = {
-		FOREST = { scale = 1.8, offset = V3(0,  1.2, -3.0), rot = V3(0, 0, 0), pattern = "single" },
-		OCEAN  = { scale = 1.8, offset = V3(0,  1.2, -4.0), rot = V3(0, 0, 0), pattern = "single" },
-		SKY    = { scale = 1.8, offset = V3(0,  0.4,  3.0), rot = V3(0, 0, 0), pattern = "single" },
+		FOREST = { scale = 1.2, offset = V3(0,  1.2, -3.0), rot = V3(0, 0, 0), pattern = "single" },
+		OCEAN  = { scale = 1.2, offset = V3(0,  1.2, -4.0), rot = V3(0, 0, 0), pattern = "single" },
+		SKY    = { scale = 1.2, offset = V3(0,  0.4,  3.0), rot = V3(0, 0, 0), pattern = "single" },
 	},
 }
 
