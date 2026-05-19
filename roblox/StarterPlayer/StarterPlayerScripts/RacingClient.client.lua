@@ -324,6 +324,90 @@ RemoteEvents.DriftCharge.OnClientEvent:Connect(function(amount)
 	end
 end)
 
+-- ─── Checkpoint indicator (Issue #131) ────────────────────────────────────────
+-- Shows CP1 / CP2 progress so players understand why a finish-line touch
+-- doesn't count. Server gating lives in CheckpointService (Issue #126).
+
+local _cpFrame   = nil
+local _cpLabels  = { nil, nil }
+local _cpPassed  = { false, false }
+
+local CP_INACTIVE_COLOR = Color3.fromRGB(180, 180, 195)
+local CP_PASSED_COLOR   = Color3.fromRGB(80, 230, 120)
+
+local function _ensureCheckpointHUD()
+	if _cpFrame and _cpFrame.Parent then return _cpFrame end
+	local overlay = _getOverlay()
+	local frame = Instance.new("Frame")
+	frame.Name        = "CheckpointIndicator"
+	frame.Size        = UDim2.new(0, 200, 0, 32)
+	frame.AnchorPoint = Vector2.new(0.5, 0)
+	frame.Position    = UDim2.new(0.5, 0, 0, 16)
+	frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+	frame.BackgroundTransparency = 0.4
+	frame.BorderSizePixel = 0
+	frame.Parent      = overlay
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 6)
+	corner.Parent = frame
+
+	for i = 1, 2 do
+		local lbl = Instance.new("TextLabel")
+		lbl.Name           = "CP" .. i
+		lbl.Size           = UDim2.new(0.5, -4, 1, -4)
+		lbl.Position       = UDim2.new((i - 1) * 0.5, 2, 0, 2)
+		lbl.BackgroundTransparency = 1
+		lbl.Font           = Enum.Font.GothamBold
+		lbl.TextScaled     = true
+		lbl.TextStrokeTransparency = 0.5
+		lbl.Text           = "CP" .. i .. "  ☐"
+		lbl.TextColor3     = CP_INACTIVE_COLOR
+		lbl.Parent         = frame
+		_cpLabels[i] = lbl
+	end
+
+	_cpFrame = frame
+	return frame
+end
+
+local function _updateCheckpointHUD()
+	_ensureCheckpointHUD()
+	for i = 1, 2 do
+		local lbl = _cpLabels[i]
+		if lbl then
+			lbl.Text       = "CP" .. i .. (_cpPassed[i] and "  ✓" or "  ☐")
+			lbl.TextColor3 = _cpPassed[i] and CP_PASSED_COLOR or CP_INACTIVE_COLOR
+		end
+	end
+end
+
+local function _resetCheckpointHUD()
+	_cpPassed[1] = false
+	_cpPassed[2] = false
+	_updateCheckpointHUD()
+end
+
+local function _flashCheckpoint(cpIndex)
+	local lbl = _cpLabels[cpIndex]
+	if not lbl then return end
+	local original = lbl.TextSize
+	TweenService:Create(lbl, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		TextTransparency = 0,
+	}):Play()
+	_applyScreenTint(CP_PASSED_COLOR, 0.15, 0.2)
+end
+
+if RemoteEvents.CheckpointPassed then
+	RemoteEvents.CheckpointPassed.OnClientEvent:Connect(function(cpIndex)
+		if cpIndex == 1 or cpIndex == 2 then
+			_cpPassed[cpIndex] = true
+			_updateCheckpointHUD()
+			_flashCheckpoint(cpIndex)
+		end
+	end)
+end
+
 -- ─── Vehicle drive loop ───────────────────────────────────────────────────────
 
 local function _driveLoop()
@@ -528,6 +612,7 @@ function RacingClient.enable()
 	_drifting     = false
 	_abilityIndex = 1
 	_updateBoostHUD()
+	_resetCheckpointHUD()
 
 	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 	if hum then hum.JumpHeight = 0 end
