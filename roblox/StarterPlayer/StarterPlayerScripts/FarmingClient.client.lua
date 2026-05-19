@@ -13,7 +13,14 @@ local TweenService      = game:GetService("TweenService")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 
-local _UIManager = nil  -- lazy-loaded to avoid require order issues
+local LocalPlayer = Players.LocalPlayer
+local Camera      = workspace.CurrentCamera
+
+-- _getUIManager must be declared AFTER LocalPlayer: Lua resolves the
+-- LocalPlayer name to a global if no local is in scope at function-define
+-- time, and the global is nil — so picking up a dropped item (only path
+-- that hits _getUIManager from pickup) errored "index nil with WaitForChild".
+local _UIManager = nil
 local function _getUIManager()
 	if not _UIManager then
 		local scripts = LocalPlayer:WaitForChild("PlayerScripts", 5)
@@ -23,9 +30,6 @@ local function _getUIManager()
 	end
 	return _UIManager
 end
-
-local LocalPlayer = Players.LocalPlayer
-local Camera      = workspace.CurrentCamera
 
 local FarmingClient = {}
 
