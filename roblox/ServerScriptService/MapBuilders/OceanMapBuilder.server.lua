@@ -177,31 +177,98 @@ end
 
 -- ─── Reef walls (spec §3.4): solid above-water at ±30 stud offset ────────────
 
+-- Wall is broken into sub-walls separated by gaps every WALL_GAP_INTERVAL studs
+-- of cumulative track-arc distance. Player can swim/sail through the doorway
+-- onto open water; the SlowZone outside (_buildSlowZones) imposes a speed mult.
+
+local WALL_GAP_INTERVAL   = 48
+local WALL_GAP_HALF_WIDTH = 4   -- 8-stud opening
+
+local function _wallPieces(arcStart, segLen)
+	local pieces = {}
+	local cursor = 0
+	local firstGapK = math.ceil((arcStart - WALL_GAP_HALF_WIDTH) / WALL_GAP_INTERVAL)
+	local k = firstGapK
+	while true do
+		local gapArc = k * WALL_GAP_INTERVAL
+		local gapStartArc = gapArc - WALL_GAP_HALF_WIDTH
+		local gapEndArc   = gapArc + WALL_GAP_HALF_WIDTH
+		if gapStartArc >= arcStart + segLen then break end
+		if gapEndArc > arcStart then
+			local relStart = math.max(0, gapStartArc - arcStart)
+			local relEnd   = math.min(segLen, gapEndArc - arcStart)
+			if relStart > cursor then
+				table.insert(pieces, { cursor, relStart })
+			end
+			cursor = math.max(cursor, relEnd)
+		end
+		k = k + 1
+	end
+	if cursor < segLen then
+		table.insert(pieces, { cursor, segLen })
+	end
+	return pieces
+end
+
 local function _buildReefWalls(root)
+	local arcStart = 0
 	for i = 1, #NODES - 1 do
 		local a, b   = NODES[i], NODES[i + 1]
 		local segLen = _segLen(a[1], a[2], b[1], b[2])
 		local cf     = _segCF(a[1], a[2], b[1], b[2], WATER_Y + WALL_H / 2)
 
-		for _, side in ipairs({ -1, 1 }) do
-			local wall = _part(root, {
-				Name     = "ReefWall",
-				-- segLen (no overlap): preserves channel width at sharp kinks (N5/N17/N23).
-				-- An earlier +8 extension intruded 4 studs into the lane at drift-corner apexes.
-				Size     = Vector3.new(3, WALL_H, segLen),
-				Color    = C.REEF,
-				Material = MAT.ROCK,
-			})
-			wall.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), 0, 0)
+		for _, piece in ipairs(_wallPieces(arcStart, segLen)) do
+			local pStart, pEnd = piece[1], piece[2]
+			local pLen = pEnd - pStart
+			if pLen < 0.5 then continue end
+			local pMid = (pStart + pEnd) / 2 - segLen / 2
 
-			local cap = _part(root, {
-				Name     = "ReefWallCap",
-				Size     = Vector3.new(3.4, 0.6, segLen),
-				Color    = C.REEF_TOP,
+			for _, side in ipairs({ -1, 1 }) do
+				local wall = _part(root, {
+					Name     = "ReefWall",
+					Size     = Vector3.new(3, WALL_H, pLen),
+					Color    = C.REEF,
+					Material = MAT.ROCK,
+				})
+				wall.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), 0, pMid)
+
+				local cap = _part(root, {
+					Name     = "ReefWallCap",
+					Size     = Vector3.new(3.4, 0.6, pLen),
+					Color    = C.REEF_TOP,
+					Material = MAT.NEON,
+					CastShadow = false,
+				})
+				cap.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), WALL_H / 2 + 0.3, pMid)
+			end
+		end
+		arcStart = arcStart + segLen
+	end
+end
+
+-- ─── Slow zones outside the reef walls (rough water / chop) ─────────────────
+
+local function _buildSlowZones(root)
+	local SZ_WIDTH  = 50
+	local SZ_HEIGHT = 4
+	local SZ_OFFSET = LANE_W / 2 + 1.5 + SZ_WIDTH / 2 + 2
+	for i = 1, #NODES - 1 do
+		local a, b   = NODES[i], NODES[i + 1]
+		local segLen = _segLen(a[1], a[2], b[1], b[2])
+		if segLen < 0.1 then continue end
+		local cf = _segCF(a[1], a[2], b[1], b[2], WATER_Y + SZ_HEIGHT / 2)
+		for _, side in ipairs({ -1, 1 }) do
+			local sz = _part(root, {
+				Name = "SlowZone_" .. i .. (side > 0 and "R" or "L"),
+				Size = Vector3.new(SZ_WIDTH, SZ_HEIGHT, segLen + 8),
+				Color = C.WATER_FOAM,
 				Material = MAT.NEON,
+				CanCollide = false,
+				Transparency = 0.65,
 				CastShadow = false,
 			})
-			cap.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), WALL_H / 2 + 0.3, 0)
+			sz.CFrame = cf * CFrame.new(side * SZ_OFFSET, 0, 0)
+			_tag(sz, "SlowZone")
 		end
 	end
 end
@@ -578,6 +645,7 @@ local function buildOcean()
 	_buildReefFormation(trackSub)
 	_buildLaneStrip(trackSub)
 	_buildReefWalls(trackSub)
+	_buildSlowZones(trackSub)
 	_buildCourseBuoys(trackSub)
 	_buildBoostPads(trackSub)
 	_buildJumpRamps(trackSub)

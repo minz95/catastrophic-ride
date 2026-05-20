@@ -146,6 +146,8 @@ Constants.VEHICLE_TYPE = {
 Constants.OBSTACLE_BOUNCE_PENALTY_DURATION = 1.0  -- seconds
 Constants.OBSTACLE_BOUNCE_SPEED_MULT       = 0.5
 Constants.MUD_SPEED_MULT                   = 0.5
+Constants.SLOW_ZONE_MULT                   = 0.6  -- off-corridor soft penalty
+Constants.RACE_BOOST_PAD_ACTIVE_RATIO      = 0.6  -- fraction of placed BoostPads active per race
 Constants.SKY_GRAVITY_MULT                 = 1.2  -- outside updraft zones
 Constants.UPDRAFT_BASE_FORCE               = 200  -- studs/s² upward (scaled by flyability)
 

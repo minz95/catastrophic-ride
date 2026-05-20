@@ -117,6 +117,53 @@ local function _setupMudZones()
 	end
 end
 
+-- ─── Slow zones (off-corridor soft penalty, FOREST + OCEAN) ─────────────────
+-- Players can squeeze through the wall gaps; the SlowZone trigger pads
+-- outside the wall apply SLOW_ZONE_MULT to vehicle MaxSpeed while touching.
+-- Same Touched/TouchEnded pattern as _setupMudZones, separate state flag.
+
+local function _setupSlowZones()
+	for _, part in ipairs(CollectionService:GetTagged("SlowZone")) do
+		part.Touched:Connect(function(hit)
+			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
+			if not vehicle then return end
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel == vehicle then
+					local ps = _physState[player.UserId]
+					if ps and not ps.inSlowZone then
+						ps.inSlowZone = true
+						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							seat.MaxSpeed = seat.MaxSpeed * Constants.SLOW_ZONE_MULT
+						end
+					end
+					break
+				end
+			end
+		end)
+
+		part.TouchEnded:Connect(function(hit)
+			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
+			if not vehicle then return end
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel == vehicle then
+					local ps = _physState[player.UserId]
+					if ps and ps.inSlowZone then
+						ps.inSlowZone = false
+						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							seat.MaxSpeed = seat.MaxSpeed / Constants.SLOW_ZONE_MULT
+						end
+					end
+					break
+				end
+			end
+		end)
+	end
+end
+
 -- ─── Buoyancy (OCEAN) ─────────────────────────────────────────────────────────
 
 local WATER_Y = 0   -- set from BiomeConfig at race start
@@ -501,6 +548,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 			_physState[player.UserId] = {
 				inMud             = false,
 				inUpdraft         = false,
+				inSlowZone        = false,
 				boostCooldownEnd  = 0,
 				obstaclePenaltyEnd = 0,
 				drifting          = false,
@@ -512,6 +560,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_setupObstacles()
 		_setupBoostPads()
 		_setupDriftCorners()   -- all biomes: charges boost gauge (F key)
+
+		_setupSlowZones()   -- FOREST + OCEAN have SlowZone-tagged trigger pads
 
 		if biome == "FOREST" then
 			_setupMudZones()

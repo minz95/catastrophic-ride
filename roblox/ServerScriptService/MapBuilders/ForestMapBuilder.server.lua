@@ -321,30 +321,102 @@ end
 -- segment N to jut 4 studs past its endpoint along its own direction at
 -- sharp kinks (S2 arc N4–N6, S4 U-bend N17–N21, S5 chicane N23–N29),
 -- intruding into the next segment's lane.
+--
+-- Wall is broken into sub-walls separated by 8-stud gaps every WALL_GAP_INTERVAL
+-- studs of cumulative track-arc distance. Players can squeeze through the
+-- doorways onto the grass for risky shortcuts; the SlowZone outside the wall
+-- (see _buildSlowZones below) penalises that with a speed mult.
+
+local WALL_GAP_INTERVAL   = 48          -- cumulative arc distance between gap centers
+local WALL_GAP_HALF_WIDTH = 4           -- 8-stud opening
+
+-- Returns list of {start, end} sub-wall intervals (local to segment, in segment-Z),
+-- after carving out gap zones at cumulative arc positions multiple-of-GAP_INTERVAL.
+local function _wallPieces(arcStart, segLen)
+	local pieces = {}
+	local cursor = 0  -- segment-local start of next sub-wall
+	local firstGapK = math.ceil((arcStart - WALL_GAP_HALF_WIDTH) / WALL_GAP_INTERVAL)
+	local k = firstGapK
+	while true do
+		local gapArc = k * WALL_GAP_INTERVAL
+		local gapStartArc = gapArc - WALL_GAP_HALF_WIDTH
+		local gapEndArc   = gapArc + WALL_GAP_HALF_WIDTH
+		if gapStartArc >= arcStart + segLen then break end
+		if gapEndArc > arcStart then
+			local relStart = math.max(0, gapStartArc - arcStart)
+			local relEnd   = math.min(segLen, gapEndArc - arcStart)
+			if relStart > cursor then
+				table.insert(pieces, { cursor, relStart })
+			end
+			cursor = math.max(cursor, relEnd)
+		end
+		k = k + 1
+	end
+	if cursor < segLen then
+		table.insert(pieces, { cursor, segLen })
+	end
+	return pieces
+end
 
 local function _buildWalls(root)
+	local arcStart = 0
 	for i = 1, #NODES - 1 do
 		local a, b   = NODES[i], NODES[i + 1]
 		local segLen = _segLen(a[1], a[2], b[1], b[2])
 		local cf     = _segCF(a[1], a[2], b[1], b[2])
 
-		for _, side in ipairs({ -1, 1 }) do
-			local wall = _part(root, {
-				Name     = "TrackWall",
-				Size     = Vector3.new(2, WALL_H, segLen),
-				Color    = C.WALL,
-				Material = MAT.WOOD,
-			})
-			wall.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H / 2, 0)
+		for _, piece in ipairs(_wallPieces(arcStart, segLen)) do
+			local pStart, pEnd = piece[1], piece[2]
+			local pLen = pEnd - pStart
+			if pLen < 0.5 then continue end
+			local pMid = (pStart + pEnd) / 2 - segLen / 2  -- segment-local Z offset
 
-			local cap = _part(root, {
-				Name     = "TrackWallCap",
-				Size     = Vector3.new(2.4, 0.6, segLen),
-				Color    = C.WALL_TOP,
-				Material = MAT.NEON,
+			for _, side in ipairs({ -1, 1 }) do
+				local wall = _part(root, {
+					Name     = "TrackWall",
+					Size     = Vector3.new(2, WALL_H, pLen),
+					Color    = C.WALL,
+					Material = MAT.WOOD,
+				})
+				wall.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H / 2, pMid)
+
+				local cap = _part(root, {
+					Name     = "TrackWallCap",
+					Size     = Vector3.new(2.4, 0.6, pLen),
+					Color    = C.WALL_TOP,
+					Material = MAT.NEON,
+				})
+				cap.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H + 0.3, pMid)
+				cap.CastShadow = false
+			end
+		end
+		arcStart = arcStart + segLen
+	end
+end
+
+-- ─── Slow zones outside the corridor (soft penalty for off-track shortcuts) ─
+
+local function _buildSlowZones(root)
+	local SZ_WIDTH = 40       -- stud width per side
+	local SZ_HEIGHT = 4       -- low trigger volume
+	local SZ_OFFSET = TRACK_W / 2 + 1 + SZ_WIDTH / 2 + 2  -- just outside wall
+	for i = 1, #NODES - 1 do
+		local a, b   = NODES[i], NODES[i + 1]
+		local segLen = _segLen(a[1], a[2], b[1], b[2])
+		if segLen < 0.1 then continue end
+		local cf = _segCF(a[1], a[2], b[1], b[2])
+		for _, side in ipairs({ -1, 1 }) do
+			local sz = _part(root, {
+				Name = "SlowZone_" .. i .. (side > 0 and "R" or "L"),
+				Size = Vector3.new(SZ_WIDTH, SZ_HEIGHT, segLen + 8),
+				Color = C.MUD,
+				Material = MAT.MUD,
+				CanCollide = false,
+				Transparency = 0.6,
+				CastShadow = false,
 			})
-			cap.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H + 0.3, 0)
-			cap.CastShadow = false
+			sz.CFrame = cf * CFrame.new(side * SZ_OFFSET, SZ_HEIGHT / 2 + 0.1, 0)
+			_tag(sz, "SlowZone")
 		end
 	end
 end
@@ -815,6 +887,7 @@ local function buildForest()
 
 	_buildTrack(trackSub)
 	_buildWalls(trackSub)
+	_buildSlowZones(trackSub)
 	_buildRiverBridge(trackSub)
 	_buildMudZones(trackSub)
 	_buildRockDecor(trackSub)
