@@ -422,22 +422,78 @@ local function _buildBoostPads(root)
 end
 
 -- ─── Checkpoints (spec §4.6) ─────────────────────────────────────────────────
+-- Each checkpoint = invisible Touched trigger (gated by CheckpointService)
+-- + visible glowing arch so players know where to drive through.
+
+local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
+	local archY = SKY_BASE_Y + 22
+	-- Two pillars at corridor edges
+	for _, side in ipairs({ -1, 1 }) do
+		_part(root, {
+			Name = "CPGate" .. cpIndex .. "Pillar" .. (side > 0 and "R" or "L"),
+			Size = Vector3.new(2.4, 38, 2.4),
+			Position = Vector3.new(x + side * (CORRIDOR_W / 2 - 2), SKY_BASE_Y + 19, z),
+			Color = archColor, Material = MAT.NEON,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	-- Curved top: 3 segments faking an arch
+	local topY = archY + 6
+	for i = -1, 1 do
+		_part(root, {
+			Name = "CPGate" .. cpIndex .. "Top" .. (i + 2),
+			Size = Vector3.new(CORRIDOR_W / 3 + 2, 2, 2.4),
+			Position = Vector3.new(x + i * (CORRIDOR_W / 3), topY + (i == 0 and 1.5 or 0), z),
+			Color = archColor, Material = MAT.NEON,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	-- Floating "CP1" / "CP2" label
+	local labelAnchor = _part(root, {
+		Name = "CPGate" .. cpIndex .. "Label",
+		Size = Vector3.new(1, 1, 1),
+		Position = Vector3.new(x, topY + 6, z),
+		Transparency = 1, CanCollide = false, CastShadow = false,
+	})
+	local bb = Instance.new("BillboardGui")
+	bb.Size           = UDim2.new(0, 120, 0, 32)
+	bb.StudsOffset    = Vector3.new(0, 0, 0)
+	bb.MaxDistance    = 300
+	bb.LightInfluence = 0
+	bb.Parent         = labelAnchor
+	local lbl = Instance.new("TextLabel")
+	lbl.Size                   = UDim2.fromScale(1, 1)
+	lbl.BackgroundTransparency = 1
+	lbl.Text                   = "체크포인트 " .. cpIndex
+	lbl.TextColor3             = archColor
+	lbl.TextStrokeColor3       = Color3.new(0, 0, 0)
+	lbl.TextStrokeTransparency = 0.2
+	lbl.Font                   = Enum.Font.GothamBlack
+	lbl.TextScaled             = true
+	lbl.Parent                 = bb
+end
 
 local function _buildCheckpoints(root)
+	local cp1Pos = { x = -600, z = 800 }   -- N8 Loop A western extent
+	local cp2Pos = { x = 600,  z = 400 }   -- N18 Loop B eastern extent
+
 	local cp1 = _part(root, {
 		Name = "Checkpoint1",
 		Size = Vector3.new(CORRIDOR_W, 50, 6),
-		Position = Vector3.new(-600, SKY_BASE_Y + 25, 800),  -- N8 Loop A western extent
+		Position = Vector3.new(cp1Pos.x, SKY_BASE_Y + 25, cp1Pos.z),
 		CanCollide = false, Transparency = 1,
 	})
 	_tag(cp1, "Checkpoint1")
+	_buildCheckpointGate(root, cp1Pos.x, cp1Pos.z, 1, Color3.fromRGB(120, 220, 255))
+
 	local cp2 = _part(root, {
 		Name = "Checkpoint2",
 		Size = Vector3.new(CORRIDOR_W, 50, 6),
-		Position = Vector3.new(600, SKY_BASE_Y + 25, 400),  -- N18 Loop B eastern extent
+		Position = Vector3.new(cp2Pos.x, SKY_BASE_Y + 25, cp2Pos.z),
 		CanCollide = false, Transparency = 1,
 	})
 	_tag(cp2, "Checkpoint2")
+	_buildCheckpointGate(root, cp2Pos.x, cp2Pos.z, 2, Color3.fromRGB(255, 200, 100))
 end
 
 -- ─── Farm platform (relocated north of start, beyond track Z extent) ─────────

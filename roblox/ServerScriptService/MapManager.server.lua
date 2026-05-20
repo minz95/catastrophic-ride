@@ -172,6 +172,11 @@ local function _setSubVisible(biome, subName, visible)
 				desc.Transparency = 1
 				desc.CanCollide   = false
 			end
+		elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
+			-- GUIs ignore the Part.Transparency of their adornee, so the
+			-- transparency loop above won't hide their text. Without this
+			-- branch the floating checkpoint labels stayed visible all phases.
+			desc.Enabled = visible
 		end
 	end
 end

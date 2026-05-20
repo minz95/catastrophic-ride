@@ -21,6 +21,8 @@
 --   ScreenEffect        → (effectName: string, params: table) -- client-side VFX
 --   DriftCharge         → (amount: number)  -- boost gauge fill from DriftCorner zone
 --   CheckpointPassed    → (cpIndex: number)  -- fires to passing player only (1 or 2)
+--   RaceIntroShown      → (intro: { biome: string })  -- broadcast at race start
+--   RaceSeedBroadcast   → (seed: number)  -- per-race seed for client-side variation
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -51,6 +53,8 @@ local EVENTS = {
 	"ScreenEffect",
 	"DriftCharge",
 	"CheckpointPassed",
+	"RaceIntroShown",
+	"RaceSeedBroadcast",
 }
 
 local FUNCTIONS = {

@@ -361,7 +361,7 @@ local function _ensureCheckpointHUD()
 		lbl.Font           = Enum.Font.GothamBold
 		lbl.TextScaled     = true
 		lbl.TextStrokeTransparency = 0.5
-		lbl.Text           = "CP" .. i .. "  ☐"
+		lbl.Text           = i .. "번 ☐"
 		lbl.TextColor3     = CP_INACTIVE_COLOR
 		lbl.Parent         = frame
 		_cpLabels[i] = lbl
@@ -376,7 +376,7 @@ local function _updateCheckpointHUD()
 	for i = 1, 2 do
 		local lbl = _cpLabels[i]
 		if lbl then
-			lbl.Text       = "CP" .. i .. (_cpPassed[i] and "  ✓" or "  ☐")
+			lbl.Text       = i .. "번 " .. (_cpPassed[i] and "✓" or "☐")
 			lbl.TextColor3 = _cpPassed[i] and CP_PASSED_COLOR or CP_INACTIVE_COLOR
 		end
 	end
@@ -398,13 +398,112 @@ local function _flashCheckpoint(cpIndex)
 	_applyScreenTint(CP_PASSED_COLOR, 0.15, 0.2)
 end
 
+local function _showCheckpointPassToast(cpIndex)
+	local overlay = _getOverlay()
+	local lbl = overlay:FindFirstChild("CPPassToast")
+	if not lbl then
+		lbl = Instance.new("TextLabel")
+		lbl.Name                   = "CPPassToast"
+		lbl.Size                   = UDim2.new(0, 280, 0, 56)
+		lbl.AnchorPoint            = Vector2.new(0.5, 0)
+		lbl.Position               = UDim2.new(0.5, 0, 0, 72)
+		lbl.BackgroundTransparency = 1
+		lbl.TextScaled             = true
+		lbl.Font                   = Enum.Font.GothamBlack
+		lbl.TextStrokeTransparency = 0.3
+		lbl.Parent                 = overlay
+	end
+	lbl.Text             = "체크포인트 " .. cpIndex .. " 통과! ✓"
+	lbl.TextColor3       = CP_PASSED_COLOR
+	lbl.TextTransparency = 0
+	TweenService:Create(lbl, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {
+		TextTransparency = 1,
+	}):Play()
+end
+
 if RemoteEvents.CheckpointPassed then
 	RemoteEvents.CheckpointPassed.OnClientEvent:Connect(function(cpIndex)
 		if cpIndex == 1 or cpIndex == 2 then
 			_cpPassed[cpIndex] = true
 			_updateCheckpointHUD()
 			_flashCheckpoint(cpIndex)
+			_showCheckpointPassToast(cpIndex)
 		end
+	end)
+end
+
+-- ─── Race intro overlay (Issue #131 follow-up) ────────────────────────────────
+-- Shown once at race start: explains the CP1/CP2 gating rule so players know
+-- they need to drive through both arches before the finish line counts.
+
+local function _showRaceIntro()
+	_resetCheckpointHUD()
+	local overlay = _getOverlay()
+	local existing = overlay:FindFirstChild("RaceIntroBanner")
+	if existing then existing:Destroy() end
+
+	local frame = Instance.new("Frame")
+	frame.Name                   = "RaceIntroBanner"
+	frame.Size                   = UDim2.new(0, 540, 0, 96)
+	frame.AnchorPoint            = Vector2.new(0.5, 0.5)
+	frame.Position               = UDim2.new(0.5, 0, 0.42, 0)
+	frame.BackgroundColor3       = Color3.fromRGB(15, 18, 28)
+	frame.BackgroundTransparency = 0.2
+	frame.BorderSizePixel        = 0
+	frame.Parent                 = overlay
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 10)
+	corner.Parent = frame
+
+	local title = Instance.new("TextLabel")
+	title.Size                   = UDim2.new(1, -20, 0, 36)
+	title.Position               = UDim2.new(0, 10, 0, 8)
+	title.BackgroundTransparency = 1
+	title.Text                   = "🏁 레이스 시작!"
+	title.TextColor3             = Color3.fromRGB(255, 220, 80)
+	title.Font                   = Enum.Font.GothamBlack
+	title.TextScaled             = true
+	title.TextStrokeTransparency = 0.4
+	title.Parent                 = frame
+
+	local body = Instance.new("TextLabel")
+	body.Size                    = UDim2.new(1, -20, 0, 44)
+	body.Position                = UDim2.new(0, 10, 0, 46)
+	body.BackgroundTransparency  = 1
+	body.Text                    = "1번 → 2번 체크포인트 아치를 순서대로 통과한 뒤 결승선!"
+	body.TextColor3              = Color3.fromRGB(220, 230, 245)
+	body.Font                    = Enum.Font.GothamBold
+	body.TextScaled              = true
+	body.TextStrokeTransparency  = 0.5
+	body.Parent                  = frame
+
+	task.delay(2.8, function()
+		if not frame.Parent then return end
+		local tw = TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quad), {
+			BackgroundTransparency = 1,
+		})
+		tw:Play()
+		for _, child in ipairs(frame:GetDescendants()) do
+			if child:IsA("TextLabel") then
+				TweenService:Create(child, TweenInfo.new(0.6), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
+			end
+		end
+		tw.Completed:Wait()
+		frame:Destroy()
+	end)
+end
+
+if RemoteEvents.RaceIntroShown then
+	RemoteEvents.RaceIntroShown.OnClientEvent:Connect(function(_intro)
+		_showRaceIntro()
+	end)
+end
+
+-- Store per-race seed broadcast (placeholder for future client-side variation)
+local _raceSeed = nil
+if RemoteEvents.RaceSeedBroadcast then
+	RemoteEvents.RaceSeedBroadcast.OnClientEvent:Connect(function(seed)
+		_raceSeed = seed
 	end)
 end
 

@@ -23,6 +23,7 @@ local _biome       = nil
 local _startTick   = 0
 local _finishOrder = {}   -- { { userId, time } }
 local _totalRacers = 0
+local _raceSeed    = 0    -- broadcast to clients for per-race variation
 
 -- Per-player physics state
 -- _physState[userId] = {
@@ -527,6 +528,11 @@ GameManager.onPhaseChanged(function(phase, biome)
 
 		_setupFinishLine()
 		_startPositionSync()
+
+		-- Broadcast race intro overlay + per-race seed (for client variation)
+		RemoteEvents.RaceIntroShown:FireAllClients({ biome = biome })
+		_raceSeed = math.random(1, 1000000)
+		RemoteEvents.RaceSeedBroadcast:FireAllClients(_raceSeed)
 
 	elseif phase == Constants.PHASES.RESULTS then
 		_active = false
