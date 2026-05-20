@@ -252,10 +252,14 @@ local function _buildPalmIsland(root)
 		Position = Vector3.new(cx, WATER_Y - 2, cz),
 		Color = C.SAND, Material = MAT.SAND,
 	})
+	-- Beach surface (sand, not grass): ocean biome shouldn't look like farmland,
+	-- and Material.Grass renders blades that persisted even with low transparency.
+	-- Slightly lighter sand differentiates the dry top from the sand base.
 	_part(root, {
-		Name = "Palm_IslandGrass", Size = Vector3.new(95, 1.5, 200),
+		Name = "Palm_IslandTop", Size = Vector3.new(95, 1.5, 200),
 		Position = Vector3.new(cx, WATER_Y + 2.5, cz),
-		Color = C.GRASS, Material = MAT.GRASS,
+		Color = Color3.fromRGB(235, 210, 150),
+		Material = MAT.SAND,
 	})
 
 	local rng = Random.new(99)
