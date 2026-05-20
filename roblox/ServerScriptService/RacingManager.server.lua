@@ -117,6 +117,53 @@ local function _setupMudZones()
 	end
 end
 
+-- ─── Slow zones (off-corridor soft penalty, FOREST + OCEAN) ─────────────────
+-- Players can squeeze through the wall gaps; the SlowZone trigger pads
+-- outside the wall apply SLOW_ZONE_MULT to vehicle MaxSpeed while touching.
+-- Same Touched/TouchEnded pattern as _setupMudZones, separate state flag.
+
+local function _setupSlowZones()
+	for _, part in ipairs(CollectionService:GetTagged("SlowZone")) do
+		part.Touched:Connect(function(hit)
+			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
+			if not vehicle then return end
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel == vehicle then
+					local ps = _physState[player.UserId]
+					if ps and not ps.inSlowZone then
+						ps.inSlowZone = true
+						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							seat.MaxSpeed = seat.MaxSpeed * Constants.SLOW_ZONE_MULT
+						end
+					end
+					break
+				end
+			end
+		end)
+
+		part.TouchEnded:Connect(function(hit)
+			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
+			if not vehicle then return end
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel == vehicle then
+					local ps = _physState[player.UserId]
+					if ps and ps.inSlowZone then
+						ps.inSlowZone = false
+						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							seat.MaxSpeed = seat.MaxSpeed / Constants.SLOW_ZONE_MULT
+						end
+					end
+					break
+				end
+			end
+		end)
+	end
+end
+
 -- ─── Buoyancy (OCEAN) ─────────────────────────────────────────────────────────
 
 local WATER_Y = 0   -- set from BiomeConfig at race start
@@ -331,32 +378,61 @@ end
 
 local _boostPadCooldowns = {}   -- { [partRef] = { [userId] = expireTick } }
 
+-- Seed-driven subset selection: each race picks a different K-of-N subset of
+-- placed BoostPads to be active. Inactive ones are visually dimmed so players
+-- can tell which are live, but don't fire. Adds per-race variety so memorized
+-- pad routes don't dominate.
 local function _setupBoostPads()
-	for _, part in ipairs(CollectionService:GetTagged("BoostPad")) do
-		_boostPadCooldowns[part] = {}
-		part.Touched:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local cds = _boostPadCooldowns[part]
-					if cds[player.UserId] and tick() < cds[player.UserId] then break end
-					cds[player.UserId] = tick() + 5   -- 5s pad cooldown
+	local pads = CollectionService:GetTagged("BoostPad")
+	if #pads == 0 then return end
 
-					local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-					if seat then
-						local old = seat.MaxSpeed
-						seat.MaxSpeed = old * 1.4
-						task.delay(2, function()
-							if seat and seat.Parent then seat.MaxSpeed = old end
-						end)
+	-- Deterministic shuffle by _raceSeed
+	local rng = Random.new(_raceSeed)
+	local shuffled = {}
+	for _, p in ipairs(pads) do table.insert(shuffled, p) end
+	for i = #shuffled, 2, -1 do
+		local j = rng:NextInteger(1, i)
+		shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+	end
+
+	local activeCount = math.max(1, math.ceil(#shuffled * Constants.RACE_BOOST_PAD_ACTIVE_RATIO))
+	local activeSet = {}
+	for i = 1, activeCount do activeSet[shuffled[i]] = true end
+
+	for _, part in ipairs(pads) do
+		if activeSet[part] then
+			_boostPadCooldowns[part] = {}
+			part.Touched:Connect(function(hit)
+				local vehicle = hit:FindFirstAncestorWhichIsA("Model")
+				if not vehicle then return end
+				for _, player in ipairs(Players:GetPlayers()) do
+					local pdata = SessionManager.getData(player)
+					if pdata and pdata.vehicleModel == vehicle then
+						local cds = _boostPadCooldowns[part]
+						if cds[player.UserId] and tick() < cds[player.UserId] then break end
+						cds[player.UserId] = tick() + 5   -- 5s pad cooldown
+
+						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							local old = seat.MaxSpeed
+							seat.MaxSpeed = old * 1.4
+							task.delay(2, function()
+								if seat and seat.Parent then seat.MaxSpeed = old end
+							end)
+						end
+						RemoteEvents.ScreenEffect:FireClient(player, "boostPad", {})
+						break
 					end
-					RemoteEvents.ScreenEffect:FireClient(player, "boostPad", {})
-					break
 				end
-			end
-		end)
+			end)
+		else
+			-- Dim the inactive pad so players can see it's not live this round
+			pcall(function()
+				part.Transparency = math.max(part.Transparency, 0.75)
+			end)
+			local ring = part.Parent and part.Parent:FindFirstChild(part.Name .. "Ring", true)
+			if ring then pcall(function() ring.Transparency = 0.9 end) end
+		end
 	end
 end
 
@@ -501,6 +577,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 			_physState[player.UserId] = {
 				inMud             = false,
 				inUpdraft         = false,
+				inSlowZone        = false,
 				boostCooldownEnd  = 0,
 				obstaclePenaltyEnd = 0,
 				drifting          = false,
@@ -508,10 +585,16 @@ GameManager.onPhaseChanged(function(phase, biome)
 			}
 		end
 
+		-- Generate per-race seed first — _setupBoostPads consumes it for its
+		-- K-of-N subset selection. Broadcast happens below alongside the intro.
+		_raceSeed = math.random(1, 1000000)
+
 		-- Setup collision systems
 		_setupObstacles()
 		_setupBoostPads()
 		_setupDriftCorners()   -- all biomes: charges boost gauge (F key)
+
+		_setupSlowZones()   -- FOREST + OCEAN have SlowZone-tagged trigger pads
 
 		if biome == "FOREST" then
 			_setupMudZones()
@@ -529,9 +612,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_setupFinishLine()
 		_startPositionSync()
 
-		-- Broadcast race intro overlay + per-race seed (for client variation)
+		-- Broadcast race intro overlay + per-race seed (for client variation).
+		-- _raceSeed was set above before _setupBoostPads consumed it.
 		RemoteEvents.RaceIntroShown:FireAllClients({ biome = biome })
-		_raceSeed = math.random(1, 1000000)
 		RemoteEvents.RaceSeedBroadcast:FireAllClients(_raceSeed)
 
 	elseif phase == Constants.PHASES.RESULTS then

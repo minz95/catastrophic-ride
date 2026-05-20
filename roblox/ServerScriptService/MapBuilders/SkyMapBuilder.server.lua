@@ -193,6 +193,12 @@ end
 
 -- ─── Continuous track floor (spec §4.4: no inter-platform gaps) ──────────────
 
+-- Track surface friction. Roblox vehicles here use BodyVelocity-based
+-- propulsion (RacingClient _driveLoop), so floor friction acts as pure drag,
+-- not traction. Default Rock = 0.5 caused noticeable "sticky" sections —
+-- 0.05 with frictionWeight=100 keeps the vehicle gliding.
+local LOW_FRICTION_FLOOR = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
 local function _buildFloor(root)
 	local colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }
 	for i = 1, #NODES - 1 do
@@ -206,6 +212,7 @@ local function _buildFloor(root)
 			Color    = colors[((i - 1) % 3) + 1],
 			Material = MAT.ROCK,
 		})
+		floor.CustomPhysicalProperties = LOW_FRICTION_FLOOR
 		floor.CFrame = cf
 
 		-- Edge glow stripes on both sides for visibility
@@ -221,26 +228,59 @@ local function _buildFloor(root)
 	end
 end
 
--- ─── Invisible side walls (spec §4.4: ±25, Y 54→114) ─────────────────────────
+-- ─── Edge barriers (spec §4.4 revised: visible permeable pillars) ───────────
+-- Replaces the original invisible CanCollide=true walls. Players reported the
+-- mystery "I just stopped" effect with no way around. New design:
+--   - Crystal pillars (2x2 stud, neon) along corridor edge — visible
+--   - Pillar every PILLAR_SPACING studs along the track
+--   - Every GAP_INTERVAL studs of *track-cumulative* distance, an opening of
+--     2 * GAP_HALF_WIDTH studs is left for risky shortcuts
+--   - Running-distance gap pattern (not per-segment) so even short segments at
+--     sharp corners still get gaps — guarantees no impassable sub-section
 
-local function _buildInvisibleWalls(root)
+local PILLAR_SPACING = 6
+local GAP_INTERVAL   = 48
+local GAP_HALF_WIDTH = 4   -- 8-stud doorway
+
+-- High frictionWeight + very low friction makes the vehicle slide *along*
+-- the pillars (and other walls) instead of getting brake-pinned by them.
+-- Roblox blends surface frictions weighted: with weight=100 and friction=0.05
+-- on the wall vs default tire friction, contact friction ≈ 0.054.
+local LOW_FRICTION = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
+local function _isInGap(arcPos)
+	local nearestGapCenter = math.floor(arcPos / GAP_INTERVAL + 0.5) * GAP_INTERVAL
+	return math.abs(arcPos - nearestGapCenter) < GAP_HALF_WIDTH
+end
+
+local function _buildEdgeBarriers(root)
 	local wallH = WALL_Y_HI - WALL_Y_LO
+	local pillarColors = { C.CRYSTAL, C.CRYSTAL2 }
+	local arcStart = 0  -- cumulative arc-distance at start of current segment
 	for i = 1, #NODES - 1 do
 		local a, b = NODES[i], NODES[i + 1]
 		local segLen = _segLen(a[1], a[2], b[1], b[2])
 		if segLen < 0.1 then continue end
 		local cf = _segCF(a[1], a[2], b[1], b[2], (WALL_Y_LO + WALL_Y_HI) / 2)
-		for _, side in ipairs({ -1, 1 }) do
-			-- segLen (no +8): prevents wall protrusion into the next segment's
-			-- corridor at sharp kinks. Floor still uses +8 for joint coverage
-			-- since players drive ON it laterally.
-			local wall = _part(root, {
-				Name = "InvisibleWall_" .. i .. (side > 0 and "R" or "L"),
-				Size = Vector3.new(2, wallH, segLen),
-				CanCollide = true, Transparency = 1, CastShadow = false,
-			})
-			wall.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + 1), 0, 0)
+		local numPillars = math.max(1, math.floor(segLen / PILLAR_SPACING))
+		for slot = 0, numPillars - 1 do
+			local relAlong = (slot + 0.5) * PILLAR_SPACING       -- distance from seg start
+			local arcPos   = arcStart + relAlong                 -- cumulative arc distance
+			if _isInGap(arcPos) then continue end
+			local localZ = relAlong - segLen / 2                 -- CFrame-local Z
+			for _, side in ipairs({ -1, 1 }) do
+				local pillar = _part(root, {
+					Name = "EdgePillar_" .. i .. "_" .. slot .. (side > 0 and "R" or "L"),
+					Size = Vector3.new(2, wallH, 2),
+					Color = pillarColors[(slot % 2) + 1],
+					Material = MAT.CRYSTAL,
+					CanCollide = true, CastShadow = false,
+				})
+				pillar.CustomPhysicalProperties = LOW_FRICTION
+				pillar.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + 1), 0, localZ)
+			end
 		end
+		arcStart = arcStart + segLen
 	end
 end
 
@@ -644,7 +684,7 @@ local function buildSky()
 	_buildFarmPlatform(farmSub)
 
 	_buildFloor(trackSub)
-	_buildInvisibleWalls(trackSub)
+	_buildEdgeBarriers(trackSub)
 	_buildInvisibleCeiling(trackSub)
 	_buildCrystalClusters(trackSub)
 	_buildBoostPads(trackSub)
