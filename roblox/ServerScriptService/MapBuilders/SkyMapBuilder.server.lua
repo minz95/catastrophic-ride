@@ -231,9 +231,12 @@ local function _buildInvisibleWalls(root)
 		if segLen < 0.1 then continue end
 		local cf = _segCF(a[1], a[2], b[1], b[2], (WALL_Y_LO + WALL_Y_HI) / 2)
 		for _, side in ipairs({ -1, 1 }) do
+			-- segLen (no +8): prevents wall protrusion into the next segment's
+			-- corridor at sharp kinks. Floor still uses +8 for joint coverage
+			-- since players drive ON it laterally.
 			local wall = _part(root, {
 				Name = "InvisibleWall_" .. i .. (side > 0 and "R" or "L"),
-				Size = Vector3.new(2, wallH, segLen + 8),
+				Size = Vector3.new(2, wallH, segLen),
 				CanCollide = true, Transparency = 1, CastShadow = false,
 			})
 			wall.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + 1), 0, 0)
