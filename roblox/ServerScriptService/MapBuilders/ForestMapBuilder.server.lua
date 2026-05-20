@@ -272,6 +272,11 @@ end
 -- One TrackSeg per node-pair, slightly elongated by +2 studs on each end so
 -- adjacent segments overlap at the joints (no thin gap visible at corners).
 
+-- Vehicle drive uses BodyVelocity (RacingClient _driveLoop), so floor friction
+-- is pure drag, not traction. Default Asphalt friction (~0.5) caused noticeable
+-- "sticky" slowdowns. 0.05 with frictionWeight=100 keeps the vehicle gliding.
+local LOW_FRICTION_SURFACE = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
 local function _buildTrack(root)
 	for i = 1, #NODES - 1 do
 		local a, b   = NODES[i], NODES[i + 1]
@@ -284,6 +289,7 @@ local function _buildTrack(root)
 			Color    = C.TRACK,
 			Material = MAT.TRACK,
 		})
+		seg.CustomPhysicalProperties = LOW_FRICTION_SURFACE
 		seg.CFrame = cf
 
 		-- White outer-edge stripe (visual only).
@@ -378,6 +384,7 @@ local function _buildWalls(root)
 					Color    = C.WALL,
 					Material = MAT.WOOD,
 				})
+				wall.CustomPhysicalProperties = LOW_FRICTION_SURFACE
 				wall.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H / 2, pMid)
 
 				local cap = _part(root, {

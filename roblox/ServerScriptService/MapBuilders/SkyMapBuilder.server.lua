@@ -193,6 +193,12 @@ end
 
 -- ─── Continuous track floor (spec §4.4: no inter-platform gaps) ──────────────
 
+-- Track surface friction. Roblox vehicles here use BodyVelocity-based
+-- propulsion (RacingClient _driveLoop), so floor friction acts as pure drag,
+-- not traction. Default Rock = 0.5 caused noticeable "sticky" sections —
+-- 0.05 with frictionWeight=100 keeps the vehicle gliding.
+local LOW_FRICTION_FLOOR = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
 local function _buildFloor(root)
 	local colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }
 	for i = 1, #NODES - 1 do
@@ -206,6 +212,7 @@ local function _buildFloor(root)
 			Color    = colors[((i - 1) % 3) + 1],
 			Material = MAT.ROCK,
 		})
+		floor.CustomPhysicalProperties = LOW_FRICTION_FLOOR
 		floor.CFrame = cf
 
 		-- Edge glow stripes on both sides for visibility
@@ -235,6 +242,12 @@ local PILLAR_SPACING = 6
 local GAP_INTERVAL   = 48
 local GAP_HALF_WIDTH = 4   -- 8-stud doorway
 
+-- High frictionWeight + very low friction makes the vehicle slide *along*
+-- the pillars (and other walls) instead of getting brake-pinned by them.
+-- Roblox blends surface frictions weighted: with weight=100 and friction=0.05
+-- on the wall vs default tire friction, contact friction ≈ 0.054.
+local LOW_FRICTION = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
 local function _isInGap(arcPos)
 	local nearestGapCenter = math.floor(arcPos / GAP_INTERVAL + 0.5) * GAP_INTERVAL
 	return math.abs(arcPos - nearestGapCenter) < GAP_HALF_WIDTH
@@ -263,6 +276,7 @@ local function _buildEdgeBarriers(root)
 					Material = MAT.CRYSTAL,
 					CanCollide = true, CastShadow = false,
 				})
+				pillar.CustomPhysicalProperties = LOW_FRICTION
 				pillar.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + 1), 0, localZ)
 			end
 		end

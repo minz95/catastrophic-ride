@@ -184,6 +184,10 @@ end
 local WALL_GAP_INTERVAL   = 48
 local WALL_GAP_HALF_WIDTH = 4   -- 8-stud opening
 
+-- Same rationale as FOREST/SKY: BodyVelocity propulsion means wall contact
+-- is pure drag. Low friction makes boats glide along the reef instead of pinning.
+local LOW_FRICTION_SURFACE = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+
 local function _wallPieces(arcStart, segLen)
 	local pieces = {}
 	local cursor = 0
@@ -230,6 +234,7 @@ local function _buildReefWalls(root)
 					Color    = C.REEF,
 					Material = MAT.ROCK,
 				})
+				wall.CustomPhysicalProperties = LOW_FRICTION_SURFACE
 				wall.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), 0, pMid)
 
 				local cap = _part(root, {
