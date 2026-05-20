@@ -317,8 +317,10 @@ local function _buildTrack(root)
 end
 
 -- ─── Continuous track walls (spec §2.4) ───────────────────────────────────────
--- Each segment gets a wall on each side, extended by +4 studs each end so
--- adjacent walls overlap. Two-tone (dark wood + red top-stripe) for visibility.
+-- Walls span exactly segLen. An earlier +8 extension caused the wall from
+-- segment N to jut 4 studs past its endpoint along its own direction at
+-- sharp kinks (S2 arc N4–N6, S4 U-bend N17–N21, S5 chicane N23–N29),
+-- intruding into the next segment's lane.
 
 local function _buildWalls(root)
 	for i = 1, #NODES - 1 do
@@ -327,19 +329,17 @@ local function _buildWalls(root)
 		local cf     = _segCF(a[1], a[2], b[1], b[2])
 
 		for _, side in ipairs({ -1, 1 }) do
-			-- Visible wall body
 			local wall = _part(root, {
 				Name     = "TrackWall",
-				Size     = Vector3.new(2, WALL_H, segLen + 8),
+				Size     = Vector3.new(2, WALL_H, segLen),
 				Color    = C.WALL,
 				Material = MAT.WOOD,
 			})
 			wall.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H / 2, 0)
 
-			-- Red top-stripe (collidable but visually distinct)
 			local cap = _part(root, {
 				Name     = "TrackWallCap",
-				Size     = Vector3.new(2.4, 0.6, segLen + 8),
+				Size     = Vector3.new(2.4, 0.6, segLen),
 				Color    = C.WALL_TOP,
 				Material = MAT.NEON,
 			})

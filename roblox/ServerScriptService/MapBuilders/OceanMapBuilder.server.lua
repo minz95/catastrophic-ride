@@ -186,16 +186,17 @@ local function _buildReefWalls(root)
 		for _, side in ipairs({ -1, 1 }) do
 			local wall = _part(root, {
 				Name     = "ReefWall",
-				Size     = Vector3.new(3, WALL_H, segLen + 8),  -- +8: adjacent walls overlap at joints
+				-- segLen (no overlap): preserves channel width at sharp kinks (N5/N17/N23).
+				-- An earlier +8 extension intruded 4 studs into the lane at drift-corner apexes.
+				Size     = Vector3.new(3, WALL_H, segLen),
 				Color    = C.REEF,
 				Material = MAT.ROCK,
 			})
 			wall.CFrame = cf * CFrame.new(side * (LANE_W / 2 + 1.5), 0, 0)
 
-			-- Red top stripe for visibility
 			local cap = _part(root, {
 				Name     = "ReefWallCap",
-				Size     = Vector3.new(3.4, 0.6, segLen + 8),
+				Size     = Vector3.new(3.4, 0.6, segLen),
 				Color    = C.REEF_TOP,
 				Material = MAT.NEON,
 				CastShadow = false,
