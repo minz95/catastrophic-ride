@@ -266,12 +266,18 @@ end
 --   - Running-distance gap pattern (not per-segment) so even short segments at
 --     sharp corners still get gaps — guarantees no impassable sub-section
 
--- SKY-specific tuning: tighter than ground biomes because falling through a
--- gap kills the player (no ground beneath). 4-stud doorway (vs 8 elsewhere)
--- still threadable on purpose, but rare drift won't accidentally pop through.
-local PILLAR_SPACING = 4   -- denser fence
-local GAP_INTERVAL   = 96  -- doorways every 96 studs, half as many as before
-local GAP_HALF_WIDTH = 2   -- 4-stud doorway (was 8)
+-- SKY pillars: now a continuous solid fence with NO doorways. SKY vehicles
+-- (flyers) have a ~1.5-stud-wide chassis hitbox, so any gap wide enough to be
+-- visually "permeable" is physically passable. Players reported drifting
+-- through 4-stud doorways into the kill plane. Doorways and pillar spacing
+-- have been tightened so adjacent pillars touch:
+--   - PILLAR_SPACING = 2 (pillar size, no gap between adjacent)
+--   - No doorways (GAP_HALF_WIDTH = 0)
+-- Slow-zone shortcut is no longer possible on SKY — falling off is genuinely
+-- catastrophic so the wall is binary: stay on track or kill plane.
+local PILLAR_SPACING = 2
+local GAP_INTERVAL   = 1000  -- unused (GAP_HALF_WIDTH=0)
+local GAP_HALF_WIDTH = 0
 
 -- High frictionWeight + very low friction makes the vehicle slide *along*
 -- the pillars (and other walls) instead of getting brake-pinned by them.
