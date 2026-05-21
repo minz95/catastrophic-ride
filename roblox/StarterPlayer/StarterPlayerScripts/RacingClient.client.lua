@@ -413,7 +413,7 @@ local function _showCheckpointPassToast(cpIndex)
 		lbl.TextStrokeTransparency = 0.3
 		lbl.Parent                 = overlay
 	end
-	lbl.Text             = "체크포인트 " .. cpIndex .. " 통과! ✓"
+	lbl.Text             = "CP " .. cpIndex .. " PASSED ✓"
 	lbl.TextColor3       = CP_PASSED_COLOR
 	lbl.TextTransparency = 0
 	TweenService:Create(lbl, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {
@@ -470,7 +470,7 @@ local function _showRaceIntro()
 	body.Size                    = UDim2.new(1, -20, 0, 44)
 	body.Position                = UDim2.new(0, 10, 0, 46)
 	body.BackgroundTransparency  = 1
-	body.Text                    = "1번 → 2번 체크포인트 아치를 순서대로 통과한 뒤 결승선!"
+	body.Text                    = "Drive through CP 1 → CP 2 → Finish!"
 	body.TextColor3              = Color3.fromRGB(220, 230, 245)
 	body.Font                    = Enum.Font.GothamBold
 	body.TextScaled              = true

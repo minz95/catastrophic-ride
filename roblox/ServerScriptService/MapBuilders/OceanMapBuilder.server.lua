@@ -499,7 +499,7 @@ local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
 	local lbl = Instance.new("TextLabel")
 	lbl.Size = UDim2.fromScale(1, 1)
 	lbl.BackgroundTransparency = 1
-	lbl.Text = "체크포인트 " .. cpIndex
+	lbl.Text = "CP " .. cpIndex
 	lbl.TextColor3 = archColor
 	lbl.TextStrokeColor3 = Color3.new(0, 0, 0)
 	lbl.TextStrokeTransparency = 0.2
