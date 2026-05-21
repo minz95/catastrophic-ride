@@ -30,21 +30,31 @@ local function _ensure(userId)
 	return _state[userId]
 end
 
-local function _findPlayerByVehicle(vehicle)
-	for _, player in ipairs(Players:GetPlayers()) do
-		local pdata = SessionManager.getData(player)
-		if pdata and pdata.vehicleModel == vehicle then
-			return player
+-- BODY-driven chassis (#139) and other slot items mount the item's FBX model
+-- inside the vehicle Model. FindFirstAncestorWhichIsA("Model") on the touched
+-- part can stop at the BODY sub-model instead of the registered vehicle Model.
+-- Walk up ALL Model ancestors and check each against every player's
+-- vehicleModel so the comparison succeeds wherever the contact part lives.
+local function _findPlayerByTouch(hit)
+	local players = Players:GetPlayers()
+	local vehicleByModel = {}
+	for _, p in ipairs(players) do
+		local pdata = SessionManager.getData(p)
+		if pdata and pdata.vehicleModel then
+			vehicleByModel[pdata.vehicleModel] = p
 		end
+	end
+	local node = hit
+	while node do
+		if vehicleByModel[node] then return vehicleByModel[node] end
+		node = node.Parent
 	end
 	return nil
 end
 
 local function _connectCheckpoint(part, cpIndex)
 	return part.Touched:Connect(function(hit)
-		local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-		if not vehicle then return end
-		local player = _findPlayerByVehicle(vehicle)
+		local player = _findPlayerByTouch(hit)
 		if not player then return end
 
 		local s = _ensure(player.UserId)
