@@ -228,6 +228,34 @@ local function _buildFloor(root)
 	end
 end
 
+-- ─── Safety shoulder (catches vehicles that squeeze through pillar gaps) ────
+-- Without a shoulder, threading a 4-stud doorway = immediate fall (kill plane).
+-- A 6-stud solid ledge outside each pillar row gives a "yes you can shortcut,
+-- but you have to commit to it" feel rather than instant death.
+
+local SHOULDER_W = 6
+
+local function _buildShoulders(root)
+	for i = 1, #NODES - 1 do
+		local a, b = NODES[i], NODES[i + 1]
+		local segLen = _segLen(a[1], a[2], b[1], b[2])
+		if segLen < 0.1 then continue end
+		local cf = _segCF(a[1], a[2], b[1], b[2], SKY_BASE_Y - FLOOR_TH / 2)
+		for _, side in ipairs({ -1, 1 }) do
+			local shoulder = _part(root, {
+				Name = "Shoulder_" .. i .. (side > 0 and "R" or "L"),
+				Size = Vector3.new(SHOULDER_W, FLOOR_TH, segLen + 8),
+				Color = C.PLATFORM2,
+				Material = MAT.ROCK,
+				CastShadow = false,
+			})
+			shoulder.CustomPhysicalProperties = LOW_FRICTION_FLOOR
+			-- Centerline of shoulder is at corridor edge + half width + tiny gap
+			shoulder.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + SHOULDER_W / 2 + 0.2), 0, 0)
+		end
+	end
+end
+
 -- ─── Edge barriers (spec §4.4 revised: visible permeable pillars) ───────────
 -- Replaces the original invisible CanCollide=true walls. Players reported the
 -- mystery "I just stopped" effect with no way around. New design:
@@ -238,9 +266,12 @@ end
 --   - Running-distance gap pattern (not per-segment) so even short segments at
 --     sharp corners still get gaps — guarantees no impassable sub-section
 
-local PILLAR_SPACING = 6
-local GAP_INTERVAL   = 48
-local GAP_HALF_WIDTH = 4   -- 8-stud doorway
+-- SKY-specific tuning: tighter than ground biomes because falling through a
+-- gap kills the player (no ground beneath). 4-stud doorway (vs 8 elsewhere)
+-- still threadable on purpose, but rare drift won't accidentally pop through.
+local PILLAR_SPACING = 4   -- denser fence
+local GAP_INTERVAL   = 96  -- doorways every 96 studs, half as many as before
+local GAP_HALF_WIDTH = 2   -- 4-stud doorway (was 8)
 
 -- High frictionWeight + very low friction makes the vehicle slide *along*
 -- the pillars (and other walls) instead of getting brake-pinned by them.
@@ -491,6 +522,17 @@ local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
 			CanCollide = false, CastShadow = false,
 		})
 	end
+	-- Vertical beacon column — visible from anywhere on the map so players can
+	-- always orient toward the next checkpoint
+	local beaconHeight = 120
+	_part(root, {
+		Name = "CPGate" .. cpIndex .. "Beacon",
+		Size = Vector3.new(1.4, beaconHeight, 1.4),
+		Position = Vector3.new(x, topY + 6 + beaconHeight / 2, z),
+		Color = archColor, Material = MAT.NEON,
+		CanCollide = false, CastShadow = false,
+		Transparency = 0.15,
+	})
 	-- Floating "CP1" / "CP2" label
 	local labelAnchor = _part(root, {
 		Name = "CPGate" .. cpIndex .. "Label",
@@ -499,10 +541,11 @@ local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
 		Transparency = 1, CanCollide = false, CastShadow = false,
 	})
 	local bb = Instance.new("BillboardGui")
-	bb.Size           = UDim2.new(0, 120, 0, 32)
+	bb.Size           = UDim2.new(0, 180, 0, 48)
 	bb.StudsOffset    = Vector3.new(0, 0, 0)
-	bb.MaxDistance    = 300
+	bb.MaxDistance    = 1500   -- visible from across the map
 	bb.LightInfluence = 0
+	bb.AlwaysOnTop    = true
 	bb.Parent         = labelAnchor
 	local lbl = Instance.new("TextLabel")
 	lbl.Size                   = UDim2.fromScale(1, 1)
@@ -684,6 +727,7 @@ local function buildSky()
 	_buildFarmPlatform(farmSub)
 
 	_buildFloor(trackSub)
+	_buildShoulders(trackSub)
 	_buildEdgeBarriers(trackSub)
 	_buildInvisibleCeiling(trackSub)
 	_buildCrystalClusters(trackSub)
