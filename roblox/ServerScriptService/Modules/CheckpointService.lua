@@ -30,15 +30,15 @@ local function _ensure(userId)
 	return _state[userId]
 end
 
--- BODY-driven chassis (#139) and other slot items mount the item's FBX model
--- inside the vehicle Model. FindFirstAncestorWhichIsA("Model") on the touched
--- part can stop at the BODY sub-model instead of the registered vehicle Model.
--- Walk up ALL Model ancestors and check each against every player's
--- vehicleModel so the comparison succeeds wherever the contact part lives.
+-- The touching part may belong to:
+--   a) The vehicle's chassis or a slot item's nested model (BODY FBX, etc.)
+--   b) The player's Character sitting in the VehicleSeat (head/torso reaches
+--      up into the CP arch's tall trigger volume)
+-- Walk up the ancestry and accept EITHER a registered vehicleModel or a
+-- player Character match. #162 fixed (a); this completes the fix for (b).
 local function _findPlayerByTouch(hit)
-	local players = Players:GetPlayers()
 	local vehicleByModel = {}
-	for _, p in ipairs(players) do
+	for _, p in ipairs(Players:GetPlayers()) do
 		local pdata = SessionManager.getData(p)
 		if pdata and pdata.vehicleModel then
 			vehicleByModel[pdata.vehicleModel] = p
@@ -46,7 +46,11 @@ local function _findPlayerByTouch(hit)
 	end
 	local node = hit
 	while node do
-		if vehicleByModel[node] then return vehicleByModel[node] end
+		if node:IsA("Model") then
+			if vehicleByModel[node] then return vehicleByModel[node] end
+			local p = Players:GetPlayerFromCharacter(node)
+			if p then return p end
+		end
 		node = node.Parent
 	end
 	return nil
