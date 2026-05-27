@@ -233,27 +233,55 @@ end
 -- A 6-stud solid ledge outside each pillar row gives a "yes you can shortcut,
 -- but you have to commit to it" feel rather than instant death.
 
-local SHOULDER_W = 6
+-- Wayfinding arrows on the corridor floor at every direction change.
+-- S1 (the 700-stud straight) ends at N4 where the track curves into Loop A;
+-- without a visual cue players read the curve as a dead-end ("앞으로 가면 길 없음").
+-- Arrows point along the OUTGOING segment direction and are placed in the floor
+-- before each non-trivial turn.
 
-local function _buildShoulders(root)
-	for i = 1, #NODES - 1 do
-		local a, b = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		if segLen < 0.1 then continue end
-		local cf = _segCF(a[1], a[2], b[1], b[2], SKY_BASE_Y - FLOOR_TH / 2)
-		for _, side in ipairs({ -1, 1 }) do
-			local shoulder = _part(root, {
-				Name = "Shoulder_" .. i .. (side > 0 and "R" or "L"),
-				Size = Vector3.new(SHOULDER_W, FLOOR_TH, segLen + 8),
-				Color = C.PLATFORM2,
-				Material = MAT.ROCK,
-				CastShadow = false,
-			})
-			shoulder.CustomPhysicalProperties = LOW_FRICTION_FLOOR
-			-- Centerline of shoulder is at corridor edge + half width + tiny gap
-			shoulder.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 + SHOULDER_W / 2 + 0.2), 0, 0)
+local function _floorArrow(root, idx, x, z, headingDeg)
+	local shaft = _part(root, {
+		Name = "WayArrowShaft_" .. idx,
+		Size = Vector3.new(2.4, 0.6, 14),
+		Color = Color3.fromRGB(255, 220, 80),
+		Material = MAT.NEON,
+		CanCollide = false, CastShadow = false,
+		Transparency = 0.15,
+	})
+	shaft.CFrame = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, math.rad(headingDeg), 0)
+	local head = _wedge(root, {
+		Name = "WayArrowHead_" .. idx,
+		Size = Vector3.new(5, 0.6, 5),
+		Color = Color3.fromRGB(255, 220, 80),
+		Material = MAT.NEON,
+		CanCollide = false, CastShadow = false,
+		Transparency = 0.15,
+	})
+	head.CFrame = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, math.rad(headingDeg), 0)
+		* CFrame.new(0, 0, -9.5) * CFrame.Angles(-math.pi / 2, 0, 0)
+end
+
+local function _buildWayfindingArrows(root)
+	-- Place an arrow at each internal node where the heading changes meaningfully.
+	-- Arrow is positioned at the node and points along the outgoing segment direction.
+	local TURN_THRESHOLD_RAD = math.rad(12)
+	for i = 2, #NODES - 1 do
+		local prev, cur, nxt = NODES[i - 1], NODES[i], NODES[i + 1]
+		local inDx, inDz   = cur[1] - prev[1], cur[2] - prev[2]
+		local outDx, outDz = nxt[1] - cur[1], nxt[2] - cur[2]
+		local inAng  = math.atan2(inDx, inDz)
+		local outAng = math.atan2(outDx, outDz)
+		local diff   = math.atan2(math.sin(outAng - inAng), math.cos(outAng - inAng))
+		if math.abs(diff) >= TURN_THRESHOLD_RAD then
+			-- Use the outgoing direction so the arrow points "where to go next"
+			local headingDeg = math.deg(outAng)
+			_floorArrow(root, i, cur[1], cur[2], headingDeg)
 		end
 	end
+	-- Extra arrows along S1's straight (700 stud) so players see direction long
+	-- before they reach the first turn at N4.
+	_floorArrow(root, 100, 0, 1300, 180)  -- pointing -Z
+	_floorArrow(root, 101, 0, 1000, 180)
 end
 
 -- ─── Edge barriers (spec §4.4 revised: visible permeable pillars) ───────────
@@ -733,7 +761,7 @@ local function buildSky()
 	_buildFarmPlatform(farmSub)
 
 	_buildFloor(trackSub)
-	_buildShoulders(trackSub)
+	_buildWayfindingArrows(trackSub)
 	_buildEdgeBarriers(trackSub)
 	_buildInvisibleCeiling(trackSub)
 	_buildCrystalClusters(trackSub)
