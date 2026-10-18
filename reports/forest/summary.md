@@ -10,41 +10,66 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 48.8 | expert | 88.3 s | 0 | 0 |
-| live code | slowest | 48.8 | expert | 88.3 s | 0 | 0 |
+| authored | slowest | 48.8 | expert | 88.2 s | 0 | 0 |
+| live code | slowest | 48.8 | expert | 88.2 s | 0 | 0 |
 | authored | slowest | 48.8 | average | 88.6 s | 0 | 0 |
 | live code | slowest | 48.8 | average | 88.6 s | 0 | 0 |
-| authored | slowest | 48.8 | novice | 94.8 s | 0 | 0 |
-| live code | slowest | 48.8 | novice | 94.8 s | 0 | 0 |
+| authored | slowest | 48.8 | novice | 94.7 s | 0 | 0 |
+| live code | slowest | 48.8 | novice | 94.7 s | 0 | 0 |
 | authored | p50 | 67.5 | expert | 62.3 s | 0 | 0 |
 | live code | p50 | 67.5 | expert | 62.3 s | 0 | 0 |
 | authored | p50 | 67.5 | average | 62.6 s | 0 | 0 |
 | live code | p50 | 67.5 | average | 62.6 s | 0 | 0 |
-| authored | p50 | 67.5 | novice | 71.9 s | 0 | 3 |
-| live code | p50 | 67.5 | novice | 71.9 s | 0 | 3 |
+| authored | p50 | 67.5 | novice | 72.1 s | 0 | 5 |
+| live code | p50 | 67.5 | novice | 72.1 s | 0 | 5 |
 | authored | fastest | 86.8 | expert | 41.4 s | 0 | 0 |
 | live code | fastest | 86.8 | expert | 41.4 s | 0 | 0 |
 | authored | fastest | 86.8 | average | 41.9 s | 0 | 0 |
 | live code | fastest | 86.8 | average | 41.9 s | 0 | 0 |
-| authored | fastest | 86.8 | novice | 68.7 s | 1 | 29 |
-| live code | fastest | 86.8 | novice | 68.8 s | 1 | 29 |
+| authored | fastest | 86.8 | novice | 56.3 s | 0 | 23 |
+| live code | fastest | 86.8 | novice | 56.3 s | 0 | 23 |
 
 Cars by top speed: slowest = Microwave + Fan + Pizza (top speed 48.8, turn 2.52 rad/s); p50 = Barrel + Magnifying Glass + Lantern + Alarm Clock (top speed 67.5, turn 2.26 rad/s); fastest = Skateboard + Kettle + Umbrella + Log (top speed 86.8, turn 2.33 rad/s).
 
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 180 s: 100%
-- Fastest car won 6 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.66 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.52
+- Fastest car won 4 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.64 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.43
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 2.94 |
-| farming: casual | 4.06 |
-| driving: expert | 2.54 |
-| driving: average | 2.67 |
-| driving: novice | 5.29 |
+| farming: sweaty | 2.89 |
+| farming: casual | 4.11 |
+| driving: expert | 2.62 |
+| driving: average | 2.79 |
+| driving: novice | 5.08 |
+
+## Fun metrics
+
+Each simulated match is scored with `Shared/RaceMetrics` (the same code scores real Studio playtests, see `Modules/PlaytestReport`). Bots race as ghosts on one clock: no car-to-car contact, no abilities, so lead changes come from build and driving differences only. Targets are starting points in `Constants.FUN_TARGETS`; playtests decide.
+
+| | Metric | Value | Target | Why |
+|---|---|---|---|---|
+| ✗ | closeShare | 0.12 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.33 |  .. 0.70 | the fastest build should not always win |
+| ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
+| ✓ | finishSpread | 35.06 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.08 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.25 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.64 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
+| ✗ | winnerTime | 46.70 | 60.00 .. 120.00 | a race should take about 90 s |
+
+Overtakes per match: 6.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+
+| Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
+|---|---|---|---|---|---|
+| S1 start straight | 5.5 | 3.5 | 0 | 0 | 13 |
+| S2 outcrop hairpin | 8.1 | 5.3 | 0 | 0 | 20 |
+| S3 river sweeper | 17.1 | 10.1 | 7 | 0 | 73 |
+| S4 farm U-bend | 20.1 | 9.8 | 5 | 0 | 42 |
+| S5 mud hook | 10.3 | 6.8 | 0 | 0 | 65 |
 
 ## Geometry findings
 

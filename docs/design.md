@@ -94,9 +94,21 @@ spot with its track section; the RESULTS report lists them per section.
 
 ## Open questions (from the reports, not decided)
 
-- Ocean races are short: ~40 s for the winner in simulation vs the 60–120 s
-  target. Lengthen the track, or slow boats?
-- Only ~25% of a round is racing (farming 90 s + crafting 120 s + results
-  30 s). Shorten crafting?
-- Sky is long (~7,600 studs): the slowest car with a novice driver needs
-  ~170 s of the 180 s limit.
+Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
+
+| | Forest | Ocean | Sky | Target |
+|---|---|---|---|---|
+| Winner time | 47 s | 43 s | 94 s | 60–120 s |
+| Share of the round spent racing | 25% | 23% | 38% | ≥ 35% |
+| Spread first → last finisher | 35 s | 30 s | 50 s | ≤ 45 s |
+| Lead changes per race | 1.1 | 1.5 | 2.9 | ≥ 1 |
+| Top two within 40 studs | 12% | 22% | 24% | ≥ 25% |
+
+- Forest and Ocean races are short (~45 s vs ~90 s). Lengthen the tracks,
+  or lower top speeds?
+- Racing is a quarter of a round on Forest and Ocean (farming 90 s +
+  crafting 120 s + results 30 s). Shorten crafting?
+- Sky's last finisher arrives 50 s after the winner; the slowest car with a
+  novice driver needs ~170 s of the 180 s limit.
+- Close racing is low everywhere, but the simulation has no car-to-car
+  contact or abilities; check with playtests (M / N markers) before acting.

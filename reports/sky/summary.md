@@ -12,8 +12,8 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 |---|---|---|---|---|---|---|
 | authored | slowest | 51.8 | expert | 148.7 s | 0 | 0 |
 | live code | slowest | 51.8 | expert | 148.7 s | 0 | 0 |
-| authored | slowest | 51.8 | average | 153.3 s | 0 | 0 |
-| live code | slowest | 51.8 | average | 153.3 s | 0 | 0 |
+| authored | slowest | 51.8 | average | 153.2 s | 0 | 0 |
+| live code | slowest | 51.8 | average | 153.2 s | 0 | 0 |
 | authored | slowest | 51.8 | novice | 171.9 s | 0 | 2 |
 | live code | slowest | 51.8 | novice | 171.9 s | 0 | 2 |
 | authored | p50 | 74.9 | expert | 106.4 s | 0 | 0 |
@@ -34,17 +34,43 @@ Cars by top speed: slowest = Microwave + Fan + Umbrella (top speed 51.8, turn 1.
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 180 s: 100%
-- Fastest car won 5 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.34 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.25
+- Fastest car won 4 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.40 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.22
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.25 |
-| farming: casual | 3.75 |
-| driving: expert | 2.25 |
-| driving: average | 2.75 |
+| farming: sweaty | 3.28 |
+| farming: casual | 3.72 |
+| driving: expert | 2.29 |
+| driving: average | 2.71 |
 | driving: novice | 5.50 |
+
+## Fun metrics
+
+Each simulated match is scored with `Shared/RaceMetrics` (the same code scores real Studio playtests, see `Modules/PlaytestReport`). Bots race as ghosts on one clock: no car-to-car contact, no abilities, so lead changes come from build and driving differences only. Targets are starting points in `Constants.FUN_TARGETS`; playtests decide.
+
+| | Metric | Value | Target | Why |
+|---|---|---|---|---|
+| ✗ | closeShare | 0.24 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.33 |  .. 0.70 | the fastest build should not always win |
+| ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
+| ✗ | finishSpread | 50.12 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 2.92 | 1.00 ..  | the lead changes at least once |
+| ✓ | racingShare | 0.38 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.40 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
+| ✓ | winnerTime | 94.48 | 60.00 .. 120.00 | a race should take about 90 s |
+
+Overtakes per match: 11.6. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+
+| Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
+|---|---|---|---|---|---|
+| S1 launch tunnel | 8.7 | 4.0 | 0 | 0 | 27 |
+| S2 cloud loop A | 26.3 | 15.1 | 3 | 0 | 165 |
+| S3 crossover plaza | 4.9 | 2.3 | 0 | 1 | 8 |
+| S4 cloud loop B | 24.8 | 16.5 | 7 | 2 | 215 |
+| S5 crystal canyon | 36.9 | 12.8 | 2 | 1 | 312 |
+| S6 final descent | 12.8 | 4.2 | 0 | 0 | 32 |
 
 ## Geometry findings
 

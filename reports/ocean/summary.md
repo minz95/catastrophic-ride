@@ -31,20 +31,20 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 Cars by top speed: slowest = Microwave + Fan + Balloon Bunch (top speed 33.2, turn 1.22 rad/s); p50 = Skateboard + Magnifying Glass + Cactus (top speed 52.2, turn 1.26 rad/s); fastest = Kite + Fan + Magnet + Bathtub (top speed 80.0, turn 2.00 rad/s).
 
-## Simulated matches (3 × 6 bots, authored map)
+## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 180 s: 100%
-- Fastest car won 2 of 3 matches that had a finisher
-- Rank correlation, top speed vs place: -0.64 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.51
+- Fastest car won 6 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.55 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.38
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 2.56 |
-| farming: casual | 4.44 |
-| driving: expert | 2.50 |
-| driving: average | 2.83 |
-| driving: novice | 5.17 |
+| farming: sweaty | 2.72 |
+| farming: casual | 4.28 |
+| driving: expert | 2.67 |
+| driving: average | 2.62 |
+| driving: novice | 5.21 |
 
 ## Fun metrics
 
@@ -52,24 +52,24 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✗ | closeShare | 0.15 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.67 |  .. 0.70 | the fastest build should not always win |
+| ✗ | closeShare | 0.22 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.50 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 35.37 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 1.00 | 1.00 ..  | the lead changes at least once |
-| ✗ | racingShare | 0.24 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.64 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
-| ✗ | winnerTime | 40.42 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | finishSpread | 30.27 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.50 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.23 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.55 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
+| ✗ | winnerTime | 43.12 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 8.7. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 8.6. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 harbor launch | 5.7 | 3.1 | 0 | 0 | 0 |
-| S2 island arc | 10.5 | 6.8 | 0 | 0 | 3 |
-| S3 open channel | 9.9 | 5.8 | 0 | 0 | 4 |
-| S4 reef U-bend | 14.5 | 9.5 | 0 | 0 | 6 |
-| S5 return channel | 18.5 | 12.1 | 3 | 0 | 14 |
+| S1 harbor launch | 5.5 | 2.7 | 0 | 0 | 0 |
+| S2 island arc | 10.1 | 5.6 | 0 | 0 | 8 |
+| S3 open channel | 9.4 | 4.9 | 0 | 0 | 11 |
+| S4 reef U-bend | 14.2 | 8.4 | 1 | 0 | 21 |
+| S5 return channel | 18.4 | 11.1 | 11 | 0 | 46 |
 
 ## Geometry findings
 
@@ -78,8 +78,9 @@ Overtakes per match: 8.7. Per section (mean over matches; "decided" = matches wh
 - 0 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 64 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (0)
+## Known bugs from the test suite (1)
 
+- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 
