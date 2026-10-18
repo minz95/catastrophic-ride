@@ -15,6 +15,16 @@ local GameManager       = require(ServerScriptService.GameManager)
 local SessionManager    = require(ServerScriptService.SessionManager)
 local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
+local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
+local Telemetry         = require(ServerScriptService.Modules.Telemetry)
+
+-- Records a MaxSpeed change so overlapping effects can be audited later.
+local function _logSpeed(player, effect, phase, before, after)
+	Telemetry.record("speed_effect", {
+		userId = player.UserId, effect = effect, phase = phase,
+		before = before, after = after,
+	})
+end
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -39,10 +49,7 @@ local _physState = {}
 
 local function _trackProgress(vehicle)
 	if not vehicle or not vehicle.PrimaryPart or not _biome then return 0 end
-	local track = Constants.TRACK[_biome]
-	if not track then return 0 end
-	local z = vehicle.PrimaryPart.Position.Z
-	return math.clamp(track.zStart - z, 0, track.zStart - track.zFinish)
+	return RaceProgress.progress(_biome, vehicle.PrimaryPart.Position.Z)
 end
 
 -- ─── Position sync loop ───────────────────────────────────────────────────────
@@ -55,6 +62,19 @@ local function _startPositionSync()
 			for userId, pdata in pairs(allData) do
 				if pdata.vehicleModel then
 					local progress = _trackProgress(pdata.vehicleModel)
+					local pp = pdata.vehicleModel.PrimaryPart
+					if pp and Telemetry.detailed then
+						local seatS = pdata.vehicleModel:FindFirstChildWhichIsA("VehicleSeat", true)
+						Telemetry.sample("race_sample", {
+							userId = userId,
+							x = math.floor(pp.Position.X * 10) / 10,
+							y = math.floor(pp.Position.Y * 10) / 10,
+							z = math.floor(pp.Position.Z * 10) / 10,
+							speed = math.floor(pp.AssemblyLinearVelocity.Magnitude * 10) / 10,
+							maxSpeed = seatS and seatS.MaxSpeed,
+							progress = progress,
+						})
+					end
 					SessionManager.setRaceProgress(
 						Players:GetPlayerByUserId(userId),
 						progress,
@@ -87,7 +107,9 @@ local function _setupMudZones()
 						ps.inMud = true
 						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 						if seat then
+							local before = seat.MaxSpeed
 							seat.MaxSpeed = seat.MaxSpeed * Constants.MUD_SPEED_MULT
+							_logSpeed(player, "mud", "enter", before, seat.MaxSpeed)
 						end
 						RemoteEvents.ScreenEffect:FireClient(player, "mudWarning", {})
 					end
@@ -107,7 +129,9 @@ local function _setupMudZones()
 						ps.inMud = false
 						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 						if seat then
+							local before = seat.MaxSpeed
 							seat.MaxSpeed = seat.MaxSpeed / Constants.MUD_SPEED_MULT
+							_logSpeed(player, "mud", "exit", before, seat.MaxSpeed)
 						end
 					end
 					break
@@ -135,7 +159,9 @@ local function _setupSlowZones()
 						ps.inSlowZone = true
 						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 						if seat then
+							local before = seat.MaxSpeed
 							seat.MaxSpeed = seat.MaxSpeed * Constants.SLOW_ZONE_MULT
+							_logSpeed(player, "slow_zone", "enter", before, seat.MaxSpeed)
 						end
 					end
 					break
@@ -154,7 +180,9 @@ local function _setupSlowZones()
 						ps.inSlowZone = false
 						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 						if seat then
+							local before = seat.MaxSpeed
 							seat.MaxSpeed = seat.MaxSpeed / Constants.SLOW_ZONE_MULT
+							_logSpeed(player, "slow_zone", "exit", before, seat.MaxSpeed)
 						end
 					end
 					break
@@ -262,22 +290,25 @@ end
 
 -- Teleports the vehicle back onto the track at its current progress, with a
 -- screen flash. Safe to call from server Heartbeat or a RemoteFunction.
-local function _respawnVehicle(player)
+local function _respawnVehicle(player, reason)
 	local pdata = SessionManager.getData(player)
 	local vehicle = pdata and pdata.vehicleModel
 	if not vehicle or not vehicle.PrimaryPart then return end
 
 	local primary = vehicle.PrimaryPart
-	local progress = _trackProgress(vehicle)
 	-- Step back 30 studs so the player has room to regain speed.
-	local track = _biome and Constants.TRACK[_biome]
-	local zStart = track and track.zStart or 600
-	local safeZ = zStart - math.max(progress - 30, 0)
-	local y     = _spawnY() + 3   -- a little above surface to avoid clipping
+	local x, y, safeZ = RaceProgress.respawnPoint(_biome, primary.Position.Z, _spawnY())
+
+	Telemetry.record("respawn", {
+		userId = player.UserId,
+		reason = reason or "unknown",
+		from = Telemetry.vec(primary.Position),
+		to = { x = x, y = y, z = safeZ },
+	})
 
 	-- Briefly anchor so the vehicle doesn't fall while being moved.
 	primary.Anchored = true
-	vehicle:SetPrimaryPartCFrame(CFrame.new(0, y, safeZ))
+	vehicle:SetPrimaryPartCFrame(CFrame.new(x, y, safeZ))
 	-- Zero out any lingering velocity.
 	primary.AssemblyLinearVelocity  = Vector3.zero
 	primary.AssemblyAngularVelocity = Vector3.zero
@@ -306,7 +337,7 @@ local function _setupKillPlane()
 				local now = tick()
 				if (_respawnCooldown[player.UserId] or 0) > now then continue end
 				_respawnCooldown[player.UserId] = now + 3   -- 3s cooldown
-				_respawnVehicle(player)
+				_respawnVehicle(player, "kill_plane")
 			end
 		end
 	end)
@@ -323,7 +354,7 @@ RemoteEvents.RequestRespawn.OnServerInvoke = function(player)
 		return "denied: cooldown"
 	end
 	_manualRespawnCooldown[player.UserId] = now + 5   -- 5s between manual resets
-	_respawnVehicle(player)
+	_respawnVehicle(player, "manual")
 	return "ok"
 end
 
@@ -348,9 +379,12 @@ local function _setupObstacles()
 					if seat then
 						local oldMax = seat.MaxSpeed
 						seat.MaxSpeed = oldMax * Constants.OBSTACLE_BOUNCE_SPEED_MULT
+						_logSpeed(player, "obstacle", "enter", oldMax, seat.MaxSpeed)
 						task.delay(Constants.OBSTACLE_BOUNCE_PENALTY_DURATION, function()
 							if seat and seat.Parent then
+								local before = seat.MaxSpeed
 								seat.MaxSpeed = oldMax
+								_logSpeed(player, "obstacle", "restore", before, oldMax)
 							end
 						end)
 					end
@@ -416,8 +450,13 @@ local function _setupBoostPads()
 						if seat then
 							local old = seat.MaxSpeed
 							seat.MaxSpeed = old * 1.4
+							_logSpeed(player, "boost_pad", "enter", old, seat.MaxSpeed)
 							task.delay(2, function()
-								if seat and seat.Parent then seat.MaxSpeed = old end
+								if seat and seat.Parent then
+									local before = seat.MaxSpeed
+									seat.MaxSpeed = old
+									_logSpeed(player, "boost_pad", "restore", before, old)
+								end
 							end)
 						end
 						RemoteEvents.ScreenEffect:FireClient(player, "boostPad", {})
@@ -490,9 +529,14 @@ RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	ps.boostCooldownEnd = now + Constants.BOOST_COOLDOWN
 	local oldMax = seat.MaxSpeed
 	seat.MaxSpeed = oldMax * Constants.BOOST_MULTIPLIER
+	_logSpeed(player, "boost", "enter", oldMax, seat.MaxSpeed)
 
 	task.delay(boostDuration, function()
-		if seat and seat.Parent then seat.MaxSpeed = oldMax end
+		if seat and seat.Parent then
+			local before = seat.MaxSpeed
+			seat.MaxSpeed = oldMax
+			_logSpeed(player, "boost", "restore", before, oldMax)
+		end
 	end)
 
 	return "ok"
@@ -535,6 +579,7 @@ local function _setupFinishLine()
 				-- is inactive and the finish counts as before.
 				if CheckpointService.isActive()
 					and not CheckpointService.hasCompleted(player) then
+					Telemetry.record("finish_rejected", { userId = player.UserId, reason = "checkpoints" })
 					print(string.format(
 						"[RacingManager] %s touched FinishLine but checkpoints incomplete — ignored",
 						player.Name))
@@ -544,6 +589,9 @@ local function _setupFinishLine()
 				local elapsed = tick() - _startTick
 				table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
 				SessionManager.setFinished(player, elapsed)
+				Telemetry.record("finish", {
+					userId = player.UserId, time = elapsed, place = #_finishOrder,
+				})
 
 				RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
 				print(string.format("[RacingManager] %s finished #%d (%.1fs)",

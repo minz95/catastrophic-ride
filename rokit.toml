@@ -1,0 +1,4 @@
+# Toolchain (https://github.com/rojo-rbx/rokit): `rokit install`
+[tools]
+rojo = "rojo-rbx/rojo@7.6.1"
+lune = "lune-org/lune@0.10.4"

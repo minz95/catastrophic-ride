@@ -46,6 +46,21 @@ local btnClearItems = toolbar:CreateButton(
 	"Remove the ItemPreview folder from Workspace",
 	"rbxassetid://6031094667"
 )
+local btnRaceSim = toolbar:CreateButton(
+	"Race Sim",
+	"Test harness: drive 3 simulated drivers around FOREST with StepPhysics (edit mode)",
+	"rbxassetid://6031094667"
+)
+local btnRaceSimRun = toolbar:CreateButton(
+	"Race Sim (Run)",
+	"Test harness: same race in a fresh Run-mode session (latest code, real time)",
+	"rbxassetid://6031094667"
+)
+local btnBotMatch = toolbar:CreateButton(
+	"Bot Match",
+	"Test harness: 4 bot clients play a full FOREST round (StudioTestService multiplayer)",
+	"rbxassetid://6031094667"
+)
 
 -- ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -192,6 +207,32 @@ local function clearItems()
 	end
 end
 
+-- ─── Test harness ─────────────────────────────────────────────────────────────
+-- See docs/testing.md. Each button prints a one-screen summary to Output; the
+-- full JSON report is printed after it for copy/paste or an AI agent.
+
+local function runHarness(label, fn)
+	local runnerModule = ServerScriptService:FindFirstChild("TestHarness")
+		and ServerScriptService.TestHarness:FindFirstChild("Runner")
+	if not runnerModule then
+		warn("[CatastrophicDayPreview] ServerScriptService.TestHarness.Runner not found — is Rojo syncing?")
+		return
+	end
+	notify(label .. " started…")
+	task.spawn(function()
+		local ok, summary, json = pcall(function()
+			return fn(require(runnerModule))
+		end)
+		if ok then
+			print(summary)
+			print("[HarnessReport] " .. tostring(json))
+			notify(label .. " finished.")
+		else
+			warn("[CatastrophicDayPreview] " .. label .. " failed: " .. tostring(summary))
+		end
+	end)
+end
+
 -- ─── Button connections ───────────────────────────────────────────────────────
 
 btnForest.Click:Connect(function()
@@ -222,6 +263,27 @@ end)
 btnClearItems.Click:Connect(function()
 	btnClearItems:SetActive(false)
 	clearItems()
+end)
+
+btnRaceSim.Click:Connect(function()
+	btnRaceSim:SetActive(false)
+	runHarness("Race Sim", function(Runner)
+		return Runner.runRace({ profiles = { "expert", "average", "novice" } })
+	end)
+end)
+
+btnRaceSimRun.Click:Connect(function()
+	btnRaceSimRun:SetActive(false)
+	runHarness("Race Sim (Run)", function(Runner)
+		return Runner.runRace({ mode = "run" })
+	end)
+end)
+
+btnBotMatch.Click:Connect(function()
+	btnBotMatch:SetActive(false)
+	runHarness("Bot Match", function(Runner)
+		return Runner.runMatch({ players = 4, rounds = 1 })
+	end)
 end)
 
 notify("Plugin loaded. Use the 'Catastrophic Day Preview' toolbar buttons.")

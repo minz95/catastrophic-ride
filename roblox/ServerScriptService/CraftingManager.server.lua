@@ -14,6 +14,7 @@ local VehicleStats   = require(ReplicatedStorage.Shared.VehicleStats)
 local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
+local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -70,6 +71,15 @@ local function _processCraft(player, slots)
 	stats.slotAssignments = slots
 
 	SessionManager.setVehicle(player, nil, stats)
+	Telemetry.record("craft", {
+		userId = player.UserId,
+		slots = table.clone(slots),
+		stats = {
+			speed = stats.speed, acceleration = stats.acceleration,
+			stability = stats.stability, floatability = stats.floatability,
+			flyability = stats.flyability, boostDuration = stats.boostDuration,
+		},
+	})
 	print(string.format("[CraftingManager] %s submitted craft | spd=%.1f accel=%.1f",
 		player.Name, stats.speed, stats.acceleration))
 end
@@ -201,6 +211,13 @@ GameManager.onPhaseChanged(function(phase, biome)
 							warn("[CraftingManager] Humanoid never ready for", player.Name)
 						end
 
+						Telemetry.record("vehicle_spawn", {
+							userId = player.UserId,
+							seated = humanoid ~= nil and humanoid.Sit or false,
+							maxSpeed = seat.MaxSpeed, turnSpeed = seat.TurnSpeed, torque = seat.Torque,
+							mass = primary and primary.AssemblyMass,
+							at = primary and Telemetry.vec(primary.Position),
+						})
 						RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
 						-- Unanchor after sit takes effect so vehicle can move
 						task.wait(0.1)

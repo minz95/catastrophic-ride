@@ -17,6 +17,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local RemoteEvents   = require(ReplicatedStorage.RemoteEvents)
 local SessionManager = require(ServerScriptService.SessionManager)
+local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 
 local CheckpointService = {}
 
@@ -65,12 +66,14 @@ local function _connectCheckpoint(part, cpIndex)
 		if cpIndex == 1 then
 			if not s.cp1 then
 				s.cp1 = true
+				Telemetry.record("checkpoint", { userId = player.UserId, index = 1 })
 				RemoteEvents.CheckpointPassed:FireClient(player, 1)
 			end
 		elseif cpIndex == 2 then
 			-- In-order only: CP2 counts only if CP1 already passed.
 			if s.cp1 and not s.cp2 then
 				s.cp2 = true
+				Telemetry.record("checkpoint", { userId = player.UserId, index = 2 })
 				RemoteEvents.CheckpointPassed:FireClient(player, 2)
 			end
 		end

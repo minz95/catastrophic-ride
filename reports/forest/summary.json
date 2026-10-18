@@ -1,0 +1,233 @@
+{
+  "generatedBy": "tools/report.luau",
+  "geometry": {
+    "respawnOffTrackSamples": 63,
+    "respawnSamples": 90,
+    "solidOnlyBecauseOfCanCollideBug": 21,
+    "treesInLane": 5,
+    "wallIntrusionSpots": 5
+  },
+  "matches": {
+    "bots": 72,
+    "count": 12,
+    "fastestCarWins": 2,
+    "finishRate": 0.2638888888888889,
+    "matchesWithFinisher": 8,
+    "meanPlaceByDriver": {
+      "average": 3.6666666666666665,
+      "expert": 2.375,
+      "novice": 4.458333333333333
+    },
+    "meanPlaceByFarmProfile": {
+      "casual": 4.083333333333333,
+      "sweaty": 2.9166666666666665
+    },
+    "spearmanRarityVsPlace": -0.0647630072673484,
+    "spearmanTopSpeedVsPlace": -0.2809826998520806
+  },
+  "raceRuns": [
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "expert",
+      "finished": false,
+      "impacts": 45,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4092,
+      "respawns": 10,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "expert",
+      "finished": false,
+      "impacts": 81,
+      "maxSpeed": 48.76632801161104,
+      "progress": 579,
+      "respawns": 18,
+      "world": "as shipped"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "average",
+      "finished": false,
+      "impacts": 49,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4096,
+      "respawns": 8,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "average",
+      "finished": false,
+      "impacts": 75,
+      "maxSpeed": 48.76632801161104,
+      "progress": 578,
+      "respawns": 17,
+      "world": "as shipped"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 37,
+      "maxSpeed": 48.76632801161104,
+      "progress": 3720,
+      "respawns": 12,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 172,
+      "maxSpeed": 48.76632801161104,
+      "progress": 580,
+      "respawns": 14,
+      "world": "as shipped"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "expert",
+      "finished": false,
+      "impacts": 69,
+      "maxSpeed": 67.55,
+      "progress": 4096,
+      "respawns": 9,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "expert",
+      "finished": false,
+      "impacts": 105,
+      "maxSpeed": 67.55,
+      "progress": 579,
+      "respawns": 15,
+      "world": "as shipped"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "average",
+      "finished": false,
+      "impacts": 77,
+      "maxSpeed": 67.55,
+      "progress": 4096,
+      "respawns": 10,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "average",
+      "finished": false,
+      "impacts": 139,
+      "maxSpeed": 67.55,
+      "progress": 578,
+      "respawns": 20,
+      "world": "as shipped"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 47,
+      "maxSpeed": 67.55,
+      "progress": 4096,
+      "respawns": 5,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Shopping Cart + Magnifying Glass + Toilet Paper",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 413,
+      "maxSpeed": 67.55,
+      "progress": 582,
+      "respawns": 18,
+      "world": "as shipped"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 4,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4437,
+      "respawns": 0,
+      "time": 45.08333333333206,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "expert",
+      "finished": false,
+      "impacts": 197,
+      "maxSpeed": 86.75995552793887,
+      "progress": 582,
+      "respawns": 17,
+      "world": "as shipped"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "average",
+      "finished": false,
+      "impacts": 150,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4096,
+      "respawns": 16,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "average",
+      "finished": false,
+      "impacts": 224,
+      "maxSpeed": 86.75995552793887,
+      "progress": 582,
+      "respawns": 20,
+      "world": "as shipped"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 107,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4096,
+      "respawns": 4,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Alarm Clock",
+      "driver": "novice",
+      "finished": false,
+      "impacts": 254,
+      "maxSpeed": 86.75995552793887,
+      "progress": 580,
+      "respawns": 18,
+      "world": "as shipped"
+    }
+  ],
+  "track": {
+    "length": 4487.952929080409,
+    "nodes": 31
+  }
+}

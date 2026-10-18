@@ -18,6 +18,7 @@ local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local ItemModelBuilder  = require(ServerScriptService.Modules.ItemModelBuilder)
 local ItemVisualUpgrader = require(ServerScriptService.Modules.ItemVisualUpgrader)
+local Telemetry          = require(ServerScriptService.Modules.Telemetry)
 
 print("[FarmingManager] All requires succeeded")
 
@@ -451,6 +452,10 @@ local function _giveItem(player, itemId)
 		item.part:Destroy()
 	end
 
+	Telemetry.record("item_pickup", {
+		userId = player.UserId, itemId = itemId, item = item.itemName,
+		rarity = item.rarity, inventory = #data.inventory,
+	})
 	RemoteEvents.ItemPickedUp:FireAllClients(itemId, player.UserId, {
 		rarity = item.rarity,
 		userId = player.UserId,
@@ -596,6 +601,11 @@ RemoteEvents.RequestContest.OnServerInvoke = function(player, itemId, presses)
 			winner, loser = p2, p1
 		end
 
+		Telemetry.record("contest_result", {
+			itemId = itemId, winner = winner.UserId, loser = loser.UserId,
+			presses = { [tostring(p1.UserId)] = contest.presses[p1.UserId] or 0,
+			            [tostring(p2.UserId)] = contest.presses[p2.UserId] or 0 },
+		})
 		RemoteEvents.ContestResult:FireAllClients(itemId, winner.UserId)
 		_giveItem(winner, itemId)
 		_contests[itemId] = nil
@@ -613,7 +623,7 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	if tick() < thiefData.stealCooldownEnd then return end
 
 	-- CRAFTING lock-out
-	local timeLeft = Constants.PHASE_DURATION.FARMING
+	local timeLeft = (GameManager.phaseDuration("FARMING") or Constants.PHASE_DURATION.FARMING)
 		- (tick() - (_farmingStartTick or 0))
 	if timeLeft < Constants.STEAL_DISABLE_BEFORE then return end
 
@@ -657,6 +667,10 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 
 	RemoteEvents.InventoryUpdated:FireClient(thief,  thiefData.inventory)
 	RemoteEvents.InventoryUpdated:FireClient(victim, victimData.inventory)
+	Telemetry.record("steal", {
+		thief = thief.UserId, victim = victim.UserId, item = stolenItem,
+		thiefInventory = #thiefData.inventory,
+	})
 	RemoteEvents.ItemStolen:FireAllClients(thief.Name, victim.Name, stolenItem)
 end
 

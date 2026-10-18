@@ -12,6 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
+local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -252,7 +254,7 @@ local function _enterDrift()
 	if not _seat or _drifting then return end
 	_drifting        = true
 	_driftGripBackup = _seat.TurnSpeed
-	_seat.TurnSpeed  = math.max(_seat.TurnSpeed * 0.35, 0.3)
+	_seat.TurnSpeed  = VehicleController.driftTurnSpeed(_seat.TurnSpeed)
 
 	local driftColor, driftText
 	if _biome == "OCEAN" then
@@ -513,78 +515,40 @@ local function _driveLoop()
 	if not _vehicle or not _vehicle.PrimaryPart then return end
 	local primary = _vehicle.PrimaryPart
 
-	local bv  = primary:FindFirstChild("DriveVelocity")
-	local bav = primary:FindFirstChild("DriveAngular")
-	if not bv or not bav then return end
+	if not primary:FindFirstChild("DriveVelocity") or not primary:FindFirstChild("DriveAngular") then
+		return
+	end
 
 	local maxSpeed  = _seat and _seat.MaxSpeed  or 40
 	local turnSpeed = _seat and _seat.TurnSpeed or 1
-	local throttle, steer
 
 	-- Detect SKY mode by the vehicle's HoverPosition constraint rather than
 	-- the _biome client variable. BiomeSelected can race against PhaseChanged
 	-- on client load and leave _biome nil/stale — but the vehicle is
 	-- authoritative about its own physics setup.
-	local hover = primary:FindFirstChild("HoverPosition")
-	local isSky = hover ~= nil
+	local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 
-	throttle = 0
-	if _keys.W or _keys.Up   then throttle =  1 end
-	if _keys.S or _keys.Down then throttle = -0.5 end
-	steer = 0
-	if _keys.A or _keys.Left  then steer =  1 end
-	if _keys.D or _keys.Right then steer = -1 end
+	-- Keyboard state, or a harness bot's synthetic keys (InputSource override).
+	local input = VehicleController.readKeys(InputSource.read(_keys))
 
-	if isSky then
-		turnSpeed = math.min(turnSpeed, 1.5)
-		if hover then
-			local dt = 1 / 60
-			if _keys.Space then
-				hover.Position = hover.Position + Vector3.new(0, 20 * dt, 0)
-			elseif _keys.Ctrl then
-				hover.Position = hover.Position - Vector3.new(0, 20 * dt, 0)
-			end
-		end
-	else
-
-		local isSteering = _keys.A or _keys.D or _keys.Left or _keys.Right
-		if _keys.Shift and isSteering and not _drifting then
-			local vel = primary.AssemblyLinearVelocity.Magnitude
-			if vel > maxSpeed * 0.5 then _enterDrift() end
-		end
-
-		if _biome == "FOREST" then
-			local susp = primary:FindFirstChild("SuspensionHover")
-			if susp then
-				local halfH = primary.Size.Y * 0.5
-				local ray   = workspace:Raycast(
-					primary.Position,
-					Vector3.new(0, -(halfH + 5), 0),
-					_suspParams
-				)
-				if ray then
-					susp.Position = Vector3.new(
-						primary.Position.X,
-						ray.Position.Y + halfH + 0.2,
-						primary.Position.Z
-					)
-					susp.MaxForce = Vector3.new(0, 4e4, 0)
-				else
-					susp.MaxForce = Vector3.zero
-				end
-			end
+	if not isSky then
+		local vel = primary.AssemblyLinearVelocity.Magnitude
+		if VehicleController.shouldEnterDrift(input, _drifting, vel, maxSpeed, isSky) then
+			_enterDrift()
 		end
 	end
 
-	local forward = primary.CFrame.LookVector
-	bv.Velocity         = forward * throttle * maxSpeed
-	bav.AngularVelocity = Vector3.new(0, steer * turnSpeed, 0)
-
-	local gyro = primary:FindFirstChild("UprightGyro")
-	if gyro then
-		local _, currentY, _ = primary.CFrame:ToEulerAnglesYXZ()
-		gyro.CFrame = CFrame.fromEulerAnglesYXZ(0, currentY, 0)
-	end
+	local cmd = VehicleController.command(input, {
+		maxSpeed  = maxSpeed,
+		turnSpeed = turnSpeed,
+		isSky     = isSky,
+	})
+	VehicleController.apply(primary, cmd, {
+		biome   = _biome,
+		raycast = function(origin, direction)
+			return workspace:Raycast(origin, direction, _suspParams)
+		end,
+	})
 end
 
 -- ─── Ability activation ───────────────────────────────────────────────────────

@@ -15,6 +15,7 @@ local ItemConfig     = require(ReplicatedStorage.Shared.ItemConfig)
 local AbilityConfig  = require(ServerScriptService.Modules.AbilityConfig)
 local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
+local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
 -- _cooldowns[userId][itemName] = expireTick
@@ -561,7 +562,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 	end
 end)
 
-RemoteEvents.RequestAbility.OnServerInvoke = function(player, itemName)
+local function _handleAbilityRequest(player, itemName)
 	-- Phase check (Flower is FARMING-only)
 	local abilCfg = AbilityConfig.get(itemName, _biome)
 	if not abilCfg then return "denied: no config" end
@@ -612,6 +613,7 @@ RemoteEvents.RequestAbility.OnServerInvoke = function(player, itemName)
 		task.spawn(effectFn, player, target, abilCfg)
 	else
 		warn("[AbilityManager] No effect handler for:", abilCfg.effectKey)
+		Telemetry.record("ability_unhandled", { userId = userId, item = itemName, effect = abilCfg.effectKey })
 	end
 
 	-- Broadcast to clients for animation
@@ -619,4 +621,13 @@ RemoteEvents.RequestAbility.OnServerInvoke = function(player, itemName)
 	RemoteEvents.AbilityActivated:FireAllClients(userId, itemName, targetIds)
 
 	return "ok"
+end
+
+-- Telemetry wrapper: logs every ability request and its result, including
+-- each early "denied" return above. (OnServerInvoke is write-only in Roblox,
+-- so the handler is a local function wrapped here.)
+RemoteEvents.RequestAbility.OnServerInvoke = function(player, itemName)
+	local result = _handleAbilityRequest(player, itemName)
+	Telemetry.record("ability", { userId = player.UserId, item = itemName, result = result })
+	return result
 end

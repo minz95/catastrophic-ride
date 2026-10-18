@@ -71,8 +71,9 @@ roblox/
     RacingManager.server.lua        -- Race state, biome physics, finish detection
     CharacterManager.server.lua     -- Skin assignment, spawn placement
     BalanceAudit.server.lua         -- Stat matrix audit (runs only in SOLO_TEST_MODE)
+    TestHarness/                    -- Studio harness: RaceSim, MatchHarness, Runner (docs/testing.md)
     MapBuilders/
-      ForestMapBuilder.server.lua
+      ForestMapBuilder.server.lua   -- calls Modules/Maps/ForestMap (layout data in Shared/Tracks)
       OceanMapBuilder.server.lua
       SkyMapBuilder.server.lua
       TerrainPainter.server.lua
@@ -125,6 +126,20 @@ roblox/
 
 `Constants.SOLO_TEST_MODE = true` (default) starts the game 2 seconds after one player connects,
 skipping the lobby wait. Set to `false` before production deployment.
+
+### Automated tests and simulations
+
+See [docs/testing.md](docs/testing.md). In short:
+
+```
+lune run tests/run.luau        # offline suite: real game code in a mock engine
+lune run tools/report.luau     # FOREST track SVG + race/match balance report
+```
+
+In Studio, the plugin's **Race Sim** / **Bot Match** buttons (or
+`require(game.ServerScriptService.TestHarness.Runner)` over the Studio MCP
+server) run the race with real physics and a full round with bot clients.
+The latest report is in [reports/forest/summary.md](reports/forest/summary.md).
 
 ---
 
