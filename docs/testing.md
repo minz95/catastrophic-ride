@@ -32,7 +32,8 @@ Outputs:
   corridor, walls, parts that block the lane, checkpoint footprints, respawn
   targets, simulated driving lines.
 - `reports/<biome>/summary.md` / `summary.json` – race results per car and
-  driver, match statistics, geometry findings, known bugs.
+  driver, match statistics, **fun metrics** (`Shared/RaceMetrics` against
+  `Constants.FUN_TARGETS`, per-section spreads), geometry findings, known bugs.
 
 ### How it works
 
@@ -56,9 +57,9 @@ Outputs:
   at Y 84.
 - `mapchecks.luau` / `biomespecs.luau` are the geometry checks every map gets:
   lane obstacles, walls cutting into the lane (inside of turns, the Sky
-  figure-8 crossings), holes in the wall (outside of turns included), slow
-  zones on the lane, gates a car can drive past, pads off the lane, floor
-  holes, decoration in the lane.
+  figure-8 crossings), any hole in the walls (outside of turns included),
+  wall spurs past a corner, slow zones on the lane, gates a car can drive
+  past, pads off the lane, floor holes, decoration in the lane.
 - `kinesim.luau` is a 2D kinematic race simulator. It is a fair model of this
   game because the car's velocity is *set* every frame
   (`VehicleController`), not produced by tyres. Collisions use the footprints
@@ -76,9 +77,11 @@ Constants, BiomeConfig and the spawn grid), stat balance per biome, the map
 geometry of FOREST, OCEAN and SKY (`map_*`), race progress and respawn on
 every track, the real RacingManager (speed effects, passives, shields,
 rounds), every item's ability through the real AbilityManager, hazards,
-farming rules, the driving model, kinematic race sims per biome (`sim_*`),
-whole matches on every biome (`farming`, `match_biomes`), and smoke runs of
-the Studio harness.
+farming rules (pure `FarmingRules` over hundreds of generated cases, plus
+scenarios on the real FarmingManager), the driving model, kinematic race
+sims per biome (`sim_*`), whole matches on every biome (`farming`,
+`match_biomes`), fun metrics and the live playtest report (`race_metrics`),
+and smoke runs of the Studio harness.
 
 `R.known(name, why, fn)` marks a check that is **expected to fail today**
 because it documents a bug. The run stays green while the bug exists and
@@ -130,6 +133,20 @@ Caveats:
 - In edit mode no character sits in the car; set `driverMass` to the
   `mass` reported by the `vehicle_spawn` telemetry event of a real playtest.
 
+### Playtests: markers and the fun report
+
+In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)
+players press **M** where something feels frustrating and **N** where it
+feels fun. `PlaytestReporter.server.lua` logs the spot and its track section,
+and at RESULTS prints the race scored by `Shared/RaceMetrics` (winner time,
+spread, lead changes, overtakes, close racing, per-section spreads, respawns,
+hits, markers) followed by `[PlaytestReport] {json}`. Over MCP:
+
+```lua
+local PR = require(game.ServerScriptService.Modules.PlaytestReport)
+return PR.format(PR.last), PR.json(PR.last)
+```
+
 ### Telemetry in any session
 
 `Modules/Telemetry.lua` records phases, pickups, contests, steals, crafts,
@@ -143,11 +160,12 @@ every 0.5 s.
 ## 3. Workflow for map and balance changes
 
 1. Edit data, not code: `ReplicatedStorage/Shared/Tracks/<Biome>Track.lua`
-   holds the node list, checkpoints, pads, drift corners and ramps; balance
-   numbers live in `Shared/Constants.lua` and `Shared/ItemConfig.lua`. Walls
-   are laid out by `TrackGeometry:boundaryRuns` (closes the outside of each
-   turn, drops wall that would stand inside the lane), so moving nodes does
-   not need builder changes.
+   holds the node list, walls, checkpoints, pads, drift corners, ramps,
+   trigger sizes and scenery positions; balance numbers live in
+   `Shared/Constants.lua` and `Shared/ItemConfig.lua`. The shared parts are
+   built by `Modules/Maps/TrackKit.lua`; walls follow
+   `TrackGeometry:boundaryRuns` (closes the outside of each turn, drops wall
+   that would stand inside the lane), so moving nodes needs no builder change.
 2. `lune run tests/run.luau` – nothing new may fail.
 3. `lune run tools/report.luau` – open `reports/<biome>/track.svg` and
    `summary.md`; compare finish rate, stuck locations, wall hits.

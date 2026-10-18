@@ -30,12 +30,12 @@ local ONLY = process.args[2]
 -- that must stay off the lane (drawn as red dots when it does not).
 local BIOMES = {
 	FOREST = {
-		isWall = function(n) return n == "TrackWall" end, wallLabel = "walls (8-stud doorways)",
+		isWall = function(n) return n == "TrackWall" end, wallLabel = "walls (continuous)",
 		props = { "Trunk" }, propLabel = "tree trunk inside the lane",
 		ground = "#5d8a3c", lane = "#4a4540", wall = "#2b1d10", slow = "#6b4f2e",
 	},
 	OCEAN = {
-		isWall = function(n) return n == "ReefWall" end, wallLabel = "reef walls (8-stud doorways)",
+		isWall = function(n) return n == "ReefWall" end, wallLabel = "reef walls (continuous)",
 		props = { "^PalmTrunk$", "^ReefSpire_%d+$" }, propLabel = "palm or reef spire inside the lane",
 		ground = "#1e5aa8", lane = "#3d8fd6", wall = "#5f4b37", slow = "#bfe6ff",
 	},
