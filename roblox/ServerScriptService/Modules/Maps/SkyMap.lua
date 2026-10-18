@@ -1,19 +1,24 @@
--- SkyMap.lua (ModuleScript; was MapBuilders/SkyMapBuilder.server.lua)
--- Procedurally builds the SKY biome map per racetrack spec §4:
---   - ~7500-stud planar figure-8 centerline (two 360° loops + plaza + canyon)
---     along Z=1500 → -2000 at altitude Y=80
---   - 50-wide corridor with continuous solid floor (no inter-platform gaps)
---   - Invisible vertical side walls at ±25 studs offset, Y 54 → 114
---   - Invisible ceiling at Y=120
---   - Crystal clusters relocated outside invisible barriers (decorative)
---   - CP1 inside S2 Loop A western extent, CP2 inside S4 Loop B eastern extent
+-- SkyMap.lua (ModuleScript; called by MapBuilders/SkyMapBuilder.server.lua)
+-- Builds the SKY biome map per racetrack spec §4:
+--   - planar figure-8 centerline (two 360° loops + plaza + canyon + descent)
+--     Z = 1500 → -2000 at altitude Y = 80
+--   - 50-wide corridor on a continuous floor, fenced by touching crystal
+--     pillars (open where the figure-8 crosses itself), invisible ceiling
+--   - CP1 at Loop A's western extent, CP2 at Loop B's eastern extent
+--
+-- Every position and size comes from ReplicatedStorage.Shared.Tracks.SkyTrack.
+-- The parts all tracks share (floor, fence, triggers, finish, start) come
+-- from Modules.Maps.TrackKit; this file adds the sky and the scenery.
 -- Resolves: Issue #10, #97, #130
 
-local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Track = require(ReplicatedStorage.Shared.Tracks.SkyTrack)
-local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
+local BiomeConfig = require(script.Parent.Parent.BiomeConfig)
+local TrackKit = require(script.Parent.TrackKit)
+
+local KIT = TrackKit.new(Track)
+local _part, _wedge, _tag = TrackKit.part, TrackKit.wedge, TrackKit.tag
 
 local C = {
 	CLOUD_FLAT   = Color3.fromRGB(240, 245, 255),
@@ -26,9 +31,10 @@ local C = {
 	CRYSTAL2     = Color3.fromRGB(100, 180, 255),
 	CRYSTAL3     = Color3.fromRGB(255, 130, 220),
 	BOOST        = Color3.fromRGB(195, 150, 255),
+	BOOST_RING   = Color3.fromRGB(255, 200, 240),
 	STAR         = Color3.fromRGB(255, 240, 100),
 	ARCH         = Color3.fromRGB(175, 95, 255),
-	ARCH_RING    = Color3.fromRGB(255, 200, 80),
+	ARROW        = Color3.fromRGB(255, 220, 80),
 	UPDRAFT      = Color3.fromRGB(115, 200, 255),
 	DRIFT_GLOW   = Color3.fromRGB(255, 130, 220),
 }
@@ -38,338 +44,161 @@ local MAT = {
 	ROCK    = Enum.Material.Rock,
 	CRYSTAL = Enum.Material.Neon,
 	NEON    = Enum.Material.Neon,
-	METAL   = Enum.Material.Metal,
 }
 
-local SKY_BASE_Y = Track.trackTop  -- floor top surface
-local FLOOR_TH   = 4       -- floor thickness
-local CORRIDOR_W = Track.width     -- matches Constants.TRACK.SKY.width
-local WALL_Y_LO  = 54      -- invisible side wall bottom (spec §4.4)
-local WALL_Y_HI  = 114     -- invisible side wall top
-local CEILING_Y  = 120
-local FINISH_Z   = Track.finishZ   -- matches Constants.TRACK.SKY.zFinish
+local SKY_BASE_Y = Track.trackTop   -- floor top surface
+local CORRIDOR_W = Track.width
+local NODES      = Track.nodes
 
-local function _part(parent, props)
-	local p = Instance.new("Part")
-	p.Anchored   = true
-	p.CanCollide = true
-	for k, v in pairs(props) do pcall(function() p[k] = v end) end
-	p.Parent = parent
-	return p
-end
-
-local function _wedge(parent, props)
-	local p = Instance.new("WedgePart")
-	p.Anchored   = true
-	p.CanCollide = true
-	for k, v in pairs(props) do pcall(function() p[k] = v end) end
-	p.Parent = parent
-	return p
-end
-
-local function _tag(part, tagName) CollectionService:AddTag(part, tagName) end
-
-local function _getOrCreateMap()
-	local maps = workspace:FindFirstChild("Maps") or (function()
-		local f = Instance.new("Folder"); f.Name = "Maps"; f.Parent = workspace; return f
-	end)()
-	local existing = maps:FindFirstChild("SkyMap")
-	if existing then existing:Destroy() end
-	local model = Instance.new("Model")
-	model.Name   = "SkyMap"
-	model.Parent = maps
-	return model
-end
-
--- ─── Track centerline nodes (figure-8 per spec §4.1) ─────────────────────────
--- Two 360° loops (A west, B east) connected by a plaza, then canyon + descent.
-
-local NODES = Track.nodes
-local GEO   = TrackGeometry.new(NODES, CORRIDOR_W)
-
--- Track heading (Roblox yaw) near a point, averaged over a few studs so a
--- prop placed on a node faces the bisector of the turn.
-local function _trackYawNear(x, z)
-	local s = GEO:project(x, z).s
-	local ax, az = GEO:pointAt(s - 4)
-	local bx, bz = GEO:pointAt(s + 4)
-	return math.atan2(-(bx - ax), -(bz - az))
-end
-
--- CFrame at (x, y, z) whose LookVector points down the track.
-local function _trackCF(x, y, z)
-	return CFrame.new(x, y, z) * CFrame.Angles(0, _trackYawNear(x, z), 0)
-end
-
-local function _segCF(ax, az, bx, bz, y)
-	local mx, mz = (ax + bx) * 0.5, (az + bz) * 0.5
-	local rotY   = math.atan2(bx - ax, bz - az)
-	return CFrame.new(mx, y, mz) * CFrame.Angles(0, rotY, 0)
-end
-
-local function _segLen(ax, az, bx, bz)
-	local dx, dz = bx - ax, bz - az
-	return math.sqrt(dx * dx + dz * dz)
+-- Track bounding box (farm included) plus margin.
+local function _bbox(margin)
+	local x0, x1, z0, z1 = math.huge, -math.huge, math.huge, -math.huge
+	for _, n in ipairs(NODES) do
+		x0 = math.min(x0, n[1]); x1 = math.max(x1, n[1])
+		z0 = math.min(z0, n[2]); z1 = math.max(z1, n[2])
+	end
+	z1 = math.max(z1, Track.farm.cz + Track.farm.size[2] / 2)
+	return x0 - margin, x1 + margin, z0 - margin, z1 + margin
 end
 
 -- ─── Sky backdrop + clouds ───────────────────────────────────────────────────
 
 local function _buildClouds(root)
-	-- Sky backdrop blocks the Baseplate from showing through
+	local x0, x1, z0, z1 = _bbox(600)
+	local cx, cz, w, d = (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0
+	-- Backdrop blocks the Baseplate from showing through
 	_part(root, {
-		Name = "SkyBackdrop", Size = Vector3.new(3000, 6, 5000),
-		Position = Vector3.new(0, SKY_BASE_Y - 55, -250),
-		Color = Color3.fromRGB(140, 165, 220),
-		Material = Enum.Material.SmoothPlastic,
+		Name = "SkyBackdrop", Size = Vector3.new(w, 6, d),
+		Position = Vector3.new(cx, SKY_BASE_Y - 55, cz),
+		Color = Color3.fromRGB(140, 165, 220), Material = MAT.CLOUD,
 		CanCollide = false, CastShadow = false,
 	})
 	_part(root, {
-		Name = "SkyHaze", Size = Vector3.new(3000, 4, 5000),
-		Position = Vector3.new(0, SKY_BASE_Y - 48, -250),
-		Color = Color3.fromRGB(175, 195, 235),
-		Material = Enum.Material.SmoothPlastic,
+		Name = "SkyHaze", Size = Vector3.new(w, 4, d),
+		Position = Vector3.new(cx, SKY_BASE_Y - 48, cz),
+		Color = Color3.fromRGB(175, 195, 235), Material = MAT.CLOUD,
 		CanCollide = false, CastShadow = false, Transparency = 0.5,
 	})
-
+	local ix0, ix1, iz0, iz1 = _bbox(300)
 	local rng = Random.new(77)
 	for _ = 1, 35 do
-		local cx = rng:NextNumber(-1200, 1200)
-		local cy = SKY_BASE_Y + rng:NextNumber(-45, -20)
-		local cz = rng:NextNumber(-2200, 1800)
-		local cw = rng:NextNumber(50, 140)
-		local cd = rng:NextNumber(25, 70)
+		local px, pz = rng:NextNumber(ix0, ix1), rng:NextNumber(iz0, iz1)
+		local py = SKY_BASE_Y + rng:NextNumber(-45, -20)
+		local cw, cd = rng:NextNumber(50, 140), rng:NextNumber(25, 70)
 		_part(root, {
 			Name = "CloudSlab", Size = Vector3.new(cw, rng:NextNumber(4, 8), cd),
-			Position = Vector3.new(cx, cy, cz),
+			Position = Vector3.new(px, py, pz),
 			Color = C.CLOUD_SHADOW, Material = MAT.CLOUD,
 			CanCollide = false, CastShadow = false, Transparency = 0.55,
 		})
 		_part(root, {
 			Name = "CloudSlabTop", Size = Vector3.new(cw * 0.85, 3, cd * 0.85),
-			Position = Vector3.new(cx, cy + 4, cz),
+			Position = Vector3.new(px, py + 4, pz),
 			Color = C.CLOUD_FLAT, Material = MAT.CLOUD,
 			CanCollide = false, CastShadow = false, Transparency = 0.45,
 		})
 	end
-	for _ = 1, 45 do
-		local px = rng:NextNumber(-1100, 1100)
-		local py = SKY_BASE_Y + rng:NextNumber(-12, 25)
-		local pz = rng:NextNumber(-2100, 1700)
+	-- Puffs at corridor height only where they cannot sit on the corridor.
+	local placed, tries = 0, 0
+	while placed < 45 and tries < 400 do
+		tries += 1
+		local px, pz = rng:NextNumber(ix0, ix1), rng:NextNumber(iz0, iz1)
 		local pr = rng:NextNumber(10, 28)
-		_part(root, {
-			Name = "CloudPuff", Size = Vector3.new(pr * 2, pr, pr * 1.3),
-			Position = Vector3.new(px, py, pz),
-			Color = C.CLOUD_PUFF, Material = MAT.CLOUD,
-			CanCollide = false, CastShadow = false, Transparency = 0.4,
-		})
-	end
-end
-
--- ─── Continuous track floor (spec §4.4: no inter-platform gaps) ──────────────
-
--- Track surface friction. Roblox vehicles here use BodyVelocity-based
--- propulsion (RacingClient _driveLoop), so floor friction acts as pure drag,
--- not traction. Default Rock = 0.5 caused noticeable "sticky" sections —
--- 0.05 with frictionWeight=100 keeps the vehicle gliding.
-local LOW_FRICTION_FLOOR = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
-
-local function _buildFloor(root)
-	local colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }
-	for i = 1, #NODES - 1 do
-		local a, b = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		if segLen < 0.1 then continue end
-		local cf = _segCF(a[1], a[2], b[1], b[2], SKY_BASE_Y - FLOOR_TH / 2)
-		local floor = _part(root, {
-			Name     = "TrackFloor_" .. i,
-			Size     = Vector3.new(CORRIDOR_W, FLOOR_TH, segLen + 8),
-			Color    = colors[((i - 1) % 3) + 1],
-			Material = MAT.ROCK,
-		})
-		floor.CustomPhysicalProperties = LOW_FRICTION_FLOOR
-		floor.CFrame = cf
-
-		-- Round joint at the end node: the two straight slabs leave a wedge
-		-- hole on the outside of every turn; a disc of the corridor width
-		-- fills it. Its top sits 0.05 below the slabs so they don't z-fight.
-		if i < #NODES - 1 then
-			local joint = _part(root, {
-				Name     = "TrackFloorJoint_" .. (i + 1),
-				Shape    = Enum.PartType.Cylinder,
-				Size     = Vector3.new(FLOOR_TH, CORRIDOR_W, CORRIDOR_W),
-				CFrame   = CFrame.new(b[1], SKY_BASE_Y - 0.05 - FLOOR_TH / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
-				Color    = colors[((i - 1) % 3) + 1],
-				Material = MAT.ROCK,
+		local py = SKY_BASE_Y + rng:NextNumber(-12, 25)
+		if not KIT:inLane(px, pz, pr * 1.3 + 4) then
+			placed += 1
+			_part(root, {
+				Name = "CloudPuff", Size = Vector3.new(pr * 2, pr, pr * 1.3),
+				Position = Vector3.new(px, py, pz),
+				Color = C.CLOUD_PUFF, Material = MAT.CLOUD,
+				CanCollide = false, CastShadow = false, Transparency = 0.4,
 			})
-			joint.CustomPhysicalProperties = LOW_FRICTION_FLOOR
-		end
-
-		-- Edge glow stripes on both sides for visibility
-		for _, side in ipairs({ -1, 1 }) do
-			local stripe = _part(root, {
-				Name = "EdgeGlow_" .. i .. (side > 0 and "R" or "L"),
-				Size = Vector3.new(1.2, 0.6, segLen + 8),
-				Color = (i % 2 == 0) and C.CRYSTAL or C.CRYSTAL2,
-				Material = MAT.NEON, CanCollide = false, CastShadow = false,
-			})
-			stripe.CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 - 0.8), FLOOR_TH / 2 + 0.4, 0)
 		end
 	end
 end
 
--- ─── Safety shoulder (catches vehicles that squeeze through pillar gaps) ────
--- Without a shoulder, threading a 4-stud doorway = immediate fall (kill plane).
--- A 6-stud solid ledge outside each pillar row gives a "yes you can shortcut,
--- but you have to commit to it" feel rather than instant death.
+-- ─── Floor, fence, ceiling (TrackKit) ────────────────────────────────────────
 
--- Wayfinding arrows on the corridor floor at every direction change.
--- S1 (the 700-stud straight) ends at N4 where the track curves into Loop A;
--- without a visual cue players read the curve as a dead-end ("앞으로 가면 길 없음").
--- Arrows point along the OUTGOING segment direction and are placed in the floor
--- before each non-trivial turn.
-
-local function _floorArrow(root, idx, x, z, headingDeg)
-	local shaft = _part(root, {
-		Name = "WayArrowShaft_" .. idx,
-		Size = Vector3.new(2.4, 0.6, 14),
-		Color = Color3.fromRGB(255, 220, 80),
-		Material = MAT.NEON,
-		CanCollide = false, CastShadow = false,
-		Transparency = 0.15,
+local function _buildCorridor(root)
+	KIT:buildSurface(root, {
+		name = "TrackFloor", jointName = "TrackFloorJoint", thickness = 4, overlap = 4,
+		colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }, material = MAT.ROCK,
+		decorate = function(r, i, cf, segLen)
+			for _, side in ipairs({ -1, 1 }) do
+				_part(r, {
+					Name = "EdgeGlow_" .. i .. (side > 0 and "R" or "L"),
+					Size = Vector3.new(1.2, 0.6, segLen + 8),
+					CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 - 0.8), 2.4, 0),
+					Color = (i % 2 == 0) and C.CRYSTAL or C.CRYSTAL2,
+					Material = MAT.NEON, CanCollide = false, CastShadow = false,
+				})
+			end
+		end,
 	})
-	shaft.CFrame = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, math.rad(headingDeg), 0)
+	-- Crystal pillar fence, packed edge to edge (flyers are ~1.5 studs wide,
+	-- any gap is passable and below is the kill plane).
+	KIT:buildWalls(root, {
+		name = "EdgePillar_",
+		pillars = {
+			size = Track.wallThickness, spacing = Track.wallThickness,
+			colors = { C.CRYSTAL, C.CRYSTAL2 }, material = MAT.CRYSTAL,
+			yLo = Track.wallYLo, yHi = Track.wallYHi,
+		},
+	})
+	local x0, x1, z0, z1 = _bbox(200)
+	_part(root, {
+		Name = "InvisibleCeiling", Size = Vector3.new(x1 - x0, 2, z1 - z0),
+		Position = Vector3.new((x0 + x1) / 2, Track.ceilingY, (z0 + z1) / 2),
+		CanCollide = true, Transparency = 1, CastShadow = false,
+	})
+end
+
+-- ─── Wayfinding arrows ───────────────────────────────────────────────────────
+-- At every node where the heading changes by 12°+ (pointing along the
+-- outgoing segment), and every ARROW_EVERY studs along long straights, so the
+-- first turn after a long straight never reads as a dead end.
+
+local ARROW_EVERY = 300
+
+local function _floorArrow(root, idx, x, z, yaw)
+	local cf = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, yaw, 0)
+	_part(root, {
+		Name = "WayArrowShaft_" .. idx, Size = Vector3.new(2.4, 0.6, 14), CFrame = cf,
+		Color = C.ARROW, Material = MAT.NEON, CanCollide = false, CastShadow = false, Transparency = 0.15,
+	})
 	local head = _wedge(root, {
-		Name = "WayArrowHead_" .. idx,
-		Size = Vector3.new(5, 0.6, 5),
-		Color = Color3.fromRGB(255, 220, 80),
-		Material = MAT.NEON,
-		CanCollide = false, CastShadow = false,
-		Transparency = 0.15,
+		Name = "WayArrowHead_" .. idx, Size = Vector3.new(5, 0.6, 5),
+		Color = C.ARROW, Material = MAT.NEON, CanCollide = false, CastShadow = false, Transparency = 0.15,
 	})
-	head.CFrame = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, math.rad(headingDeg), 0)
-		* CFrame.new(0, 0, -9.5) * CFrame.Angles(-math.pi / 2, 0, 0)
+	head.CFrame = cf * CFrame.new(0, 0, -9.5) * CFrame.Angles(-math.pi / 2, 0, 0)
 end
 
 local function _buildWayfindingArrows(root)
-	-- Place an arrow at each internal node where the heading changes meaningfully.
-	-- Arrow is positioned at the node and points along the outgoing segment direction.
-	local TURN_THRESHOLD_RAD = math.rad(12)
-	for i = 2, #NODES - 1 do
-		local prev, cur, nxt = NODES[i - 1], NODES[i], NODES[i + 1]
-		local inDx, inDz   = cur[1] - prev[1], cur[2] - prev[2]
-		local outDx, outDz = nxt[1] - cur[1], nxt[2] - cur[2]
-		local inAng  = math.atan2(inDx, inDz)
-		local outAng = math.atan2(outDx, outDz)
-		local diff   = math.atan2(math.sin(outAng - inAng), math.cos(outAng - inAng))
-		if math.abs(diff) >= TURN_THRESHOLD_RAD then
-			-- Use the outgoing direction so the arrow points "where to go next"
-			local headingDeg = math.deg(outAng)
-			_floorArrow(root, i, cur[1], cur[2], headingDeg)
+	local geo = KIT.geo
+	local idx = 0
+	for _, d in ipairs(geo:deflections()) do
+		if math.abs(d.angle) >= 12 then
+			idx += 1
+			local seg = geo.segments[d.node]
+			_floorArrow(root, idx, seg.ax, seg.az, math.atan2(-seg.dx, -seg.dz))
 		end
 	end
-	-- Extra arrows along S1's straight (700 stud) so players see direction long
-	-- before they reach the first turn at N4.
-	_floorArrow(root, 100, 0, 1300, 180)  -- pointing -Z
-	_floorArrow(root, 101, 0, 1000, 180)
-end
-
--- ─── Edge barriers (spec §4.4 revised: visible permeable pillars) ───────────
--- Replaces the original invisible CanCollide=true walls. Players reported the
--- mystery "I just stopped" effect with no way around. New design:
---   - Crystal pillars (2x2 stud, neon) along corridor edge — visible
---   - Pillar every PILLAR_SPACING studs along the track
---   - Every GAP_INTERVAL studs of *track-cumulative* distance, an opening of
---     2 * GAP_HALF_WIDTH studs is left for risky shortcuts
---   - Running-distance gap pattern (not per-segment) so even short segments at
---     sharp corners still get gaps — guarantees no impassable sub-section
-
--- SKY pillars: now a continuous solid fence with NO doorways. SKY vehicles
--- (flyers) have a ~1.5-stud-wide chassis hitbox, so any gap wide enough to be
--- visually "permeable" is physically passable. Players reported drifting
--- through 4-stud doorways into the kill plane. Doorways and pillar spacing
--- have been tightened so adjacent pillars touch:
---   - PILLAR_SPACING = 2 (pillar size, no gap between adjacent)
---   - No doorways (GAP_HALF_WIDTH = 0)
--- Slow-zone shortcut is no longer possible on SKY — falling off is genuinely
--- catastrophic so the wall is binary: stay on track or kill plane.
-local PILLAR_SPACING = 2
-
--- High frictionWeight + very low friction makes the vehicle slide *along*
--- the pillars (and other walls) instead of getting brake-pinned by them.
--- Roblox blends surface frictions weighted: with weight=100 and friction=0.05
--- on the wall vs default tire friction, contact friction ≈ 0.054.
-local LOW_FRICTION = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
-
--- Pillars follow TrackGeometry:boundaryRuns: extended to close the outside
--- of each turn, and dropped wherever they would stand inside the corridor —
--- the inside of a turn, and the two figure-8 junctions where the track passes
--- over itself (S1/Loop A at (0, 800), S3/Loop B at (0, 400)). Pillars are
--- packed at <= PILLAR_SPACING so no gap opens between them.
-local PILLAR_OFFSET = CORRIDOR_W / 2 + 1
-
-local function _buildEdgeBarriers(root)
-	local wallH = WALL_Y_HI - WALL_Y_LO
-	local pillarColors = { C.CRYSTAL, C.CRYSTAL2 }
-	for i = 1, #NODES - 1 do
-		local a, b = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		if segLen < 0.1 then continue end
-		local cf = _segCF(a[1], a[2], b[1], b[2], (WALL_Y_LO + WALL_Y_HI) / 2)
-		for _, side in ipairs({ -1, 1 }) do
-			-- builder side +1 = left of travel (_segCF local +X); TrackGeometry uses +1 = right
-			local slot = 0
-			for _, run in ipairs(GEO:boundaryRuns(i, -side, PILLAR_OFFSET, PILLAR_OFFSET + 1)) do
-				local runLen = run[2] - run[1]
-				local count = math.max(1, math.ceil(runLen / PILLAR_SPACING))
-				for k = 0, count - 1 do
-					local relAlong = run[1] + (k + 0.5) * runLen / count
-					local localZ = relAlong - segLen / 2
-					local pillar = _part(root, {
-						Name = "EdgePillar_" .. i .. "_" .. slot .. (side > 0 and "R" or "L"),
-						Size = Vector3.new(2, wallH, 2),
-						Color = pillarColors[(slot % 2) + 1],
-						Material = MAT.CRYSTAL,
-						CanCollide = true, CastShadow = false,
-					})
-					pillar.CustomPhysicalProperties = LOW_FRICTION
-					pillar.CFrame = cf * CFrame.new(side * PILLAR_OFFSET, 0, localZ)
-					slot += 1
-				end
+	for _, seg in ipairs(geo.segments) do
+		if seg.len > ARROW_EVERY * 0.8 then
+			for t = ARROW_EVERY / 2, seg.len - 60, ARROW_EVERY do
+				idx += 1
+				_floorArrow(root, idx, seg.ax + seg.dx * t, seg.az + seg.dz * t, math.atan2(-seg.dx, -seg.dz))
 			end
 		end
 	end
 end
 
--- ─── Invisible ceiling (spec §4.4: Y=120) ────────────────────────────────────
-
-local function _buildInvisibleCeiling(root)
-	_part(root, {
-		Name = "InvisibleCeiling",
-		Size = Vector3.new(2800, 2, 5000),
-		Position = Vector3.new(0, CEILING_Y, -250),
-		CanCollide = true, Transparency = 1, CastShadow = false,
-	})
-end
-
--- ─── Decorative crystal clusters (outside walls per spec §4.7) ───────────────
+-- ─── Crystal clusters (decoration, off the corridor) ─────────────────────────
 
 local function _buildCrystalClusters(root)
-	local seeds = {
-		-- S1 area decoration (X = ±90, north of N1)
-		{  90, 1380 }, { -90, 1380 }, {  90, 1080 }, { -90, 1080 },
-		-- Loop A outer ring (west of west boundary)
-		{ -700,  800 }, { -680,  500 }, { -680, 1100 }, { -560, 1240 }, { -560,  360 },
-		-- Loop B outer ring (east of east boundary)
-		{  700,  400 }, {  680,  100 }, {  680,  700 }, {  560,  840 }, {  560,  -40 },
-		-- S5 canyon outer (X ≈ ±150)
-		{ -160,  100 }, {  160, -100 }, { -160, -340 }, {  160, -560 },
-		{ -160, -800 }, {  160, -940 },
-		-- S6 descent decoration
-		{   90, -1500 }, {  -90, -1500 }, {   90, -1800 }, {  -90, -1800 },
-	}
 	local crystalColors = { C.CRYSTAL, C.CRYSTAL2, C.CRYSTAL3 }
 	local rng = Random.new(33)
-	for ci, cs in ipairs(seeds) do
+	for ci, cs in ipairs(Track.crystalSeeds) do
 		local baseY = SKY_BASE_Y - 5
 		for s = 1, rng:NextInteger(3, 5) do
 			local ox = cs[1] + rng:NextNumber(-12, 12)
@@ -378,258 +207,108 @@ local function _buildCrystalClusters(root)
 			local sw = rng:NextNumber(2, 5)
 			local color = crystalColors[rng:NextInteger(1, 3)]
 			_part(root, {
-				Name = "CrystalSpire_" .. ci .. "_" .. s,
-				Size = Vector3.new(sw, sh, sw),
+				Name = "CrystalSpire_" .. ci .. "_" .. s, Size = Vector3.new(sw, sh, sw),
 				Position = Vector3.new(ox, baseY + sh / 2, oz),
-				Color = color, Material = MAT.CRYSTAL,
-				CanCollide = false, CastShadow = false,
+				Color = color, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
 			})
 			local tip = _wedge(root, {
-				Name = "CrystalTip_" .. ci .. "_" .. s,
-				Size = Vector3.new(sw, sh * 0.35, sw),
-				Color = color, Material = MAT.CRYSTAL,
-				CanCollide = false, CastShadow = false,
+				Name = "CrystalTip_" .. ci .. "_" .. s, Size = Vector3.new(sw, sh * 0.35, sw),
+				Color = color, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
 			})
-			tip.CFrame = CFrame.new(ox, baseY + sh + sh * 0.18, oz)
-				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+			tip.CFrame = CFrame.new(ox, baseY + sh + sh * 0.18, oz) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
 		end
 	end
 end
 
--- ─── Updraft zones (kept as physics zones; floor is now continuous) ──────────
+-- ─── Updraft zones (hazard) ──────────────────────────────────────────────────
 
 local function _buildUpdraftZones(root)
-	local zones = {
-		{ -300,  800 },  -- inside Loop A center
-		{  300,  400 },  -- inside Loop B center
-		{    0, -1200 }, -- mid canyon recovery
-	}
-	for i, uz in ipairs(zones) do
-		local ux, uz2 = uz[1], uz[2]
+	for i, uz in ipairs(Track.updraftZones) do
 		local baseY = SKY_BASE_Y - 18
 		_part(root, {
-			Name = "UpdraftVisual_" .. i,
-			Size = Vector3.new(14, 55, 14),
-			Position = Vector3.new(ux, baseY, uz2),
+			Name = "UpdraftVisual_" .. i, Size = Vector3.new(14, 55, 14),
+			Position = Vector3.new(uz[1], baseY, uz[2]),
 			Color = C.UPDRAFT, Material = MAT.NEON,
 			CanCollide = false, Transparency = 0.72, CastShadow = false,
 		})
 		local trigger = _part(root, {
-			Name = "UpdraftZone_" .. i,
-			Size = Vector3.new(18, 70, 18),
-			Position = Vector3.new(ux, baseY, uz2),
+			Name = "UpdraftZone_" .. i, Size = Vector3.new(18, 70, 18),
+			Position = Vector3.new(uz[1], baseY, uz[2]),
 			CanCollide = false, Transparency = 1,
 		})
 		_tag(trigger, "UpdraftZone")
 	end
 end
 
--- ─── Drift corners (3 per spec §4.3: loop apexes + canyon entry) ─────────────
+-- ─── Triggers (TrackKit) ─────────────────────────────────────────────────────
 
-local function _buildDriftCorners(root)
-	for i, c in ipairs(Track.driftCorners) do
-		local rx, rz = c[1], c[2]
-		local ry = SKY_BASE_Y + 4
-		local ringR = 14
-		-- The ring faces down the track so racers fly through it.
-		local ringCF = _trackCF(rx, ry, rz)
-		for seg = 0, 7 do
-			local angle = (seg / 8) * math.pi * 2
-			local arc = _part(root, {
-				Name = "DriftRingArc_" .. i .. "_" .. seg,
-				Size = Vector3.new(2, 2, 8),
-				Color = C.DRIFT_GLOW, Material = MAT.CRYSTAL,
-				CanCollide = false, CastShadow = false,
+local function _buildTriggers(root)
+	KIT:buildDriftCorners(root, {
+		-- a ring facing down the track, flown through at hover height
+		visual = function(r, cf, i)
+			local ringCF = cf * CFrame.new(0, 4, 0)
+			local ringR = 14
+			for seg = 0, 7 do
+				local angle = (seg / 8) * math.pi * 2
+				_part(r, {
+					Name = "DriftRingArc_" .. i .. "_" .. seg, Size = Vector3.new(2, 2, 8),
+					CFrame = ringCF * CFrame.new(math.cos(angle) * ringR, math.sin(angle) * ringR, 0) * CFrame.Angles(0, 0, angle),
+					Color = C.DRIFT_GLOW, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
+				})
+			end
+			_part(r, {
+				Name = "DriftRingStar_" .. i, Size = Vector3.new(4, 4, 0.5), CFrame = ringCF,
+				Color = C.STAR, Material = MAT.NEON, CanCollide = false, CastShadow = false,
 			})
-			arc.CFrame = ringCF * CFrame.new(math.cos(angle) * ringR, math.sin(angle) * ringR, 0)
-				* CFrame.Angles(0, 0, angle)
-		end
-		_part(root, {
-			Name = "DriftRingStar_" .. i,
-			Size = Vector3.new(4, 4, 0.5),
-			CFrame = ringCF,
-			Color = C.STAR, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-		-- Trigger spans the whole corridor width, 50 deep along the track.
-		local trigger = _part(root, {
-			Name = "DriftCorner_" .. i,
-			Size = Vector3.new(CORRIDOR_W, ringR * 2 + 4, 50),
-			CFrame = ringCF,
-			CanCollide = false, Transparency = 1,
-		})
-		_tag(trigger, "DriftCorner")
-	end
-end
-
--- ─── Jump zones (3 per spec §4.3: S5 XZ boost dressed as ramps) ──────────────
--- Flyer is Y-locked at 84, so these apply forward-velocity boost (not vertical).
-
-local function _buildJumpRamps(root)
-	for i, r in ipairs(Track.jumpRamps) do
-		local rx, rz = r[1], r[2]
-		_part(root, {
-			Name = "JumpRamp_" .. i,
-			Size = Vector3.new(CORRIDOR_W - 14, 1.2, 14),
-			CFrame = _trackCF(rx, SKY_BASE_Y + 0.8, rz),
-			Color = C.CLOUD_PUFF, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false, Transparency = 0.3,
-		})
-		local jz = _part(root, {
-			Name = "JumpZone_" .. i,
-			Size = Vector3.new(CORRIDOR_W - 6, 8, 12),
-			CFrame = _trackCF(rx, SKY_BASE_Y + 4, rz),
-			CanCollide = false, Transparency = 1,
-		})
-		_tag(jz, "JumpZone")
-	end
-end
-
--- ─── Boost pads (5 per spec §4.3) ────────────────────────────────────────────
-
-local function _buildBoostPads(root)
-	for i, pd in ipairs(Track.boostPads) do
-		local pad = _part(root, {
-			Name = "BoostPad_" .. i,
-			Size = Vector3.new(12, 0.4, 8),
-			CFrame = _trackCF(pd[1], SKY_BASE_Y + 0.4, pd[2]),
-			Color = C.BOOST, Material = MAT.NEON, CanCollide = false,
-		})
-		_tag(pad, "BoostPad")
-		_part(root, {
-			Name = "BoostRing_" .. i,
-			Size = Vector3.new(16, 0.2, 12),
-			CFrame = _trackCF(pd[1], SKY_BASE_Y + 0.3, pd[2]),
-			Color = Color3.fromRGB(255, 200, 240), Material = MAT.NEON,
-			Transparency = 0.5, CanCollide = false,
-		})
-	end
-end
-
--- ─── Checkpoints (spec §4.6) ─────────────────────────────────────────────────
--- Each checkpoint = invisible Touched trigger (gated by CheckpointService)
--- + visible glowing arch so players know where to drive through.
-
-local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
-	local archY = SKY_BASE_Y + 22
-	local gateCF = _trackCF(x, 0, z)
-	-- Two pillars at corridor edges
-	for _, side in ipairs({ -1, 1 }) do
-		_part(root, {
-			Name = "CPGate" .. cpIndex .. "Pillar" .. (side > 0 and "R" or "L"),
-			Size = Vector3.new(2.4, 38, 2.4),
-			CFrame = gateCF * CFrame.new(side * (CORRIDOR_W / 2 - 2), SKY_BASE_Y + 19, 0),
-			Color = archColor, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-	end
-	-- Curved top: 3 segments faking an arch
-	local topY = archY + 6
-	for i = -1, 1 do
-		_part(root, {
-			Name = "CPGate" .. cpIndex .. "Top" .. (i + 2),
-			Size = Vector3.new(CORRIDOR_W / 3 + 2, 2, 2.4),
-			CFrame = gateCF * CFrame.new(i * (CORRIDOR_W / 3), topY + (i == 0 and 1.5 or 0), 0),
-			Color = archColor, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-	end
-	-- Vertical beacon column — visible from anywhere on the map so players can
-	-- always orient toward the next checkpoint
-	local beaconHeight = 120
-	_part(root, {
-		Name = "CPGate" .. cpIndex .. "Beacon",
-		Size = Vector3.new(1.4, beaconHeight, 1.4),
-		Position = Vector3.new(x, topY + 6 + beaconHeight / 2, z),
-		Color = archColor, Material = MAT.NEON,
-		CanCollide = false, CastShadow = false,
-		Transparency = 0.15,
+		end,
 	})
-	-- Floating "CP1" / "CP2" label
-	local labelAnchor = _part(root, {
-		Name = "CPGate" .. cpIndex .. "Label",
-		Size = Vector3.new(1, 1, 1),
-		Position = Vector3.new(x, topY + 6, z),
-		Transparency = 1, CanCollide = false, CastShadow = false,
+	KIT:buildJumpZones(root, {
+		-- flyers hold altitude, so jump zones give a forward boost; dressed as ramps
+		visual = function(r, cf, i)
+			_part(r, {
+				Name = "JumpRamp_" .. i, Size = Vector3.new(CORRIDOR_W - 14, 1.2, 14),
+				CFrame = cf * CFrame.new(0, 0.8, 0),
+				Color = C.CLOUD_PUFF, Material = MAT.NEON,
+				CanCollide = false, CastShadow = false, Transparency = 0.3,
+			})
+		end,
 	})
-	local bb = Instance.new("BillboardGui")
-	bb.Size           = UDim2.new(0, 180, 0, 48)
-	bb.StudsOffset    = Vector3.new(0, 0, 0)
-	bb.MaxDistance    = 1500   -- visible from across the map
-	bb.LightInfluence = 0
-	bb.AlwaysOnTop    = true
-	bb.Parent         = labelAnchor
-	local lbl = Instance.new("TextLabel")
-	lbl.Size                   = UDim2.fromScale(1, 1)
-	lbl.BackgroundTransparency = 1
-	lbl.Text                   = "CP " .. cpIndex
-	lbl.TextColor3             = archColor
-	lbl.TextStrokeColor3       = Color3.new(0, 0, 0)
-	lbl.TextStrokeTransparency = 0.2
-	lbl.Font                   = Enum.Font.GothamBlack
-	lbl.TextScaled             = true
-	lbl.Parent                 = bb
+	KIT:buildBoostPads(root, { color = C.BOOST, ringColor = C.BOOST_RING })
+	-- beacon column visible from anywhere, label visible across the map
+	KIT:buildCheckpoints(root, { archHeight = 34, beacon = 120, labelDistance = 1500 })
 end
 
--- Trigger is wider than the corridor and 10 deep, turned to the track, so no
--- line through the gate misses it.
-local CHECKPOINT_DEPTH = 10
-
-local function _buildCheckpoints(root)
-	local colors = { Color3.fromRGB(120, 220, 255), Color3.fromRGB(255, 200, 100) }
-	for i, c in ipairs(Track.checkpoints) do
-		local cp = _part(root, {
-			Name = "Checkpoint" .. i,
-			Size = Vector3.new(CORRIDOR_W + 4, 50, CHECKPOINT_DEPTH),
-			CFrame = _trackCF(c[1], SKY_BASE_Y + 25, c[2]),
-			CanCollide = false, Transparency = 1,
-		})
-		_tag(cp, "Checkpoint" .. i)
-		_buildCheckpointGate(root, c[1], c[2], i, colors[i])
-	end
-end
-
--- ─── Farm platform (relocated north of start, beyond track Z extent) ─────────
+-- ─── Farm platform (FARMING phase only) ──────────────────────────────────────
 
 local function _buildFarmPlatform(root)
-	local cx, cz = 0, 1850
+	local farm = Track.farm
+	local cx, cz, w, d = farm.cx, farm.cz, farm.size[1], farm.size[2]
 	_part(root, {
-		Name = "FarmPlatform",
-		Size = Vector3.new(200, 9, 240),
+		Name = "FarmPlatform", Size = Vector3.new(w, 9, d),
 		Position = Vector3.new(cx, SKY_BASE_Y - 4.5, cz),
 		Color = C.PLATFORM3, Material = MAT.ROCK,
 	})
 	for _, side in ipairs({ -1, 1 }) do
 		local bev = _wedge(root, {
-			Name = "FarmBevel",
-			Size = Vector3.new(200, 5, 6),
+			Name = "FarmBevel", Size = Vector3.new(w, 5, 6),
 			Color = C.PLATFORM2, Material = MAT.ROCK, CanCollide = false,
 		})
-		bev.CFrame = CFrame.new(cx, SKY_BASE_Y - 7.5, cz + side * 125)
+		bev.CFrame = CFrame.new(cx, SKY_BASE_Y - 7.5, cz + side * (d / 2 + 5))
 			* CFrame.Angles(0, side > 0 and 0 or math.pi, 0)
 	end
-
-	local pillarPositions = {
-		{ cx - 85, cz - 105 }, { cx + 85, cz - 105 },
-		{ cx - 85, cz       }, { cx + 85, cz       },
-		{ cx - 85, cz + 105 }, { cx + 85, cz + 105 },
-	}
-	for _, pp in ipairs(pillarPositions) do
-		_part(root, {
-			Name = "CrystalPillar", Size = Vector3.new(5, 50, 5),
-			Position = Vector3.new(pp[1], SKY_BASE_Y - 33, pp[2]),
-			Color = C.CRYSTAL, Material = MAT.CRYSTAL,
-			CanCollide = false, CastShadow = false,
-		})
+	for _, ox in ipairs({ -1, 1 }) do
+		for _, oz in ipairs({ -1, 0, 1 }) do
+			_part(root, {
+				Name = "CrystalPillar", Size = Vector3.new(5, 50, 5),
+				Position = Vector3.new(cx + ox * (w / 2 - 15), SKY_BASE_Y - 33, cz + oz * (d / 2 - 15)),
+				Color = C.CRYSTAL, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
+			})
+		end
 	end
-
-	local cols = { -65, -32, 0, 32, 65 }
-	local rows = { cz - 45, cz + 45 }
-	for _, rz in ipairs(rows) do
-		for _, ox in ipairs(cols) do
+	for _, rz in ipairs({ cz - 45, cz + 45 }) do
+		for _, ox in ipairs({ -65, -32, 0, 32, 65 }) do
 			local sp = _part(root, {
-				Name = "FarmSpawnPoint",
-				Size = Vector3.new(4, 0.5, 4),
+				Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
 				Position = Vector3.new(cx + ox, SKY_BASE_Y + 4.5, rz),
 				Color = Color3.fromRGB(255, 220, 60), Material = MAT.NEON,
 				CanCollide = false, Transparency = 0.5,
@@ -639,85 +318,15 @@ local function _buildFarmPlatform(root)
 	end
 end
 
--- ─── Start grid (matches BiomeConfig.SKY.raceStartZ = 1490) ──────────────────
+-- ─── Start, finish, kill plane ───────────────────────────────────────────────
 
-local function _buildStartGrid(root)
-	for side = -1, 1, 2 do
-		_part(root, {
-			Name = "StartPole" .. (side > 0 and "R" or "L"),
-			Size = Vector3.new(1.5, 18, 1.5),
-			-- in the pillar line, outside the corridor
-			Position = Vector3.new(side * PILLAR_OFFSET, SKY_BASE_Y + 13, 1495),
-			Color = C.ARCH, Material = MAT.METAL,
-		})
-	end
-	_part(root, {
-		Name = "StartBanner",
-		Size = Vector3.new(CORRIDOR_W + 2, 2, 1),
-		Position = Vector3.new(0, SKY_BASE_Y + 22, 1495),
-		Color = Color3.fromRGB(255, 220, 40), Material = MAT.NEON, CanCollide = false,
-	})
-end
-
--- ─── Finish line (Z = -2000) ─────────────────────────────────────────────────
-
-local function _buildFinishLine(root)
-	for col = -(CORRIDOR_W / 2), (CORRIDOR_W / 2) - 4, 4 do
-		for row = 0, 1 do
-			_part(root, {
-				Name = "FinishTile",
-				Size = Vector3.new(4, 0.4, 4),
-				Position = Vector3.new(col + 2, SKY_BASE_Y + 0.4, FINISH_Z + row * 4),
-				Color = (math.floor((col + CORRIDOR_W / 2) / 4) + row) % 2 == 0
-					and Color3.new(1, 1, 1) or Color3.new(0, 0, 0),
-				Material = MAT.METAL, CanCollide = false,
-			})
-		end
-	end
-
-	local finish = _part(root, {
-		Name = "FinishLine",
-		Size = Vector3.new(CORRIDOR_W, 12, 2),
-		Position = Vector3.new(0, SKY_BASE_Y + 6, FINISH_Z),
-		CanCollide = false, Transparency = 1,
-	})
-	_tag(finish, "FinishLine")
-
-	for side = -1, 1, 2 do
-		_part(root, {
-			Name = "FinishPole" .. (side > 0 and "R" or "L"),
-			Size = Vector3.new(1.8, 22, 1.8),
-			-- in the pillar line, outside the corridor
-			Position = Vector3.new(side * PILLAR_OFFSET, SKY_BASE_Y + 11, FINISH_Z),
-			Color = C.ARCH, Material = MAT.CRYSTAL,
-		})
-	end
-	_part(root, {
-		Name = "FinishArch",
-		Size = Vector3.new(CORRIDOR_W + 4, 3, 1.8),
-		Position = Vector3.new(0, SKY_BASE_Y + 22.5, FINISH_Z),
-		Color = C.ARCH, Material = MAT.NEON, CanCollide = false,
-	})
-	-- Star burst decoration on arch
-	for sx = -20, 20, 5 do
-		local phase = sx * 0.6
-		_part(root, {
-			Name = "ArchStar",
-			Size = Vector3.new(2.5, 2.5, 0.6),
-			Position = Vector3.new(sx, SKY_BASE_Y + 23 + math.sin(phase) * 1.5, FINISH_Z - 0.5),
-			Color = C.STAR, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-	end
-end
-
--- ─── Kill plane (Y = -200 per BiomeConfig.SKY.killPlaneY) ────────────────────
-
-local function _buildKillPlane(root)
+local function _buildStartAndFinish(root)
+	KIT:buildStartGrid(root, { poleColor = C.ARCH })
+	KIT:buildFinish(root, { poleColor = C.ARCH, poleMaterial = MAT.CRYSTAL, archColor = C.ARCH })
+	local x0, x1, z0, z1 = _bbox(600)
 	local kill = _part(root, {
-		Name = "KillPlane",
-		Size = Vector3.new(3000, 4, 5000),
-		Position = Vector3.new(0, -200, -250),
+		Name = "KillPlane", Size = Vector3.new(x1 - x0, 4, z1 - z0),
+		Position = Vector3.new((x0 + x1) / 2, BiomeConfig.SKY.killPlaneY, (z0 + z1) / 2),
 		CanCollide = false, Transparency = 1,
 	})
 	_tag(kill, "KillPlane")
@@ -726,29 +335,19 @@ end
 -- ─── Main build ──────────────────────────────────────────────────────────────
 
 local function buildSky()
-	local root = _getOrCreateMap()
-
-	local farmSub  = Instance.new("Model"); farmSub.Name  = "FarmArea";  farmSub.Parent  = root
-	local trackSub = Instance.new("Model"); trackSub.Name = "RaceTrack"; trackSub.Parent = root
+	local root, farmSub, trackSub = TrackKit.newMap("SkyMap")
 
 	_buildClouds(root)
 	_buildUpdraftZones(root)
 	_buildFarmPlatform(farmSub)
 
-	_buildFloor(trackSub)
+	_buildCorridor(trackSub)
 	_buildWayfindingArrows(trackSub)
-	_buildEdgeBarriers(trackSub)
-	_buildInvisibleCeiling(trackSub)
 	_buildCrystalClusters(trackSub)
-	_buildBoostPads(trackSub)
-	_buildJumpRamps(trackSub)
-	_buildDriftCorners(trackSub)
-	_buildCheckpoints(trackSub)
-	_buildStartGrid(trackSub)
-	_buildFinishLine(trackSub)
-	_buildKillPlane(trackSub)
+	_buildTriggers(trackSub)
+	_buildStartAndFinish(trackSub)
 
-	CollectionService:AddTag(root, "BiomeMap")
+	TrackKit.tag(root, "BiomeMap")
 	root:SetAttribute("Biome", "SKY")
 
 	print("[SkyMapBuilder] Built SKY map (" .. #root:GetDescendants() .. " descendants)")
@@ -757,4 +356,5 @@ end
 
 return {
 	build = buildSky,
+	track = Track,
 }

@@ -71,6 +71,24 @@ R.describe("farming rules", function()
 		R.expect(#srv.SessionManager.getData(b).inventory).toBe(0)
 	end)
 
+	R.it("a contest nobody presses in still ends when its time is up", function()
+		local srv = farmServer(2)
+		local a, b = srv.players[1], srv.players[2]
+		local item
+		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
+			if d.Name == "ItemId" then item = d break end
+		end
+		local pos = item.Parent.Position
+		a.Character.HumanoidRootPart.Position = pos + Vector3.new(2, 2, 0)
+		b.Character.HumanoidRootPart.Position = pos + Vector3.new(-2, 2, 0)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPickup, a, item.Value)).toBe("contested")
+		-- both players walk away without pressing
+		srv.advance(5)
+		R.expect(#srv.Telemetry.events("contest_result")).toBe(1)
+		local got = #srv.SessionManager.getData(a).inventory + #srv.SessionManager.getData(b).inventory
+		R.expect(got).toBe(1)
+	end)
+
 	R.it("a steal never pushes the thief past the 8-slot inventory",
 		function()
 			local srv = farmServer(2)

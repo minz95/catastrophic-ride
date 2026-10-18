@@ -10,20 +10,20 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 33.2 | expert | 86.4 s | 0 | 0 |
-| live code | slowest | 33.2 | expert | 86.4 s | 0 | 0 |
-| authored | slowest | 33.2 | average | 90.8 s | 0 | 0 |
-| live code | slowest | 33.2 | average | 90.8 s | 0 | 0 |
+| authored | slowest | 33.2 | expert | 86.3 s | 0 | 0 |
+| live code | slowest | 33.2 | expert | 86.3 s | 0 | 0 |
+| authored | slowest | 33.2 | average | 90.7 s | 0 | 0 |
+| live code | slowest | 33.2 | average | 90.7 s | 0 | 0 |
 | authored | slowest | 33.2 | novice | 100.2 s | 0 | 0 |
 | live code | slowest | 33.2 | novice | 100.2 s | 0 | 0 |
 | authored | p50 | 52.2 | expert | 61.3 s | 0 | 0 |
 | live code | p50 | 52.2 | expert | 61.3 s | 0 | 0 |
-| authored | p50 | 52.2 | average | 65.8 s | 0 | 0 |
-| live code | p50 | 52.2 | average | 65.8 s | 0 | 0 |
-| authored | p50 | 52.2 | novice | 78.5 s | 0 | 1 |
-| live code | p50 | 52.2 | novice | 78.5 s | 0 | 1 |
-| authored | fastest | 80.0 | expert | 38.9 s | 0 | 0 |
-| live code | fastest | 80.0 | expert | 38.9 s | 0 | 0 |
+| authored | p50 | 52.2 | average | 65.7 s | 0 | 0 |
+| live code | p50 | 52.2 | average | 65.7 s | 0 | 0 |
+| authored | p50 | 52.2 | novice | 78.4 s | 0 | 1 |
+| live code | p50 | 52.2 | novice | 78.4 s | 0 | 1 |
+| authored | fastest | 80.0 | expert | 38.8 s | 0 | 0 |
+| live code | fastest | 80.0 | expert | 38.8 s | 0 | 0 |
 | authored | fastest | 80.0 | average | 43.8 s | 0 | 0 |
 | live code | fastest | 80.0 | average | 43.8 s | 0 | 0 |
 | authored | fastest | 80.0 | novice | 59.0 s | 0 | 3 |
@@ -35,16 +35,41 @@ Cars by top speed: slowest = Microwave + Fan + Balloon Bunch (top speed 33.2, tu
 
 - Finish rate within 180 s: 100%
 - Fastest car won 6 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.58 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.37
+- Rank correlation, top speed vs place: -0.55 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.38
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 2.67 |
-| farming: casual | 4.33 |
+| farming: sweaty | 2.72 |
+| farming: casual | 4.28 |
 | driving: expert | 2.67 |
 | driving: average | 2.62 |
 | driving: novice | 5.21 |
+
+## Fun metrics
+
+Each simulated match is scored with `Shared/RaceMetrics` (the same code scores real Studio playtests, see `Modules/PlaytestReport`). Bots race as ghosts on one clock: no car-to-car contact, no abilities, so lead changes come from build and driving differences only. Targets are starting points in `Constants.FUN_TARGETS`; playtests decide.
+
+| | Metric | Value | Target | Why |
+|---|---|---|---|---|
+| ✗ | closeShare | 0.22 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.50 |  .. 0.70 | the fastest build should not always win |
+| ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
+| ✓ | finishSpread | 30.27 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.50 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.23 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.55 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
+| ✗ | winnerTime | 43.12 | 60.00 .. 120.00 | a race should take about 90 s |
+
+Overtakes per match: 8.6. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+
+| Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
+|---|---|---|---|---|---|
+| S1 harbor launch | 5.5 | 2.7 | 0 | 0 | 0 |
+| S2 island arc | 10.1 | 5.6 | 0 | 0 | 8 |
+| S3 open channel | 9.4 | 4.9 | 0 | 0 | 11 |
+| S4 reef U-bend | 14.2 | 8.4 | 1 | 0 | 21 |
+| S5 return channel | 18.4 | 11.1 | 11 | 0 | 46 |
 
 ## Geometry findings
 

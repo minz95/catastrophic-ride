@@ -256,9 +256,13 @@ function TrackGeometry:boundaryRuns(i, lat, offset, reach, step)
 	if cur then
 		table.insert(runs, cur)
 	end
+	-- Keep only runs that touch the segment itself: an extension that is cut
+	-- off from it crossed another part of the lane (the inside wall of a sharp
+	-- turn runs straight through the next segment) and would stand alone as
+	-- a spur on the far side.
 	local out = {}
 	for _, r in ipairs(runs) do
-		if r[2] - r[1] >= 0.5 then
+		if r[2] - r[1] >= 0.5 and r[2] > 0 and r[1] < seg.len then
 			table.insert(out, r)
 		end
 	end

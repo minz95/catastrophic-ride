@@ -145,6 +145,7 @@ local function _respawnVehicle(player, reason)
 	Telemetry.record("respawn", {
 		userId = player.UserId,
 		reason = reason or "unknown",
+		s = math.floor(_progressFor(player, vehicle)),
 		from = Telemetry.vec(primary.Position),
 		to = { x = x, y = y, z = z },
 	})
@@ -317,6 +318,7 @@ local function _onObstacleTouched(part, hit)
 		return
 	end
 	ps.cleanSince = tick()
+	Telemetry.record("hit", { userId = player.UserId, by = part.Name, s = math.floor(_progressFor(player, vehicle)) })
 
 	_speed(player, _seatOf(vehicle), "obstacle",
 		Constants.OBSTACLE_BOUNCE_SPEED_MULT, Constants.OBSTACLE_BOUNCE_PENALTY_DURATION)
@@ -548,13 +550,20 @@ end
 local function _startPositionSync()
 	task.spawn(function()
 		local length = RaceProgress.trackLength(_biome)
+		local nextProgressLog = 0
 		while _active do
+			-- Fun metrics (RaceMetrics) read one progress sample per racer per second.
+			local logProgress = tick() - _startTick >= nextProgressLog
+			if logProgress then nextProgressLog += Constants.FUN.PROGRESS_EVERY end
 			local data, ranked = {}, {}
 			for _, player in ipairs(Players:GetPlayers()) do
 				local pdata = SessionManager.getData(player)
 				if pdata and pdata.vehicleModel and _physState[player.UserId] then
 					local progress = _progressFor(player, pdata.vehicleModel)
 					table.insert(data, { userId = player.UserId, progress = progress, rank = 0 })
+					if logProgress then
+						Telemetry.record("race_progress", { userId = player.UserId, s = math.floor(progress) })
+					end
 					table.insert(ranked, { player = player, progress = progress })
 					local pp = pdata.vehicleModel.PrimaryPart
 					if pp and Telemetry.detailed then
@@ -725,6 +734,13 @@ GameManager.onPhaseChanged(function(phase, biome)
 		elseif biome == "SKY" then
 			for _, part in ipairs(CollectionService:GetTagged("UpdraftZone")) do _connectUpdraft(part) end
 		end
+
+		local racerIds = {}
+		for _, player in ipairs(Players:GetPlayers()) do table.insert(racerIds, player.UserId) end
+		Telemetry.record("race_start", {
+			biome = biome, racers = racerIds, round = GameManager.getRound(),
+			length = RaceProgress.trackLength(biome), timeout = Constants.RACING_TIMEOUT,
+		})
 
 		CheckpointService.resetAll()
 		CheckpointService.setup()

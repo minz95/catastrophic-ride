@@ -21,6 +21,7 @@ Constants.PHASE_DURATION = {
 	FARMING  = 90,
 	CRAFTING = 120,
 	RACING   = nil, -- ends on finish, timeout below
+	RESULTS  = 30,
 }
 Constants.RACING_TIMEOUT = 180 -- 3-minute failsafe
 
@@ -78,6 +79,24 @@ Constants.BOOST_DURATION   = 2    -- seconds
 Constants.BOOST_MULTIPLIER = 1.5
 Constants.BOOST_COOLDOWN   = 5
 Constants.POSITION_SYNC_RATE = 0.5  -- seconds between PlayerPositionSync broadcasts
+
+-- ─── Fun as numbers (Shared/RaceMetrics, tools/report.luau, PlaytestReport) ──
+-- Starting targets, not truths: playtests decide. A report marks each value
+-- inside / outside its range so a change can be judged against them.
+Constants.FUN = {
+	PROGRESS_EVERY = 1,   -- s between race_progress telemetry samples
+	MARK_COOLDOWN  = 1,   -- s between playtest markers from one player
+}
+Constants.FUN_TARGETS = {
+	winnerTime   = { min = 60,  max = 120, why = "a race should take about 90 s" },
+	finishRate   = { min = 0.9,            why = "almost everyone finishes" },
+	finishSpread = {            max = 45,  why = "nobody waits long for the last car" },
+	leadChanges  = { min = 1,              why = "the lead changes at least once" },
+	closeShare   = { min = 0.25,           why = "the top two race each other a quarter of the time" },
+	racingShare  = { min = 0.35,           why = "share of a round spent racing (vs farming / crafting / results)" },
+	fastestWinRate = {          max = 0.7, why = "the fastest build should not always win" },
+	speedPlaceCorr = { min = -0.85, max = -0.3, why = "a better build helps, but driving and items matter too" },
+}
 
 -- ─── Drift / DriftCorner ──────────────────────────────────────────────────────
 -- Driving through a tagged DriftCorner zone fills the boost gauge by this amount.

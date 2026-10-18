@@ -60,6 +60,13 @@ function BiomeSpecs.map(biome, cfg)
 				.toBeEmpty("holes in the wall wider than " .. cfg.doorway .. " studs")
 		end)
 
+		R.it("walls never continue past a corner as a detached spur", function()
+			local t = intended.track
+			local thick = t.wallThickness or 2
+			R.expect(MapChecks.detachedWallRuns(intended, t.width / 2 + thick / 2, t.width / 2 + thick))
+				.toBeEmpty("wall stretches cut off from their segment")
+		end)
+
 		R.it("off-track slow zones never cover the lane", function()
 			R.expect(MapChecks.slowZonesInLane(intended)).toBeEmpty("slow zones inside the driving lane")
 		end)

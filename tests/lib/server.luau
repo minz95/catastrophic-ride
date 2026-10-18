@@ -44,6 +44,9 @@ function Server.boot(opts)
 		table.insert(srv.players, p)
 	end
 
+	-- e.g. set attributes the scripts read at start-up
+	if opts.setup then opts.setup(env, Mock) end
+
 	for _, path in ipairs(opts.scripts or Server.DEFAULT_SCRIPTS) do
 		local ok, inst = pcall(env.find, path)
 		if ok and inst then

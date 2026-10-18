@@ -157,7 +157,7 @@ function _startResults(finishOrder)
 	RemoteEvents.RaceFinished:FireAllClients(finishOrder)
 
 	-- Wait for Play Again votes or 30s, then restart
-	task.delay(_duration("RESULTS", 30), function()
+	task.delay(_duration("RESULTS", Constants.PHASE_DURATION.RESULTS), function()
 		_startLobby()
 	end)
 end

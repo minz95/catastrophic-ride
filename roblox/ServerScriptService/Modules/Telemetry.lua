@@ -12,10 +12,13 @@
 --   contest_result   FarmingManager         { itemId, winner, loser, presses }
 --   steal            FarmingManager         { thief, victim, item }
 --   craft            CraftingManager        { userId, slots, stats, auto }
---   race_start       RacingManager          { racers = { userId, maxSpeed, turnSpeed, mass } }
+--   race_start       RacingManager          { biome, racers = { userId }, round, length, timeout }
+--   race_progress    RacingManager          { userId, s }   every Constants.FUN.PROGRESS_EVERY s
 --   race_sample      RacingManager          { userId, x, y, z, speed, maxSpeed, progress }  (detailed only)
 --   speed_effect     RacingManager          { userId, effect, phase = "enter"|"exit"|"restore", before, after }
---   respawn          RacingManager          { userId, reason, from = {x,y,z}, to = {x,y,z} }
+--   hit              RacingManager          { userId, by, s }   obstacle bump
+--   respawn          RacingManager          { userId, reason, s, from = {x,y,z}, to = {x,y,z} }
+--   feedback         PlaytestReporter       { userId, note = "bad"|"fun", phase, s, section, x, z }
 --   checkpoint       CheckpointService      { userId, index }
 --   finish           RacingManager          { userId, time, place }
 --   ability          AbilityManager         { userId, item, result }

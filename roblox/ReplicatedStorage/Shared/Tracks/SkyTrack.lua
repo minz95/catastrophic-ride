@@ -14,6 +14,18 @@ Track.trackTop = 80   -- floor top surface Y (SkyMap SKY_BASE_Y)
 -- altitude (BiomeConfig.SKY.raceStartY = 84), so the body sits ~82..88.
 Track.obstacleBand = { 2, 8 }
 
+-- ─── Edge fence ──────────────────────────────────────────────────────────────
+-- Crystal pillars (wallThickness × wallThickness) packed edge to edge from
+-- wallYLo to wallYHi; no doorways (a flyer that slips out falls to the kill
+-- plane). Invisible ceiling above.
+Track.wallThickness    = 2
+Track.wallYLo          = 54
+Track.wallYHi          = 114
+Track.wallGapInterval  = 1000
+Track.wallGapHalfWidth = 0
+Track.ceilingY         = 120
+Track.slowZoneWidth    = 0      -- no off-track slow zones in the sky
+
 Track.nodes = {
 	-- S1 Launch Tunnel (~700, Z 1500 → 800, straight)
 	{   0, 1500 }, -- N1  start of corridor
@@ -111,7 +123,33 @@ Track.jumpRamps = {
 	{  80, -680 },    -- N28 S5 late
 }
 
+-- Trigger sizes: { across the track, height, along the track }.
+Track.checkpointSize  = { Track.width + 4, 50, 10 }
+Track.boostPadSize    = { 12, 0.4, 8 }
+Track.driftCornerSize = { Track.width, 32, 50 }
+Track.jumpZoneSize    = { Track.width - 6, 8, 12 }
+Track.finishSize      = { Track.width, 12, 6 }
+
+-- ─── Scenery (outside the fence; map_sky checks) ─────────────────────────────
+-- Updraft hazard zones { x, z }: loop centres (off the lane) and one on the
+-- final descent.
+Track.updraftZones = {
+	{ -300,   800 },   -- inside Loop A
+	{  300,   400 },   -- inside Loop B
+	{    0, -1200 },   -- mid descent recovery
+}
+
+-- Decorative crystal clusters { x, z } (spec §4.7), all off the corridor.
+Track.crystalSeeds = {
+	{  90, 1380 }, { -90, 1380 }, {  90, 1080 }, { -90, 1080 },            -- S1
+	{ -700,  800 }, { -680,  500 }, { -680, 1100 }, { -560, 1240 }, { -560,  360 },  -- Loop A
+	{  700,  400 }, {  680,  100 }, {  680,  700 }, {  560,  840 }, {  560,  -40 },  -- Loop B
+	{ -160,  100 }, {  160, -100 }, { -160, -340 }, {  160, -560 },        -- S5 canyon
+	{ -160, -800 }, {  160, -940 },
+	{  90, -1500 }, { -90, -1500 }, {  90, -1800 }, { -90, -1800 },        -- S6 descent
+}
+
 -- Farming area (FarmArea model, hidden during RACING).
-Track.farm = { cx = 0, cz = 1850 }
+Track.farm = { cx = 0, cz = 1850, size = { 200, 240 } }
 
 return Track

@@ -1,9 +1,11 @@
 -- ForestMap.lua
 -- ModuleScript: procedurally builds the FOREST biome map per racetrack spec §2.
--- Layout data (nodes, hazards, checkpoints) lives in
+-- Layout data (nodes, hazards, checkpoints, sizes) lives in
 -- ReplicatedStorage.Shared.Tracks.ForestTrack so simulators and offline checks
--- read the same numbers. Called by MapBuilders/ForestMapBuilder.server.lua at
--- server start, and by the Studio harness / preview plugin in edit mode.
+-- read the same numbers. The parts every track shares (surface, walls, slow
+-- zones, triggers, finish, start) come from Modules.Maps.TrackKit; this file
+-- only adds the forest look. Called by MapBuilders/ForestMapBuilder.server.lua
+-- at server start, and by the Studio harness / preview plugin in edit mode.
 --
 --   - 4700-stud centerline (figure-3 + U-bend) along Z = +600 → -2000
 --   - 40-wide corridor with continuous 8-stud-tall walls both sides
@@ -16,7 +18,9 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Track = require(ReplicatedStorage.Shared.Tracks.ForestTrack)
-local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
+local TrackKit = require(script.Parent.TrackKit)
+
+local KIT = TrackKit.new(Track)
 
 local C = {
 	GRASS        = Color3.fromRGB(76,  120, 50),
@@ -61,90 +65,27 @@ local MAT = {
 }
 
 local TRACK_W   = Track.width       -- corridor width (spec §2 table)
-local WALL_H    = Track.wallHeight  -- wall height (spec §2 table; cars hop ramps and clear 5)
-local TRACK_TOP = Track.trackTop    -- Y of track surface (Part top)
 
-local function _part(parent, props)
-	local p = Instance.new("Part")
-	p.Anchored   = true
-	p.CanCollide = true
-	p.CastShadow = true
-	for k, v in pairs(props) do pcall(function() p[k] = v end) end
-	p.Parent = parent
-	return p
-end
-
-local function _wedge(parent, props)
-	local p = Instance.new("WedgePart")
-	p.Anchored   = true
-	p.CanCollide = true
-	for k, v in pairs(props) do pcall(function() p[k] = v end) end
-	p.Parent = parent
-	return p
-end
-
-local function _tag(part, tagName)
-	CollectionService:AddTag(part, tagName)
-end
-
-local function _getOrCreateMap()
-	local maps = workspace:FindFirstChild("Maps") or (function()
-		local f = Instance.new("Folder"); f.Name = "Maps"; f.Parent = workspace; return f
-	end)()
-	local existing = maps:FindFirstChild("ForestMap")
-	if existing then existing:Destroy() end
-	local model = Instance.new("Model")
-	model.Name   = "ForestMap"
-	model.Parent = maps
-	return model
-end
-
--- ─── Track node layout (spec §2.1, figure-3 + U-bend) ─────────────────────────
--- See ReplicatedStorage.Shared.Tracks.ForestTrack for the annotated node list.
--- Race direction: vehicle starts at N1 (Z=600) and progresses toward Nlast.
+local _part, _wedge, _tag = TrackKit.part, TrackKit.wedge, TrackKit.tag
 
 local NODES = Track.nodes
-local GEO   = TrackGeometry.new(NODES, Track.width)
-
--- Track direction at a point near the centerline, smoothed across a node
--- (yaw in the TrackGeometry:yawAt convention).
-local function _trackYawNear(x, z)
-	local s = GEO:project(x, z).s
-	local ax, az = GEO:pointAt(s - 4)
-	local bx, bz = GEO:pointAt(s + 4)
-	return math.atan2(-(bx - ax), -(bz - az))
-end
-
--- Deflection (degrees, + = right) at each interior node index.
-local DEFLECTION = {}
-for _, d in ipairs(GEO:deflections()) do
-	DEFLECTION[d.node] = d.angle
-end
-
--- Finish-line Z (FinishLine sensor / arch). Must match Constants.TRACK.FOREST.zFinish (-2000 ± approach).
-local FINISH_Z = Track.finishZ
-
--- ─── Segment helpers ──────────────────────────────────────────────────────────
-
-local function _segCF(ax, az, bx, bz)
-	local mx, mz = (ax + bx) * 0.5, (az + bz) * 0.5
-	local rotY   = math.atan2(bx - ax, bz - az)
-	return CFrame.new(mx, 0.5, mz) * CFrame.Angles(0, rotY, 0)
-end
-
-local function _segLen(ax, az, bx, bz)
-	local dx, dz = bx - ax, bz - az
-	return math.sqrt(dx * dx + dz * dz)
-end
+local GEO   = KIT.geo
 
 -- ─── Ground plane ─────────────────────────────────────────────────────────────
 
 local function _buildGround(root)
-	-- Large grass plane covering full track bbox plus generous margin.
+	-- Grass plane covering the track and farm bounding box plus a margin.
+	local x0, x1, z0, z1 = math.huge, -math.huge, math.huge, -math.huge
+	for _, n in ipairs(NODES) do
+		x0 = math.min(x0, n[1]); x1 = math.max(x1, n[1])
+		z0 = math.min(z0, n[2]); z1 = math.max(z1, n[2])
+	end
+	z1 = math.max(z1, Track.farm.cz + 160)
+	local M = 400
 	_part(root, {
 		Name     = "Ground",
-		Size     = Vector3.new(1400, 4, 3200),
-		Position = Vector3.new(0, -2, -700),
+		Size     = Vector3.new(x1 - x0 + M * 2, 4, z1 - z0 + M * 2),
+		Position = Vector3.new((x0 + x1) / 2, -2, (z0 + z1) / 2),
 		Color    = C.GRASS,
 		Material = MAT.GRASS,
 	})
@@ -154,7 +95,7 @@ local function _buildGround(root)
 		_part(root, {
 			Name       = "GrassDetail",
 			Size       = Vector3.new(rng:NextNumber(15, 40), 0.3, rng:NextNumber(10, 25)),
-			Position   = Vector3.new(rng:NextNumber(-600, 600), 0.2, rng:NextNumber(-2100, 700)),
+			Position   = Vector3.new(rng:NextNumber(x0 - M / 2, x1 + M / 2), 0.2, rng:NextNumber(z0 - M / 2, z1 + M / 2)),
 			Color      = Color3.fromRGB(55, 100, 38),
 			Material   = MAT.GRASS,
 			CanCollide = false,
@@ -246,225 +187,44 @@ local function _buildFarmArea(root)
 	end
 end
 
--- ─── Track surface ────────────────────────────────────────────────────────────
--- One TrackSeg per node-pair, slightly elongated by +2 studs on each end so
--- adjacent segments overlap at the joints (no thin gap visible at corners).
-
--- Vehicle drive uses BodyVelocity (RacingClient _driveLoop), so floor friction
--- is pure drag, not traction. Default Asphalt friction (~0.5) caused noticeable
--- "sticky" slowdowns. 0.05 with frictionWeight=100 keeps the vehicle gliding.
-local LOW_FRICTION_SURFACE = PhysicalProperties.new(1, 0.05, 0.1, 100, 1)
+-- ─── Track surface, walls, slow zones (TrackKit) ─────────────────────────────
 
 local function _buildTrack(root)
-	for i = 1, #NODES - 1 do
-		local a, b   = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		local cf     = _segCF(a[1], a[2], b[1], b[2])
-
-		local seg = _part(root, {
-			Name     = "TrackSeg_" .. i,
-			Size     = Vector3.new(TRACK_W, 1, segLen + 4),
-			Color    = C.TRACK,
-			Material = MAT.TRACK,
-		})
-		seg.CustomPhysicalProperties = LOW_FRICTION_SURFACE
-		seg.CFrame = cf
-
-		-- Round joint at the end node: two straight slabs leave a wedge-shaped
-		-- dip on the outside of every turn; a disc of the track width fills it.
-		-- Its top sits 0.05 below the slabs so they don't z-fight.
-		if i < #NODES - 1 then
-			local joint = _part(root, {
-				Name     = "TrackSegJoint_" .. (i + 1),
-				Shape    = Enum.PartType.Cylinder,
-				Size     = Vector3.new(1, TRACK_W, TRACK_W),
-				CFrame   = CFrame.new(b[1], TRACK_TOP - 0.55, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
-				Color    = C.TRACK,
-				Material = MAT.TRACK,
-			})
-			joint.CustomPhysicalProperties = LOW_FRICTION_SURFACE
-		end
-
-		-- White outer-edge stripe (visual only).
-		for _, side in ipairs({ -1, 1 }) do
-			local edge = _part(root, {
-				Name       = "TrackEdge",
-				Size       = Vector3.new(1.5, 1.1, segLen + 4),
-				Color      = C.TRACK_EDGE,
-				Material   = MAT.METAL,
-				CanCollide = false,
-				CastShadow = false,
-			})
-			edge.CFrame = cf * CFrame.new(side * (TRACK_W / 2 - 1), 0.05, 0)
-		end
-
-		-- Dashed centre line
-		local dashCount = math.max(1, math.floor(segLen / 30))
-		for d = 0, dashCount - 1 do
-			local dz = -segLen / 2 + (d + 0.5) * (segLen / dashCount)
-			local dash = _part(root, {
-				Name     = "CentreDash",
-				Size     = Vector3.new(1, 1.15, 14),
-				Color    = Color3.fromRGB(255, 220, 60),
-				Material = MAT.NEON,
-				CanCollide = false,
-				CastShadow = false,
-			})
-			dash.CFrame = cf * CFrame.new(0, 0.05, dz)
-		end
-	end
-end
-
--- ─── Continuous track walls (spec §2.4) ───────────────────────────────────────
--- Walls span exactly segLen. An earlier +8 extension caused the wall from
--- segment N to jut 4 studs past its endpoint along its own direction at
--- sharp kinks (S2 arc N4–N6, S4 U-bend N17–N21, S5 chicane N23–N29),
--- intruding into the next segment's lane.
---
--- Wall is broken into sub-walls separated by 8-stud gaps every WALL_GAP_INTERVAL
--- studs of cumulative track-arc distance. Players can squeeze through the
--- doorways onto the grass for risky shortcuts; the SlowZone outside the wall
--- (see _buildSlowZones below) penalises that with a speed mult.
-
-local WALL_GAP_INTERVAL   = Track.wallGapInterval    -- cumulative arc distance between gap centers
-local WALL_GAP_HALF_WIDTH = Track.wallGapHalfWidth   -- 8-stud opening
-
--- Returns list of {start, end} sub-wall intervals (local to segment, in segment-Z),
--- after carving out gap zones at cumulative arc positions multiple-of-GAP_INTERVAL.
-local function _wallPieces(arcStart, segLen)
-	local pieces = {}
-	local cursor = 0  -- segment-local start of next sub-wall
-	local firstGapK = math.ceil((arcStart - WALL_GAP_HALF_WIDTH) / WALL_GAP_INTERVAL)
-	local k = firstGapK
-	while true do
-		local gapArc = k * WALL_GAP_INTERVAL
-		local gapStartArc = gapArc - WALL_GAP_HALF_WIDTH
-		local gapEndArc   = gapArc + WALL_GAP_HALF_WIDTH
-		if gapStartArc >= arcStart + segLen then break end
-		if gapEndArc > arcStart then
-			local relStart = math.max(0, gapStartArc - arcStart)
-			local relEnd   = math.min(segLen, gapEndArc - arcStart)
-			if relStart > cursor then
-				table.insert(pieces, { cursor, relStart })
+	KIT:buildSurface(root, {
+		name = "TrackSeg", jointName = "TrackSegJoint", thickness = 1, overlap = 2,
+		color = C.TRACK, material = MAT.TRACK,
+		decorate = function(r, i, cf, segLen)
+			-- White edge stripes and a dashed centre line (visual only)
+			for _, side in ipairs({ -1, 1 }) do
+				_part(r, {
+					Name = "TrackEdge", Size = Vector3.new(1.5, 1.1, segLen + 4),
+					CFrame = cf * CFrame.new(side * (TRACK_W / 2 - 1), 0.05, 0),
+					Color = C.TRACK_EDGE, Material = MAT.METAL,
+					CanCollide = false, CastShadow = false,
+				})
 			end
-			cursor = math.max(cursor, relEnd)
-		end
-		k = k + 1
-	end
-	if cursor < segLen then
-		table.insert(pieces, { cursor, segLen })
-	end
-	return pieces
-end
-
--- At a kink the two straight wall boxes leave a wedge-shaped hole on the
--- OUTER side of the turn (2·h·sin(θ/2) wide: ~10 studs at 30°), which cars
--- used to escape through. Outer walls are extended by h·tan(θ/2) at that end
--- so neighbouring walls meet. Inner walls are left as they are.
-local function _outerExtension(nodeIndex, side)
-	local angle = DEFLECTION[nodeIndex]
-	if not angle or math.abs(angle) < 1 then return 0 end
-	-- side +1 = left of travel (see _segCF), outer side of a right turn
-	local outerSide = angle > 0 and 1 or -1
-	if side ~= outerSide then return 0 end
-	local h = TRACK_W / 2 + 2
-	return h * math.tan(math.rad(math.abs(angle)) / 2) + 1
+			local dashCount = math.max(1, math.floor(segLen / 30))
+			for d = 0, dashCount - 1 do
+				_part(r, {
+					Name = "CentreDash", Size = Vector3.new(1, 1.15, 14),
+					CFrame = cf * CFrame.new(0, 0.05, -segLen / 2 + (d + 0.5) * (segLen / dashCount)),
+					Color = Color3.fromRGB(255, 220, 60), Material = MAT.NEON,
+					CanCollide = false, CastShadow = false,
+				})
+			end
+		end,
+	})
 end
 
 local function _buildWalls(root)
-	local arcStart = 0
-	for i = 1, #NODES - 1 do
-		local a, b   = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		local cf     = _segCF(a[1], a[2], b[1], b[2])
-
-		local pieces = _wallPieces(arcStart, segLen)
-		for idx, piece in ipairs(pieces) do
-			for _, side in ipairs({ -1, 1 }) do
-				local pStart, pEnd = piece[1], piece[2]
-				if idx == 1 and pStart < 0.01 then
-					pStart -= _outerExtension(i, side)
-				end
-				if idx == #pieces and pEnd > segLen - 0.01 then
-					pEnd += _outerExtension(i + 1, side)
-				end
-				local pLen = pEnd - pStart
-				if pLen < 0.5 then continue end
-				-- segment-local +Z points along travel (a → b); 0 is the midpoint
-				local pMid = (pStart + pEnd) / 2 - segLen / 2
-
-				local wall = _part(root, {
-					Name     = "TrackWall",
-					Size     = Vector3.new(2, WALL_H, pLen),
-					Color    = C.WALL,
-					Material = MAT.WOOD,
-				})
-				wall.CustomPhysicalProperties = LOW_FRICTION_SURFACE
-				wall.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H / 2, pMid)
-
-				local cap = _part(root, {
-					Name     = "TrackWallCap",
-					Size     = Vector3.new(2.4, 0.6, pLen),
-					Color    = C.WALL_TOP,
-					Material = MAT.NEON,
-				})
-				cap.CFrame = cf * CFrame.new(side * (TRACK_W / 2 + 1), WALL_H + 0.3, pMid)
-				cap.CastShadow = false
-			end
-		end
-		arcStart = arcStart + segLen
-	end
-end
-
--- ─── Slow zones outside the corridor (soft penalty for off-track shortcuts) ─
-
--- Built in short chunks; a chunk is skipped when any corner comes within the
--- driving lane of ANY part of the track. One long box per segment used to
--- overlap the next segment's lane at kinks and slow cars on the racing line.
-local SZ_CHUNK = 12
-
-local function _inLane(x, z)
-	return GEO:project(x, z).dist < TRACK_W / 2 + 2
+	KIT:buildWalls(root, {
+		name = "TrackWall", color = C.WALL, material = MAT.WOOD,
+		cap = { name = "TrackWallCap", color = C.WALL_TOP, material = MAT.NEON },
+	})
 end
 
 local function _buildSlowZones(root)
-	local SZ_WIDTH = Track.slowZoneWidth    -- stud width per side
-	local SZ_HEIGHT = Track.slowZoneHeight  -- low trigger volume
-	local SZ_OFFSET = TRACK_W / 2 + 1 + SZ_WIDTH / 2 + 2  -- just outside wall
-	for i = 1, #NODES - 1 do
-		local a, b   = NODES[i], NODES[i + 1]
-		local segLen = _segLen(a[1], a[2], b[1], b[2])
-		if segLen < 0.1 then continue end
-		local cf = _segCF(a[1], a[2], b[1], b[2])
-		local chunks = math.max(1, math.ceil(segLen / SZ_CHUNK))
-		local chunkLen = segLen / chunks
-		for c = 1, chunks do
-			local mid = -segLen / 2 + (c - 0.5) * chunkLen
-			for _, side in ipairs({ -1, 1 }) do
-				local centre = cf * CFrame.new(side * SZ_OFFSET, SZ_HEIGHT / 2 + 0.1, mid)
-				local clear = true
-				for _, cu in ipairs({ -1, 1 }) do
-					for _, cv in ipairs({ -1, 1 }) do
-						local corner = centre * Vector3.new(cu * SZ_WIDTH / 2, 0, cv * chunkLen / 2)
-						if _inLane(corner.X, corner.Z) then clear = false end
-					end
-				end
-				if clear then
-					local sz = _part(root, {
-						Name = "SlowZone_" .. i .. "_" .. c .. (side > 0 and "R" or "L"),
-						Size = Vector3.new(SZ_WIDTH, SZ_HEIGHT, chunkLen + 0.5),
-						Color = C.MUD,
-						Material = MAT.MUD,
-						CanCollide = false,
-						Transparency = 0.6,
-						CastShadow = false,
-					})
-					sz.CFrame = centre
-					_tag(sz, "SlowZone")
-				end
-			end
-		end
-	end
+	KIT:buildSlowZones(root, { color = C.MUD, material = MAT.MUD, transparency = 0.6 })
 end
 
 -- ─── River + bridge across S3 (between N10 and centerline) ───────────────────
@@ -567,169 +327,49 @@ local function _buildRockDecor(root)
 	end
 end
 
--- ─── Jump ramps (2 per spec, mid-S3 and pre-S5) ──────────────────────────────
+-- ─── Jump ramps, boost pads, drift corners, checkpoints (TrackKit) ─────────
 -- Ramp pieces are floor-only: thin wedge sitting on the track surface, no
 -- side collision walls (spec §2.4 fix for the "snag on prop side" cheese).
 
 local function _buildJumpRamps(root)
 	local rs = Track.jumpRampSize
-	for i, r in ipairs(Track.jumpRamps) do
-		local rx, rz, yaw = r[1], r[2], r[3]
-		local facing = CFrame.Angles(0, yaw, 0)          -- LookVector = travel direction
-		local ramp = _wedge(root, {
-			Name     = "JumpRamp_" .. i,
-			Size     = Vector3.new(rs[1], rs[2], rs[3]),
-			Color    = C.RAMP,
-			Material = MAT.DIRT,
-		})
-		ramp.CFrame = CFrame.new(rx, 3, rz) * CFrame.Angles(0, yaw + math.pi, 0)
-
-		-- Landing pad 17 studs past the ramp along the travel direction
-		-- (purely cosmetic; the TrackSeg below is the real floor).
-		local landing = _part(root, {
-			Name = "LandingPad_" .. i,
-			Size = Vector3.new(TRACK_W - 4, 0.2, 22),
-			Color = C.RAMP, Material = MAT.DIRT,
-			CanCollide = false, CastShadow = false,
-		})
-		landing.CFrame = CFrame.new(rx, TRACK_TOP + 0.1, rz) * facing * CFrame.new(0, 0, -17)
-
-		local jz = _part(root, {
-			Name = "JumpZone_" .. i, Size = Vector3.new(TRACK_W, 10, 14),
-			CanCollide = false, Transparency = 1,
-		})
-		jz.CFrame = CFrame.new(rx, 6, rz) * facing
-		_tag(jz, "JumpZone")
-	end
+	KIT:buildJumpZones(root, {
+		visual = function(r, cf, i, ramp)
+			local yaw = ramp[3]
+			local ramp3 = _wedge(r, {
+				Name = "JumpRamp_" .. i, Size = Vector3.new(rs[1], rs[2], rs[3]),
+				Color = C.RAMP, Material = MAT.DIRT,
+			})
+			ramp3.CFrame = CFrame.new(ramp[1], 3, ramp[2]) * CFrame.Angles(0, yaw + math.pi, 0)
+			-- Landing pad 17 studs past the ramp (cosmetic; the TrackSeg is the floor)
+			_part(r, {
+				Name = "LandingPad_" .. i, Size = Vector3.new(TRACK_W - 4, 0.2, 22),
+				CFrame = cf * CFrame.new(0, 0.1, -17),
+				Color = C.RAMP, Material = MAT.DIRT, CanCollide = false, CastShadow = false,
+			})
+		end,
+	})
 end
-
--- ─── Boost pads (4 per spec) ─────────────────────────────────────────────────
--- Pads sit on the track surface as thin floor strips, CanCollide false.
 
 local function _buildBoostPads(root)
-	local ps = Track.boostPadSize
-	for i, pd in ipairs(Track.boostPads) do
-		-- turned to the track so the arrow points where the car is going
-		local padCF = CFrame.new(pd[1], TRACK_TOP + 0.2, pd[2]) * CFrame.Angles(0, _trackYawNear(pd[1], pd[2]), 0)
-		local pad = _part(root, {
-			Name = "BoostPad_" .. i,
-			Size = Vector3.new(ps[1], ps[2], ps[3]),
-			CFrame = padCF,
-			Color = C.BOOST_PAD, Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-		_tag(pad, "BoostPad")
-
-		local arrow = _wedge(root, {
-			Name = "BoostArrow_" .. i,
-			Size = Vector3.new(5, 0.4, 5),
-			Color = Color3.fromRGB(255, 240, 80), Material = MAT.NEON,
-			CanCollide = false, CastShadow = false,
-		})
-		arrow.CFrame = padCF * CFrame.new(0, 0.2, -5) * CFrame.Angles(0, math.pi, 0)
-	end
+	KIT:buildBoostPads(root, { color = C.BOOST_PAD })
 end
-
--- ─── Drift corner zones (4 per spec §2.3) ────────────────────────────────────
 
 local function _buildDriftCorners(root)
-	local dcs = Track.driftCornerSize
-	for i, c in ipairs(Track.driftCorners) do
-		local cx, cz = c[1], c[2]
-		_part(root, {
-			Name         = "DriftStrip_" .. i,
-			Size         = Vector3.new(TRACK_W - 2, 0.2, 38),
-			Position     = Vector3.new(cx, TRACK_TOP + 0.12, cz),
-			Color        = Color3.fromRGB(255, 165, 20),
-			Material     = MAT.NEON,
-			CanCollide   = false,
-			CastShadow   = false,
-			Transparency = 0.55,
-		})
-		local trigger = _part(root, {
-			Name         = "DriftCorner_" .. i,
-			Size         = Vector3.new(dcs[1], dcs[2], dcs[3]),
-			Position     = Vector3.new(cx, 3.5, cz),
-			CanCollide   = false,
-			Transparency = 1,
-		})
-		_tag(trigger, "DriftCorner")
-	end
-end
-
--- ─── Checkpoints (CP1 inside S3 sweeper, CP2 inside S4 U-bend) ───────────────
--- Per spec §2.6: positioned so any straight-line outside-the-corridor path
--- geometrically misses the trigger volumes. CheckpointService (#126) gates the
--- FinishLine on cp1 && cp2.
-
--- Gate and trigger are rotated to face along the track, so the trigger spans
--- the whole lane width wherever the checkpoint sits (CP1 sits where the track
--- runs along X; an axis-aligned box only covered a 6-stud strip there).
-local CHECKPOINT_DEPTH = 10
-
-local function _buildCheckpointGate(root, gateCF, cpIndex, archColor)
-	local archTop = 18
-	for _, side in ipairs({ -1, 1 }) do
-		local pillar = _part(root, {
-			Name = "CPGate" .. cpIndex .. "Pillar" .. (side > 0 and "R" or "L"),
-			Size = Vector3.new(2.4, archTop, 2.4),
-			Color = archColor, Material = Enum.Material.Neon,
-			CanCollide = false, CastShadow = false,
-		})
-		pillar.CFrame = gateCF * CFrame.new(side * (TRACK_W / 2 - 2), archTop / 2, 0)
-	end
-	for i = -1, 1 do
-		local bar = _part(root, {
-			Name = "CPGate" .. cpIndex .. "Top" .. (i + 2),
-			Size = Vector3.new(TRACK_W / 3 + 2, 2, 2.4),
-			Color = archColor, Material = Enum.Material.Neon,
-			CanCollide = false, CastShadow = false,
-		})
-		bar.CFrame = gateCF * CFrame.new(i * (TRACK_W / 3), archTop + (i == 0 and 2 or 0.5), 0)
-	end
-	local labelAnchor = _part(root, {
-		Name = "CPGate" .. cpIndex .. "Label",
-		Size = Vector3.new(1, 1, 1),
-		Transparency = 1, CanCollide = false, CastShadow = false,
+	KIT:buildDriftCorners(root, {
+		visual = function(r, cf, i)
+			_part(r, {
+				Name = "DriftStrip_" .. i, Size = Vector3.new(TRACK_W - 2, 0.2, 38),
+				CFrame = cf * CFrame.new(0, 0.12, 0),
+				Color = Color3.fromRGB(255, 165, 20), Material = MAT.NEON,
+				CanCollide = false, CastShadow = false, Transparency = 0.55,
+			})
+		end,
 	})
-	labelAnchor.CFrame = gateCF * CFrame.new(0, archTop + 8, 0)
-	local bb = Instance.new("BillboardGui")
-	bb.Size           = UDim2.new(0, 120, 0, 32)
-	bb.MaxDistance    = 300
-	bb.LightInfluence = 0
-	bb.Parent         = labelAnchor
-	local lbl = Instance.new("TextLabel")
-	lbl.Size = UDim2.fromScale(1, 1)
-	lbl.BackgroundTransparency = 1
-	lbl.Text = "CP " .. cpIndex
-	lbl.TextColor3 = archColor
-	lbl.TextStrokeColor3 = Color3.new(0, 0, 0)
-	lbl.TextStrokeTransparency = 0.2
-	lbl.Font = Enum.Font.GothamBlack
-	lbl.TextScaled = true
-	lbl.Parent = bb
 end
-
-local CHECKPOINT_COLORS = {
-	Color3.fromRGB(120, 220, 255),
-	Color3.fromRGB(255, 200, 100),
-}
 
 local function _buildCheckpoints(root)
-	local size = Track.checkpointSize
-	for idx, cp in ipairs(Track.checkpoints) do
-		local cx, cz = cp[1], cp[2]
-		local gateCF = CFrame.new(cx, 0, cz) * CFrame.Angles(0, _trackYawNear(cx, cz), 0)
-		local trigger = _part(root, {
-			Name         = "Checkpoint" .. idx,
-			Size         = Vector3.new(TRACK_W + 4, size[2], CHECKPOINT_DEPTH),
-			CanCollide   = false,
-			Transparency = 1,
-		})
-		trigger.CFrame = gateCF * CFrame.new(0, 7, 0)
-		_tag(trigger, "Checkpoint" .. idx)
-		_buildCheckpointGate(root, gateCF, idx, CHECKPOINT_COLORS[idx] or CHECKPOINT_COLORS[1])
-	end
+	KIT:buildCheckpoints(root, { archHeight = 17 })
 end
 
 -- ─── Three tree species (relocated OUTSIDE walls per §2.7) ───────────────────
@@ -796,16 +436,7 @@ local function _buildTrees(root)
 	end
 
 	local builders = { _pine, _pine, _oak, _oak, _birch }
-	local zones = {
-		-- (xMin, xMax, zMin, zMax, count)
-		{ -550, -100,   100,  700, 30 },  -- left of S1/farm
-		{  100,  550,   100,  700, 30 },  -- right of S1/farm
-		{ -550,    0,  -700,    0, 35 },  -- inside arc of S2/S3 sweeper (left)
-		{  650, 1100,  -500,  100, 25 },  -- right of S3 outer sweep
-		{ -800, -550, -1700, -700, 35 },  -- outside U-bend west side
-		{  100,  700, -1700, -700, 30 },  -- inside U-bend east side
-		{ -500,  500, -2200, -1700, 30 }, -- around finish-line approach
-	}
+	local zones = Track.treeZones
 
 	for _, zone in ipairs(zones) do
 		local xMin, xMax, zMin, zMax, count = zone[1], zone[2], zone[3], zone[4], zone[5]
@@ -823,85 +454,20 @@ local function _buildTrees(root)
 	end
 end
 
--- ─── Finish line ──────────────────────────────────────────────────────────────
+-- ─── Finish line and start grid (TrackKit) ──────────────────────────────────
 
 local function _buildFinishLine(root)
-	-- Checker tiles either side of the finish sensor.
-	for col = -18, 18, 4 do
-		for row = 0, 1 do
-			_part(root, {
-				Name = "FinishTile",
-				Size = Vector3.new(4, 0.3, 4),
-				Position = Vector3.new(col, TRACK_TOP + 0.15, FINISH_Z + row * 4),
-				Color = (math.floor(col / 4) + row) % 2 == 0
-					and Color3.new(1,1,1) or Color3.new(0,0,0),
-				Material = MAT.METAL,
-				CanCollide = false,
-			})
-		end
-	end
-
-	local finish = _part(root, {
-		Name         = "FinishLine",
-		Size         = Vector3.new(TRACK_W, 10, 2),
-		Position     = Vector3.new(0, 6, FINISH_Z),
-		CanCollide   = false,
-		Transparency = 1,
-	})
-	_tag(finish, "FinishLine")
-
-	for side = -1, 1, 2 do
-		_part(root, {
-			Name = "FinishPole",
-			Size = Vector3.new(1.5, 18, 1.5),
-			Position = Vector3.new(side * (TRACK_W / 2 + 1), 10, FINISH_Z),
-			Color = Color3.fromRGB(240, 240, 240), Material = MAT.METAL,
-		})
-	end
-	_part(root, {
-		Name = "FinishArch", Size = Vector3.new(TRACK_W + 4, 2.5, 1.5),
-		Position = Vector3.new(0, 20, FINISH_Z),
-		Color = Color3.fromRGB(220, 55, 55), Material = MAT.NEON,
-		CanCollide = false,
-	})
-	for bx = -20, 20, 8 do
-		_part(root, {
-			Name = "ArchBanner",
-			Size = Vector3.new(8, 4, 0.4),
-			Position = Vector3.new(bx, 16, FINISH_Z),
-			Color = math.abs(bx) % 16 == 0 and Color3.new(1,1,1) or Color3.new(0,0,0),
-			Material = MAT.METAL, CanCollide = false,
-		})
-	end
+	KIT:buildFinish(root, { archColor = Color3.fromRGB(220, 55, 55) })
 end
 
--- ─── Start grid (matches BiomeConfig.FOREST.raceStartZ = 590) ────────────────
-
 local function _buildStartGrid(root)
-	local cols = Track.startGrid.cols
-	local rows = Track.startGrid.rows
-	for ri, z in ipairs(rows) do
-		for ci, x in ipairs(cols) do
-			local idx = (ri - 1) * 5 + ci
-			_part(root, {
-				Name     = "StartBox_" .. idx,
-				Size     = Vector3.new(7, 0.2, 7),
-				Position = Vector3.new(x, TRACK_TOP + 0.05, z),
-				Color    = Color3.fromRGB(60, 120, 255),
-				Material = MAT.NEON,
-				CanCollide = false,
-			})
-		end
-	end
+	KIT:buildStartGrid(root, { poleColor = Color3.fromRGB(240, 240, 240) })
 end
 
 -- ─── Main build ───────────────────────────────────────────────────────────────
 
 local function buildForest()
-	local root = _getOrCreateMap()
-
-	local farmSub  = Instance.new("Model"); farmSub.Name  = "FarmArea";  farmSub.Parent  = root
-	local trackSub = Instance.new("Model"); trackSub.Name = "RaceTrack"; trackSub.Parent = root
+	local root, farmSub, trackSub = TrackKit.newMap("ForestMap")
 
 	_buildGround(root)
 	_buildTrees(root)

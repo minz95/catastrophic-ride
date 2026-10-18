@@ -44,8 +44,20 @@ Each round cycles through three phases: Farming, Crafting, and Racing.
 | W / Up | Accelerate |
 | S / Down | Brake / reverse |
 | A / D or Left / Right | Steer |
-| Shift | Activate boost (cooldown: 5s) |
+| Shift | Drift |
+| F | Activate boost when the gauge is full (drift corners fill it) |
 | E | Use item ability |
+| R | Respawn on the track |
+| Space / Ctrl | Climb / descend (Sky) |
+
+### Playtesting (Studio and test servers only)
+| Key | Action |
+|-----|--------|
+| M | Mark "this is frustrating" here |
+| N | Mark "this is fun" here |
+
+The round report printed at RESULTS lists the markers per track section
+(see [docs/design.md](docs/design.md)).
 
 ---
 
@@ -76,8 +88,11 @@ roblox/
       ForestMapBuilder.server.lua   -- calls Modules/Maps/ForestMap (layout data in Shared/Tracks)
       OceanMapBuilder.server.lua    -- calls Modules/Maps/OceanMap
       SkyMapBuilder.server.lua      -- calls Modules/Maps/SkyMap
+    PlaytestReporter.server.lua     -- M/N playtest markers + fun report at RESULTS (Studio only)
       TerrainPainter.server.lua
     Modules/
+      Maps/TrackKit.lua             -- walls, floor, triggers, finish shared by all maps
+      PlaytestReport.lua            -- RaceMetrics on the last race's telemetry
       BiomeConfig.lua
       ItemConfig.lua                -- 37 items with stats, slot type, rarity, icon
       ItemModelBuilder.lua          -- Procedural 3D item models
@@ -102,6 +117,12 @@ roblox/
       ItemConfig.lua
       VehicleStats.lua              -- Pure stat calculation functions
       SoundConfig.lua               -- BGM, ambience, SFX asset ID table
+      Tracks/                       -- Forest/Ocean/Sky track data (edit these, not the builders)
+      TrackGeometry.lua             -- centerline math, wall layout
+      VehicleController.lua         -- keys -> velocity (players, bots, simulators)
+      RaceProgress.lua              -- race progress and respawn points
+      RaceMetrics.lua               -- "fun" numbers for a race
+      FarmingRules.lua              -- pickup / contest / steal decisions
 ```
 
 ---

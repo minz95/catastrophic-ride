@@ -4,7 +4,7 @@
 require("../lib/biomespecs").map("OCEAN", {
 	isWall = function(name) return name == "ReefWall" end,
 	wallOffset = 31.5,   -- LANE_W / 2 + WALL_T / 2
-	doorway = 8,         -- WALL_GAP_HALF_WIDTH * 2: intended sail-out openings
+	doorway = 0,         -- continuous walls (OceanTrack.wallGapHalfWidth = 0)
 	-- buoys are lane-edge markers by design (CanCollide false), so not listed
 	props = { "^PalmTrunk$", "^ReefSpire_%d+$" },
 })

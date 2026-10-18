@@ -149,6 +149,25 @@ function MapChecks.wallIntrusions(w, isWall, margin)
 	return lines
 end
 
+--- Wall layout rule: every stretch TrackGeometry:boundaryRuns returns for a
+-- segment must touch that segment (t in [0, len]). A stretch that only exists
+-- past a node crossed another part of the lane and stands alone as a spur
+-- (the inside wall of a 98° turn used to poke out through the next wall).
+function MapChecks.detachedWallRuns(w, offset, reach)
+	local bad = {}
+	for i, seg in ipairs(w.geo.segments) do
+		for _, lat in ipairs({ -1, 1 }) do
+			for _, r in ipairs(w.geo:boundaryRuns(i, lat, offset, reach)) do
+				if r[2] <= 0 or r[1] >= seg.len then
+					table.insert(bad, string.format("segment %d %s wall: stretch %d..%d is detached (segment is %d long)",
+						i, lat > 0 and "right" or "left", round(r[1]), round(r[2]), round(seg.len)))
+				end
+			end
+		end
+	end
+	return bad
+end
+
 --- Off-track slow zones that cover part of the lane.
 function MapChecks.slowZonesInLane(w)
 	local zones = MapChecks.tagged(w, "SlowZone")
