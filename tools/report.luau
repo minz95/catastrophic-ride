@@ -364,6 +364,17 @@ local summary = {
 		meanPlaceByFarmProfile = {}, meanPlaceByDriver = {},
 	},
 }
+-- Fun as numbers (Shared/RaceMetrics; targets in Constants.FUN_TARGETS)
+local RaceMetrics = env.requirePath("ReplicatedStorage.Shared.RaceMetrics")
+do
+	local list = {}
+	for _, m in ipairs(matches) do table.insert(list, m.fun) end
+	local agg = RaceMetrics.aggregate(list)
+	agg.racingShare = RaceMetrics.racingShare(agg.lastTime, Constants.PHASE_DURATION)
+	agg.fastestWinRate = matchesWithFinisher > 0 and fastestWins / matchesWithFinisher or nil
+	agg.speedPlaceCorr = spearman(speedsAll, placesAll)
+	summary.fun = { aggregate = agg, verdicts = RaceMetrics.verdicts(agg, Constants.FUN_TARGETS) }
+end
 for k, v in pairs(byFarm) do summary.matches.meanPlaceByFarmProfile[k] = mean(v) end
 for k, v in pairs(byDriver) do summary.matches.meanPlaceByDriver[k] = mean(v) end
 for _, r in ipairs(raceRuns) do
@@ -418,6 +429,26 @@ line("|---|---|")
 for k, v in pairs(ms.meanPlaceByFarmProfile) do line(string.format("| farming: %s | %s |", k, fmt(v, 2))) end
 for k, v in pairs(ms.meanPlaceByDriver) do line(string.format("| driving: %s | %s |", k, fmt(v, 2))) end
 line()
+line("## Fun metrics")
+line()
+line("Each simulated match is scored with `Shared/RaceMetrics` (the same code scores real Studio playtests, see `Modules/PlaytestReport`). Bots race as ghosts on one clock: no car-to-car contact, no abilities, so lead changes come from build and driving differences only. Targets are starting points in `Constants.FUN_TARGETS`; playtests decide.")
+line()
+line("| | Metric | Value | Target | Why |")
+line("|---|---|---|---|---|")
+for _, v in ipairs(summary.fun.verdicts) do
+	local range = (v.min and fmt(v.min, 2) or "") .. " .. " .. (v.max and fmt(v.max, 2) or "")
+	line(string.format("| %s | %s | %s | %s | %s |", v.ok == nil and "·" or (v.ok and "✓" or "✗"), v.key,
+		v.value and fmt(v.value, 2) or "n/a", range, v.why or ""))
+end
+line()
+line(string.format("Overtakes per match: %s. Per section (mean over matches; \"decided\" = matches whose largest time spread between bots was in that section):", fmt(summary.fun.aggregate.overtakes or 0, 1)))
+line()
+line("| Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |")
+line("|---|---|---|---|---|---|")
+for _, sec in ipairs(summary.fun.aggregate.sections) do
+	line(string.format("| %s | %s | %s | %d | %d | %d |", sec.name, fmt(sec.meanTime), fmt(sec.spread), sec.deciding, sec.respawns, sec.hits))
+end
+line()
 line("## Geometry findings")
 line()
 line(string.format("- %d parts inside or next to the lane are solid during RACING but not in the authored map (red boxes).", #findings.solid))
@@ -442,6 +473,9 @@ fs.writeFile(OUT .. "/summary.md", table.concat(md, "\n") .. "\n")
 
 print("wrote " .. OUT .. "/track.svg, summary.md, summary.json")
 print(string.format("%s matches: %d, finish rate %d%%, fastest car won %d/%d", biome, #matches, math.floor(ms.finishRate * 100 + 0.5), ms.fastestCarWins, ms.matchesWithFinisher))
+for _, v in ipairs(summary.fun.verdicts) do
+	print(string.format("  %s %-14s %s", v.ok == nil and "·" or (v.ok and "✓" or "✗"), v.key, v.value and fmt(v.value, 2) or "n/a"))
+end
 end
 
 for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do

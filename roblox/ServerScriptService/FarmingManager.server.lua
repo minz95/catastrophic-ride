@@ -19,11 +19,13 @@ local SessionManager = require(ServerScriptService.SessionManager)
 local ItemModelBuilder  = require(ServerScriptService.Modules.ItemModelBuilder)
 local ItemVisualUpgrader = require(ServerScriptService.Modules.ItemVisualUpgrader)
 local Telemetry          = require(ServerScriptService.Modules.Telemetry)
+local FarmingRules       = require(ReplicatedStorage.Shared.FarmingRules)
 
 print("[FarmingManager] All requires succeeded")
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
+local _resolveContest    -- defined below (contest resolution)
 local _items      = {}   -- { [itemId] = { part, itemName, rarity, taken=false } }
 local _contests   = {}   -- { [itemId] = { players={}, presses={}, endTick } }
 local _phaseTimer = nil
@@ -282,7 +284,6 @@ end
 
 -- ─── Rarity rank (lower = weaker) ────────────────────────────────────────────
 
-local RARITY_RANK = { Common = 1, Uncommon = 2, Rare = 3, Epic = 4 }
 
 -- ─── Drop item from inventory (spawns it back in the world) ───────────────────
 
@@ -476,23 +477,12 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 	local data = SessionManager.getData(player)
 	if not data then return "denied: no player data" end
 
-	-- Auto-swap: if inventory is full, drop the lowest-rarity item and pick up the new one.
-	if #data.inventory >= Constants.INVENTORY_SIZE then
-		local newCfg = ItemConfig[item.itemName]
-		local newRank = RARITY_RANK[newCfg and newCfg.rarity or "Common"] or 1
-
-		-- Find the weakest item in inventory
-		local weakestIdx, weakestRank = 1, 999
-		for i, name in ipairs(data.inventory) do
-			local r = RARITY_RANK[(ItemConfig[name] and ItemConfig[name].rarity) or "Common"] or 1
-			if r < weakestRank then weakestRank = r; weakestIdx = i end
-		end
-
-		-- Only swap if the new item is strictly better than the weakest held item
-		if newRank <= weakestRank then
-			return "inventory_full"
-		end
-
+	-- Auto-swap: if inventory is full, drop the lowest-rarity item for a
+	-- strictly rarer one (FarmingRules.pickupSlot).
+	local slot, weakestIdx = FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE)
+	if slot == "full" then
+		return "inventory_full"
+	elseif slot == "swap" then
 		local droppedName = _dropItem(player, weakestIdx)
 		-- Notify client which item was auto-dropped
 		if droppedName then
@@ -538,11 +528,17 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 		if (otherRoot.Position - item.part.Position).Magnitude <= Constants.PICKUP_RANGE then
 			-- Contest! Both players are competing
 			if not _contests[itemId] then
-				_contests[itemId] = {
+				local contest = {
 					players = { player, otherPlayer },
 					presses = { [player.UserId] = 0, [otherPlayer.UserId] = 0 },
 					endTick = tick() + Constants.CONTEST_DURATION,
 				}
+				_contests[itemId] = contest
+				-- Ends on time even if nobody presses again (it used to wait for
+				-- the next RequestContest and locked the item for the round).
+				task.delay(Constants.CONTEST_DURATION, function()
+					_resolveContest(itemId, contest)
+				end)
 				-- Notify both clients to start button-mash UI
 				RemoteEvents.ContestUpdate:FireClient(player,
 					itemId,
@@ -575,6 +571,23 @@ RemoteEvents.RequestDrop.OnServerInvoke = function(player, slotIndex)
 	return dropped and "ok" or "denied: empty slot"
 end
 
+-- ─── Contest resolution ───────────────────────────────────────────────────────
+
+_resolveContest = function(itemId, contest)
+	if _contests[itemId] ~= contest then return end   -- already resolved
+	_contests[itemId] = nil
+	local p1, p2 = contest.players[1], contest.players[2]
+	local c1, c2 = contest.presses[p1.UserId] or 0, contest.presses[p2.UserId] or 0
+	local winner, loser = p1, p2
+	if FarmingRules.contestWinner(c1, c2) == 2 then winner, loser = p2, p1 end
+	Telemetry.record("contest_result", {
+		itemId = itemId, winner = winner.UserId, loser = loser.UserId,
+		presses = { [tostring(p1.UserId)] = c1, [tostring(p2.UserId)] = c2 },
+	})
+	RemoteEvents.ContestResult:FireAllClients(itemId, winner.UserId)
+	if _active then _giveItem(winner, itemId) end
+end
+
 -- ─── RequestContest handler (press count updates) ─────────────────────────────
 
 RemoteEvents.RequestContest.OnServerInvoke = function(player, itemId, presses)
@@ -592,23 +605,8 @@ RemoteEvents.RequestContest.OnServerInvoke = function(player, itemId, presses)
 	RemoteEvents.ContestUpdate:FireClient(p1, itemId, update[1], update[2])
 	RemoteEvents.ContestUpdate:FireClient(p2, itemId, update[1], update[2])
 
-	-- Check if contest time is up
 	if tick() >= contest.endTick then
-		local winner, loser
-		if (contest.presses[p1.UserId] or 0) >= (contest.presses[p2.UserId] or 0) then
-			winner, loser = p1, p2
-		else
-			winner, loser = p2, p1
-		end
-
-		Telemetry.record("contest_result", {
-			itemId = itemId, winner = winner.UserId, loser = loser.UserId,
-			presses = { [tostring(p1.UserId)] = contest.presses[p1.UserId] or 0,
-			            [tostring(p2.UserId)] = contest.presses[p2.UserId] or 0 },
-		})
-		RemoteEvents.ContestResult:FireAllClients(itemId, winner.UserId)
-		_giveItem(winner, itemId)
-		_contests[itemId] = nil
+		_resolveContest(itemId, contest)
 	end
 end
 
@@ -617,33 +615,26 @@ end
 RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	if not _active then return end
 
-	-- Check steal cooldown
 	local thiefData = SessionManager.getData(thief)
-	if not thiefData then return end
-	if tick() < thiefData.stealCooldownEnd then return end
-
-	-- CRAFTING lock-out
-	local timeLeft = (GameManager.phaseDuration("FARMING") or Constants.PHASE_DURATION.FARMING)
-		- (tick() - (_farmingStartTick or 0))
-	if timeLeft < Constants.STEAL_DISABLE_BEFORE then return end
-
 	local victim = Players:GetPlayerByUserId(targetUserId)
-	if not victim then return end
-
-	local victimData = SessionManager.getData(victim)
-	if not victimData then return end
-	if #victimData.inventory == 0 then return end
-	-- A full thief has nowhere to put the item
-	if #thiefData.inventory >= Constants.INVENTORY_SIZE then return end
-
-	-- Distance check
+	local victimData = victim and SessionManager.getData(victim)
+	if not thiefData or not victimData then return end
 	local thiefRoot  = thief.Character  and thief.Character:FindFirstChild("HumanoidRootPart")
 	local victimRoot = victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
 	if not thiefRoot or not victimRoot then return end
-	if (thiefRoot.Position - victimRoot.Position).Magnitude > Constants.STEAL_RANGE then return end
 
-	-- Invincibility check
-	if tick() < victimData.stealInvincibleEnd then return end
+	local ok = FarmingRules.canSteal({
+		now = tick(),
+		thiefCooldownEnd = thiefData.stealCooldownEnd,
+		farmingTimeLeft = (GameManager.phaseDuration("FARMING") or Constants.PHASE_DURATION.FARMING)
+			- (tick() - (_farmingStartTick or 0)),
+		disableBefore = Constants.STEAL_DISABLE_BEFORE,
+		thiefItems = #thiefData.inventory, victimItems = #victimData.inventory,
+		inventorySize = Constants.INVENTORY_SIZE,
+		distance = (thiefRoot.Position - victimRoot.Position).Magnitude, range = Constants.STEAL_RANGE,
+		victimInvincibleEnd = victimData.stealInvincibleEnd,
+	})
+	if not ok then return end
 
 	-- Notify victim — they have STEAL_DEFEND_WINDOW seconds to defend
 	RemoteEvents.StealAttempt:FireClient(victim, thief.Name)

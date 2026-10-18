@@ -198,7 +198,10 @@ function MatchSim.run(opts)
 		end
 	end
 
-	-- RACE: each car on the kinematic simulator
+	-- RACE: each car on the kinematic simulator (all start together, so the
+	-- runs line up on one clock: a "ghost race" without car-to-car contact)
+	local RaceMetrics = env.requirePath("ReplicatedStorage.Shared.RaceMetrics")
+	local funRacers = {}
 	local results = {}
 	for i, b in ipairs(bots) do
 		local data = srv.SessionManager.getData(b.player)
@@ -208,6 +211,17 @@ function MatchSim.run(opts)
 			car = car, profile = Autopilot.PROFILES[b.drive], profileName = b.drive,
 			respawn = opts.respawn or "track", seed = seed * 31 + i, slot = i,
 		})
+		local fr = { id = i, progress = {}, finish = race.finished and race.time or nil, respawns = {}, hits = {} }
+		local nextT = 0
+		for _, smp in ipairs(race.samples) do
+			if smp.t >= nextT then
+				table.insert(fr.progress, { smp.t, smp.s })
+				nextT += 1
+			end
+		end
+		for _, e in ipairs(race.respawns) do table.insert(fr.respawns, e.s) end
+		for _, e in ipairs(race.impacts) do table.insert(fr.hits, e.s) end
+		table.insert(funRacers, fr)
 		local inv = crafts[b].inventory
 		local rarity = { Common = 0, Uncommon = 0, Rare = 0, Epic = 0 }
 		local ItemConfig = env.requirePath("ReplicatedStorage.Shared.ItemConfig")
@@ -236,8 +250,13 @@ function MatchSim.run(opts)
 	end)
 	for place, r in ipairs(results) do r.place = place end
 
+	local fun = RaceMetrics.compute({
+		length = world.geo.length, timeout = Constants.RACING_TIMEOUT,
+		sections = RaceMetrics.sections(world.track, world.geo), racers = funRacers,
+	})
+
 	return {
-		seed = seed, players = n, results = results, biome = biome,
+		seed = seed, players = n, results = results, biome = biome, fun = fun,
 		itemsLeft = #itemList(map), log = log,
 		serverErrors = table.clone(Mock.errors or {}),
 	}

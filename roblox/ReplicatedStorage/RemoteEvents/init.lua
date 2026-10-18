@@ -23,6 +23,7 @@
 --   CheckpointPassed    → (cpIndex: number)  -- fires to passing player only (1 or 2)
 --   RaceIntroShown      → (intro: { biome: string })  -- broadcast at race start
 --   RaceSeedBroadcast   → (seed: number)  -- per-race seed for client-side variation
+--   PlaytestMark        → client→server (note: "bad" | "fun")  -- playtest marker, Studio / test servers only
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -55,6 +56,7 @@ local EVENTS = {
 	"CheckpointPassed",
 	"RaceIntroShown",
 	"RaceSeedBroadcast",
+	"PlaytestMark",
 }
 
 local FUNCTIONS = {

@@ -10,20 +10,20 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 33.2 | expert | 86.4 s | 0 | 0 |
-| live code | slowest | 33.2 | expert | 86.4 s | 0 | 0 |
-| authored | slowest | 33.2 | average | 90.8 s | 0 | 0 |
-| live code | slowest | 33.2 | average | 90.8 s | 0 | 0 |
+| authored | slowest | 33.2 | expert | 86.3 s | 0 | 0 |
+| live code | slowest | 33.2 | expert | 86.3 s | 0 | 0 |
+| authored | slowest | 33.2 | average | 90.7 s | 0 | 0 |
+| live code | slowest | 33.2 | average | 90.7 s | 0 | 0 |
 | authored | slowest | 33.2 | novice | 100.2 s | 0 | 0 |
 | live code | slowest | 33.2 | novice | 100.2 s | 0 | 0 |
 | authored | p50 | 52.2 | expert | 61.3 s | 0 | 0 |
 | live code | p50 | 52.2 | expert | 61.3 s | 0 | 0 |
-| authored | p50 | 52.2 | average | 65.8 s | 0 | 0 |
-| live code | p50 | 52.2 | average | 65.8 s | 0 | 0 |
-| authored | p50 | 52.2 | novice | 78.5 s | 0 | 1 |
-| live code | p50 | 52.2 | novice | 78.5 s | 0 | 1 |
-| authored | fastest | 80.0 | expert | 38.9 s | 0 | 0 |
-| live code | fastest | 80.0 | expert | 38.9 s | 0 | 0 |
+| authored | p50 | 52.2 | average | 65.7 s | 0 | 0 |
+| live code | p50 | 52.2 | average | 65.7 s | 0 | 0 |
+| authored | p50 | 52.2 | novice | 78.4 s | 0 | 1 |
+| live code | p50 | 52.2 | novice | 78.4 s | 0 | 1 |
+| authored | fastest | 80.0 | expert | 38.8 s | 0 | 0 |
+| live code | fastest | 80.0 | expert | 38.8 s | 0 | 0 |
 | authored | fastest | 80.0 | average | 43.8 s | 0 | 0 |
 | live code | fastest | 80.0 | average | 43.8 s | 0 | 0 |
 | authored | fastest | 80.0 | novice | 59.0 s | 0 | 3 |
@@ -31,20 +31,45 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 Cars by top speed: slowest = Microwave + Fan + Balloon Bunch (top speed 33.2, turn 1.22 rad/s); p50 = Skateboard + Magnifying Glass + Cactus (top speed 52.2, turn 1.26 rad/s); fastest = Kite + Fan + Magnet + Bathtub (top speed 80.0, turn 2.00 rad/s).
 
-## Simulated matches (12 × 6 bots, authored map)
+## Simulated matches (3 × 6 bots, authored map)
 
 - Finish rate within 180 s: 100%
-- Fastest car won 6 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.58 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.37
+- Fastest car won 2 of 3 matches that had a finisher
+- Rank correlation, top speed vs place: -0.64 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.51
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 2.67 |
-| farming: casual | 4.33 |
-| driving: expert | 2.67 |
-| driving: average | 2.62 |
-| driving: novice | 5.21 |
+| farming: sweaty | 2.56 |
+| farming: casual | 4.44 |
+| driving: expert | 2.50 |
+| driving: average | 2.83 |
+| driving: novice | 5.17 |
+
+## Fun metrics
+
+Each simulated match is scored with `Shared/RaceMetrics` (the same code scores real Studio playtests, see `Modules/PlaytestReport`). Bots race as ghosts on one clock: no car-to-car contact, no abilities, so lead changes come from build and driving differences only. Targets are starting points in `Constants.FUN_TARGETS`; playtests decide.
+
+| | Metric | Value | Target | Why |
+|---|---|---|---|---|
+| ✗ | closeShare | 0.15 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.67 |  .. 0.70 | the fastest build should not always win |
+| ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
+| ✓ | finishSpread | 35.37 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.00 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.24 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.64 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
+| ✗ | winnerTime | 40.42 | 60.00 .. 120.00 | a race should take about 90 s |
+
+Overtakes per match: 8.7. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+
+| Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
+|---|---|---|---|---|---|
+| S1 harbor launch | 5.7 | 3.1 | 0 | 0 | 0 |
+| S2 island arc | 10.5 | 6.8 | 0 | 0 | 3 |
+| S3 open channel | 9.9 | 5.8 | 0 | 0 | 4 |
+| S4 reef U-bend | 14.5 | 9.5 | 0 | 0 | 6 |
+| S5 return channel | 18.5 | 12.1 | 3 | 0 | 14 |
 
 ## Geometry findings
 
@@ -53,9 +78,8 @@ Cars by top speed: slowest = Microwave + Fan + Balloon Bunch (top speed 33.2, tu
 - 0 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 64 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (1)
+## Known bugs from the test suite (0)
 
-- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 
