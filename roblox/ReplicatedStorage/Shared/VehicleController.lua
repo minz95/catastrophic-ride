@@ -88,6 +88,15 @@ function VehicleController.accelFor(torque)
 	return D.ACCEL_BASE + (torque or 0) * D.ACCEL_PER_TORQUE
 end
 
+--- Turn rate the controller actually applies (SKY flyers are capped).
+function VehicleController.turnRate(turnSpeed, isSky)
+	local turn = turnSpeed or 1
+	if isSky then
+		turn = math.min(turn, VehicleController.SKY_TURN_CAP)
+	end
+	return turn
+end
+
 --- Drive command.
 -- ctx: { maxSpeed, turnSpeed, isSky, drifting,
 --        torque, dt, actualForward }   -- the last three only matter with `state`
@@ -99,9 +108,7 @@ function VehicleController.command(input, ctx, state)
 	if ctx.drifting then
 		turn = VehicleController.driftTurnSpeed(turn)
 	end
-	if ctx.isSky then
-		turn = math.min(turn, VehicleController.SKY_TURN_CAP)
-	end
+	turn = VehicleController.turnRate(turn, ctx.isSky)
 	local maxSpeed = ctx.maxSpeed or 40
 	local target = input.throttle * maxSpeed
 	local forward = target

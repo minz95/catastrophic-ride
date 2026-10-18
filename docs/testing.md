@@ -4,7 +4,7 @@ This game is tested in two places:
 
 | Layer | Runs where | Speed | What it can tell you |
 |---|---|---|---|
-| **Offline** (Lune) | any machine, CI, an AI agent's sandbox | ~10 s tests, ~45 s report | config mistakes, stat balance, map geometry, kinematic race and full farm→craft→race matches using the real server scripts |
+| **Offline** (Lune) | any machine, CI, an AI agent's sandbox | ~1 min tests, a few minutes for the report | config mistakes, stat balance, map geometry, kinematic race and full farm→craft→race matches using the real server scripts |
 | **Studio** (StudioTestService / StepPhysics) | Roblox Studio, through the plugin or the Studio MCP server | seconds to minutes | real Roblox physics for the race, real multiplayer clients playing a whole round |
 
 Neither layer can judge whether the game is *fun*, how touch controls feel,
@@ -20,16 +20,18 @@ see `rokit.toml`) and run from the repository root:
 ```sh
 lune run tests/run.luau            # all specs
 lune run tests/run.luau map        # only spec files whose name contains "map"
-lune run tools/report.luau         # track SVG + balance report (12 matches)
+lune run tools/report.luau         # track SVG + balance report, every biome (12 matches each)
 lune run tools/report.luau 40      # more matches, steadier numbers
+lune run tools/report.luau 12 SKY  # one biome
 ```
 
 Outputs:
 
 - `tests/out/results.json` – pass/fail plus every known bug with its details.
-- `reports/forest/track.svg` – top-down map: corridor, walls, parts that block
-  the lane, checkpoint footprints, respawn targets, simulated driving lines.
-- `reports/forest/summary.md` / `summary.json` – race results per car and
+- `reports/<biome>/track.svg` (`forest`, `ocean`, `sky`) – top-down map:
+  corridor, walls, parts that block the lane, checkpoint footprints, respawn
+  targets, simulated driving lines.
+- `reports/<biome>/summary.md` / `summary.json` – race results per car and
   driver, match statistics, geometry findings, known bugs.
 
 ### How it works
@@ -45,25 +47,38 @@ Outputs:
   Lune's `@lune/roblox`.
 - `server.luau` boots the real server scripts (GameManager, SessionManager,
   MapManager, FarmingManager, CraftingManager, RacingManager…) in that mock.
-- `world.luau` builds the FOREST map with the real `ForestMap` module and
+- `world.luau` builds a biome's map with the real builder module
+  (`Modules/Maps/ForestMap`, `OceanMap`, `SkyMap`: `World.build("OCEAN")`) and
   applies the RACING visibility state, either **as shipped** (today's
   `MapVisibility` code) or **authored** (every part's authored collision).
+  The body height band used for collisions comes from the track data
+  (`trackTop`, `obstacleBand`): boats ride over the 1-stud dock, flyers hover
+  at Y 84.
+- `mapchecks.luau` / `biomespecs.luau` are the geometry checks every map gets:
+  lane obstacles, walls cutting into the lane (inside of turns, the Sky
+  figure-8 crossings), holes in the wall (outside of turns included), slow
+  zones on the lane, gates a car can drive past, pads off the lane, floor
+  holes, decoration in the lane.
 - `kinesim.luau` is a 2D kinematic race simulator. It is a fair model of this
   game because the car's velocity is *set* every frame
   (`VehicleController`), not produced by tyres. Collisions use the footprints
-  of the actually built parts. It does not model jumps or car-to-car contact.
+  of the actually built parts. Seat values per biome (`KineSim.SEAT`) are
+  checked against the real `VehicleBuilder`. It does not model jumps, waves,
+  updrafts, gusts or car-to-car contact.
 - `matchsim.luau` runs a whole match: bots (`BotBrain`) walk to items and call
   the real `RequestPickup` / `RequestContest` / `RequestSteal` handlers, craft
   through `SubmitCraft`, and every resulting car is raced on `kinesim`.
 
 ### Known bugs
 
-What the specs cover (`tests/specs/`): config consistency, stat balance per
-biome, the FOREST map geometry (lane obstacles, wall gaps, slow zones,
-checkpoints, ramps, trees), race progress and respawn on every track, the
-real RacingManager (speed effects, passives, shields, rounds), every item's
-ability through the real AbilityManager, hazards, farming rules, the driving
-model, the kinematic race sim, and smoke runs of the Studio harness.
+What the specs cover (`tests/specs/`): config consistency (track data vs
+Constants, BiomeConfig and the spawn grid), stat balance per biome, the map
+geometry of FOREST, OCEAN and SKY (`map_*`), race progress and respawn on
+every track, the real RacingManager (speed effects, passives, shields,
+rounds), every item's ability through the real AbilityManager, hazards,
+farming rules, the driving model, kinematic race sims per biome (`sim_*`),
+whole matches on every biome (`farming`, `match_biomes`), and smoke runs of
+the Studio harness.
 
 `R.known(name, why, fn)` marks a check that is **expected to fail today**
 because it documents a bug. The run stays green while the bug exists and
@@ -98,7 +113,7 @@ Every Runner function returns `summary, json`.
 
 | Call | What happens |
 |---|---|
-| `Runner.runRace({ ... })` | **Edit mode.** Builds the map, applies the RACING visibility state, spawns a VehicleBuilder car per driver profile and drives it with `workspace:StepPhysics` – faster than real time. |
+| `Runner.runRace({ biome = "SKY", ... })` | **Edit mode.** Builds the map (`biome` = FOREST, OCEAN or SKY), applies the RACING visibility state, spawns a VehicleBuilder car per driver profile and drives it with `workspace:StepPhysics` – faster than real time. |
 | `Runner.runRace({ mode = "run", ... })` | Starts a fresh server-only session with `StudioTestService:ExecuteRunModeAsync`; same race in real time with the latest code. |
 | `Runner.runMatch({ players = 4, rounds = 1 })` | `StudioTestService:ExecuteMultiplayerTestAsync`: a server and N client windows. Every client is a bot (`BotDriver`) that farms, crafts and races through the normal client code; the server returns a report with round results, telemetry and every server/client script error. |
 
@@ -127,13 +142,16 @@ every 0.5 s.
 
 ## 3. Workflow for map and balance changes
 
-1. Edit data, not code: `ReplicatedStorage/Shared/Tracks/ForestTrack.lua`
-   holds the node list, hazards and checkpoints; balance numbers live in
-   `Shared/Constants.lua` and `Shared/ItemConfig.lua`.
+1. Edit data, not code: `ReplicatedStorage/Shared/Tracks/<Biome>Track.lua`
+   holds the node list, checkpoints, pads, drift corners and ramps; balance
+   numbers live in `Shared/Constants.lua` and `Shared/ItemConfig.lua`. Walls
+   are laid out by `TrackGeometry:boundaryRuns` (closes the outside of each
+   turn, drops wall that would stand inside the lane), so moving nodes does
+   not need builder changes.
 2. `lune run tests/run.luau` – nothing new may fail.
-3. `lune run tools/report.luau` – open `reports/forest/track.svg` and
+3. `lune run tools/report.luau` – open `reports/<biome>/track.svg` and
    `summary.md`; compare finish rate, stuck locations, wall hits.
 4. In Studio: `Runner.runRace{ mode = "run" }` to confirm with real physics,
    then `Runner.runMatch{}` for a full round with bot clients.
-5. Commit the regenerated `reports/forest/` with the change, so the diff shows
+5. Commit the regenerated `reports/` with the change, so the diff shows
    what the change did to the track.

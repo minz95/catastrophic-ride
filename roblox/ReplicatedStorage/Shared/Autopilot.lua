@@ -7,7 +7,10 @@
 -- kinematic simulator in tests/.
 --
 --   local ap = Autopilot.new(geo, Autopilot.PROFILES.average, seed)
---   local keys, info = ap:update({ x, z, yaw, speed, maxSpeed, turnSpeed, t })
+--   local keys, info = ap:update({ x, z, yaw, speed, forward, maxSpeed, turnSpeed, t })
+--     speed    horizontal speed (studs/s)
+--     forward  signed speed along LookVector (negative = reversing); optional
+--     turnSpeed the rate the car really turns at (VehicleController.turnRate)
 --
 -- yaw follows Roblox: LookVector = (-sin(yaw), 0, -cos(yaw)).
 
@@ -145,8 +148,11 @@ function Autopilot:update(state)
 	keys.W = math.abs(predErr) < p.liftAngle
 
 	-- Slow for corners: the car keeps its speed when W is released now.
+	-- Only while moving FORWARD: S on a reversing car only reverses harder,
+	-- which used to rock a stalled car back and forth at sharp corners.
 	local speed = state.speed or 0
-	if speed > 5 then
+	local forward = state.forward or speed
+	if forward > 5 then
 		local far = math.max(look * Autopilot.CORNER_LOOK, 20)
 		local turnNeeded = math.abs(wrapAngle(self.geo:yawAt(proj.s + far) - self.geo:yawAt(proj.s)))
 		local required = turnNeeded * speed / far

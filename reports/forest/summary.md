@@ -10,46 +10,46 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 48.8 | expert | 89.0 s | 0 | 0 |
-| live code | slowest | 48.8 | expert | 89.0 s | 0 | 0 |
-| authored | slowest | 48.8 | average | 89.4 s | 0 | 0 |
-| live code | slowest | 48.8 | average | 89.4 s | 0 | 0 |
-| authored | slowest | 48.8 | novice | 93.7 s | 0 | 0 |
-| live code | slowest | 48.8 | novice | 93.7 s | 0 | 0 |
-| authored | p50 | 67.5 | expert | 63.1 s | 0 | 0 |
-| live code | p50 | 67.5 | expert | 63.1 s | 0 | 0 |
-| authored | p50 | 67.5 | average | 63.3 s | 0 | 0 |
-| live code | p50 | 67.5 | average | 63.3 s | 0 | 0 |
-| authored | p50 | 67.5 | novice | 73.4 s | 0 | 3 |
-| live code | p50 | 67.5 | novice | 73.4 s | 0 | 3 |
-| authored | fastest | 86.8 | expert | 42.2 s | 0 | 0 |
-| live code | fastest | 86.8 | expert | 42.2 s | 0 | 0 |
-| authored | fastest | 86.8 | average | 42.7 s | 0 | 0 |
-| live code | fastest | 86.8 | average | 42.7 s | 0 | 0 |
-| authored | fastest | 86.8 | novice | 63.0 s | 0 | 27 |
-| live code | fastest | 86.8 | novice | 63.0 s | 0 | 27 |
+| authored | slowest | 48.8 | expert | 88.3 s | 0 | 0 |
+| live code | slowest | 48.8 | expert | 88.3 s | 0 | 0 |
+| authored | slowest | 48.8 | average | 88.6 s | 0 | 0 |
+| live code | slowest | 48.8 | average | 88.6 s | 0 | 0 |
+| authored | slowest | 48.8 | novice | 94.8 s | 0 | 0 |
+| live code | slowest | 48.8 | novice | 94.8 s | 0 | 0 |
+| authored | p50 | 67.5 | expert | 62.3 s | 0 | 0 |
+| live code | p50 | 67.5 | expert | 62.3 s | 0 | 0 |
+| authored | p50 | 67.5 | average | 62.6 s | 0 | 0 |
+| live code | p50 | 67.5 | average | 62.6 s | 0 | 0 |
+| authored | p50 | 67.5 | novice | 71.9 s | 0 | 3 |
+| live code | p50 | 67.5 | novice | 71.9 s | 0 | 3 |
+| authored | fastest | 86.8 | expert | 41.4 s | 0 | 0 |
+| live code | fastest | 86.8 | expert | 41.4 s | 0 | 0 |
+| authored | fastest | 86.8 | average | 41.9 s | 0 | 0 |
+| live code | fastest | 86.8 | average | 41.9 s | 0 | 0 |
+| authored | fastest | 86.8 | novice | 68.7 s | 1 | 29 |
+| live code | fastest | 86.8 | novice | 68.8 s | 1 | 29 |
 
-Cars by top speed: slowest = Microwave + Fan + Pizza (48.8); p50 = Barrel + Magnifying Glass + Lantern + Alarm Clock (67.5); fastest = Skateboard + Kettle + Umbrella + Log (86.8).
+Cars by top speed: slowest = Microwave + Fan + Pizza (top speed 48.8, turn 2.52 rad/s); p50 = Barrel + Magnifying Glass + Lantern + Alarm Clock (top speed 67.5, turn 2.26 rad/s); fastest = Skateboard + Kettle + Umbrella + Log (top speed 86.8, turn 2.33 rad/s).
 
 ## Simulated matches (12 × 6 bots, authored map)
 
-- Finish rate within 180 s: 93%
-- Fastest car won 4 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.50 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.27
+- Finish rate within 180 s: 100%
+- Fastest car won 6 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.66 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.52
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.06 |
-| farming: casual | 3.94 |
-| driving: expert | 2.92 |
-| driving: average | 2.71 |
-| driving: novice | 4.88 |
+| farming: sweaty | 2.94 |
+| farming: casual | 4.06 |
+| driving: expert | 2.54 |
+| driving: average | 2.67 |
+| driving: novice | 5.29 |
 
 ## Geometry findings
 
 - 0 parts inside or next to the lane are solid during RACING but not in the authored map (red boxes).
-- 0 tree trunks stand inside the lane (red dots).
+- 0 decoration parts (Trunk) stand inside the lane (red dots).
 - 0 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 89 sampled positions respawn off the track (pink ×).
 

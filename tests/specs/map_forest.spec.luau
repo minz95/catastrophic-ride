@@ -5,6 +5,7 @@ local R = require("../lib/runner")
 local World = require("../lib/world")
 local Loader = require("../lib/loader")
 local MapQuery = require("../lib/mapquery")
+local MapChecks = require("../lib/mapchecks")
 
 local shipped = World.forest({ visibility = "shipped" })
 local intended = World.forest({ visibility = "intended" })
@@ -171,6 +172,27 @@ R.describe("FOREST map during RACING", function()
 			end
 			R.expect(bad).toBeEmpty("misplaced ramps")
 		end)
+
+	R.it("boost pads lie fully on the lane", function()
+		R.expect(MapChecks.onLane(intended, "BoostPad")).toBeEmpty("pads off the lane")
+	end)
+
+	R.it("the track surface has no holes, outside of turns included", function()
+		R.expect(MapChecks.floorCoverage(intended, function(n) return n:sub(1, 8) == "TrackSeg" end)).toBeEmpty("lane without a surface")
+	end)
+
+	R.it("checkpoints and the finish line cannot be driven past", function()
+		local gaps = {}
+		for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine" }) do
+			for _, g in ipairs(MapChecks.gateSpan(intended, tag)) do table.insert(gaps, g) end
+		end
+		R.expect(gaps).toBeEmpty("gates a car can miss")
+	end)
+
+	R.it("walls have no holes wider than a doorway at the outside of any turn", function()
+		R.expect(MapChecks.wallGaps(intended, function(n) return n == "TrackWall" end, track.width / 2 + 1, 9))
+			.toBeEmpty("holes in the wall wider than a doorway (8 studs)")
+	end)
 
 	R.it("no tree trunk stands inside the corridor",
 		function()

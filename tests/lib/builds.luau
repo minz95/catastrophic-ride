@@ -3,6 +3,8 @@
 -- Enumerates every BODY × ENGINE × SPECIAL × MOBILITY combination for a biome
 -- and derives the in-game seat values, using the real VehicleStats module.
 
+local KineSim = require("./kinesim")
+
 local Builds = {}
 
 local MOBILITY_CHOICES = 4 -- none, plus three sampled mobility items per combo
@@ -40,12 +42,13 @@ function Builds.enumerate(env, biome)
 				for _, m in ipairs({ false, affinity, plain }) do
 					local stats = VehicleStats.calculate(ItemConfig[b], ItemConfig[e], ItemConfig[s], biome)
 					stats = VehicleStats.applyMobility(stats, m and ItemConfig[m] or nil, biome)
+					local seat = KineSim.carFromStats(stats, Constants, biome)
 					table.insert(out, {
 						slots = { BODY = b, ENGINE = e, SPECIAL = s, MOBILITY = m or nil },
 						stats = stats,
-						maxSpeed = math.clamp(stats.speed * 2.5, 20, 120),
-						turnSpeed = Constants.turnSpeedFor(biome, stats),
-						torque = math.clamp(stats.acceleration * 4, 20, 200),
+						maxSpeed = seat.maxSpeed,
+						turnSpeed = seat.turnSpeed,
+						torque = seat.torque,
 						boostDuration = stats.boostDuration,
 					})
 				end

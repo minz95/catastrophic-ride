@@ -24,6 +24,7 @@ local RemoteEvents  = require(ReplicatedStorage.RemoteEvents)
 local BotBrain      = require(ReplicatedStorage.Shared.BotBrain)
 local Autopilot     = require(ReplicatedStorage.Shared.Autopilot)
 local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
+local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local InputSource   = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local channel = ReplicatedStorage:WaitForChild("HarnessChannel", 30)
@@ -40,7 +41,11 @@ end)
 
 local farmProfile = BotBrain.PROFILES[LocalPlayer:GetAttribute("BotFarmProfile") or "casual"] or BotBrain.PROFILES.casual
 local driverName = LocalPlayer:GetAttribute("BotDriverProfile") or "average"
-local TRACKS = { FOREST = ReplicatedStorage.Shared.Tracks:FindFirstChild("ForestTrack") }
+local TRACKS = {
+	FOREST = ReplicatedStorage.Shared.Tracks:FindFirstChild("ForestTrack"),
+	OCEAN  = ReplicatedStorage.Shared.Tracks:FindFirstChild("OceanTrack"),
+	SKY    = ReplicatedStorage.Shared.Tracks:FindFirstChild("SkyTrack"),
+}
 
 local phase, biome = nil, nil
 local inventory = {}
@@ -145,10 +150,13 @@ InputSource.setOverride(function()
 	local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 	local _, yaw = primary.CFrame:ToEulerAnglesYXZ()
 	local v = primary.AssemblyLinearVelocity
+	local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 	local keys, info = autopilot:update({
 		x = primary.Position.X, z = primary.Position.Z, yaw = yaw,
 		speed = Vector3.new(v.X, 0, v.Z).Magnitude,
-		maxSpeed = seat and seat.MaxSpeed or 40, turnSpeed = seat and seat.TurnSpeed or 1,
+		forward = v:Dot(primary.CFrame.LookVector),
+		maxSpeed = seat and seat.MaxSpeed or 40,
+		turnSpeed = VehicleController.turnRate(seat and seat.TurnSpeed or 1, isSky),
 		t = os.clock() - raceStart,
 	})
 	if info.respawn then

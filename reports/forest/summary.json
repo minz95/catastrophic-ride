@@ -1,4 +1,5 @@
 {
+  "biome": "FOREST",
   "generatedBy": "tools/report.luau",
   "geometry": {
     "respawnOffTrackSamples": 0,
@@ -10,20 +11,20 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 4,
-    "finishRate": 0.9305555555555556,
+    "fastestCarWins": 6,
+    "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
-      "average": 2.7083333333333335,
-      "expert": 2.9166666666666665,
-      "novice": 4.875
+      "average": 2.6666666666666665,
+      "expert": 2.5416666666666665,
+      "novice": 5.291666666666667
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.9444444444444446,
-      "sweaty": 3.0555555555555554
+      "casual": 4.055555555555555,
+      "sweaty": 2.9444444444444446
     },
-    "spearmanRarityVsPlace": -0.2739404463309538,
-    "spearmanTopSpeedVsPlace": -0.4974596437069907
+    "spearmanRarityVsPlace": -0.517975432503698,
+    "spearmanTopSpeedVsPlace": -0.6619075181683709
   },
   "raceRuns": [
     {
@@ -33,9 +34,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 48.76632801161104,
-      "progress": 4370,
+      "progress": 4371,
       "respawns": 0,
-      "time": 88.9666666666629,
+      "time": 88.26666666666294,
       "world": "authored"
     },
     {
@@ -45,9 +46,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 48.76632801161104,
-      "progress": 4370,
+      "progress": 4371,
       "respawns": 0,
-      "time": 88.9666666666629,
+      "time": 88.26666666666294,
       "world": "live code"
     },
     {
@@ -59,7 +60,7 @@
       "maxSpeed": 48.76632801161104,
       "progress": 4370,
       "respawns": 0,
-      "time": 89.36666666666288,
+      "time": 88.64999999999625,
       "world": "authored"
     },
     {
@@ -71,7 +72,7 @@
       "maxSpeed": 48.76632801161104,
       "progress": 4370,
       "respawns": 0,
-      "time": 89.36666666666288,
+      "time": 88.64999999999625,
       "world": "live code"
     },
     {
@@ -83,7 +84,7 @@
       "maxSpeed": 48.76632801161104,
       "progress": 4370,
       "respawns": 0,
-      "time": 93.74999999999596,
+      "time": 94.76666666666257,
       "world": "authored"
     },
     {
@@ -95,7 +96,7 @@
       "maxSpeed": 48.76632801161104,
       "progress": 4370,
       "respawns": 0,
-      "time": 93.74999999999596,
+      "time": 94.76666666666257,
       "world": "live code"
     },
     {
@@ -107,7 +108,7 @@
       "maxSpeed": 67.55,
       "progress": 4371,
       "respawns": 0,
-      "time": 63.08333333333103,
+      "time": 62.333333333331076,
       "world": "authored"
     },
     {
@@ -119,7 +120,7 @@
       "maxSpeed": 67.55,
       "progress": 4371,
       "respawns": 0,
-      "time": 63.08333333333103,
+      "time": 62.333333333331076,
       "world": "live code"
     },
     {
@@ -131,7 +132,7 @@
       "maxSpeed": 67.55,
       "progress": 4371,
       "respawns": 0,
-      "time": 63.33333333333102,
+      "time": 62.59999999999773,
       "world": "authored"
     },
     {
@@ -143,7 +144,7 @@
       "maxSpeed": 67.55,
       "progress": 4371,
       "respawns": 0,
-      "time": 63.33333333333102,
+      "time": 62.59999999999773,
       "world": "live code"
     },
     {
@@ -153,9 +154,9 @@
       "finished": true,
       "impacts": 3,
       "maxSpeed": 67.55,
-      "progress": 4370,
+      "progress": 4371,
       "respawns": 0,
-      "time": 73.43333333333045,
+      "time": 71.88333333333054,
       "world": "authored"
     },
     {
@@ -165,9 +166,9 @@
       "finished": true,
       "impacts": 3,
       "maxSpeed": 67.55,
-      "progress": 4370,
+      "progress": 4371,
       "respawns": 0,
-      "time": 73.43333333333045,
+      "time": 71.88333333333054,
       "world": "live code"
     },
     {
@@ -177,9 +178,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 86.75995552793887,
-      "progress": 4370,
+      "progress": 4372,
       "respawns": 0,
-      "time": 42.166666666665556,
+      "time": 41.38333333333227,
       "world": "authored"
     },
     {
@@ -189,45 +190,45 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.38333333333227,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.91666666666557,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.91666666666557,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 29,
+      "maxSpeed": 86.75995552793887,
       "progress": 4370,
-      "respawns": 0,
-      "time": 42.166666666665556,
-      "world": "live code"
-    },
-    {
-      "car": "fastest",
-      "carBuild": "Skateboard + Kettle + Umbrella + Log",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 86.75995552793887,
-      "progress": 4371,
-      "respawns": 0,
-      "time": 42.69999999999886,
-      "world": "authored"
-    },
-    {
-      "car": "fastest",
-      "carBuild": "Skateboard + Kettle + Umbrella + Log",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 86.75995552793887,
-      "progress": 4371,
-      "respawns": 0,
-      "time": 42.69999999999886,
-      "world": "live code"
-    },
-    {
-      "car": "fastest",
-      "carBuild": "Skateboard + Kettle + Umbrella + Log",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 27,
-      "maxSpeed": 86.75995552793887,
-      "progress": 4371,
-      "respawns": 0,
-      "time": 62.999999999997705,
+      "respawns": 1,
+      "time": 68.71666666666405,
       "world": "authored"
     },
     {
@@ -235,11 +236,11 @@
       "carBuild": "Skateboard + Kettle + Umbrella + Log",
       "driver": "novice",
       "finished": true,
-      "impacts": 27,
+      "impacts": 29,
       "maxSpeed": 86.75995552793887,
-      "progress": 4371,
-      "respawns": 0,
-      "time": 62.999999999997705,
+      "progress": 4370,
+      "respawns": 1,
+      "time": 68.81666666666405,
       "world": "live code"
     }
   ],

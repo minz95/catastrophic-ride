@@ -64,6 +64,29 @@ function MapQuery.closest(shape, x, z)
 		inside, u, v
 end
 
+--- Does the straight move (x0,z0) → (x1,z1) pass through the shape's footprint?
+function MapQuery.crosses(sh, x0, z0, x1, z1)
+	local function local_(x, z)
+		local dx, dz = x - sh.cx, z - sh.cz
+		return dx * sh.ux + dz * sh.uz, dx * sh.vx + dz * sh.vz
+	end
+	local u0, v0 = local_(x0, z0)
+	local u1, v1 = local_(x1, z1)
+	local t0, t1 = 0, 1
+	for _, ax in ipairs({ { u0, u1 - u0, sh.hu }, { v0, v1 - v0, sh.hv } }) do
+		local p0, d, h = ax[1], ax[2], ax[3]
+		if math.abs(d) < 1e-9 then
+			if math.abs(p0) > h then return false end
+		else
+			local ta, tb = (-h - p0) / d, (h - p0) / d
+			if ta > tb then ta, tb = tb, ta end
+			t0, t1 = math.max(t0, ta), math.min(t1, tb)
+			if t0 > t1 then return false end
+		end
+	end
+	return true
+end
+
 function MapQuery.contains(shape, x, z)
 	local _, _, inside = MapQuery.closest(shape, x, z)
 	return inside

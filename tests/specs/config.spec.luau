@@ -184,14 +184,29 @@ R.describe("biomes", function()
 			R.expect(missing).toBeEmpty("hazards with no implementation")
 		end)
 
-	R.it("FOREST track data agrees with Constants and BiomeConfig", function()
-		local t = Constants.TRACK.FOREST
-		R.expect(ForestTrack.finishZ).toBe(t.zFinish)
-		R.expect(ForestTrack.nodes[1][2]).toBe(t.zStart)
-		R.expect(ForestTrack.width).toBe(t.width)
-		local startZ = BiomeConfig.FOREST.raceStartZ
-		R.expect(startZ).toBe(ForestTrack.startGrid.rows[1])
-	end)
+	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+		R.it(biome .. " track data agrees with Constants, BiomeConfig and the spawn grid", function()
+			local data = env.requirePath("ReplicatedStorage.Shared.Tracks." .. ({ FOREST = "ForestTrack", OCEAN = "OceanTrack", SKY = "SkyTrack" })[biome])
+			local t = Constants.TRACK[biome]
+			local bc = BiomeConfig[biome]
+			local bad = {}
+			local function check(what, got, want)
+				if got ~= want then table.insert(bad, string.format("%s: %s (want %s)", what, tostring(got), tostring(want))) end
+			end
+			check("biome", data.biome, biome)
+			check("finishZ", data.finishZ, t.zFinish)
+			check("first node Z", data.nodes[1][2], t.zStart)
+			check("width", data.width, t.width)
+			-- CraftingManager._buildSpawnGrid: x = (col - 3) * 7, rows 8 apart from raceStartZ
+			for i, x in ipairs(data.startGrid.cols) do check("grid col " .. i, x, (i - 3) * 7) end
+			for i, z in ipairs(data.startGrid.rows) do check("grid row " .. i, z, bc.raceStartZ + (i - 1) * 8) end
+			check("checkpoints", #data.checkpoints, 2)
+			check("boost pads", #data.boostPads, bc.boostPads)
+			check("drift corners", #data.driftCorners, bc.driftCorners)
+			check("jump ramps", #data.jumpRamps, bc.jumpRamps)
+			R.expect(bad).toBeEmpty("mismatches")
+		end)
+	end
 end)
 
 R.describe("audio", function()

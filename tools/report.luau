@@ -1,10 +1,11 @@
 --!nocheck
--- tools/report.luau — FOREST track + balance report.
+-- tools/report.luau — track + balance report for every biome.
 --
---   lune run tools/report.luau            # 12 simulated matches (default)
+--   lune run tools/report.luau            # all biomes, 12 simulated matches each
 --   lune run tools/report.luau 40         # more matches for steadier numbers
+--   lune run tools/report.luau 12 OCEAN   # one biome
 --
--- Writes reports/forest/:
+-- Writes reports/<biome>/ (forest, ocean, sky):
 --   track.svg    top-down map: corridor, walls, blocking parts, triggers,
 --                respawn targets and simulated driving lines
 --   summary.md   findings + race and match statistics
@@ -23,11 +24,35 @@ local Builds = require("../tests/lib/builds")
 local MatchSim = require("../tests/lib/matchsim")
 
 local MATCHES = tonumber(process.args[1]) or 12
-local OUT = "reports/forest"
+local ONLY = process.args[2]
+
+-- Per-biome drawing and naming. isWall: the side walls; props: decoration
+-- that must stay off the lane (drawn as red dots when it does not).
+local BIOMES = {
+	FOREST = {
+		isWall = function(n) return n == "TrackWall" end, wallLabel = "walls (8-stud doorways)",
+		props = { "Trunk" }, propLabel = "tree trunk inside the lane",
+		ground = "#5d8a3c", lane = "#4a4540", wall = "#2b1d10", slow = "#6b4f2e",
+	},
+	OCEAN = {
+		isWall = function(n) return n == "ReefWall" end, wallLabel = "reef walls (8-stud doorways)",
+		props = { "^PalmTrunk$", "^ReefSpire_%d+$" }, propLabel = "palm or reef spire inside the lane",
+		ground = "#1e5aa8", lane = "#3d8fd6", wall = "#5f4b37", slow = "#bfe6ff",
+	},
+	SKY = {
+		isWall = function(n) return n:sub(1, 11) == "EdgePillar_" end, wallLabel = "crystal pillar fence (no doorways)",
+		props = { "^CrystalSpire_" }, propLabel = "crystal spire inside the lane",
+		ground = "#8ca5dc", lane = "#a693d6", wall = "#5b2fbf", slow = "#ffffff",
+	},
+}
+
+local function report(biome)
+local cfg = BIOMES[biome]
+local OUT = "reports/" .. string.lower(biome)
 fs.writeDir(OUT)
 
-local intended = World.forest({ visibility = "intended" })
-local shipped = World.forest({ visibility = "shipped" })
+local intended = World.build(biome, { visibility = "intended" })
+local shipped = World.build(biome, { visibility = "shipped" })
 local geo, track = intended.geo, intended.track
 local env = intended.env
 local Autopilot = env.requirePath("ReplicatedStorage.Shared.Autopilot")
@@ -39,10 +64,10 @@ local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
 local function fmt(n, d) return string.format("%." .. (d or 1) .. "f", n) end
 
 -- ─── Race runs (single car, no opponents) ──────────────────────────────────────
-local reps = Builds.representative(Builds.enumerate(env, "FOREST"))
+local reps = Builds.representative(Builds.enumerate(env, biome))
 local raceRuns = {}
 for _, rep in ipairs(reps) do
-	local car = KineSim.carFromStats(rep.build.stats, Constants)
+	local car = KineSim.carFromStats(rep.build.stats, Constants, biome)
 	for _, profile in ipairs({ "expert", "average", "novice" }) do
 		for _, world in ipairs({ intended, shipped }) do
 			local r = KineSim.run(world, {
@@ -60,7 +85,7 @@ end
 -- ─── Matches (farm → craft → race) ─────────────────────────────────────────────
 local matches = {}
 for seed = 1, MATCHES do
-	table.insert(matches, MatchSim.run({ players = 6, seed = seed, world = intended }))
+	table.insert(matches, MatchSim.run({ players = 6, seed = seed, world = intended, biome = biome }))
 end
 
 -- ─── Geometry findings ─────────────────────────────────────────────────────────
@@ -76,9 +101,11 @@ for _, sh in ipairs(shipped.obstacles) do
 	end
 end
 for _, sh in ipairs(intended.allShapes) do
-	if sh.name:find("Trunk") then
-		local p = geo:project(sh.cx, sh.cz)
-		if p.dist < HALF + 2 then table.insert(findings.trees, sh) end
+	for _, pat in ipairs(cfg.props) do
+		if sh.name:find(pat) then
+			local p = geo:project(sh.cx, sh.cz)
+			if p.dist < HALF + 2 then table.insert(findings.trees, sh) end
+		end
 	end
 end
 local worst = {}
@@ -86,7 +113,7 @@ for s = 0, geo.length, 2 do
 	for lat = -(HALF - 6), HALF - 6, 2 do
 		local x, z = geo:offsetPoint(s, lat)
 		for _, ob in ipairs(intended.obstacleGrid.near(x, z, 1)) do
-			if ob.name == "TrackWall" and MapQuery.contains(ob, x, z) then
+			if cfg.isWall(ob.name) and MapQuery.contains(ob, x, z) then
 				local key = math.floor(s / 40)
 				if not worst[key] then worst[key] = { x = x, z = z, s = s } end
 			end
@@ -96,7 +123,7 @@ end
 for _, w in pairs(worst) do table.insert(findings.intrusions, w) end
 for s = 0, geo.length, 50 do
 	local x, z = geo:pointAt(s)
-	local rx, _, rz = RaceProgress.respawnPoint("FOREST", x, z, BiomeConfig.FOREST.raceStartY)
+	local rx, _, rz = RaceProgress.respawnPoint(biome, x, z, BiomeConfig[biome].raceStartY)
 	local p = geo:project(rx, rz)
 	if p.dist > HALF - 2 then
 		table.insert(findings.respawnOff, { s = s, x = x, z = z, rx = rx, rz = rz })
@@ -128,20 +155,25 @@ local function shapePoly(sh, attrs) poly(MapQuery.corners(sh), attrs) end
 local function esc(s) return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")) end
 
 add(string.format('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d" font-family="Helvetica, Arial, sans-serif">', W, H, W, H))
-add(string.format('<rect x="0" y="0" width="%d" height="%d" fill="#5d8a3c"/>', W, H))
+add(string.format('<rect x="0" y="0" width="%d" height="%d" fill="%s"/>', W, H, cfg.ground))
 
 -- Corridor (one rectangle per segment, exactly like the builder)
 for _, seg in ipairs(geo.segments) do
 	local rx, rz = -seg.dz * HALF, seg.dx * HALF
-	poly({ { seg.ax + rx, seg.az + rz }, { seg.bx + rx, seg.bz + rz }, { seg.bx - rx, seg.bz - rz }, { seg.ax - rx, seg.az - rz } }, 'fill="#4a4540"')
+	poly({ { seg.ax + rx, seg.az + rz }, { seg.bx + rx, seg.bz + rz }, { seg.bx - rx, seg.bz - rz }, { seg.ax - rx, seg.az - rz } }, 'fill="' .. cfg.lane .. '"')
+end
+-- Round lane joints at the nodes (the outside of each turn)
+for i = 2, #track.nodes - 1 do
+	local n = track.nodes[i]
+	add(string.format('<circle cx="%s" cy="%s" r="%s" fill="%s"/>', X(n[1]), Y(n[2]), fmt(HALF), cfg.lane))
 end
 -- Slow zones (outside walls)
 for _, sh in ipairs(intended.allShapes) do
-	if table.find(sh.tags, "SlowZone") then shapePoly(sh, 'fill="#6b4f2e" fill-opacity="0.25"') end
+	if table.find(sh.tags, "SlowZone") then shapePoly(sh, 'fill="' .. cfg.slow .. '" fill-opacity="0.25"') end
 end
 -- Walls
 for _, sh in ipairs(intended.obstacles) do
-	if sh.name == "TrackWall" then shapePoly(sh, 'fill="#2b1d10"') end
+	if cfg.isWall(sh.name) then shapePoly(sh, 'fill="' .. cfg.wall .. '"') end
 end
 -- Triggers
 for _, sh in ipairs(intended.allShapes) do
@@ -151,7 +183,8 @@ for _, sh in ipairs(intended.allShapes) do
 	if table.find(tags, "DriftCorner") then shapePoly(sh, 'fill="none" stroke="#ff9f1c" stroke-width="2" stroke-dasharray="6 4"') end
 	if table.find(tags, "Checkpoint1") or table.find(tags, "Checkpoint2") then shapePoly(sh, 'fill="#4cc9f0" fill-opacity="0.85"') end
 	if table.find(tags, "FinishLine") then shapePoly(sh, 'fill="#ffffff"') end
-	if sh.class == "WedgePart" and sh.name:find("JumpRamp") then shapePoly(sh, 'fill="#c8a26b" stroke="#000" stroke-width="0.5"') end
+	if table.find(tags, "JumpZone") then shapePoly(sh, 'fill="#c8a26b" fill-opacity="0.8" stroke="#000" stroke-width="0.5"') end
+	if table.find(tags, "UpdraftZone") then shapePoly(sh, 'fill="#73c8ff" fill-opacity="0.6"') end
 end
 -- Parts that are solid only because of the CanCollide restore bug
 for _, sh in ipairs(findings.solid) do
@@ -198,22 +231,22 @@ add(string.format('<text x="%s" y="%s" font-size="14" fill="#fff">START ↑</tex
 local lx = maxX - minX + 20
 local ly = 30
 add(string.format('<rect x="%d" y="0" width="%d" height="%d" fill="#1b1b1b"/>', lx - 20, LEGEND_W, H))
-add(string.format('<text x="%d" y="%d" font-size="22" fill="#fff" font-weight="bold">FOREST track report</text>', lx, ly))
+add(string.format('<text x="%d" y="%d" font-size="22" fill="#fff" font-weight="bold">%s track report</text>', lx, ly, biome))
 ly += 26
 add(string.format('<text x="%d" y="%d" font-size="12" fill="#bbb">Top-down; race runs bottom → top. 1 px = 1 stud.</text>', lx, ly))
 ly += 30
 local legend = {
-	{ "rect", "#4a4540", "corridor (40 studs)" },
-	{ "rect", "#2b1d10", "walls (8-stud doorways)" },
+	{ "rect", cfg.lane, string.format("corridor (%d studs)", track.width) },
+	{ "rect", cfg.wall, cfg.wallLabel },
 	{ "rect", "#e63946", "solid during RACING but not in the authored map (should be none)" },
-	{ "dot", "#e63946", "tree trunk inside the lane" },
+	{ "dot", "#e63946", cfg.propLabel },
 	{ "ring", "#ff006e", "wall cuts into the lane (> 6 studs)" },
 	{ "x", "#ff006e", "respawn target that lands off the track" },
 	{ "rect", "#4cc9f0", "checkpoint trigger (actual footprint)" },
 	{ "rect", "#ffd23c", "boost pad" },
 	{ "rect", "#7a4f1e", "mud" },
 	{ "dash", "#ff9f1c", "drift-corner trigger" },
-	{ "rect", "#c8a26b", "jump ramp" },
+	{ "rect", "#c8a26b", "jump zone" },
 	{ "line", LINE_COLORS.expert, "sim: expert driver (median car)" },
 	{ "line", LINE_COLORS.average, "sim: average driver" },
 	{ "line", LINE_COLORS.novice, "sim: novice driver" },
@@ -247,7 +280,7 @@ for _, e in ipairs(legend) do
 	ly += 10 + #lines * 15
 end
 ly += 20
-add(string.format('<text x="%d" y="%d" font-size="15" fill="#fff" font-weight="bold">Single-car sim (180 s limit)</text>', lx, ly))
+add(string.format('<text x="%d" y="%d" font-size="15" fill="#fff" font-weight="bold">Single-car sim (%d s limit)</text>', lx, ly, Constants.RACING_TIMEOUT))
 ly += 20
 for _, r in ipairs(raceRuns) do
 	if r.carLabel == "p50" then
@@ -312,7 +345,7 @@ for _, m in ipairs(matches) do
 end
 
 local summary = {
-	generatedBy = "tools/report.luau",
+	generatedBy = "tools/report.luau", biome = biome,
 	track = { length = geo.length, nodes = #track.nodes },
 	geometry = {
 		solidOnlyBecauseOfCanCollideBug = #findings.solid,
@@ -345,7 +378,7 @@ fs.writeFile(OUT .. "/summary.json", serde.encode("json", summary, true))
 -- ─── Markdown ──────────────────────────────────────────────────────────────────
 local md = {}
 local function line(s) table.insert(md, s or "") end
-line("# FOREST track report")
+line("# " .. biome .. " track report")
 line()
 line("Generated by `lune run tools/report.luau` from the real map builder, game modules and server scripts running in the offline mock engine. Re-run it after every map or balance change.")
 line()
@@ -364,14 +397,18 @@ end
 line()
 line("Cars by top speed: " .. table.concat((function()
 	local t = {}
-	for _, rep in ipairs(reps) do table.insert(t, string.format("%s = %s (%s)", rep.label, Builds.describe(rep.build), fmt(KineSim.carFromStats(rep.build.stats, Constants).maxSpeed))) end
+	for _, rep in ipairs(reps) do
+		local c = KineSim.carFromStats(rep.build.stats, Constants, biome)
+		table.insert(t, string.format("%s = %s (top speed %s, turn %s rad/s)", rep.label, Builds.describe(rep.build), fmt(c.maxSpeed),
+			fmt(env.requirePath("ReplicatedStorage.Shared.VehicleController").turnRate(c.turnSpeed, biome == "SKY"), 2)))
+	end
 	return t
 end)(), "; ") .. ".")
 line()
 line(string.format("## Simulated matches (%d × 6 bots, authored map)", #matches))
 line()
 local ms = summary.matches
-line(string.format("- Finish rate within 180 s: %d%%", math.floor(ms.finishRate * 100 + 0.5)))
+line(string.format("- Finish rate within %d s: %d%%", Constants.RACING_TIMEOUT, math.floor(ms.finishRate * 100 + 0.5)))
 line(string.format("- Fastest car won %d of %d matches that had a finisher", ms.fastestCarWins, ms.matchesWithFinisher))
 line(string.format("- Rank correlation, top speed vs place: %s (−1 = faster always places better)", fmt(ms.spearmanTopSpeedVsPlace, 2)))
 line(string.format("- Rank correlation, rarity points collected vs place: %s", fmt(ms.spearmanRarityVsPlace, 2)))
@@ -384,7 +421,7 @@ line()
 line("## Geometry findings")
 line()
 line(string.format("- %d parts inside or next to the lane are solid during RACING but not in the authored map (red boxes).", #findings.solid))
-line(string.format("- %d tree trunks stand inside the lane (red dots).", #findings.trees))
+line(string.format("- %d decoration parts (%s) stand inside the lane (red dots).", #findings.trees, table.concat(cfg.props, ", ")))
 line(string.format("- %d spots where a wall cuts more than 6 studs into the lane (pink rings).", #findings.intrusions))
 line(string.format("- %d of %d sampled positions respawn off the track (pink ×).", #findings.respawnOff, summary.geometry.respawnSamples))
 line()
@@ -404,4 +441,11 @@ line("- Network latency, touch controls and whether it is fun. Those need people
 fs.writeFile(OUT .. "/summary.md", table.concat(md, "\n") .. "\n")
 
 print("wrote " .. OUT .. "/track.svg, summary.md, summary.json")
-print(string.format("matches: %d, finish rate %d%%, fastest car won %d/%d", #matches, math.floor(ms.finishRate * 100 + 0.5), ms.fastestCarWins, ms.matchesWithFinisher))
+print(string.format("%s matches: %d, finish rate %d%%, fastest car won %d/%d", biome, #matches, math.floor(ms.finishRate * 100 + 0.5), ms.fastestCarWins, ms.matchesWithFinisher))
+end
+
+for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+	if not ONLY or ONLY == biome then
+		report(biome)
+	end
+end

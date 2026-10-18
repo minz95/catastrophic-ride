@@ -270,6 +270,21 @@ local function _buildTrack(root)
 		seg.CustomPhysicalProperties = LOW_FRICTION_SURFACE
 		seg.CFrame = cf
 
+		-- Round joint at the end node: two straight slabs leave a wedge-shaped
+		-- dip on the outside of every turn; a disc of the track width fills it.
+		-- Its top sits 0.05 below the slabs so they don't z-fight.
+		if i < #NODES - 1 then
+			local joint = _part(root, {
+				Name     = "TrackSegJoint_" .. (i + 1),
+				Shape    = Enum.PartType.Cylinder,
+				Size     = Vector3.new(1, TRACK_W, TRACK_W),
+				CFrame   = CFrame.new(b[1], TRACK_TOP - 0.55, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
+				Color    = C.TRACK,
+				Material = MAT.TRACK,
+			})
+			joint.CustomPhysicalProperties = LOW_FRICTION_SURFACE
+		end
+
 		-- White outer-edge stripe (visual only).
 		for _, side in ipairs({ -1, 1 }) do
 			local edge = _part(root, {
@@ -594,10 +609,12 @@ end
 local function _buildBoostPads(root)
 	local ps = Track.boostPadSize
 	for i, pd in ipairs(Track.boostPads) do
+		-- turned to the track so the arrow points where the car is going
+		local padCF = CFrame.new(pd[1], TRACK_TOP + 0.2, pd[2]) * CFrame.Angles(0, _trackYawNear(pd[1], pd[2]), 0)
 		local pad = _part(root, {
 			Name = "BoostPad_" .. i,
 			Size = Vector3.new(ps[1], ps[2], ps[3]),
-			Position = Vector3.new(pd[1], TRACK_TOP + 0.2, pd[2]),
+			CFrame = padCF,
 			Color = C.BOOST_PAD, Material = MAT.NEON,
 			CanCollide = false, CastShadow = false,
 		})
@@ -609,7 +626,7 @@ local function _buildBoostPads(root)
 			Color = Color3.fromRGB(255, 240, 80), Material = MAT.NEON,
 			CanCollide = false, CastShadow = false,
 		})
-		arrow.CFrame = CFrame.new(pd[1], TRACK_TOP + 0.4, pd[2] - 5) * CFrame.Angles(0, math.pi, 0)
+		arrow.CFrame = padCF * CFrame.new(0, 0.2, -5) * CFrame.Angles(0, math.pi, 0)
 	end
 end
 

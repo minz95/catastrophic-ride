@@ -6,24 +6,29 @@ Roblox racing game (Luau, Rojo). Read `README.md` for the game loop and
 ## Verify every change
 
 ```sh
-lune run tests/run.luau      # must stay green; ~10 s
-lune run tools/report.luau   # regenerates reports/forest/ (track.svg, summary.md)
+lune run tests/run.luau      # must stay green; ~1 min
+lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.svg, summary.md)
 ```
 
 - Tests run the REAL game modules and server scripts in a mock engine
   (`tests/lib/`). Prefer adding a spec over reasoning about behaviour.
 - `R.known(...)` marks a documented bug. When you fix one, the run fails until
   you change that `known` to `it` — do that in the same change.
-- Look at `reports/forest/track.svg` (render it to PNG if you cannot view SVG)
-  after touching map code or track data.
+- Look at `reports/<biome>/track.svg` (render it to PNG if you cannot view
+  SVG) after touching map code or track data.
 - In Studio (MCP): `require(game.ServerScriptService.TestHarness.Runner)`
-  → `runRace{ mode = "run" }` for real physics, `runMatch{}` for bot clients.
+  → `runRace{ biome = "OCEAN", mode = "run" }` for real physics,
+  `runMatch{ biome = "SKY" }` for bot clients.
 
 ## Where things live
 
-- Track layout data: `roblox/ReplicatedStorage/Shared/Tracks/ForestTrack.lua`.
-  The builder (`ServerScriptService/Modules/Maps/ForestMap.lua`) only turns it
-  into parts. Change numbers in the data file, not the builder.
+- Track layout data: `roblox/ReplicatedStorage/Shared/Tracks/{Forest,Ocean,Sky}Track.lua`.
+  The builders (`ServerScriptService/Modules/Maps/{Forest,Ocean,Sky}Map.lua`,
+  called by the thin `MapBuilders/*MapBuilder.server.lua` scripts) only turn
+  it into parts. Change numbers in the data file, not the builder.
+- Side walls come from `TrackGeometry:boundaryRuns`: extended to close the
+  outside of every turn, dropped wherever they would stand inside the lane
+  (inside of turns, SKY's figure-8 crossings at (0, 800) and (0, 400)).
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.
@@ -46,7 +51,11 @@ lune run tools/report.luau   # regenerates reports/forest/ (track.svg, summary.m
 - The drive command ramps: acceleration = `ACCEL_BASE + Torque × ACCEL_PER_TORQUE`
   (`Constants.DRIVE`). Reset `VehicleController` state on spawn and respawn.
 - Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range;
-  clamping a raw multiple made every FOREST car identical before.
+  clamping a raw multiple made every FOREST car identical before. SKY is also
+  capped at `VehicleController.SKY_TURN_CAP` (1.5) inside the controller, so
+  its range ends there; use `VehicleController.turnRate` for the real rate.
+- Track data `obstacleBand` is the body height band above `trackTop` that
+  collides: boats ride over the 1-stud dock, flyers hover at Y 84.
 - Race progress is distance along the centerline (`TrackGeometry:progressAt`,
   continuous across kinks), never a raw Z coordinate. Respawns go to
   `RaceProgress.respawnPoint`, on the centerline facing along the track.

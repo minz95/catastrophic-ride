@@ -63,7 +63,7 @@ Constants.MOBILITY_EMPTY_PENALTY = 0.30  -- 30% reduction to biome core stat
 --   SKY    7800-stud path / 3500-stud Z-extent (planar figure-8,   path/Z ~2.2)
 Constants.TRACK = {
 	FOREST = { zStart = 600,  zFinish = -2000, width = 40 },
-	OCEAN  = { zStart = 600,  zFinish = -1500, width = 60 },
+	OCEAN  = { zStart = 600,  zFinish = -1530, width = 60 },
 	SKY    = { zStart = 1500, zFinish = -2000, width = 50 },
 }
 
@@ -160,10 +160,13 @@ Constants.DRIVE = {
 -- Linear map of a biome's handling stat onto [min, max], clamped. The ranges
 -- cover roughly the 10th–90th percentile of all item combinations, so BODY and
 -- MOBILITY choices change how the vehicle turns.
+-- SKY tops out at VehicleController.SKY_TURN_CAP (1.5): the old map
+-- (flyability × 0.4, clamped 0.5–4.0) put every build at or above the cap, so
+-- flyability did nothing for handling.
 Constants.TURN_SPEED = {
 	FOREST = { stat = "stability",    lo = 20, hi = 100, min = 2.0, max = 3.2 },
 	OCEAN  = { stat = "floatability", lo = 10, hi = 45,  min = 1.2, max = 2.0 },
-	SKY    = { stat = "flyability",   scale = 0.4, min = 0.5, max = 4.0 },  -- unchanged
+	SKY    = { stat = "flyability",   lo = 8,  hi = 36,  min = 1.0, max = 1.5 },
 }
 
 function Constants.turnSpeedFor(biome, stats)

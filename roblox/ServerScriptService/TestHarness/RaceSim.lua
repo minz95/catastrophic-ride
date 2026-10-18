@@ -1,5 +1,5 @@
 -- RaceSim.lua
--- Drives simulated cars around the FOREST track with REAL Roblox physics and
+-- Drives simulated cars around a race track (FOREST, OCEAN or SKY) with REAL Roblox physics and
 -- reports where they slow down, get stuck, respawn or finish.
 --
 -- Two stepping modes:
@@ -43,10 +43,13 @@ local RaceSim = {}
 
 RaceSim.TRACKS = {
 	FOREST = { data = Shared.Tracks.ForestTrack, builder = ServerScriptService.Modules.Maps.ForestMap },
+	OCEAN  = { data = Shared.Tracks.OceanTrack,  builder = ServerScriptService.Modules.Maps.OceanMap },
+	SKY    = { data = Shared.Tracks.SkyTrack,    builder = ServerScriptService.Modules.Maps.SkyMap },
 }
 
 -- Named test cars (slots), matching the representative builds the offline
--- report picks (slowest / median / fastest top speed for FOREST).
+-- report picks (slowest / median / fastest top speed for FOREST). The same
+-- slots are used on every biome; stats are derived for the chosen biome.
 RaceSim.CARS = {
 	slowest = { BODY = "Microwave", ENGINE = "Fan", SPECIAL = "Pizza" },
 	p50     = { BODY = "Shopping Cart", ENGINE = "Magnifying Glass", SPECIAL = "Toilet Paper" },
@@ -233,9 +236,11 @@ function RaceSim.runOne(opts)
 		local vel = primary.AssemblyLinearVelocity
 		local speed = Vector3.new(vel.X, 0, vel.Z).Magnitude
 		local _, yaw = primary.CFrame:ToEulerAnglesYXZ()
+		local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 		local keys, info = ap:update({
 			x = pos.X, z = pos.Z, yaw = yaw, speed = speed,
-			maxSpeed = seat.MaxSpeed, turnSpeed = seat.TurnSpeed, t = t,
+			forward = vel:Dot(primary.CFrame.LookVector),
+			maxSpeed = seat.MaxSpeed, turnSpeed = VehicleController.turnRate(seat.TurnSpeed, isSky), t = t,
 		})
 		if info.s > maxS then maxS = info.s end
 
@@ -289,7 +294,7 @@ function RaceSim.runOne(opts)
 		-- Drive exactly like RacingClient
 		local input = VehicleController.readKeys(keys)
 		local cmd = VehicleController.command(input, {
-			maxSpeed = maxSpeed, turnSpeed = seat.TurnSpeed, isSky = false,
+			maxSpeed = maxSpeed, turnSpeed = seat.TurnSpeed, isSky = isSky,
 			torque = seat.Torque, dt = dt, actualForward = vel:Dot(primary.CFrame.LookVector),
 		}, driveState)
 		VehicleController.apply(primary, cmd, {

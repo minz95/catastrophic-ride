@@ -21,6 +21,15 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 		R.expect(type(RaceSim.summarize(report))).toBe("string")
 	end)
 
+	for _, biome in ipairs({ "OCEAN", "SKY" }) do
+		R.it("runs on " .. biome, function()
+			local report = RaceSim.run({ biome = biome, profiles = { "average" }, seconds = 4, visibility = "intended", yieldEvery = 1e9 })
+			R.expect(#report.results).toBe(1)
+			R.expect(#report.results[1].samples).toBeGreaterThan(3)
+			R.expect(RaceSim.summarize(report):find("RaceSim " .. biome) ~= nil).toBe(true)
+		end)
+	end
+
 	R.it("Runner.runRace returns a summary and JSON", function()
 		local Runner = env.requirePath("ServerScriptService.TestHarness.Runner")
 		local summary, json = Runner.runRace({ profiles = { "novice" }, seconds = 3, yieldEvery = 1e9 })

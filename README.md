@@ -74,8 +74,8 @@ roblox/
     TestHarness/                    -- Studio harness: RaceSim, MatchHarness, Runner (docs/testing.md)
     MapBuilders/
       ForestMapBuilder.server.lua   -- calls Modules/Maps/ForestMap (layout data in Shared/Tracks)
-      OceanMapBuilder.server.lua
-      SkyMapBuilder.server.lua
+      OceanMapBuilder.server.lua    -- calls Modules/Maps/OceanMap
+      SkyMapBuilder.server.lua      -- calls Modules/Maps/SkyMap
       TerrainPainter.server.lua
     Modules/
       BiomeConfig.lua
@@ -133,13 +133,14 @@ See [docs/testing.md](docs/testing.md). In short:
 
 ```
 lune run tests/run.luau        # offline suite: real game code in a mock engine
-lune run tools/report.luau     # FOREST track SVG + race/match balance report
+lune run tools/report.luau     # per-biome track SVG + race/match balance report
 ```
 
 In Studio, the plugin's **Race Sim** / **Bot Match** buttons (or
 `require(game.ServerScriptService.TestHarness.Runner)` over the Studio MCP
 server) run the race with real physics and a full round with bot clients.
-The latest report is in [reports/forest/summary.md](reports/forest/summary.md).
+The latest reports: [Forest](reports/forest/summary.md), [Ocean](reports/ocean/summary.md),
+[Sky](reports/sky/summary.md).
 
 ---
 

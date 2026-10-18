@@ -1,0 +1,251 @@
+{
+  "biome": "OCEAN",
+  "generatedBy": "tools/report.luau",
+  "geometry": {
+    "respawnOffTrackSamples": 0,
+    "respawnSamples": 64,
+    "solidOnlyBecauseOfCanCollideBug": 0,
+    "treesInLane": 0,
+    "wallIntrusionSpots": 0
+  },
+  "matches": {
+    "bots": 72,
+    "count": 12,
+    "fastestCarWins": 6,
+    "finishRate": 1,
+    "matchesWithFinisher": 12,
+    "meanPlaceByDriver": {
+      "average": 2.625,
+      "expert": 2.6666666666666665,
+      "novice": 5.208333333333333
+    },
+    "meanPlaceByFarmProfile": {
+      "casual": 4.333333333333333,
+      "sweaty": 2.6666666666666665
+    },
+    "spearmanRarityVsPlace": -0.37346453148112424,
+    "spearmanTopSpeedVsPlace": -0.5778828220464338
+  },
+  "raceRuns": [
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 86.36666666666305,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 86.36666666666305,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 90.7666666666628,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 90.7666666666628,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 100.2499999999956,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Balloon Bunch",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 33.22620519159456,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 100.2499999999956,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 61.31666666666447,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 61.31666666666447,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 65.79999999999755,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 65.79999999999755,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 1,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 78.49999999999683,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 1,
+      "maxSpeed": 52.21807576029939,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 78.49999999999683,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 80,
+      "progress": 3119,
+      "respawns": 0,
+      "time": 38.88333333333241,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 80,
+      "progress": 3119,
+      "respawns": 0,
+      "time": 38.88333333333241,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 80,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 43.78333333333213,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 80,
+      "progress": 3118,
+      "respawns": 0,
+      "time": 43.78333333333213,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 3,
+      "maxSpeed": 80,
+      "progress": 3119,
+      "respawns": 0,
+      "time": 59.0166666666646,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 3,
+      "maxSpeed": 80,
+      "progress": 3119,
+      "respawns": 0,
+      "time": 59.0166666666646,
+      "world": "live code"
+    }
+  ],
+  "track": {
+    "length": 3179.3384214416596,
+    "nodes": 28
+  }
+}

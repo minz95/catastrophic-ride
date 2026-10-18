@@ -14,9 +14,12 @@ local Vector3 = require("@lune/roblox").Vector3
 local Server = {}
 
 -- Server scripts started in this order (GameBootstrap first, as in Studio the
--- module requires make the order mostly irrelevant).
+-- module requires make the order mostly irrelevant). All three map builders
+-- run, as in a live server; MapManager shows only the selected biome.
 Server.DEFAULT_SCRIPTS = {
 	"ServerScriptService.MapBuilders.ForestMapBuilder",
+	"ServerScriptService.MapBuilders.OceanMapBuilder",
+	"ServerScriptService.MapBuilders.SkyMapBuilder",
 	"ServerScriptService.GameBootstrap",
 	"ServerScriptService.MapManager",
 	"ServerScriptService.ItemModelPreloader",

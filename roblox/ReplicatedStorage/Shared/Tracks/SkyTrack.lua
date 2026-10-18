@@ -5,7 +5,14 @@
 
 local Track = {}
 
-Track.width = 50  -- corridor width (SkyMapBuilder CORRIDOR_W)
+Track.biome = "SKY"
+
+Track.width    = 50   -- corridor width (SkyMap CORRIDOR_W)
+Track.trackTop = 80   -- floor top surface Y (SkyMap SKY_BASE_Y)
+
+-- Height band (above trackTop) a flyer occupies. Flyers hold the spawn
+-- altitude (BiomeConfig.SKY.raceStartY = 84), so the body sits ~82..88.
+Track.obstacleBand = { 2, 8 }
 
 Track.nodes = {
 	-- S1 Launch Tunnel (~700, Z 1500 → 800, straight)
@@ -53,5 +60,58 @@ Track.nodes = {
 	{   0,-1700 }, -- N32
 	{   0,-2000 }, -- N33 FinishLine
 }
+
+-- Named sections for reports (inclusive node index ranges).
+Track.sections = {
+	{ name = "S1 launch tunnel",  from = 1,  to = 4 },
+	{ name = "S2 cloud loop A",   from = 4,  to = 12 },
+	{ name = "S3 crossover plaza", from = 12, to = 14 },
+	{ name = "S4 cloud loop B",   from = 14, to = 22 },
+	{ name = "S5 crystal canyon", from = 22, to = 30 },
+	{ name = "S6 final descent",  from = 30, to = 33 },
+}
+
+-- Finish-line Z. Must match Constants.TRACK.SKY.zFinish.
+Track.finishZ = -2000
+
+-- Start grid: CraftingManager._buildSpawnGrid (x = (col-3)*7, rows 8 apart
+-- from BiomeConfig.SKY.raceStartZ = 1490).
+Track.startGrid = {
+	cols = { -14, -7, 0, 7, 14 },
+	rows = { 1490, 1498 },
+}
+
+-- ─── Props and triggers (SkyMap reads these) ─────────────────────────────────
+-- Checkpoints, in order: { x, z }. Gates are turned to face the track.
+Track.checkpoints = {
+	{ -600, 800 },   -- CP1 at N8, Loop A western extent
+	{  600, 400 },   -- CP2 at N18, Loop B eastern extent
+}
+
+-- Boost pads { x, z }, turned to the track direction (spec §4.3).
+Track.boostPads = {
+	{    0,  1300 },  -- S1 launch
+	{ -300,   500 },  -- N6 Loop A south apex (rewards tight line)
+	{    0,   600 },  -- S3 plaza
+	{  300,   700 },  -- N20 Loop B north apex
+	{    0, -1400 },  -- S6 mid descent
+}
+
+-- Drift corner centres { x, z } (spec §4.3: loop apexes + canyon entry).
+Track.driftCorners = {
+	{ -300, 1100 },   -- N10 Loop A north apex
+	{  300,  100 },   -- N16 Loop B south apex
+	{  -80, -140 },   -- N25 canyon zigzag mid-entry
+}
+
+-- Jump zones { x, z } (S5 XZ boost dressed as ramps).
+Track.jumpRamps = {
+	{  80,   40 },    -- N24 S5 entry
+	{ -80, -500 },    -- N27 S5 mid
+	{  80, -680 },    -- N28 S5 late
+}
+
+-- Farming area (FarmArea model, hidden during RACING).
+Track.farm = { cx = 0, cz = 1850 }
 
 return Track

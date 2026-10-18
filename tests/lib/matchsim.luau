@@ -4,7 +4,7 @@
 -- GameManager scripts in the mock engine with bots, then races every
 -- crafted car on the kinematic simulator.
 --
---   local r = MatchSim.run({ players = 6, seed = 1 })
+--   local r = MatchSim.run({ players = 6, seed = 1, biome = "FOREST" | "OCEAN" | "SKY" })
 --
 -- Modelled: item spawning and pickup rules, contests (button mash), steals and
 -- defends, crafting validation and stats, race time per car+driver.
@@ -55,13 +55,14 @@ function MatchSim.run(opts)
 	local farmingTime = opts.farming or 90
 	-- Build the race world FIRST: Loader.boot resets the shared mock engine,
 	-- so the server must be the last thing booted.
-	local world = opts.world or World.forest({ visibility = opts.visibility or "intended" })
+	local biome = opts.biome or (opts.world and opts.world.biome) or "FOREST"
+	local world = opts.world or World.build(biome, { visibility = opts.visibility or "intended" })
 	local srv = Server.boot({
 		players = n,
 		quiet = opts.quiet ~= false,
 		swallowErrors = true,
 		harness = {
-			harness = "lune-match", biome = "FOREST", players = n, lobbyDelay = 0,
+			harness = "lune-match", biome = biome, players = n, lobbyDelay = 0,
 			durations = { FARMING = farmingTime, CRAFTING = opts.crafting or 5, RESULTS = 1 },
 		},
 	})
@@ -69,7 +70,9 @@ function MatchSim.run(opts)
 	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
 	local BotBrain = env.requirePath("ReplicatedStorage.Shared.BotBrain")
 	local Autopilot = env.requirePath("ReplicatedStorage.Shared.Autopilot")
-	local map = env.workspace.Maps.ForestMap
+	local map = env.workspace.Maps[World.BIOMES[biome].builder]
+	local farm = world.track.farm
+	local groundY = world.track.trackTop + 2
 
 	local farmProfiles = opts.farmProfiles or { "sweaty", "casual" }
 	local driverProfiles = opts.driverProfiles or { "expert", "average", "novice" }
@@ -80,7 +83,7 @@ function MatchSim.run(opts)
 		-- Start on the farm edge, spread around
 		local ang = (i / n) * 2 * math.pi
 		local root = p.Character.HumanoidRootPart
-		root.Position = Vector3.new(math.cos(ang) * 90, 3, 850 + math.sin(ang) * 140)
+		root.Position = Vector3.new(farm.cx + math.cos(ang) * 90, groundY, farm.cz + math.sin(ang) * 140)
 		bots[i] = {
 			player = p, farm = fp, drive = dp, profile = BotBrain.PROFILES[fp],
 			target = nil, nextTry = 0, contest = nil, walked = 0,
@@ -168,7 +171,7 @@ function MatchSim.run(opts)
 	local crafts = {}
 	for _, b in ipairs(bots) do
 		local data = srv.SessionManager.getData(b.player)
-		local slots = BotBrain.chooseSlots(b.profile, data.inventory, "FOREST")
+		local slots = BotBrain.chooseSlots(b.profile, data.inventory, biome)
 		crafts[b] = { inventory = table.clone(data.inventory), slots = slots }
 		if b.profile.crafter ~= "none" then
 			Mock.invoke(srv.RemoteEvents.SubmitCraft, b.player, table.clone(slots))
@@ -200,7 +203,7 @@ function MatchSim.run(opts)
 	for i, b in ipairs(bots) do
 		local data = srv.SessionManager.getData(b.player)
 		local stats = data.vehicleStats
-		local car = KineSim.carFromStats(stats, Constants)
+		local car = KineSim.carFromStats(stats, Constants, biome)
 		local race = KineSim.run(world, {
 			car = car, profile = Autopilot.PROFILES[b.drive], profileName = b.drive,
 			respawn = opts.respawn or "track", seed = seed * 31 + i, slot = i,
@@ -220,7 +223,9 @@ function MatchSim.run(opts)
 			race = {
 				finished = race.finished, time = race.time, respawns = #race.respawns,
 				impacts = #race.impacts, progress = math.floor(race.maxProgress),
+				checkpoints = #race.checkpoints,
 			},
+			raceDetail = opts.keepRaces and race or nil,
 		})
 	end
 	table.sort(results, function(a, b)
@@ -232,7 +237,7 @@ function MatchSim.run(opts)
 	for place, r in ipairs(results) do r.place = place end
 
 	return {
-		seed = seed, players = n, results = results,
+		seed = seed, players = n, results = results, biome = biome,
 		itemsLeft = #itemList(map), log = log,
 		serverErrors = table.clone(Mock.errors or {}),
 	}

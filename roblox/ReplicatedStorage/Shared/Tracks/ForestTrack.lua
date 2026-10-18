@@ -130,7 +130,7 @@ ForestTrack.jumpRampSize = { ForestTrack.width - 4, 4, 14 }
 ForestTrack.boostPads = {
 	{   0,  400 },    -- S1 launch
 	{ 560, -380 },    -- S3 mid-sweep (rewards apex)
-	{ -380, -1500 },  -- S4 U exit
+	{ -368, -1480 },  -- S4 U exit (on the N20 → N21 centerline; was 24 studs off, behind the wall)
 	{   0, -1920 },   -- S5 onto finish straight
 }
 ForestTrack.boostPadSize = { 10, 0.3, 8 }

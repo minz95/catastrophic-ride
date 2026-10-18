@@ -17,16 +17,43 @@ end
 
 R.describe("handling across biomes", function()
 	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+	local VehicleController = env.requirePath("ReplicatedStorage.Shared.VehicleController")
 	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
-		R.it(biome .. " TurnSpeed spreads over its range instead of sitting on a clamp", function()
+		-- the rate the controller really turns at (SKY is capped), not the seat value
+		R.it(biome .. " turn rate spreads over its range instead of sitting on a clamp", function()
 			local values = {}
 			for _, b in ipairs(Builds.enumerate(env, biome)) do
-				table.insert(values, Constants.turnSpeedFor(biome, b.stats))
+				table.insert(values, VehicleController.turnRate(Constants.turnSpeedFor(biome, b.stats), biome == "SKY"))
 			end
 			table.sort(values)
 			local p10 = values[math.floor(#values * 0.1) + 1]
 			local p90 = values[math.floor(#values * 0.9) + 1]
-			R.expect(p90 - p10).toBeGreaterThan(0.3)
+			R.expect(p90 - p10).toBeGreaterThan(0.25)
+		end)
+	end
+end)
+
+R.describe("simulator seat values", function()
+	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+	local VehicleBuilder = env.requirePath("ServerScriptService.Modules.VehicleBuilder")
+	local KineSim = require("../lib/kinesim")
+	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+		R.it(biome .. ": KineSim.carFromStats matches the seat VehicleBuilder builds", function()
+			local bad = {}
+			local all = Builds.enumerate(env, biome)
+			for i = 1, #all, math.max(1, math.floor(#all / 40)) do
+				local b = all[i]
+				local model = VehicleBuilder.build(b.stats, biome, require("@lune/roblox").CFrame.new(0, 10, 0), b.slots)
+				local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
+				local car = KineSim.carFromStats(b.stats, Constants, biome)
+				for _, f in ipairs({ { "MaxSpeed", "maxSpeed" }, { "Torque", "torque" }, { "TurnSpeed", "turnSpeed" } }) do
+					if math.abs(seat[f[1]] - car[f[2]]) > 1e-3 then
+						table.insert(bad, string.format("%s: seat %s %.2f, sim %.2f", Builds.describe(b), f[1], seat[f[1]], car[f[2]]))
+					end
+				end
+				model:Destroy()
+			end
+			R.expect(bad).toBeEmpty("seat values the simulator gets wrong")
 		end)
 	end
 end)

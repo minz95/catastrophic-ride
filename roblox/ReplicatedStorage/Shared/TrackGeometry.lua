@@ -212,6 +212,59 @@ function TrackGeometry:nodeRadius(i)
 	return (a * b * c) / (2 * area2)
 end
 
+--- Where a side wall of segment `i` should stand.
+-- The wall line runs `offset` studs from the segment's centerline on side
+-- `lat` (+1 = right of travel, -1 = left). It is extended past both nodes far
+-- enough to close the outside of a turn for a wall whose outer face is `reach`
+-- studs out, and every stretch whose line lies inside the lane (the inside of
+-- a turn, or anywhere the track passes over itself) is dropped.
+-- Returns runs { {t0, t1}, ... } in studs from the segment's start node along
+-- its direction (t0 may be < 0 and t1 > len on the extensions).
+function TrackGeometry:boundaryRuns(i, lat, offset, reach, step)
+	step = step or 1
+	reach = reach or offset
+	local seg = self.segments[i]
+	local half = self.halfWidth
+	local function ext(a, b)
+		if not a or not b or a.len == 0 or b.len == 0 then
+			return 0
+		end
+		local dot = math.clamp(a.dx * b.dx + a.dz * b.dz, -1, 1)
+		local theta = math.acos(dot)
+		return math.min(reach * math.tan(theta / 2) + step, 3 * self.width)
+	end
+	local t0 = -ext(self.segments[i - 1], seg)
+	local t1 = seg.len + ext(seg, self.segments[i + 1])
+	local rx, rz = -seg.dz * lat, seg.dx * lat
+	local runs, cur = {}, nil
+	local n = math.max(1, math.ceil((t1 - t0) / step))
+	for k = 0, n do
+		local t = t0 + (t1 - t0) * k / n
+		local px = seg.ax + seg.dx * t + rx * offset
+		local pz = seg.az + seg.dz * t + rz * offset
+		if self:project(px, pz).dist >= half then
+			if cur then
+				cur[2] = t
+			else
+				cur = { t, t }
+			end
+		elseif cur then
+			table.insert(runs, cur)
+			cur = nil
+		end
+	end
+	if cur then
+		table.insert(runs, cur)
+	end
+	local out = {}
+	for _, r in ipairs(runs) do
+		if r[2] - r[1] >= 0.5 then
+			table.insert(out, r)
+		end
+	end
+	return out
+end
+
 --- Heading (radians, Roblox yaw convention: atan2(-dx, -dz)) at arc length s.
 -- A CFrame with this yaw has LookVector = (dx, 0, dz).
 function TrackGeometry:yawAt(s)

@@ -27,14 +27,25 @@ KineSim.DEFAULT_ACCEL = 400        -- studs/s², ≈ MaxForce 1e4 / assembly mas
 KineSim.IMPACT_SPEED = 8           -- normal speed (studs/s) that counts as a hit
 KineSim.OFFTRACK_RESCUE = 3        -- seconds off the corridor before pressing R
 
---- Seat values exactly as VehicleBuilder.buildCar derives them.
+--- Seat formulas per biome, exactly as VehicleBuilder derives them
+-- (buildCar / buildBoat / buildFlyer). A spec checks these against seats the
+-- real VehicleBuilder produces, so they cannot drift apart silently.
+KineSim.SEAT = {
+	FOREST = { speed = 2.5, speedMin = 20, speedMax = 120, torque = 4, torqueMin = 20, torqueMax = 200 },
+	OCEAN  = { speed = 2.0, speedMin = 15, speedMax = 80,  torque = 3, torqueMin = 15, torqueMax = 120 },
+	SKY    = { speed = 3.0, speedMin = 30, speedMax = 160, torque = 5, torqueMin = 30, torqueMax = 250 },
+}
+
+--- Seat values for `stats` in `biome` (default FOREST).
 -- `Constants` is the game's Constants module (any loader env).
-function KineSim.carFromStats(stats, Constants)
+function KineSim.carFromStats(stats, Constants, biome)
+	biome = biome or "FOREST"
+	local f = assert(KineSim.SEAT[biome], "unknown biome " .. tostring(biome))
 	return {
-		maxSpeed  = math.clamp(stats.speed * 2.5, 20, 120),
-		turnSpeed = Constants.turnSpeedFor("FOREST", stats),
-		torque    = math.clamp(stats.acceleration * 4, 20, 200),
-		torque    = math.clamp(stats.acceleration * 4, 20, 200),
+		biome     = biome,
+		maxSpeed  = math.clamp(stats.speed * f.speed, f.speedMin, f.speedMax),
+		turnSpeed = Constants.turnSpeedFor(biome, stats),
+		torque    = math.clamp(stats.acceleration * f.torque, f.torqueMin, f.torqueMax),
 		boostDuration = stats.boostDuration or 2,
 		radius    = 1.9,
 	}
@@ -55,6 +66,10 @@ function KineSim.run(world, opts)
 
 	local geo, track = world.geo, world.track
 	local car = opts.car
+	local isSky = world.biome == "SKY"
+	-- What the controller will actually turn at (SKY caps it), so the
+	-- autopilot plans with the real rate.
+	local effTurn = VehicleController.turnRate(car.turnSpeed, isSky)
 	local r = car.radius or 1.9
 	local dt = KineSim.DT
 	local timeout = opts.timeout or Constants.RACING_TIMEOUT
@@ -133,6 +148,8 @@ function KineSim.run(world, opts)
 		return p.dist <= track.width / 2 - r, p
 	end
 
+	local prevX, prevZ = x, z
+
 	local function respawn(t, reason, s)
 		local entry = { t = t, reason = reason, s = s, from = { x = x, z = z } }
 		-- "legacy" = whatever RaceProgress.respawnPoint (the live game) returns
@@ -148,11 +165,17 @@ function KineSim.run(world, opts)
 			x, z, yaw = px, pz, yawFromDir(ddx, ddz)
 		end
 		vx, vz = 0, 0
+		prevX, prevZ = x, z
 		VehicleController.reset(driveState)
 		entry.to = { x = x, z = z }
 		table.insert(res.respawns, entry)
 		ap:resetTracking()
 		offTrackSince = nil
+	end
+
+	for _, tr in ipairs(world.triggers) do
+		tr.isGate = table.find(tr.tags, "Checkpoint1") or table.find(tr.tags, "Checkpoint2")
+			or table.find(tr.tags, "FinishLine") or nil
 	end
 
 	local t = 0
@@ -162,7 +185,8 @@ function KineSim.run(world, opts)
 		local speed = math.sqrt(vx * vx + vz * vz)
 		local keys, info = ap:update({
 			x = x, z = z, yaw = yaw, speed = speed,
-			maxSpeed = mods:value(t), turnSpeed = car.turnSpeed, t = t,
+			forward = vx * -math.sin(yaw) + vz * -math.cos(yaw),
+			maxSpeed = mods:value(t), turnSpeed = effTurn, t = t,
 		})
 		local s = info.s
 		if s > maxS then maxS = s end
@@ -194,10 +218,19 @@ function KineSim.run(world, opts)
 			continue
 		end
 
-		-- Triggers: checkpoints, finish, pads, drift corners, mud, slow zones
+		-- Triggers: checkpoints, finish, pads, drift corners, mud, slow zones.
+		-- Gates are tested along the whole move of this step: a fast car covers
+		-- more than a thin gate's depth in one 60 Hz step (Roblox steps physics
+		-- at 240 Hz and the car body is several studs long, so it never skips).
 		local nowMud, nowSlow = false, false
 		for _, tr in ipairs(world.triggers) do
-			if MapQuery.contains(tr, x, z) then
+			local inside
+			if tr.isGate then
+				inside = MapQuery.crosses(tr, prevX, prevZ, x, z)
+			else
+				inside = MapQuery.contains(tr, x, z)
+			end
+			if inside then
 				local tags = tr.tags
 				if table.find(tags, "Checkpoint1") and not cp[1] then
 					cp[1] = true
@@ -253,7 +286,7 @@ function KineSim.run(world, opts)
 		local input = VehicleController.readKeys(keys)
 		local lx0, lz0 = -math.sin(yaw), -math.cos(yaw)
 		local cmd = VehicleController.command(input, {
-			maxSpeed = mods:value(t), turnSpeed = car.turnSpeed, isSky = false,
+			maxSpeed = mods:value(t), turnSpeed = car.turnSpeed, isSky = isSky,
 			torque = car.torque, dt = dt, actualForward = vx * lx0 + vz * lz0,
 		}, driveState)
 		yaw += cmd.yawRate * dt
@@ -267,6 +300,7 @@ function KineSim.run(world, opts)
 		end
 		vx += dvx
 		vz += dvz
+		prevX, prevZ = x, z   -- start of this step's move (gate sweep next step)
 		x += vx * dt
 		z += vz * dt
 

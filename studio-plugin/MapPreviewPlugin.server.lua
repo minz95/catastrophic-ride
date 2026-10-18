@@ -48,7 +48,7 @@ local btnClearItems = toolbar:CreateButton(
 )
 local btnRaceSim = toolbar:CreateButton(
 	"Race Sim",
-	"Test harness: drive 3 simulated drivers around FOREST with StepPhysics (edit mode)",
+	"Test harness: drive 3 simulated drivers around the last previewed biome (FOREST by default) with StepPhysics (edit mode)",
 	"rbxassetid://6031094667"
 )
 local btnRaceSimRun = toolbar:CreateButton(
@@ -58,7 +58,7 @@ local btnRaceSimRun = toolbar:CreateButton(
 )
 local btnBotMatch = toolbar:CreateButton(
 	"Bot Match",
-	"Test harness: 4 bot clients play a full FOREST round (StudioTestService multiplayer)",
+	"Test harness: 4 bot clients play a full round on the last previewed biome (FOREST by default)",
 	"rbxassetid://6031094667"
 )
 
@@ -67,6 +67,9 @@ local btnBotMatch = toolbar:CreateButton(
 local function notify(msg)
 	print("[CatastrophicDayPreview] " .. msg)
 end
+
+-- Biome the harness buttons use: the last one built with a preview button.
+local harnessBiome = "FOREST"
 
 local function getMapsFolder()
 	local f = Workspace:FindFirstChild("Maps")
@@ -113,7 +116,8 @@ local function buildBiome(biome)
 	end)
 
 	if ok then
-		notify("Built " .. biome .. " map.")
+		harnessBiome = string.upper(biome)
+		notify("Built " .. biome .. " map. Race Sim / Bot Match now use " .. harnessBiome .. ".")
 	else
 		warn("[CatastrophicDayPreview] Error building " .. biome .. ": " .. tostring(result))
 		notify("Build failed — check Output for details.")
@@ -271,21 +275,21 @@ end)
 btnRaceSim.Click:Connect(function()
 	btnRaceSim:SetActive(false)
 	runHarness("Race Sim", function(Runner)
-		return Runner.runRace({ profiles = { "expert", "average", "novice" } })
+		return Runner.runRace({ biome = harnessBiome, profiles = { "expert", "average", "novice" } })
 	end)
 end)
 
 btnRaceSimRun.Click:Connect(function()
 	btnRaceSimRun:SetActive(false)
 	runHarness("Race Sim (Run)", function(Runner)
-		return Runner.runRace({ mode = "run" })
+		return Runner.runRace({ biome = harnessBiome, mode = "run" })
 	end)
 end)
 
 btnBotMatch.Click:Connect(function()
 	btnBotMatch:SetActive(false)
 	runHarness("Bot Match", function(Runner)
-		return Runner.runMatch({ players = 4, rounds = 1 })
+		return Runner.runMatch({ biome = harnessBiome, players = 4, rounds = 1 })
 	end)
 end)
 
