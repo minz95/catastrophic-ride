@@ -12,6 +12,7 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local BiomeConfig  = require(ServerScriptService.Modules.BiomeConfig)
 local GameManager  = require(ServerScriptService.GameManager)
+local MapVisibility = require(ServerScriptService.Modules.MapVisibility)
 
 -- ─── Map folder convention ────────────────────────────────────────────────────
 -- Each map lives under workspace.Maps.<BiomeName>Map as a Model.
@@ -76,59 +77,25 @@ local function _getMapsFolder()
 end
 
 local function _hideAllMaps()
-	local folder = _getMapsFolder()
-	for _, child in ipairs(folder:GetChildren()) do
-		if child:IsA("Model") or child:IsA("Folder") then
-			child:SetAttribute("MapVisible", false)
-			-- Hide all descendant BaseParts
-			for _, desc in ipairs(child:GetDescendants()) do
-				if desc:IsA("BasePart") then
-					desc.Transparency = 1
-					desc.CanCollide   = false
-				end
-			end
-		end
-	end
+	MapVisibility.hideAll(_getMapsFolder())
 end
 
 local function _showMap(biome)
-	local folder   = _getMapsFolder()
-	local mapName  = biome:sub(1, 1):upper() .. biome:sub(2):lower() .. "Map"
-	local mapModel = folder:FindFirstChild(mapName)
+	local mapName  = MapVisibility.mapName(biome)
+	local mapModel = _getMapsFolder():FindFirstChild(mapName)
 
 	if not mapModel then
 		warn(string.format("[MapManager] Map model '%s' not found — build it in Studio (#8 #9 #10)", mapName))
 		return false
 	end
 
-	mapModel:SetAttribute("MapVisible", true)
-	for _, desc in ipairs(mapModel:GetDescendants()) do
-		if desc:IsA("BasePart") then
-			local storedT  = desc:GetAttribute("OriginalTransparency")
-			local storedCC = desc:GetAttribute("OriginalCanCollide")
-			desc.Transparency = storedT  ~= nil and storedT  or 0
-			desc.CanCollide   = storedCC ~= nil and storedCC or true
-		end
-	end
-	return true
+	return MapVisibility.show(mapModel)
 end
 
 -- ─── Store original transparencies (called once at startup) ──────────────────
 
 local function _cacheTransparencies()
-	local folder = _getMapsFolder()
-	for _, mapModel in ipairs(folder:GetChildren()) do
-		for _, desc in ipairs(mapModel:GetDescendants()) do
-			if desc:IsA("BasePart") then
-				if desc:GetAttribute("OriginalTransparency") == nil then
-					desc:SetAttribute("OriginalTransparency", desc.Transparency)
-				end
-				if desc:GetAttribute("OriginalCanCollide") == nil then
-					desc:SetAttribute("OriginalCanCollide", desc.CanCollide)
-				end
-			end
-		end
-	end
+	MapVisibility.cacheOriginals(_getMapsFolder())
 end
 
 -- ─── Biome selection ──────────────────────────────────────────────────────────
@@ -156,29 +123,8 @@ end
 -- ─── Sub-model visibility (FarmArea / RaceTrack) ─────────────────────────────
 
 local function _setSubVisible(biome, subName, visible)
-	local mapName  = biome:sub(1,1):upper() .. biome:sub(2):lower() .. "Map"
-	local mapModel = _getMapsFolder():FindFirstChild(mapName)
-	if not mapModel then return end
-	local sub = mapModel:FindFirstChild(subName)
-	if not sub then return end
-	for _, desc in ipairs(sub:GetDescendants()) do
-		if desc:IsA("BasePart") then
-			if visible then
-				local storedT  = desc:GetAttribute("OriginalTransparency")
-				local storedCC = desc:GetAttribute("OriginalCanCollide")
-				desc.Transparency = storedT  ~= nil and storedT  or 0
-				desc.CanCollide   = storedCC ~= nil and storedCC or true
-			else
-				desc.Transparency = 1
-				desc.CanCollide   = false
-			end
-		elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
-			-- GUIs ignore the Part.Transparency of their adornee, so the
-			-- transparency loop above won't hide their text. Without this
-			-- branch the floating checkpoint labels stayed visible all phases.
-			desc.Enabled = visible
-		end
-	end
+	local mapModel = _getMapsFolder():FindFirstChild(MapVisibility.mapName(biome))
+	MapVisibility.setSubVisible(mapModel, subName, visible)
 end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────

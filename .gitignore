@@ -2,3 +2,7 @@
 
 # Blender FBX import texture cache
 *.fbm/
+
+# Test harness output
+tests/out/
+tests/scratch/

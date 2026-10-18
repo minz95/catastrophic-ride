@@ -1,0 +1,36 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lune
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o lune.zip https://github.com/lune-org/lune/releases/download/v0.10.4/lune-0.10.4-linux-x86_64.zip
+          unzip -q -o lune.zip -d "$HOME/.local/bin"
+          chmod +x "$HOME/.local/bin/lune"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Offline test suite
+        run: lune run tests/run.luau
+
+      - name: Track and balance report
+        if: always()
+        run: lune run tools/report.luau 6
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-results
+          path: |
+            tests/out/
+            reports/

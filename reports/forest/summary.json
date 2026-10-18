@@ -1,0 +1,251 @@
+{
+  "biome": "FOREST",
+  "generatedBy": "tools/report.luau",
+  "geometry": {
+    "respawnOffTrackSamples": 0,
+    "respawnSamples": 89,
+    "solidOnlyBecauseOfCanCollideBug": 0,
+    "treesInLane": 0,
+    "wallIntrusionSpots": 0
+  },
+  "matches": {
+    "bots": 72,
+    "count": 12,
+    "fastestCarWins": 6,
+    "finishRate": 1,
+    "matchesWithFinisher": 12,
+    "meanPlaceByDriver": {
+      "average": 2.6666666666666665,
+      "expert": 2.5416666666666665,
+      "novice": 5.291666666666667
+    },
+    "meanPlaceByFarmProfile": {
+      "casual": 4.055555555555555,
+      "sweaty": 2.9444444444444446
+    },
+    "spearmanRarityVsPlace": -0.517975432503698,
+    "spearmanTopSpeedVsPlace": -0.6619075181683709
+  },
+  "raceRuns": [
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 88.26666666666294,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 88.26666666666294,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4370,
+      "respawns": 0,
+      "time": 88.64999999999625,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4370,
+      "respawns": 0,
+      "time": 88.64999999999625,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4370,
+      "respawns": 0,
+      "time": 94.76666666666257,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Pizza",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 48.76632801161104,
+      "progress": 4370,
+      "respawns": 0,
+      "time": 94.76666666666257,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 62.333333333331076,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 62.333333333331076,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 62.59999999999773,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 62.59999999999773,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 3,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 71.88333333333054,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 3,
+      "maxSpeed": 67.55,
+      "progress": 4371,
+      "respawns": 0,
+      "time": 71.88333333333054,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.38333333333227,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.38333333333227,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.91666666666557,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4372,
+      "respawns": 0,
+      "time": 41.91666666666557,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 29,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4370,
+      "respawns": 1,
+      "time": 68.71666666666405,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Umbrella + Log",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 29,
+      "maxSpeed": 86.75995552793887,
+      "progress": 4370,
+      "respawns": 1,
+      "time": 68.81666666666405,
+      "world": "live code"
+    }
+  ],
+  "track": {
+    "length": 4421.246029788578,
+    "nodes": 36
+  }
+}

@@ -205,7 +205,7 @@ AbilityConfig["Umbrella"] = {
 	cooldown    = 18,
 	duration    = 3,
 	targetType  = "self",
-	effectKey   = "umbrellaSky",   -- per-biome variant
+	effectKey   = "umbrellaBlock", -- per-biome variants below; FOREST behaviour is the default
 	animKey     = "umbrellaOpen",
 	sfxKey      = "umbrella_pop",
 	uiHint      = "☂️ Shield!",
@@ -231,15 +231,26 @@ AbilityConfig["Fan"] = {
 	uiHint      = "🌬️ Gust!",
 }
 
+-- Flower used to be a FARMING-only "attract items" ability, but abilities can
+-- only be triggered while racing (E key in RacingClient), so it never fired.
 AbilityConfig["Flower"] = {
-	cooldown    = 30,
-	duration    = 5,
+	cooldown    = 20,
+	duration    = 2,
 	targetType  = "self",
-	effectKey   = "itemAttract",   -- pulls nearby unclaimed items toward player
+	effectKey   = "bloomCleanse",  -- removes every slowdown on you + 2s shield
 	animKey     = "flowerBloom",
 	sfxKey      = "flower_chime",
-	uiHint      = "🌻 Attract!",
-	phaseRestrict = "FARMING",     -- only usable during farming
+	uiHint      = "🌻 Bloom!",
+}
+
+AbilityConfig["Drill"] = {
+	cooldown    = 14,
+	duration    = 4,
+	targetType  = "self",
+	effectKey   = "digMode",       -- ignore mud and off-track slow zones
+	animKey     = "drillSpin",
+	sfxKey      = "drill_whirr",
+	uiHint      = "🔧 Dig!",
 }
 
 -- Big Gear removed in #88 (power=8 underwhelming, single gear doesn't read as engine)
@@ -421,11 +432,10 @@ AbilityConfig["Backpack"] = {
 	cooldown    = 60,
 	duration    = 30,
 	targetType  = "self",
-	effectKey   = "backpackBoost",  -- FARMING: +2 inventory slots; RACING: free boost charge
+	effectKey   = "backpackBoost",  -- refills the boost gauge
 	animKey     = "backpackOpen",
 	sfxKey      = "backpack_zip",
 	uiHint      = "🎒 Gear Up!",
-	biomeEffect = {},              -- see effectKey — server checks current phase
 }
 
 -- Laptop removed in #88 (body concept unclear; hack belongs to a SPECIAL item)

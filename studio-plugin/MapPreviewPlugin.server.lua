@@ -46,12 +46,30 @@ local btnClearItems = toolbar:CreateButton(
 	"Remove the ItemPreview folder from Workspace",
 	"rbxassetid://6031094667"
 )
+local btnRaceSim = toolbar:CreateButton(
+	"Race Sim",
+	"Test harness: drive 3 simulated drivers around the last previewed biome (FOREST by default) with StepPhysics (edit mode)",
+	"rbxassetid://6031094667"
+)
+local btnRaceSimRun = toolbar:CreateButton(
+	"Race Sim (Run)",
+	"Test harness: same race in a fresh Run-mode session (latest code, real time)",
+	"rbxassetid://6031094667"
+)
+local btnBotMatch = toolbar:CreateButton(
+	"Bot Match",
+	"Test harness: 4 bot clients play a full round on the last previewed biome (FOREST by default)",
+	"rbxassetid://6031094667"
+)
 
 -- ─── Helpers ──────────────────────────────────────────────────────────────────
 
 local function notify(msg)
 	print("[CatastrophicDayPreview] " .. msg)
 end
+
+-- Biome the harness buttons use: the last one built with a preview button.
+local harnessBiome = "FOREST"
 
 local function getMapsFolder()
 	local f = Workspace:FindFirstChild("Maps")
@@ -98,7 +116,8 @@ local function buildBiome(biome)
 	end)
 
 	if ok then
-		notify("Built " .. biome .. " map.")
+		harnessBiome = string.upper(biome)
+		notify("Built " .. biome .. " map. Race Sim / Bot Match now use " .. harnessBiome .. ".")
 	else
 		warn("[CatastrophicDayPreview] Error building " .. biome .. ": " .. tostring(result))
 		notify("Build failed — check Output for details.")
@@ -117,20 +136,22 @@ end
 
 -- ─── Item preview ─────────────────────────────────────────────────────────────
 
-local ITEM_NAMES = {
-	-- BODY
-	"Stick", "Cardboard Box", "Bamboo Raft", "Skateboard", "Log",
-	"Shopping Cart", "Life Preserver", "Kite", "Laptop", "Backpack",
-	"Red Sofa", "Microwave", "Bathtub",
-	-- ENGINE
-	"Shovel", "Flower", "Pinwheel", "Watering Can", "Big Gear",
-	"Leaf Blower", "Spinning Top", "Propeller", "V8 Engine",
-	"Rocket", "Cup Noodle", "Kettle",
-	-- SPECIAL
-	"Pizza", "Toilet Paper", "Leaves", "Racing Flag", "Cactus",
-	"Scarf", "Boombox", "Umbrella", "Rubber Duck",
-	"Bubble Wrap", "Balloon Bunch", "Soda Bottle",
-}
+-- The roster comes from ReplicatedStorage.Shared.ItemTypes so this list can
+-- never drift from the game again.
+local function itemNames()
+	local names = {}
+	local ok, ItemTypes = pcall(function()
+		return require(game:GetService("ReplicatedStorage").Shared.ItemTypes)
+	end)
+	if ok and ItemTypes and ItemTypes.ALL then
+		for _, entry in ipairs(ItemTypes.ALL) do
+			table.insert(names, entry.name)
+		end
+	else
+		warn("[CatastrophicDayPreview] Cannot load ItemTypes: " .. tostring(ItemTypes))
+	end
+	return names
+end
 
 local function buildItemPreview()
 	-- Remove old preview
@@ -155,6 +176,7 @@ local function buildItemPreview()
 	local SPACE = 5  -- studs between items
 	local built = 0
 
+	local ITEM_NAMES = itemNames()
 	for i, name in ipairs(ITEM_NAMES) do
 		local col = (i - 1) % COLS
 		local row = math.floor((i - 1) / COLS)
@@ -192,6 +214,32 @@ local function clearItems()
 	end
 end
 
+-- ─── Test harness ─────────────────────────────────────────────────────────────
+-- See docs/testing.md. Each button prints a one-screen summary to Output; the
+-- full JSON report is printed after it for copy/paste or an AI agent.
+
+local function runHarness(label, fn)
+	local runnerModule = ServerScriptService:FindFirstChild("TestHarness")
+		and ServerScriptService.TestHarness:FindFirstChild("Runner")
+	if not runnerModule then
+		warn("[CatastrophicDayPreview] ServerScriptService.TestHarness.Runner not found — is Rojo syncing?")
+		return
+	end
+	notify(label .. " started…")
+	task.spawn(function()
+		local ok, summary, json = pcall(function()
+			return fn(require(runnerModule))
+		end)
+		if ok then
+			print(summary)
+			print("[HarnessReport] " .. tostring(json))
+			notify(label .. " finished.")
+		else
+			warn("[CatastrophicDayPreview] " .. label .. " failed: " .. tostring(summary))
+		end
+	end)
+end
+
 -- ─── Button connections ───────────────────────────────────────────────────────
 
 btnForest.Click:Connect(function()
@@ -222,6 +270,27 @@ end)
 btnClearItems.Click:Connect(function()
 	btnClearItems:SetActive(false)
 	clearItems()
+end)
+
+btnRaceSim.Click:Connect(function()
+	btnRaceSim:SetActive(false)
+	runHarness("Race Sim", function(Runner)
+		return Runner.runRace({ biome = harnessBiome, profiles = { "expert", "average", "novice" } })
+	end)
+end)
+
+btnRaceSimRun.Click:Connect(function()
+	btnRaceSimRun:SetActive(false)
+	runHarness("Race Sim (Run)", function(Runner)
+		return Runner.runRace({ biome = harnessBiome, mode = "run" })
+	end)
+end)
+
+btnBotMatch.Click:Connect(function()
+	btnBotMatch:SetActive(false)
+	runHarness("Bot Match", function(Runner)
+		return Runner.runMatch({ biome = harnessBiome, players = 4, rounds = 1 })
+	end)
 end)
 
 notify("Plugin loaded. Use the 'Catastrophic Day Preview' toolbar buttons.")

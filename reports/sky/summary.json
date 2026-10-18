@@ -1,0 +1,251 @@
+{
+  "biome": "SKY",
+  "generatedBy": "tools/report.luau",
+  "geometry": {
+    "respawnOffTrackSamples": 0,
+    "respawnSamples": 152,
+    "solidOnlyBecauseOfCanCollideBug": 0,
+    "treesInLane": 0,
+    "wallIntrusionSpots": 0
+  },
+  "matches": {
+    "bots": 72,
+    "count": 12,
+    "fastestCarWins": 5,
+    "finishRate": 1,
+    "matchesWithFinisher": 12,
+    "meanPlaceByDriver": {
+      "average": 2.75,
+      "expert": 2.25,
+      "novice": 5.5
+    },
+    "meanPlaceByFarmProfile": {
+      "casual": 3.75,
+      "sweaty": 3.25
+    },
+    "spearmanRarityVsPlace": -0.2536175959868803,
+    "spearmanTopSpeedVsPlace": -0.34111518425622234
+  },
+  "raceRuns": [
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 148.70000000001048,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 148.70000000001048,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 153.26666666668078,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "average",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 153.26666666668078,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 2,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 171.9333333333623,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Fan + Umbrella",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 2,
+      "maxSpeed": 51.7586649550706,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 171.9333333333623,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 106.41666666666191,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 106.41666666666191,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "average",
+      "finished": true,
+      "impacts": 5,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 112.94999999999487,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "average",
+      "finished": true,
+      "impacts": 5,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 112.94999999999487,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 16,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 133.41666666666498,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Bathtub + Cup Noodle + Magic Wand",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 16,
+      "maxSpeed": 74.88258827622195,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 133.41666666666498,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 84.38333333332983,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 84.38333333332983,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "average",
+      "finished": true,
+      "impacts": 9,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 90.53333333332948,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "average",
+      "finished": true,
+      "impacts": 9,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7575,
+      "respawns": 0,
+      "time": 90.53333333332948,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 37,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 115.61666666666139,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Skateboard + Kettle + Lantern + Kite",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 37,
+      "maxSpeed": 93.09765352500213,
+      "progress": 7574,
+      "respawns": 0,
+      "time": 115.61666666666139,
+      "world": "live code"
+    }
+  ],
+  "track": {
+    "length": 7575.832344720282,
+    "nodes": 33
+  }
+}
