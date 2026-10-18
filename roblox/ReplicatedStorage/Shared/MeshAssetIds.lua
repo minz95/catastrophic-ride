@@ -26,13 +26,14 @@ local MeshAssetIds = {
 	["Fan"]            = "",   -- assets/items/fan.fbx
 	["Flower"]         = "",   -- assets/items/flower.fbx
 	["Kettle"]         = "",   -- assets/items/kettle.fbx
-	["Leaf Blower"]    = "",   -- assets/items/leaf_blower.fbx
-	["Pinwheel"]       = "",   -- assets/items/pinwheel.fbx
-	["Propeller"]      = "",   -- assets/items/propeller.fbx
+	["Alarm Clock"]    = "",   -- assets/items/Alarm Clock.fbx
+	["Compass"]        = "",   -- assets/items/Compass.fbx
+	["Drill"]          = "",   -- assets/items/Drill.fbx
+	["Hair Dryer"]     = "",   -- assets/items/Hair Dryer.fbx
+	["Magnifying Glass"] = "", -- assets/items/Magnifying Glass.fbx
+	["Propeller Hat"]  = "",   -- assets/items/Propeller Hat.fbx
+	["Treadmill"]      = "",   -- assets/items/Treadmill.fbx
 	["Rocket"]         = "",   -- assets/items/rocket.fbx
-	["Spinning Top"]   = "",   -- assets/items/spinning_top.fbx
-	["V8 Engine"]      = "",   -- assets/items/v8_engine.fbx
-	["Watering Can"]   = "",   -- assets/items/watering_can.fbx
 
 	-- ── SPECIAL ───────────────────────────────────────────────────────────────
 	["Balloon Bunch"]  = "",   -- assets/items/Balloon Bunch.fbx

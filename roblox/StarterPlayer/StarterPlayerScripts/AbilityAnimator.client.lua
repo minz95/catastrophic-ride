@@ -189,7 +189,8 @@ end
 
 -- ─── Remote listener ──────────────────────────────────────────────────────────
 
-RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, effectKey)
+-- Server sends (userId, itemName, targetIds, effectKey)
+RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, _targetIds, effectKey)
 	if userId == LocalPlayer.UserId then
 		_playAbilityAnim(effectKey)
 	else

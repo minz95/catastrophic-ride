@@ -31,7 +31,7 @@ ForestTrack.slowZoneHeight = 4
 -- S2 (Outcrop Hairpin, right 90°): N2  → N8
 -- S3 (River Sweeper, left 120°)  : N8  → N15, bridge at N10
 -- S4 (Farm U-Bend, 180° around)  : N15 → N23
--- S5 (Mud S-Chicane + finish)    : N23 → N31
+-- S5 (Mud U-turn hook + finish)  : N23 → N36
 ForestTrack.nodes = {
 	-- S1
 	{   0,   600 }, -- N1  start grid line
@@ -64,15 +64,22 @@ ForestTrack.nodes = {
 	{ -100, -1530 }, -- N22
 	{   50, -1500 }, -- N23 end of S4
 
-	-- S5 S-chicane (right→left), then 230-stud finish straight at X=0
-	{  180, -1550 }, -- N24 chicane right curve
-	{  130, -1620 }, -- N25 return
-	{    0, -1640 }, -- N26 crossover
-	{ -100, -1670 }, -- N27 chicane left peak
-	{  -30, -1740 }, -- N28 return
-	{    0, -1770 }, -- N29 onto finish straight (X=0 from here)
-	{    0, -2000 }, -- N30 FinishLine sensor (Constants.TRACK.FOREST.zFinish)
-	{    0, -2050 }, -- N31 runoff past finish
+	-- S5 (redesigned): left U-turn (R=55, 30° steps) then a right-hander
+	-- (R=60) onto the finish straight. The old N24 (−105°) and N27 (+118°)
+	-- single-node kinks let walls cut across the lane and trapped cars.
+	{  150, -1520 }, -- N24  S5 entry, heading east
+	{ 177.5, -1527.4 }, -- N25
+	{ 197.6, -1547.5 }, -- N26
+	{ 205, -1575 }, -- N27  U-turn apex (drift corner)
+	{ 197.6, -1602.5 }, -- N28
+	{ 177.5, -1622.6 }, -- N29
+	{ 150, -1630 }, -- N30  heading west
+	{   60, -1630 }, -- N31  start of the right-hander onto the finish straight
+	{ 30, -1638 }, -- N32
+	{ 8, -1660 }, -- N33
+	{ 0, -1690 }, -- N34  onto the finish straight (X=0 from here)
+	{    0, -2000 }, -- N35 FinishLine sensor (Constants.TRACK.FOREST.zFinish)
+	{    0, -2050 }, -- N36 runoff past finish
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -81,7 +88,7 @@ ForestTrack.sections = {
 	{ name = "S2 outcrop hairpin", from = 2,  to = 8 },
 	{ name = "S3 river sweeper",   from = 8,  to = 15 },
 	{ name = "S4 farm U-bend",     from = 15, to = 23 },
-	{ name = "S5 mud chicane",     from = 23, to = 31 },
+	{ name = "S5 mud hook",        from = 23, to = 36 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.FOREST.zFinish.
@@ -96,10 +103,10 @@ ForestTrack.startGrid = {
 -- ─── Hazards & props ─────────────────────────────────────────────────────────
 -- Mud patches in the S-chicane apex sides (rewards apex cutting).
 ForestTrack.mudZones = {
-	{ 230, -1560 },   -- outer of right chicane peak
-	{ -150, -1660 },  -- outer of left chicane peak
-	{   0, -1810 },   -- centerline mud just before finish straight (skill check)
-	{  50, -1700 },   -- inside chicane
+	{ 217, -1575 },   -- outer half of the U-turn apex (rewards the inside line)
+	{   9, -1639 },   -- outer half of the right-hander
+	{   0, -1810 },   -- centerline mud on the finish straight (skill check)
+	{  26, -1656 },   -- inner half of the right-hander
 }
 ForestTrack.mudZoneSize = { 20, 0.4, 16 }
 
@@ -108,14 +115,15 @@ ForestTrack.rockPiles = {
 	{ 110, -10 },      -- S2 outcrop (outer of right hairpin)
 	{ 620, -300 },     -- S3 outer bend at river mouth
 	{ -540, -1310 },   -- S4 U peak outer
-	{ 230, -1570 },    -- S5 chicane outer
+	{ 245, -1575 },    -- S5 U-turn outer
 	{ -30,  100 },     -- S2 inner (left of corridor)
 }
 
--- Jump ramps: { x, z, yaw (radians) }. Floor-only wedges.
+-- Jump ramps: { x, z, yaw (radians) }. Floor-only wedges, centred on the
+-- lane; yaw uses TrackGeometry:yawAt so the slope faces the direction of travel.
 ForestTrack.jumpRamps = {
-	{  490, -550, math.rad(35) },   -- mid-S3 over creek tributary
-	{    0, -1850, math.rad(0)  },  -- pre-finish straight (after chicane)
+	{  505, -560, math.atan2(90, 160) },  -- mid-S3: middle of the N11 → N12 straight
+	{    0, -1850, 0 },                   -- finish straight
 }
 ForestTrack.jumpRampSize = { ForestTrack.width - 4, 4, 14 }
 
@@ -132,7 +140,7 @@ ForestTrack.driftCorners = {
 	{  60,   30 },   -- S2 outcrop apex
 	{ 580, -300 },   -- S3 river bridge entry
 	{ -470, -1310 }, -- S4 U peak
-	{ 180, -1550 },  -- S5 chicane entry
+	{ 205, -1575 },  -- S5 U-turn apex
 }
 ForestTrack.driftCornerSize = { ForestTrack.width, 5, 40 }
 

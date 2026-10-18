@@ -28,10 +28,12 @@ KineSim.IMPACT_SPEED = 8           -- normal speed (studs/s) that counts as a hi
 KineSim.OFFTRACK_RESCUE = 3        -- seconds off the corridor before pressing R
 
 --- Seat values exactly as VehicleBuilder.buildCar derives them.
-function KineSim.carFromStats(stats)
+-- `Constants` is the game's Constants module (any loader env).
+function KineSim.carFromStats(stats, Constants)
 	return {
 		maxSpeed  = math.clamp(stats.speed * 2.5, 20, 120),
-		turnSpeed = math.clamp(stats.stability * 0.3, 0.5, 3),
+		turnSpeed = Constants.turnSpeedFor("FOREST", stats),
+		torque    = math.clamp(stats.acceleration * 4, 20, 200),
 		torque    = math.clamp(stats.acceleration * 4, 20, 200),
 		boostDuration = stats.boostDuration or 2,
 		radius    = 1.9,
@@ -72,6 +74,7 @@ function KineSim.run(world, opts)
 	local vx, vz = 0, 0
 
 	local ap = Autopilot.new(geo, opts.profile, seed)
+	local driveState = VehicleController.newState()
 	local mods = SpeedModifiers.new(car.maxSpeed)
 	local raceStartY = BiomeConfig[world.biome].raceStartY
 
@@ -132,18 +135,20 @@ function KineSim.run(world, opts)
 
 	local function respawn(t, reason, s)
 		local entry = { t = t, reason = reason, s = s, from = { x = x, z = z } }
-		local lx, _, lz = RaceProgress.respawnPoint(world.biome, z, raceStartY)
+		-- "legacy" = whatever RaceProgress.respawnPoint (the live game) returns
+		local lx, _, lz, lyaw = RaceProgress.respawnPoint(world.biome, x, z, raceStartY, ap.segHint)
 		local ok, p = onTrack(lx, lz)
 		entry.legacy = { x = lx, z = lz, onTrack = ok, lateral = p.lateral }
 		if respawnMode == "legacy" then
 			x, z = lx, lz
-			yaw = 0 -- CFrame.new(x, y, z): identity rotation, faces -Z
+			yaw = lyaw
 		else
 			local ts = math.max(s - RaceProgress.RESPAWN_STEP_BACK, 0)
 			local px, pz, ddx, ddz = geo:pointAt(ts)
 			x, z, yaw = px, pz, yawFromDir(ddx, ddz)
 		end
 		vx, vz = 0, 0
+		VehicleController.reset(driveState)
 		entry.to = { x = x, z = z }
 		table.insert(res.respawns, entry)
 		ap:resetTracking()
@@ -246,9 +251,11 @@ function KineSim.run(world, opts)
 
 		-- Drive: exactly the client's command path.
 		local input = VehicleController.readKeys(keys)
+		local lx0, lz0 = -math.sin(yaw), -math.cos(yaw)
 		local cmd = VehicleController.command(input, {
 			maxSpeed = mods:value(t), turnSpeed = car.turnSpeed, isSky = false,
-		})
+			torque = car.torque, dt = dt, actualForward = vx * lx0 + vz * lz0,
+		}, driveState)
 		yaw += cmd.yawRate * dt
 		local lx, lz = -math.sin(yaw), -math.cos(yaw)
 		local tvx, tvz = lx * cmd.forwardSpeed, lz * cmd.forwardSpeed

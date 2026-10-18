@@ -6,10 +6,13 @@
 -- Hiding sets Transparency=1 / CanCollide=false; showing restores the values
 -- cached in the OriginalTransparency / OriginalCanCollide attributes.
 --
--- KNOWN BUG (kept as-is, see tests/specs/map_forest.spec.luau):
---   `storedCC ~= nil and storedCC or true` evaluates to true when the stored
---   value is false (Lua and/or idiom), so every non-collidable part — trigger
---   volumes, decorations — becomes solid when its map is shown.
+-- Two rules keep trigger volumes non-solid:
+--   * restore() treats a stored `false` as false. (The old
+--     `stored ~= nil and stored or true` idiom turned every false into true,
+--     so checkpoints and drift corners became invisible walls.)
+--   * the authored values are recorded right before a part is first hidden,
+--     so the result no longer depends on whether cacheOriginals ran before or
+--     after the map builders.
 
 local MapVisibility = {}
 
@@ -17,11 +20,28 @@ function MapVisibility.mapName(biome)
 	return biome:sub(1, 1):upper() .. biome:sub(2):lower() .. "Map"
 end
 
+local function remember(desc)
+	if desc:GetAttribute("OriginalTransparency") == nil then
+		desc:SetAttribute("OriginalTransparency", desc.Transparency)
+	end
+	if desc:GetAttribute("OriginalCanCollide") == nil then
+		desc:SetAttribute("OriginalCanCollide", desc.CanCollide)
+	end
+end
+
+local function hide(desc)
+	remember(desc)
+	desc.Transparency = 1
+	desc.CanCollide   = false
+end
+
 local function restore(desc)
 	local storedT  = desc:GetAttribute("OriginalTransparency")
 	local storedCC = desc:GetAttribute("OriginalCanCollide")
-	desc.Transparency = storedT  ~= nil and storedT  or 0
-	desc.CanCollide   = storedCC ~= nil and storedCC or true
+	if storedT == nil then storedT = 0 end
+	if storedCC == nil then storedCC = true end
+	desc.Transparency = storedT
+	desc.CanCollide   = storedCC
 end
 
 --- Records each BasePart's authored Transparency / CanCollide once.
@@ -29,12 +49,7 @@ function MapVisibility.cacheOriginals(mapsFolder)
 	for _, mapModel in ipairs(mapsFolder:GetChildren()) do
 		for _, desc in ipairs(mapModel:GetDescendants()) do
 			if desc:IsA("BasePart") then
-				if desc:GetAttribute("OriginalTransparency") == nil then
-					desc:SetAttribute("OriginalTransparency", desc.Transparency)
-				end
-				if desc:GetAttribute("OriginalCanCollide") == nil then
-					desc:SetAttribute("OriginalCanCollide", desc.CanCollide)
-				end
+				remember(desc)
 			end
 		end
 	end
@@ -46,8 +61,7 @@ function MapVisibility.hideAll(mapsFolder)
 			child:SetAttribute("MapVisible", false)
 			for _, desc in ipairs(child:GetDescendants()) do
 				if desc:IsA("BasePart") then
-					desc.Transparency = 1
-					desc.CanCollide   = false
+					hide(desc)
 				end
 			end
 		end
@@ -78,8 +92,7 @@ function MapVisibility.setSubVisible(mapModel, subName, visible)
 			if visible then
 				restore(desc)
 			else
-				desc.Transparency = 1
-				desc.CanCollide   = false
+				hide(desc)
 			end
 		elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
 			-- GUIs ignore the Part.Transparency of their adornee, so the

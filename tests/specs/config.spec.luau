@@ -81,7 +81,13 @@ R.describe("items", function()
 		R.expect(missing).toBeEmpty("items without assets/items/<name>.fbx")
 	end)
 
-	R.known("MeshAssetIds only lists current items", "MeshAssetIds still has entries for removed/never-added items", function()
+	R.it("MeshAssetIds lists exactly the current items", function()
+		local missing = {}
+		for _, name in ipairs(sortedKeys(items)) do
+			if MeshAssetIds[name] == nil then table.insert(missing, name) end
+		end
+		R.expect(missing).toBeEmpty("items without a MeshAssetIds entry")
+
 		local orphans = {}
 		for _, name in ipairs(sortedKeys(MeshAssetIds)) do
 			if not items[name] then table.insert(orphans, name) end
@@ -89,14 +95,10 @@ R.describe("items", function()
 		R.expect(orphans).toBeEmpty("MeshAssetIds keys with no ItemConfig item")
 	end)
 
-	R.known("Studio preview plugin lists current items", "studio-plugin ITEM_NAMES predates the #88 roster change", function()
+	R.it("Studio preview plugin takes its item list from ItemTypes", function()
 		local src = fs.readFile("studio-plugin/MapPreviewPlugin.server.lua")
-		local block = src:match("local ITEM_NAMES = (%b{})")
-		local stale = {}
-		for name in block:gmatch('"([^"]+)"') do
-			if not items[name] then table.insert(stale, name) end
-		end
-		R.expect(stale).toBeEmpty("plugin ITEM_NAMES entries that are not items")
+		R.expect(src:find("local ITEM_NAMES = {", 1, true) == nil).toBe(true)
+		R.expect(src:find("Shared.ItemTypes", 1, true) ~= nil).toBe(true)
 	end)
 end)
 
@@ -111,7 +113,7 @@ R.describe("abilities", function()
 		R.expect(#sortedKeys(handlers)).toBeGreaterThan(20)
 	end)
 
-	R.known("every item has an AbilityConfig entry", "Drill (Rare ENGINE) has no ability, so pressing E with it does nothing", function()
+	R.it("every item has an AbilityConfig entry", function()
 		local missing = {}
 		for _, name in ipairs(sortedKeys(items)) do
 			if type(AbilityConfig[name]) ~= "table" then table.insert(missing, name) end
@@ -119,8 +121,7 @@ R.describe("abilities", function()
 		R.expect(missing).toBeEmpty("items with no ability")
 	end)
 
-	R.known("every effectKey has a handler in AbilityManager",
-		"these abilities fire, consume their cooldown and do nothing (AbilityManager warns 'No effect handler')",
+	R.it("every effectKey has a handler in AbilityManager",
 		function()
 			local missing = {}
 			for _, item in ipairs(sortedKeys(AbilityConfig)) do
@@ -139,8 +140,7 @@ R.describe("abilities", function()
 			R.expect(missing).toBeEmpty("abilities whose effectKey has no handler")
 		end)
 
-	R.known("HEAD/TAIL passives are read by game code",
-		"VehicleStats.HEAD_PASSIVES / TAIL_PASSIVES are defined but nothing reads them, so HEAD/TAIL slots are cosmetic",
+	R.it("HEAD/TAIL passives are read by game code",
 		function()
 			local users = {}
 			for path, src in pairs(SOURCES) do
@@ -152,9 +152,21 @@ R.describe("abilities", function()
 		end)
 end)
 
+R.describe("passives", function()
+	local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+	R.it("HEAD/TAIL passives only name items that exist", function()
+		local bad = {}
+		for _, t in ipairs({ VehicleStats.HEAD_PASSIVES, VehicleStats.TAIL_PASSIVES }) do
+			for name in pairs(t) do
+				if not items[name] then table.insert(bad, name) end
+			end
+		end
+		R.expect(bad).toBeEmpty("passives for removed items")
+	end)
+end)
+
 R.describe("biomes", function()
-	R.known("every BiomeConfig hazard type is implemented",
-		"fallingLog / waveFlood / gustZone are configured but no code spawns them",
+	R.it("every BiomeConfig hazard type is implemented",
 		function()
 			local missing = {}
 			for _, biome in ipairs(Constants.BIOMES) do

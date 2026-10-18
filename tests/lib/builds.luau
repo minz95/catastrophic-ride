@@ -9,6 +9,7 @@ local MOBILITY_CHOICES = 4 -- none, plus three sampled mobility items per combo
 
 function Builds.enumerate(env, biome)
 	local ItemConfig = env.requirePath("ReplicatedStorage.Shared.ItemConfig")
+	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
 	local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
 	local bySlot = { BODY = {}, ENGINE = {}, SPECIAL = {} }
 	local all = {}
@@ -43,7 +44,7 @@ function Builds.enumerate(env, biome)
 						slots = { BODY = b, ENGINE = e, SPECIAL = s, MOBILITY = m or nil },
 						stats = stats,
 						maxSpeed = math.clamp(stats.speed * 2.5, 20, 120),
-						turnSpeed = math.clamp(stats.stability * 0.3, 0.5, 3),
+						turnSpeed = Constants.turnSpeedFor(biome, stats),
 						torque = math.clamp(stats.acceleration * 4, 20, 200),
 						boostDuration = stats.boostDuration,
 					})

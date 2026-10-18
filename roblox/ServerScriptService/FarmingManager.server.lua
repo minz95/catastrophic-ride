@@ -633,6 +633,8 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	local victimData = SessionManager.getData(victim)
 	if not victimData then return end
 	if #victimData.inventory == 0 then return end
+	-- A full thief has nowhere to put the item
+	if #thiefData.inventory >= Constants.INVENTORY_SIZE then return end
 
 	-- Distance check
 	local thiefRoot  = thief.Character  and thief.Character:FindFirstChild("HumanoidRootPart")
@@ -657,7 +659,8 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 		return
 	end
 
-	-- Steal succeeds: take random item
+	-- Steal succeeds: take random item (re-check after the defence wait)
+	if #victimData.inventory == 0 or #thiefData.inventory >= Constants.INVENTORY_SIZE then return end
 	local idx = math.random(#victimData.inventory)
 	local stolenItem = table.remove(victimData.inventory, idx)
 	table.insert(thiefData.inventory, stolenItem)

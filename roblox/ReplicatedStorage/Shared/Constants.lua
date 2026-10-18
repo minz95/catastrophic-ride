@@ -142,6 +142,71 @@ Constants.VEHICLE_TYPE = {
 	SKY    = "FlyingVehicle",
 }
 
+-- ─── Driving model (VehicleController) ────────────────────────────────────────
+-- The commanded forward speed ramps instead of jumping to MaxSpeed:
+--   acceleration (studs/s²) = ACCEL_BASE + VehicleSeat.Torque * ACCEL_PER_TORQUE
+-- so the acceleration stat (Torque = acceleration × 4) matters.
+Constants.DRIVE = {
+	ACCEL_BASE       = 20,
+	ACCEL_PER_TORQUE = 0.3,
+	COAST_DECEL      = 30,   -- W released: roll to a stop
+	BRAKE_DECEL      = 90,   -- S held, or MaxSpeed dropped below the current speed
+	BLOCKED_SLACK    = 10,   -- command may not run more than this ahead of the real speed
+	DRIFT_TURN_MULT  = 0.35, -- drifting turns slower but keeps speed
+	DRIFT_TURN_MIN   = 0.3,
+}
+
+-- ─── Handling: stat → VehicleSeat.TurnSpeed ───────────────────────────────────
+-- Linear map of a biome's handling stat onto [min, max], clamped. The ranges
+-- cover roughly the 10th–90th percentile of all item combinations, so BODY and
+-- MOBILITY choices change how the vehicle turns.
+Constants.TURN_SPEED = {
+	FOREST = { stat = "stability",    lo = 20, hi = 100, min = 2.0, max = 3.2 },
+	OCEAN  = { stat = "floatability", lo = 10, hi = 45,  min = 1.2, max = 2.0 },
+	SKY    = { stat = "flyability",   scale = 0.4, min = 0.5, max = 4.0 },  -- unchanged
+}
+
+function Constants.turnSpeedFor(biome, stats)
+	local t = Constants.TURN_SPEED[biome]
+	if not t then return 1 end
+	local v = stats[t.stat] or 0
+	if t.scale then
+		return math.clamp(v * t.scale, t.min, t.max)
+	end
+	local f = math.clamp((v - t.lo) / (t.hi - t.lo), 0, 1)
+	return t.min + f * (t.max - t.min)
+end
+
+-- ─── HEAD / TAIL passives (RacingManager) ─────────────────────────────────────
+Constants.PASSIVES = {
+	CONTACT_COOLDOWN   = 1.0,   -- s between effects for the same pair of cars
+	REAR_END_DOT       = 0.5,   -- attacker must face the victim this squarely
+	HEAD_SLOW_MULT     = 0.5,   -- Cactus head: victim speed
+	HEAD_SLOW_TIME     = 1.0,
+	REAR_SLOW_MULT     = 0.5,   -- Cactus tail: attacker speed
+	RAM_PUSH           = 30,    -- base shove (studs/s) when rear-ending
+	SLIPSTREAM_RANGE   = 25,    -- Toilet Paper tail: car directly behind
+	SLIPSTREAM_CONE    = 0.85,  -- dot(leaderLook, toFollower) <= -this
+	LEAD_PERIOD        = 0.5,   -- s between lead / momentum / slipstream checks
+	MOMENTUM_STEP      = 5,     -- s of clean driving per Flower bonus step
+	MOMENTUM_MAX       = 0.15,
+	BLIND_TIME         = 1.5,   -- Soda Bottle tail: follower blinded on boost
+}
+
+-- ─── Track hazards (HazardManager, see BiomeConfig.hazards) ───────────────────
+Constants.HAZARDS = {
+	LOG_SIZE          = { 7, 2.2, 2.2 },
+	LOG_DROP_HEIGHT   = 22,
+	LOG_LIFETIME      = 6,
+	LOG_AHEAD_MIN     = 80,     -- studs of track ahead of the leading car
+	LOG_AHEAD_MAX     = 260,
+	LOG_LATERAL       = 12,     -- max offset from the centerline
+	GUST_DURATION     = 2,
+	GUST_PULSE        = 0.25,   -- s between sideways shoves while a gust blows
+	GUST_PUSH_PER_FORCE = 0.12, -- shove speed (studs/s) per unit of BiomeConfig force
+	FLOOD_STEPS       = 10,     -- water rises/falls in this many steps over 1 s
+}
+
 -- ─── Collision / Physics ──────────────────────────────────────────────────────
 Constants.OBSTACLE_BOUNCE_PENALTY_DURATION = 1.0  -- seconds
 Constants.OBSTACLE_BOUNCE_SPEED_MULT       = 0.5

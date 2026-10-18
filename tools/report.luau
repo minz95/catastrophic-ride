@@ -34,6 +34,7 @@ local Autopilot = env.requirePath("ReplicatedStorage.Shared.Autopilot")
 local RaceProgress = env.requirePath("ReplicatedStorage.Shared.RaceProgress")
 local BiomeConfig = env.requirePath("ServerScriptService.Modules.BiomeConfig")
 local HALF = track.width / 2
+local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
 
 local function fmt(n, d) return string.format("%." .. (d or 1) .. "f", n) end
 
@@ -41,7 +42,7 @@ local function fmt(n, d) return string.format("%." .. (d or 1) .. "f", n) end
 local reps = Builds.representative(Builds.enumerate(env, "FOREST"))
 local raceRuns = {}
 for _, rep in ipairs(reps) do
-	local car = KineSim.carFromStats(rep.build.stats)
+	local car = KineSim.carFromStats(rep.build.stats, Constants)
 	for _, profile in ipairs({ "expert", "average", "novice" }) do
 		for _, world in ipairs({ intended, shipped }) do
 			local r = KineSim.run(world, {
@@ -50,7 +51,7 @@ for _, rep in ipairs(reps) do
 			})
 			r.carLabel = rep.label
 			r.carDesc = Builds.describe(rep.build)
-			r.world = world == intended and "authored" or "as shipped"
+			r.world = world == intended and "authored" or "live code"
 			table.insert(raceRuns, r)
 		end
 	end
@@ -95,7 +96,7 @@ end
 for _, w in pairs(worst) do table.insert(findings.intrusions, w) end
 for s = 0, geo.length, 50 do
 	local x, z = geo:pointAt(s)
-	local rx, _, rz = RaceProgress.respawnPoint("FOREST", z, BiomeConfig.FOREST.raceStartY)
+	local rx, _, rz = RaceProgress.respawnPoint("FOREST", x, z, BiomeConfig.FOREST.raceStartY)
 	local p = geo:project(rx, rz)
 	if p.dist > HALF - 2 then
 		table.insert(findings.respawnOff, { s = s, x = x, z = z, rx = rx, rz = rz })
@@ -204,7 +205,7 @@ ly += 30
 local legend = {
 	{ "rect", "#4a4540", "corridor (40 studs)" },
 	{ "rect", "#2b1d10", "walls (8-stud doorways)" },
-	{ "rect", "#e63946", "solid during RACING only because of the CanCollide bug" },
+	{ "rect", "#e63946", "solid during RACING but not in the authored map (should be none)" },
 	{ "dot", "#e63946", "tree trunk inside the lane" },
 	{ "ring", "#ff006e", "wall cuts into the lane (> 6 studs)" },
 	{ "x", "#ff006e", "respawn target that lands off the track" },
@@ -352,7 +353,7 @@ line("![track](track.svg)")
 line()
 line("## Single-car race simulation")
 line()
-line("Each car drives alone with the shared Autopilot. \"Authored\" restores every part's authored collision and respawns on the track. \"As shipped\" runs today's MapVisibility and respawn code.")
+line("Each car drives alone with the shared Autopilot. \"Authored\" restores every part's authored collision. \"Live code\" runs MapVisibility and RaceProgress exactly as the server does; the two should match.")
 line()
 line("| Map | Car | Top speed | Driver | Result | Respawns | Wall hits |")
 line("|---|---|---|---|---|---|---|")
@@ -363,7 +364,7 @@ end
 line()
 line("Cars by top speed: " .. table.concat((function()
 	local t = {}
-	for _, rep in ipairs(reps) do table.insert(t, string.format("%s = %s (%s)", rep.label, Builds.describe(rep.build), fmt(KineSim.carFromStats(rep.build.stats).maxSpeed))) end
+	for _, rep in ipairs(reps) do table.insert(t, string.format("%s = %s (%s)", rep.label, Builds.describe(rep.build), fmt(KineSim.carFromStats(rep.build.stats, Constants).maxSpeed))) end
 	return t
 end)(), "; ") .. ".")
 line()
@@ -382,7 +383,7 @@ for k, v in pairs(ms.meanPlaceByDriver) do line(string.format("| driving: %s | %
 line()
 line("## Geometry findings")
 line()
-line(string.format("- %d parts inside or next to the lane are solid during RACING only because of the CanCollide restore bug (red boxes).", #findings.solid))
+line(string.format("- %d parts inside or next to the lane are solid during RACING but not in the authored map (red boxes).", #findings.solid))
 line(string.format("- %d tree trunks stand inside the lane (red dots).", #findings.trees))
 line(string.format("- %d spots where a wall cuts more than 6 studs into the lane (pink rings).", #findings.intrusions))
 line(string.format("- %d of %d sampled positions respawn off the track (pink ×).", #findings.respawnOff, summary.geometry.respawnSamples))

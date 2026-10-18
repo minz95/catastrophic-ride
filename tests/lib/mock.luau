@@ -686,6 +686,7 @@ end
 local function newCollectionService()
 	local cs = makeInstance("CollectionService")
 	local byTag = {}
+	local added, removed = {}, {}
 	rawset(cs, "_byTag", byTag)
 	-- Instance methods are looked up through `methods`, so attach service
 	-- methods directly on the raw table.
@@ -696,6 +697,7 @@ local function newCollectionService()
 		rawget(inst, "_tags")[tag] = true
 		byTag[tag] = byTag[tag] or {}
 		table.insert(byTag[tag], inst)
+		if added[tag] then added[tag]:Fire(inst) end
 	end)
 	rawset(cs, "RemoveTag", function(_, inst, tag)
 		rawget(inst, "_tags")[tag] = nil
@@ -704,6 +706,7 @@ local function newCollectionService()
 			local idx = table.find(list, inst)
 			if idx then
 				table.remove(list, idx)
+				if removed[tag] then removed[tag]:Fire(inst) end
 			end
 		end
 	end)
@@ -716,11 +719,13 @@ local function newCollectionService()
 	rawset(cs, "GetTags", function(_, inst)
 		return inst:GetTags()
 	end)
-	rawset(cs, "GetInstanceAddedSignal", function()
-		return Signal.new()
+	rawset(cs, "GetInstanceAddedSignal", function(_, tag)
+		added[tag] = added[tag] or Signal.new()
+		return added[tag]
 	end)
-	rawset(cs, "GetInstanceRemovedSignal", function()
-		return Signal.new()
+	rawset(cs, "GetInstanceRemovedSignal", function(_, tag)
+		removed[tag] = removed[tag] or Signal.new()
+		return removed[tag]
 	end)
 	rawset(cs, "_untagAll", function(self, inst)
 		for tag in pairs(rawget(inst, "_tags")) do

@@ -33,6 +33,7 @@ local _boostGauge    = 1.0   -- 0–1, charges via DriftCorner zones
 local _heartbeatConn = nil
 local _baseFOV       = 70
 local _abilitySlots  = {}    -- { slotName → itemName } from crafting
+local _driveState    = VehicleController.newState()
 
 -- ─── Input tracking ───────────────────────────────────────────────────────────
 
@@ -213,7 +214,6 @@ end
 -- DriftCorner zone touch (server) → DriftCharge event → fills gauge.
 -- F key with full gauge → activate boost slingshot.
 
-local _driftGripBackup = nil
 local _driftLabel      = nil
 
 local function _ensureDriftLabel()
@@ -250,11 +250,11 @@ local function _hideDriftLabel()
 	}):Play()
 end
 
+-- Drifting lowers the turn rate inside VehicleController.command (ctx.drifting);
+-- the seat's TurnSpeed is server-owned and never written here.
 local function _enterDrift()
 	if not _seat or _drifting then return end
 	_drifting        = true
-	_driftGripBackup = _seat.TurnSpeed
-	_seat.TurnSpeed  = VehicleController.driftTurnSpeed(_seat.TurnSpeed)
 
 	local driftColor, driftText
 	if _biome == "OCEAN" then
@@ -271,10 +271,6 @@ end
 function _exitDrift()
 	if not _seat or not _drifting then return end
 	_drifting = false
-	if _driftGripBackup then
-		_seat.TurnSpeed = _driftGripBackup
-		_driftGripBackup = nil
-	end
 	_hideDriftLabel()
 	-- No local slingshot: DriftCorner zones charge the boost gauge instead.
 end
@@ -511,7 +507,7 @@ end
 
 -- ─── Vehicle drive loop ───────────────────────────────────────────────────────
 
-local function _driveLoop()
+local function _driveLoop(dt)
 	if not _vehicle or not _vehicle.PrimaryPart then return end
 	local primary = _vehicle.PrimaryPart
 
@@ -539,13 +535,18 @@ local function _driveLoop()
 	end
 
 	local cmd = VehicleController.command(input, {
-		maxSpeed  = maxSpeed,
-		turnSpeed = turnSpeed,
-		isSky     = isSky,
-	})
+		maxSpeed      = maxSpeed,
+		turnSpeed     = turnSpeed,
+		isSky         = isSky,
+		drifting      = _drifting,
+		torque        = _seat and _seat.Torque or 0,
+		dt            = dt,
+		actualForward = primary.AssemblyLinearVelocity:Dot(primary.CFrame.LookVector),
+	}, _driveState)
 	VehicleController.apply(primary, cmd, {
-		biome   = _biome,
-		raycast = function(origin, direction)
+		biome      = _biome,
+		altitudeDt = dt,
+		raycast    = function(origin, direction)
 			return workspace:Raycast(origin, direction, _suspParams)
 		end,
 	})
@@ -601,7 +602,14 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(effectName, params)
 		end)
 
 	elseif effectName == "respawn" then
+		VehicleController.reset(_driveState)
 		_applyScreenTint(Color3.fromRGB(255, 255, 255), 0.9, 0.5)
+
+	elseif effectName == "boostRecharge" then
+		-- Backpack ability: refill the boost gauge
+		_boostGauge = 1
+		_updateBoostHUD()
+		_showBoostReady()
 
 	elseif effectName == "bubblePop" then
 		_applyScreenTint(Color3.fromRGB(150, 220, 255), 0.5, 0.3)
@@ -651,6 +659,7 @@ RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, vehicleModel)
 	if userId ~= LocalPlayer.UserId then return end
 	_vehicle = vehicleModel
 	_seat    = vehicleModel:FindFirstChildWhichIsA("VehicleSeat", true)
+	VehicleController.reset(_driveState)
 	_suspParams.FilterDescendantsInstances = {vehicleModel}
 
 	if not _seat then
@@ -690,9 +699,9 @@ function RacingClient.enable()
 	end
 
 	if _heartbeatConn then _heartbeatConn:Disconnect() end
-	_heartbeatConn = RunService.Heartbeat:Connect(function()
+	_heartbeatConn = RunService.Heartbeat:Connect(function(dt)
 		if not _active then return end
-		_driveLoop()
+		_driveLoop(dt)
 		_updateCamera()
 		_updateSpeedHUD()
 	end)

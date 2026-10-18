@@ -200,7 +200,7 @@ function MatchSim.run(opts)
 	for i, b in ipairs(bots) do
 		local data = srv.SessionManager.getData(b.player)
 		local stats = data.vehicleStats
-		local car = KineSim.carFromStats(stats)
+		local car = KineSim.carFromStats(stats, Constants)
 		local race = KineSim.run(world, {
 			car = car, profile = Autopilot.PROFILES[b.drive], profileName = b.drive,
 			respawn = opts.respawn or "track", seed = seed * 31 + i, slot = i,

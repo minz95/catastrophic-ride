@@ -58,6 +58,13 @@ Outputs:
 
 ### Known bugs
 
+What the specs cover (`tests/specs/`): config consistency, stat balance per
+biome, the FOREST map geometry (lane obstacles, wall gaps, slow zones,
+checkpoints, ramps, trees), race progress and respawn on every track, the
+real RacingManager (speed effects, passives, shields, rounds), every item's
+ability through the real AbilityManager, hazards, farming rules, the driving
+model, the kinematic race sim, and smoke runs of the Studio harness.
+
 `R.known(name, why, fn)` marks a check that is **expected to fail today**
 because it documents a bug. The run stays green while the bug exists and
 **fails as soon as the bug is fixed**, telling you to turn `known` into `it`.

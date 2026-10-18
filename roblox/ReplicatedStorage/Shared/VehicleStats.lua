@@ -192,18 +192,18 @@ end
 -- These are small additive tweaks; major active effects live in AbilityConfig.
 -- Kept here so the crafting UI can reflect them in the preview.
 
+-- Applied by RacingManager through Shared/Passives.lua.
 VehicleStats.HEAD_PASSIVES = {
-	["Shopping Cart"]  = { collisionPower = 1.50 },
-	["Cactus"]         = { headCollisionSlow = 1.0 },   -- slows opponent on hit
-	["Stick"]          = { dragReduction = 0.10, collisionResist = -0.30 },
-	["Rubber Duck"]    = { absorbOneHit = true },
+	["Shopping Cart"]  = { collisionPower = 1.50 },     -- rear-end shove ×1.5
+	["Cactus"]         = { headCollisionSlow = 1.0 },   -- slows the car you rear-end (seconds)
+	["Rubber Duck"]    = { absorbOneHit = true },       -- first hit of the race is ignored
 	["Racing Flag"]    = { leadSpeedBonus = 0.05 },     -- +5% when in 1st place
 	["Flower"]         = { momentumBonus = 0.03 },      -- small per-5s accel bonus
 }
 
 VehicleStats.TAIL_PASSIVES = {
 	["Rocket"]         = { boostDurationAdd = 1.0 },    -- +1s to boost
-	["Soda Bottle"]    = { boostBlindTrail = true },     -- particles blind follower
+	["Soda Bottle"]    = { boostBlindTrail = true },     -- boosting blinds the car behind
 	["Toilet Paper"]   = { slipstreamSlow = 0.10 },      -- -10% to car directly behind
 	["Balloon Bunch"]  = { rearImpactAbsorb = true },   -- bumper absorbs rear hit
 	["Cactus"]         = { rearContactSlow = 1.5 },      -- slows anyone who rear-ends you

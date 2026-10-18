@@ -1,6 +1,6 @@
 -- AbilityManager.server.lua
 -- Server-authoritative ability activation, cooldown enforcement,
--- and physics effect dispatch for all 37 item abilities.
+-- and effect dispatch for every item ability (AbilityConfig).
 -- Resolves: Issue #55, #56, #57, #58
 
 local Players             = game:GetService("Players")
@@ -16,14 +16,21 @@ local AbilityConfig  = require(ServerScriptService.Modules.AbilityConfig)
 local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
+local VehicleTuning  = require(ServerScriptService.Modules.VehicleTuning)
+local RaceEffects    = require(ServerScriptService.Modules.RaceEffects)
+local CollectionService = game:GetService("CollectionService")
 
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
 -- _cooldowns[userId][itemName] = expireTick
 
 local _cooldowns   = {}
 local _activeDurations = {}   -- [userId][itemName] = expireTick (effect is live)
+local _biome       = nil
 
 -- ─── Helpers ──────────────────────────────────────────────────────────────────
+-- Speed / turn changes go through VehicleTuning (named multipliers, never
+-- save-and-restore). Harmful effects on another player ask _hurts(target)
+-- first, which honours shields (Umbrella, Suitcase, Red Sofa, Rubber Duck).
 
 local function _getVehicle(player)
 	local pdata = SessionManager.getData(player)
@@ -34,14 +41,27 @@ local function _getSeat(vehicle)
 	return vehicle and vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
 end
 
-local function _applySpeedMult(vehicle, mult, duration)
+local function _applySpeedMult(vehicle, mult, duration, id)
 	local seat = _getSeat(vehicle)
 	if not seat then return end
-	local old = seat.MaxSpeed
-	seat.MaxSpeed = old * mult
-	task.delay(duration, function()
-		if seat and seat.Parent then seat.MaxSpeed = old end
-	end)
+	VehicleTuning.set(seat, "MaxSpeed", id or "ability", mult, duration)
+end
+
+local function _applyTurnMult(vehicle, mult, duration, id)
+	local seat = _getSeat(vehicle)
+	if not seat then return end
+	VehicleTuning.set(seat, "TurnSpeed", id or "ability", mult, duration)
+end
+
+-- True when `target` actually takes a harmful effect (not shielded).
+local function _hurts(target)
+	if not target then return false end
+	if RaceEffects.blocksHit(target) then
+		RemoteEvents.ScreenEffect:FireClient(target, "bubblePop", {})
+		Telemetry.record("hit_blocked", { userId = target.UserId, by = "ability" })
+		return false
+	end
+	return true
 end
 
 local function _applyBodyForce(vehicle, force, duration, name)
@@ -56,12 +76,16 @@ end
 
 local function _impulse(vehicle, direction, magnitude)
 	local primary = vehicle and vehicle.PrimaryPart
-	if not primary then return end
+	if not primary or direction.Magnitude < 1e-3 then return end
 	local bv = Instance.new("BodyVelocity")
-	bv.Velocity  = direction * magnitude
+	bv.Velocity  = direction.Unit * magnitude
 	bv.MaxForce  = Vector3.new(1e5, 1e4, 1e5)
 	bv.Parent    = primary
 	Debris:AddItem(bv, 0.3)
+end
+
+local function _flat(v)
+	return Vector3.new(v.X, 0, v.Z)
 end
 
 local function _dropPart(position, size, colour, tag, duration)
@@ -83,6 +107,11 @@ local function _dropPart(position, size, colour, tag, duration)
 	return p
 end
 
+-- Disguised players (Cardboard Box) cannot be targeted.
+local function _targetable(player)
+	return not RaceEffects.has(player, "disguised")
+end
+
 local function _nearestEnemy(player, radius)
 	local pdata   = SessionManager.getData(player)
 	local vehicle = pdata and pdata.vehicleModel
@@ -91,7 +120,7 @@ local function _nearestEnemy(player, radius)
 
 	local best, bestDist = nil, radius or math.huge
 	for _, other in ipairs(Players:GetPlayers()) do
-		if other == player then continue end
+		if other == player or not _targetable(other) then continue end
 		local od = SessionManager.getData(other)
 		local ov = od and od.vehicleModel
 		if ov and ov.PrimaryPart then
@@ -110,7 +139,7 @@ local function _allInRadius(player, radius)
 
 	local result = {}
 	for _, other in ipairs(Players:GetPlayers()) do
-		if other == player then continue end
+		if other == player or not _targetable(other) then continue end
 		local od = SessionManager.getData(other)
 		local ov = od and od.vehicleModel
 		if ov and ov.PrimaryPart then
@@ -122,6 +151,25 @@ local function _allInRadius(player, radius)
 	return result
 end
 
+-- Racers touching `part` (other than `except`), each reported once per call.
+local function _onDropTouched(part, except, fn)
+	local seen = {}
+	part.Touched:Connect(function(hit)
+		local v = hit:FindFirstAncestorWhichIsA("Model")
+		if not v then return end
+		for _, p in ipairs(Players:GetPlayers()) do
+			if p ~= except and not seen[p] then
+				local pd = SessionManager.getData(p)
+				if pd and pd.vehicleModel == v then
+					seen[p] = true
+					task.delay(1, function() seen[p] = nil end)
+					fn(p, v)
+				end
+			end
+		end
+	end)
+end
+
 -- ─── Effect dispatcher ────────────────────────────────────────────────────────
 
 local EFFECTS = {}
@@ -129,265 +177,204 @@ local EFFECTS = {}
 -- ── SPECIAL ──────────────────────────────────────────────────────────────────
 
 EFFECTS.steerDisable = function(activator, target, cfg)
-	if not target then return end
-	local tv = _getVehicle(target)
-	local seat = _getSeat(tv)
-	if not seat then return end
-	local old = seat.TurnSpeed
-	seat.TurnSpeed = 0
+	if not _hurts(target) then return end
+	_applyTurnMult(_getVehicle(target), 0, cfg.duration, "steerDisable")
 	RemoteEvents.ScreenEffect:FireClient(target, "steerDisable", { duration = cfg.duration })
-	task.delay(cfg.duration, function()
-		if seat and seat.Parent then seat.TurnSpeed = old end
-	end)
 end
 
 EFFECTS.slipperyPuddle = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 1.5, 4)
+	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
+	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 1.5, 0) - (back.Magnitude > 0 and back.Unit * 5 or Vector3.zero)
 	local puddle = _dropPart(pos, Vector3.new(8, 0.3, 8),
-		Color3.fromRGB(220, 140, 50), "Slippery", cfg.duration)
-	puddle.Touched:Connect(function(hit)
-		local v = hit:FindFirstAncestorWhichIsA("Model")
-		if not v then return end
-		for _, p in ipairs(Players:GetPlayers()) do
-			if p == activator then continue end
-			local pd = SessionManager.getData(p)
-			if pd and pd.vehicleModel == v then
-				_applySpeedMult(v, 0.7, 1.5)
-				RemoteEvents.ScreenEffect:FireClient(p, "slippery", {})
-			end
-		end
+		Color3.fromRGB(220, 140, 50), "Slippery", cfg.duration + 6)
+	_onDropTouched(puddle, activator, function(p, v)
+		if not _hurts(p) then return end
+		_applySpeedMult(v, 0.7, 1.5, "slippery")
+		RemoteEvents.ScreenEffect:FireClient(p, "slippery", {})
 	end)
 end
 
 EFFECTS.emergencyFloat = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_applyBodyForce(vehicle, Vector3.new(0, 2500, 0), cfg.duration, "EmergencyFloat")
-	RemoteEvents.AbilityActivated:FireAllClients(activator.UserId, "Rubber Duck", {})
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 2500, 0), cfg.duration, "EmergencyFloat")
 end
 
-EFFECTS.fullBuoyancy = EFFECTS.emergencyFloat   -- OCEAN variant, stronger handled by multiplier
+EFFECTS.fullBuoyancy = function(activator, _, cfg)   -- OCEAN Rubber Duck: stronger float
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 4000, 0), cfg.duration, "FullBuoyancy")
+end
 
 EFFECTS.softLanding = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_applyBodyForce(vehicle, Vector3.new(0, 3500, 0), cfg.duration, "SoftLanding")
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 3500, 0), cfg.duration, "SoftLanding")
 end
 
 EFFECTS.groundBounce = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_impulse(vehicle, Vector3.new(0, 1, 0), 40)
+	_impulse(_getVehicle(activator), Vector3.new(0, 1, 0), 40)
 end
 
 EFFECTS.rise = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_applyBodyForce(vehicle, Vector3.new(0, 2800, 0), cfg.duration, "Rise")
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 2800, 0), cfg.duration, "Rise")
 end
 
 EFFECTS.reverseBoost = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local fwd = vehicle.PrimaryPart.CFrame.LookVector
-	_impulse(vehicle, fwd, 90)   -- large forward burst
-	_applySpeedMult(vehicle, 2.0, cfg.duration)
+	_impulse(vehicle, vehicle.PrimaryPart.CFrame.LookVector, 90)
+	_applySpeedMult(vehicle, 2.0, cfg.duration, "sodaBlast")
 end
 
 EFFECTS.flagAura = function(activator, _, cfg)
-	_applySpeedMult(_getVehicle(activator), 1.20, cfg.duration)
+	_applySpeedMult(_getVehicle(activator), 1.20, cfg.duration, "flagAura")
 	local ally = _nearestEnemy(activator, 40)
 	if ally then
-		_applySpeedMult(_getVehicle(ally), 1.20, cfg.duration)
+		_applySpeedMult(_getVehicle(ally), 1.20, cfg.duration, "flagAura")
 		RemoteEvents.ScreenEffect:FireClient(ally, "flagBuff", { duration = cfg.duration })
 	end
-	RemoteEvents.AbilityActivated:FireAllClients(activator.UserId, "Racing Flag", {})
 end
-
--- EFFECTS.soundBlast removed in SPECIAL overhaul (was only used by Boombox)
 
 EFFECTS.cactusObstacle = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 0.5, 6)
+	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
+	local pos = vehicle.PrimaryPart.Position + Vector3.new(0, 0.5, 0) - (back.Magnitude > 0 and back.Unit * 6 or Vector3.zero)
 	local cactus = _dropPart(pos, Vector3.new(1.5, 3, 1.5),
 		Color3.fromRGB(30, 130, 40), "Obstacle_Drop", cfg.duration + 8)
-	game:GetService("CollectionService"):AddTag(cactus, "Obstacle")
-end
-
-EFFECTS.leafPile = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 1.5, 5)
-	local pile = _dropPart(pos, Vector3.new(6, 0.4, 6),
-		Color3.fromRGB(120, 180, 40), "Slippery", cfg.duration + 5)
-	pile.Touched:Connect(function(hit)
-		local v = hit:FindFirstAncestorWhichIsA("Model")
-		if not v then return end
-		for _, p in ipairs(Players:GetPlayers()) do
-			local pd = SessionManager.getData(p)
-			if pd and pd.vehicleModel == v and p ~= activator then
-				_applySpeedMult(v, 0.60, cfg.duration)
-				RemoteEvents.ScreenEffect:FireClient(p, "leafPile", {})
-			end
-		end
-	end)
-end
-
-EFFECTS.leafPileLarge = EFFECTS.leafPile   -- biome variant; radius handled by override
-
-EFFECTS.steerHinder = function(activator, target, cfg)
-	if not target then return end
-	local seat = _getSeat(_getVehicle(target))
-	if not seat then return end
-	local old = seat.TurnSpeed
-	seat.TurnSpeed = old * 0.10
-	RemoteEvents.ScreenEffect:FireClient(target, "scarfTangle", { duration = cfg.duration })
-	task.delay(cfg.duration, function()
-		if seat and seat.Parent then seat.TurnSpeed = old end
-	end)
+	-- RacingManager connects every part tagged Obstacle, including new ones
+	CollectionService:AddTag(cactus, "Obstacle")
 end
 
 EFFECTS.umbrellaBlock = function(activator, _, cfg)
-	local pdata = SessionManager.getData(activator)
-	if pdata then pdata._bubbleShield = true end   -- reuse shield flag
-	RemoteEvents.AbilityActivated:FireAllClients(activator.UserId, "Umbrella", {})
-	task.delay(cfg.duration, function()
-		if pdata then pdata._bubbleShield = false end
-	end)
+	RaceEffects.grant(activator, "shield", cfg.duration)   -- blocks the next hit
 end
 
 EFFECTS.umbrellaSail = function(activator, _, cfg)
-	-- Side-wind speed bonus: read vehicle facing, apply lateral force
+	-- Side-wind speed bonus: lateral force plus a little speed
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local right = vehicle.PrimaryPart.CFrame.RightVector
-	_applyBodyForce(vehicle, right * 600, cfg.duration, "UmbrellaSail")
+	_applyBodyForce(vehicle, vehicle.PrimaryPart.CFrame.RightVector * 600, cfg.duration, "UmbrellaSail")
+	_applySpeedMult(vehicle, 1.15, cfg.duration, "umbrellaSail")
 end
 
 EFFECTS.parachute = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	_applyBodyForce(vehicle, Vector3.new(0, 4000, 0), cfg.duration, "Parachute")
-	_applySpeedMult(vehicle, 0.5, cfg.duration)   -- drift down slowly
+	_applySpeedMult(vehicle, 0.5, cfg.duration, "parachute")   -- drift down slowly
 end
 
--- EFFECTS.bubbleShield removed in SPECIAL overhaul (was only used by Bubble Wrap;
--- Umbrella's umbrellaBlock still writes pdata._bubbleShield for legacy reasons)
+EFFECTS.magnetPull = function(activator, target, cfg)
+	-- Pull the nearest racer back toward you and slow them while held
+	if not _hurts(target) then return end
+	local me, them = _getVehicle(activator), _getVehicle(target)
+	if not me or not them or not me.PrimaryPart or not them.PrimaryPart then return end
+	_impulse(them, _flat(me.PrimaryPart.Position - them.PrimaryPart.Position), 35)
+	_applySpeedMult(them, 0.8, cfg.duration, "magnetPull")
+	RemoteEvents.ScreenEffect:FireClient(target, "magnetPull", { duration = cfg.duration })
+end
 
 -- ── ENGINE ────────────────────────────────────────────────────────────────────
 
 EFFECTS.digMode = function(activator, _, cfg)
-	-- Immunity flagged server-side; MudZone handler checks this flag
-	local pdata = SessionManager.getData(activator)
-	if pdata then pdata._digMode = true end
-	task.delay(cfg.duration, function()
-		if pdata then pdata._digMode = false end
-	end)
-	RemoteEvents.AbilityActivated:FireAllClients(activator.UserId, "Shovel", {})
+	-- Drill: mud and off-track slow zones have no effect while active
+	RaceEffects.grant(activator, "dig", cfg.duration)
+	local seat = _getSeat(_getVehicle(activator))
+	if seat then
+		VehicleTuning.remove(seat, "MaxSpeed", "mud")
+		VehicleTuning.remove(seat, "MaxSpeed", "slowZone")
+	end
 end
 
-EFFECTS.itemAttract = function(activator, _, cfg)
-	-- Pulls nearby unclaimed Farming items toward the player
-	local pdata   = SessionManager.getData(activator)
-	local vehicle = pdata and pdata.vehicleModel
-	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos     = vehicle.PrimaryPart.Position
-
-	local FarmingManager = require(ServerScriptService.FarmingManager)
-	for id, item in pairs(FarmingManager and FarmingManager._items or {}) do
-		if not item.taken and item.part then
-			local d = (item.part.Position - pos).Magnitude
-			if d < 20 then
-				-- Tween item part toward player
-				local bv = Instance.new("BodyVelocity")
-				bv.Velocity  = (pos - item.part.Position).Unit * 25
-				bv.MaxForce  = Vector3.new(1e4, 1e4, 1e4)
-				bv.Parent    = item.part
-				Debris:AddItem(bv, 1.2)
-			end
-		end
-	end
+EFFECTS.bloomCleanse = function(activator, _, cfg)
+	-- Flower: shake off every active slowdown and stay protected briefly
+	local seat = _getSeat(_getVehicle(activator))
+	local removed = seat and VehicleTuning.cleanse(seat) or 0
+	RaceEffects.grant(activator, "shield", cfg.duration)
+	Telemetry.record("cleanse", { userId = activator.UserId, removed = removed })
 end
 
 EFFECTS.overclock = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
-	_applySpeedMult(vehicle, 1.5, cfg.duration)
+	_applySpeedMult(vehicle, 1.5, cfg.duration, "overclock")
 	task.delay(cfg.duration, function()   -- stall
-		_applySpeedMult(vehicle, 0.2, 1.0)
+		_applySpeedMult(vehicle, 0.2, 1.0, "overclockStall")
 	end)
 end
 
 EFFECTS.hover = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_applyBodyForce(vehicle, Vector3.new(0, 3200, 0), cfg.duration, "HoverForce")
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 3200, 0), cfg.duration, "HoverForce")
 end
 
 EFFECTS.redline = function(activator, _, cfg)
+	-- Treadmill: much faster, but no steering while it lasts
 	local vehicle = _getVehicle(activator)
-	local seat    = _getSeat(vehicle)
-	if not seat then return end
-	local old = seat.MaxSpeed
-	seat.MaxSpeed = 9999   -- uncapped
-	-- Disable steering on client side via ScreenEffect flag
-	RemoteEvents.ScreenEffect:FireClient(activator, "redlineActive",
-		{ duration = cfg.duration })
-	task.delay(cfg.duration, function()
-		if seat and seat.Parent then seat.MaxSpeed = old end
-	end)
+	_applySpeedMult(vehicle, 2.0, cfg.duration, "redline")
+	_applyTurnMult(vehicle, 0, cfg.duration, "redline")
+	RemoteEvents.ScreenEffect:FireClient(activator, "redlineActive", { duration = cfg.duration })
 end
 
 EFFECTS.steamCloud = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 0, 8)
+	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
+	local pos = vehicle.PrimaryPart.Position - (back.Magnitude > 0 and back.Unit * 8 or Vector3.zero)
 	local cloud = _dropPart(pos, Vector3.new(10, 6, 10),
 		Color3.fromRGB(220, 220, 220), "SteamCloud", cfg.duration)
 	cloud.Transparency = 0.6
 	cloud.CanCollide   = false
-	cloud.Touched:Connect(function(hit)
-		local v = hit:FindFirstAncestorWhichIsA("Model")
-		if not v then return end
-		for _, p in ipairs(Players:GetPlayers()) do
-			local pd = SessionManager.getData(p)
-			if pd and pd.vehicleModel == v and p ~= activator then
-				RemoteEvents.ScreenEffect:FireClient(p, "steamBlind",
-					{ duration = math.min(3, cfg.duration) })
-			end
-		end
+	_onDropTouched(cloud, activator, function(p)
+		if not _hurts(p) then return end
+		RemoteEvents.ScreenEffect:FireClient(p, "steamBlind", { duration = math.min(3, cfg.duration) })
 	end)
 end
 
 EFFECTS.noodleSnare = function(activator, target, cfg)
-	if not target then return end
-	_applySpeedMult(_getVehicle(target), 0.70, cfg.duration)
-	RemoteEvents.ScreenEffect:FireClient(target, "noodleSnare",
-		{ duration = cfg.duration })
+	if not _hurts(target) then return end
+	_applySpeedMult(_getVehicle(target), 0.70, cfg.duration, "noodleSnare")
+	RemoteEvents.ScreenEffect:FireClient(target, "noodleSnare", { duration = cfg.duration })
 end
 
 EFFECTS.rocketBurst = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
-	_applySpeedMult(vehicle, 3.0, cfg.duration)
+	_applySpeedMult(vehicle, 3.0, cfg.duration, "rocketBurst")
 	local primary = vehicle and vehicle.PrimaryPart
-	if primary then
-		local fwd = primary.CFrame.LookVector
-		_impulse(vehicle, fwd, 60)
-	end
+	if primary then _impulse(vehicle, primary.CFrame.LookVector, 60) end
 end
 
 EFFECTS.windBlast = function(activator, _, cfg)
-	local targets = _allInRadius(activator, cfg.radius or 12)
 	local vehicle = _getVehicle(activator)
-	local origin  = vehicle and vehicle.PrimaryPart and vehicle.PrimaryPart.Position
-		or Vector3.new(0, 0, 0)
-	for _, target in ipairs(targets) do
+	local origin  = vehicle and vehicle.PrimaryPart and vehicle.PrimaryPart.Position or Vector3.zero
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 12)) do
 		local tv = _getVehicle(target)
-		if tv and tv.PrimaryPart then
-			local dir = (tv.PrimaryPart.Position - origin).Unit
-			_impulse(tv, dir, 55)
+		if tv and tv.PrimaryPart and _hurts(target) then
+			_impulse(tv, _flat(tv.PrimaryPart.Position - origin), 55)
 			RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
 		end
 	end
 end
 
-EFFECTS.waterPuddle = EFFECTS.slipperyPuddle   -- reuse with different colour (server-side only visual)
+EFFECTS.gustBlast = function(activator, _, cfg)
+	-- Fan: shoves racers IN FRONT of you sideways and slows them a little
+	local vehicle = _getVehicle(activator)
+	if not vehicle or not vehicle.PrimaryPart then return end
+	local origin = vehicle.PrimaryPart.Position
+	local look = _flat(vehicle.PrimaryPart.CFrame.LookVector)
+	if look.Magnitude < 1e-3 then return end
+	look = look.Unit
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 10)) do
+		local tv = _getVehicle(target)
+		if tv and tv.PrimaryPart then
+			local to = _flat(tv.PrimaryPart.Position - origin)
+			if to.Magnitude > 1e-3 and look:Dot(to.Unit) > 0.3 and _hurts(target) then
+				local side = Vector3.new(-look.Z, 0, look.X)
+				if side:Dot(to) < 0 then side = -side end
+				_impulse(tv, side, 45)
+				_applySpeedMult(tv, 0.85, cfg.duration, "gustBlast")
+				RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
+			end
+		end
+	end
+end
+
+EFFECTS.waterPuddle = EFFECTS.slipperyPuddle      -- same slick, water coloured client-side
 EFFECTS.waterPuddleLarge = EFFECTS.slipperyPuddle
 
 EFFECTS.spinBurst = function(activator, _, cfg)
@@ -395,165 +382,131 @@ EFFECTS.spinBurst = function(activator, _, cfg)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return end
 	local fwd = primary.CFrame.LookVector
-	-- Random slight direction offset (the "chaos")
-	local angle = (math.random() - 0.5) * math.pi * 0.4
+	local angle = (math.random() - 0.5) * math.pi * 0.4   -- the "chaos"
 	local rotated = Vector3.new(
 		fwd.X * math.cos(angle) - fwd.Z * math.sin(angle),
 		fwd.Y,
 		fwd.X * math.sin(angle) + fwd.Z * math.cos(angle)
 	)
 	_impulse(vehicle, rotated, 70)
-	_applySpeedMult(vehicle, 2.0, cfg.duration)
+	_applySpeedMult(vehicle, 2.0, cfg.duration, "spinBurst")
 end
 
 EFFECTS.windRide = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	local mult    = (_biome == "SKY") and 1.6 or ((_biome == "OCEAN") and 1.4 or 1.2)
-	_applySpeedMult(vehicle, mult, cfg.duration)
+	local mult = (_biome == "SKY") and 1.6 or ((_biome == "OCEAN") and 1.4 or 1.2)
+	_applySpeedMult(_getVehicle(activator), mult, cfg.duration, "windRide")
 end
 
 -- ── BODY ──────────────────────────────────────────────────────────────────────
 
 EFFECTS.disguise = function(activator, _, cfg)
-	local pdata = SessionManager.getData(activator)
-	if pdata then pdata._disguised = true end
-	RemoteEvents.AbilityActivated:FireAllClients(activator.UserId, "Cardboard Box", {})
-	task.delay(cfg.duration, function()
-		if pdata then pdata._disguised = false end
-	end)
+	RaceEffects.grant(activator, "disguised", cfg.duration)
 end
 
 EFFECTS.raftGlide = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
-	local seat    = _getSeat(vehicle)
-	if not seat then return end
-	local old = seat.TurnSpeed
-	seat.TurnSpeed = old * 3   -- slippery but steerable
-	_applySpeedMult(vehicle, 1.15, cfg.duration)
-	task.delay(cfg.duration, function()
-		if seat and seat.Parent then seat.TurnSpeed = old end
-	end)
+	_applyTurnMult(vehicle, 3, cfg.duration, "raftGlide")   -- slippery but steerable
+	_applySpeedMult(vehicle, 1.15, cfg.duration, "raftGlide")
 end
 
 EFFECTS.logObstacle = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 0.5, 7)
+	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
+	local pos = vehicle.PrimaryPart.Position + Vector3.new(0, 0.5, 0) - (back.Magnitude > 0 and back.Unit * 7 or Vector3.zero)
 	local log = _dropPart(pos, Vector3.new(4, 1, 1),
 		Color3.fromRGB(100, 60, 30), "Obstacle_Log", 12)
 	log.Anchored = false
 	log.CFrame   = CFrame.new(pos) * CFrame.Angles(0, math.random() * math.pi, 0)
+	CollectionService:AddTag(log, "Obstacle")
 end
 
 EFFECTS.sofaFortress = function(activator, _, cfg)
-	local pdata = SessionManager.getData(activator)
-	if pdata then pdata._invincible = true end
-	local seat = _getSeat(_getVehicle(activator))
-	if seat then
-		local old = seat.MaxSpeed
-		seat.MaxSpeed = 0
-		task.delay(cfg.duration, function()
-			if seat and seat.Parent then seat.MaxSpeed = old end
-			if pdata then pdata._invincible = false end
-		end)
-	end
+	-- Red Sofa: full stop, but nothing can hurt you meanwhile
+	RaceEffects.grant(activator, "invincible", cfg.duration)
+	_applySpeedMult(_getVehicle(activator), 0, cfg.duration, "sofaFortress")
 end
 
 EFFECTS.cartRam = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return end
-	local fwd = primary.CFrame.LookVector
-	_impulse(vehicle, fwd, 50)
-	-- Push anyone in front
+	_impulse(vehicle, primary.CFrame.LookVector, 50)
 	for _, target in ipairs(_allInRadius(activator, 6)) do
 		local tv = _getVehicle(target)
-		if tv and tv.PrimaryPart then
-			local dir = (tv.PrimaryPart.Position - primary.Position).Unit
-			_impulse(tv, dir, 40)
+		if tv and tv.PrimaryPart and _hurts(target) then
+			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), 40)
 			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
 		end
 	end
 end
 
-EFFECTS.microFreeze = function(activator, _, cfg)
-	local targets = _allInRadius(activator, cfg.radius or 12)
-	for _, target in ipairs(targets) do
+EFFECTS.barrelRoll = function(activator, _, cfg)
+	-- Barrel: sideways roll that knocks adjacent racers aside
+	local vehicle = _getVehicle(activator)
+	local primary = vehicle and vehicle.PrimaryPart
+	if not primary then return end
+	_applySpeedMult(vehicle, 1.1, cfg.duration, "barrelRoll")
+	for _, target in ipairs(_allInRadius(activator, 8)) do
 		local tv = _getVehicle(target)
-		local seat = _getSeat(tv)
-		if seat then
-			local old = seat.MaxSpeed
-			seat.MaxSpeed = 0
+		if tv and tv.PrimaryPart and _hurts(target) then
+			local right = _flat(primary.CFrame.RightVector)
+			local to = _flat(tv.PrimaryPart.Position - primary.Position)
+			local dir = (right:Dot(to) >= 0) and right or -right
+			_impulse(tv, dir, 45)
+			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
+		end
+	end
+end
+
+EFFECTS.lockdown = function(activator, _, cfg)
+	-- Suitcase: brief stop, then the next hit is absorbed
+	_applySpeedMult(_getVehicle(activator), 0.3, 0.5, "lockdown")
+	RaceEffects.grant(activator, "shield", cfg.duration)
+end
+
+EFFECTS.microFreeze = function(activator, _, cfg)
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 12)) do
+		if _hurts(target) then
+			_applySpeedMult(_getVehicle(target), 0, cfg.duration, "microFreeze")
 			RemoteEvents.ScreenEffect:FireClient(target, "microFreeze", {})
-			task.delay(cfg.duration, function()
-				if seat and seat.Parent then seat.MaxSpeed = old end
-			end)
 		end
 	end
 end
 
 EFFECTS.bathSplash = function(activator, target, cfg)
-	local targets = _allInRadius(activator, cfg.radius or 8)
-	for _, t in ipairs(targets) do
-		RemoteEvents.ScreenEffect:FireClient(t, "bathSplash", { duration = cfg.duration })
-		_applySpeedMult(_getVehicle(t), 0.80, cfg.duration * 0.5)
+	for _, t in ipairs(_allInRadius(activator, cfg.radius or 8)) do
+		if _hurts(t) then
+			RemoteEvents.ScreenEffect:FireClient(t, "bathSplash", { duration = cfg.duration })
+			_applySpeedMult(_getVehicle(t), 0.80, cfg.duration * 0.5, "bathSplash")
+		end
 	end
 end
 
 EFFECTS.backpackBoost = function(activator, _, cfg)
-	local phase = GameManager.getPhase()
-	if phase == Constants.PHASES.FARMING then
-		-- +2 inventory slots temporarily
-		local pdata = SessionManager.getData(activator)
-		if pdata then pdata._extraSlots = 2 end
-		task.delay(cfg.duration, function()
-			if pdata then pdata._extraSlots = nil end
-		end)
-	else
-		-- Free boost charge
-		RemoteEvents.ScreenEffect:FireClient(activator, "boostRecharge", {})
-	end
-end
-
-EFFECTS.hackControls = function(activator, target, cfg)
-	if not target then return end
-	RemoteEvents.ScreenEffect:FireClient(target, "hackControls", { duration = cfg.duration })
-end
-
-EFFECTS.stickTrap = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	if not vehicle or not vehicle.PrimaryPart then return end
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 0.8, 5)
-	local stick = _dropPart(pos, Vector3.new(3, 0.4, 0.4),
-		Color3.fromRGB(120, 80, 40), "Obstacle_Stick", 10)
+	-- Backpack: the client refills its boost gauge
+	RemoteEvents.ScreenEffect:FireClient(activator, "boostRecharge", {})
 end
 
 EFFECTS.skateSlide = function(activator, _, cfg)
-	local seat = _getSeat(_getVehicle(activator))
-	if not seat then return end
-	local oldTurn = seat.TurnSpeed
-	seat.TurnSpeed = oldTurn * 4   -- very twitchy
-	_applySpeedMult(_getVehicle(activator), 1.25, cfg.duration)
-	task.delay(cfg.duration, function()
-		if seat and seat.Parent then seat.TurnSpeed = oldTurn end
-	end)
+	local vehicle = _getVehicle(activator)
+	_applyTurnMult(vehicle, 4, cfg.duration, "skateSlide")   -- very twitchy
+	_applySpeedMult(vehicle, 1.25, cfg.duration, "skateSlide")
 end
 
 EFFECTS.lifeFloat = function(activator, _, cfg)
-	local vehicle = _getVehicle(activator)
-	_applyBodyForce(vehicle, Vector3.new(0, 3800, 0), cfg.duration, "LifeFloat")
+	_applyBodyForce(_getVehicle(activator), Vector3.new(0, 3800, 0), cfg.duration, "LifeFloat")
 end
 
 EFFECTS.kiteLift  = EFFECTS.lifeFloat
 EFFECTS.kiteGlide = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	_applyBodyForce(vehicle, Vector3.new(0, 5000, 0), cfg.duration, "KiteGlide")
-	_applySpeedMult(vehicle, 1.3, cfg.duration)
+	_applySpeedMult(vehicle, 1.3, cfg.duration, "kiteGlide")
 end
 
 -- ─── RequestAbility handler ───────────────────────────────────────────────────
 
-local _biome = nil
 GameManager.onPhaseChanged(function(phase, biome)
 	_biome = biome
 	if phase ~= Constants.PHASES.RACING then
@@ -616,9 +569,9 @@ local function _handleAbilityRequest(player, itemName)
 		Telemetry.record("ability_unhandled", { userId = userId, item = itemName, effect = abilCfg.effectKey })
 	end
 
-	-- Broadcast to clients for animation
+	-- Broadcast to clients for animation (AbilityAnimator keys on effectKey)
 	local targetIds = target and { target.UserId } or {}
-	RemoteEvents.AbilityActivated:FireAllClients(userId, itemName, targetIds)
+	RemoteEvents.AbilityActivated:FireAllClients(userId, itemName, targetIds, abilCfg.effectKey)
 
 	return "ok"
 end

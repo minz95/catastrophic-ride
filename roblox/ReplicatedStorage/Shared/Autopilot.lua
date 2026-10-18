@@ -26,11 +26,17 @@ Autopilot.__index = Autopilot
 --   anticipation 0..1: how well the driver predicts where the car will be
 --               pointing once their reaction delay has passed (1 = perfectly).
 --               Without it, keyboard steering at TurnSpeed 3 rad/s overshoots.
+--   cornerMargin how much of the car's turn rate a corner may demand before
+--               the driver lifts (×1) or brakes (×1.4); > 1 = brakes late.
 Autopilot.PROFILES = {
-	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0 },
-	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0 },
-	novice  = { lookahead = 10, speedLook = 0.20, deadband = 0.14, liftAngle = 0.95, reaction = 0.30, anticipation = 0.75, wobble = 6, lineOffset = 0 },
+	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0, cornerMargin = 0.95 },
+	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0, cornerMargin = 1.10 },
+	novice  = { lookahead = 10, speedLook = 0.20, deadband = 0.14, liftAngle = 0.95, reaction = 0.30, anticipation = 0.75, wobble = 6, lineOffset = 0, cornerMargin = 1.30 },
 }
+
+-- Corner speed check: compare the turn rate the next stretch needs at the
+-- current speed with what the car can do.
+Autopilot.CORNER_LOOK = 3.0   -- × lookahead distance
 
 -- "Stuck" = no new track progress, regardless of wiggling in place.
 Autopilot.PROGRESS_EPS  = 6     -- studs of new progress that count as moving on
@@ -137,6 +143,21 @@ function Autopilot:update(state)
 		if predErr > 0 then keys.D = true else keys.A = true end
 	end
 	keys.W = math.abs(predErr) < p.liftAngle
+
+	-- Slow for corners: the car keeps its speed when W is released now.
+	local speed = state.speed or 0
+	if speed > 5 then
+		local far = math.max(look * Autopilot.CORNER_LOOK, 20)
+		local turnNeeded = math.abs(wrapAngle(self.geo:yawAt(proj.s + far) - self.geo:yawAt(proj.s)))
+		local required = turnNeeded * speed / far
+		local margin = (p.cornerMargin or 1) * turn
+		if required > margin * 1.4 or math.abs(predErr) > p.liftAngle * 1.6 then
+			keys.W = false
+			keys.S = true
+		elseif required > margin then
+			keys.W = false
+		end
+	end
 
 	-- Stuck handling: back out, then ask for a respawn.
 	local info = { s = proj.s, lateral = proj.lateral, seg = proj.seg, err = err, respawn = false }

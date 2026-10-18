@@ -71,8 +71,7 @@ R.describe("farming rules", function()
 		R.expect(#srv.SessionManager.getData(b).inventory).toBe(0)
 	end)
 
-	R.known("a steal never pushes the thief past the 8-slot inventory",
-		"RequestSteal does not check the thief's inventory size, so a full thief ends with 9+ items",
+	R.it("a steal never pushes the thief past the 8-slot inventory",
 		function()
 			local srv = farmServer(2)
 			local thief, victim = srv.players[1], srv.players[2]
@@ -86,8 +85,7 @@ R.describe("farming rules", function()
 			R.expect(#td.inventory).toBeAtMost(8)
 		end)
 
-	R.known("auto-submit puts items in matching slots",
-		"when the crafting timer runs out, items are assigned to BODY/ENGINE/SPECIAL in inventory order regardless of type",
+	R.it("auto-submit puts items in matching slots",
 		function()
 			local srv = farmServer(1)
 			local p = srv.players[1]

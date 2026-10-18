@@ -40,6 +40,26 @@ function TrackGeometry.new(nodes, width)
 		s += len
 	end
 	self.length = s
+	-- Bisector normals at every node: segment k owns the region between the
+	-- bisector at its start node and the one at its end node.
+	self.bisectors = {}
+	for k = 1, #self.segments + 1 do
+		local prev, nxt = self.segments[k - 1], self.segments[k]
+		local nx, nz
+		if prev and nxt then
+			nx, nz = prev.dx + nxt.dx, prev.dz + nxt.dz
+		elseif nxt then
+			nx, nz = nxt.dx, nxt.dz
+		else
+			nx, nz = prev.dx, prev.dz
+		end
+		local m = math.sqrt(nx * nx + nz * nz)
+		if m < 1e-9 then
+			nx, nz = (nxt or prev).dx, (nxt or prev).dz   -- 180° hairpin: use the outgoing direction
+			m = 1
+		end
+		self.bisectors[k] = { nx / m, nz / m }
+	end
 	return self
 end
 
@@ -80,6 +100,53 @@ function TrackGeometry:project(x, z, hintSeg, window)
 	best.lateral = (x - best.cx) * rx + (z - best.cz) * rz
 	best.s = seg.s0 + best.t
 	return best
+end
+
+--- Distance along the track for ranking. Unlike project(), it is continuous
+-- across kinks. Each segment owns the area between the angle bisectors at its
+-- two nodes; inside it the position is the fraction of the way from the start
+-- bisector to the end bisector:
+--   u = d0 / (d0 + d1),  d0 / d1 = distance to the start / end bisector line
+-- u is 0 on the start line and 1 on the end line, so neighbouring segments
+-- agree at every bisector and a car driving forward never loses progress.
+-- Returns s (clamped to [0, length]), segment index.
+function TrackGeometry:progressAt(x, z, hintSeg, window)
+	local lo, hi = 1, #self.segments
+	if hintSeg then
+		window = window or 3
+		lo = math.max(1, hintSeg - window)
+		hi = math.min(#self.segments, hintSeg + window)
+	end
+	local best, bestDist, bestS
+	for k = lo, hi do
+		local seg = self.segments[k]
+		local b0, b1 = self.bisectors[k], self.bisectors[k + 1]
+		local d0 = (x - seg.ax) * b0[1] + (z - seg.az) * b0[2]
+		local d1 = (seg.bx - x) * b1[1] + (seg.bz - z) * b1[2]
+		local inside = (d0 >= 0 or k == 1) and (d1 > 0 or k == #self.segments)
+		if inside then
+			local u
+			if d0 + d1 <= 1e-9 then
+				u = 0
+			elseif d0 < 0 then
+				u = d0 / seg.len            -- before the first node
+			elseif d1 < 0 then
+				u = 1 - d1 / seg.len        -- past the last node
+			else
+				u = d0 / (d0 + d1)
+			end
+			local perp = math.abs((x - seg.ax) * -seg.dz + (z - seg.az) * seg.dx)
+			if not bestDist or perp < bestDist then
+				best, bestDist, bestS = k, perp, seg.s0 + u * seg.len
+			end
+		end
+	end
+	if not best then
+		-- Outside every region in the window (far off the track): nearest point
+		local p = self:project(x, z, hintSeg, window)
+		return p.s, p.seg
+	end
+	return math.clamp(bestS, 0, self.length), best
 end
 
 --- Point and unit direction at arc length s (clamped to the track).

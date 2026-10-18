@@ -3,6 +3,7 @@
 -- for geometry problems a player would hit.
 local R = require("../lib/runner")
 local World = require("../lib/world")
+local Loader = require("../lib/loader")
 local MapQuery = require("../lib/mapquery")
 
 local shipped = World.forest({ visibility = "shipped" })
@@ -44,8 +45,7 @@ R.describe("FOREST map build", function()
 end)
 
 R.describe("FOREST map during RACING", function()
-	R.known("trigger volumes stay non-collidable when the track is shown",
-		"MapVisibility restores CanCollide with `stored ~= nil and stored or true`, which turns every false into true: checkpoints, finish line, drift corners and jump zones become invisible solid boxes",
+	R.it("trigger volumes stay non-collidable when the track is shown",
 		function()
 			local solid = {}
 			for _, sh in ipairs(shipped.allShapes) do
@@ -74,8 +74,7 @@ R.describe("FOREST map during RACING", function()
 		R.expect(hits).toBeEmpty("non-wall obstacles inside the lane")
 	end)
 
-	R.known("walls never cut into the lane",
-		"walls are one straight box per segment; at sharp kinks the next segment's wall slices into the current lane",
+	R.it("walls never cut into the lane",
 		function()
 			local intrusions = {}
 			local worst = {}
@@ -107,8 +106,7 @@ R.describe("FOREST map during RACING", function()
 			R.expect(lines).toBeEmpty("wall intrusions deeper than 6 studs from the lane edge")
 		end)
 
-	R.known("off-track slow zones never cover the lane",
-		"SlowZone pads are placed per segment just outside its walls; at sharp kinks they overlap the next segment's lane, so cars on the racing line get the 0.6× off-track penalty",
+	R.it("off-track slow zones never cover the lane",
 		function()
 			local zones = {}
 			for _, sh in ipairs(intended.allShapes) do
@@ -134,8 +132,7 @@ R.describe("FOREST map during RACING", function()
 			R.expect(lines).toBeEmpty("slow zones inside the driving lane")
 		end)
 
-	R.known("checkpoint triggers span the whole corridor",
-		"checkpoint boxes are axis-aligned 40×6; CP1 sits where the track runs along X, so it covers only a 6-stud strip of the lane",
+	R.it("checkpoint triggers span the whole corridor",
 		function()
 			local gaps = {}
 			for i = 1, #track.checkpoints do
@@ -155,8 +152,7 @@ R.describe("FOREST map during RACING", function()
 			R.expect(gaps).toBeEmpty("checkpoints a car can drive past without touching")
 		end)
 
-	R.known("jump ramps sit inside the corridor and face the direction of travel",
-		"JumpRamp_1 is placed 18 studs off the centerline of a 40-wide lane and is not aligned with the track",
+	R.it("jump ramps sit inside the corridor and face the direction of travel",
 		function()
 			local bad = {}
 			for i, r in ipairs(track.jumpRamps) do
@@ -176,8 +172,7 @@ R.describe("FOREST map during RACING", function()
 			R.expect(bad).toBeEmpty("misplaced ramps")
 		end)
 
-	R.known("no tree trunk stands inside the corridor",
-		"tree placement only keeps 35 studs from track NODES, not from the segments between them, so trees grow inside long straights (solid during RACING because of the CanCollide bug)",
+	R.it("no tree trunk stands inside the corridor",
 		function()
 			local bad = {}
 			for _, sh in ipairs(intended.allShapes) do
@@ -191,3 +186,52 @@ R.describe("FOREST map during RACING", function()
 			R.expect(bad).toBeEmpty("trees in the lane")
 		end)
 end)
+
+R.describe("FOREST map: walls and visibility", function()
+	R.it("outer walls have no corner gaps wider than a doorway", function()
+		local walls = {}
+		for _, sh in ipairs(intended.obstacles) do
+			if sh.name == "TrackWall" then table.insert(walls, sh) end
+		end
+		local grid = MapQuery.grid(walls, 32)
+		local gaps = {}
+		for _, side in ipairs({ -1, 1 }) do
+			local runStart, runEnd = nil, nil
+			for s = 2, geo.length - 2, 0.5 do
+				local x, z = geo:offsetPoint(s, side * (HALF + 1))
+				local covered = false
+				for _, w in ipairs(grid.near(x, z, 1)) do
+					if MapQuery.contains(w, x, z) then covered = true break end
+				end
+				if covered then
+					if runStart and runEnd - runStart > 9 then
+						table.insert(gaps, string.format("%s side: %d-stud gap at s=%d", side > 0 and "right" or "left", runEnd - runStart, runStart))
+					end
+					runStart = nil
+				else
+					runStart = runStart or s
+					runEnd = s
+				end
+			end
+		end
+		R.expect(gaps).toBeEmpty("holes in the wall wider than a doorway (8 studs)")
+	end)
+
+	R.it("racing visibility is right even when originals were never cached", function()
+		local env = Loader.boot()
+		local map = env.requirePath("ServerScriptService.Modules.Maps.ForestMap").build()
+		local MV = env.requirePath("ServerScriptService.Modules.MapVisibility")
+		-- MapManager may cache before the builders run: simulate "no cache"
+		MV.applyRacingState(env.workspace.Maps, map)
+		local bad = {}
+		for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine", "DriftCorner", "JumpZone", "SlowZone" }) do
+			for _, p in ipairs(env.mock.CollectionService:GetTagged(tag)) do
+				if p.CanCollide or p.Transparency < 0.5 then
+					table.insert(bad, p.Name .. " cc=" .. tostring(p.CanCollide) .. " t=" .. p.Transparency)
+				end
+			end
+		end
+		R.expect(bad).toBeEmpty("triggers that became solid or visible")
+	end)
+end)
+

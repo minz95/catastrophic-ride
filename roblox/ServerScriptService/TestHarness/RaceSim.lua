@@ -181,6 +181,7 @@ function RaceSim.runOne(opts)
 	overlap.FilterDescendantsInstances = triggerParts(map)
 
 	local ap = Autopilot.new(geo, Autopilot.PROFILES[opts.profile or "average"], opts.seed or 1)
+	local driveState = VehicleController.newState()
 	local mods = SpeedModifiers.new(seat.MaxSpeed)
 
 	local res = {
@@ -203,11 +204,12 @@ function RaceSim.runOne(opts)
 
 	local function respawn(reason, s)
 		local pos = primary.Position
-		local lx, ly, lz = RaceProgress.respawnPoint(biome, pos.Z, startY)
+		local lx, ly, lz, lyaw = RaceProgress.respawnPoint(biome, pos.X, pos.Z, startY, ap.segHint)
 		local entry = { t = round(t, 2), reason = reason, s = math.floor(s), from = { x = round(pos.X), z = round(pos.Z) } }
 		local target
 		if respawnMode == "legacy" then
-			target = CFrame.new(lx, ly, lz)
+			-- exactly what RacingManager does
+			target = CFrame.new(lx, ly, lz) * CFrame.Angles(0, lyaw, 0)
 		else
 			local ts = math.max(s - RaceProgress.RESPAWN_STEP_BACK, 0)
 			local px, pz = geo:pointAt(ts)
@@ -220,6 +222,7 @@ function RaceSim.runOne(opts)
 		primary.AssemblyLinearVelocity = Vector3.zero
 		primary.AssemblyAngularVelocity = Vector3.zero
 		primary.Anchored = false
+		VehicleController.reset(driveState)
 		table.insert(res.respawns, entry)
 		ap:resetTracking()
 	end
@@ -285,9 +288,12 @@ function RaceSim.runOne(opts)
 
 		-- Drive exactly like RacingClient
 		local input = VehicleController.readKeys(keys)
-		local cmd = VehicleController.command(input, { maxSpeed = maxSpeed, turnSpeed = seat.TurnSpeed, isSky = false })
+		local cmd = VehicleController.command(input, {
+			maxSpeed = maxSpeed, turnSpeed = seat.TurnSpeed, isSky = false,
+			torque = seat.Torque, dt = dt, actualForward = vel:Dot(primary.CFrame.LookVector),
+		}, driveState)
 		VehicleController.apply(primary, cmd, {
-			biome = biome,
+			biome = biome, altitudeDt = dt,
 			raycast = function(origin, direction)
 				return workspace:Raycast(origin, direction, rayParams)
 			end,

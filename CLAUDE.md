@@ -36,10 +36,22 @@ lune run tools/report.luau   # regenerates reports/forest/ (track.svg, summary.m
 
 ## Facts that are easy to get wrong
 
-- The car's velocity is SET each frame (`LookVector * throttle * MaxSpeed`).
-  There is no coasting and `VehicleSeat.Torque` is never read.
-- `TurnSpeed` clamps to 3.0 for every FOREST build, so stability has no
-  effect on handling today.
+- Only `Modules/VehicleTuning` writes `VehicleSeat.MaxSpeed` / `TurnSpeed`
+  during a race (named multipliers). Never save a seat value and restore it
+  later: overlapping effects then leave cars permanently fast or slow.
+- Harmful effects call `RaceEffects.blocksHit(player)` first (shields,
+  Rubber Duck). Enemy abilities target only `_targetable` players.
+- Connect Touched handlers once per part (`_once` in RacingManager) and check
+  `_active`; connecting on every RACING phase doubles effects from round 2.
+- The drive command ramps: acceleration = `ACCEL_BASE + Torque × ACCEL_PER_TORQUE`
+  (`Constants.DRIVE`). Reset `VehicleController` state on spawn and respawn.
+- Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range;
+  clamping a raw multiple made every FOREST car identical before.
+- Race progress is distance along the centerline (`TrackGeometry:progressAt`,
+  continuous across kinks), never a raw Z coordinate. Respawns go to
+  `RaceProgress.respawnPoint`, on the centerline facing along the track.
+- `MapVisibility.restore` must keep a stored `false` (the old
+  `x ~= nil and x or true` idiom turned trigger volumes into invisible walls).
 - `OnServerInvoke` / `OnInvoke` cannot be read in Roblox, only assigned.
 - Lune's `fs` is async: never read files inside mock-managed coroutines
   (the loader caches sources at boot for this reason).

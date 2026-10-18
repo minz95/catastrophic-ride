@@ -16,6 +16,7 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Track = require(ReplicatedStorage.Shared.Tracks.ForestTrack)
+local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
 
 local C = {
 	GRASS        = Color3.fromRGB(76,  120, 50),
@@ -103,6 +104,22 @@ end
 -- Race direction: vehicle starts at N1 (Z=600) and progresses toward Nlast.
 
 local NODES = Track.nodes
+local GEO   = TrackGeometry.new(NODES, Track.width)
+
+-- Track direction at a point near the centerline, smoothed across a node
+-- (yaw in the TrackGeometry:yawAt convention).
+local function _trackYawNear(x, z)
+	local s = GEO:project(x, z).s
+	local ax, az = GEO:pointAt(s - 4)
+	local bx, bz = GEO:pointAt(s + 4)
+	return math.atan2(-(bx - ax), -(bz - az))
+end
+
+-- Deflection (degrees, + = right) at each interior node index.
+local DEFLECTION = {}
+for _, d in ipairs(GEO:deflections()) do
+	DEFLECTION[d.node] = d.angle
+end
 
 -- Finish-line Z (FinishLine sensor / arch). Must match Constants.TRACK.FOREST.zFinish (-2000 ± approach).
 local FINISH_Z = Track.finishZ
@@ -325,6 +342,20 @@ local function _wallPieces(arcStart, segLen)
 	return pieces
 end
 
+-- At a kink the two straight wall boxes leave a wedge-shaped hole on the
+-- OUTER side of the turn (2·h·sin(θ/2) wide: ~10 studs at 30°), which cars
+-- used to escape through. Outer walls are extended by h·tan(θ/2) at that end
+-- so neighbouring walls meet. Inner walls are left as they are.
+local function _outerExtension(nodeIndex, side)
+	local angle = DEFLECTION[nodeIndex]
+	if not angle or math.abs(angle) < 1 then return 0 end
+	-- side +1 = left of travel (see _segCF), outer side of a right turn
+	local outerSide = angle > 0 and 1 or -1
+	if side ~= outerSide then return 0 end
+	local h = TRACK_W / 2 + 2
+	return h * math.tan(math.rad(math.abs(angle)) / 2) + 1
+end
+
 local function _buildWalls(root)
 	local arcStart = 0
 	for i = 1, #NODES - 1 do
@@ -332,13 +363,21 @@ local function _buildWalls(root)
 		local segLen = _segLen(a[1], a[2], b[1], b[2])
 		local cf     = _segCF(a[1], a[2], b[1], b[2])
 
-		for _, piece in ipairs(_wallPieces(arcStart, segLen)) do
-			local pStart, pEnd = piece[1], piece[2]
-			local pLen = pEnd - pStart
-			if pLen < 0.5 then continue end
-			local pMid = (pStart + pEnd) / 2 - segLen / 2  -- segment-local Z offset
-
+		local pieces = _wallPieces(arcStart, segLen)
+		for idx, piece in ipairs(pieces) do
 			for _, side in ipairs({ -1, 1 }) do
+				local pStart, pEnd = piece[1], piece[2]
+				if idx == 1 and pStart < 0.01 then
+					pStart -= _outerExtension(i, side)
+				end
+				if idx == #pieces and pEnd > segLen - 0.01 then
+					pEnd += _outerExtension(i + 1, side)
+				end
+				local pLen = pEnd - pStart
+				if pLen < 0.5 then continue end
+				-- segment-local +Z points along travel (a → b); 0 is the midpoint
+				local pMid = (pStart + pEnd) / 2 - segLen / 2
+
 				local wall = _part(root, {
 					Name     = "TrackWall",
 					Size     = Vector3.new(2, WALL_H, pLen),
@@ -364,6 +403,15 @@ end
 
 -- ─── Slow zones outside the corridor (soft penalty for off-track shortcuts) ─
 
+-- Built in short chunks; a chunk is skipped when any corner comes within the
+-- driving lane of ANY part of the track. One long box per segment used to
+-- overlap the next segment's lane at kinks and slow cars on the racing line.
+local SZ_CHUNK = 12
+
+local function _inLane(x, z)
+	return GEO:project(x, z).dist < TRACK_W / 2 + 2
+end
+
 local function _buildSlowZones(root)
 	local SZ_WIDTH = Track.slowZoneWidth    -- stud width per side
 	local SZ_HEIGHT = Track.slowZoneHeight  -- low trigger volume
@@ -373,18 +421,33 @@ local function _buildSlowZones(root)
 		local segLen = _segLen(a[1], a[2], b[1], b[2])
 		if segLen < 0.1 then continue end
 		local cf = _segCF(a[1], a[2], b[1], b[2])
-		for _, side in ipairs({ -1, 1 }) do
-			local sz = _part(root, {
-				Name = "SlowZone_" .. i .. (side > 0 and "R" or "L"),
-				Size = Vector3.new(SZ_WIDTH, SZ_HEIGHT, segLen + 8),
-				Color = C.MUD,
-				Material = MAT.MUD,
-				CanCollide = false,
-				Transparency = 0.6,
-				CastShadow = false,
-			})
-			sz.CFrame = cf * CFrame.new(side * SZ_OFFSET, SZ_HEIGHT / 2 + 0.1, 0)
-			_tag(sz, "SlowZone")
+		local chunks = math.max(1, math.ceil(segLen / SZ_CHUNK))
+		local chunkLen = segLen / chunks
+		for c = 1, chunks do
+			local mid = -segLen / 2 + (c - 0.5) * chunkLen
+			for _, side in ipairs({ -1, 1 }) do
+				local centre = cf * CFrame.new(side * SZ_OFFSET, SZ_HEIGHT / 2 + 0.1, mid)
+				local clear = true
+				for _, cu in ipairs({ -1, 1 }) do
+					for _, cv in ipairs({ -1, 1 }) do
+						local corner = centre * Vector3.new(cu * SZ_WIDTH / 2, 0, cv * chunkLen / 2)
+						if _inLane(corner.X, corner.Z) then clear = false end
+					end
+				end
+				if clear then
+					local sz = _part(root, {
+						Name = "SlowZone_" .. i .. "_" .. c .. (side > 0 and "R" or "L"),
+						Size = Vector3.new(SZ_WIDTH, SZ_HEIGHT, chunkLen + 0.5),
+						Color = C.MUD,
+						Material = MAT.MUD,
+						CanCollide = false,
+						Transparency = 0.6,
+						CastShadow = false,
+					})
+					sz.CFrame = centre
+					_tag(sz, "SlowZone")
+				end
+			end
 		end
 	end
 end
@@ -497,6 +560,7 @@ local function _buildJumpRamps(root)
 	local rs = Track.jumpRampSize
 	for i, r in ipairs(Track.jumpRamps) do
 		local rx, rz, yaw = r[1], r[2], r[3]
+		local facing = CFrame.Angles(0, yaw, 0)          -- LookVector = travel direction
 		local ramp = _wedge(root, {
 			Name     = "JumpRamp_" .. i,
 			Size     = Vector3.new(rs[1], rs[2], rs[3]),
@@ -505,21 +569,21 @@ local function _buildJumpRamps(root)
 		})
 		ramp.CFrame = CFrame.new(rx, 3, rz) * CFrame.Angles(0, yaw + math.pi, 0)
 
-		-- Landing pad (flat slab matching track top — purely cosmetic since
-		-- the underlying TrackSeg already covers this Z).
-		_part(root, {
+		-- Landing pad 17 studs past the ramp along the travel direction
+		-- (purely cosmetic; the TrackSeg below is the real floor).
+		local landing = _part(root, {
 			Name = "LandingPad_" .. i,
 			Size = Vector3.new(TRACK_W - 4, 0.2, 22),
-			Position = Vector3.new(rx, TRACK_TOP + 0.1, rz - 17 * math.cos(yaw)),
 			Color = C.RAMP, Material = MAT.DIRT,
 			CanCollide = false, CastShadow = false,
 		})
+		landing.CFrame = CFrame.new(rx, TRACK_TOP + 0.1, rz) * facing * CFrame.new(0, 0, -17)
 
 		local jz = _part(root, {
 			Name = "JumpZone_" .. i, Size = Vector3.new(TRACK_W, 10, 14),
-			Position = Vector3.new(rx, 6, rz),
 			CanCollide = false, Transparency = 1,
 		})
+		jz.CFrame = CFrame.new(rx, 6, rz) * facing
 		_tag(jz, "JumpZone")
 	end
 end
@@ -581,33 +645,37 @@ end
 -- geometrically misses the trigger volumes. CheckpointService (#126) gates the
 -- FinishLine on cp1 && cp2.
 
-local function _buildCheckpointGate(root, x, z, cpIndex, archColor)
-	local groundY = 0
-	local archTop = groundY + 18
+-- Gate and trigger are rotated to face along the track, so the trigger spans
+-- the whole lane width wherever the checkpoint sits (CP1 sits where the track
+-- runs along X; an axis-aligned box only covered a 6-stud strip there).
+local CHECKPOINT_DEPTH = 10
+
+local function _buildCheckpointGate(root, gateCF, cpIndex, archColor)
+	local archTop = 18
 	for _, side in ipairs({ -1, 1 }) do
-		_part(root, {
+		local pillar = _part(root, {
 			Name = "CPGate" .. cpIndex .. "Pillar" .. (side > 0 and "R" or "L"),
 			Size = Vector3.new(2.4, archTop, 2.4),
-			Position = Vector3.new(x + side * (TRACK_W / 2 - 2), groundY + archTop / 2, z),
 			Color = archColor, Material = Enum.Material.Neon,
 			CanCollide = false, CastShadow = false,
 		})
+		pillar.CFrame = gateCF * CFrame.new(side * (TRACK_W / 2 - 2), archTop / 2, 0)
 	end
 	for i = -1, 1 do
-		_part(root, {
+		local bar = _part(root, {
 			Name = "CPGate" .. cpIndex .. "Top" .. (i + 2),
 			Size = Vector3.new(TRACK_W / 3 + 2, 2, 2.4),
-			Position = Vector3.new(x + i * (TRACK_W / 3), archTop + (i == 0 and 2 or 0.5), z),
 			Color = archColor, Material = Enum.Material.Neon,
 			CanCollide = false, CastShadow = false,
 		})
+		bar.CFrame = gateCF * CFrame.new(i * (TRACK_W / 3), archTop + (i == 0 and 2 or 0.5), 0)
 	end
 	local labelAnchor = _part(root, {
 		Name = "CPGate" .. cpIndex .. "Label",
 		Size = Vector3.new(1, 1, 1),
-		Position = Vector3.new(x, archTop + 8, z),
 		Transparency = 1, CanCollide = false, CastShadow = false,
 	})
+	labelAnchor.CFrame = gateCF * CFrame.new(0, archTop + 8, 0)
 	local bb = Instance.new("BillboardGui")
 	bb.Size           = UDim2.new(0, 120, 0, 32)
 	bb.MaxDistance    = 300
@@ -634,15 +702,16 @@ local function _buildCheckpoints(root)
 	local size = Track.checkpointSize
 	for idx, cp in ipairs(Track.checkpoints) do
 		local cx, cz = cp[1], cp[2]
+		local gateCF = CFrame.new(cx, 0, cz) * CFrame.Angles(0, _trackYawNear(cx, cz), 0)
 		local trigger = _part(root, {
 			Name         = "Checkpoint" .. idx,
-			Size         = Vector3.new(size[1], size[2], size[3]),
-			Position     = Vector3.new(cx, 7, cz),
+			Size         = Vector3.new(TRACK_W + 4, size[2], CHECKPOINT_DEPTH),
 			CanCollide   = false,
 			Transparency = 1,
 		})
+		trigger.CFrame = gateCF * CFrame.new(0, 7, 0)
 		_tag(trigger, "Checkpoint" .. idx)
-		_buildCheckpointGate(root, cx, cz, idx, CHECKPOINT_COLORS[idx] or CHECKPOINT_COLORS[1])
+		_buildCheckpointGate(root, gateCF, idx, CHECKPOINT_COLORS[idx] or CHECKPOINT_COLORS[1])
 	end
 end
 
@@ -703,16 +772,10 @@ local function _buildTrees(root)
 		})
 	end
 
-	-- Helper: reject tree positions that fall within the corridor bbox.
+	-- Reject tree positions near ANY part of the centerline (the old check
+	-- only looked at node points, so trees grew inside long straights).
 	local function _insideTrack(tx, tz)
-		-- Approximate: trees too close to any node are likely on the track.
-		for _, n in ipairs(NODES) do
-			local dx, dz = tx - n[1], tz - n[2]
-			if dx * dx + dz * dz < 35 * 35 then  -- 35-stud buffer (track is 40 wide)
-				return true
-			end
-		end
-		return false
+		return GEO:project(tx, tz).dist < TRACK_W / 2 + 10
 	end
 
 	local builders = { _pine, _pine, _oak, _oak, _birch }

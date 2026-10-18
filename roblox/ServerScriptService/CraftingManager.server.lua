@@ -105,23 +105,38 @@ end
 
 -- ─── Auto-submit on timer expiry ─────────────────────────────────────────────
 
+-- Best-effort slots for a player who did not submit: the first item of each
+-- category goes to BODY / ENGINE / SPECIAL, leftovers to MOBILITY, HEAD, TAIL.
+function _autoSlots(inventory)
+	local slots, used = {}, {}
+	for _, slotName in ipairs({ "BODY", "ENGINE", "SPECIAL" }) do
+		for i, name in ipairs(inventory) do
+			local cfg = ItemConfig[name]
+			if not used[i] and cfg and cfg.slotType == slotName then
+				slots[slotName] = name
+				used[i] = true
+				break
+			end
+		end
+	end
+	for _, slotName in ipairs({ "MOBILITY", "HEAD", "TAIL" }) do
+		for i, name in ipairs(inventory) do
+			if not used[i] then
+				slots[slotName] = name
+				used[i] = true
+				break
+			end
+		end
+	end
+	return slots
+end
+
 local function _autoSubmitAll()
 	for _, player in ipairs(Players:GetPlayers()) do
 		if not _submitted[player.UserId] then
 			local data = SessionManager.getData(player)
 			if data then
-				-- Build best-effort slots from whatever is in inventory
-				local inv = data.inventory
-				local slots = {}
-				local slotOrder = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
-				local idx = 1
-				for _, slotName in ipairs(slotOrder) do
-					if inv[idx] then
-						slots[slotName] = inv[idx]
-						idx = idx + 1
-					end
-				end
-				_processCraft(player, slots)
+				_processCraft(player, _autoSlots(data.inventory))
 				_submitted[player.UserId] = true
 			end
 		end

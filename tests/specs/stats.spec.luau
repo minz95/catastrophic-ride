@@ -15,6 +15,22 @@ local function isFinite(n)
 	return type(n) == "number" and n == n and n ~= math.huge and n ~= -math.huge
 end
 
+R.describe("handling across biomes", function()
+	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+		R.it(biome .. " TurnSpeed spreads over its range instead of sitting on a clamp", function()
+			local values = {}
+			for _, b in ipairs(Builds.enumerate(env, biome)) do
+				table.insert(values, Constants.turnSpeedFor(biome, b.stats))
+			end
+			table.sort(values)
+			local p10 = values[math.floor(#values * 0.1) + 1]
+			local p90 = values[math.floor(#values * 0.9) + 1]
+			R.expect(p90 - p10).toBeGreaterThan(0.3)
+		end)
+	end
+end)
+
 R.describe("vehicle stats (FOREST)", function()
 	R.it("every build yields finite stats within the seat clamps", function()
 		local bad = {}
@@ -45,18 +61,16 @@ R.describe("vehicle stats (FOREST)", function()
 		R.expect(bad).toBeEmpty("bodies where the Epic engine is slower")
 	end)
 
-	R.known("stability changes how fast the car turns",
-		"TurnSpeed = clamp(stability * 0.3, 0.5, 3) hits the 3.0 cap for every build, so BODY grip/weight never changes handling",
+	R.it("stability changes how fast the car turns",
 		function()
 			local distinct = {}
 			for _, b in ipairs(list) do distinct[string.format("%.2f", b.turnSpeed)] = true end
 			local n = 0
 			for _ in pairs(distinct) do n += 1 end
-			R.expect(n).toBeGreaterThan(1)
+			R.expect(n).toBeGreaterThan(20)
 		end)
 
-	R.known("the acceleration stat affects driving",
-		"VehicleSeat.Torque is derived from acceleration but the drive code sets velocity directly and never reads it",
+	R.it("the acceleration stat affects driving",
 		function()
 			local readers = {}
 			for _, path in ipairs({

@@ -1,13 +1,21 @@
 -- RacingManager.server.lua
 -- Race state, position tracking, biome physics (mud/buoyancy/updraft/drift),
--- obstacle/boost-pad collision, finish detection, and result calculation.
+-- obstacle/boost-pad collision, HEAD/TAIL passives, finish detection.
 -- Resolves: Issue #30, #31, #32, #33, #34, #35, #37, #66
+--
+-- Rules that keep this file correct across rounds (see tests/specs):
+--   * Every speed / turn change goes through Modules/VehicleTuning (named
+--     multipliers), never by saving and restoring VehicleSeat values.
+--   * Touched handlers are connected ONCE per part (_once) and check _active,
+--     so a second round does not double every effect.
+--   * Harmful effects ask RaceEffects.blocksHit first (shields, Rubber Duck).
 
 local Players             = game:GetService("Players")
 local RunService          = game:GetService("RunService")
 local CollectionService   = game:GetService("CollectionService")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local Debris              = game:GetService("Debris")
 
 local Constants         = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents      = require(ReplicatedStorage.RemoteEvents)
@@ -16,15 +24,12 @@ local SessionManager    = require(ServerScriptService.SessionManager)
 local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
+local Passives          = require(ReplicatedStorage.Shared.Passives)
 local Telemetry         = require(ServerScriptService.Modules.Telemetry)
+local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
+local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
 
--- Records a MaxSpeed change so overlapping effects can be audited later.
-local function _logSpeed(player, effect, phase, before, after)
-	Telemetry.record("speed_effect", {
-		userId = player.UserId, effect = effect, phase = phase,
-		before = before, after = after,
-	})
-end
+local P = Constants.PASSIVES
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -34,314 +39,253 @@ local _startTick   = 0
 local _finishOrder = {}   -- { { userId, time } }
 local _totalRacers = 0
 local _raceSeed    = 0    -- broadcast to clients for per-race variation
+local _activePads  = {}   -- [BoostPad part] = true for this race
 
--- Per-player physics state
 -- _physState[userId] = {
---   inMud=false, inUpdraft=false, boostCooldownEnd=0,
---   obstaclePenaltyEnd=0, drifting=false,
---   vehicle=Model, seat=VehicleSeat
+--   zones = { mud = {[part]=true}, slow = {...}, updraft = {...} },
+--   boostCooldownEnd, obstaclePenaltyEnd, progressSeg, cleanSince,
+--   head = {...}, tail = {...}, slots = {...},
 -- }
 local _physState = {}
 
--- ─── Track axis ───────────────────────────────────────────────────────────────
--- Track runs along -Z. Per-biome zStart/zFinish live in Constants.TRACK and
--- are looked up at race start from the active _biome.
+-- ─── Helpers ──────────────────────────────────────────────────────────────────
 
-local function _trackProgress(vehicle)
+local function _seatOf(vehicle)
+	return vehicle and vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+end
+
+-- Records a MaxSpeed change so overlapping effects can be audited later.
+local function _logSpeed(player, effect, phase, before, after)
+	Telemetry.record("speed_effect", {
+		userId = player.UserId, effect = effect, phase = phase,
+		before = before, after = after,
+	})
+end
+
+-- Applies a named MaxSpeed multiplier through VehicleTuning and logs it.
+local function _speed(player, seat, id, mult, duration)
+	if not seat then return end
+	local before = seat.MaxSpeed
+	VehicleTuning.set(seat, "MaxSpeed", id, mult, duration)
+	_logSpeed(player, id, "enter", before, seat.MaxSpeed)
+	if duration then
+		task.delay(duration, function()
+			if seat.Parent then _logSpeed(player, id, "expire", nil, seat.MaxSpeed) end
+		end)
+	end
+end
+
+local function _unspeed(player, seat, id)
+	if not seat or not VehicleTuning.has(seat, "MaxSpeed", id) then return end
+	local before = seat.MaxSpeed
+	VehicleTuning.remove(seat, "MaxSpeed", id)
+	_logSpeed(player, id, "exit", before, seat.MaxSpeed)
+end
+
+-- The racer whose vehicle contains `hit`, plus that vehicle.
+local function _ownerOf(hit)
+	local node = hit
+	while node and node ~= workspace do
+		if node:IsA("Model") then
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel == node then
+					return player, node
+				end
+			end
+		end
+		node = node.Parent
+	end
+	return nil
+end
+
+-- Connects `fn` to part.Touched (or another signal) only once per part.
+local _connected = setmetatable({}, { __mode = "k" })
+local function _once(part, key, signalName, fn)
+	_connected[part] = _connected[part] or {}
+	if _connected[part][key] then return end
+	_connected[part][key] = true
+	part[signalName]:Connect(fn)
+end
+
+local function _flat(v)
+	return Vector3.new(v.X, 0, v.Z)
+end
+
+-- ─── Progress ─────────────────────────────────────────────────────────────────
+
+local function _progressFor(player, vehicle)
 	if not vehicle or not vehicle.PrimaryPart or not _biome then return 0 end
-	return RaceProgress.progress(_biome, vehicle.PrimaryPart.Position.Z)
+	local ps = _physState[player.UserId]
+	local pos = vehicle.PrimaryPart.Position
+	local s, seg = RaceProgress.progress(_biome, pos.X, pos.Z, ps and ps.progressSeg)
+	if ps then ps.progressSeg = seg end
+	return s
 end
 
--- ─── Position sync loop ───────────────────────────────────────────────────────
+-- ─── Respawn ──────────────────────────────────────────────────────────────────
 
-local function _startPositionSync()
-	task.spawn(function()
-		while _active do
-			local data = {}
-			local allData = SessionManager.getAllData()
-			for userId, pdata in pairs(allData) do
-				if pdata.vehicleModel then
-					local progress = _trackProgress(pdata.vehicleModel)
-					local pp = pdata.vehicleModel.PrimaryPart
-					if pp and Telemetry.detailed then
-						local seatS = pdata.vehicleModel:FindFirstChildWhichIsA("VehicleSeat", true)
-						Telemetry.sample("race_sample", {
-							userId = userId,
-							x = math.floor(pp.Position.X * 10) / 10,
-							y = math.floor(pp.Position.Y * 10) / 10,
-							z = math.floor(pp.Position.Z * 10) / 10,
-							speed = math.floor(pp.AssemblyLinearVelocity.Magnitude * 10) / 10,
-							maxSpeed = seatS and seatS.MaxSpeed,
-							progress = progress,
-						})
-					end
-					SessionManager.setRaceProgress(
-						Players:GetPlayerByUserId(userId),
-						progress,
-						0   -- rank recalculated below
-					)
-					table.insert(data, { userId = userId, progress = progress, rank = 0 })
-				end
-			end
-			-- Sort by progress desc → assign ranks
-			table.sort(data, function(a, b) return a.progress > b.progress end)
-			for rank, entry in ipairs(data) do entry.rank = rank end
-			RemoteEvents.PlayerPositionSync:FireAllClients(data)
-			task.wait(Constants.POSITION_SYNC_RATE)
-		end
-	end)
-end
-
--- ─── Mud zones (FOREST) ───────────────────────────────────────────────────────
-
-local function _setupMudZones()
-	for _, part in ipairs(CollectionService:GetTagged("MudZone")) do
-		part.Touched:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps and not ps.inMud then
-						ps.inMud = true
-						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-						if seat then
-							local before = seat.MaxSpeed
-							seat.MaxSpeed = seat.MaxSpeed * Constants.MUD_SPEED_MULT
-							_logSpeed(player, "mud", "enter", before, seat.MaxSpeed)
-						end
-						RemoteEvents.ScreenEffect:FireClient(player, "mudWarning", {})
-					end
-					break
-				end
-			end
-		end)
-
-		part.TouchEnded:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps and ps.inMud then
-						ps.inMud = false
-						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-						if seat then
-							local before = seat.MaxSpeed
-							seat.MaxSpeed = seat.MaxSpeed / Constants.MUD_SPEED_MULT
-							_logSpeed(player, "mud", "exit", before, seat.MaxSpeed)
-						end
-					end
-					break
-				end
-			end
-		end)
-	end
-end
-
--- ─── Slow zones (off-corridor soft penalty, FOREST + OCEAN) ─────────────────
--- Players can squeeze through the wall gaps; the SlowZone trigger pads
--- outside the wall apply SLOW_ZONE_MULT to vehicle MaxSpeed while touching.
--- Same Touched/TouchEnded pattern as _setupMudZones, separate state flag.
-
-local function _setupSlowZones()
-	for _, part in ipairs(CollectionService:GetTagged("SlowZone")) do
-		part.Touched:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps and not ps.inSlowZone then
-						ps.inSlowZone = true
-						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-						if seat then
-							local before = seat.MaxSpeed
-							seat.MaxSpeed = seat.MaxSpeed * Constants.SLOW_ZONE_MULT
-							_logSpeed(player, "slow_zone", "enter", before, seat.MaxSpeed)
-						end
-					end
-					break
-				end
-			end
-		end)
-
-		part.TouchEnded:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps and ps.inSlowZone then
-						ps.inSlowZone = false
-						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-						if seat then
-							local before = seat.MaxSpeed
-							seat.MaxSpeed = seat.MaxSpeed / Constants.SLOW_ZONE_MULT
-							_logSpeed(player, "slow_zone", "exit", before, seat.MaxSpeed)
-						end
-					end
-					break
-				end
-			end
-		end)
-	end
-end
-
--- ─── Buoyancy (OCEAN) ─────────────────────────────────────────────────────────
-
-local WATER_Y = 0   -- set from BiomeConfig at race start
-
-local function _buoyancyLoop()
-	local cfg = BiomeConfig.get("OCEAN")
-	WATER_Y = cfg.waterPlaneY or 0
-
-	RunService.Heartbeat:Connect(function()
-		if not _active or _biome ~= "OCEAN" then return end
-
-		local allData = SessionManager.getAllData()
-		for userId, pdata in pairs(allData) do
-			local vehicle = pdata.vehicleModel
-			if not vehicle or not vehicle.PrimaryPart then continue end
-
-			local ps = _physState[userId]
-			if not ps then continue end
-
-			local partY   = vehicle.PrimaryPart.Position.Y
-			local submerge = math.max(0, WATER_Y - partY)   -- how deep below surface
-			local floatStat = (pdata.vehicleStats and pdata.vehicleStats.floatability) or 20
-
-			if submerge > 0 or partY < WATER_Y + 1 then
-				-- Apply upward buoyancy force
-				local forceY = (submerge * 300 + floatStat * 15)
-				local bf = vehicle.PrimaryPart:FindFirstChild("BuoyancyForce")
-				if not bf then
-					bf = Instance.new("BodyForce")
-					bf.Name   = "BuoyancyForce"
-					bf.Parent = vehicle.PrimaryPart
-				end
-				bf.Force = Vector3.new(0, forceY, 0)
-			else
-				local bf = vehicle.PrimaryPart:FindFirstChild("BuoyancyForce")
-				if bf then bf:Destroy() end
-			end
-		end
-	end)
-end
-
--- ─── Updraft zones (SKY) ──────────────────────────────────────────────────────
-
-local function _setupUpdraftZones()
-	for _, part in ipairs(CollectionService:GetTagged("UpdraftZone")) do
-		part.Touched:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps and not ps.inUpdraft then
-						ps.inUpdraft = true
-						local flyStat = (pdata.vehicleStats and pdata.vehicleStats.flyability) or 10
-						local bf = vehicle.PrimaryPart:FindFirstChild("UpdraftForce")
-						if not bf then
-							bf = Instance.new("BodyForce")
-							bf.Name   = "UpdraftForce"
-							bf.Parent = vehicle.PrimaryPart
-						end
-						bf.Force = Vector3.new(0, Constants.UPDRAFT_BASE_FORCE * (flyStat / 20), 0)
-						RemoteEvents.ScreenEffect:FireClient(player, "updraftWarning", {})
-					end
-					break
-				end
-			end
-		end)
-
-		part.TouchEnded:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if ps then
-						ps.inUpdraft = false
-						local bf = vehicle.PrimaryPart:FindFirstChild("UpdraftForce")
-						if bf then bf:Destroy() end
-					end
-					break
-				end
-			end
-		end)
-	end
-end
-
--- ─── Respawn helper ───────────────────────────────────────────────────────────
-
--- Returns the spawn Y for the current biome (vehicle rests at this height).
 local function _spawnY()
 	local cfg = _biome and BiomeConfig[_biome]
 	return (cfg and cfg.raceStartY) or 2
 end
 
--- Teleports the vehicle back onto the track at its current progress, with a
--- screen flash. Safe to call from server Heartbeat or a RemoteFunction.
+-- Puts the vehicle back on the track centerline 30 studs behind its progress,
+-- facing along the track.
 local function _respawnVehicle(player, reason)
 	local pdata = SessionManager.getData(player)
 	local vehicle = pdata and pdata.vehicleModel
 	if not vehicle or not vehicle.PrimaryPart then return end
 
 	local primary = vehicle.PrimaryPart
-	-- Step back 30 studs so the player has room to regain speed.
-	local x, y, safeZ = RaceProgress.respawnPoint(_biome, primary.Position.Z, _spawnY())
+	local ps = _physState[player.UserId]
+	local x, y, z, yaw = RaceProgress.respawnPoint(_biome, primary.Position.X, primary.Position.Z,
+		_spawnY(), ps and ps.progressSeg)
 
 	Telemetry.record("respawn", {
 		userId = player.UserId,
 		reason = reason or "unknown",
 		from = Telemetry.vec(primary.Position),
-		to = { x = x, y = y, z = safeZ },
+		to = { x = x, y = y, z = z },
 	})
 
-	-- Briefly anchor so the vehicle doesn't fall while being moved.
 	primary.Anchored = true
-	vehicle:SetPrimaryPartCFrame(CFrame.new(x, y, safeZ))
-	-- Zero out any lingering velocity.
+	vehicle:PivotTo(CFrame.new(x, y, z) * CFrame.Angles(0, yaw, 0))
 	primary.AssemblyLinearVelocity  = Vector3.zero
 	primary.AssemblyAngularVelocity = Vector3.zero
+	-- SKY: hover target follows the respawn point
+	local hover = primary:FindFirstChild("HoverPosition")
+	if hover then hover.Position = primary.Position end
 	task.wait(0.1)
 	primary.Anchored = false
+	if ps then ps.cleanSince = tick() end
 
 	RemoteEvents.ScreenEffect:FireClient(player, "respawn", {})
 end
 
+-- ─── Zones (mud / slow / updraft): entered while any car part touches ─────────
+
+-- zones[kind][zonePart] = { [car part touching it] = true }. The car is "in"
+-- while any of its parts touches any zone of that kind, so a wheel leaving the
+-- mud while the chassis is still in it does not end the effect.
+local function _zoneTouch(player, kind, zonePart, hitPart, entering)
+	local ps = _physState[player.UserId]
+	if not ps then return false, false end
+	ps.zones[kind] = ps.zones[kind] or {}
+	local zones = ps.zones[kind]
+	local wasIn = next(zones) ~= nil
+	local hits = zones[zonePart]
+	if entering then
+		if not hits then
+			hits = {}
+			zones[zonePart] = hits
+		end
+		hits[hitPart] = true
+	elseif hits then
+		hits[hitPart] = nil
+		if next(hits) == nil then zones[zonePart] = nil end
+	end
+	return wasIn, next(zones) ~= nil
+end
+
+local function _connectSpeedZone(part, kind, mult, warning)
+	local function handle(hit, entering)
+		if not _active then return end
+		local player, vehicle = _ownerOf(hit)
+		if not player then return end
+		local wasIn, isIn = _zoneTouch(player, kind, part, hit, entering)
+		if wasIn == isIn then return end
+		local seat = _seatOf(vehicle)
+		if isIn then
+			if RaceEffects.has(player, "dig") then return end   -- Drill ignores mud / slow ground
+			_speed(player, seat, kind, mult)
+			if warning then RemoteEvents.ScreenEffect:FireClient(player, warning, {}) end
+		else
+			_unspeed(player, seat, kind)
+		end
+	end
+	_once(part, kind .. "In", "Touched", function(hit) handle(hit, true) end)
+	_once(part, kind .. "Out", "TouchEnded", function(hit) handle(hit, false) end)
+end
+
+-- ─── Buoyancy (OCEAN) ─────────────────────────────────────────────────────────
+
+local function _waterY()
+	local cfg = BiomeConfig.get("OCEAN")
+	return (cfg.waterPlaneY or 0) + (workspace:GetAttribute("WaterLevelOffset") or 0)
+end
+
+RunService.Heartbeat:Connect(function()
+	if not _active or _biome ~= "OCEAN" then return end
+	local waterY = _waterY()
+	for userId, pdata in pairs(SessionManager.getAllData()) do
+		local vehicle = pdata.vehicleModel
+		if not vehicle or not vehicle.PrimaryPart or not _physState[userId] then continue end
+		local partY    = vehicle.PrimaryPart.Position.Y
+		local submerge = math.max(0, waterY - partY)
+		local floatStat = (pdata.vehicleStats and pdata.vehicleStats.floatability) or 20
+		local bf = vehicle.PrimaryPart:FindFirstChild("BuoyancyForce")
+		if submerge > 0 or partY < waterY + 1 then
+			if not bf then
+				bf = Instance.new("BodyForce")
+				bf.Name   = "BuoyancyForce"
+				bf.Parent = vehicle.PrimaryPart
+			end
+			bf.Force = Vector3.new(0, submerge * 300 + floatStat * 15, 0)
+		elseif bf then
+			bf:Destroy()
+		end
+	end
+end)
+
+-- ─── Updraft zones (SKY) ──────────────────────────────────────────────────────
+
+local function _connectUpdraft(part)
+	local function handle(hit, entering)
+		if not _active then return end
+		local player, vehicle = _ownerOf(hit)
+		if not player or not vehicle.PrimaryPart then return end
+		local wasIn, isIn = _zoneTouch(player, "updraft", part, hit, entering)
+		if wasIn == isIn then return end
+		local bf = vehicle.PrimaryPart:FindFirstChild("UpdraftForce")
+		if isIn then
+			local pdata = SessionManager.getData(player)
+			local flyStat = (pdata.vehicleStats and pdata.vehicleStats.flyability) or 10
+			if not bf then
+				bf = Instance.new("BodyForce")
+				bf.Name   = "UpdraftForce"
+				bf.Parent = vehicle.PrimaryPart
+			end
+			bf.Force = Vector3.new(0, Constants.UPDRAFT_BASE_FORCE * (flyStat / 20), 0)
+			RemoteEvents.ScreenEffect:FireClient(player, "updraftWarning", {})
+		elseif bf then
+			bf:Destroy()
+		end
+	end
+	_once(part, "updraftIn", "Touched", function(hit) handle(hit, true) end)
+	_once(part, "updraftOut", "TouchEnded", function(hit) handle(hit, false) end)
+end
+
 -- ─── Kill plane (all biomes) ──────────────────────────────────────────────────
 
-local function _setupKillPlane()
-	local cfg   = _biome and BiomeConfig[_biome]
-	-- SKY has an explicit killPlaneY; for ground/ocean use a generous floor.
+local _respawnCooldown = {}   -- { [userId] = expireTick }
+
+RunService.Heartbeat:Connect(function()
+	if not _active then return end
+	local cfg = _biome and BiomeConfig[_biome]
 	local killY = (cfg and cfg.killPlaneY) or -50
-
-	local _respawnCooldown = {}   -- { [userId] = expireTick } prevents rapid re-triggers
-
-	RunService.Heartbeat:Connect(function()
-		if not _active then return end
-		for _, player in ipairs(Players:GetPlayers()) do
-			local pdata = SessionManager.getData(player)
-			local vehicle = pdata and pdata.vehicleModel
-			if not vehicle or not vehicle.PrimaryPart then continue end
-			if vehicle.PrimaryPart.Position.Y < killY then
-				local now = tick()
-				if (_respawnCooldown[player.UserId] or 0) > now then continue end
-				_respawnCooldown[player.UserId] = now + 3   -- 3s cooldown
-				_respawnVehicle(player, "kill_plane")
-			end
+	for _, player in ipairs(Players:GetPlayers()) do
+		local pdata = SessionManager.getData(player)
+		local vehicle = pdata and pdata.vehicleModel
+		if not vehicle or not vehicle.PrimaryPart then continue end
+		if vehicle.PrimaryPart.Position.Y < killY then
+			local now = tick()
+			if (_respawnCooldown[player.UserId] or 0) > now then continue end
+			_respawnCooldown[player.UserId] = now + 3
+			task.spawn(_respawnVehicle, player, "kill_plane")
 		end
-	end)
-end
+	end
+end)
 
 -- ─── Manual respawn (R key from client) ───────────────────────────────────────
 
@@ -358,152 +302,298 @@ RemoteEvents.RequestRespawn.OnServerInvoke = function(player)
 	return "ok"
 end
 
--- ─── Obstacle collision (all biomes) ─────────────────────────────────────────
+-- ─── Obstacles (map parts and dynamic drops: Cactus, falling logs, …) ────────
 
-local function _setupObstacles()
-	for _, part in ipairs(CollectionService:GetTagged("Obstacle")) do
-		part.Touched:Connect(function(hit)
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
+local function _onObstacleTouched(part, hit)
+	if not _active then return end
+	local player, vehicle = _ownerOf(hit)
+	if not player then return end
+	local ps = _physState[player.UserId]
+	if not ps or tick() < (ps.obstaclePenaltyEnd or 0) then return end
+	ps.obstaclePenaltyEnd = tick() + Constants.OBSTACLE_BOUNCE_PENALTY_DURATION
 
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local ps = _physState[player.UserId]
-					if not ps or tick() < (ps.obstaclePenaltyEnd or 0) then break end
-
-					ps.obstaclePenaltyEnd = tick() + Constants.OBSTACLE_BOUNCE_PENALTY_DURATION
-
-					-- Apply bounce impulse
-					local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-					if seat then
-						local oldMax = seat.MaxSpeed
-						seat.MaxSpeed = oldMax * Constants.OBSTACLE_BOUNCE_SPEED_MULT
-						_logSpeed(player, "obstacle", "enter", oldMax, seat.MaxSpeed)
-						task.delay(Constants.OBSTACLE_BOUNCE_PENALTY_DURATION, function()
-							if seat and seat.Parent then
-								local before = seat.MaxSpeed
-								seat.MaxSpeed = oldMax
-								_logSpeed(player, "obstacle", "restore", before, oldMax)
-							end
-						end)
-					end
-
-					-- Impulse away from obstacle
-					local primary = vehicle.PrimaryPart
-					if primary then
-						local dir = (primary.Position - part.Position).Unit
-						local bv = Instance.new("BodyVelocity")
-						bv.Velocity     = dir * 30
-						bv.MaxForce     = Vector3.new(1e5, 1e4, 1e5)
-						bv.Parent       = primary
-						game:GetService("Debris"):AddItem(bv, 0.25)
-					end
-
-					RemoteEvents.ScreenEffect:FireClient(player, "collision", {})
-					break
-				end
-			end
-		end)
+	if RaceEffects.blocksHit(player) then
+		Telemetry.record("hit_blocked", { userId = player.UserId, by = part.Name })
+		return
 	end
+	ps.cleanSince = tick()
+
+	_speed(player, _seatOf(vehicle), "obstacle",
+		Constants.OBSTACLE_BOUNCE_SPEED_MULT, Constants.OBSTACLE_BOUNCE_PENALTY_DURATION)
+
+	local primary = vehicle.PrimaryPart
+	if primary then
+		local away = _flat(primary.Position - part.Position)
+		if away.Magnitude > 1e-3 then
+			local bv = Instance.new("BodyVelocity")
+			bv.Velocity = away.Unit * 30
+			bv.MaxForce = Vector3.new(1e5, 1e4, 1e5)
+			bv.Parent   = primary
+			Debris:AddItem(bv, 0.25)
+		end
+	end
+	RemoteEvents.ScreenEffect:FireClient(player, "collision", {})
 end
 
+local function _connectObstacle(part)
+	if not part:IsA("BasePart") then return end
+	_once(part, "obstacle", "Touched", function(hit) _onObstacleTouched(part, hit) end)
+end
+
+for _, part in ipairs(CollectionService:GetTagged("Obstacle")) do
+	_connectObstacle(part)
+end
+CollectionService:GetInstanceAddedSignal("Obstacle"):Connect(_connectObstacle)
+
 -- ─── Boost pads ───────────────────────────────────────────────────────────────
-
-local _boostPadCooldowns = {}   -- { [partRef] = { [userId] = expireTick } }
-
 -- Seed-driven subset selection: each race picks a different K-of-N subset of
--- placed BoostPads to be active. Inactive ones are visually dimmed so players
--- can tell which are live, but don't fire. Adds per-race variety so memorized
--- pad routes don't dominate.
+-- placed BoostPads to be active. Inactive ones are dimmed.
+
+local _padCooldowns = {}   -- [part][userId] = expireTick
+
+local function _connectBoostPad(part)
+	_once(part, "boostPad", "Touched", function(hit)
+		if not _active or not _activePads[part] then return end
+		local player, vehicle = _ownerOf(hit)
+		if not player then return end
+		_padCooldowns[part] = _padCooldowns[part] or {}
+		local cds = _padCooldowns[part]
+		if cds[player.UserId] and tick() < cds[player.UserId] then return end
+		cds[player.UserId] = tick() + 5   -- 5s pad cooldown
+		_speed(player, _seatOf(vehicle), "boostPad", 1.4, 2)
+		RemoteEvents.ScreenEffect:FireClient(player, "boostPad", {})
+	end)
+end
+
 local function _setupBoostPads()
 	local pads = CollectionService:GetTagged("BoostPad")
+	table.sort(pads, function(a, b) return a:GetFullName() < b:GetFullName() end)
+	_activePads = {}
+	_padCooldowns = {}
 	if #pads == 0 then return end
 
-	-- Deterministic shuffle by _raceSeed
 	local rng = Random.new(_raceSeed)
-	local shuffled = {}
-	for _, p in ipairs(pads) do table.insert(shuffled, p) end
+	local shuffled = table.clone(pads)
 	for i = #shuffled, 2, -1 do
 		local j = rng:NextInteger(1, i)
 		shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
 	end
-
 	local activeCount = math.max(1, math.ceil(#shuffled * Constants.RACE_BOOST_PAD_ACTIVE_RATIO))
-	local activeSet = {}
-	for i = 1, activeCount do activeSet[shuffled[i]] = true end
+	for i = 1, activeCount do _activePads[shuffled[i]] = true end
 
 	for _, part in ipairs(pads) do
-		if activeSet[part] then
-			_boostPadCooldowns[part] = {}
-			part.Touched:Connect(function(hit)
-				local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-				if not vehicle then return end
-				for _, player in ipairs(Players:GetPlayers()) do
-					local pdata = SessionManager.getData(player)
-					if pdata and pdata.vehicleModel == vehicle then
-						local cds = _boostPadCooldowns[part]
-						if cds[player.UserId] and tick() < cds[player.UserId] then break end
-						cds[player.UserId] = tick() + 5   -- 5s pad cooldown
-
-						local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-						if seat then
-							local old = seat.MaxSpeed
-							seat.MaxSpeed = old * 1.4
-							_logSpeed(player, "boost_pad", "enter", old, seat.MaxSpeed)
-							task.delay(2, function()
-								if seat and seat.Parent then
-									local before = seat.MaxSpeed
-									seat.MaxSpeed = old
-									_logSpeed(player, "boost_pad", "restore", before, old)
-								end
-							end)
-						end
-						RemoteEvents.ScreenEffect:FireClient(player, "boostPad", {})
-						break
-					end
-				end
-			end)
+		_connectBoostPad(part)
+		local base = part:GetAttribute("OriginalTransparency") or 0
+		local ring = part.Parent and part.Parent:FindFirstChild(part.Name .. "Ring", true)
+		if _activePads[part] then
+			part.Transparency = base
+			if ring then ring.Transparency = ring:GetAttribute("OriginalTransparency") or 0 end
 		else
-			-- Dim the inactive pad so players can see it's not live this round
-			pcall(function()
-				part.Transparency = math.max(part.Transparency, 0.75)
-			end)
-			local ring = part.Parent and part.Parent:FindFirstChild(part.Name .. "Ring", true)
-			if ring then pcall(function() ring.Transparency = 0.9 end) end
+			part.Transparency = math.max(base, 0.75)
+			if ring then ring.Transparency = 0.9 end
 		end
 	end
 end
 
 -- ─── Drift corner zones (all biomes) ─────────────────────────────────────────
--- Parts tagged "DriftCorner" charge the player's boost gauge (F key) when touched.
--- Per-zone per-player cooldown prevents farming the same corner.
 
-local function _setupDriftCorners()
-	local _cornerCooldowns = {}   -- { [partRef] = { [userId] = expireTick } }
-	for _, part in ipairs(CollectionService:GetTagged("DriftCorner")) do
-		_cornerCooldowns[part] = {}
-		part.Touched:Connect(function(hit)
-			if not _active then return end
-			local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-			if not vehicle then return end
-			for _, player in ipairs(Players:GetPlayers()) do
-				local pdata = SessionManager.getData(player)
-				if pdata and pdata.vehicleModel == vehicle then
-					local cds = _cornerCooldowns[part]
-					local now = tick()
-					if cds[player.UserId] and now < cds[player.UserId] then break end
-					cds[player.UserId] = now + Constants.DRIFT_CORNER_COOLDOWN
-					RemoteEvents.DriftCharge:FireClient(player, Constants.DRIFT_CHARGE_PER_CORNER)
-					break
+local _cornerCooldowns = {}   -- [part][userId] = expireTick
+
+local function _connectDriftCorner(part)
+	_once(part, "drift", "Touched", function(hit)
+		if not _active then return end
+		local player = _ownerOf(hit)
+		if not player then return end
+		_cornerCooldowns[part] = _cornerCooldowns[part] or {}
+		local cds = _cornerCooldowns[part]
+		local now = tick()
+		if cds[player.UserId] and now < cds[player.UserId] then return end
+		cds[player.UserId] = now + Constants.DRIFT_CORNER_COOLDOWN
+		RemoteEvents.DriftCharge:FireClient(player, Constants.DRIFT_CHARGE_PER_CORNER)
+	end)
+end
+
+-- ─── HEAD / TAIL passives ─────────────────────────────────────────────────────
+
+local function _carPose(vehicle)
+	local cf = vehicle.PrimaryPart.CFrame
+	local look = _flat(cf.LookVector)
+	if look.Magnitude > 1e-3 then look = look.Unit end
+	return { x = cf.Position.X, z = cf.Position.Z, lx = look.X, lz = look.Z }
+end
+
+local _contactCooldown = {}   -- ["a:b"] = expireTick
+
+local function _onCarContact(ownerA, vehicleA, hit)
+	if not _active then return end
+	local ownerB, vehicleB = _ownerOf(hit)
+	if not ownerB or ownerB == ownerA then return end
+	if not vehicleA.PrimaryPart or not vehicleB.PrimaryPart then return end
+	if RaceEffects.has(ownerA, "disguised") or RaceEffects.has(ownerB, "disguised") then return end
+
+	local a, b = ownerA.UserId, ownerB.UserId
+	local key = (a < b) and (a .. ":" .. b) or (b .. ":" .. a)
+	if (_contactCooldown[key] or 0) > tick() then return end
+	_contactCooldown[key] = tick() + P.CONTACT_COOLDOWN
+
+	local who = Passives.rearEnd(_carPose(vehicleA), _carPose(vehicleB))
+	if not who then return end
+	local attacker, victim = ownerA, ownerB
+	local aVeh, vVeh = vehicleA, vehicleB
+	if who == "b" then attacker, victim, aVeh, vVeh = ownerB, ownerA, vehicleB, vehicleA end
+
+	local aps, vps = _physState[attacker.UserId], _physState[victim.UserId]
+	local fx = Passives.contactEffects(aps and aps.slots, vps and vps.slots)
+	local now = tick()
+	if aps then aps.cleanSince = now end
+	if vps then vps.cleanSince = now end
+
+	local victimBlocked = (fx.victimPush > 0 or fx.victimSlow) and RaceEffects.blocksHit(victim)
+	if not victimBlocked then
+		if fx.victimPush > 0 then
+			local dir = _flat(aVeh.PrimaryPart.CFrame.LookVector)
+			if dir.Magnitude > 1e-3 then
+				local bv = Instance.new("BodyVelocity")
+				bv.Velocity = dir.Unit * fx.victimPush
+				bv.MaxForce = Vector3.new(1e5, 1e4, 1e5)
+				bv.Parent   = vVeh.PrimaryPart
+				Debris:AddItem(bv, 0.25)
+			end
+		end
+		if fx.victimSlow then
+			_speed(victim, _seatOf(vVeh), "cactusHead", fx.victimSlow.mult, fx.victimSlow.duration)
+		end
+	end
+	if fx.attackerSlow and not RaceEffects.blocksHit(attacker) then
+		_speed(attacker, _seatOf(aVeh), "cactusTail", fx.attackerSlow.mult, fx.attackerSlow.duration)
+	end
+	Telemetry.record("contact", {
+		attacker = attacker.UserId, victim = victim.UserId,
+		push = fx.victimPush, victimSlow = fx.victimSlow ~= nil and not victimBlocked,
+		attackerSlow = fx.attackerSlow ~= nil,
+	})
+end
+
+-- Per-race passive setup for one player (vehicle may spawn after RACING starts).
+local function _ensureRacer(player)
+	local ps = _physState[player.UserId]
+	if not ps then return nil end
+	local pdata = SessionManager.getData(player)
+	local vehicle = pdata and pdata.vehicleModel
+	if not vehicle or not vehicle.PrimaryPart then return ps end
+	if ps.vehicle ~= vehicle then
+		ps.vehicle = vehicle
+		local slots = (pdata.vehicleStats and pdata.vehicleStats.slotAssignments) or {}
+		ps.slots = slots
+		ps.head, ps.tail = Passives.forSlots(slots)
+		ps.cleanSince = tick()
+		if ps.head.absorbOneHit then
+			RaceEffects.grant(player, "absorb")   -- Rubber Duck: one hit per race
+		end
+		_once(vehicle.PrimaryPart, "carContact", "Touched", function(hit)
+			_onCarContact(player, vehicle, hit)
+		end)
+	end
+	return ps
+end
+
+-- Lead bonus (Racing Flag), momentum (Flower) and slipstream (Toilet Paper).
+local function _updatePassives(ranked)
+	local now = tick()
+	for rank, entry in ipairs(ranked) do
+		local player = entry.player
+		local ps = _ensureRacer(player)
+		local vehicle = ps and ps.vehicle
+		local seat = _seatOf(vehicle)
+		if not seat then continue end
+
+		local lead = ps.head and ps.head.leadSpeedBonus
+		if lead then
+			if rank == 1 and #ranked > 1 then
+				VehicleTuning.set(seat, "MaxSpeed", "leadFlag", 1 + lead)
+			else
+				VehicleTuning.remove(seat, "MaxSpeed", "leadFlag")
+			end
+		end
+
+		local momentum = ps.head and ps.head.momentumBonus
+		if momentum then
+			local mult = Passives.momentumMult(now - (ps.cleanSince or now), momentum)
+			if mult > 1 then
+				VehicleTuning.set(seat, "MaxSpeed", "momentum", mult)
+			else
+				VehicleTuning.remove(seat, "MaxSpeed", "momentum")
+			end
+		end
+
+		local slip = ps.tail and ps.tail.slipstreamSlow
+		if slip and vehicle.PrimaryPart then
+			local leader = _carPose(vehicle)
+			for _, other in ipairs(ranked) do
+				if other.player ~= player then
+					local ops = _physState[other.player.UserId]
+					local ov = ops and ops.vehicle
+					if ov and ov.PrimaryPart and Passives.isDirectlyBehind(leader, _carPose(ov)) then
+						VehicleTuning.set(_seatOf(ov), "MaxSpeed", "slipstream_" .. player.UserId,
+							1 - slip, P.LEAD_PERIOD * 1.5)
+					end
 				end
 			end
-		end)
+		end
 	end
 end
 
+-- ─── Position sync loop ───────────────────────────────────────────────────────
+
+local function _startPositionSync()
+	task.spawn(function()
+		local length = RaceProgress.trackLength(_biome)
+		while _active do
+			local data, ranked = {}, {}
+			for _, player in ipairs(Players:GetPlayers()) do
+				local pdata = SessionManager.getData(player)
+				if pdata and pdata.vehicleModel and _physState[player.UserId] then
+					local progress = _progressFor(player, pdata.vehicleModel)
+					table.insert(data, { userId = player.UserId, progress = progress, rank = 0 })
+					table.insert(ranked, { player = player, progress = progress })
+					local pp = pdata.vehicleModel.PrimaryPart
+					if pp and Telemetry.detailed then
+						local seatS = _seatOf(pdata.vehicleModel)
+						Telemetry.sample("race_sample", {
+							userId = player.UserId,
+							x = math.floor(pp.Position.X * 10) / 10,
+							y = math.floor(pp.Position.Y * 10) / 10,
+							z = math.floor(pp.Position.Z * 10) / 10,
+							speed = math.floor(pp.AssemblyLinearVelocity.Magnitude * 10) / 10,
+							maxSpeed = seatS and seatS.MaxSpeed,
+							progress = progress,
+						})
+					end
+				end
+			end
+			-- Finished racers rank ahead of everyone still driving
+			local finishedAt = {}
+			for i, f in ipairs(_finishOrder) do finishedAt[f.userId] = i end
+			local function key(e)
+				local f = finishedAt[e.userId or e.player.UserId]
+				return f and (1e9 - f) or e.progress
+			end
+			table.sort(data, function(a, b) return key(a) > key(b) end)
+			table.sort(ranked, function(a, b) return key(a) > key(b) end)
+			for rank, entry in ipairs(data) do
+				entry.rank = rank
+				entry.length = length
+				local player = Players:GetPlayerByUserId(entry.userId)
+				if player then SessionManager.setRaceProgress(player, entry.progress, rank) end
+			end
+			_updatePassives(ranked)
+			RemoteEvents.PlayerPositionSync:FireAllClients(data)
+			task.wait(Constants.POSITION_SYNC_RATE)
+		end
+	end)
+end
+
 -- ─── Manual boost activation (F key) ─────────────────────────────────────────
--- Client invokes RequestBoost when boost gauge is full; server applies the speed burst.
 
 RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	if not _active then return "denied: not racing" end
@@ -518,34 +608,67 @@ RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	local pdata = SessionManager.getData(player)
 	local vehicle = pdata and pdata.vehicleModel
 	if not vehicle then return "denied: no vehicle" end
-
-	local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+	local seat = _seatOf(vehicle)
 	if not seat then return "denied: no seat" end
+	_ensureRacer(player)
 
-	-- Apply boost
-	local boostDuration = (pdata.vehicleStats and pdata.vehicleStats.boostDuration)
+	local duration = (pdata.vehicleStats and pdata.vehicleStats.boostDuration)
 		or Constants.BOOST_DURATION
+	duration += (ps.tail and ps.tail.boostDurationAdd) or 0   -- Rocket TAIL
 
 	ps.boostCooldownEnd = now + Constants.BOOST_COOLDOWN
-	local oldMax = seat.MaxSpeed
-	seat.MaxSpeed = oldMax * Constants.BOOST_MULTIPLIER
-	_logSpeed(player, "boost", "enter", oldMax, seat.MaxSpeed)
+	_speed(player, seat, "boost", Constants.BOOST_MULTIPLIER, duration)
 
-	task.delay(boostDuration, function()
-		if seat and seat.Parent then
-			local before = seat.MaxSpeed
-			seat.MaxSpeed = oldMax
-			_logSpeed(player, "boost", "restore", before, oldMax)
+	-- Soda Bottle TAIL: the car right behind gets a face full of fizz
+	if ps.tail and ps.tail.boostBlindTrail and vehicle.PrimaryPart then
+		local me = _carPose(vehicle)
+		for _, other in ipairs(Players:GetPlayers()) do
+			if other ~= player then
+				local od = SessionManager.getData(other)
+				local ov = od and od.vehicleModel
+				if ov and ov.PrimaryPart and Passives.isDirectlyBehind(me, _carPose(ov), P.SLIPSTREAM_RANGE * 1.5)
+					and not RaceEffects.blocksHit(other) then
+					RemoteEvents.ScreenEffect:FireClient(other, "steamBlind", { duration = P.BLIND_TIME })
+				end
+			end
 		end
-	end)
-
+	end
 	return "ok"
 end
 
 -- ─── Finish line ──────────────────────────────────────────────────────────────
 
+local function _onFinishTouched(hit)
+	if not _active then return end
+	local player = _ownerOf(hit)
+	if not player then return end
+	for _, entry in ipairs(_finishOrder) do
+		if entry.userId == player.UserId then return end
+	end
+
+	-- Gate finish on checkpoint completion. If the active map has no
+	-- checkpoints tagged, the gate is inactive and the finish counts.
+	if CheckpointService.isActive() and not CheckpointService.hasCompleted(player) then
+		Telemetry.record("finish_rejected", { userId = player.UserId, reason = "checkpoints" })
+		return
+	end
+
+	local elapsed = tick() - _startTick
+	table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
+	SessionManager.setFinished(player, elapsed)
+	Telemetry.record("finish", { userId = player.UserId, time = elapsed, place = #_finishOrder })
+
+	RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
+	print(string.format("[RacingManager] %s finished #%d (%.1fs)", player.Name, #_finishOrder, elapsed))
+
+	if #_finishOrder >= math.max(1, _totalRacers) then
+		_active = false
+		GameManager.raceComplete(_finishOrder)
+	end
+end
+
 local function _setupFinishLine()
-	-- Search in the active biome's map first to avoid picking up another biome's sensor.
+	-- Prefer the active biome's map so another biome's sensor is never used.
 	local finishPart
 	if _biome then
 		local mapName   = _biome:sub(1,1):upper() .. _biome:sub(2):lower() .. "Map"
@@ -553,59 +676,12 @@ local function _setupFinishLine()
 		local biomeMap  = mapsModel and mapsModel:FindFirstChild(mapName)
 		finishPart = biomeMap and biomeMap:FindFirstChild("FinishLine", true)
 	end
-	if not finishPart then
-		finishPart = workspace:FindFirstChild("FinishLine", true)
-	end
+	finishPart = finishPart or workspace:FindFirstChild("FinishLine", true)
 	if not finishPart then
 		warn("[RacingManager] No FinishLine Part found in Workspace")
 		return
 	end
-
-	finishPart.Touched:Connect(function(hit)
-		if not _active then return end
-		local vehicle = hit:FindFirstAncestorWhichIsA("Model")
-		if not vehicle then return end
-
-		for _, player in ipairs(Players:GetPlayers()) do
-			local pdata = SessionManager.getData(player)
-			if pdata and pdata.vehicleModel == vehicle then
-				-- Check not already finished
-				for _, entry in ipairs(_finishOrder) do
-					if entry.userId == player.UserId then return end
-				end
-
-				-- Gate finish on checkpoint completion. If the active map has
-				-- no checkpoints tagged (legacy maps not yet rebuilt), the gate
-				-- is inactive and the finish counts as before.
-				if CheckpointService.isActive()
-					and not CheckpointService.hasCompleted(player) then
-					Telemetry.record("finish_rejected", { userId = player.UserId, reason = "checkpoints" })
-					print(string.format(
-						"[RacingManager] %s touched FinishLine but checkpoints incomplete — ignored",
-						player.Name))
-					return
-				end
-
-				local elapsed = tick() - _startTick
-				table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
-				SessionManager.setFinished(player, elapsed)
-				Telemetry.record("finish", {
-					userId = player.UserId, time = elapsed, place = #_finishOrder,
-				})
-
-				RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
-				print(string.format("[RacingManager] %s finished #%d (%.1fs)",
-					player.Name, #_finishOrder, elapsed))
-
-				-- All racers done?
-				if #_finishOrder >= math.max(1, _totalRacers) then
-					_active = false
-					GameManager.raceComplete(_finishOrder)
-				end
-				break
-			end
-		end
-	end)
+	_once(finishPart, "finish", "Touched", _onFinishTouched)
 end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
@@ -618,41 +694,37 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_finishOrder = {}
 		_physState   = {}
 		_totalRacers = #Players:GetPlayers()
+		_contactCooldown = {}
+		_cornerCooldowns = {}
 
-		-- Init physics state per player
 		for _, player in ipairs(Players:GetPlayers()) do
-			local pdata = SessionManager.getData(player)
+			RaceEffects.reset(player)
 			_physState[player.UserId] = {
-				inMud             = false,
-				inUpdraft         = false,
-				inSlowZone        = false,
-				boostCooldownEnd  = 0,
+				zones              = {},
+				boostCooldownEnd   = 0,
 				obstaclePenaltyEnd = 0,
-				drifting          = false,
-				vehicle           = pdata and pdata.vehicleModel,
+				progressSeg        = nil,
+				cleanSince         = tick(),
+				head = {}, tail = {}, slots = {},
 			}
+			_ensureRacer(player)
 		end
 
-		-- Generate per-race seed first — _setupBoostPads consumes it for its
-		-- K-of-N subset selection. Broadcast happens below alongside the intro.
+		-- Per-race seed first — _setupBoostPads consumes it.
 		_raceSeed = math.random(1, 1000000)
 
-		-- Setup collision systems
-		_setupObstacles()
 		_setupBoostPads()
-		_setupDriftCorners()   -- all biomes: charges boost gauge (F key)
-
-		_setupSlowZones()   -- FOREST + OCEAN have SlowZone-tagged trigger pads
-
-		if biome == "FOREST" then
-			_setupMudZones()
-		elseif biome == "OCEAN" then
-			_buoyancyLoop()
-		elseif biome == "SKY" then
-			_setupUpdraftZones()
+		for _, part in ipairs(CollectionService:GetTagged("DriftCorner")) do _connectDriftCorner(part) end
+		for _, part in ipairs(CollectionService:GetTagged("SlowZone")) do
+			_connectSpeedZone(part, "slowZone", Constants.SLOW_ZONE_MULT, nil)
 		end
-
-		_setupKillPlane()   -- applies to all biomes
+		if biome == "FOREST" then
+			for _, part in ipairs(CollectionService:GetTagged("MudZone")) do
+				_connectSpeedZone(part, "mud", Constants.MUD_SPEED_MULT, "mudWarning")
+			end
+		elseif biome == "SKY" then
+			for _, part in ipairs(CollectionService:GetTagged("UpdraftZone")) do _connectUpdraft(part) end
+		end
 
 		CheckpointService.resetAll()
 		CheckpointService.setup()
@@ -660,13 +732,14 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_setupFinishLine()
 		_startPositionSync()
 
-		-- Broadcast race intro overlay + per-race seed (for client variation).
-		-- _raceSeed was set above before _setupBoostPads consumed it.
 		RemoteEvents.RaceIntroShown:FireAllClients({ biome = biome })
 		RemoteEvents.RaceSeedBroadcast:FireAllClients(_raceSeed)
 
 	elseif phase == Constants.PHASES.RESULTS then
 		_active = false
+		for _, pdata in pairs(SessionManager.getAllData()) do
+			VehicleTuning.clear(_seatOf(pdata.vehicleModel))
+		end
 		_physState = {}
 	end
 end)

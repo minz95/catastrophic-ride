@@ -132,20 +132,22 @@ end
 
 -- ─── Item preview ─────────────────────────────────────────────────────────────
 
-local ITEM_NAMES = {
-	-- BODY
-	"Stick", "Cardboard Box", "Bamboo Raft", "Skateboard", "Log",
-	"Shopping Cart", "Life Preserver", "Kite", "Laptop", "Backpack",
-	"Red Sofa", "Microwave", "Bathtub",
-	-- ENGINE
-	"Shovel", "Flower", "Pinwheel", "Watering Can", "Big Gear",
-	"Leaf Blower", "Spinning Top", "Propeller", "V8 Engine",
-	"Rocket", "Cup Noodle", "Kettle",
-	-- SPECIAL
-	"Pizza", "Toilet Paper", "Leaves", "Racing Flag", "Cactus",
-	"Scarf", "Boombox", "Umbrella", "Rubber Duck",
-	"Bubble Wrap", "Balloon Bunch", "Soda Bottle",
-}
+-- The roster comes from ReplicatedStorage.Shared.ItemTypes so this list can
+-- never drift from the game again.
+local function itemNames()
+	local names = {}
+	local ok, ItemTypes = pcall(function()
+		return require(game:GetService("ReplicatedStorage").Shared.ItemTypes)
+	end)
+	if ok and ItemTypes and ItemTypes.ALL then
+		for _, entry in ipairs(ItemTypes.ALL) do
+			table.insert(names, entry.name)
+		end
+	else
+		warn("[CatastrophicDayPreview] Cannot load ItemTypes: " .. tostring(ItemTypes))
+	end
+	return names
+end
 
 local function buildItemPreview()
 	-- Remove old preview
@@ -170,6 +172,7 @@ local function buildItemPreview()
 	local SPACE = 5  -- studs between items
 	local built = 0
 
+	local ITEM_NAMES = itemNames()
 	for i, name in ipairs(ITEM_NAMES) do
 		local col = (i - 1) % COLS
 		local row = math.floor((i - 1) / COLS)

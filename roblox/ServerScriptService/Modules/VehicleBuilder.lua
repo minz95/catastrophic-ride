@@ -260,7 +260,7 @@ local function buildCar(model, stats, palette, slots)
 	seat.Color  = Color3.fromRGB(50, 50, 50)
 	seat.MaxSpeed = math.clamp(stats.speed * 2.5, 20, 120)
 	seat.Torque   = math.clamp(stats.acceleration * 4, 20, 200)
-	seat.TurnSpeed = math.clamp(stats.stability * 0.3, 0.5, 3)
+	seat.TurnSpeed = Constants.turnSpeedFor("FOREST", stats)
 	seat.Parent = model
 	weld(chassis, seat)
 
@@ -344,7 +344,7 @@ local function buildBoat(model, stats, palette, slots)
 	seat.Color  = Color3.fromRGB(60, 40, 30)
 	seat.MaxSpeed  = math.clamp(stats.speed * 2.0, 15, 80)
 	seat.Torque    = math.clamp(stats.acceleration * 3, 15, 120)
-	seat.TurnSpeed = math.clamp(stats.floatability * 0.25, 0.4, 2)
+	seat.TurnSpeed = Constants.turnSpeedFor("OCEAN", stats)
 	seat.Parent = model
 	weld(hull, seat)
 
@@ -427,7 +427,7 @@ local function buildFlyer(model, stats, palette, slots)
 	seat.Color  = Color3.fromRGB(30, 30, 50)
 	seat.MaxSpeed  = math.clamp(stats.speed * 3.0, 30, 160)
 	seat.Torque    = math.clamp(stats.acceleration * 5, 30, 250)
-	seat.TurnSpeed = math.clamp(stats.flyability * 0.4, 0.5, 4)
+	seat.TurnSpeed = Constants.turnSpeedFor("SKY", stats)
 	seat.Parent = model
 	weld(fuse, seat)
 
