@@ -17,10 +17,13 @@ ForestTrack.width     = 40     -- corridor width (spec §2 table)
 ForestTrack.wallHeight = 8     -- wall height (cars hop ramps and clear 5)
 ForestTrack.trackTop  = 1.0    -- Y of track surface (Part top)
 ForestTrack.wallThickness = 2
+ForestTrack.wallBaseY = 0      -- walls stand on the ground (top of Ground = 0)
 
--- Wall doorways: 8-stud openings every 48 studs of arc length.
+-- Wall doorways: 2 × wallGapHalfWidth-stud openings every wallGapInterval
+-- studs of track length. 0 = continuous walls (current design: the 8-stud
+-- doorways read as broken walls in playtests).
 ForestTrack.wallGapInterval  = 48
-ForestTrack.wallGapHalfWidth = 4
+ForestTrack.wallGapHalfWidth = 0
 
 -- Off-corridor slow pads, per side.
 ForestTrack.slowZoneWidth  = 40
@@ -142,17 +145,31 @@ ForestTrack.driftCorners = {
 	{ -470, -1310 }, -- S4 U peak
 	{ 205, -1575 },  -- S5 U-turn apex
 }
-ForestTrack.driftCornerSize = { ForestTrack.width, 5, 40 }
+ForestTrack.driftCornerSize = { ForestTrack.width, 5, 40 }  -- { across, height, along the track }
+ForestTrack.jumpZoneSize = { ForestTrack.width, 10, 14 }
 
 -- Checkpoints, in order. Trigger boxes are axis-aligned: { x, z }.
 ForestTrack.checkpoints = {
 	{ 130, -820 },   -- CP1 at N14, inside S3 sweeper apex
 	{ -470, -1310 }, -- CP2 at N19, inside U-bend peak
 }
-ForestTrack.checkpointSize = { ForestTrack.width, 12, 6 }
+ForestTrack.checkpointSize = { ForestTrack.width + 4, 12, 10 }  -- { across, height, depth }
+ForestTrack.finishSize = { ForestTrack.width, 10, 6 }
 
 -- River crossing S3 (decorative water under the corridor).
 ForestTrack.river = { z = -300, bridgeX = 580 }
+
+-- Tree scatter zones { xMin, xMax, zMin, zMax, count }. Trees closer than
+-- width / 2 + 10 to the centerline are rejected, so zones may overlap the track.
+ForestTrack.treeZones = {
+	{ -550, -100,   100,   700, 30 },  -- left of S1 / farm
+	{  100,  550,   100,   700, 30 },  -- right of S1 / farm
+	{ -550,    0,  -700,     0, 35 },  -- inside the S2/S3 sweeper (left)
+	{  650, 1100,  -500,   100, 25 },  -- outside the S3 sweep
+	{ -800, -550, -1700,  -700, 35 },  -- outside the U-bend, west
+	{  100,  700, -1700,  -700, 30 },  -- inside the U-bend, east
+	{ -500,  500, -2200, -1700, 30 },  -- around the finish approach
+}
 
 -- Farming area behind the start grid.
 ForestTrack.farm = { cx = 0, cz = 850 }

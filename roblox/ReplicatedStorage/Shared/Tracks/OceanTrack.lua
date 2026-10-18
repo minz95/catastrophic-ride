@@ -15,6 +15,20 @@ Track.trackTop = 2    -- water surface Y (BiomeConfig.OCEAN.waterPlaneY)
 -- over, not hit. Used by the offline checks and the kinematic sim.
 Track.obstacleBand = { 1.2, 4 }
 
+-- ─── Reef walls ───────────────────────────────────────────────────────────────
+-- From the sea floor (-12) to 12 above the water, so no seam shows at the
+-- waterline (the water is see-through) and waveFlood never lifts boats over.
+Track.wallThickness = 3
+Track.wallBaseY     = -12
+Track.wallHeight    = 26
+-- Doorways (2 × half-width every interval studs); 0 = continuous walls.
+Track.wallGapInterval  = 48
+Track.wallGapHalfWidth = 0
+
+-- Rough water beside the walls (SlowZone), per side.
+Track.slowZoneWidth  = 50
+Track.slowZoneHeight = 4
+
 Track.nodes = {
 	-- S1 Harbor Launch (~350)
 	{   0,  600 }, -- N1  start dock
@@ -104,7 +118,22 @@ Track.jumpRamps = {
 	{ 0, -500 },     -- mid-S3 skill shot (N11)
 }
 
+-- Trigger sizes: { across the track, height, along the track }.
+Track.checkpointSize  = { Track.width + 4, 12, 10 }
+Track.boostPadSize    = { 12, 0.4, 8 }
+Track.driftCornerSize = { Track.width + 20, 8, 46 }
+Track.jumpZoneSize    = { Track.width - 6, 8, 12 }
+Track.finishSize      = { Track.width, 10, 6 }
+
+-- ─── Scenery (inside the turns, never on the lane; map_ocean checks) ────────
+-- Palm island inside the S2 arc: blocks the straight-line cut to CP1.
+Track.palmIsland = { cx = 40, cz = 0, size = { 110, 220 }, palms = 8, seed = 99 }
+-- Reef formation inside the S4 U-bend.
+Track.reef = { cx = 220, cz = -870, size = { 80, 140 }, spires = 5 }
+-- Start dock under the grid (boats ride over it: obstacleBand starts at 1.2).
+Track.startDock = { z = 595, length = 24 }
+
 -- Farming area (FarmArea model, hidden during RACING).
-Track.farm = { cx = 0, cz = 850 }
+Track.farm = { cx = 0, cz = 850, size = { 180, 260 }, palms = 8, seed = 7 }
 
 return Track
