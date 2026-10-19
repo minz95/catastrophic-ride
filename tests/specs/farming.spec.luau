@@ -123,3 +123,242 @@ R.describe("farming rules", function()
 			R.expect(wrong).toBeEmpty("auto-assigned items in the wrong slot")
 		end)
 end)
+
+-- Steals with several players (Studio check 2026-10-20 found these by
+-- reading FarmingManager; each case failed before the fix).
+R.describe("steals with several players", function()
+	local function setup(n)
+		local srv = farmServer(n)
+		for i, p in ipairs(srv.players) do
+			p.Character.HumanoidRootPart.Position = Vector3.new(i, 3, 850)
+			local d = srv.SessionManager.getData(p)
+			d.inventory = { "Kettle", "Log" }
+		end
+		return srv
+	end
+	local function inv(srv, p) return #srv.SessionManager.getData(p).inventory end
+	local function attempts(srv, result)
+		local n = 0
+		for _, e in ipairs(srv.Telemetry.events("steal_attempt")) do
+			if result == nil or e.result == result then n += 1 end
+		end
+		return n
+	end
+
+	R.it("a DefendSteal sent before any attempt does not block the next steal", function()
+		local srv = setup(2)
+		local thief, victim = srv.players[1], srv.players[2]
+		srv.mock.invoke(srv.RemoteEvents.DefendSteal, victim)
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, victim.UserId)
+		srv.advance(1.5)
+		R.expect(inv(srv, victim)).toBe(1)
+		R.expect(inv(srv, thief)).toBe(3)
+	end)
+
+	R.it("one tap is not a defence; STEAL_DEFEND_PRESSES taps in the window are", function()
+		local srv = setup(3)
+		local thief, v1, v2 = srv.players[1], srv.players[2], srv.players[3]
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, v1.UserId)
+		srv.advance(0.2)
+		srv.mock.invoke(srv.RemoteEvents.DefendSteal, v1)
+		srv.advance(1.3)
+		R.expect(inv(srv, v1)).toBe(1)
+
+		srv.advance(10) -- thief cooldown
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, v2.UserId)
+		srv.advance(0.2)
+		for _ = 1, srv.env.requirePath("ReplicatedStorage.Shared.Constants").STEAL_DEFEND_PRESSES do
+			srv.mock.invoke(srv.RemoteEvents.DefendSteal, v2)
+		end
+		srv.advance(1.3)
+		R.expect(inv(srv, v2)).toBe(2)
+		R.expect(attempts(srv, "defended")).toBe(1)
+		R.expect(attempts(srv, "stolen")).toBe(1)
+	end)
+
+	R.it("a thief cannot run two steals at once", function()
+		local srv = setup(3)
+		local thief = srv.players[1]
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, srv.players[2].UserId)
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, srv.players[3].UserId)
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, srv.players[3].UserId)
+		srv.advance(1.5)
+		R.expect(inv(srv, thief)).toBe(3)
+		R.expect(inv(srv, srv.players[2]) + inv(srv, srv.players[3])).toBe(3)
+	end)
+
+	R.it("two thieves at one victim take one item; the victim is then protected", function()
+		local srv = setup(3)
+		local victim = srv.players[1]
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, srv.players[2], victim.UserId)
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, srv.players[3], victim.UserId)
+		srv.advance(1.5)
+		R.expect(inv(srv, victim)).toBe(1)
+		R.expect(attempts(srv, "stolen")).toBe(1)
+	end)
+
+	R.it("nobody can steal from themselves", function()
+		local srv = setup(1)
+		local p = srv.players[1]
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, p, p.UserId)
+		srv.advance(1.5)
+		R.expect(inv(srv, p)).toBe(2)
+		R.expect(attempts(srv, "stolen")).toBe(0)
+	end)
+
+	R.it("items are conserved: a steal moves an item, never copies or loses one", function()
+		local srv = setup(4)
+		local before = 0
+		for _, p in ipairs(srv.players) do before += inv(srv, p) end
+		for round = 1, 6 do
+			for i, p in ipairs(srv.players) do
+				local target = srv.players[(i + round - 1) % #srv.players + 1]
+				srv.mock.invoke(srv.RemoteEvents.RequestSteal, p, target.UserId)
+			end
+			srv.advance(0.5)
+			srv.mock.invoke(srv.RemoteEvents.DefendSteal, srv.players[round % 4 + 1])
+			srv.advance(4)
+		end
+		local after = 0
+		for _, p in ipairs(srv.players) do after += inv(srv, p) end
+		R.expect(after).toBe(before)
+		R.expect(attempts(srv, "stolen")).toBeGreaterThan(0)
+	end)
+end)
+
+R.describe("crafting input from clients", function()
+	local function craftServer()
+		local srv = farmServer(2)
+		srv.advance(60) -- FARMING → CRAFTING
+		return srv
+	end
+
+	R.it("a malformed submission is refused without a server error", function()
+		local srv = craftServer()
+		local p = srv.players[1]
+		local res = srv.mock.invoke(srv.RemoteEvents.SubmitCraft, p, nil)
+		srv.advance(0.1)
+		R.expect(res).toBe("denied: bad slots")
+		local res2 = srv.mock.invoke(srv.RemoteEvents.SubmitCraft, p, "BODY")
+		R.expect(res2).toBe("denied: bad slots")
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("core slots only take items of their type; unknown slots are dropped", function()
+		local srv = craftServer()
+		local p = srv.players[1]
+		local data = srv.SessionManager.getData(p)
+		data.inventory = { "Kettle", "Log", "Trophy" } -- ENGINE, BODY, SPECIAL
+		local res = srv.mock.invoke(srv.RemoteEvents.SubmitCraft, p,
+			{ BODY = "Kettle", ENGINE = "Log", SPECIAL = "Trophy", WINGS = "Log" })
+		R.expect(res).toBe("ok")
+		local slots = data.vehicleStats.slotAssignments
+		R.expect(slots.BODY).toBe(nil)
+		R.expect(slots.ENGINE).toBe(nil)
+		R.expect(slots.SPECIAL).toBe("Trophy")
+		R.expect(slots.WINGS).toBe(nil)
+		local craft = srv.Telemetry.events("craft")
+		R.expect(#craft[#craft].rejected).toBe(3)
+	end)
+
+	R.it("one item cannot fill two slots", function()
+		local srv = craftServer()
+		local p = srv.players[1]
+		local data = srv.SessionManager.getData(p)
+		data.inventory = { "Log" }
+		srv.mock.invoke(srv.RemoteEvents.SubmitCraft, p, { BODY = "Log", MOBILITY = "Log" })
+		local slots = data.vehicleStats.slotAssignments
+		local n = 0
+		for _, v in pairs(slots) do if v == "Log" then n += 1 end end
+		R.expect(n).toBe(1)
+	end)
+
+	R.it("players who do not submit get an auto craft, marked as such", function()
+		local srv = craftServer()
+		local a, b = srv.players[1], srv.players[2]
+		srv.SessionManager.getData(a).inventory = { "Log" }
+		srv.SessionManager.getData(b).inventory = { "Kettle" }
+		srv.mock.invoke(srv.RemoteEvents.SubmitCraft, a, { BODY = "Log" })
+		srv.advance(6) -- CRAFTING timer → RACING → auto submit
+		local byUser = {}
+		for _, e in ipairs(srv.Telemetry.events("craft")) do byUser[e.userId] = e end
+		R.expect(byUser[a.UserId].auto).toBe(false)
+		R.expect(byUser[b.UserId].auto).toBe(true)
+		R.expect(byUser[b.UserId].slots.ENGINE).toBe("Kettle")
+	end)
+end)
+
+-- Studio steal-crowd-6p (2026-10-20): a player's inventory shrank with no
+-- event. With a full inventory, RequestPickup dropped the weakest item BEFORE
+-- the distance and contest checks, so a refused pickup or a lost contest cost
+-- an item for nothing.
+R.describe("full inventory and a rarer item", function()
+	local function setup(n)
+		local srv = farmServer(n)
+		local ItemConfig = srv.env.requirePath("ReplicatedStorage.Shared.ItemConfig")
+		local common
+		for name, cfg in pairs(ItemConfig) do
+			if type(cfg) == "table" and cfg.rarity == "Common" then common = name break end
+		end
+		local rare
+		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
+			if d.Name == "ItemId" then
+				local name = d.Parent:FindFirstChild("ItemName")
+				local cfg = name and ItemConfig[name.Value]
+				if cfg and cfg.rarity ~= "Common" then rare = d break end
+			end
+		end
+		for _, p in ipairs(srv.players) do
+			local data = srv.SessionManager.getData(p)
+			data.inventory = {}
+			for i = 1, 8 do data.inventory[i] = common end
+		end
+		return srv, rare
+	end
+
+	R.it("a pickup refused for distance keeps the inventory", function()
+		local srv, rare = setup(1)
+		local p = srv.players[1]
+		p.Character.HumanoidRootPart.Position = rare.Parent.Position + Vector3.new(40, 2, 0)
+		local res = srv.mock.invoke(srv.RemoteEvents.RequestPickup, p, rare.Value)
+		R.expect(tostring(res):find("too far") ~= nil).toBe(true)
+		R.expect(#srv.SessionManager.getData(p).inventory).toBe(8)
+	end)
+
+	R.it("losing the contest for it keeps the inventory; winning swaps the weakest", function()
+		local srv, rare = setup(2)
+		local a, b = srv.players[1], srv.players[2]
+		local pos = rare.Parent.Position
+		local name = rare.Parent.ItemName.Value
+		a.Character.HumanoidRootPart.Position = pos + Vector3.new(2, 2, 0)
+		b.Character.HumanoidRootPart.Position = pos + Vector3.new(-2, 2, 0)
+		srv.mock.invoke(srv.RemoteEvents.RequestPickup, a, rare.Value)
+		for i = 1, 30 do
+			srv.advance(0.1)
+			srv.mock.invoke(srv.RemoteEvents.RequestContest, a, rare.Value, i)
+			srv.mock.invoke(srv.RemoteEvents.RequestContest, b, rare.Value, i * 2)
+		end
+		local ad, bd = srv.SessionManager.getData(a), srv.SessionManager.getData(b)
+		R.expect(#ad.inventory).toBe(8)
+		R.expect(#bd.inventory).toBe(8)
+		R.expect(table.find(bd.inventory, name) ~= nil).toBe(true)
+		R.expect(table.find(ad.inventory, name) == nil).toBe(true)
+		-- the swapped-out item is logged
+		local drops = srv.Telemetry.events("item_drop")
+		R.expect(#drops).toBe(1)
+		R.expect(drops[1].userId).toBe(b.UserId)
+	end)
+end)
+
+R.describe("late client scripts", function()
+	-- Studio steal-crowd-6p: bot clients that loaded after the FARMING event
+	-- never farmed. The phase is also an attribute they can read on start.
+	R.it("ReplicatedStorage carries the current phase and biome", function()
+		local srv = farmServer(1)
+		local RS = srv.env.game.ReplicatedStorage
+		R.expect(RS:GetAttribute("Phase")).toBe("FARMING")
+		R.expect(RS:GetAttribute("Biome")).toBe("FOREST")
+		srv.advance(60)
+		R.expect(RS:GetAttribute("Phase")).toBe("CRAFTING")
+	end)
+end)

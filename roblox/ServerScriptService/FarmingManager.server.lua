@@ -287,11 +287,14 @@ end
 
 -- ─── Drop item from inventory (spawns it back in the world) ───────────────────
 
-local function _dropItem(player, slotIndex)
+local function _dropItem(player, slotIndex, reason)
 	local data = SessionManager.getData(player)
 	if not data or not data.inventory[slotIndex] then return nil end
 
 	local itemName = table.remove(data.inventory, slotIndex)
+	Telemetry.record("item_drop", {
+		userId = player.UserId, item = itemName, reason = reason or "manual", inventory = #data.inventory,
+	})
 	local cfg = ItemConfig[itemName]
 
 	-- Spawn a new world item near the player
@@ -436,11 +439,19 @@ end
 
 -- ─── Give item to player ──────────────────────────────────────────────────────
 
+-- With a full inventory the weakest item is swapped out here, when the new
+-- item is really handed over (it used to be dropped before the distance and
+-- contest checks, so a refused pickup or a lost contest cost an item).
 local function _giveItem(player, itemId)
 	local data = SessionManager.getData(player)
 	local item = _items[itemId]
 	if not data or not item or item.taken then return false end
-	if #data.inventory >= Constants.INVENTORY_SIZE then return false end
+	local slot, weakestIdx = FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE)
+	if slot == "full" then return false end
+	if slot == "swap" then
+		_dropItem(player, weakestIdx, "swap")
+		if #data.inventory >= Constants.INVENTORY_SIZE then return false end
+	end
 
 	item.taken = true
 	table.insert(data.inventory, item.itemName)
@@ -479,20 +490,9 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 
 	-- Auto-swap: if inventory is full, drop the lowest-rarity item for a
 	-- strictly rarer one (FarmingRules.pickupSlot).
-	local slot, weakestIdx = FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE)
-	if slot == "full" then
+	-- (the swap itself happens in _giveItem, once the pickup succeeds)
+	if FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE) == "full" then
 		return "inventory_full"
-	elseif slot == "swap" then
-		local droppedName = _dropItem(player, weakestIdx)
-		-- Notify client which item was auto-dropped
-		if droppedName then
-			local cfg = ItemConfig[droppedName]
-			RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
-			-- Re-check size after drop
-			if #data.inventory >= Constants.INVENTORY_SIZE then
-				return "inventory_full"
-			end
-		end
 	end
 
 	-- Distance check — measured to the closest BasePart in the model, not just
@@ -613,18 +613,26 @@ end
 -- ─── RequestSteal handler ─────────────────────────────────────────────────────
 
 RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
-	if not _active then return end
+	if not _active then return "denied: not farming" end
 
 	local thiefData = SessionManager.getData(thief)
-	local victim = Players:GetPlayerByUserId(targetUserId)
+	local victim = type(targetUserId) == "number" and Players:GetPlayerByUserId(targetUserId)
 	local victimData = victim and SessionManager.getData(victim)
-	if not thiefData or not victimData then return end
+	if not thiefData or not victimData then return "denied: no such player" end
 	local thiefRoot  = thief.Character  and thief.Character:FindFirstChild("HumanoidRootPart")
 	local victimRoot = victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
-	if not thiefRoot or not victimRoot then return end
+	if not thiefRoot or not victimRoot then return "denied: no character" end
 
-	local ok = FarmingRules.canSteal({
+	local function attempt(result)
+		Telemetry.record("steal_attempt", { thief = thief.UserId, victim = victim.UserId, result = result })
+		return result
+	end
+
+	local ok, why = FarmingRules.canSteal({
 		now = tick(),
+		self = thief == victim,
+		thiefBusy = thiefData._stealing ~= nil,
+		victimUnderAttack = victimData._stealWindow ~= nil,
 		thiefCooldownEnd = thiefData.stealCooldownEnd,
 		farmingTimeLeft = (GameManager.phaseDuration("FARMING") or Constants.PHASE_DURATION.FARMING)
 			- (tick() - (_farmingStartTick or 0)),
@@ -634,24 +642,28 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 		distance = (thiefRoot.Position - victimRoot.Position).Magnitude, range = Constants.STEAL_RANGE,
 		victimInvincibleEnd = victimData.stealInvincibleEnd,
 	})
-	if not ok then return end
+	if not ok then return attempt("denied: " .. why) end
 
-	-- Notify victim — they have STEAL_DEFEND_WINDOW seconds to defend
+	-- Open the defence window: the victim's DefendSteal taps count only while
+	-- it is open, and nobody else can start a steal on either player.
+	local window = { thief = thief.UserId, presses = 0 }
+	victimData._stealWindow = window
+	thiefData._stealing = window
 	RemoteEvents.StealAttempt:FireClient(victim, thief.Name)
-
-	-- Wait for defence window
 	task.wait(Constants.STEAL_DEFEND_WINDOW)
+	victimData._stealWindow = nil
+	thiefData._stealing = nil
 
-	-- Check if victim successfully defended (DefendSteal sets a flag)
-	if victimData._defendingSteal then
-		victimData._defendingSteal = false
-		-- Stun thief briefly
-		thiefData.stealCooldownEnd = tick() + 0.5
-		return
+	if FarmingRules.stealOutcome(window.presses, Constants.STEAL_DEFEND_PRESSES) == "defended" then
+		thiefData.stealCooldownEnd = tick() + Constants.STEAL_DEFENDED_COOLDOWN
+		return attempt("defended")
 	end
 
-	-- Steal succeeds: take random item (re-check after the defence wait)
-	if #victimData.inventory == 0 or #thiefData.inventory >= Constants.INVENTORY_SIZE then return end
+	-- Re-check what may have changed during the window
+	if not _active then return attempt("denied: farming ended") end
+	if #victimData.inventory == 0 then return attempt("denied: victim has nothing") end
+	if #thiefData.inventory >= Constants.INVENTORY_SIZE then return attempt("denied: thief is full") end
+
 	local idx = math.random(#victimData.inventory)
 	local stolenItem = table.remove(victimData.inventory, idx)
 	table.insert(thiefData.inventory, stolenItem)
@@ -666,13 +678,19 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 		thiefInventory = #thiefData.inventory,
 	})
 	RemoteEvents.ItemStolen:FireAllClients(thief.Name, victim.Name, stolenItem)
+	return attempt("stolen")
 end
 
+-- One call per defence tap. Taps outside an open window do nothing (a tap
+-- sent "just in case" used to block the next steal whenever it came).
 RemoteEvents.DefendSteal.OnServerInvoke = function(player)
 	local data = SessionManager.getData(player)
-	if data then
-		data._defendingSteal = true
+	local window = data and data._stealWindow
+	if window then
+		window.presses += 1
+		return window.presses
 	end
+	return 0
 end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────

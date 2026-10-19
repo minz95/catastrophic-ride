@@ -11,6 +11,7 @@ local Constants      = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents   = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig     = require(ServerScriptService.Modules.ItemConfig)
 local VehicleStats   = require(ReplicatedStorage.Shared.VehicleStats)
+local CraftingRules  = require(ReplicatedStorage.Shared.CraftingRules)
 local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
@@ -24,38 +25,18 @@ local _active       = false
 
 -- ─── Validate and apply a craft submission ────────────────────────────────────
 
-local function _processCraft(player, slots)
-	-- slots = {
-	--   BODY = "Log", ENGINE = "Kettle", SPECIAL = "Rubber Duck",
-	--   MOBILITY = "Kite", HEAD = "Cactus", TAIL = "Rocket"
-	-- }
+local function _processCraft(player, submitted, auto)
 	local data = SessionManager.getData(player)
 	if not data then return end
 
 	local biome = GameManager.getBiome()
 
-	-- Validate ownership: each named item must be in player's inventory
-	local inventoryCopy = { table.unpack(data.inventory) }
-	local used = {}
-	for slotName, itemName in pairs(slots) do
-		if itemName and itemName ~= "" then
-			local found = false
-			for i, invItem in ipairs(inventoryCopy) do
-				if invItem == itemName and not used[i] then
-					used[i] = true
-					found = true
-					break
-				end
-			end
-			if not found then
-				warn(string.format("[CraftingManager] %s: item '%s' not in inventory",
-					player.Name, itemName))
-				slots[slotName] = nil  -- drop the invalid slot silently
-			end
-		end
+	local slots, rejected = CraftingRules.validate(submitted, data.inventory, ItemConfig)
+	if not slots then return end
+	for _, r in ipairs(rejected) do
+		warn(string.format("[CraftingManager] %s: %s ← '%s' dropped (%s)", player.Name, r.slot, r.item, r.reason))
 	end
 
-	-- Look up configs
 	local bodyCfg    = slots.BODY     and ItemConfig[slots.BODY]
 	local engineCfg  = slots.ENGINE   and ItemConfig[slots.ENGINE]
 	local specialCfg = slots.SPECIAL  and ItemConfig[slots.SPECIAL]
@@ -73,6 +54,8 @@ local function _processCraft(player, slots)
 	SessionManager.setVehicle(player, nil, stats)
 	Telemetry.record("craft", {
 		userId = player.UserId,
+		auto = auto == true,
+		rejected = rejected,
 		slots = table.clone(slots),
 		stats = {
 			speed = stats.speed, acceleration = stats.acceleration,
@@ -89,8 +72,9 @@ end
 RemoteEvents.SubmitCraft.OnServerInvoke = function(player, slots)
 	if not _active then return "denied: not crafting" end
 	if _submitted[player.UserId] then return "denied: already submitted" end
+	if type(slots) ~= "table" then return "denied: bad slots" end
 
-	_processCraft(player, slots)
+	_processCraft(player, slots, false)
 	_submitted[player.UserId] = true
 
 	-- Check if everyone has now submitted
@@ -136,7 +120,7 @@ local function _autoSubmitAll()
 		if not _submitted[player.UserId] then
 			local data = SessionManager.getData(player)
 			if data then
-				_processCraft(player, _autoSlots(data.inventory))
+				_processCraft(player, _autoSlots(data.inventory), true)
 				_submitted[player.UserId] = true
 			end
 		end

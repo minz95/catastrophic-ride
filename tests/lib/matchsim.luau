@@ -129,7 +129,9 @@ function MatchSim.run(opts)
 							local calls = rawget(steal, "_calls") or {}
 							if #calls > (before or 0) then
 								if BotBrain.defends(other.profile, rng) then
-									Mock.invoke(srv.RemoteEvents.DefendSteal, other.player)
+									for _ = 1, Constants.STEAL_DEFEND_PRESSES do
+										Mock.invoke(srv.RemoteEvents.DefendSteal, other.player)
+									end
 								end
 							end
 							break

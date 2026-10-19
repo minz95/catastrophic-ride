@@ -76,7 +76,10 @@ local function _transition(newPhase)
 		task.spawn(cb, newPhase, _currentBiome)
 	end
 
-	-- Notify all clients
+	-- Notify all clients. The attributes let a client script that starts late
+	-- (after the event went out) read the current phase and biome.
+	ReplicatedStorage:SetAttribute("Phase", newPhase)
+	ReplicatedStorage:SetAttribute("Biome", _currentBiome)
 	RemoteEvents.PhaseChanged:FireAllClients(newPhase)
 end
 

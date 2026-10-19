@@ -3,7 +3,8 @@
 -- Does nothing unless the server marks this player with the HarnessBot
 -- attribute (TestHarness.MatchHarness), so normal players never run it.
 --
---   FARMING  walk to items chosen by BotBrain, pick up, mash contests
+--   FARMING  walk to items chosen by BotBrain, pick up, mash contests,
+--            steal from (or hunt) nearby players, defend steals with taps
 --   CRAFTING submit the slots BotBrain picks from the real inventory
 --   RACING   drive with Autopilot through InputSource → RacingClient's
 --            normal drive loop (same code path as a keyboard)
@@ -75,21 +76,97 @@ local function visibleItems()
 	return out
 end
 
+-- Other players' inventories are not replicated, so every other player is
+-- assumed to hold something; the server refuses ("victim has nothing").
+local function otherPlayers()
+	local out = {}
+	for _, p in ipairs(Players:GetPlayers()) do
+		local r = p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+		if r then table.insert(out, { userId = p.UserId, x = r.Position.X, z = r.Position.Z, items = 1, root = r }) end
+	end
+	return out
+end
+
+local stealing = false
+local nextStealAt = 0
+local function trySteal(victim)
+	stealing = true
+	task.spawn(function()
+		local ok, result = pcall(function()
+			return RemoteEvents.RequestSteal:InvokeServer(victim.userId)
+		end)
+		report("steal", { victim = victim.userId, result = ok and result or ("error: " .. tostring(result)) })
+		nextStealAt = os.clock() + (result == "stolen" and Constants.STEAL_COOLDOWN
+			or result == "defended" and Constants.STEAL_DEFENDED_COOLDOWN or 1)
+		stealing = false
+	end)
+end
+
+RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
+	if phase ~= Constants.PHASES.FARMING then return end
+	local defend = BotBrain.defends(farmProfile)
+	report("defend", { thief = thiefName, tried = defend })
+	if not defend then return end
+	task.spawn(function()
+		for _ = 1, Constants.STEAL_DEFEND_PRESSES do
+			RemoteEvents.DefendSteal:InvokeServer()
+			task.wait(0.12)
+		end
+	end)
+end)
+
 local function farmLoop()
 	local target, contestId, presses, giveUpAt = nil, nil, 0, 0
+	local hunt, huntUntil, nextHuntAt = nil, 0, 0
+	local targetUntil, skip = 0, {}
 	while phase == Constants.PHASES.FARMING do
 		local char = LocalPlayer.Character
 		local root = char and char:FindFirstChild("HumanoidRootPart")
 		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		if root and hum then
+		local me = root and { x = root.Position.X, z = root.Position.Z, items = #inventory }
+		local victim, victimDist = nil, math.huge
+		if me and not contestId and not stealing and os.clock() >= nextStealAt then
+			victim, victimDist = BotBrain.pickVictim(farmProfile, me, otherPlayers())
+		end
+		if root and hum and victim and victimDist <= Constants.STEAL_RANGE * 0.6
+			and BotBrain.wantsSteal(farmProfile, 0.1) then
+			hunt = nil
+			trySteal(victim)
+		elseif root and hum and (hunt or (victim and victimDist > Constants.STEAL_RANGE
+			and os.clock() >= nextHuntAt and BotBrain.wantsSteal(farmProfile, 0.1))) then
+			-- Hunting: follow the victim for a few seconds, then farm a while
+			-- (a thief that only hunted never picked anything up).
+			if not hunt then hunt, huntUntil = victim, os.clock() + BotBrain.HUNT_TIME end
+			local r = hunt.root
+			if os.clock() > huntUntil or not r.Parent then
+				hunt = nil
+				nextHuntAt = os.clock() + BotBrain.HUNT_REST
+			else
+				hum:MoveTo(r.Position)
+				if (r.Position - root.Position).Magnitude <= Constants.STEAL_RANGE * 0.6 and not stealing then
+					trySteal(hunt)
+					hunt = nil
+					nextHuntAt = os.clock() + BotBrain.HUNT_REST
+				end
+			end
+		elseif root and hum then
 			if contestId then
 				presses += math.max(1, math.floor(farmProfile.mashRate * 0.1))
 				RemoteEvents.RequestContest:InvokeServer(contestId, presses)
 				if os.clock() > giveUpAt then contestId = nil end
 			else
 				local items = visibleItems()
+				if target and os.clock() > targetUntil then
+					skip[target.id] = true
+					target = nil
+				end
 				if not target or not target.part.Parent then
-					target = BotBrain.pickItem(farmProfile, { x = root.Position.X, z = root.Position.Z }, items, inventory)
+					local reachable = {}
+					for _, it in ipairs(items) do
+						if not skip[it.id] then table.insert(reachable, it) end
+					end
+					target = BotBrain.pickItem(farmProfile, { x = root.Position.X, z = root.Position.Z }, reachable, inventory)
+					targetUntil = os.clock() + BotBrain.ITEM_GIVE_UP
 				end
 				if target and farmProfile.mashRate > 0 then
 					local d = (Vector3.new(target.x, root.Position.Y, target.z) - root.Position).Magnitude
@@ -175,7 +252,8 @@ end)
 
 -- ─── Phase driver ─────────────────────────────────────────────────────────────
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(newPhase)
+local function onPhase(newPhase)
+	if newPhase == phase then return end
 	phase = newPhase
 	if newPhase == Constants.PHASES.FARMING then
 		task.spawn(farmLoop)
@@ -184,6 +262,14 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(newPhase)
 	elseif newPhase ~= Constants.PHASES.RACING then
 		vehicle, autopilot = nil, nil
 	end
-end)
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
+
+-- A bot client that loads slowly (6 Studio windows) can start after the
+-- FARMING event went out; join the phase that is already running.
+biome = biome or ReplicatedStorage:GetAttribute("Biome")
+if ReplicatedStorage:GetAttribute("Phase") then
+	onPhase(ReplicatedStorage:GetAttribute("Phase"))
+end
 
 report("ready", { farm = LocalPlayer:GetAttribute("BotFarmProfile"), driver = driverName })

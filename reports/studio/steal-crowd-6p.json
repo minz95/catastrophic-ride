@@ -1,0 +1,2719 @@
+{
+ "checks": [],
+ "commit": "a7efc25",
+ "dirty": false,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-19T19:33:11.749Z,142.749329,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '0'",
+  "2026-10-19T19:33:11.758Z,142.758194,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '0'",
+  "2026-10-19T19:33:11.758Z,142.758514,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '0'",
+  "2026-10-19T19:33:11.759Z,142.759003,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '0'",
+  "2026-10-19T19:33:11.759Z,142.759186,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '0'",
+  "2026-10-19T19:33:12.317Z,143.317444,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:33:12.317Z,143.317520,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:33:12.354Z,143.354736,6bb5f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"4ba9bf73-a636-4c36-af6f-dd8940e2ab49\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-19T19:33:12.588Z,143.588623,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'",
+  "2026-10-19T19:33:12.588Z,143.588715,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 20,
+   "FARMING": 90,
+   "RACING": 60,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "thief",
+   "thief",
+   "thief",
+   "guard",
+   "casual",
+   "sweaty"
+  ],
+  "maxSeconds": 400,
+  "players": 6,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-20T04:33:13+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "thief",
+     "thief",
+     "thief",
+     "guard",
+     "casual",
+     "sweaty"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 90,
+    "RACING": 60,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 400,
+   "players": 6,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [
+   {
+    "error": {
+     "message": "Players.Player2.PlayerScripts.ChatScript:116: Error calling SetCore CoreGuiChatConnections: SetCore: CoreGuiChatConnections has not been registered by the CoreScripts",
+     "script": "Players.Player2.PlayerScripts.ChatScript",
+     "trace": "Players.Player2.PlayerScripts.ChatScript, line 116 - function SetCoreGuiChatConnections\nPlayers.Player2.PlayerScripts.ChatScript, line 104 - function DoEverything\nPlayers.Player2.PlayerScripts.ChatScript, line 133\n"
+    },
+    "userId": -2
+   }
+  ],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Barrel",
+       "ENGINE": "Magnifying Glass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Gas Can"
+      },
+      "stats": {
+       "acceleration": 20.500000000000004,
+       "boostDuration": 0.96,
+       "floatability": 0.175,
+       "flyability": 3.333333333333333,
+       "speed": 27.02,
+       "stability": 37.059999999999995
+      }
+     },
+     "-2": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Compass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Lantern"
+      },
+      "stats": {
+       "acceleration": 24.484968113037684,
+       "boostDuration": 1.2,
+       "floatability": 0.3183045854694899,
+       "flyability": 1.5067672684946267,
+       "speed": 29.930425021377268,
+       "stability": 43.75953501162095
+      }
+     },
+     "-3": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Flower",
+       "MOBILITY": "Umbrella",
+       "SPECIAL": "Cactus"
+      },
+      "stats": {
+       "acceleration": 14.632,
+       "boostDuration": 2.6,
+       "floatability": 0.325,
+       "flyability": 1.5384615384615385,
+       "speed": 23,
+       "stability": 75.52000000000001
+      }
+     },
+     "-4": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "ENGINE": "Drill",
+       "HEAD": "Soda Bottle",
+       "SPECIAL": "Balloon Bunch",
+       "TAIL": "Balloon Bunch"
+      },
+      "stats": {
+       "acceleration": 27.298578199052134,
+       "boostDuration": 8,
+       "floatability": 0.23696682464454977,
+       "flyability": 1.1848341232227488,
+       "speed": 31.469194312796212,
+       "stability": 27.86729857819905
+      }
+     },
+     "-5": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Hair Dryer",
+       "MOBILITY": "Log",
+       "SPECIAL": "Cactus"
+      },
+      "stats": {
+       "acceleration": 24.622799999999998,
+       "boostDuration": 2.6,
+       "floatability": 0.325,
+       "flyability": 1.5384615384615385,
+       "speed": 27.8,
+       "stability": 77.06400000000001
+      }
+     },
+     "-6": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Kite",
+       "ENGINE": "Drill",
+       "HEAD": "Backpack",
+       "SPECIAL": "Racing Flag",
+       "TAIL": "Log"
+      },
+      "stats": {
+       "acceleration": 29.7753761903608,
+       "boostDuration": 3.12,
+       "floatability": 0.07754004216239793,
+       "flyability": 7.572269742421671,
+       "speed": 32.17911749739514,
+       "stability": 21.276987569361992
+      }
+     }
+    },
+    "craftT0": 118.012,
+    "durationSeconds": 93.41758312500315,
+    "farm": {
+     "attempts": {
+      "defended": 6,
+      "denied: too far": 12,
+      "denied: victim has nothing": 1,
+      "denied: victim protected": 1,
+      "stolen": 7
+     },
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": {
+        "defended": 2,
+        "denied: too far": 5,
+        "denied: victim has nothing": 1,
+        "stolen": 3
+       },
+       "contestsLost": 3,
+       "contestsWon": 2,
+       "defencesTried": 1,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 3,
+       "stolen": 3
+      },
+      "-2": {
+       "attempts": {
+        "defended": 1,
+        "denied: too far": 1,
+        "denied: victim protected": 1,
+        "stolen": 2
+       },
+       "contestsLost": 2,
+       "contestsWon": 4,
+       "defencesTried": 1,
+       "drops": 2,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 9,
+       "robbed": 1,
+       "stolen": 2
+      },
+      "-3": {
+       "attempts": {
+        "defended": 3,
+        "denied: too far": 5
+       },
+       "contestsLost": 1,
+       "contestsWon": 5,
+       "defencesTried": 2,
+       "drops": 1,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 11,
+       "robbed": 2,
+       "stolen": 0
+      },
+      "-4": {
+       "attempts": [],
+       "contestsLost": 1,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "drops": 3,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 11,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-5": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "drops": 2,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 10,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-6": {
+       "attempts": {
+        "denied: too far": 1,
+        "stolen": 2
+       },
+       "contestsLost": 4,
+       "contestsWon": 0,
+       "defencesTried": 2,
+       "drops": 1,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 1,
+       "stolen": 2
+      }
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [
+      "Gas Can",
+      "Magnifying Glass",
+      "Barrel",
+      "Barrel",
+      "Barrel",
+      "Magnifying Glass",
+      "Lantern",
+      "Toilet Paper"
+     ],
+     "-2": [
+      "Compass",
+      "Shopping Cart",
+      "Barrel",
+      "Lantern",
+      "Barrel",
+      "Alarm Clock",
+      "Cactus",
+      "Magnifying Glass"
+     ],
+     "-3": [
+      "Cactus",
+      "Umbrella",
+      "Shopping Cart",
+      "Flower",
+      "Pizza",
+      "Gas Can",
+      "Racing Flag",
+      "Rubber Duck"
+     ],
+     "-4": [
+      "Balloon Bunch",
+      "Soda Bottle",
+      "Balloon Bunch",
+      "Life Preserver",
+      "Red Sofa",
+      "Rubber Duck",
+      "Rubber Duck",
+      "Drill"
+     ],
+     "-5": [
+      "Shopping Cart",
+      "Log",
+      "Log",
+      "Cactus",
+      "Hair Dryer",
+      "Racing Flag",
+      "Skateboard",
+      "Magic Wand"
+     ],
+     "-6": [
+      "Drill",
+      "Backpack",
+      "Kite",
+      "Racing Flag",
+      "Log",
+      "Magnifying Glass",
+      "Magnet",
+      "Shopping Cart"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 0.96,
+      "driver": "expert",
+      "farm": "thief",
+      "name": "Player1",
+      "slots": {
+       "BODY": "Barrel",
+       "ENGINE": "Magnifying Glass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Gas Can"
+      },
+      "speed": 27.02,
+      "userId": -1
+     },
+     {
+      "boostDuration": 1.2,
+      "driver": "average",
+      "farm": "thief",
+      "name": "Player2",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Compass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Lantern"
+      },
+      "speed": 29.930425021377268,
+      "userId": -2
+     },
+     {
+      "boostDuration": 2.6,
+      "driver": "novice",
+      "farm": "thief",
+      "name": "Player3",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Flower",
+       "MOBILITY": "Umbrella",
+       "SPECIAL": "Cactus"
+      },
+      "speed": 23,
+      "userId": -3
+     },
+     {
+      "boostDuration": 8,
+      "driver": "expert",
+      "farm": "guard",
+      "name": "Player4",
+      "slots": {
+       "ENGINE": "Drill",
+       "HEAD": "Soda Bottle",
+       "SPECIAL": "Balloon Bunch",
+       "TAIL": "Balloon Bunch"
+      },
+      "speed": 31.469194312796212,
+      "userId": -4
+     },
+     {
+      "boostDuration": 2.6,
+      "driver": "average",
+      "farm": "casual",
+      "name": "Player5",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Hair Dryer",
+       "MOBILITY": "Log",
+       "SPECIAL": "Cactus"
+      },
+      "speed": 27.8,
+      "userId": -5
+     },
+     {
+      "boostDuration": 3.12,
+      "driver": "novice",
+      "farm": "sweaty",
+      "name": "Player6",
+      "slots": {
+       "BODY": "Kite",
+       "ENGINE": "Drill",
+       "HEAD": "Backpack",
+       "SPECIAL": "Racing Flag",
+       "TAIL": "Log"
+      },
+      "speed": 32.17911749739514,
+      "userId": -6
+     }
+    ],
+    "raceStartedAt": 125.25824520832975,
+    "round": 1,
+    "startedAt": 32.851617541658925,
+    "t0": 27.979
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (FOREST): 0 finished of 6\n    steal attempts: defended=6, denied: too far=12, denied: victim has nothing=1, denied: victim protected=1, stolen=7\n    -3: picked 11, contests 5/6, stole 0, robbed 2, defences 2, items 8 | craft submitted, rejected 0\n    -2: picked 9, contests 4/6, stole 2, robbed 1, defences 1, items 8 | craft submitted, rejected 0\n    -1: picked 8, contests 2/5, stole 3, robbed 3, defences 1, items 8 | craft submitted, rejected 0\n    -4: picked 11, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -5: picked 10, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -6: picked 8, contests 0/4, stole 2, robbed 1, defences 2, items 8 | craft submitted, rejected 0\n  events: bot_craft=6 bot_defend=13 bot_joined=6 bot_pickup_denied=46 bot_ready=6 bot_steal=27 contest_result=11 craft=6 harness_crafting=1 harness_round=1 item_drop=9 item_pickup=57 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=1 steal=7 steal_attempt=27 vehicle_spawn=3",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "driver": "expert",
+     "farm": "thief",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 7.067,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "thief"
+     },
+     "kind": "bot_ready",
+     "t": 9.134,
+     "userId": -1
+    },
+    {
+     "driver": "average",
+     "farm": "thief",
+     "kind": "bot_joined",
+     "name": "Player2",
+     "t": 9.605,
+     "userId": -2
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "thief"
+     },
+     "kind": "bot_ready",
+     "t": 11.349,
+     "userId": -2
+    },
+    {
+     "driver": "novice",
+     "farm": "thief",
+     "kind": "bot_joined",
+     "name": "Player3",
+     "t": 12.785,
+     "userId": -3
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "thief"
+     },
+     "kind": "bot_ready",
+     "t": 16.414,
+     "userId": -3
+    },
+    {
+     "driver": "expert",
+     "farm": "guard",
+     "kind": "bot_joined",
+     "name": "Player4",
+     "t": 18.009,
+     "userId": -4
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "guard"
+     },
+     "kind": "bot_ready",
+     "t": 22.182,
+     "userId": -4
+    },
+    {
+     "driver": "average",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player5",
+     "t": 23.457,
+     "userId": -5
+    },
+    {
+     "driver": "novice",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player6",
+     "t": 24.31,
+     "userId": -6
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 27.7
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 27.979
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 28.299,
+     "userId": -6
+    },
+    {
+     "inventory": 1,
+     "item": "Gas Can",
+     "itemId": "97",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 31.312,
+     "userId": -1
+    },
+    {
+     "data": {
+      "item": "Balloon Bunch",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 34.198,
+     "userId": -4
+    },
+    {
+     "inventory": 1,
+     "item": "Balloon Bunch",
+     "itemId": "4",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 34.383,
+     "userId": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: victim has nothing",
+     "t": 34.916,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 35.198,
+     "userId": -5
+    },
+    {
+     "item": "Gas Can",
+     "kind": "steal",
+     "t": 35.931,
+     "thief": -2,
+     "thiefInventory": 1,
+     "victim": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 35.931,
+     "thief": -2,
+     "victim": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Soda Bottle",
+     "itemId": "98",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 36.599,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 37.015,
+     "userId": -2
+    },
+    {
+     "inventory": 1,
+     "item": "Cactus",
+     "itemId": "27",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 40.334,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player2",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 40.334,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "denied: victim has nothing",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 40.334,
+     "userId": -1
+    },
+    {
+     "data": {
+      "item": "Balloon Bunch",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 40.549,
+     "userId": -4
+    },
+    {
+     "inventory": 3,
+     "item": "Balloon Bunch",
+     "itemId": "81",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 40.888,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Pizza",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 41.018,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Compass",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 41.018,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Gas Can",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 41.018,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Gas Can",
+     "itemId": "53",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 41.086,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Pizza",
+     "itemId": "9",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 41.139,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Compass",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 41.237,
+     "userId": -2
+    },
+    {
+     "inventory": 2,
+     "item": "Compass",
+     "itemId": "48",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 41.453,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Life Preserver",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 41.936,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Life Preserver",
+     "itemId": "78",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 42.056,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Shopping Cart",
+      "result": "denied: too far (11 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 42.137,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Shopping Cart",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 42.768,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Shopping Cart",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 43.018,
+     "userId": -2
+    },
+    {
+     "inventory": 3,
+     "item": "Shopping Cart",
+     "itemId": "14",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 43.161,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 43.303,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Umbrella",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 43.303,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (12 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 43.51,
+     "userId": -6
+    },
+    {
+     "inventory": 4,
+     "item": "Lantern",
+     "itemId": "71",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 43.514,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Umbrella",
+      "result": "denied: too far (12 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 43.548,
+     "userId": -3
+    },
+    {
+     "inventory": 1,
+     "item": "Drill",
+     "itemId": "79",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 43.582,
+     "userId": -6
+    },
+    {
+     "inventory": 3,
+     "item": "Umbrella",
+     "itemId": "50",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 43.667,
+     "userId": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Red Sofa",
+     "itemId": "13",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 44.156,
+     "userId": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 44.288,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 44.349,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Lantern",
+     "itemId": "19",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 44.8,
+     "userId": -4
+    },
+    {
+     "data": {
+      "thief": "Player6",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 45.056,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player3",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 45.137,
+     "userId": -6
+    },
+    {
+     "inventory": 2,
+     "item": "Backpack",
+     "itemId": "46",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 45.517,
+     "userId": -6
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "83",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 46.067,
+     "userId": -4
+    },
+    {
+     "item": "Pizza",
+     "kind": "steal",
+     "t": 46.069,
+     "thief": -6,
+     "thiefInventory": 3,
+     "victim": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 46.069,
+     "thief": -6,
+     "victim": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 46.069,
+     "thief": -3,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 46.137,
+     "userId": -6
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 46.137,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 46.278,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Magnet",
+      "result": "denied: too far (12 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 46.431,
+     "userId": -5
+    },
+    {
+     "inventory": 1,
+     "item": "Magnet",
+     "itemId": "33",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 46.506,
+     "userId": -5
+    },
+    {
+     "itemId": "62",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-2": 15
+     },
+     "t": 46.672,
+     "winner": -2
+    },
+    {
+     "inventory": 5,
+     "item": "Barrel",
+     "itemId": "62",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 46.673,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 47.154,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 47.197,
+     "userId": -1
+    },
+    {
+     "itemId": "20",
+     "kind": "contest_result",
+     "loser": -6,
+     "presses": {
+      "-3": 14,
+      "-6": 14
+     },
+     "t": 48.119,
+     "winner": -3
+    },
+    {
+     "inventory": 3,
+     "item": "Magnifying Glass",
+     "itemId": "20",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 48.119,
+     "userId": -3
+    },
+    {
+     "inventory": 2,
+     "item": "Shopping Cart",
+     "itemId": "5",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 48.487,
+     "userId": -5
+    },
+    {
+     "inventory": 2,
+     "item": "Racing Flag",
+     "itemId": "86",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 48.819,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Log",
+     "itemId": "37",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 49.565,
+     "userId": -5
+    },
+    {
+     "data": {
+      "thief": "Player3",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 50.087,
+     "userId": -6
+    },
+    {
+     "inventory": 4,
+     "item": "Log",
+     "itemId": "63",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 50.686,
+     "userId": -5
+    },
+    {
+     "inventory": 8,
+     "item": "Rubber Duck",
+     "itemId": "99",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 50.882,
+     "userId": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 50.983,
+     "thief": -3,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 51.001,
+     "userId": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Cactus",
+     "itemId": "40",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 51.121,
+     "userId": -5
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 51.122,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Magnifying Glass",
+     "itemId": "67",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 51.146,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Hair Dryer",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 52.956,
+     "userId": -5
+    },
+    {
+     "inventory": 6,
+     "item": "Hair Dryer",
+     "itemId": "29",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 53.116,
+     "userId": -5
+    },
+    {
+     "itemId": "58",
+     "kind": "contest_result",
+     "loser": -6,
+     "presses": {
+      "-3": 7,
+      "-6": 0
+     },
+     "t": 53.473,
+     "winner": -3
+    },
+    {
+     "inventory": 4,
+     "item": "Shopping Cart",
+     "itemId": "58",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 53.518,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Rubber Duck",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 54.853,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 54.939,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Rubber Duck",
+     "itemId": "30",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 54.953,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Kite",
+      "result": "denied: too far (13 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 55.154,
+     "userId": -6
+    },
+    {
+     "inventory": 4,
+     "item": "Kite",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 55.187,
+     "userId": -6
+    },
+    {
+     "inventory": 7,
+     "item": "Racing Flag",
+     "itemId": "76",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 55.965,
+     "userId": -5
+    },
+    {
+     "inventory": 8,
+     "item": "Barrel",
+     "itemId": "102",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 56.134,
+     "userId": -5
+    },
+    {
+     "data": {
+      "thief": "Player6",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 57.087,
+     "userId": -1
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 57.266,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Magnifying Glass",
+      "result": "denied: too far (11 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 57.522,
+     "userId": -6
+    },
+    {
+     "inventory": 5,
+     "item": "Magnifying Glass",
+     "itemId": "54",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 57.657,
+     "userId": -6
+    },
+    {
+     "item": "Racing Flag",
+     "kind": "steal",
+     "t": 58.05,
+     "thief": -6,
+     "thiefInventory": 6,
+     "victim": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 58.05,
+     "thief": -6,
+     "victim": -1
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "steal",
+     "t": 58.05,
+     "thief": -1,
+     "thiefInventory": 2,
+     "victim": -6
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 58.05,
+     "thief": -1,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 58.189,
+     "userId": -6
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 58.19,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: victim protected",
+     "t": 58.381,
+     "thief": -2,
+     "victim": -1
+    },
+    {
+     "data": {
+      "item": "Lantern",
+      "result": "denied: too far (12 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 58.451,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "denied: victim protected",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 58.634,
+     "userId": -2
+    },
+    {
+     "inventory": 3,
+     "item": "Lantern",
+     "itemId": "45",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 58.635,
+     "userId": -1
+    },
+    {
+     "data": {
+      "item": "Log",
+      "result": "denied: too far (14 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 59.505,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Log",
+      "result": "denied: too far (13 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 60.334,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Log",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 61.037,
+     "userId": -6
+    },
+    {
+     "inventory": 6,
+     "item": "Log",
+     "itemId": "11",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 61.086,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Barrel",
+      "result": "denied: too far (13 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 61.117,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Barrel",
+      "result": "denied: too far (21 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 61.117,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 62.967,
+     "thief": -3,
+     "victim": -2
+    },
+    {
+     "itemId": "100",
+     "kind": "contest_result",
+     "loser": -2,
+     "presses": {
+      "-1": 1,
+      "-2": 0
+     },
+     "t": 65.647,
+     "winner": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Barrel",
+     "itemId": "100",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 65.649,
+     "userId": -1
+    },
+    {
+     "data": {
+      "item": "Skateboard",
+      "result": "denied: too far (35 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 70.925,
+     "userId": -5
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (90 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.007,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Magnifying Glass",
+      "result": "denied: too far (17 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.014,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Skateboard",
+      "result": "denied: too far (35 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.154,
+     "userId": -5
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 71.155,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Barrel",
+      "result": "denied: already taken"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.155,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Skateboard",
+      "result": "denied: too far (35 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.197,
+     "userId": -5
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (90 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.197,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Magnifying Glass",
+      "result": "denied: too far (16 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.215,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Skateboard",
+      "result": "denied: too far (35 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.368,
+     "userId": -5
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (90 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.4,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Magnifying Glass",
+      "result": "denied: too far (16 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.414,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Skateboard",
+      "result": "denied: too far (35 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.516,
+     "userId": -5
+    },
+    {
+     "data": {
+      "item": "Drill",
+      "result": "denied: too far (88 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.532,
+     "userId": -4
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 71.532,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Magnifying Glass",
+     "itemId": "82",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 71.582,
+     "userId": -6
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 71.621,
+     "userId": -5
+    },
+    {
+     "inventory": 8,
+     "item": "Skateboard",
+     "itemId": "47",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 71.625,
+     "userId": -5
+    },
+    {
+     "inventory": 7,
+     "item": "Magnifying Glass",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 71.664,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Drill",
+     "itemId": "92",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 71.667,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Alarm Clock",
+      "result": "denied: too far (17 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.69,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Alarm Clock",
+      "result": "denied: too far (16 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 71.976,
+     "userId": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Alarm Clock",
+     "itemId": "26",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 72.073,
+     "userId": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 72.474,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 72.536,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 72.696,
+     "thief": -3,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 72.752,
+     "userId": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 73.782,
+     "thief": -3,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 73.855,
+     "userId": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 74.74,
+     "thief": -6,
+     "victim": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 74.778,
+     "thief": -1,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 74.815,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 74.88,
+     "userId": -6
+    },
+    {
+     "inventory": 6,
+     "item": "Flower",
+     "itemId": "77",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 75.183,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Flower",
+      "result": "denied: already taken"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 75.197,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 76.681,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 76.734,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 77.353,
+     "thief": -2,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 77.414,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 77.48,
+     "thief": -3,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 77.497,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Magic Wand",
+      "result": "denied: too far (18 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 78.281,
+     "userId": -5
+    },
+    {
+     "inventory": 7,
+     "item": "Magnet",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 78.431,
+     "userId": -5
+    },
+    {
+     "inventory": 8,
+     "item": "Magic Wand",
+     "itemId": "74",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 78.436,
+     "userId": -5
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 78.497,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "item": "Barrel",
+      "result": "denied: too far (12 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 78.53,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 78.547,
+     "userId": -1
+    },
+    {
+     "data": {
+      "thief": "Player2",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 78.647,
+     "userId": -3
+    },
+    {
+     "data": {
+      "item": "Magnet",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 78.991,
+     "userId": -6
+    },
+    {
+     "data": {
+      "item": "Magnet",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 79.204,
+     "userId": -6
+    },
+    {
+     "inventory": 8,
+     "item": "Magnet",
+     "itemId": "12",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 79.365,
+     "userId": -6
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 79.617,
+     "thief": -2,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 79.646,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 79.728,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 79.775,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 81.264,
+     "thief": -3,
+     "victim": -6
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -6
+     },
+     "kind": "bot_steal",
+     "t": 81.286,
+     "userId": -3
+    },
+    {
+     "itemId": "68",
+     "kind": "contest_result",
+     "loser": -3,
+     "presses": {
+      "-2": 13,
+      "-3": 0
+     },
+     "t": 81.785,
+     "winner": -2
+    },
+    {
+     "inventory": 6,
+     "item": "Barrel",
+     "itemId": "68",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 81.786,
+     "userId": -2
+    },
+    {
+     "data": {
+      "item": "Barrel",
+      "result": "denied: too far (16 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 82.312,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player2",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 83.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 84.28,
+     "userId": -2
+    },
+    {
+     "item": "Lantern",
+     "kind": "steal",
+     "t": 84.783,
+     "thief": -2,
+     "thiefInventory": 7,
+     "victim": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 84.783,
+     "thief": -2,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 84.833,
+     "userId": -2
+    },
+    {
+     "item": "Barrel",
+     "kind": "steal",
+     "t": 85.214,
+     "thief": -1,
+     "thiefInventory": 4,
+     "victim": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 85.214,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 85.346,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "23",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 86.665,
+     "userId": -2
+    },
+    {
+     "itemId": "22",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 12,
+      "-2": 13
+     },
+     "t": 90.518,
+     "winner": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Alarm Clock",
+     "itemId": "22",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 90.52,
+     "userId": -2
+    },
+    {
+     "inventory": 7,
+     "item": "Pizza",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 91.739,
+     "userId": -6
+    },
+    {
+     "inventory": 8,
+     "item": "Shopping Cart",
+     "itemId": "34",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 91.743,
+     "userId": -6
+    },
+    {
+     "itemId": "73",
+     "kind": "contest_result",
+     "loser": -2,
+     "presses": {
+      "-1": 15,
+      "-2": 0
+     },
+     "t": 94.802,
+     "winner": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Barrel",
+     "itemId": "73",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 94.803,
+     "userId": -1
+    },
+    {
+     "itemId": "106",
+     "kind": "contest_result",
+     "loser": -6,
+     "presses": {
+      "-3": 13,
+      "-6": 0
+     },
+     "t": 95.208,
+     "winner": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Pizza",
+     "itemId": "106",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 95.208,
+     "userId": -3
+    },
+    {
+     "itemId": "36",
+     "kind": "contest_result",
+     "loser": -6,
+     "presses": {
+      "-3": 13,
+      "-6": 0
+     },
+     "t": 99.862,
+     "winner": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Gas Can",
+     "itemId": "36",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 99.862,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Alarm Clock",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 104.012,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Racing Flag",
+     "itemId": "24",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 104.016,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 108.647,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 109.348,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Cactus",
+     "itemId": "10",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 109.35,
+     "userId": -2
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "steal",
+     "t": 109.647,
+     "thief": -1,
+     "thiefInventory": 6,
+     "victim": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 109.647,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 109.675,
+     "userId": -1
+    },
+    {
+     "data": {
+      "thief": "Player3",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 109.891,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 110.895,
+     "thief": -3,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 110.962,
+     "userId": -3
+    },
+    {
+     "itemId": "44",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 11,
+      "-3": 16
+     },
+     "t": 113.23,
+     "winner": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Rubber Duck",
+     "itemId": "44",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 113.233,
+     "userId": -3
+    },
+    {
+     "itemId": "104",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-2": 14,
+      "-4": 0
+     },
+     "t": 114.082,
+     "winner": -2
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 114.082,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Magnifying Glass",
+     "itemId": "104",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 114.083,
+     "userId": -2
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "itemId": "84",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 116.08,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Toilet Paper",
+     "itemId": "65",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 117.347,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 117.98
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 118.012
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Shopping Cart",
+      "ENGINE": "Compass",
+      "MOBILITY": "Barrel",
+      "SPECIAL": "Lantern"
+     },
+     "stats": {
+      "acceleration": 24.484968113037684,
+      "boostDuration": 1.2,
+      "floatability": 0.3183045854694899,
+      "flyability": 1.5067672684946267,
+      "speed": 29.930425021377268,
+      "stability": 43.75953501162095
+     },
+     "t": 119.446,
+     "userId": -2
+    },
+    {
+     "data": {
+      "inventory": [
+       "Compass",
+       "Shopping Cart",
+       "Barrel",
+       "Lantern",
+       "Barrel",
+       "Alarm Clock",
+       "Cactus",
+       "Magnifying Glass"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Compass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Lantern"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 119.48,
+     "userId": -2
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Kite",
+      "ENGINE": "Drill",
+      "HEAD": "Backpack",
+      "SPECIAL": "Racing Flag",
+      "TAIL": "Log"
+     },
+     "stats": {
+      "acceleration": 29.7753761903608,
+      "boostDuration": 3.12,
+      "floatability": 0.07754004216239793,
+      "flyability": 7.572269742421671,
+      "speed": 32.17911749739514,
+      "stability": 21.276987569361992
+     },
+     "t": 119.512,
+     "userId": -6
+    },
+    {
+     "data": {
+      "inventory": [
+       "Drill",
+       "Backpack",
+       "Kite",
+       "Racing Flag",
+       "Log",
+       "Magnifying Glass",
+       "Magnet",
+       "Shopping Cart"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Kite",
+       "ENGINE": "Drill",
+       "HEAD": "Backpack",
+       "SPECIAL": "Racing Flag",
+       "TAIL": "Log"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 119.546,
+     "userId": -6
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Shopping Cart",
+      "ENGINE": "Hair Dryer",
+      "MOBILITY": "Log",
+      "SPECIAL": "Cactus"
+     },
+     "stats": {
+      "acceleration": 24.622799999999998,
+      "boostDuration": 2.6,
+      "floatability": 0.325,
+      "flyability": 1.5384615384615385,
+      "speed": 27.8,
+      "stability": 77.06400000000001
+     },
+     "t": 119.565,
+     "userId": -5
+    },
+    {
+     "data": {
+      "inventory": [
+       "Shopping Cart",
+       "Log",
+       "Log",
+       "Cactus",
+       "Hair Dryer",
+       "Racing Flag",
+       "Skateboard",
+       "Magic Wand"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Hair Dryer",
+       "MOBILITY": "Log",
+       "SPECIAL": "Cactus"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 119.613,
+     "userId": -5
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Shopping Cart",
+      "ENGINE": "Flower",
+      "MOBILITY": "Umbrella",
+      "SPECIAL": "Cactus"
+     },
+     "stats": {
+      "acceleration": 14.632,
+      "boostDuration": 2.6,
+      "floatability": 0.325,
+      "flyability": 1.5384615384615385,
+      "speed": 23,
+      "stability": 75.52000000000001
+     },
+     "t": 120.079,
+     "userId": -3
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "ENGINE": "Drill",
+      "HEAD": "Soda Bottle",
+      "SPECIAL": "Balloon Bunch",
+      "TAIL": "Balloon Bunch"
+     },
+     "stats": {
+      "acceleration": 27.298578199052134,
+      "boostDuration": 8,
+      "floatability": 0.23696682464454977,
+      "flyability": 1.1848341232227488,
+      "speed": 31.469194312796212,
+      "stability": 27.86729857819905
+     },
+     "t": 120.113,
+     "userId": -4
+    },
+    {
+     "data": {
+      "inventory": [
+       "Cactus",
+       "Umbrella",
+       "Shopping Cart",
+       "Flower",
+       "Pizza",
+       "Gas Can",
+       "Racing Flag",
+       "Rubber Duck"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Shopping Cart",
+       "ENGINE": "Flower",
+       "MOBILITY": "Umbrella",
+       "SPECIAL": "Cactus"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 120.113,
+     "userId": -3
+    },
+    {
+     "data": {
+      "inventory": [
+       "Balloon Bunch",
+       "Soda Bottle",
+       "Balloon Bunch",
+       "Life Preserver",
+       "Red Sofa",
+       "Rubber Duck",
+       "Rubber Duck",
+       "Drill"
+      ],
+      "result": "ok",
+      "slots": {
+       "ENGINE": "Drill",
+       "HEAD": "Soda Bottle",
+       "SPECIAL": "Balloon Bunch",
+       "TAIL": "Balloon Bunch"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 120.164,
+     "userId": -4
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Barrel",
+      "ENGINE": "Magnifying Glass",
+      "MOBILITY": "Barrel",
+      "SPECIAL": "Gas Can"
+     },
+     "stats": {
+      "acceleration": 20.500000000000004,
+      "boostDuration": 0.96,
+      "floatability": 0.175,
+      "flyability": 3.333333333333333,
+      "speed": 27.02,
+      "stability": 37.059999999999995
+     },
+     "t": 120.164,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 120.165
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 7613.949699724847,
+     "racers": [
+      -1,
+      -2,
+      -3,
+      -4,
+      -5,
+      -6
+     ],
+     "round": 1,
+     "t": 120.331,
+     "timeout": 240
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 120.385,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 67.55000305175781,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.385,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 67.55000305175781,
+     "seated": true,
+     "t": 120.628,
+     "torque": 82,
+     "turnSpeed": 2.2558999061584473,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Gas Can",
+       "Magnifying Glass",
+       "Barrel",
+       "Barrel",
+       "Barrel",
+       "Magnifying Glass",
+       "Lantern",
+       "Toilet Paper"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Barrel",
+       "ENGINE": "Magnifying Glass",
+       "MOBILITY": "Barrel",
+       "SPECIAL": "Gas Can"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 120.812,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 67.55000305175781,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.922,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 74.82606506347656,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.922,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": -7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 74.82606506347656,
+     "seated": true,
+     "t": 120.938,
+     "torque": 97.93987274169922,
+     "turnSpeed": 2.3563930988311768,
+     "userId": -2
+    },
+    {
+     "at": {
+      "x": 0,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 57.5,
+     "seated": true,
+     "t": 121.226,
+     "torque": 58.52799987792969,
+     "turnSpeed": 2.8327999114990234,
+     "userId": -3
+    },
+    {
+     "after": 101.32500457763672,
+     "before": 67.55000305175781,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.249,
+     "userId": -1
+    }
+   ],
+   "samplesTotal": 3
+  },
+  "timedOut": false
+ },
+ "scenario": "steal-crowd-6p",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (FOREST): 0 finished of 6\n    steal attempts: defended=6, denied: too far=12, denied: victim has nothing=1, denied: victim protected=1, stolen=7\n    -3: picked 11, contests 5/6, stole 0, robbed 2, defences 2, items 8 | craft submitted, rejected 0\n    -2: picked 9, contests 4/6, stole 2, robbed 1, defences 1, items 8 | craft submitted, rejected 0\n    -1: picked 8, contests 2/5, stole 3, robbed 3, defences 1, items 8 | craft submitted, rejected 0\n    -4: picked 11, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -5: picked 10, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -6: picked 8, contests 0/4, stole 2, robbed 1, defences 2, items 8 | craft submitted, rejected 0\n  events: bot_craft=6 bot_defend=13 bot_joined=6 bot_pickup_denied=46 bot_ready=6 bot_steal=27 contes",
+ "wallSeconds": 145.2
+}

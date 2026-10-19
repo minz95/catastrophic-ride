@@ -83,11 +83,27 @@ R.describe("FarmingRules.canSteal", function()
 			{ { thiefItems = base.inventorySize }, "thief is full" },
 			{ { distance = base.range + 0.1 }, "too far" },
 			{ { victimInvincibleEnd = 101 }, "victim protected" },
+			{ { thiefBusy = true }, "already stealing" },
+			{ { victimUnderAttack = true }, "victim under attack" },
+			{ { self = true }, "self" },
 		}
 		for _, c in ipairs(cases) do
 			local ok, why = Rules.canSteal(with(c[1]))
 			R.expect(ok).toBe(false)
 			R.expect(why).toBe(c[2])
 		end
+	end)
+end)
+
+R.describe("FarmingRules.stealOutcome", function()
+	-- A steal is blocked only by enough taps inside the defence window
+	-- (it used to be blocked by one DefendSteal call made at any time).
+	R.it("needs STEAL_DEFEND_PRESSES taps in the window", function()
+		local need = Constants.STEAL_DEFEND_PRESSES
+		R.expect(Rules.stealOutcome(need, need)).toBe("defended")
+		R.expect(Rules.stealOutcome(need + 4, need)).toBe("defended")
+		R.expect(Rules.stealOutcome(need - 1, need)).toBe("stolen")
+		R.expect(Rules.stealOutcome(0, need)).toBe("stolen")
+		R.expect(Rules.stealOutcome(nil, need)).toBe("stolen")
 	end)
 end)

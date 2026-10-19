@@ -128,6 +128,23 @@ checked the same way.
 | `escape` | `runEscape{ biome }` | every case drives `RaceSim.ESCAPE_GAIN` studs on within `ESCAPE_SECONDS`: nose in the left / right wall at 70°, facing backwards (every 500 studs), on each jump ramp, mud zone and drift corner. "Needed a respawn" is a warning, "stuck" a failure |
 | `match` | `runMatch{ biome, players, rounds }` | all bot clients joined, finish rate, no server errors |
 
+Farming and crafting scenarios (`match` with `stopAfter = "CRAFTING"`, tag
+`farm`) end when the race would start and check each round's
+`farm` / `craft` stats from `MatchHarness`:
+
+| Check | Meaning |
+|---|---|
+| `ledger` | every player's inventory size equals what the pickup / steal events add up to (no item copied or lost) |
+| `everyonePicks` | every non-AFK bot picked something up |
+| `everyoneCrafted`, `noRejected` | every player has a craft and the server dropped no slot from a bot's submission |
+| `autoFor` | players with these farm profiles got an automatic craft |
+| `minAttempts` / `maxAttempts` | steal attempts by result (`stolen`, `defended`, `denied: …`) |
+
+Bot farm profiles (`Shared/BotBrain`): `sweaty`, `casual`, `afk`, and two
+harness profiles, `thief` (hunts anyone within 120 studs and steals on every
+chance) and `guard` (always taps the defence 3 times). Studio bots steal and
+defend through the same remotes as the keyboard (`BotDriver`).
+
 Harness cars in one race are ghosts to each other (collision group
 `HarnessCars`) unless `contact = true`; the `*-contact` scenarios test
 car-to-car contact from the grid.

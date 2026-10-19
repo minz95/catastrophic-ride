@@ -279,10 +279,11 @@ RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
 	conn = UserInputService.InputBegan:Connect(function(input, processed)
 		if processed then return end
 		if input.KeyCode == Enum.KeyCode.E then
+			-- The server counts the taps (one call each) inside its window.
 			defendPresses = defendPresses + 1
+			task.spawn(function() RemoteEvents.DefendSteal:InvokeServer() end)
 			if defendPresses >= Constants.STEAL_DEFEND_PRESSES then
 				defended = true
-				RemoteEvents.DefendSteal:InvokeServer()
 				conn:Disconnect()
 			end
 		end

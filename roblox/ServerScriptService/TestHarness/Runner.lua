@@ -110,7 +110,7 @@ end
 -- opts: { players = 4, rounds = 1, biome = "FOREST",
 --         durations = { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 --         farmProfiles = { "sweaty", "casual" }, driverProfiles = { "expert", "average", "novice" },
---         maxSeconds = 600 }
+--         maxSeconds = 600, stopAfter = "CRAFTING" }
 function Runner.runMatch(opts)
 	opts = opts or {}
 	local players = opts.players or 4
@@ -121,6 +121,7 @@ function Runner.runMatch(opts)
 		rounds = opts.rounds or 1,
 		lobbyDelay = 3,
 		joinTimeout = opts.joinTimeout or 90,
+		stopAfter = opts.stopAfter,   -- "CRAFTING": end when the race would start
 		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 		maxSeconds = opts.maxSeconds or 900,
 		bots = {

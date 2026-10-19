@@ -1,0 +1,847 @@
+{
+ "checks": [],
+ "commit": "a7efc25",
+ "dirty": false,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-19T19:35:39.117Z,145.117874,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.117Z,145.117920,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.143Z,145.143814,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.144Z,145.144485,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.145Z,145.145264,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.764Z,145.764252,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.764Z,145.764420,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:35:39.981Z,145.981674,6fb2b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"ee77035b-7393-4a58-815b-86e7e720471d\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-19T19:35:40.175Z,146.175659,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'",
+  "2026-10-19T19:35:40.175Z,146.175781,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 20,
+   "FARMING": 90,
+   "RACING": 60,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "sweaty",
+   "afk",
+   "casual"
+  ],
+  "maxSeconds": 400,
+  "players": 3,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-20T04:35:45+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "sweaty",
+     "afk",
+     "casual"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 90,
+    "RACING": 60,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 400,
+   "players": 3,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "ENGINE": "Rocket",
+       "HEAD": "Umbrella",
+       "SPECIAL": "Rubber Duck",
+       "TAIL": "Propeller Hat"
+      },
+      "stats": {
+       "acceleration": 31.533847472150814,
+       "boostDuration": 6.4,
+       "floatability": 0.21422450728363326,
+       "flyability": 1.0711225364181662,
+       "speed": 32.56212510711226,
+       "stability": 24.23307626392459
+      }
+     },
+     "-2": {
+      "auto": true,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.8,
+       "boostDuration": 0.8,
+       "floatability": 0.25,
+       "flyability": 1.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     },
+     "-3": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Treadmill",
+       "MOBILITY": "Life Preserver",
+       "SPECIAL": "Rubber Duck"
+      },
+      "stats": {
+       "acceleration": 15.477289288316733,
+       "boostDuration": 6.4,
+       "floatability": 0.6558173427252854,
+       "flyability": 0.24289531212047605,
+       "speed": 23.317949963565702,
+       "stability": 100.26718484333253
+      }
+     }
+    },
+    "craftT0": 104.412,
+    "durationSeconds": 111.08752420835663,
+    "farm": {
+     "attempts": {
+      "denied: victim has nothing": 2,
+      "stolen": 1
+     },
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": {
+        "denied: victim has nothing": 1,
+        "stolen": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 7,
+       "robbed": 0,
+       "stolen": 1
+      },
+      "-2": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 0,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-3": {
+       "attempts": {
+        "denied: victim has nothing": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "drops": 4,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 13,
+       "robbed": 1,
+       "stolen": 0
+      }
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [
+      "Rocket",
+      "Umbrella",
+      "Rubber Duck",
+      "Propeller Hat",
+      "Life Preserver",
+      "Umbrella",
+      "Compass",
+      "Log"
+     ],
+     "-2": [],
+     "-3": [
+      "Microwave",
+      "Life Preserver",
+      "Treadmill",
+      "Life Preserver",
+      "Rubber Duck",
+      "Magic Wand",
+      "Life Preserver",
+      "Bathtub"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 6.4,
+      "driver": "expert",
+      "farm": "sweaty",
+      "name": "Player1",
+      "slots": {
+       "ENGINE": "Rocket",
+       "HEAD": "Umbrella",
+       "SPECIAL": "Rubber Duck",
+       "TAIL": "Propeller Hat"
+      },
+      "speed": 32.56212510711226,
+      "userId": -1
+     },
+     {
+      "boostDuration": 0.8,
+      "driver": "average",
+      "farm": "afk",
+      "name": "Player2",
+      "slots": [],
+      "speed": 23,
+      "userId": -2
+     },
+     {
+      "boostDuration": 6.4,
+      "driver": "novice",
+      "farm": "casual",
+      "name": "Player3",
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Treadmill",
+       "MOBILITY": "Life Preserver",
+       "SPECIAL": "Rubber Duck"
+      },
+      "speed": 23.317949963565702,
+      "userId": -3
+     }
+    ],
+    "raceStartedAt": 129.21846562501742,
+    "round": 1,
+    "startedAt": 19.1423483749968,
+    "t0": 14.381
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 3\n    steal attempts: denied: victim has nothing=2, stolen=1\n    -3: picked 13, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0\n    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 7, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: bot_craft=2 bot_defend=1 bot_joined=3 bot_ready=3 bot_steal=3 craft=3 harness_crafting=1 harness_round=1 item_drop=4 item_pickup=20 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal=1 steal_attempt=3 vehicle_spawn=3",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "driver": "expert",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 7.074,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 8.323,
+     "userId": -1
+    },
+    {
+     "driver": "average",
+     "farm": "afk",
+     "kind": "bot_joined",
+     "name": "Player2",
+     "t": 9.347,
+     "userId": -2
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "afk"
+     },
+     "kind": "bot_ready",
+     "t": 9.922,
+     "userId": -2
+    },
+    {
+     "driver": "novice",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player3",
+     "t": 10.963,
+     "userId": -3
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 11.705,
+     "userId": -3
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 14.255
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 14.381
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: victim has nothing",
+     "t": 14.656,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "denied: victim has nothing",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 14.705,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Microwave",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 18.922,
+     "userId": -3
+    },
+    {
+     "inventory": 2,
+     "item": "Rocket",
+     "itemId": "48",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 23.371,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 23.421,
+     "userId": -3
+    },
+    {
+     "inventory": 3,
+     "item": "Life Preserver",
+     "itemId": "88",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 23.971,
+     "userId": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: victim has nothing",
+     "t": 24.338,
+     "thief": -3,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "denied: victim has nothing",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 24.354,
+     "userId": -3
+    },
+    {
+     "item": "Rocket",
+     "kind": "steal",
+     "t": 24.421,
+     "thief": -1,
+     "thiefInventory": 1,
+     "victim": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 24.421,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 24.438,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Treadmill",
+     "itemId": "59",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 25.64,
+     "userId": -3
+    },
+    {
+     "inventory": 4,
+     "item": "Log",
+     "itemId": "25",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 26.222,
+     "userId": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Hair Dryer",
+     "itemId": "49",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 27.054,
+     "userId": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Shopping Cart",
+     "itemId": "46",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 27.672,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Racing Flag",
+     "itemId": "85",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 28.955,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Life Preserver",
+     "itemId": "77",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 32.038,
+     "userId": -3
+    },
+    {
+     "inventory": 2,
+     "item": "Umbrella",
+     "itemId": "95",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 32.256,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Log",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 34.738,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Rubber Duck",
+     "itemId": "38",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 34.739,
+     "userId": -3
+    },
+    {
+     "inventory": 3,
+     "item": "Rubber Duck",
+     "itemId": "50",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 35.456,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Hair Dryer",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 37.904,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Magic Wand",
+     "itemId": "78",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 37.905,
+     "userId": -3
+    },
+    {
+     "inventory": 4,
+     "item": "Propeller Hat",
+     "itemId": "68",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 39.071,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Life Preserver",
+     "itemId": "47",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 42.72,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Shopping Cart",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 44.804,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Life Preserver",
+     "itemId": "42",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 44.805,
+     "userId": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Umbrella",
+     "itemId": "98",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 45.054,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Compass",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 49.254,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "89",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 49.621,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Racing Flag",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 51.837,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Bathtub",
+     "itemId": "100",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 51.839,
+     "userId": -3
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 104.387
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 104.412
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Microwave",
+      "ENGINE": "Treadmill",
+      "MOBILITY": "Life Preserver",
+      "SPECIAL": "Rubber Duck"
+     },
+     "stats": {
+      "acceleration": 15.477289288316733,
+      "boostDuration": 6.4,
+      "floatability": 0.6558173427252854,
+      "flyability": 0.24289531212047605,
+      "speed": 23.317949963565702,
+      "stability": 100.26718484333253
+     },
+     "t": 106.101,
+     "userId": -3
+    },
+    {
+     "data": {
+      "inventory": [
+       "Microwave",
+       "Life Preserver",
+       "Treadmill",
+       "Life Preserver",
+       "Rubber Duck",
+       "Magic Wand",
+       "Life Preserver",
+       "Bathtub"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Treadmill",
+       "MOBILITY": "Life Preserver",
+       "SPECIAL": "Rubber Duck"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 106.135,
+     "userId": -3
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "ENGINE": "Rocket",
+      "HEAD": "Umbrella",
+      "SPECIAL": "Rubber Duck",
+      "TAIL": "Propeller Hat"
+     },
+     "stats": {
+      "acceleration": 31.533847472150814,
+      "boostDuration": 6.4,
+      "floatability": 0.21422450728363326,
+      "flyability": 1.0711225364181662,
+      "speed": 32.56212510711226,
+      "stability": 24.23307626392459
+     },
+     "t": 106.384,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Rocket",
+       "Umbrella",
+       "Rubber Duck",
+       "Propeller Hat",
+       "Life Preserver",
+       "Umbrella",
+       "Compass",
+       "Log"
+      ],
+      "result": "ok",
+      "slots": {
+       "ENGINE": "Rocket",
+       "HEAD": "Umbrella",
+       "SPECIAL": "Rubber Duck",
+       "TAIL": "Propeller Hat"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 106.417,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 124.417
+    },
+    {
+     "auto": true,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.8,
+      "boostDuration": 0.8,
+      "floatability": 0.25,
+      "flyability": 1.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 124.417,
+     "userId": -2
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 7613.949699724847,
+     "racers": [
+      -1,
+      -2,
+      -3
+     ],
+     "round": 1,
+     "t": 124.457,
+     "timeout": 240
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 124.457,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 81.40531158447266,
+     "progress": 10,
+     "speed": 0,
+     "t": 124.457,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 81.40531158447266,
+     "seated": true,
+     "t": 124.635,
+     "torque": 126.13539123535156,
+     "turnSpeed": 2.0634961128234863,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 57.5,
+     "seated": true,
+     "t": 124.918,
+     "torque": 47.20000076293945,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 81.40531158447266,
+     "progress": 10,
+     "speed": 0,
+     "t": 124.967,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 57.5,
+     "progress": 10,
+     "speed": 0,
+     "t": 124.968,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "after": 122.10797119140625,
+     "before": 81.40531158447266,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 125.086,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": 0,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 58.29487609863281,
+     "seated": true,
+     "t": 125.201,
+     "torque": 61.909156799316406,
+     "turnSpeed": 3.200000047683716,
+     "userId": -3
+    },
+    {
+     "after": 86.25,
+     "before": 57.5,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 125.367,
+     "userId": -2
+    }
+   ],
+   "samplesTotal": 3
+  },
+  "timedOut": false
+ },
+ "scenario": "craft-afk-3p",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 3\n    steal attempts: denied: victim has nothing=2, stolen=1\n    -3: picked 13, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0\n    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 7, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: bot_craft=2 bot_defend=1 bot_joined=3 bot_ready=3 bot_steal=3 craft=3 harness_crafting=1 harness_round=1 item_drop=4 item_pickup=20 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal=1 steal_attempt=3 vehicle_spawn=3",
+ "wallSeconds": 151.7
+}
