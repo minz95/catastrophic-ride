@@ -72,6 +72,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Race progress is distance along the centerline (`TrackGeometry:progressAt`,
   continuous across kinks), never a raw Z coordinate. Respawns go to
   `RaceProgress.respawnPoint`, on the centerline facing along the track.
+- Steals: `DefendSteal` is one call per tap and counts only inside the
+  victim's open window (`STEAL_DEFEND_PRESSES` taps defend). One steal at a
+  time per thief and per victim; every attempt is logged as `steal_attempt`.
+- Craft submissions go through `Shared/CraftingRules.validate` (core slots
+  only take their own item type; the rest is dropped and logged).
 - Timed things end on a timer, not on the next client message (contests used
   to wait for one more press and locked items for the round).
 - `MapVisibility.restore` must keep a stored `false` (the old
