@@ -194,6 +194,49 @@ def check(sc, report):
                 out.append(("fail", "round %s: %d of %d finished" % (r.get("round"), done, len(players))))
         if not report.get("rounds"):
             out.append(("fail", "no round completed"))
+        for r in report.get("rounds", []):
+            out += check_farm(c, r, report)
+    return out
+
+
+def check_farm(c, r, report):
+    """FARMING / CRAFTING checks on one round (MatchHarness farm / craft stats)."""
+    out = []
+    farm, craft = r.get("farm") or {}, r.get("craft") or {}
+    players = (farm.get("players") or {})
+    profile = {str(p.get("userId")): p.get("farm") for p in r.get("players", [])}
+    tag = "round %s: " % r.get("round")
+    if c.get("ledger") and farm.get("ledgerMismatches"):
+        out.append(("fail", tag + "inventory ledger off: " + "; ".join(farm["ledgerMismatches"])))
+    for uid, p in players.items():
+        if (p.get("inventory") or 0) > 8:
+            out.append(("fail", tag + "%s holds %d items" % (uid, p["inventory"])))
+    if c.get("everyonePicks"):
+        lazy = [uid for uid, prof in profile.items() if prof != "afk" and players.get(uid, {}).get("pickups", 0) == 0]
+        if lazy:
+            out.append(("fail", tag + "picked up nothing: " + ", ".join(lazy)))
+    if c.get("everyoneCrafted"):
+        missing = [uid for uid in profile if uid not in craft]
+        if missing:
+            out.append(("fail", tag + "no craft for " + ", ".join(missing)))
+    if c.get("noRejected"):
+        bad = ["%s %s" % (uid, x.get("rejected")) for uid, x in craft.items() if x.get("rejected")]
+        if bad:
+            out.append(("fail", tag + "server rejected craft slots: " + "; ".join(bad)))
+    for prof in c.get("autoFor", []):
+        for uid, pr in profile.items():
+            if pr == prof and not (craft.get(uid) or {}).get("auto"):
+                out.append(("fail", tag + "%s (%s) did not get an auto craft" % (uid, prof)))
+    attempts = farm.get("attempts") or {}
+    for res, n in (c.get("minAttempts") or {}).items():
+        if attempts.get(res, 0) < n:
+            out.append(("fail", tag + "steal attempts %s: %d (want at least %d; all: %s)" % (res, attempts.get(res, 0), n, attempts)))
+    for res, n in (c.get("maxAttempts") or {}).items():
+        if attempts.get(res, 0) > n:
+            out.append(("fail", tag + "steal attempts %s: %d (want at most %d)" % (res, attempts.get(res, 0), n)))
+    errs = [e for e in report.get("clientErrors", []) if "ChatScript" not in json.dumps(e)]
+    if errs:
+        out.append(("warn", "%d bot client errors, first: %s" % (len(errs), json.dumps(errs[0])[:200])))
     return out
 
 

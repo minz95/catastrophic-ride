@@ -202,9 +202,16 @@ RemoteEvents.ContestUpdate.OnClientEvent:Connect(function(data)
 	end
 end)
 
-RemoteEvents.ContestResult.OnClientEvent:Connect(function(data)
-	if data then
-		if data.winner == LocalPlayer.UserId then
+-- FarmingManager fires (itemId, winnerUserId) to everyone; only the two
+-- contestants hear a result (they got ContestUpdate for this item).
+local _myContests = {}
+RemoteEvents.ContestUpdate.OnClientEvent:Connect(function(itemId)
+	_myContests[itemId] = true
+end)
+RemoteEvents.ContestResult.OnClientEvent:Connect(function(itemId, winnerUserId)
+	if _myContests[itemId] then
+		_myContests[itemId] = nil
+		if winnerUserId == LocalPlayer.UserId then
 			_playSFX("CONTEST_WIN")
 		else
 			_playSFX("CONTEST_LOSE")
@@ -212,8 +219,9 @@ RemoteEvents.ContestResult.OnClientEvent:Connect(function(data)
 	end
 end)
 
-RemoteEvents.ItemStolen.OnClientEvent:Connect(function(data)
-	if data and data.victimId == LocalPlayer.UserId then
+-- FarmingManager fires (thiefName, victimName, itemName) to everyone.
+RemoteEvents.ItemStolen.OnClientEvent:Connect(function(_thiefName, victimName)
+	if victimName == LocalPlayer.Name then
 		_playSFX("ITEM_STOLEN")
 	end
 end)

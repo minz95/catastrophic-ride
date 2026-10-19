@@ -110,6 +110,7 @@ Constants.STEAL_COOLDOWN     = 8    -- seconds between steal attempts
 Constants.STEAL_INVINCIBLE   = 3    -- seconds of steal immunity after being robbed
 Constants.STEAL_DEFEND_WINDOW = 1   -- seconds victim has to defend
 Constants.STEAL_DEFEND_PRESSES = 3  -- taps needed to block
+Constants.STEAL_DEFENDED_COOLDOWN = 0.5 -- thief may try again this soon after a defended attempt
 
 -- ─── Rarity ───────────────────────────────────────────────────────────────────
 Constants.RARITY = {

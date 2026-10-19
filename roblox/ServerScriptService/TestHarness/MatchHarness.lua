@@ -29,6 +29,61 @@ local function summarizeRound(round)
 	return finished
 end
 
+--- FARMING / CRAFTING numbers for one round, from the telemetry since
+-- `t0` and the inventories at the end of FARMING. Per player: pickups,
+-- contests won / lost, steals done / suffered, steal attempts by result,
+-- defences tried (bot notes), and the inventory ledger: the size expected
+-- from the events vs the real one (a mismatch = an item copied or lost).
+function MatchHarness.farmStats(t0, inventories)
+	local per, attempts = {}, {}
+	local function P(uid)
+		local key = tostring(uid)
+		per[key] = per[key] or { pickups = 0, contestsWon = 0, contestsLost = 0, stolen = 0, robbed = 0,
+			attempts = {}, defencesTried = 0, ledger = 0 }
+		return per[key]
+	end
+	for _, e in ipairs(Telemetry.events()) do
+		if e.t >= t0 then
+			if e.kind == "item_pickup" then
+				local p = P(e.userId); p.pickups += 1; p.ledger = e.inventory
+			elseif e.kind == "contest_result" then
+				P(e.winner).contestsWon += 1; P(e.loser).contestsLost += 1
+			elseif e.kind == "steal" then
+				local t, v = P(e.thief), P(e.victim)
+				t.stolen += 1; t.ledger = e.thiefInventory
+				v.robbed += 1; v.ledger -= 1
+			elseif e.kind == "steal_attempt" then
+				local p = P(e.thief)
+				p.attempts[e.result] = (p.attempts[e.result] or 0) + 1
+				attempts[e.result] = (attempts[e.result] or 0) + 1
+			elseif e.kind == "bot_defend" and e.data and e.data.tried then
+				P(e.userId).defencesTried += 1
+			end
+		end
+	end
+	local mismatches = {}
+	for uid, inv in pairs(inventories) do
+		local p = P(uid)
+		p.inventory = #inv
+		if p.ledger ~= #inv then
+			table.insert(mismatches, string.format("%s: events say %d items, has %d", uid, p.ledger, #inv))
+		end
+	end
+	return { players = per, attempts = attempts, ledgerMismatches = mismatches }
+end
+
+--- CRAFTING numbers: every craft event since t0 (submitted or auto, slots,
+-- slots the server rejected).
+function MatchHarness.craftStats(t0)
+	local out = {}
+	for _, e in ipairs(Telemetry.events("craft")) do
+		if e.t >= t0 then
+			out[tostring(e.userId)] = { auto = e.auto, slots = e.slots, rejected = e.rejected, stats = e.stats }
+		end
+	end
+	return out
+end
+
 function MatchHarness.start(args, endTest)
 	local bots = args.bots or {}
 	local farmProfiles = bots.farmProfiles or { "sweaty", "casual" }
@@ -104,18 +159,41 @@ function MatchHarness.start(args, endTest)
 	GameManager.onPhaseChanged(function(phase, biome)
 		if ended then return end
 		if phase == "FARMING" then
-			current = { round = GameManager.getRound(), biome = biome, startedAt = os.clock(), players = {} }
-		elseif phase == "RACING" and current then
-			current.raceStartedAt = os.clock()
+			current = { round = GameManager.getRound(), biome = biome, startedAt = os.clock(), players = {},
+				t0 = Telemetry.record("harness_round", { round = GameManager.getRound() }).t }
+		elseif phase == "CRAFTING" and current then
+			local inventories = {}
 			for _, p in ipairs(Players:GetPlayers()) do
 				local d = SessionManager.getData(p)
-				local s = d and d.vehicleStats
-				table.insert(current.players, {
-					userId = p.UserId, name = p.Name,
-					farm = p:GetAttribute("BotFarmProfile"), driver = p:GetAttribute("BotDriverProfile"),
-					slots = s and s.slotAssignments, speed = s and s.speed, boostDuration = s and s.boostDuration,
-				})
+				if d then inventories[tostring(p.UserId)] = table.clone(d.inventory) end
 			end
+			current.inventories = inventories
+			current.farm = MatchHarness.farmStats(current.t0, inventories)
+			current.craftT0 = Telemetry.record("harness_crafting", {}).t
+		elseif phase == "RACING" and current then
+			current.raceStartedAt = os.clock()
+			local round = current
+			-- CraftingManager auto-submits on this same phase change; read the
+			-- crafts and the players' cars once it has.
+			task.delay(1, function()
+				round.craft = MatchHarness.craftStats(round.craftT0 or round.t0)
+				for _, p in ipairs(Players:GetPlayers()) do
+					local d = SessionManager.getData(p)
+					local s = d and d.vehicleStats
+					table.insert(round.players, {
+						userId = p.UserId, name = p.Name,
+						farm = p:GetAttribute("BotFarmProfile"), driver = p:GetAttribute("BotDriverProfile"),
+						slots = s and s.slotAssignments, speed = s and s.speed, boostDuration = s and s.boostDuration,
+					})
+				end
+				if args.stopAfter == "CRAFTING" and not ended then
+					round.finishOrder = {}
+					round.durationSeconds = os.clock() - round.startedAt
+					table.insert(report.rounds, round)
+					current = nil
+					if #report.rounds >= wantRounds then finish("stopAfter CRAFTING") end
+				end
+			end)
 		elseif phase == "RESULTS" and current then
 			for _, entry in ipairs(current.players) do
 				local p = Players:GetPlayerByUserId(entry.userId)
@@ -149,6 +227,21 @@ function MatchHarness.summarize(report)
 		#(report.rounds or {}), tostring(report.endReason), #(report.errors or {}), #(report.clientErrors or {})) }
 	for _, r in ipairs(report.rounds or {}) do
 		table.insert(lines, string.format("  round %s (%s): %d finished of %d", tostring(r.round), tostring(r.biome), #(r.finishOrder or {}), #(r.players or {})))
+		local f = r.farm
+		if f then
+			local att = {}
+			for k, v in pairs(f.attempts or {}) do table.insert(att, k .. "=" .. v) end
+			table.sort(att)
+			table.insert(lines, "    steal attempts: " .. (#att > 0 and table.concat(att, ", ") or "none")
+				.. (#f.ledgerMismatches > 0 and ("  LEDGER: " .. table.concat(f.ledgerMismatches, "; ")) or ""))
+			for uid, p in pairs(f.players or {}) do
+				local c = r.craft and r.craft[uid]
+				table.insert(lines, string.format("    %s: picked %d, contests %d/%d, stole %d, robbed %d, defences %d, items %s%s",
+					uid, p.pickups, p.contestsWon, p.contestsWon + p.contestsLost, p.stolen, p.robbed, p.defencesTried,
+					tostring(p.inventory), c and string.format(" | craft %s, rejected %d", c.auto and "auto" or "submitted",
+						#(c.rejected or {})) or ""))
+			end
+		end
 		for _, f in ipairs(r.finishOrder or {}) do
 			table.insert(lines, string.format("    #%d %s %.1fs", f.place, f.name, f.time or -1))
 		end

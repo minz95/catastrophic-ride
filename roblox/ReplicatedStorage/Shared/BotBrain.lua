@@ -20,10 +20,15 @@ BotBrain.RARITY_VALUE = RARITY_VALUE
 -- stealChance   probability per second of trying to steal when in range
 -- defendChance  probability of tapping fast enough to block a steal
 -- crafter       "optimal" (search best top speed) | "casual" (first fit)
+-- huntRange     studs a bot walks to reach a steal victim (0 = only steals
+--               from players it happens to pass)
 BotBrain.PROFILES = {
-	sweaty = { mashRate = 11, greed = 40, stealChance = 0.6, defendChance = 0.8, crafter = "optimal" },
-	casual = { mashRate = 7,  greed = 15, stealChance = 0.1, defendChance = 0.4, crafter = "casual" },
-	afk    = { mashRate = 0,  greed = 0,  stealChance = 0,   defendChance = 0,   crafter = "none" },
+	sweaty = { mashRate = 11, greed = 40, stealChance = 0.6, defendChance = 0.8, crafter = "optimal", huntRange = 40 },
+	casual = { mashRate = 7,  greed = 15, stealChance = 0.1, defendChance = 0.4, crafter = "casual",  huntRange = 0 },
+	afk    = { mashRate = 0,  greed = 0,  stealChance = 0,   defendChance = 0,   crafter = "none",    huntRange = 0 },
+	-- harness profiles: every encounter turns into a steal attempt
+	thief  = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, crafter = "casual",  huntRange = 120 },
+	guard  = { mashRate = 9,  greed = 20, stealChance = 0,   defendChance = 1,   crafter = "optimal", huntRange = 0 },
 }
 
 local function rarityRank(name)
@@ -65,6 +70,25 @@ end
 --- Whether to attempt a steal this tick.
 function BotBrain.wantsSteal(profile, dt, rng)
 	return (rng or math.random)() < (profile.stealChance or 0) * dt
+end
+
+--- Who to steal from: the nearest other player with items within reach
+-- (STEAL_RANGE, or huntRange when hunting), or nil.
+-- others: { { userId, x, z, items } }, me: { x, z, items }
+function BotBrain.pickVictim(profile, me, others)
+	if (profile.stealChance or 0) <= 0 or (me.items or 0) >= Constants.INVENTORY_SIZE then
+		return nil
+	end
+	local reach = math.max(Constants.STEAL_RANGE, profile.huntRange or 0)
+	local best, bestD = nil, math.huge
+	for _, o in ipairs(others) do
+		if (o.items or 0) > 0 then
+			local dx, dz = o.x - me.x, o.z - me.z
+			local d = math.sqrt(dx * dx + dz * dz)
+			if d <= reach and d < bestD then best, bestD = o, d end
+		end
+	end
+	return best, bestD
 end
 
 --- Whether a steal attempt against this bot gets defended.

@@ -6,6 +6,7 @@ local R = require("../lib/runner")
 local Loader = require("../lib/loader")
 local Server = require("../lib/server")
 local MatchSim = require("../lib/matchsim")
+local Vector3 = require("@lune/roblox").Vector3
 
 R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 	local env = Loader.boot()
@@ -110,5 +111,57 @@ R.describe("TestHarness.MatchHarness (smoke, real server scripts)", function()
 			R.expect(p:GetAttribute("HarnessBot")).toBe(true)
 		end
 		R.expect(srv.mock.errors).toBeEmpty("server script errors during the match")
+	end)
+end)
+
+R.describe("TestHarness.MatchHarness farming / crafting report", function()
+	R.it("stopAfter CRAFTING ends at the race start with farm and craft stats", function()
+		local ended
+		local srv = Server.boot({
+			players = 3,
+			swallowErrors = true,
+			scripts = {
+				"ServerScriptService.MapBuilders.ForestMapBuilder",
+				"ServerScriptService.GameBootstrap",
+				"ServerScriptService.MapManager",
+				"ServerScriptService.FarmingManager",
+				"ServerScriptService.CraftingManager",
+			},
+			harness = { harness = "match", biome = "FOREST", players = 3, lobbyDelay = 0, rounds = 1, stopAfter = "CRAFTING",
+				durations = { FARMING = 6, CRAFTING = 2, RACING = 60, RESULTS = 1 } },
+		})
+		local MatchHarness = srv.env.requirePath("ServerScriptService.TestHarness.MatchHarness")
+		MatchHarness.start(srv.GameManager.getHarness(), function(result) ended = result end)
+		srv.advance(1)
+		local a, b = srv.players[1], srv.players[2]
+		srv.SessionManager.getData(a).inventory = {}
+		srv.SessionManager.getData(b).inventory = { "Log" }
+		a.Character.HumanoidRootPart.Position = Vector3.new(0, 3, 850)
+		b.Character.HumanoidRootPart.Position = Vector3.new(2, 3, 850)
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, a, b.UserId)
+		srv.advance(20, 0.5, function() end)
+		R.expect(ended ~= nil).toBe(true)
+		R.expect(ended.endReason).toBe("stopAfter CRAFTING")
+		local r = ended.rounds[1]
+		R.expect(r.farm.attempts.stolen).toBe(1)
+		R.expect(r.farm.players[tostring(a.UserId)].stolen).toBe(1)
+		R.expect(#r.craft[tostring(a.UserId)].rejected).toBe(0)
+		R.expect(r.craft[tostring(a.UserId)].auto).toBe(true)
+		R.expect(ended.summary:find("steal attempts: stolen=1") ~= nil).toBe(true)
+	end)
+end)
+
+R.describe("BotBrain.pickVictim", function()
+	local env = Loader.boot()
+	local BotBrain = env.requirePath("ReplicatedStorage.Shared.BotBrain")
+	local others = { { userId = 1, x = 3, z = 0, items = 2 }, { userId = 2, x = 30, z = 0, items = 2 }, { userId = 3, x = 1, z = 0, items = 0 } }
+	R.it("picks the nearest player with items in reach; hunters reach further", function()
+		R.expect(BotBrain.pickVictim(BotBrain.PROFILES.casual, { x = 0, z = 0, items = 1 }, others).userId).toBe(1)
+		R.expect(BotBrain.pickVictim(BotBrain.PROFILES.casual, { x = 20, z = 0, items = 1 }, others)).toBe(nil)
+		R.expect(BotBrain.pickVictim(BotBrain.PROFILES.sweaty, { x = 20, z = 0, items = 1 }, others).userId).toBe(2)
+	end)
+	R.it("never when the bot cannot steal or is full", function()
+		R.expect(BotBrain.pickVictim(BotBrain.PROFILES.afk, { x = 0, z = 0, items = 1 }, others)).toBe(nil)
+		R.expect(BotBrain.pickVictim(BotBrain.PROFILES.sweaty, { x = 0, z = 0, items = 8 }, others)).toBe(nil)
 	end)
 end)

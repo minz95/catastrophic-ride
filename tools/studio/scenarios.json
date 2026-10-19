@@ -1,5 +1,5 @@
 {
-  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). Tags: smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. Tags: farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
   "scenarios": [
     {
       "name": "race-forest",
@@ -395,6 +395,256 @@
       "checks": {
         "finishRate": 0.9,
         "allJoined": true
+      }
+    },
+    {
+      "name": "farm-forest-4p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "core",
+        "full"
+      ],
+      "_why": "baseline farming round: everyone picks items, inventories add up, everyone gets a craft",
+      "opts": {
+        "biome": "FOREST",
+        "players": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "sweaty",
+          "casual"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true
+      }
+    },
+    {
+      "name": "farm-ocean-4p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "full"
+      ],
+      "_why": "farm island layout",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "sweaty",
+          "casual"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true
+      }
+    },
+    {
+      "name": "farm-sky-4p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "full"
+      ],
+      "_why": "floating farm platform (falls?)",
+      "opts": {
+        "biome": "SKY",
+        "players": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "sweaty",
+          "casual"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true
+      }
+    },
+    {
+      "name": "steal-defended-2p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "core",
+        "full"
+      ],
+      "_why": "a thief hunts a guard that always taps 3x: every completed attempt must be defended",
+      "opts": {
+        "biome": "FOREST",
+        "players": 2,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "thief",
+          "guard"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true,
+        "minAttempts": {
+          "defended": 1
+        },
+        "maxAttempts": {
+          "stolen": 0
+        }
+      }
+    },
+    {
+      "name": "steal-4p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "core",
+        "full"
+      ],
+      "_why": "two thieves among casual players: steals happen, items move and are never copied or lost",
+      "opts": {
+        "biome": "FOREST",
+        "players": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "thief",
+          "casual",
+          "thief",
+          "casual"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true,
+        "minAttempts": {
+          "stolen": 1
+        }
+      }
+    },
+    {
+      "name": "steal-crowd-6p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "full"
+      ],
+      "_why": "three thieves at once: concurrent attempts on one victim, inventory caps",
+      "opts": {
+        "biome": "FOREST",
+        "players": 6,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "thief",
+          "thief",
+          "thief",
+          "guard",
+          "casual",
+          "sweaty"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": true,
+        "everyoneCrafted": true,
+        "noRejected": true,
+        "minAttempts": {
+          "stolen": 1
+        }
+      }
+    },
+    {
+      "name": "craft-afk-3p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "core",
+        "full"
+      ],
+      "_why": "an AFK player gets an automatic craft; bots' submissions are all valid",
+      "opts": {
+        "biome": "FOREST",
+        "players": 3,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "sweaty",
+          "afk",
+          "casual"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyonePicks": false,
+        "everyoneCrafted": true,
+        "noRejected": true,
+        "autoFor": [
+          "afk"
+        ]
       }
     }
   ]
