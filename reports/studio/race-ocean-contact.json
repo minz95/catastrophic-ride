@@ -1,0 +1,233 @@
+{
+ "checks": [],
+ "commit": "c7dab7c",
+ "dirty": false,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-19T17:44:18.866Z,0.866690,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-19T17:44:19.708Z,1.708212,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:44:20.992Z,2.992393,6bb43000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c703870c-9cb5-4cc7-b7d1-8e64483f7c63\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:44:29.793Z,11.793902,6c1af000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T17:44:30.039Z,12.039358,6bfa3000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:45:19.711Z,61.711117,6c3bb000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:46:19.711Z,121.711861,6bb43000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:46:56.586Z,158.586288,6b937000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c703870c-9cb5-4cc7-b7d1-8e64483f7c63\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "OCEAN",
+  "contact": true,
+  "mode": "run",
+  "profiles": [
+   "expert",
+   "average",
+   "novice",
+   "average",
+   "expert"
+  ]
+ },
+ "ranAt": "2026-10-20T02:47:03+0900",
+ "report": {
+  "biome": "OCEAN",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.42
+     },
+     {
+      "index": 2,
+      "t": 49.57
+     }
+    ],
+    "effects": [],
+    "endT": 130.8,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 7.73,
+    "maxProgress": 5874,
+    "maxSpeed": 49.302345275878906,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [
+     {
+      "from": {
+       "x": 53.2,
+       "z": -186.8
+      },
+      "reason": "stuck",
+      "s": 906,
+      "t": 27.82,
+      "to": {
+       "onTrack": true,
+       "x": 78.5,
+       "z": -180.4
+      }
+     }
+    ],
+    "time": 130.8,
+    "trackLength": 5948,
+    "turnSpeed": 1.2433884143829346,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.8
+     },
+     {
+      "index": 2,
+      "t": 42.57
+     }
+    ],
+    "effects": [],
+    "endT": 126.93,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 7.73,
+    "maxProgress": 5874,
+    "maxSpeed": 49.302345275878906,
+    "profile": "average",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 126.93,
+    "trackLength": 5948,
+    "turnSpeed": 1.2433884143829346,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.94
+     },
+     {
+      "index": 2,
+      "t": 44.47
+     }
+    ],
+    "effects": [],
+    "endT": 145.13,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 7.73,
+    "maxProgress": 5874,
+    "maxSpeed": 49.302345275878906,
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [
+     {
+      "from": {
+       "x": 70.3,
+       "z": -1139.8
+      },
+      "reason": "stuck",
+      "s": 2543,
+      "t": 68.87,
+      "to": {
+       "onTrack": true,
+       "x": 47.5,
+       "z": -1121.6
+      }
+     }
+    ],
+    "time": 145.13,
+    "trackLength": 5948,
+    "turnSpeed": 1.2433884143829346,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.47
+     },
+     {
+      "index": 2,
+      "t": 49.35
+     }
+    ],
+    "effects": [],
+    "endT": 142.01,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 7.73,
+    "maxProgress": 5874,
+    "maxSpeed": 49.302345275878906,
+    "profile": "average",
+    "respawnMode": "legacy",
+    "respawns": [
+     {
+      "from": {
+       "x": 68.5,
+       "z": -1137.9
+      },
+      "reason": "stuck",
+      "s": 2541,
+      "t": 69,
+      "to": {
+       "onTrack": true,
+       "x": 45.6,
+       "z": -1119.9
+      }
+     }
+    ],
+    "time": 142.01,
+    "trackLength": 5948,
+    "turnSpeed": 1.2433884143829346,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.45
+     },
+     {
+      "index": 2,
+      "t": 41.48
+     }
+    ],
+    "effects": [],
+    "endT": 122.65,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 7.73,
+    "maxProgress": 5873,
+    "maxSpeed": 49.302345275878906,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 122.65,
+    "trackLength": 5948,
+    "turnSpeed": 1.2433884143829346,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim OCEAN (shipped) \u2014 143.8s wall time\n  expert   car=p50 max=49 mass=7.73 \u2192 130.8s | CPs 2 | respawns 1 | blocked 0\n  average  car=p50 max=49 mass=7.73 \u2192 126.93s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=49 mass=7.73 \u2192 145.13s | CPs 2 | respawns 1 | blocked 0\n  average  car=p50 max=49 mass=7.73 \u2192 142.01s | CPs 2 | respawns 1 | blocked 0\n  expert   car=p50 max=49 mass=7.73 \u2192 122.65s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 143.8
+ },
+ "scenario": "race-ocean-contact",
+ "studioExit": 0,
+ "summary": "RaceSim OCEAN (shipped) \u2014 143.8s wall time\n  expert   car=p50 max=49 mass=7.73 \u2192 130.8s | CPs 2 | respawns 1 | blocked 0\n  average  car=p50 max=49 mass=7.73 \u2192 126.93s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=49 mass=7.73 \u2192 145.13s | CPs 2 | respawns 1 | blocked 0\n  average  car=p50 max=49 mass=7.73 \u2192 142.01s | CPs 2 | respawns 1 | blocked 0\n  expert   car=p50 max=49 mass=7.73 \u2192 122.65s | CPs 2 | respawns 0 | blocked 0",
+ "wallSeconds": 165.4
+}
