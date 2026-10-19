@@ -1,0 +1,908 @@
+{
+ "checks": [],
+ "commit": "8705b05",
+ "dirty": false,
+ "kind": "vehicles",
+ "logErrors": [
+  "2026-10-19T19:52:44.618Z,0.618542,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-19T19:52:44.825Z,0.825552,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T19:52:44.893Z,0.893393,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-19T19:52:45.668Z,1.668190,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T19:52:47.055Z,3.055048,6c0b3000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"1f029840-81be-4601-bc68-f5e66fb5230e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T19:52:55.879Z,11.879075,6cd43000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T19:52:56.155Z,12.155748,6c513000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T19:53:19.058Z,35.058754,6bea7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"1f029840-81be-4601-bc68-f5e66fb5230e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "OCEAN",
+  "cases": "vehicles",
+  "extra": 6,
+  "mode": "run",
+  "profiles": [
+   "average"
+  ],
+  "seed": 3
+ },
+ "ranAt": "2026-10-20T04:53:25+0900",
+ "report": {
+  "biome": "OCEAN",
+  "kind": "escape",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": [],
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 17.12
+     }
+    ],
+    "effects": [],
+    "endT": 18.1,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "no items",
+    "mass": 6.52,
+    "maxProgress": 700,
+    "maxSpeed": 45.23107147216797,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 18.1,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": [],
+    "stopAt": 700,
+    "topSpeed": 45.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.2900125980377197,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Backpack",
+     "ENGINE": "Cup Noodle",
+     "HEAD": "Toilet Paper",
+     "MOBILITY": "Bathtub",
+     "SPECIAL": "Cactus",
+     "TAIL": "Balloon Bunch"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 10.85
+     }
+    ],
+    "effects": [],
+    "endT": 11.4,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Backpack",
+    "mass": 7.96,
+    "maxProgress": 700,
+    "maxSpeed": 80,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 11.4,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Backpack",
+     "ENGINE": "Cup Noodle",
+     "HEAD": "Toilet Paper",
+     "MOBILITY": "Bathtub",
+     "SPECIAL": "Cactus",
+     "TAIL": "Balloon Bunch"
+    },
+    "stopAt": 700,
+    "topSpeed": 106.1,
+    "trackLength": 5948,
+    "turnSpeed": 1.6781328916549683,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Hair Dryer",
+     "HEAD": "Toilet Paper",
+     "MOBILITY": "Microwave",
+     "SPECIAL": "Camera",
+     "TAIL": "Kettle"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 11.25
+     }
+    ],
+    "effects": [],
+    "endT": 11.83,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Bamboo Raft",
+    "mass": 8.45,
+    "maxProgress": 701,
+    "maxSpeed": 74.6211929321289,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 11.83,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Hair Dryer",
+     "HEAD": "Toilet Paper",
+     "MOBILITY": "Microwave",
+     "SPECIAL": "Camera",
+     "TAIL": "Kettle"
+    },
+    "stopAt": 700,
+    "topSpeed": 100.6,
+    "trackLength": 5948,
+    "turnSpeed": 1.8002938032150269,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Barrel",
+     "ENGINE": "Compass",
+     "HEAD": "Treadmill",
+     "MOBILITY": "Racing Flag",
+     "SPECIAL": "Balloon Bunch",
+     "TAIL": "Life Preserver"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 10.07
+     }
+    ],
+    "effects": [],
+    "endT": 10.72,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Barrel",
+    "mass": 7.23,
+    "maxProgress": 700,
+    "maxSpeed": 60.41169357299805,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 10.72,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Barrel",
+     "ENGINE": "Compass",
+     "HEAD": "Treadmill",
+     "MOBILITY": "Racing Flag",
+     "SPECIAL": "Balloon Bunch",
+     "TAIL": "Life Preserver"
+    },
+    "stopAt": 700,
+    "topSpeed": 90.6,
+    "trackLength": 5948,
+    "turnSpeed": 1.4866793155670166,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Bathtub",
+     "ENGINE": "Flower",
+     "HEAD": "Alarm Clock",
+     "MOBILITY": "Cardboard Box",
+     "SPECIAL": "Magnet",
+     "TAIL": "Magic Wand"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 20.35
+     }
+    ],
+    "effects": [],
+    "endT": 21.62,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Bathtub",
+    "mass": 6.68,
+    "maxProgress": 700,
+    "maxSpeed": 34.932403564453125,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 21.62,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Bathtub",
+     "ENGINE": "Flower",
+     "HEAD": "Alarm Clock",
+     "MOBILITY": "Cardboard Box",
+     "SPECIAL": "Magnet",
+     "TAIL": "Magic Wand"
+    },
+    "stopAt": 700,
+    "topSpeed": 52.4,
+    "trackLength": 5948,
+    "turnSpeed": 1.3346518278121948,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Cardboard Box",
+     "ENGINE": "Kettle",
+     "HEAD": "Bathtub",
+     "MOBILITY": "Gas Can",
+     "SPECIAL": "Camera",
+     "TAIL": "Microwave"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 12.8
+     }
+    ],
+    "effects": [],
+    "endT": 13.54,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Cardboard Box",
+    "mass": 6.5,
+    "maxProgress": 700,
+    "maxSpeed": 59.47955322265625,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 13.54,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Cardboard Box",
+     "ENGINE": "Kettle",
+     "HEAD": "Bathtub",
+     "MOBILITY": "Gas Can",
+     "SPECIAL": "Camera",
+     "TAIL": "Microwave"
+    },
+    "stopAt": 700,
+    "topSpeed": 89.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.2827306985855103,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Kite",
+     "ENGINE": "Propeller Hat",
+     "HEAD": "Kettle",
+     "MOBILITY": "Kettle",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Pizza"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 11.02
+     }
+    ],
+    "effects": [],
+    "endT": 11.58,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Kite",
+    "mass": 8.5,
+    "maxProgress": 700,
+    "maxSpeed": 74.74409484863281,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 11.58,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Kite",
+     "ENGINE": "Propeller Hat",
+     "HEAD": "Kettle",
+     "MOBILITY": "Kettle",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Pizza"
+    },
+    "stopAt": 700,
+    "topSpeed": 112.1,
+    "trackLength": 5948,
+    "turnSpeed": 1.8122472763061523,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Life Preserver",
+     "ENGINE": "Kettle",
+     "HEAD": "Cardboard Box",
+     "MOBILITY": "Kettle",
+     "SPECIAL": "Magnet",
+     "TAIL": "Magic Wand"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 10.18
+     }
+    ],
+    "effects": [],
+    "endT": 10.75,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Life Preserver",
+    "mass": 7.58,
+    "maxProgress": 700,
+    "maxSpeed": 80,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 10.75,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Life Preserver",
+     "ENGINE": "Kettle",
+     "HEAD": "Cardboard Box",
+     "MOBILITY": "Kettle",
+     "SPECIAL": "Magnet",
+     "TAIL": "Magic Wand"
+    },
+    "stopAt": 700,
+    "topSpeed": 120,
+    "trackLength": 5948,
+    "turnSpeed": 1.5784006118774414,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Log",
+     "ENGINE": "Magnifying Glass",
+     "HEAD": "Lantern",
+     "MOBILITY": "Cactus",
+     "SPECIAL": "Camera",
+     "TAIL": "Bamboo Raft"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 14.37
+     }
+    ],
+    "effects": [],
+    "endT": 15.18,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Log",
+    "mass": 7.1,
+    "maxProgress": 700,
+    "maxSpeed": 53.494224548339844,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 15.18,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Log",
+     "ENGINE": "Magnifying Glass",
+     "HEAD": "Lantern",
+     "MOBILITY": "Cactus",
+     "SPECIAL": "Camera",
+     "TAIL": "Bamboo Raft"
+    },
+    "stopAt": 700,
+    "topSpeed": 80.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.4510079622268677,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Microwave",
+     "ENGINE": "Fan",
+     "HEAD": "Propeller Hat",
+     "MOBILITY": "Kite",
+     "SPECIAL": "Magic Wand",
+     "TAIL": "Trophy"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.95
+     }
+    ],
+    "effects": [],
+    "endT": 16.95,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Microwave",
+    "mass": 7.43,
+    "maxProgress": 700,
+    "maxSpeed": 43.19406509399414,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 16.95,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Microwave",
+     "ENGINE": "Fan",
+     "HEAD": "Propeller Hat",
+     "MOBILITY": "Kite",
+     "SPECIAL": "Magic Wand",
+     "TAIL": "Trophy"
+    },
+    "stopAt": 700,
+    "topSpeed": 64.8,
+    "trackLength": 5948,
+    "turnSpeed": 1.5383082628250122,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Red Sofa",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Bathtub",
+     "MOBILITY": "Umbrella",
+     "SPECIAL": "Gas Can",
+     "TAIL": "Cardboard Box"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 15.47
+     }
+    ],
+    "effects": [],
+    "endT": 16.32,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Red Sofa",
+    "mass": 7.56,
+    "maxProgress": 700,
+    "maxSpeed": 51.186641693115234,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 16.32,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Red Sofa",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Bathtub",
+     "MOBILITY": "Umbrella",
+     "SPECIAL": "Gas Can",
+     "TAIL": "Cardboard Box"
+    },
+    "stopAt": 700,
+    "topSpeed": 51.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.5735578536987305,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Shopping Cart",
+     "ENGINE": "Compass",
+     "HEAD": "Cactus",
+     "MOBILITY": "Magnet",
+     "SPECIAL": "Soda Bottle",
+     "TAIL": "Magic Wand"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 10.57
+     }
+    ],
+    "effects": [],
+    "endT": 11.33,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Shopping Cart",
+    "mass": 7.16,
+    "maxProgress": 700,
+    "maxSpeed": 57.56429672241211,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 11.33,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Shopping Cart",
+     "ENGINE": "Compass",
+     "HEAD": "Cactus",
+     "MOBILITY": "Magnet",
+     "SPECIAL": "Soda Bottle",
+     "TAIL": "Magic Wand"
+    },
+    "stopAt": 700,
+    "topSpeed": 86.3,
+    "trackLength": 5948,
+    "turnSpeed": 1.4660441875457764,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Skateboard",
+     "ENGINE": "Hair Dryer",
+     "HEAD": "Magic Wand",
+     "MOBILITY": "Bamboo Raft",
+     "SPECIAL": "Magic Wand",
+     "TAIL": "Shopping Cart"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 11.65
+     }
+    ],
+    "effects": [],
+    "endT": 12.39,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Skateboard",
+    "mass": 7.36,
+    "maxProgress": 700,
+    "maxSpeed": 58.667762756347656,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 12.39,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Skateboard",
+     "ENGINE": "Hair Dryer",
+     "HEAD": "Magic Wand",
+     "MOBILITY": "Bamboo Raft",
+     "SPECIAL": "Magic Wand",
+     "TAIL": "Shopping Cart"
+    },
+    "stopAt": 700,
+    "topSpeed": 88,
+    "trackLength": 5948,
+    "turnSpeed": 1.5211422443389893,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Suitcase",
+     "ENGINE": "Magnifying Glass",
+     "HEAD": "Umbrella",
+     "MOBILITY": "Magic Wand",
+     "SPECIAL": "Umbrella",
+     "TAIL": "Magnet"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 11.5
+     }
+    ],
+    "effects": [],
+    "endT": 12.22,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "Suitcase",
+    "mass": 7.49,
+    "maxProgress": 700,
+    "maxSpeed": 59.7596321105957,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 12.22,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Suitcase",
+     "ENGINE": "Magnifying Glass",
+     "HEAD": "Umbrella",
+     "MOBILITY": "Magic Wand",
+     "SPECIAL": "Umbrella",
+     "TAIL": "Magnet"
+    },
+    "stopAt": 700,
+    "topSpeed": 89.6,
+    "trackLength": 5948,
+    "turnSpeed": 1.555442452430725,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Backpack",
+     "ENGINE": "Rocket",
+     "HEAD": "Racing Flag",
+     "MOBILITY": "Drill",
+     "SPECIAL": "Magnet",
+     "TAIL": "Toilet Paper"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 13.08
+     }
+    ],
+    "effects": [],
+    "endT": 13.82,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random1",
+    "mass": 7,
+    "maxProgress": 700,
+    "maxSpeed": 58.84016799926758,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 13.82,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Backpack",
+     "ENGINE": "Rocket",
+     "HEAD": "Racing Flag",
+     "MOBILITY": "Drill",
+     "SPECIAL": "Magnet",
+     "TAIL": "Toilet Paper"
+    },
+    "stopAt": 700,
+    "topSpeed": 88.3,
+    "trackLength": 5948,
+    "turnSpeed": 1.424453616142273,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Red Sofa",
+     "MOBILITY": "Barrel",
+     "SPECIAL": "Lantern",
+     "TAIL": "Microwave"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 16.62
+     }
+    ],
+    "effects": [],
+    "endT": 17.55,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random2",
+    "mass": 6.97,
+    "maxProgress": 700,
+    "maxSpeed": 47.241455078125,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 17.55,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Red Sofa",
+     "MOBILITY": "Barrel",
+     "SPECIAL": "Lantern",
+     "TAIL": "Microwave"
+    },
+    "stopAt": 700,
+    "topSpeed": 53.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.4147369861602783,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Flower",
+     "HEAD": "Alarm Clock",
+     "MOBILITY": "Cactus",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Trophy"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 14.33
+     }
+    ],
+    "effects": [],
+    "endT": 15.15,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random3",
+    "mass": 7.55,
+    "maxProgress": 700,
+    "maxSpeed": 52.60305404663086,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 15.15,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Bamboo Raft",
+     "ENGINE": "Flower",
+     "HEAD": "Alarm Clock",
+     "MOBILITY": "Cactus",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Trophy"
+    },
+    "stopAt": 700,
+    "topSpeed": 78.9,
+    "trackLength": 5948,
+    "turnSpeed": 1.5701936483383179,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Skateboard",
+     "ENGINE": "Cup Noodle",
+     "HEAD": "Shopping Cart",
+     "MOBILITY": "Magnifying Glass",
+     "SPECIAL": "Camera",
+     "TAIL": "Gas Can"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 11.58
+     }
+    ],
+    "effects": [],
+    "endT": 12.22,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random4",
+    "mass": 6.91,
+    "maxProgress": 700,
+    "maxSpeed": 67.45996856689453,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 12.22,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Skateboard",
+     "ENGINE": "Cup Noodle",
+     "HEAD": "Shopping Cart",
+     "MOBILITY": "Magnifying Glass",
+     "SPECIAL": "Camera",
+     "TAIL": "Gas Can"
+    },
+    "stopAt": 700,
+    "topSpeed": 101.2,
+    "trackLength": 5948,
+    "turnSpeed": 1.4000205993652344,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Suitcase",
+     "ENGINE": "Fan",
+     "HEAD": "Gas Can",
+     "MOBILITY": "Trophy",
+     "SPECIAL": "Pizza",
+     "TAIL": "Racing Flag"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 13.78
+     }
+    ],
+    "effects": [],
+    "endT": 14.52,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random5",
+    "mass": 8.49,
+    "maxProgress": 700,
+    "maxSpeed": 60.142601013183594,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 14.52,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Suitcase",
+     "ENGINE": "Fan",
+     "HEAD": "Gas Can",
+     "MOBILITY": "Trophy",
+     "SPECIAL": "Pizza",
+     "TAIL": "Racing Flag"
+    },
+    "stopAt": 700,
+    "topSpeed": 60.1,
+    "trackLength": 5948,
+    "turnSpeed": 1.8093336820602417,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": {
+     "BODY": "Life Preserver",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Magnet",
+     "MOBILITY": "Treadmill",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Racing Flag"
+    },
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 13.6
+     }
+    ],
+    "effects": [],
+    "endT": 14.38,
+    "engine": "studio-heartbeat",
+    "finished": false,
+    "label": "random6",
+    "mass": 7.85,
+    "maxProgress": 700,
+    "maxSpeed": 56.60585403442383,
+    "maxTilt": 0,
+    "profile": "average",
+    "reached": 14.38,
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Life Preserver",
+     "ENGINE": "Alarm Clock",
+     "HEAD": "Magnet",
+     "MOBILITY": "Treadmill",
+     "SPECIAL": "Racing Flag",
+     "TAIL": "Racing Flag"
+    },
+    "stopAt": 700,
+    "topSpeed": 84.9,
+    "trackLength": 5948,
+    "turnSpeed": 1.6501076221466064,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim OCEAN (shipped) \u2014 20.2s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
+  "visibility": "shipped",
+  "wallSeconds": 20.2
+ },
+ "scenario": "vehicles-ocean",
+ "studioExit": 0,
+ "summary": "RaceSim OCEAN (shipped) \u2014 20.2s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
+ "wallSeconds": 41.2
+}
