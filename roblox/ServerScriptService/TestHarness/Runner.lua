@@ -12,13 +12,18 @@
 -- Every function returns a compact text summary first and the full report as
 -- JSON second, so an agent can read the summary and parse the JSON.
 --
+-- From the command line (no MCP, no open Studio window): tools/studio/sim.py
+-- runs saved scenarios through `RobloxStudio -task RunScript`.
+--
 -- Modes
 --   runRace{ mode = "step" } (default) – edit mode, StepPhysics, faster than
 --       real time. Note: Studio caches require() results in edit mode, so
 --       after changing game code use mode = "run" (fresh session) or reopen
 --       the place.
 --   runRace{ mode = "run" } – StudioTestService:ExecuteRunModeAsync: a fresh
---       server-only session (latest code), physics in real time.
+--       server-only session (latest code), physics in real time. The only
+--       mode that works under `-task RunScript` (StepPhysics crashes Studio
+--       there).
 --   runMatch{} – StudioTestService:ExecuteMultiplayerTestAsync: a server plus
 --       N real clients driven by BotDriver through the whole game loop.
 
@@ -38,13 +43,47 @@ local function studioTestService()
 	return sts
 end
 
+-- Seconds a session must last to count as a real run (see startSession).
+Runner.MIN_SESSION_SECONDS = 5
+Runner.SESSION_ATTEMPTS = 4
+
+--- Starts a test session and returns its EndTest result.
+-- The args also go into the ServerScriptService "HarnessArgs" attribute,
+-- which the session's copy of the place inherits: GetTestArgs can return nil
+-- for several seconds at session start (HarnessConfig polls only briefly, so
+-- the game used to fall through to an ordinary LOBBY and hang). The attribute
+-- is removed again when the session ends.
+-- Right after a place opens (command line `-task RunScript`), the first
+-- session can end at once with no result; that is retried.
+local function startSession(args, run)
+	local attr = HttpService:JSONEncode(args)
+	local result
+	for attempt = 1, Runner.SESSION_ATTEMPTS do
+		ServerScriptService:SetAttribute("HarnessArgs", attr)
+		local t0 = os.clock()
+		local ok, res = pcall(run)
+		ServerScriptService:SetAttribute("HarnessArgs", nil)
+		if not ok then error(res, 0) end
+		result = res
+		if type(res) == "table" or os.clock() - t0 >= Runner.MIN_SESSION_SECONDS then
+			break
+		end
+		warn(string.format("[Runner] session ended after %.1fs with no result; retrying (%d/%d)",
+			os.clock() - t0, attempt, Runner.SESSION_ATTEMPTS))
+		task.wait(3)
+	end
+	return result
+end
+
 --- Single-car race simulation. See RaceSim.runOne for options.
 function Runner.runRace(opts)
 	opts = opts or {}
 	if opts.mode == "run" then
-		local args = { harness = "race", autoStart = false, race = opts }
-		args.race.mode = "heartbeat"
-		local report = studioTestService():ExecuteRunModeAsync(args)
+		local race = table.clone(opts)
+		race.mode = "heartbeat"
+		local args = { harness = "race", autoStart = false, race = race }
+		local sts = studioTestService()
+		local report = startSession(args, function() return sts:ExecuteRunModeAsync(args) end)
 		if type(report) ~= "table" then
 			return "RaceSim run-mode session returned nothing (did HarnessEntry run?)", "{}"
 		end
@@ -56,6 +95,15 @@ function Runner.runRace(opts)
 	o.mode = "step"
 	local report = RaceSim.run(o)
 	return RaceSim.summarize(report), encode(report)
+end
+
+--- Escape test: a car dropped at every spot where drivers get stuck (nose in
+-- the wall, facing backwards, on ramps / mud / drift corners) must drive
+-- RaceSim.ESCAPE_GAIN studs on. opts as runRace plus { biome, profiles = { "average" } }.
+function Runner.runEscape(opts)
+	local o = table.clone(opts or {})
+	o.cases = "escape"
+	return Runner.runRace(o)
 end
 
 --- Full multiplayer match with bot clients.
@@ -72,7 +120,7 @@ function Runner.runMatch(opts)
 		players = players,
 		rounds = opts.rounds or 1,
 		lobbyDelay = 3,
-		joinTimeout = 90,
+		joinTimeout = opts.joinTimeout or 90,
 		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 180, RESULTS = 5 },
 		maxSeconds = opts.maxSeconds or 900,
 		bots = {
@@ -80,7 +128,8 @@ function Runner.runMatch(opts)
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },
 		},
 	}
-	local report = studioTestService():ExecuteMultiplayerTestAsync(players, args)
+	local sts = studioTestService()
+	local report = startSession(args, function() return sts:ExecuteMultiplayerTestAsync(players, args) end)
 	if type(report) ~= "table" then
 		return "Match session returned nothing (did MatchHarness end the test?)", "{}"
 	end

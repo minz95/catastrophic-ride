@@ -1,0 +1,71 @@
+{
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS), stuck (escape: max stuck cases), finishRate (match), allJoined (match). Tags: smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "scenarios": [
+    { "name": "race-forest", "kind": "race", "tags": ["smoke", "core", "full"],
+      "opts": { "biome": "FOREST", "car": "p50", "profiles": ["expert", "average", "novice"] },
+      "checks": { "finishAll": true, "maxRespawns": 2, "winnerTime": [60, 120] } },
+    { "name": "race-ocean", "kind": "race", "tags": ["smoke", "core", "full"],
+      "opts": { "biome": "OCEAN", "car": "p50", "profiles": ["expert", "average", "novice"] },
+      "checks": { "finishAll": true, "maxRespawns": 2, "winnerTime": [60, 120] } },
+    { "name": "race-sky", "kind": "race", "tags": ["smoke", "core", "full"],
+      "opts": { "biome": "SKY", "car": "p50", "profiles": ["expert", "average", "novice"] },
+      "checks": { "finishAll": true, "maxRespawns": 2, "winnerTime": [60, 120] } },
+
+    { "name": "race-forest-builds", "kind": "race", "tags": ["full"],
+      "_why": "slowest build with the weakest driver and fastest build with the best: the spread of a real lobby",
+      "opts": { "biome": "FOREST", "cases": [
+        { "label": "slowest-novice", "car": "slowest", "profile": "novice" },
+        { "label": "fastest-expert", "car": "fastest", "profile": "expert" } ] },
+      "checks": { "finishAll": true, "maxRespawns": 3, "winnerTime": [60, 120] } },
+    { "name": "race-ocean-builds", "kind": "race", "tags": ["full"],
+      "opts": { "biome": "OCEAN", "cases": [
+        { "label": "slowest-novice", "car": "slowest", "profile": "novice" },
+        { "label": "fastest-expert", "car": "fastest", "profile": "expert" } ] },
+      "checks": { "finishAll": true, "maxRespawns": 3, "winnerTime": [60, 120] } },
+    { "name": "race-sky-builds", "kind": "race", "tags": ["full"],
+      "opts": { "biome": "SKY", "cases": [
+        { "label": "slowest-novice", "car": "slowest", "profile": "novice" },
+        { "label": "fastest-expert", "car": "fastest", "profile": "expert" } ] },
+      "checks": { "finishAll": true, "maxRespawns": 3, "winnerTime": [60, 120] } },
+
+    { "name": "race-forest-contact", "kind": "race", "tags": ["full"],
+      "_why": "cars collide with each other from the grid on (the offline sim has no car contact)",
+      "opts": { "biome": "FOREST", "contact": true, "profiles": ["expert", "average", "novice", "average", "expert"] },
+      "checks": { "finishAll": true, "maxRespawns": 4 } },
+    { "name": "race-ocean-contact", "kind": "race", "tags": ["full"],
+      "opts": { "biome": "OCEAN", "contact": true, "profiles": ["expert", "average", "novice", "average", "expert"] },
+      "checks": { "finishAll": true, "maxRespawns": 4 } },
+    { "name": "race-sky-contact", "kind": "race", "tags": ["full"],
+      "opts": { "biome": "SKY", "contact": true, "profiles": ["expert", "average", "novice", "average", "expert"] },
+      "checks": { "finishAll": true, "maxRespawns": 4 } },
+
+    { "name": "race-forest-heavy", "kind": "race", "tags": ["full"],
+      "_why": "ballast for a seated character (edit-mode cars have no driver)",
+      "opts": { "biome": "FOREST", "driverMass": 20, "profiles": ["expert", "novice"] },
+      "checks": { "finishAll": true, "maxRespawns": 2 } },
+    { "name": "race-forest-intended", "kind": "race", "tags": ["full"],
+      "_why": "authored collision instead of the shipped MapVisibility state",
+      "opts": { "biome": "FOREST", "visibility": "intended", "profiles": ["average"] },
+      "checks": { "finishAll": true, "maxRespawns": 2 } },
+
+    { "name": "escape-forest", "kind": "escape", "tags": ["core", "full"],
+      "opts": { "biome": "FOREST", "profiles": ["average"] }, "checks": { "stuck": 0 } },
+    { "name": "escape-ocean", "kind": "escape", "tags": ["core", "full"],
+      "opts": { "biome": "OCEAN", "profiles": ["average"] }, "checks": { "stuck": 0 } },
+    { "name": "escape-sky", "kind": "escape", "tags": ["core", "full"],
+      "opts": { "biome": "SKY", "profiles": ["average"] }, "checks": { "stuck": 0 } },
+    { "name": "escape-forest-novice", "kind": "escape", "tags": ["full"],
+      "opts": { "biome": "FOREST", "profiles": ["novice"] }, "checks": { "stuck": 0 } },
+
+    { "name": "match-forest", "kind": "match", "tags": ["core", "full"],
+      "opts": { "biome": "FOREST", "players": 4 }, "checks": { "finishRate": 0.9, "allJoined": true } },
+    { "name": "match-ocean", "kind": "match", "tags": ["core", "full"],
+      "opts": { "biome": "OCEAN", "players": 4 }, "checks": { "finishRate": 0.9, "allJoined": true } },
+    { "name": "match-sky", "kind": "match", "tags": ["core", "full"],
+      "opts": { "biome": "SKY", "players": 4 }, "checks": { "finishRate": 0.9, "allJoined": true } },
+    { "name": "match-forest-2rounds", "kind": "match", "tags": ["full"],
+      "_why": "round 2 re-uses the map: effects must not double, terrain and visibility must reset",
+      "opts": { "biome": "FOREST", "players": 3, "rounds": 2, "maxSeconds": 1500 },
+      "checks": { "finishRate": 0.9, "allJoined": true } }
+  ]
+}

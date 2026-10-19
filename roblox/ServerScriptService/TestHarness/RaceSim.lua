@@ -25,6 +25,7 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService        = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
+local PhysicsService    = game:GetService("PhysicsService")
 
 local Shared = ReplicatedStorage.Shared
 local Constants        = require(Shared.Constants)
@@ -38,6 +39,7 @@ local RaceProgress     = require(Shared.RaceProgress)
 local BiomeConfig      = require(ServerScriptService.Modules.BiomeConfig)
 local MapVisibility    = require(ServerScriptService.Modules.MapVisibility)
 local VehicleBuilder   = require(ServerScriptService.Modules.VehicleBuilder)
+local TerrainPainter   = require(ServerScriptService.Modules.TerrainPainter)
 
 local RaceSim = {}
 
@@ -79,6 +81,7 @@ function RaceSim.prepareMap(biome, visibility)
 	local entry = RaceSim.TRACKS[biome]
 	assert(entry, "RaceSim: no track data for " .. tostring(biome))
 	local map = require(entry.builder).build()
+	TerrainPainter.paint(biome, true)
 	local maps = workspace:FindFirstChild("Maps")
 	MapVisibility.cacheOriginals(maps)
 	MapVisibility.applyRacingState(maps, map)
@@ -116,6 +119,23 @@ local function vehicleParts(model)
 	return out
 end
 
+-- Harness cars in "heartbeat" mode share one world. Unless opts.contact is
+-- true they are put in a collision group that ignores itself, so a slow car
+-- on the grid does not block the others (each car's run must stay comparable
+-- with the offline single-car sim). runMatch is the place for car contact.
+RaceSim.CAR_GROUP = "HarnessCars"
+
+local function ghostCars(parts)
+	local ok = pcall(function()
+		if not PhysicsService:IsCollisionGroupRegistered(RaceSim.CAR_GROUP) then
+			PhysicsService:RegisterCollisionGroup(RaceSim.CAR_GROUP)
+		end
+		PhysicsService:CollisionGroupSetCollidable(RaceSim.CAR_GROUP, RaceSim.CAR_GROUP, false)
+	end)
+	if not ok then return end
+	for _, p in ipairs(parts) do p.CollisionGroup = RaceSim.CAR_GROUP end
+end
+
 local function addBallast(model, mass)
 	if not mass or mass <= 0 then return end
 	local primary = model.PrimaryPart
@@ -141,6 +161,10 @@ end
 --   seconds = 180, dt = 1/60, mode = "step" | "heartbeat",
 --   visibility = "shipped" | "intended", respawn = "legacy" | "track",
 --   seed = 1, slot = 3, driverMass = 0, sampleEvery = 0.5, yieldEvery = 600,
+--   contact = false (true: harness cars collide with each other),
+--   spawn = { s = 1200, lateral = 0, yawOffset = 0 } (start mid-track instead
+--     of on the grid; lateral is + right of travel, yawOffset in degrees),
+--   stopAt = progress at which the run counts as done (with spawn: escape tests),
 --   map = (prepared map), track = (track data)
 -- }
 function RaceSim.runOne(opts)
@@ -166,6 +190,12 @@ function RaceSim.runOne(opts)
 	local startY = BiomeConfig[biome].raceStartY or 2
 	local yaw0 = geo:yawAt(0)
 	local spawnCF = CFrame.new(cols[col], startY, rows[row] or rows[1]) * CFrame.Angles(0, yaw0, 0)
+	if opts.spawn then
+		local sp = opts.spawn
+		local px, pz = geo:offsetPoint(sp.s or 0, sp.lateral or 0)
+		local yaw = geo:yawAt(sp.s or 0) + math.rad(sp.yawOffset or 0)
+		spawnCF = CFrame.new(px, startY + (sp.lift or 0), pz) * CFrame.Angles(0, yaw, 0)
+	end
 
 	local model = VehicleBuilder.build(stats, biome, spawnCF, slots)
 	model.Name = "HarnessCar_" .. (opts.profile or "average")
@@ -174,6 +204,7 @@ function RaceSim.runOne(opts)
 	local primary = model.PrimaryPart
 	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
 	local parts = vehicleParts(model)
+	if not opts.contact then ghostCars(parts) end
 
 	local rayParams = RaycastParams.new()
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
@@ -192,6 +223,7 @@ function RaceSim.runOne(opts)
 		profile = opts.profile or "average", car = opts.car or "p50",
 		maxSpeed = seat.MaxSpeed, turnSpeed = seat.TurnSpeed, mass = round(primary.AssemblyMass, 2),
 		visibility = opts.visibility or "shipped", respawnMode = respawnMode,
+		spawn = opts.spawn, stopAt = opts.stopAt, reached = nil,
 		finished = false, checkpoints = {}, respawns = {}, blocked = {}, samples = {},
 		effects = {}, airborne = 0, trackLength = round(geo.length, 0),
 	}
@@ -243,6 +275,9 @@ function RaceSim.runOne(opts)
 			maxSpeed = seat.MaxSpeed, turnSpeed = VehicleController.turnRate(seat.TurnSpeed, isSky), t = t,
 		})
 		if info.s > maxS then maxS = info.s end
+		if opts.stopAt and not res.reached and info.s >= opts.stopAt then
+			res.reached = round(t, 2)
+		end
 
 		-- Triggers touched this step (spatial query; works with CanCollide off)
 		local touching = {}
@@ -332,7 +367,7 @@ function RaceSim.runOne(opts)
 	if mode == "step" then
 		for i = 1, steps do
 			step()
-			if res.finished then break end
+			if res.finished or res.reached then break end
 			workspace:StepPhysics(dt, parts)
 			if i % yieldEvery == 0 then task.wait() end
 		end
@@ -343,7 +378,7 @@ function RaceSim.runOne(opts)
 			if done then return end
 			dt = frameDt
 			step()
-			if res.finished or t >= seconds then
+			if res.finished or res.reached or t >= seconds then
 				done = true
 				conn:Disconnect()
 			end
@@ -358,6 +393,41 @@ function RaceSim.runOne(opts)
 	return res
 end
 
+--- Escape cases: cars dropped where a driver can get stuck, each must drive
+-- ESCAPE_GAIN studs further along the track within ESCAPE_SECONDS.
+--   wall-left / wall-right  nose into the wall at 70°, touching it
+--   backwards               on the centerline facing the wrong way
+--   feature                 on each jump ramp, mud zone and drift corner, angled 30°
+-- One position every ESCAPE_SPACING studs of track, plus every feature.
+RaceSim.ESCAPE_SPACING = 500
+RaceSim.ESCAPE_GAIN    = 120
+RaceSim.ESCAPE_SECONDS = 25
+
+function RaceSim.escapeCases(biome, track)
+	track = track or require(RaceSim.TRACKS[biome].data)
+	local geo = TrackGeometry.new(track.nodes, track.width)
+	local edge = track.width / 2 - 4
+	local cases = {}
+	local function add(label, s, lateral, yawOffset)
+		if s + RaceSim.ESCAPE_GAIN > geo.length - 20 then return end
+		table.insert(cases, { label = label, spawn = { s = math.floor(s), lateral = lateral, yawOffset = yawOffset } })
+	end
+	local s = 150
+	while s < geo.length do
+		add(string.format("wall-left@%d", s), s, -edge, 70)
+		add(string.format("wall-right@%d", s), s, edge, -70)
+		add(string.format("backwards@%d", s), s, 0, 180)
+		s += RaceSim.ESCAPE_SPACING
+	end
+	for _, key in ipairs({ "jumpRamps", "mudZones", "driftCorners" }) do
+		for i, f in ipairs(track[key] or {}) do
+			local p = geo:project(f[1], f[2])
+			add(string.format("%s%d", key, i), math.max(p.s - 10, 0), p.lateral, 30)
+		end
+	end
+	return cases
+end
+
 --- Runs several profiles on one prepared map. In "heartbeat" mode the cars
 -- run concurrently (one coroutine each); in "step" mode one after another.
 function RaceSim.run(opts)
@@ -368,6 +438,45 @@ function RaceSim.run(opts)
 	local profiles = opts.profiles or { "expert", "average", "novice" }
 	local results = {}
 	local started = os.clock()
+	-- opts.cases: list of per-car overrides ({ label, spawn, stopAt, seconds,
+	-- profile }) or "escape" for RaceSim.escapeCases. One car per case.
+	local cases = opts.cases
+	if cases == "escape" then
+		cases = RaceSim.escapeCases(biome, track)
+		for _, c in ipairs(cases) do
+			c.stopAt = c.spawn.s + RaceSim.ESCAPE_GAIN
+			c.seconds = opts.seconds or RaceSim.ESCAPE_SECONDS
+		end
+	end
+	if cases then
+		local function runCase(i, c)
+			local o = table.clone(opts)
+			o.cases = nil
+			for k, v in pairs(c) do o[k] = v end
+			o.profile = c.profile or (opts.profiles and opts.profiles[1]) or "average"
+			o.map, o.track, o.seed = map, track, (opts.seed or 1) + i
+			local r = RaceSim.runOne(o)
+			r.label = c.label or ("case" .. i)
+			return r
+		end
+		if (opts.mode or "step") == "heartbeat" then
+			local pending = #cases
+			for i, c in ipairs(cases) do
+				task.spawn(function()
+					local ok, r = pcall(runCase, i, c)
+					results[i] = ok and r or { label = c.label, error = tostring(r), blocked = {}, respawns = {}, checkpoints = {} }
+					pending -= 1
+				end)
+			end
+			while pending > 0 do task.wait(0.2) end
+		else
+			for i, c in ipairs(cases) do results[i] = runCase(i, c) end
+		end
+		return {
+			biome = biome, visibility = visibility, wallSeconds = round(os.clock() - started, 1),
+			kind = opts.cases == "escape" and "escape" or "cases", results = results,
+		}
+	end
 	if (opts.mode or "step") == "heartbeat" then
 		local pending = #profiles
 		for i, profile in ipairs(profiles) do
@@ -395,11 +504,30 @@ end
 --- One line per car, for printing in MCP / Output.
 function RaceSim.summarize(report)
 	local lines = { string.format("RaceSim %s (%s) — %ss wall time", report.biome, report.visibility, report.wallSeconds) }
+	if report.kind == "escape" then
+		local drove, respawned, stuck = 0, 0, {}
+		for _, r in ipairs(report.results) do
+			if r.reached and #r.respawns == 0 then drove += 1
+			elseif r.reached or r.finished then respawned += 1
+			else table.insert(stuck, string.format("%s (s=%s→%s)", tostring(r.label),
+				r.spawn and tostring(r.spawn.s) or "?", tostring(r.maxProgress))) end
+		end
+		table.insert(lines, string.format("  cases %d: drove out %d, needed a respawn %d, stuck %d",
+			#report.results, drove, respawned, #stuck))
+		for _, r in ipairs(report.results) do
+			if not (r.reached and #r.respawns == 0) then
+				table.insert(lines, string.format("    %-22s %s respawns %d%s", tostring(r.label),
+					r.reached and ("reached in " .. r.reached .. "s") or ("STUCK at " .. tostring(r.maxProgress)),
+					#(r.respawns or {}), r.blocked and r.blocked[1] and (" blocked by " .. r.blocked[1].part) or ""))
+			end
+		end
+		return table.concat(lines, "\n")
+	end
 	for _, r in ipairs(report.results) do
 		local outcome = r.finished and (r.time .. "s") or string.format("stopped at %d/%d", r.maxProgress, r.trackLength)
 		local firstBlock = r.blocked[1]
-		table.insert(lines, string.format("  %-8s car=%s max=%.0f mass=%s → %s | CPs %d | respawns %d | blocked %d%s",
-			r.profile, tostring(r.car), r.maxSpeed, tostring(r.mass), outcome, #r.checkpoints, #r.respawns, #r.blocked,
+		table.insert(lines, string.format("  %-8s%s car=%s max=%.0f mass=%s → %s | CPs %d | respawns %d | blocked %d%s",
+			r.profile, r.label and (" [" .. r.label .. "]") or "", tostring(r.car), r.maxSpeed, tostring(r.mass), outcome, #r.checkpoints, #r.respawns, #r.blocked,
 			firstBlock and (" (first: " .. firstBlock.part .. " at s=" .. firstBlock.s .. ")") or ""))
 	end
 	return table.concat(lines, "\n")

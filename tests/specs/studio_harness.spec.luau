@@ -30,6 +30,27 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 		end)
 	end
 
+	R.it("escape cases cover every biome, start on the lane and face the stated way", function()
+		local TG = env.requirePath("ReplicatedStorage.Shared.TrackGeometry")
+		for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+			local track = env.requirePath("ReplicatedStorage.Shared.Tracks." .. biome:sub(1, 1) .. biome:sub(2):lower() .. "Track")
+			local geo = TG.new(track.nodes, track.width)
+			local cases = RaceSim.escapeCases(biome, track)
+			R.expect(#cases).toBeGreaterThan(8)
+			for _, c in ipairs(cases) do
+				local x, z = geo:offsetPoint(c.spawn.s, c.spawn.lateral)
+				R.expect(geo:project(x, z).dist <= track.width / 2).toBe(true)
+			end
+		end
+	end)
+
+	R.it("Runner.runEscape runs one car per case and summarizes them", function()
+		local Runner = env.requirePath("ServerScriptService.TestHarness.Runner")
+		local summary, json = Runner.runEscape({ biome = "FOREST", seconds = 0.5, yieldEvery = 1e9 })
+		R.expect(summary:find("cases %d+: drove out") ~= nil).toBe(true)
+		R.expect(json:find("wall%-left@150") ~= nil).toBe(true)
+	end)
+
 	R.it("Runner.runRace returns a summary and JSON", function()
 		local Runner = env.requirePath("ServerScriptService.TestHarness.Runner")
 		local summary, json = Runner.runRace({ profiles = { "novice" }, seconds = 3, yieldEvery = 1e9 })
