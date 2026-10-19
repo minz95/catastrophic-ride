@@ -252,7 +252,8 @@ end)
 
 -- ─── Phase driver ─────────────────────────────────────────────────────────────
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(newPhase)
+local function onPhase(newPhase)
+	if newPhase == phase then return end
 	phase = newPhase
 	if newPhase == Constants.PHASES.FARMING then
 		task.spawn(farmLoop)
@@ -261,6 +262,14 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(newPhase)
 	elseif newPhase ~= Constants.PHASES.RACING then
 		vehicle, autopilot = nil, nil
 	end
-end)
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
+
+-- A bot client that loads slowly (6 Studio windows) can start after the
+-- FARMING event went out; join the phase that is already running.
+biome = biome or ReplicatedStorage:GetAttribute("Biome")
+if ReplicatedStorage:GetAttribute("Phase") then
+	onPhase(ReplicatedStorage:GetAttribute("Phase"))
+end
 
 report("ready", { farm = LocalPlayer:GetAttribute("BotFarmProfile"), driver = driverName })

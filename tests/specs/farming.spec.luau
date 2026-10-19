@@ -349,3 +349,16 @@ R.describe("full inventory and a rarer item", function()
 		R.expect(drops[1].userId).toBe(b.UserId)
 	end)
 end)
+
+R.describe("late client scripts", function()
+	-- Studio steal-crowd-6p: bot clients that loaded after the FARMING event
+	-- never farmed. The phase is also an attribute they can read on start.
+	R.it("ReplicatedStorage carries the current phase and biome", function()
+		local srv = farmServer(1)
+		local RS = srv.env.game.ReplicatedStorage
+		R.expect(RS:GetAttribute("Phase")).toBe("FARMING")
+		R.expect(RS:GetAttribute("Biome")).toBe("FOREST")
+		srv.advance(60)
+		R.expect(RS:GetAttribute("Phase")).toBe("CRAFTING")
+	end)
+end)
