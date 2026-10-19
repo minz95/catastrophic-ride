@@ -110,6 +110,13 @@ spot with its track section; the RESULTS report lists them per section.
 - **2026-10-20 — Ocean start dock is decoration** (no collision); boats float
   with their hull below its top and were pinned on the grid.
 
+- **2026-10-20 — Steals and crafts checked with several players.** Found by
+  the Studio farming scenarios: a defence tap sent before an attempt blocked
+  it, one tap defended (3 are required), a thief could run several steals at
+  once and two thieves could rob one victim inside its protection, and a full
+  inventory dropped its weakest item before the pickup was confirmed. Craft
+  submissions are validated (`Shared/CraftingRules`).
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

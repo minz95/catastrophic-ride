@@ -75,6 +75,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Steals: `DefendSteal` is one call per tap and counts only inside the
   victim's open window (`STEAL_DEFEND_PRESSES` taps defend). One steal at a
   time per thief and per victim; every attempt is logged as `steal_attempt`.
+- A full inventory swaps out its weakest item only inside `_giveItem`, when
+  the new item is really handed over (logged as `item_drop`); a refused
+  pickup or a lost contest must not cost an item.
+- The current phase and biome are also `ReplicatedStorage` attributes
+  (`Phase`, `Biome`) for client scripts that start after the event went out.
 - Craft submissions go through `Shared/CraftingRules.validate` (core slots
   only take their own item type; the rest is dropped and logged).
 - Timed things end on a timer, not on the next client message (contests used
