@@ -26,6 +26,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `runMatch{ biome = "SKY" }` for bot clients. After any Studio playtest,
   `require(game.ServerScriptService.Modules.PlaytestReport).last` holds the
   fun report (also printed at RESULTS); players mark spots with M / N.
+- Without MCP (macOS): `python3 tools/studio/sim.py run smoke|core|full`
+  runs the saved Studio experiments (`tools/studio/scenarios.json`: races,
+  escape tests, bot matches) and writes `reports/studio/`. Run `core` after
+  changing driving, maps or track data.
 
 ## Where things live
 

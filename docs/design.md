@@ -35,10 +35,10 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~4,420 | ~3,180 | ~7,580 |
+| Length (centerline) | ~7,610 | ~5,950 | ~7,580 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | crystal pillars 2×2, touching, Y 54–114 |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook | harbor launch, island arc, open channel, reef U-bend, return zigzag | launch tunnel, loop A, crossover plaza, loop B, crystal canyon, final descent |
+| Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, loop A, crossover plaza, loop B, crystal canyon, final descent |
 | Checkpoints | N14, N19 | N5, N17 | N8, N18 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
@@ -92,23 +92,39 @@ spot with its track section; the RESULTS report lists them per section.
 - **2026-10-18 — Forest S5 redesigned** as arcs (old ±105°/118° kinks trapped
   cars); MapVisibility no longer turns triggers into invisible walls.
 
+- **2026-10-20 — Forest and Ocean are longer.** Winners took ~45 s (target
+  60–120 s). New sections after the old finish: Forest S6 pine switchbacks
+  (two 180° hairpins) and S7 ridge chicane; Ocean S6 reef hairpin and buoy
+  slalom, S7 kelp channel. Every earlier feature kept its coordinates; the
+  finish moved (`finishX` / `finishZ` in the track data). Simulated winner
+  time is now 81 s (Forest) and 76 s (Ocean). The race failsafe
+  (`Constants.RACING_TIMEOUT`) went from 180 to 240 s: the slowest build with
+  a novice driver needs ~180 s.
+- **2026-10-20 — Forest suspension probes nose, centre and tail.** With the
+  centre ray only, cars in real Roblox physics drove into the jump ramps and
+  stopped (0 of 4 bots finished a Studio match); the offline sim does not
+  model ramps, so only the Studio harness saw it.
+- **2026-10-20 — Terrain is painted for the played biome only**
+  (`Modules/TerrainPlan`, kept out of every lane). The old script painted
+  whichever map was built last, with hills in the new lanes.
+- **2026-10-20 — Ocean start dock is decoration** (no collision); boats float
+  with their hull below its top and were pinned on the grid.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
 
 | | Forest | Ocean | Sky | Target |
 |---|---|---|---|---|
-| Winner time | 47 s | 43 s | 94 s | 60–120 s |
-| Share of the round spent racing | 25% | 23% | 38% | ≥ 35% |
-| Spread first → last finisher | 35 s | 30 s | 50 s | ≤ 45 s |
-| Lead changes per race | 1.1 | 1.5 | 2.9 | ≥ 1 |
-| Top two within 40 studs | 12% | 22% | 24% | ≥ 25% |
+| Winner time | 81 s | 76 s | 94 s | 60–120 s |
+| Share of the round spent racing | 37% | 35% | 38% | ≥ 35% |
+| Spread first → last finisher | 60 s | 51 s | 50 s | ≤ 45 s |
+| Lead changes per race | 1.5 | 1.5 | 2.9 | ≥ 1 |
+| Top two within 40 studs | 14% | 12% | 24% | ≥ 25% |
 
-- Forest and Ocean races are short (~45 s vs ~90 s). Lengthen the tracks,
-  or lower top speeds?
-- Racing is a quarter of a round on Forest and Ocean (farming 90 s +
-  crafting 120 s + results 30 s). Shorten crafting?
-- Sky's last finisher arrives 50 s after the winner; the slowest car with a
-  novice driver needs ~170 s of the 180 s limit.
+- The last finisher arrives 50–60 s after the winner on every map now that
+  the races are long enough. The spread comes from builds (top speed 33–75
+  on Ocean), not the tracks. End the race N seconds after the winner, or
+  narrow the speed range?
 - Close racing is low everywhere, but the simulation has no car-to-car
   contact or abilities; check with playtests (M / N markers) before acting.
