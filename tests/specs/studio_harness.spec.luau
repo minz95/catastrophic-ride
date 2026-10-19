@@ -30,6 +30,17 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 		end)
 	end
 
+	-- Studio 2026-10-20: the MapBuilders script replaced the map RaceSim had
+	-- built, checkpoint triggers included, and no car could finish.
+	R.it("in a running session it races on the server's map instead of building a copy", function()
+		local OceanMap = env.requirePath("ServerScriptService.Modules.Maps.OceanMap")
+		local serverBuilt = OceanMap.build()
+		env.game.ServerScriptService:SetAttribute("MapBuilt_OCEAN", true)
+		local map = RaceSim.prepareMap("OCEAN", "shipped", "heartbeat")
+		R.expect(map == serverBuilt).toBe(true)
+		R.expect(serverBuilt.Parent ~= nil).toBe(true)
+	end)
+
 	R.it("escape cases cover every biome, start on the lane and face the stated way", function()
 		local TG = env.requirePath("ReplicatedStorage.Shared.TrackGeometry")
 		for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do

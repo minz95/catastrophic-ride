@@ -10,3 +10,6 @@ local ok, err = pcall(function()
 	require(ServerScriptService.Modules.Maps.SkyMap).build()
 end)
 if not ok then warn("[SkyMapBuilder] Build failed: " .. tostring(err)) end
+-- Tells the Studio harness (TestHarness.RaceSim) the map is built, so it can
+-- reuse it instead of building a second copy that this script would replace.
+ServerScriptService:SetAttribute("MapBuilt_SKY", ok)

@@ -74,13 +74,34 @@ local function statsFor(slots, biome)
 	return s
 end
 
---- Builds the map and applies the RACING visibility state.
+RaceSim.MAP_WAIT = 20
+
+-- In a running session the MapBuilders scripts build every map at start, and
+-- TrackKit.newMap replaces a map of the same name. A map RaceSim built first
+-- was then destroyed mid-race with its checkpoint triggers (cars drove the
+-- whole track and never finished; Studio 2026-10-20). So in a running session
+-- wait for the server's build and use it.
+local function serverMap(biome)
+	local key = "MapBuilt_" .. biome
+	local waited = 0
+	while ServerScriptService:GetAttribute(key) == nil and waited < RaceSim.MAP_WAIT do
+		task.wait(0.2)
+		waited += 0.2
+	end
+	local maps = workspace:FindFirstChild("Maps")
+	return maps and maps:FindFirstChild(MapVisibility.mapName(biome))
+end
+
+--- Builds (or, in a running session, takes the server's) map and applies the
+-- RACING visibility state.
 -- visibility: "shipped" (MapVisibility exactly as the server runs it) or
 -- "intended" (authored CanCollide/Transparency restored).
-function RaceSim.prepareMap(biome, visibility)
+-- mode: "heartbeat" (running session: wait for and reuse the server's map)
+-- or "step" (edit mode: build it).
+function RaceSim.prepareMap(biome, visibility, mode)
 	local entry = RaceSim.TRACKS[biome]
 	assert(entry, "RaceSim: no track data for " .. tostring(biome))
-	local map = require(entry.builder).build()
+	local map = (mode == "heartbeat" and serverMap(biome)) or require(entry.builder).build()
 	TerrainPainter.paint(biome, true)
 	local maps = workspace:FindFirstChild("Maps")
 	MapVisibility.cacheOriginals(maps)
@@ -175,7 +196,7 @@ function RaceSim.runOne(opts)
 	local respawnMode = opts.respawn or "legacy"
 	local map, track = opts.map, opts.track
 	if not map then
-		map, track = RaceSim.prepareMap(biome, opts.visibility or "shipped")
+		map, track = RaceSim.prepareMap(biome, opts.visibility or "shipped", mode)
 	end
 	local geo = TrackGeometry.new(track.nodes, track.width)
 
@@ -210,9 +231,11 @@ function RaceSim.runOne(opts)
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
 	rayParams.FilterDescendantsInstances = { model }
 
+	local triggers = triggerParts(map)
+	assert(#triggers > 0, "RaceSim: the map has no trigger parts (checkpoints, finish)")
 	local overlap = OverlapParams.new()
 	overlap.FilterType = Enum.RaycastFilterType.Include
-	overlap.FilterDescendantsInstances = triggerParts(map)
+	overlap.FilterDescendantsInstances = triggers
 
 	local ap = Autopilot.new(geo, Autopilot.PROFILES[opts.profile or "average"], opts.seed or 1)
 	local driveState = VehicleController.newState()
@@ -434,7 +457,7 @@ function RaceSim.run(opts)
 	opts = opts or {}
 	local biome = opts.biome or "FOREST"
 	local visibility = opts.visibility or "shipped"
-	local map, track = RaceSim.prepareMap(biome, visibility)
+	local map, track = RaceSim.prepareMap(biome, visibility, opts.mode or "step")
 	local profiles = opts.profiles or { "expert", "average", "novice" }
 	local results = {}
 	local started = os.clock()
