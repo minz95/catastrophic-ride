@@ -116,6 +116,18 @@ spot with its track section; the RESULTS report lists them per section.
   once and two thieves could rob one victim inside its protection, and a full
   inventory dropped its weakest item before the pickup was confirmed. Craft
   submissions are validated (`Shared/CraftingRules`).
+- **2026-10-20 — Vehicles look like a car, a boat and a plane.** Items used
+  to be stacked on a box (a BODY item 4–5 studs across hid the vehicle; the
+  boat's bow and the car's HEAD / TAIL were at the back). The shape is now
+  data (`Modules/VehicleDesign`): car with wheels, hubcaps, bumpers, lights,
+  windshield and cabin; boat with a V prow, gunwales, deck, deckhouse,
+  outboard motor and (with a MOBILITY item) mast and sail; plane with
+  propeller, canopy, wings, tailplane, fin and landing gear. Each item fills
+  the box of its role (BODY = cabin / deckhouse / dorsal hump, ENGINE =
+  engine bay / outboard / nose, MOBILITY = four hubcaps / masthead / two
+  wing pods, SPECIAL = roof rack / foredeck / belly, HEAD = front, TAIL =
+  back), scaled to fit with its proportions kept. The chassis is unchanged
+  and the only part with mass, so handling does not depend on the look.
 
 ## Open questions (from the reports, not decided)
 

@@ -1,19 +1,21 @@
 -- VehicleBuilder.lua
--- Procedurally assembles a vehicle Model from stats + biome + slot assignments.
--- Each biome gets a distinct base shape. Item visuals are colour-coded Parts
--- attached at mount points. Studio-imported MeshParts can replace them later.
+-- Assembles a vehicle Model from stats + biome + slot assignments: a car
+-- (FOREST), a boat (OCEAN) or a plane (SKY). The look is data in
+-- Modules/VehicleDesign; this module turns it into parts, fits the crafted
+-- items into their slot boxes and adds the drive movers.
+--
+-- Only the chassis (PrimaryPart) has mass and collision, and its size comes
+-- from the stats exactly as before the 2026-10-20 redesign, so the look
+-- never changes how a vehicle drives. Everything else is massless decoration.
 -- Resolves: Issue #27
 
 local ServerStorage = game:GetService("ServerStorage")
 
 local Constants       = require(game.ReplicatedStorage.Shared.Constants)
 local ItemConfig      = require(game.ServerScriptService.Modules.ItemConfig)
-local VehicleStats    = require(game.ReplicatedStorage.Shared.VehicleStats)
-local SlotMountConfig = require(game.ReplicatedStorage.Shared.SlotMountConfig)
+local VehicleDesign   = require(game.ServerScriptService.Modules.VehicleDesign)
 
 local VehicleBuilder = {}
-
--- ─── Colour helpers ───────────────────────────────────────────────────────────
 
 local RARITY_COLOURS = {
 	Common   = Color3.fromRGB(200, 200, 200),
@@ -22,472 +24,113 @@ local RARITY_COLOURS = {
 	Epic     = Color3.fromRGB(200, 80,  255),
 }
 
-local BIOME_PALETTE = {
-	FOREST = { body = Color3.fromRGB(90,  130, 70),  accent = Color3.fromRGB(160, 220, 90) },
-	OCEAN  = { body = Color3.fromRGB(40,  100, 170), accent = Color3.fromRGB(80,  190, 220) },
-	SKY    = { body = Color3.fromRGB(200, 190, 240), accent = Color3.fromRGB(160, 130, 255) },
+-- Seat values per biome (unchanged by the redesign; KineSim checks them).
+VehicleBuilder.SEAT = {
+	FOREST = { speed = { 2.5, 20, 120 }, torque = { 4, 20, 200 } },
+	OCEAN  = { speed = { 2.0, 15, 80 },  torque = { 3, 15, 120 } },
+	SKY    = { speed = { 3.0, 30, 160 }, torque = { 5, 30, 250 } },
 }
 
--- ─── Part factory ─────────────────────────────────────────────────────────────
+VehicleBuilder.SLOTS = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
 
-local function block(size, cframe, colour, material, parent)
-	local p = Instance.new("Part")
-	p.Size     = size
-	p.CFrame   = cframe
-	p.Color    = colour
-	p.Material = material or Enum.Material.SmoothPlastic
-	p.Anchored = false
-	p.CanCollide = true
-	p.Parent   = parent
-	return p
-end
+-- ─── Parts ────────────────────────────────────────────────────────────────────
 
-local function cylinder(radius, height, cframe, colour, parent)
-	local p = Instance.new("Part")
-	p.Shape  = Enum.PartType.Cylinder
-	p.Size   = Vector3.new(height, radius * 2, radius * 2)
-	p.CFrame = cframe
-	p.Color  = colour
-	p.Material = Enum.Material.SmoothPlastic
-	p.Anchored = false
-	p.CanCollide = true
-	p.Parent   = parent
-	return p
-end
-
-local function sphere(radius, cframe, colour, parent)
-	local p = Instance.new("Part")
-	p.Shape  = Enum.PartType.Ball
-	p.Size   = Vector3.new(radius*2, radius*2, radius*2)
-	p.CFrame = cframe
-	p.Color  = colour
-	p.Material = Enum.Material.SmoothPlastic
-	p.Anchored = false
-	p.CanCollide = false  -- decorative spheres shouldn't block
-	p.Parent = parent
-	return p
-end
+local SHAPES = {
+	block    = function() return Instance.new("Part") end,
+	wedge    = function() return Instance.new("WedgePart") end,
+	cylinder = function() local p = Instance.new("Part"); p.Shape = Enum.PartType.Cylinder; return p end,
+	ball     = function() local p = Instance.new("Part"); p.Shape = Enum.PartType.Ball; return p end,
+}
 
 local function weld(part0, part1)
 	local w = Instance.new("WeldConstraint")
 	w.Part0  = part0
 	w.Part1  = part1
-	w.Parent = part0
+	w.Parent = part1
 end
 
--- ─── Item visual (coloured block representing the item) ───────────────────────
--- targetScale: longest-axis size in studs the clone should fit into. Required so
---              BODY items dominate (~6–8 studs) while HEAD/TAIL/SPECIAL/ENGINE
---              ride small (~1.5–2 studs) and don't visually overwhelm the chassis.
--- rotDeg     : optional Vector3 of Euler angles (degrees) applied to the clone.
+local function decoration(p)
+	p.Anchored   = false
+	p.CanCollide = false
+	p.CanQuery   = false
+	p.CanTouch   = false
+	p.Massless   = true
+end
 
-local function itemVisual(itemName, attachCF, model, targetScale, rotDeg)
-	local cfg  = ItemConfig[itemName]
-	if not cfg then return end
+-- ─── Items ────────────────────────────────────────────────────────────────────
 
-	local colour = RARITY_COLOURS[cfg.rarity] or Color3.fromRGB(180, 180, 180)
-
-	-- Try to load a pre-made model from ServerStorage.
-	-- ItemModelPreloader stores models as ServerStorage.ItemModels/<itemName>
-	-- (flat, no slotType subfolder).
-	local templates = ServerStorage:FindFirstChild("ItemModels")
-	local tmpl      = templates and templates:FindFirstChild(itemName)
-	if tmpl and tmpl.PrimaryPart then
-		local clone = tmpl:Clone()
-		local primary = clone.PrimaryPart
-
-		-- Bbox-normalize before placement. Preloader normalizes to ~4 studs,
-		-- but per-slot targets differ (BODY huge, HEAD/TAIL small). Compute
-		-- current extent from BaseParts and scale all part sizes + positions
-		-- around the primary's center.
-		if targetScale and targetScale > 0 then
-			local minV, maxV
-			for _, p in ipairs(clone:GetDescendants()) do
-				if p:IsA("BasePart") then
-					local half = p.Size * 0.5
-					local lo, hi = p.Position - half, p.Position + half
-					minV = minV and Vector3.new(math.min(minV.X, lo.X), math.min(minV.Y, lo.Y), math.min(minV.Z, lo.Z)) or lo
-					maxV = maxV and Vector3.new(math.max(maxV.X, hi.X), math.max(maxV.Y, hi.Y), math.max(maxV.Z, hi.Z)) or hi
-				end
-			end
-			if minV and maxV then
-				local extent = maxV - minV
-				local longest = math.max(extent.X, extent.Y, extent.Z)
-				if longest > 0 then
-					local factor = targetScale / longest
-					if math.abs(factor - 1) > 0.01 then
-						local center = primary.Position
-						for _, p in ipairs(clone:GetDescendants()) do
-							if p:IsA("BasePart") then
-								p.Size     = p.Size * factor
-								p.Position = center + (p.Position - center) * factor
-							end
-						end
+--- World-space bounding box of a model's parts: centre and size.
+local function bounds(model)
+	local lo, hi
+	for _, p in ipairs(model:GetDescendants()) do
+		if p:IsA("BasePart") then
+			local cf, half = p.CFrame, p.Size * 0.5
+			for _, sx in ipairs({ -1, 1 }) do
+				for _, sy in ipairs({ -1, 1 }) do
+					for _, sz in ipairs({ -1, 1 }) do
+						local v = cf * Vector3.new(sx * half.X, sy * half.Y, sz * half.Z)
+						lo = lo and Vector3.new(math.min(lo.X, v.X), math.min(lo.Y, v.Y), math.min(lo.Z, v.Z)) or v
+						hi = hi and Vector3.new(math.max(hi.X, v.X), math.max(hi.Y, v.Y), math.max(hi.Z, v.Z)) or v
 					end
 				end
 			end
 		end
+	end
+	if not lo then return Vector3.zero, Vector3.zero end
+	return (lo + hi) * 0.5, hi - lo
+end
+VehicleBuilder.bounds = bounds
 
-		-- Optional rotation about the primary's current position.
-		local rotCF = CFrame.new()
-		if rotDeg and (rotDeg.X ~= 0 or rotDeg.Y ~= 0 or rotDeg.Z ~= 0) then
-			rotCF = CFrame.Angles(
-				math.rad(rotDeg.X),
-				math.rad(rotDeg.Y),
-				math.rad(rotDeg.Z)
-			)
+--- Places a copy of the item's model so it fits `box` (studs, in the
+-- vehicle's axes) centred on `mountCF`, keeping its proportions. Falls back
+-- to a rarity-coloured block when the item has no model.
+local function placeItem(itemName, mountCF, box, model, chassis, slot)
+	local cfg = ItemConfig[itemName]
+	if not cfg then return nil end
+	local templates = ServerStorage:FindFirstChild("ItemModels")
+	local tmpl = templates and templates:FindFirstChild(itemName)
+	local holder = Instance.new("Model")
+	holder.Name = "Item_" .. slot .. "_" .. itemName
+	holder:SetAttribute("Slot", slot)
+	holder:SetAttribute("Item", itemName)
+	if tmpl then
+		local clone = tmpl:Clone()
+		local centre, size = bounds(clone)
+		local factor = math.huge
+		for _, axis in ipairs({ "X", "Y", "Z" }) do
+			if size[axis] > 1e-3 then factor = math.min(factor, box[axis] / size[axis]) end
 		end
-
-		-- Manual delta translation — SetPrimaryPartCFrame/PivotTo don't move
-		-- FBX-imported nested parts in this codebase's mesh structure.
-		local targetCF = attachCF * rotCF
-		local delta    = targetCF * primary.CFrame:Inverse()
+		if factor == math.huge then factor = 1 end
 		for _, p in ipairs(clone:GetDescendants()) do
 			if p:IsA("BasePart") then
-				p.CFrame     = delta * p.CFrame
-				p.CanCollide = false
-				-- Massless: items are decorations and must not contribute to the
-				-- assembly's mass distribution. FBX items have asymmetric mass
-				-- (e.g. Camera lens to one side); when weighted into the chassis
-				-- they shifted COM laterally, so BodyVelocity along LookVector
-				-- created torque around the offset COM and the vehicle spun in
-				-- place instead of driving forward.
-				p.Massless   = true
+				local rel = CFrame.new(centre):ToObjectSpace(p.CFrame)
+				p.Size = p.Size * factor
+				p.CFrame = mountCF * CFrame.new(rel.Position * factor) * (rel - rel.Position)
+				decoration(p)
+				p.Parent = holder
+				weld(chassis, p)
+			elseif p:IsA("WeldConstraint") or p:IsA("Weld") or p:IsA("Motor6D") then
+				p:Destroy()
 			end
 		end
-		clone.Parent = model
-		return clone.PrimaryPart
+		clone:Destroy()
+	else
+		local p = Instance.new("Part")
+		p.Name = "ItemBlock"
+		p.Size = box * 0.8
+		p.CFrame = mountCF
+		p.Color = RARITY_COLOURS[cfg.rarity] or RARITY_COLOURS.Common
+		p.Material = Enum.Material.SmoothPlastic
+		decoration(p)
+		p.Parent = holder
+		weld(chassis, p)
 	end
-
-	-- Fallback: simple coloured block
-	local size = Vector3.new(0.9, 0.9, 0.9)
-	local part = block(size, attachCF, colour, Enum.Material.Neon, model)
-	part.Name      = "Item_" .. itemName
-	part.CanCollide = false
-	part.Massless   = true
-
-	-- Label billboard
-	local bb = Instance.new("BillboardGui")
-	bb.Size        = UDim2.new(0, 60, 0, 20)
-	bb.StudsOffset = Vector3.new(0, 0.8, 0)
-	bb.AlwaysOnTop = false
-	bb.Adornee     = part
-	bb.Parent      = part
-
-	local lbl = Instance.new("TextLabel")
-	lbl.Size               = UDim2.fromScale(1, 1)
-	lbl.BackgroundTransparency = 1
-	lbl.Text               = (cfg.icon or "") .. " " .. itemName
-	lbl.TextColor3         = colour
-	lbl.TextScaled         = true
-	lbl.Font               = Enum.Font.GothamBold
-	lbl.Parent             = bb
-
-	return part
+	holder.Parent = model
+	return holder
 end
 
--- ─── Attachment helper ────────────────────────────────────────────────────────
-
-local function attach(name, cf, parent)
-	local a = Instance.new("Attachment")
-	a.Name         = name
-	a.CFrame       = cf
-	a.Parent       = parent
-	return a
-end
-
--- ─── Stat-driven scale ────────────────────────────────────────────────────────
--- Maps normalised stat (0–STAT_BUDGET) to a scale multiplier
-
-local function statScale(val, minS, maxS)
-	local t = math.clamp(val / Constants.BALANCE.STAT_BUDGET, 0, 1)
-	return minS + t * (maxS - minS)
-end
-
--- ─── FOREST → Car ─────────────────────────────────────────────────────────────
-
-local function buildCar(model, stats, palette, slots)
-	-- Body size driven by stability + weight proxy
-	local bodyL  = statScale(stats.stability, 3.0, 5.5)
-	local bodyW  = statScale(stats.stability, 2.0, 3.2)
-	local bodyH  = 1.2
-
-	-- Chassis (PrimaryPart)
-	local chassis = block(
-		Vector3.new(bodyL, bodyH, bodyW),
-		CFrame.new(0, bodyH / 2, 0),
-		palette.body,
-		Enum.Material.SmoothPlastic,
-		model
-	)
-	chassis.Name = "Chassis"
-	model.PrimaryPart = chassis
-
-	-- Cabin
-	block(
-		Vector3.new(bodyL * 0.55, bodyH * 0.8, bodyW * 0.9),
-		CFrame.new(0, bodyH + bodyH * 0.4, 0),
-		palette.accent,
-		Enum.Material.SmoothPlastic,
-		model
-	).Name = "Cabin"
-
-	-- Wheels (scaled by stability → grip feel)
-	local wheelR  = statScale(stats.stability, 0.38, 0.58)
-	local wheelW  = 0.28
-	local xOff    = bodyW / 2 + wheelW / 2 + 0.05
-	local zOff    = bodyL / 2 - wheelR - 0.1
-	local wheelColour = Color3.fromRGB(40, 40, 40)
-
-	for _, sign in ipairs({ 1, -1 }) do          -- left / right
-		for _, fwd in ipairs({ 1, -1 }) do        -- front / rear
-			local w = cylinder(
-				wheelR, wheelW,
-				CFrame.new(sign * xOff, wheelR, fwd * zOff)
-					* CFrame.Angles(0, 0, math.pi / 2),
-				wheelColour,
-				model
-			)
-			w.Name = "Wheel"
-			weld(chassis, w)
-		end
-	end
-
-	-- VehicleSeat (at top of chassis)
-	local seat = Instance.new("VehicleSeat")
-	seat.Size   = Vector3.new(1.4, 0.3, 1.4)
-	seat.CFrame = CFrame.new(0, bodyH + 0.15, 0)
-	seat.Color  = Color3.fromRGB(50, 50, 50)
-	seat.MaxSpeed = math.clamp(stats.speed * 2.5, 20, 120)
-	seat.Torque   = math.clamp(stats.acceleration * 4, 20, 200)
-	seat.TurnSpeed = Constants.turnSpeedFor("FOREST", stats)
-	seat.Parent = model
-	weld(chassis, seat)
-
-	-- Mount points
-	attach("BodyMount",    CFrame.new(0,     bodyH * 1.5, 0),          chassis)
-	attach("EngineMount",  CFrame.new(0,     bodyH * 0.5, -zOff),      chassis)
-	attach("SpecialMount", CFrame.new(0,     bodyH * 1.5, bodyL * 0.3), chassis)
-	attach("MobilityMount",CFrame.new(0,    -bodyH * 0.3, 0),           chassis)
-	attach("HeadMount",    CFrame.new(0,     bodyH,       zOff + 0.4),  chassis)
-	attach("TailMount",    CFrame.new(0,     bodyH,      -zOff - 0.4),  chassis)
-
-	return chassis
-end
-
--- ─── OCEAN → Boat ─────────────────────────────────────────────────────────────
-
-local function buildBoat(model, stats, palette, slots)
-	local hullL = statScale(stats.floatability, 4.0, 7.0)
-	local hullW = statScale(stats.floatability, 2.0, 3.4)
-	local hullH = 0.9
-
-	-- Hull
-	local hull = block(
-		Vector3.new(hullL, hullH, hullW),
-		CFrame.new(0, hullH / 2, 0),
-		palette.body,
-		Enum.Material.SmoothPlastic,
-		model
-	)
-	hull.Name = "Chassis"
-	model.PrimaryPart = hull
-
-	-- Bow (wedge shape at front)
-	local bow = Instance.new("WedgePart")
-	bow.Size   = Vector3.new(1.2, hullH, hullW)
-	bow.CFrame = CFrame.new(0, hullH / 2, hullL / 2 + 0.6)
-				* CFrame.Angles(0, math.pi, 0)
-	bow.Color  = palette.body
-	bow.Material = Enum.Material.SmoothPlastic
-	bow.Parent = model
-	weld(hull, bow)
-
-	-- Deck
-	block(
-		Vector3.new(hullL * 0.7, 0.15, hullW * 0.8),
-		CFrame.new(-hullL * 0.05, hullH + 0.07, 0),
-		palette.accent,
-		Enum.Material.SmoothPlastic,
-		model
-	).Name = "Deck"
-
-	-- Mast (if sail slot filled)
-	if slots and slots.MOBILITY then
-		local mastH = statScale(stats.floatability, 3.0, 5.5)
-		local mast  = cylinder(
-			0.12, mastH,
-			CFrame.new(0, hullH + mastH / 2, hullL * 0.1)
-				* CFrame.Angles(0, 0, math.pi / 2),
-			Color3.fromRGB(150, 110, 70),
-			model
-		)
-		mast.Name = "Mast"
-		weld(hull, mast)
-
-		-- Sail (flat part)
-		local sail = block(
-			Vector3.new(0.08, mastH * 0.75, hullW * 0.85),
-			CFrame.new(0, hullH + mastH * 0.5, hullL * 0.1),
-			Color3.fromRGB(240, 240, 200),
-			Enum.Material.Fabric,
-			model
-		)
-		sail.Name = "Sail"
-		weld(hull, sail)
-	end
-
-	-- VehicleSeat
-	local seat = Instance.new("VehicleSeat")
-	seat.Size   = Vector3.new(1.4, 0.3, 1.4)
-	seat.CFrame = CFrame.new(-hullL * 0.2, hullH + 0.15, 0)
-	seat.Color  = Color3.fromRGB(60, 40, 30)
-	seat.MaxSpeed  = math.clamp(stats.speed * 2.0, 15, 80)
-	seat.Torque    = math.clamp(stats.acceleration * 3, 15, 120)
-	seat.TurnSpeed = Constants.turnSpeedFor("OCEAN", stats)
-	seat.Parent = model
-	weld(hull, seat)
-
-	attach("BodyMount",    CFrame.new(0,    hullH + 0.3, 0),            hull)
-	attach("EngineMount",  CFrame.new(0,    hullH * 0.5, -hullL * 0.4), hull)
-	attach("SpecialMount", CFrame.new(0,    hullH + 0.3,  hullL * 0.3), hull)
-	attach("MobilityMount",CFrame.new(0,    hullH,        hullL * 0.1), hull)
-	attach("HeadMount",    CFrame.new(0,    hullH + 0.3,  hullL * 0.5 + 0.2), hull)
-	attach("TailMount",    CFrame.new(0,    hullH * 0.5, -hullL * 0.5 - 0.2), hull)
-
-	return hull
-end
-
--- ─── SKY → Flying Vehicle ─────────────────────────────────────────────────────
-
-local function buildFlyer(model, stats, palette, slots)
-	local fuseL  = statScale(stats.flyability, 3.5, 6.0)
-	local fuseR  = statScale(stats.flyability, 0.45, 0.75)
-	local wingSpan = statScale(stats.flyability, 4.0, 8.0)
-
-	-- Fuselage: Block long along Z (LookVector axis), default orientation.
-	-- Roblox's Cylinder Shape locks its long axis to local +X. A previous
-	-- attempt rotated the cylinder 90° around Y to make the body extend
-	-- along Z visually, but that rotation also tilted PrimaryPart.LookVector
-	-- to world -X — and RacingClient pushes the vehicle along LookVector,
-	-- so the airplane slid sideways relative to where the visible body
-	-- pointed. A Block has no shape-axis lock, so default orientation +
-	-- Size.Z=fuseL gives a fuselage that visually extends in the LookVector
-	-- (-Z) direction and matches the motion direction.
-	local fuse = block(
-		Vector3.new(fuseR * 2, fuseR * 2, fuseL),
-		CFrame.new(0, 0, 0),
-		palette.body,
-		Enum.Material.SmoothPlastic,
-		model
-	)
-	fuse.Name = "Chassis"
-	model.PrimaryPart = fuse
-
-	-- Nose cone — at front (-Z, where LookVector points). Original code
-	-- placed the nose at +Z; with the cylinder rotation removed, that put
-	-- the visible nose at the back of the LookVector direction (vehicle
-	-- would have flown tail-first). The extra Y180° flip below mirrors the
-	-- wedge so its tip points forward.
-	local nosePart = Instance.new("WedgePart")
-	nosePart.Size   = Vector3.new(fuseR * 2, fuseR * 2, fuseR * 3)
-	nosePart.CFrame = CFrame.new(0, 0, -(fuseL / 2 + fuseR * 1.5))
-				* CFrame.Angles(math.pi / 2, math.pi, 0)
-	nosePart.Color  = palette.accent
-	nosePart.Material = Enum.Material.SmoothPlastic
-	nosePart.Parent = model
-	weld(fuse, nosePart)
-
-	-- Wings (sideways, slightly toward the rear)
-	local wingH = fuseR * 0.3
-	for _, side in ipairs({ 1, -1 }) do
-		local wing = Instance.new("WedgePart")
-		wing.Size   = Vector3.new(wingSpan / 2, wingH, fuseR * 2.5)
-		wing.CFrame = CFrame.new(side * (wingSpan / 4 + fuseR), 0, fuseL * 0.1)
-		wing.Color  = palette.accent
-		wing.Material = Enum.Material.SmoothPlastic
-		wing.Parent = model
-		weld(fuse, wing)
-	end
-
-	-- Tail fins (rear, +Z)
-	for _, side in ipairs({ 1, -1 }) do
-		local fin = Instance.new("WedgePart")
-		fin.Size   = Vector3.new(fuseR * 0.2, fuseR * 2.5, fuseR * 2)
-		fin.CFrame = CFrame.new(side * fuseR * 0.6, fuseR * 1.0, fuseL * 0.4)
-		fin.Color  = palette.body
-		fin.Parent = model
-		weld(fuse, fin)
-	end
-
-	-- VehicleSeat (top of fuselage)
-	local seat = Instance.new("VehicleSeat")
-	seat.Size   = Vector3.new(1.2, 0.3, 1.2)
-	seat.CFrame = CFrame.new(0, fuseR + 0.15, 0)
-	seat.Color  = Color3.fromRGB(30, 30, 50)
-	seat.MaxSpeed  = math.clamp(stats.speed * 3.0, 30, 160)
-	seat.Torque    = math.clamp(stats.acceleration * 5, 30, 250)
-	seat.TurnSpeed = Constants.turnSpeedFor("SKY", stats)
-	seat.Parent = model
-	weld(fuse, seat)
-
-	-- Mounts: -Z is front (nose end), +Z is rear (tail end).
-	attach("BodyMount",    CFrame.new(0,    fuseR,    0),                                       fuse)
-	attach("EngineMount",  CFrame.new(0,    0,         fuseL * 0.3),                            fuse)
-	attach("SpecialMount", CFrame.new(0,    fuseR,    -fuseL * 0.2),                            fuse)
-	attach("MobilityMount",CFrame.new(0,   -fuseR * 0.5, 0),                                    fuse)
-	attach("HeadMount",    CFrame.new(0,    fuseR * 0.5, -(fuseL * 0.5 + fuseR * 1.5)),         fuse)
-	attach("TailMount",    CFrame.new(0,    0,          fuseL * 0.5),                           fuse)
-
-	return fuse
-end
-
--- ─── Attach item visuals ──────────────────────────────────────────────────────
-
-local function _attachItems(model, primaryPart, slots, biome)
-	local mountNames = {
-		BODY     = "BodyMount",
-		ENGINE   = "EngineMount",
-		SPECIAL  = "SpecialMount",
-		MOBILITY = "MobilityMount",
-		HEAD     = "HeadMount",
-		TAIL     = "TailMount",
-	}
-
-	for slotName, mountName in pairs(mountNames) do
-		local itemName = slots[slotName]
-		if not itemName then continue end
-
-		local att = primaryPart:FindFirstChild(mountName)
-		if not att then continue end
-
-		-- Per-slot/per-biome scale + rotation (silhouette: BODY dominates,
-		-- HEAD/TAIL/ENGINE/SPECIAL stay small so chassis remains readable).
-		local mount = SlotMountConfig.get(slotName, biome)
-		local scale = mount and mount.scale
-		local rot   = mount and mount.rot
-
-		local worldCF = primaryPart.CFrame * att.CFrame
-		local visPart = itemVisual(itemName, worldCF, model, scale, rot)
-		if visPart then
-			weld(primaryPart, visPart)
-		end
-	end
-end
-
--- ─── Colour customisation from stats ─────────────────────────────────────────
-
-local function _applyStatVisuals(model, stats, palette)
-	-- Fast vehicle → neon accent tint
-	if stats.speed > Constants.BALANCE.STAT_BUDGET * 0.6 then
-		for _, p in ipairs(model:GetDescendants()) do
-			if p:IsA("BasePart") and p.Name == "Cabin" or p.Name == "Deck" or p.Name == "Sail" then
-				p.Material = Enum.Material.Neon
-			end
-		end
-	end
-
-	-- Epic-tier special → purple particle above vehicle
+local function _applyStatVisuals(model, stats)
+	-- Long boost → purple sparkles above the vehicle
 	if stats.boostDuration and stats.boostDuration > 5 then
 		local emitter = Instance.new("ParticleEmitter")
 		emitter.Color      = ColorSequence.new(Color3.fromRGB(200, 80, 255))
@@ -501,53 +144,73 @@ end
 
 -- ─── Public: build ────────────────────────────────────────────────────────────
 
---- Assembles a complete vehicle Model.
+--- Assembles a complete vehicle Model at spawnCFrame (the chassis centre).
 -- @param stats       table from VehicleStats.calculate()
 -- @param biome       "FOREST" | "OCEAN" | "SKY"
--- @param spawnCFrame CFrame where the vehicle should be placed
--- @param slots       table { BODY, ENGINE, SPECIAL, MOBILITY, HEAD, TAIL } (itemNames)
+-- @param spawnCFrame CFrame of the chassis centre; -Z is the front
+-- @param slots       table { BODY, ENGINE, SPECIAL, MOBILITY, HEAD, TAIL } (item names)
 -- @returns Model
-
 function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	slots = slots or {}
+	biome = VehicleBuilder.SEAT[biome] and biome or "FOREST"
+	spawnCFrame = spawnCFrame or CFrame.new()
 
 	local model = Instance.new("Model")
 	model.Name  = "Vehicle_" .. biome
 
-	local palette = BIOME_PALETTE[biome] or BIOME_PALETTE.FOREST
-	local primaryPart
+	local design = VehicleDesign.layout(biome, stats)
 
-	if biome == "FOREST" then
-		primaryPart = buildCar(model, stats, palette, slots)
-	elseif biome == "OCEAN" then
-		primaryPart = buildBoat(model, stats, palette, slots)
-	elseif biome == "SKY" then
-		primaryPart = buildFlyer(model, stats, palette, slots)
-	else
-		primaryPart = buildCar(model, stats, palette, slots)
+	local chassis = Instance.new("Part")
+	chassis.Name = "Chassis"
+	chassis.Size = design.chassis.size
+	chassis.CFrame = spawnCFrame
+	chassis.Color = VehicleDesign.color(design, design.chassis.color)
+	chassis.Material = Enum.Material.SmoothPlastic
+	chassis.Anchored = false
+	chassis.CanCollide = true
+	chassis.Parent = model
+	model.PrimaryPart = chassis
+	local primaryPart = chassis
+
+	for _, spec in ipairs(VehicleDesign.partsFor(design, slots)) do
+		local p = SHAPES[spec.shape]()
+		p.Name = spec.name
+		p.Size = spec.size
+		p.CFrame = spawnCFrame * spec.cf
+		p.Color = VehicleDesign.color(design, spec.color)
+		p.Material = spec.material or Enum.Material.SmoothPlastic
+		p.Transparency = spec.transparency or 0
+		decoration(p)
+		p.Parent = model
+		weld(chassis, p)
 	end
 
-	-- Weld all loose parts to chassis; only chassis keeps CanCollide=true.
-	-- Cabin, decorations, and VehicleSeat must be non-collidable so the
-	-- player character can sit without being trapped inside geometry.
-	for _, part in ipairs(model:GetDescendants()) do
-		if part:IsA("BasePart") then
-			if part ~= primaryPart then
-				part.CanCollide = false
-				local hasWeld = false
-				for _, c in ipairs(part:GetChildren()) do
-					if c:IsA("WeldConstraint") then hasWeld = true; break end
-				end
-				if not hasWeld then weld(primaryPart, part) end
+	local seatSpec = design.seat
+	local seat = Instance.new("VehicleSeat")
+	seat.Name = "VehicleSeat"
+	seat.Size = seatSpec.size
+	seat.CFrame = spawnCFrame * seatSpec.cf
+	seat.Color = Color3.fromRGB(50, 50, 50)
+	seat.Transparency = 1
+	local sv = VehicleBuilder.SEAT[biome]
+	seat.MaxSpeed  = math.clamp(stats.speed * sv.speed[1], sv.speed[2], sv.speed[3])
+	seat.Torque    = math.clamp(stats.acceleration * sv.torque[1], sv.torque[2], sv.torque[3])
+	seat.TurnSpeed = Constants.turnSpeedFor(biome, stats)
+	seat.CanCollide = false
+	seat.Parent = model
+	weld(chassis, seat)
+
+	-- Crafted items in their slot boxes
+	for _, slot in ipairs(VehicleBuilder.SLOTS) do
+		local itemName = slots[slot]
+		if itemName then
+			for _, mount in ipairs(design.mounts[slot] or {}) do
+				placeItem(itemName, spawnCFrame * mount.cf, mount.box, model, chassis, slot)
 			end
 		end
 	end
 
-	-- Attach item visuals at mount points
-	_attachItems(model, primaryPart, slots, biome)
-
-	-- Visual flair from stats
-	_applyStatVisuals(model, stats, palette)
+	_applyStatVisuals(model, stats)
 
 	-- ── Physics drive constraints ─────────────────────────────────────────────
 	-- VehicleSeat's built-in Torque/TurnSpeed require Motor6D wheel joints to
@@ -603,8 +266,6 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 		susp.Parent   = primaryPart
 	end
 
-	-- Place in world
-	model:SetPrimaryPartCFrame(spawnCFrame)
 
 	-- Tag for RacingManager
 	local ownerTag = Instance.new("StringValue")

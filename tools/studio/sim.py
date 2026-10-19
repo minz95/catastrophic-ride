@@ -41,7 +41,7 @@ STUDIO = os.environ.get("ROBLOX_STUDIO", "/Applications/RobloxStudio.app/Content
 LOG_DIR = os.path.expanduser("~/Library/Logs/Roblox")
 CHUNK = 800
 
-TIMEOUT = {"race": 900, "escape": 600, "match": 1800}
+TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800}
 
 LUAU = r"""
 local HttpService = game:GetService("HttpService")
@@ -65,7 +65,7 @@ end
 print("SIM_DONE")
 """
 
-FN = {"race": "runRace", "escape": "runEscape", "match": "runMatch"}
+FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch"}
 
 
 def load_scenarios():
@@ -145,11 +145,21 @@ def check(sc, report):
     out = []
     if not isinstance(report, dict) or not report:
         return [("fail", "no report (session returned nothing)")]
-    if sc["kind"] in ("race", "escape"):
+    if sc["kind"] in ("race", "escape", "vehicles"):
         res = [r for r in report.get("results", []) if isinstance(r, dict)]
+        if "maxTilt" in c:
+            tilted = [r for r in res if (r.get("maxTilt") or 0) > c["maxTilt"]]
+            if tilted:
+                out.append(("fail", "tilted over %d°: %s" % (c["maxTilt"], ", ".join(
+                    "%s %.0f°" % (r.get("label") or r.get("profile"), r["maxTilt"]) for r in tilted[:8]))))
+        if "minTopSpeedRatio" in c:
+            slow = [r for r in res if r.get("maxSpeed") and (r.get("topSpeed") or 0) < c["minTopSpeedRatio"] * r["maxSpeed"]]
+            if slow:
+                out.append(("fail", "never reached %d%% of MaxSpeed: %s" % (c["minTopSpeedRatio"] * 100, ", ".join(
+                    "%s %.0f/%.0f" % (r.get("label"), r.get("topSpeed") or 0, r["maxSpeed"]) for r in slow[:8]))))
         if not res:
             return [("fail", "no cars in report")]
-        if sc["kind"] == "escape":
+        if sc["kind"] in ("escape", "vehicles"):
             stuck = [r for r in res if not r.get("reached")]
             respawned = [r for r in res if r.get("reached") and r.get("respawns")]
             if len(stuck) > c.get("stuck", 0):
@@ -245,8 +255,10 @@ def run_one(sc, place, args):
     for kv in args.set or []:
         k, v = kv.split("=", 1)
         opts[k] = parse_value(v)
-    if sc["kind"] in ("race", "escape"):
+    if sc["kind"] in ("race", "escape", "vehicles"):
         opts["mode"] = "run"
+    if sc["kind"] == "vehicles":
+        opts["cases"] = "vehicles"
     token = uuid.uuid4().hex
     src = (LUAU.replace("__TOKEN__", token).replace("__OPTS__", json.dumps(opts)).replace("__FN__", FN[sc["kind"]])
            .replace("__SAMPLES__", "true" if args.samples else "false").replace("__CHUNK__", str(CHUNK)))

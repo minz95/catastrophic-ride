@@ -14,6 +14,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [steal-4p](steal-4p.json) | PASS | a7efc25 | 2026-10-20T04:30 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
 | [steal-defended-2p](steal-defended-2p.json) | PASS | a7efc25 | 2026-10-20T04:28 |
+| [vehicles-forest](vehicles-forest.json) | PASS | 8705b05 | 2026-10-20T04:52 |
+| [vehicles-ocean](vehicles-ocean.json) | PASS | 8705b05 | 2026-10-20T04:53 |
+| [vehicles-sky](vehicles-sky.json) | PASS | 8705b05 | 2026-10-20T04:53 |
 
 ## craft-afk-3p — PASS
 
@@ -152,4 +155,25 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
     -1: picked 15, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
     -2: picked 10, contests 0/1, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0
   events: bot_craft=2 bot_defend=1 bot_joined=2 bot_ready=2 bot_steal=4 contest_result=1 craft=2 harness_crafting=1 harness_round=1 item_drop=9 item_pickup=25 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal_attempt=4 vehicle_spawn=2
+```
+
+## vehicles-forest — PASS
+
+```
+RaceSim FOREST (shipped) — 14s wall time
+  cases 20: drove out 20, needed a respawn 0, stuck 0
+```
+
+## vehicles-ocean — PASS
+
+```
+RaceSim OCEAN (shipped) — 20.2s wall time
+  cases 20: drove out 20, needed a respawn 0, stuck 0
+```
+
+## vehicles-sky — PASS
+
+```
+RaceSim SKY (shipped) — 13.6s wall time
+  cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
