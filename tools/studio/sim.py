@@ -32,6 +32,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import uuid
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SCENARIOS = os.path.join(ROOT, "tools", "studio", "scenarios.json")
@@ -45,6 +46,7 @@ TIMEOUT = {"race": 900, "escape": 600, "match": 1800}
 LUAU = r"""
 local HttpService = game:GetService("HttpService")
 local Runner = require(game.ServerScriptService.TestHarness.Runner)
+print("SIM_RUN __TOKEN__")
 task.wait(8) -- let the freshly opened place settle (sessions started at once end empty)
 local opts = HttpService:JSONDecode([==[__OPTS__]==])
 local keepSamples = __SAMPLES__
@@ -94,9 +96,16 @@ def parse_value(v):
         return v
 
 
-def newest_log():
-    logs = glob.glob(os.path.join(LOG_DIR, "*Studio*_last.log"))
-    return max(logs, key=os.path.getmtime) if logs else None
+def find_log(token, since):
+    """The Studio log of this run: written after `since` and containing the
+    run's token. Other Studio windows (an open editor) write logs too, so
+    "the newest log" is not enough."""
+    logs = [p for p in glob.glob(os.path.join(LOG_DIR, "*Studio*.log")) if os.path.getmtime(p) >= since - 1]
+    for p in sorted(logs, key=os.path.getmtime, reverse=True):
+        with open(p, errors="replace") as f:
+            if ("SIM_RUN " + token) in f.read():
+                return p
+    return None
 
 
 def read_log(path):
@@ -195,13 +204,13 @@ def run_one(sc, place, args):
         opts[k] = parse_value(v)
     if sc["kind"] in ("race", "escape"):
         opts["mode"] = "run"
-    src = (LUAU.replace("__OPTS__", json.dumps(opts)).replace("__FN__", FN[sc["kind"]])
+    token = uuid.uuid4().hex
+    src = (LUAU.replace("__TOKEN__", token).replace("__OPTS__", json.dumps(opts)).replace("__FN__", FN[sc["kind"]])
            .replace("__SAMPLES__", "true" if args.samples else "false").replace("__CHUNK__", str(CHUNK)))
     work = tempfile.mkdtemp(prefix="studio-sim-")
     script = os.path.join(work, sc["name"] + ".luau")
     with open(script, "w") as f:
         f.write(src)
-    before = newest_log()
     t0 = time.time()
     print("▶ %s (%s) ..." % (sc["name"], sc["kind"]), flush=True)
     timeout = args.timeout or TIMEOUT[sc["kind"]]
@@ -213,9 +222,7 @@ def run_one(sc, place, args):
     except subprocess.TimeoutExpired:
         code = "timeout"
     wall = time.time() - t0
-    log = newest_log()
-    if log == before and (log is None or os.path.getmtime(log) < t0):
-        log = None
+    log = find_log(token, t0)
     ok, summary, report, errors = read_log(log) if log else (None, "", None, ["no Studio log written"])
     checks = check(sc, report)
     if code not in (0, "0"):
