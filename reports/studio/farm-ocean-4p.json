@@ -1,0 +1,1341 @@
+{
+ "checks": [],
+ "commit": "a7efc25",
+ "dirty": false,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-19T19:24:10.709Z,132.709488,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:10.709Z,132.709549,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:10.709Z,132.709595,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:10.709Z,132.709656,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:10.709Z,132.709702,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:11.320Z,133.320038,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:11.320Z,133.320084,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-19T19:24:11.508Z,133.508179,6d80b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"63d198d8-be1a-4521-a600-694b8aee0417\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-19T19:24:11.565Z,133.565689,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'",
+  "2026-10-19T19:24:11.565Z,133.565811,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "OCEAN",
+  "durations": {
+   "CRAFTING": 20,
+   "FARMING": 90,
+   "RACING": 60,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "sweaty",
+   "casual"
+  ],
+  "maxSeconds": 400,
+  "players": 4,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-20T04:24:15+0900",
+ "report": {
+  "args": {
+   "biome": "OCEAN",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "sweaty",
+     "casual"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 90,
+    "RACING": 60,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 400,
+   "players": 4,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [
+   {
+    "error": {
+     "message": "Players.Player2.PlayerScripts.ChatScript:116: Error calling SetCore CoreGuiChatConnections: SetCore: CoreGuiChatConnections has not been registered by the CoreScripts",
+     "script": "Players.Player2.PlayerScripts.ChatScript",
+     "trace": "Players.Player2.PlayerScripts.ChatScript, line 116 - function SetCoreGuiChatConnections\nPlayers.Player2.PlayerScripts.ChatScript, line 104 - function DoEverything\nPlayers.Player2.PlayerScripts.ChatScript, line 133\n"
+    },
+    "userId": -2
+   }
+  ],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "OCEAN",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Red Sofa",
+       "MOBILITY": "Rocket",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Skateboard"
+      },
+      "stats": {
+       "acceleration": 21.465974591221222,
+       "boostDuration": 5.76,
+       "floatability": 35.7175748046625,
+       "flyability": 2.271135155366652,
+       "speed": 39.16355682022454,
+       "stability": 32.295064970931165
+      }
+     },
+     "-2": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Compass",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Magic Wand"
+      },
+      "stats": {
+       "acceleration": 22.559790742813032,
+       "boostDuration": 5.76,
+       "floatability": 22.708153421949234,
+       "flyability": 2.2214138743957057,
+       "speed": 30.447053988687447,
+       "stability": 31.275285937617134
+      }
+     },
+     "-3": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "ENGINE": "Treadmill",
+       "HEAD": "Cactus",
+       "MOBILITY": "Bathtub",
+       "SPECIAL": "Soda Bottle",
+       "TAIL": "Hair Dryer"
+      },
+      "stats": {
+       "acceleration": 21.84189079054605,
+       "boostDuration": 8,
+       "floatability": 42.90953545232274,
+       "flyability": 1.0187449062754688,
+       "speed": 46.9437652811736,
+       "stability": 34.5558272208639
+      }
+     },
+     "-4": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Drill",
+       "MOBILITY": "Propeller Hat",
+       "SPECIAL": "Rubber Duck"
+      },
+      "stats": {
+       "acceleration": 22.559790742813032,
+       "boostDuration": 6.4,
+       "floatability": 27.948496519322134,
+       "flyability": 2.2214138743957057,
+       "speed": 34.41840885677712,
+       "stability": 31.275285937617134
+      }
+     }
+    },
+    "craftT0": 108.991,
+    "durationSeconds": 93.1782155833207,
+    "farm": {
+     "attempts": {
+      "defended": 2,
+      "stolen": 1
+     },
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": {
+        "defended": 1
+       },
+       "contestsLost": 2,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-2": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 1,
+       "defencesTried": 1,
+       "drops": 1,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 9,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-3": {
+       "attempts": {
+        "defended": 1,
+        "stolen": 1
+       },
+       "contestsLost": 1,
+       "contestsWon": 2,
+       "defencesTried": 0,
+       "drops": 4,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 11,
+       "robbed": 0,
+       "stolen": 1
+      },
+      "-4": {
+       "attempts": [],
+       "contestsLost": 1,
+       "contestsWon": 1,
+       "defencesTried": 1,
+       "drops": 4,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 13,
+       "robbed": 1,
+       "stolen": 0
+      }
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [
+      "Rocket",
+      "Red Sofa",
+      "Magic Wand",
+      "Magnifying Glass",
+      "Skateboard",
+      "Skateboard",
+      "Cactus",
+      "Hair Dryer"
+     ],
+     "-2": [
+      "Compass",
+      "Magic Wand",
+      "Skateboard",
+      "Hair Dryer",
+      "Umbrella",
+      "Magic Wand",
+      "Magnet",
+      "Magnifying Glass"
+     ],
+     "-3": [
+      "Soda Bottle",
+      "Bathtub",
+      "Treadmill",
+      "Cactus",
+      "Hair Dryer",
+      "Log",
+      "Camera",
+      "Magic Wand"
+     ],
+     "-4": [
+      "Drill",
+      "Propeller Hat",
+      "Treadmill",
+      "Rubber Duck",
+      "Camera",
+      "Magnifying Glass",
+      "Racing Flag",
+      "Skateboard"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 5.76,
+      "driver": "expert",
+      "farm": "sweaty",
+      "name": "Player1",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Red Sofa",
+       "MOBILITY": "Rocket",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Skateboard"
+      },
+      "speed": 39.16355682022454,
+      "userId": -1
+     },
+     {
+      "boostDuration": 5.76,
+      "driver": "average",
+      "farm": "casual",
+      "name": "Player2",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Compass",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Magic Wand"
+      },
+      "speed": 30.447053988687447,
+      "userId": -2
+     },
+     {
+      "boostDuration": 8,
+      "driver": "novice",
+      "farm": "sweaty",
+      "name": "Player3",
+      "slots": {
+       "ENGINE": "Treadmill",
+       "HEAD": "Cactus",
+       "MOBILITY": "Bathtub",
+       "SPECIAL": "Soda Bottle",
+       "TAIL": "Hair Dryer"
+      },
+      "speed": 46.9437652811736,
+      "userId": -3
+     },
+     {
+      "boostDuration": 6.4,
+      "driver": "expert",
+      "farm": "casual",
+      "name": "Player4",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Drill",
+       "MOBILITY": "Propeller Hat",
+       "SPECIAL": "Rubber Duck"
+      },
+      "speed": 34.41840885677712,
+      "userId": -4
+     }
+    ],
+    "raceStartedAt": 115.81492895833799,
+    "round": 1,
+    "startedAt": 23.64850137499161,
+    "t0": 18.914
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (OCEAN): 0 finished of 4\n    steal attempts: defended=2, stolen=1\n    -3: picked 11, contests 2/3, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -2: picked 9, contests 1/1, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0\n    -1: picked 8, contests 0/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -4: picked 13, contests 1/2, stole 0, robbed 1, defences 1, items 8 | craft submitted, rejected 0\n  events: bot_craft=4 bot_defend=3 bot_joined=4 bot_pickup_denied=2 bot_ready=4 bot_steal=3 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=9 item_pickup=41 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal=1 steal_attempt=3 vehicle_spawn=3",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "driver": "expert",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 7.25,
+     "userId": -1
+    },
+    {
+     "driver": "average",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player2",
+     "t": 8.126,
+     "userId": -2
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 9.228,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 11.629,
+     "userId": -2
+    },
+    {
+     "driver": "novice",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player3",
+     "t": 14.657,
+     "userId": -3
+    },
+    {
+     "driver": "expert",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player4",
+     "t": 15.173,
+     "userId": -4
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 15.968,
+     "userId": -3
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 16.061,
+     "userId": -4
+    },
+    {
+     "biome": "OCEAN",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 18.311
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 18.914
+    },
+    {
+     "inventory": 1,
+     "item": "Compass",
+     "itemId": "83",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 21.361,
+     "userId": -2
+    },
+    {
+     "inventory": 1,
+     "item": "Soda Bottle",
+     "itemId": "9",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 21.728,
+     "userId": -3
+    },
+    {
+     "inventory": 1,
+     "item": "Rocket",
+     "itemId": "46",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 22.811,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Magic Wand",
+     "itemId": "97",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 23.71,
+     "userId": -2
+    },
+    {
+     "inventory": 1,
+     "item": "Bathtub",
+     "itemId": "58",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 23.81,
+     "userId": -4
+    },
+    {
+     "inventory": 3,
+     "item": "Skateboard",
+     "itemId": "27",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 24.06,
+     "userId": -2
+    },
+    {
+     "inventory": 2,
+     "item": "Drill",
+     "itemId": "25",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 24.427,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Hair Dryer",
+     "itemId": "80",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 24.678,
+     "userId": -2
+    },
+    {
+     "inventory": 3,
+     "item": "Propeller Hat",
+     "itemId": "30",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 25.01,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Treadmill",
+     "itemId": "15",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 25.493,
+     "userId": -4
+    },
+    {
+     "data": {
+      "thief": "Player3",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 25.81,
+     "userId": -4
+    },
+    {
+     "item": "Bathtub",
+     "kind": "steal",
+     "t": 26.81,
+     "thief": -3,
+     "thiefInventory": 2,
+     "victim": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 26.81,
+     "thief": -3,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -4
+     },
+     "kind": "bot_steal",
+     "t": 26.844,
+     "userId": -3
+    },
+    {
+     "data": {
+      "thief": "Player1",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 26.86,
+     "userId": -2
+    },
+    {
+     "inventory": 5,
+     "item": "Umbrella",
+     "itemId": "79",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 27.493,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 27.843,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 27.876,
+     "userId": -1
+    },
+    {
+     "itemId": "68",
+     "kind": "contest_result",
+     "loser": -3,
+     "presses": {
+      "-3": 18,
+      "-4": 18
+     },
+     "t": 31.061,
+     "winner": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Rubber Duck",
+     "itemId": "68",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 31.061,
+     "userId": -4
+    },
+    {
+     "itemId": "67",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 18,
+      "-2": 18
+     },
+     "t": 31.893,
+     "winner": -2
+    },
+    {
+     "inventory": 6,
+     "item": "Magic Wand",
+     "itemId": "67",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 31.893,
+     "userId": -2
+    },
+    {
+     "inventory": 5,
+     "item": "Lantern",
+     "itemId": "21",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 33.293,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Toilet Paper",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 33.826,
+     "userId": -4
+    },
+    {
+     "inventory": 6,
+     "item": "Toilet Paper",
+     "itemId": "36",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 33.926,
+     "userId": -4
+    },
+    {
+     "inventory": 2,
+     "item": "Red Sofa",
+     "itemId": "52",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 34.828,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Toilet Paper",
+     "itemId": "28",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 34.877,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Magnet",
+     "itemId": "62",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 35.876,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Lantern",
+     "itemId": "71",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 36.011,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Cardboard Box",
+     "itemId": "92",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 36.993,
+     "userId": -4
+    },
+    {
+     "inventory": 3,
+     "item": "Treadmill",
+     "itemId": "56",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 37.527,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 38.343,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Magnifying Glass",
+     "itemId": "7",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 38.344,
+     "userId": -2
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 38.876,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Camera",
+     "itemId": "81",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 38.877,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Magnifying Glass",
+     "itemId": "84",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 39.194,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Toilet Paper",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 39.243,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Magnifying Glass",
+     "itemId": "98",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 39.244,
+     "userId": -4
+    },
+    {
+     "inventory": 3,
+     "item": "Magic Wand",
+     "itemId": "49",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 40.577,
+     "userId": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Magnifying Glass",
+     "itemId": "61",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 41.21,
+     "userId": -1
+    },
+    {
+     "data": {
+      "thief": "Player3",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 41.493,
+     "userId": -4
+    },
+    {
+     "inventory": 5,
+     "item": "Skateboard",
+     "itemId": "72",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 41.493,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Toilet Paper",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 41.71,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Racing Flag",
+     "itemId": "16",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 41.711,
+     "userId": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 42.493,
+     "thief": -3,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -4
+     },
+     "kind": "bot_steal",
+     "t": 42.525,
+     "userId": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Skateboard",
+     "itemId": "3",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 42.576,
+     "userId": -1
+    },
+    {
+     "itemId": "104",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-3": 18,
+      "-4": 0
+     },
+     "t": 44.327,
+     "winner": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Toilet Paper",
+     "itemId": "104",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 44.327,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Cactus",
+     "itemId": "99",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 44.476,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Cardboard Box",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 44.877,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Skateboard",
+     "itemId": "1",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 44.878,
+     "userId": -4
+    },
+    {
+     "data": {
+      "item": "Gas Can",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 46.493,
+     "userId": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Gas Can",
+     "itemId": "90",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 46.592,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Hair Dryer",
+     "itemId": "53",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 47.677,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Cactus",
+     "itemId": "47",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 49.543,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Gas Can",
+     "itemId": "100",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 50.593,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Toilet Paper",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 53.426,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Hair Dryer",
+     "itemId": "43",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 53.427,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 56.259,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "23",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 56.259,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 56.76,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Camera",
+     "itemId": "88",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 56.761,
+     "userId": -3
+    },
+    {
+     "itemId": "59",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-3": 18
+     },
+     "t": 65.726,
+     "winner": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Magnifying Glass",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 65.726,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Magic Wand",
+     "itemId": "59",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 65.727,
+     "userId": -3
+    },
+    {
+     "biome": "OCEAN",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 108.963
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 108.991
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Magnifying Glass",
+      "HEAD": "Red Sofa",
+      "MOBILITY": "Rocket",
+      "SPECIAL": "Magic Wand",
+      "TAIL": "Skateboard"
+     },
+     "stats": {
+      "acceleration": 21.465974591221222,
+      "boostDuration": 5.76,
+      "floatability": 35.7175748046625,
+      "flyability": 2.271135155366652,
+      "speed": 39.16355682022454,
+      "stability": 32.295064970931165
+     },
+     "t": 110.19,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Rocket",
+       "Red Sofa",
+       "Magic Wand",
+       "Magnifying Glass",
+       "Skateboard",
+       "Skateboard",
+       "Cactus",
+       "Hair Dryer"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Red Sofa",
+       "MOBILITY": "Rocket",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Skateboard"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 110.241,
+     "userId": -1
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "ENGINE": "Treadmill",
+      "HEAD": "Cactus",
+      "MOBILITY": "Bathtub",
+      "SPECIAL": "Soda Bottle",
+      "TAIL": "Hair Dryer"
+     },
+     "stats": {
+      "acceleration": 21.84189079054605,
+      "boostDuration": 8,
+      "floatability": 42.90953545232274,
+      "flyability": 1.0187449062754688,
+      "speed": 46.9437652811736,
+      "stability": 34.5558272208639
+     },
+     "t": 110.374,
+     "userId": -3
+    },
+    {
+     "data": {
+      "inventory": [
+       "Soda Bottle",
+       "Bathtub",
+       "Treadmill",
+       "Cactus",
+       "Hair Dryer",
+       "Log",
+       "Camera",
+       "Magic Wand"
+      ],
+      "result": "ok",
+      "slots": {
+       "ENGINE": "Treadmill",
+       "HEAD": "Cactus",
+       "MOBILITY": "Bathtub",
+       "SPECIAL": "Soda Bottle",
+       "TAIL": "Hair Dryer"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 110.408,
+     "userId": -3
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Drill",
+      "MOBILITY": "Propeller Hat",
+      "SPECIAL": "Rubber Duck"
+     },
+     "stats": {
+      "acceleration": 22.559790742813032,
+      "boostDuration": 6.4,
+      "floatability": 27.948496519322134,
+      "flyability": 2.2214138743957057,
+      "speed": 34.41840885677712,
+      "stability": 31.275285937617134
+     },
+     "t": 110.807,
+     "userId": -4
+    },
+    {
+     "data": {
+      "inventory": [
+       "Drill",
+       "Propeller Hat",
+       "Treadmill",
+       "Rubber Duck",
+       "Camera",
+       "Magnifying Glass",
+       "Racing Flag",
+       "Skateboard"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Drill",
+       "MOBILITY": "Propeller Hat",
+       "SPECIAL": "Rubber Duck"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 110.858,
+     "userId": -4
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Compass",
+      "MOBILITY": "Hair Dryer",
+      "SPECIAL": "Magic Wand"
+     },
+     "stats": {
+      "acceleration": 22.559790742813032,
+      "boostDuration": 5.76,
+      "floatability": 22.708153421949234,
+      "flyability": 2.2214138743957057,
+      "speed": 30.447053988687447,
+      "stability": 31.275285937617134
+     },
+     "t": 110.94,
+     "userId": -2
+    },
+    {
+     "biome": "OCEAN",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 110.94
+    },
+    {
+     "biome": "OCEAN",
+     "kind": "race_start",
+     "length": 5947.817859543297,
+     "racers": [
+      -1,
+      -2,
+      -3,
+      -4
+     ],
+     "round": 1,
+     "t": 111.08,
+     "timeout": 240
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 111.08,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 78.32711029052734,
+     "progress": 10.80785375653327,
+     "speed": 0,
+     "t": 111.08,
+     "userId": -1,
+     "x": -14,
+     "y": 3,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 3,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 78.32711029052734,
+     "seated": true,
+     "t": 111.265,
+     "torque": 64.3979263305664,
+     "turnSpeed": 1.7878302335739136,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Compass",
+       "Magic Wand",
+       "Skateboard",
+       "Hair Dryer",
+       "Umbrella",
+       "Magic Wand",
+       "Magnet",
+       "Magnifying Glass"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Compass",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Magic Wand"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 111.357,
+     "userId": -2
+    },
+    {
+     "at": {
+      "x": -7,
+      "y": 3,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 60.894107818603516,
+     "seated": true,
+     "t": 111.59,
+     "torque": 67.67937469482422,
+     "turnSpeed": 1.4904720783233643,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 78.32711029052734,
+     "progress": 10.80785375653327,
+     "speed": 0,
+     "t": 111.59,
+     "userId": -1,
+     "x": -14,
+     "y": 3,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 60.894107818603516,
+     "progress": 10.907861601934814,
+     "speed": 0,
+     "t": 111.59,
+     "userId": -2,
+     "x": -7,
+     "y": 3,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": 0,
+      "y": 3,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 80,
+     "seated": true,
+     "t": 111.876,
+     "torque": 65.52567291259766,
+     "turnSpeed": 1.952217936515808,
+     "userId": -3
+    },
+    {
+     "after": 117.49066162109375,
+     "before": 78.32711029052734,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 111.974,
+     "userId": -1
+    },
+    {
+     "after": 91.3411636352539,
+     "before": 60.894107818603516,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 112.091,
+     "userId": -2
+    }
+   ],
+   "samplesTotal": 3
+  },
+  "timedOut": false
+ },
+ "scenario": "farm-ocean-4p",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (OCEAN): 0 finished of 4\n    steal attempts: defended=2, stolen=1\n    -4: picked 13, contests 1/2, stole 0, robbed 1, defences 1, items 8 | craft submitted, rejected 0\n    -2: picked 9, contests 1/1, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0\n    -1: picked 8, contests 0/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -3: picked 11, contests 2/3, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: bot_craft=4 bot_defend=3 bot_joined=4 bot_pickup_denied=2 bot_ready=4 bot_steal=3 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=9 item_pickup=41 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal=1 steal_attempt=3 vehicle_spawn=3",
+ "wallSeconds": 136.9
+}
