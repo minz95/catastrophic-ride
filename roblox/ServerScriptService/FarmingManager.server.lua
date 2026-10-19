@@ -287,11 +287,14 @@ end
 
 -- ─── Drop item from inventory (spawns it back in the world) ───────────────────
 
-local function _dropItem(player, slotIndex)
+local function _dropItem(player, slotIndex, reason)
 	local data = SessionManager.getData(player)
 	if not data or not data.inventory[slotIndex] then return nil end
 
 	local itemName = table.remove(data.inventory, slotIndex)
+	Telemetry.record("item_drop", {
+		userId = player.UserId, item = itemName, reason = reason or "manual", inventory = #data.inventory,
+	})
 	local cfg = ItemConfig[itemName]
 
 	-- Spawn a new world item near the player
@@ -436,11 +439,19 @@ end
 
 -- ─── Give item to player ──────────────────────────────────────────────────────
 
+-- With a full inventory the weakest item is swapped out here, when the new
+-- item is really handed over (it used to be dropped before the distance and
+-- contest checks, so a refused pickup or a lost contest cost an item).
 local function _giveItem(player, itemId)
 	local data = SessionManager.getData(player)
 	local item = _items[itemId]
 	if not data or not item or item.taken then return false end
-	if #data.inventory >= Constants.INVENTORY_SIZE then return false end
+	local slot, weakestIdx = FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE)
+	if slot == "full" then return false end
+	if slot == "swap" then
+		_dropItem(player, weakestIdx, "swap")
+		if #data.inventory >= Constants.INVENTORY_SIZE then return false end
+	end
 
 	item.taken = true
 	table.insert(data.inventory, item.itemName)
@@ -479,20 +490,9 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 
 	-- Auto-swap: if inventory is full, drop the lowest-rarity item for a
 	-- strictly rarer one (FarmingRules.pickupSlot).
-	local slot, weakestIdx = FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE)
-	if slot == "full" then
+	-- (the swap itself happens in _giveItem, once the pickup succeeds)
+	if FarmingRules.pickupSlot(data.inventory, item.itemName, ItemConfig, Constants.INVENTORY_SIZE) == "full" then
 		return "inventory_full"
-	elseif slot == "swap" then
-		local droppedName = _dropItem(player, weakestIdx)
-		-- Notify client which item was auto-dropped
-		if droppedName then
-			local cfg = ItemConfig[droppedName]
-			RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
-			-- Re-check size after drop
-			if #data.inventory >= Constants.INVENTORY_SIZE then
-				return "inventory_full"
-			end
-		end
 	end
 
 	-- Distance check — measured to the closest BasePart in the model, not just

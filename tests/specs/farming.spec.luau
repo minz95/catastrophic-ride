@@ -287,3 +287,65 @@ R.describe("crafting input from clients", function()
 		R.expect(byUser[b.UserId].slots.ENGINE).toBe("Kettle")
 	end)
 end)
+
+-- Studio steal-crowd-6p (2026-10-20): a player's inventory shrank with no
+-- event. With a full inventory, RequestPickup dropped the weakest item BEFORE
+-- the distance and contest checks, so a refused pickup or a lost contest cost
+-- an item for nothing.
+R.describe("full inventory and a rarer item", function()
+	local function setup(n)
+		local srv = farmServer(n)
+		local ItemConfig = srv.env.requirePath("ReplicatedStorage.Shared.ItemConfig")
+		local common
+		for name, cfg in pairs(ItemConfig) do
+			if type(cfg) == "table" and cfg.rarity == "Common" then common = name break end
+		end
+		local rare
+		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
+			if d.Name == "ItemId" then
+				local name = d.Parent:FindFirstChild("ItemName")
+				local cfg = name and ItemConfig[name.Value]
+				if cfg and cfg.rarity ~= "Common" then rare = d break end
+			end
+		end
+		for _, p in ipairs(srv.players) do
+			local data = srv.SessionManager.getData(p)
+			data.inventory = {}
+			for i = 1, 8 do data.inventory[i] = common end
+		end
+		return srv, rare
+	end
+
+	R.it("a pickup refused for distance keeps the inventory", function()
+		local srv, rare = setup(1)
+		local p = srv.players[1]
+		p.Character.HumanoidRootPart.Position = rare.Parent.Position + Vector3.new(40, 2, 0)
+		local res = srv.mock.invoke(srv.RemoteEvents.RequestPickup, p, rare.Value)
+		R.expect(tostring(res):find("too far") ~= nil).toBe(true)
+		R.expect(#srv.SessionManager.getData(p).inventory).toBe(8)
+	end)
+
+	R.it("losing the contest for it keeps the inventory; winning swaps the weakest", function()
+		local srv, rare = setup(2)
+		local a, b = srv.players[1], srv.players[2]
+		local pos = rare.Parent.Position
+		local name = rare.Parent.ItemName.Value
+		a.Character.HumanoidRootPart.Position = pos + Vector3.new(2, 2, 0)
+		b.Character.HumanoidRootPart.Position = pos + Vector3.new(-2, 2, 0)
+		srv.mock.invoke(srv.RemoteEvents.RequestPickup, a, rare.Value)
+		for i = 1, 30 do
+			srv.advance(0.1)
+			srv.mock.invoke(srv.RemoteEvents.RequestContest, a, rare.Value, i)
+			srv.mock.invoke(srv.RemoteEvents.RequestContest, b, rare.Value, i * 2)
+		end
+		local ad, bd = srv.SessionManager.getData(a), srv.SessionManager.getData(b)
+		R.expect(#ad.inventory).toBe(8)
+		R.expect(#bd.inventory).toBe(8)
+		R.expect(table.find(bd.inventory, name) ~= nil).toBe(true)
+		R.expect(table.find(ad.inventory, name) == nil).toBe(true)
+		-- the swapped-out item is logged
+		local drops = srv.Telemetry.events("item_drop")
+		R.expect(#drops).toBe(1)
+		R.expect(drops[1].userId).toBe(b.UserId)
+	end)
+end)

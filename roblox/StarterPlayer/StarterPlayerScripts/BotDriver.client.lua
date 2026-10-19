@@ -117,7 +117,7 @@ end)
 
 local function farmLoop()
 	local target, contestId, presses, giveUpAt = nil, nil, 0, 0
-	local hunt, huntUntil = nil, 0
+	local hunt, huntUntil, nextHuntAt = nil, 0, 0
 	while phase == Constants.PHASES.FARMING do
 		local char = LocalPlayer.Character
 		local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -132,17 +132,20 @@ local function farmLoop()
 			hunt = nil
 			trySteal(victim)
 		elseif root and hum and (hunt or (victim and victimDist > Constants.STEAL_RANGE
-			and BotBrain.wantsSteal(farmProfile, 0.1))) then
-			-- Hunting: follow the victim for a few seconds
+			and os.clock() >= nextHuntAt and BotBrain.wantsSteal(farmProfile, 0.1))) then
+			-- Hunting: follow the victim for a few seconds, then farm a while
+			-- (a thief that only hunted never picked anything up).
 			if not hunt then hunt, huntUntil = victim, os.clock() + 5 end
 			local r = hunt.root
 			if os.clock() > huntUntil or not r.Parent then
 				hunt = nil
+				nextHuntAt = os.clock() + BotBrain.HUNT_REST
 			else
 				hum:MoveTo(r.Position)
 				if (r.Position - root.Position).Magnitude <= Constants.STEAL_RANGE * 0.8 and not stealing then
 					trySteal(hunt)
 					hunt = nil
+					nextHuntAt = os.clock() + BotBrain.HUNT_REST
 				end
 			end
 		elseif root and hum then

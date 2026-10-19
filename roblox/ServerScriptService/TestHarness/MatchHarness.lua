@@ -46,6 +46,8 @@ function MatchHarness.farmStats(t0, inventories)
 		if e.t >= t0 then
 			if e.kind == "item_pickup" then
 				local p = P(e.userId); p.pickups += 1; p.ledger = e.inventory
+			elseif e.kind == "item_drop" then
+				local p = P(e.userId); p.drops = (p.drops or 0) + 1; p.ledger = e.inventory
 			elseif e.kind == "contest_result" then
 				P(e.winner).contestsWon += 1; P(e.loser).contestsLost += 1
 			elseif e.kind == "steal" then

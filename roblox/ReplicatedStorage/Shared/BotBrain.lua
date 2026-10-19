@@ -72,6 +72,9 @@ function BotBrain.wantsSteal(profile, dt, rng)
 	return (rng or math.random)() < (profile.stealChance or 0) * dt
 end
 
+-- Seconds a hunting bot farms between two hunts.
+BotBrain.HUNT_REST = 6
+
 --- Who to steal from: the nearest other player with items within reach
 -- (STEAL_RANGE, or huntRange when hunting), or nil.
 -- others: { { userId, x, z, items } }, me: { x, z, items }

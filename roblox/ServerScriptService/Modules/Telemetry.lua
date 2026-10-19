@@ -8,7 +8,8 @@
 --
 -- Event kinds currently emitted
 --   phase            GameManager            { phase, biome, round }
---   item_pickup      FarmingManager         { userId, item, rarity, result }
+--   item_pickup      FarmingManager         { userId, item, rarity, inventory }
+--   item_drop        FarmingManager         { userId, item, reason = "swap" | "manual", inventory }
 --   contest_result   FarmingManager         { itemId, winner, loser, presses }
 --   steal            FarmingManager         { thief, victim, item }
 --   steal_attempt    FarmingManager         { thief, victim, result = "stolen" | "defended" | "denied: <reason>" }
