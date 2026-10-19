@@ -37,10 +37,13 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 			local geo = TG.new(track.nodes, track.width)
 			local cases = RaceSim.escapeCases(biome, track)
 			R.expect(#cases).toBeGreaterThan(8)
+			local off = {}
 			for _, c in ipairs(cases) do
 				local x, z = geo:offsetPoint(c.spawn.s, c.spawn.lateral)
-				R.expect(geo:project(x, z).dist <= track.width / 2).toBe(true)
+				local d = geo:project(x, z).dist
+				if d > track.width / 2 then table.insert(off, string.format("%s %s %.0f studs off", biome, c.label, d)) end
 			end
+			R.expect(off).toBeEmpty("escape spawns outside the lane")
 		end
 	end)
 

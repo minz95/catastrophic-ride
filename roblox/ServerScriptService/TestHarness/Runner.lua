@@ -108,7 +108,7 @@ end
 
 --- Full multiplayer match with bot clients.
 -- opts: { players = 4, rounds = 1, biome = "FOREST",
---         durations = { FARMING = 60, CRAFTING = 20, RACING = 180, RESULTS = 5 },
+--         durations = { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 --         farmProfiles = { "sweaty", "casual" }, driverProfiles = { "expert", "average", "novice" },
 --         maxSeconds = 600 }
 function Runner.runMatch(opts)
@@ -121,7 +121,7 @@ function Runner.runMatch(opts)
 		rounds = opts.rounds or 1,
 		lobbyDelay = 3,
 		joinTimeout = opts.joinTimeout or 90,
-		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 180, RESULTS = 5 },
+		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 		maxSeconds = opts.maxSeconds or 900,
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },

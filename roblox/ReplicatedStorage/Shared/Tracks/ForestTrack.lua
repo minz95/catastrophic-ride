@@ -81,8 +81,48 @@ ForestTrack.nodes = {
 	{ 30, -1638 }, -- N32
 	{ 8, -1660 }, -- N33
 	{ 0, -1690 }, -- N34  onto the finish straight (X=0 from here)
-	{    0, -2000 }, -- N35 FinishLine sensor (Constants.TRACK.FOREST.zFinish)
-	{    0, -2050 }, -- N36 runoff past finish
+	-- S6 (2026-10-20, races were ~47 s vs the 60-120 s target): pine
+	-- switchbacks, two 180° hairpins (R=70) joined by long straights.
+	{ 0, -1960 }, -- N35  end of the finish-straight mud + ramp; S6 begins
+	{ -10.7, -2000 }, -- N36
+	{ -40, -2029.3 }, -- N37
+	{ -80, -2040 }, -- N38  heading west
+	{ -340, -2040 }, -- N39  hairpin 1 entry
+	{ -375, -2049.4 }, -- N40
+	{ -400.6, -2075 }, -- N41
+	{ -410, -2110 }, -- N42  hairpin 1 apex (drift corner)
+	{ -400.6, -2145 }, -- N43
+	{ -375, -2170.6 }, -- N44
+	{ -340, -2180 }, -- N45  heading east
+	{ 220, -2180 }, -- N46  hairpin 2 entry
+	{ 255, -2189.4 }, -- N47
+	{ 280.6, -2215 }, -- N48
+	{ 290, -2250 }, -- N49  hairpin 2 apex (drift corner)
+	{ 280.6, -2285 }, -- N50
+	{ 255, -2310.6 }, -- N51
+	{ 220, -2320 }, -- N52  heading west
+	{ -200, -2320 }, -- N53
+	{ -245, -2332.1 }, -- N54
+	{ -277.9, -2365 }, -- N55
+	{ -290, -2410 }, -- N56  S6 end, heading -Z again
+	-- S7: ridge chicane and the final straight
+	{ -290, -2610 }, -- N57
+	{ -273.9, -2670 }, -- N58
+	{ -230, -2713.9 }, -- N59
+	{ -170, -2730 }, -- N60  heading east
+	{ 50, -2730 }, -- N61  ridge chicane
+	{ 73, -2734.6 }, -- N62
+	{ 92.4, -2747.6 }, -- N63
+	{ 119.3, -2763.1 }, -- N64
+	{ 150.4, -2763.1 }, -- N65
+	{ 177.3, -2747.6 }, -- N66
+	{ 196.7, -2734.6 }, -- N67
+	{ 219.7, -2730 }, -- N68  chicane exit
+	{ 339.7, -2730 }, -- N69
+	{ 394.7, -2744.7 }, -- N70
+	{ 435, -2785 }, -- N71
+	{ 449.7, -2840 }, -- N72  onto the final straight
+	{ 449.7, -3100 }, -- N73  runoff past the finish
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -91,11 +131,14 @@ ForestTrack.sections = {
 	{ name = "S2 outcrop hairpin", from = 2,  to = 8 },
 	{ name = "S3 river sweeper",   from = 8,  to = 15 },
 	{ name = "S4 farm U-bend",     from = 15, to = 23 },
-	{ name = "S5 mud hook",        from = 23, to = 36 },
+	{ name = "S5 mud hook",        from = 23, to = 35 },
+	{ name = "S6 pine switchbacks", from = 35, to = 56 },
+	{ name = "S7 ridge chicane",   from = 56, to = 73 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.FOREST.zFinish.
-ForestTrack.finishZ = -2000
+ForestTrack.finishZ = -3050
+ForestTrack.finishX = 449.7   -- on the N72 → N73 final straight
 
 -- ─── Start grid (matches BiomeConfig.FOREST.raceStartZ = 590) ────────────────
 ForestTrack.startGrid = {
@@ -110,6 +153,9 @@ ForestTrack.mudZones = {
 	{   9, -1639 },   -- outer half of the right-hander
 	{   0, -1810 },   -- centerline mud on the finish straight (skill check)
 	{  26, -1656 },   -- inner half of the right-hander
+	{  -60, -2310 },  -- S6 west straight, left half ...
+	{ -160, -2330 },  -- ... then right half: weave or slow down
+	{  135, -2772 },  -- S7 chicane crest, outer half
 }
 ForestTrack.mudZoneSize = { 20, 0.4, 16 }
 
@@ -126,7 +172,9 @@ ForestTrack.rockPiles = {
 -- lane; yaw uses TrackGeometry:yawAt so the slope faces the direction of travel.
 ForestTrack.jumpRamps = {
 	{  505, -560, math.atan2(90, 160) },  -- mid-S3: middle of the N11 → N12 straight
-	{    0, -1850, 0 },                   -- finish straight
+	{    0, -1850, 0 },                   -- old finish straight (now mid-race)
+	{ -100, -2180, -math.pi / 2 },        -- S6 east straight, between the hairpins
+	{ 449.7, -2950, 0 },                  -- S7 final straight
 }
 ForestTrack.jumpRampSize = { ForestTrack.width - 4, 4, 14 }
 
@@ -134,7 +182,9 @@ ForestTrack.boostPads = {
 	{   0,  400 },    -- S1 launch
 	{ 560, -380 },    -- S3 mid-sweep (rewards apex)
 	{ -368, -1480 },  -- S4 U exit (on the N20 → N21 centerline; was 24 studs off, behind the wall)
-	{   0, -1920 },   -- S5 onto finish straight
+	{   0, -1920 },   -- S5 end of the old finish straight
+	{  100, -2180 },  -- S6 east straight, after the ramp
+	{  449.7, -2880 }, -- S7 final straight
 }
 ForestTrack.boostPadSize = { 10, 0.3, 8 }
 
@@ -144,6 +194,8 @@ ForestTrack.driftCorners = {
 	{ 580, -300 },   -- S3 river bridge entry
 	{ -470, -1310 }, -- S4 U peak
 	{ 205, -1575 },  -- S5 U-turn apex
+	{ -410, -2110 }, -- S6 hairpin 1 apex
+	{ 290, -2250 },  -- S6 hairpin 2 apex
 }
 ForestTrack.driftCornerSize = { ForestTrack.width, 5, 40 }  -- { across, height, along the track }
 ForestTrack.jumpZoneSize = { ForestTrack.width, 10, 14 }
@@ -168,7 +220,9 @@ ForestTrack.treeZones = {
 	{  650, 1100,  -500,   100, 25 },  -- outside the S3 sweep
 	{ -800, -550, -1700,  -700, 35 },  -- outside the U-bend, west
 	{  100,  700, -1700,  -700, 30 },  -- inside the U-bend, east
-	{ -500,  500, -2200, -1700, 30 },  -- around the finish approach
+	{ -500,  500, -2200, -1700, 30 },  -- around the old finish approach
+	{ -600,  650, -2800, -2000, 50 },  -- S6 switchbacks (inside the hairpins too)
+	{  -50,  700, -3200, -2750, 25 },  -- S7 final straight
 }
 
 -- Farming area behind the start grid.

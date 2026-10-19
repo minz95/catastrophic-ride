@@ -23,7 +23,7 @@ Constants.PHASE_DURATION = {
 	RACING   = nil, -- ends on finish, timeout below
 	RESULTS  = 30,
 }
-Constants.RACING_TIMEOUT = 180 -- 3-minute failsafe
+Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 
 -- ─── Player / Session ─────────────────────────────────────────────────────────
 Constants.MAX_PLAYERS    = 10
@@ -63,8 +63,8 @@ Constants.MOBILITY_EMPTY_PENALTY = 0.30  -- 30% reduction to biome core stat
 --   OCEAN  3400-stud path / 2100-stud Z-extent (arc-S + U-bend,    path/Z ~1.6)
 --   SKY    7800-stud path / 3500-stud Z-extent (planar figure-8,   path/Z ~2.2)
 Constants.TRACK = {
-	FOREST = { zStart = 600,  zFinish = -2000, width = 40 },
-	OCEAN  = { zStart = 600,  zFinish = -1530, width = 60 },
+	FOREST = { zStart = 600,  zFinish = -3050, width = 40 },
+	OCEAN  = { zStart = 600,  zFinish = -2800, width = 60 },
 	SKY    = { zStart = 1500, zFinish = -2000, width = 50 },
 }
 

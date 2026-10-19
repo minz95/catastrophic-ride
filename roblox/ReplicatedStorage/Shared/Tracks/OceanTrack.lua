@@ -66,7 +66,41 @@ Track.nodes = {
 	{   0, -1360 }, -- N25
 	{  80, -1430 }, -- N26
 	{   0, -1500 }, -- N27 end of the zigzag
-	{   0, -1590 }, -- N28 runoff; FinishLine at finishZ on this straight
+	-- S6 (2026-10-20, races were ~43 s vs the 60-120 s target): reef
+	-- hairpin (R=110) and a buoy slalom.
+	{ 0, -1650 }, -- N28  S6 begins
+	{ 16.1, -1710 }, -- N29
+	{ 60, -1753.9 }, -- N30
+	{ 120, -1770 }, -- N31  heading east
+	{ 370, -1770 }, -- N32  reef hairpin entry
+	{ 425, -1784.7 }, -- N33
+	{ 465.3, -1825 }, -- N34
+	{ 480, -1880 }, -- N35  hairpin apex (drift corner)
+	{ 465.3, -1935 }, -- N36
+	{ 425, -1975.3 }, -- N37
+	{ 370, -1990 }, -- N38  heading west
+	{ 190, -1990 }, -- N39  buoy slalom
+	{ 151.7, -1982.4 }, -- N40
+	{ 119.3, -1960.7 }, -- N41
+	{ 74.5, -1934.8 }, -- N42
+	{ 22.7, -1934.8 }, -- N43
+	{ -22.1, -1960.7 }, -- N44
+	{ -54.6, -1982.4 }, -- N45  slalom exit
+	-- S7: kelp channel and the final straight
+	{ -92.8, -1990 }, -- N46  S6 end
+	{ -192.8, -1990 }, -- N47
+	{ -252.8, -2006.1 }, -- N48
+	{ -296.8, -2050 }, -- N49
+	{ -312.8, -2110 }, -- N50  kelp channel, heading north
+	{ -312.8, -2330 }, -- N51
+	{ -296.8, -2390 }, -- N52
+	{ -252.8, -2433.9 }, -- N53
+	{ -192.8, -2450 }, -- N54  heading east
+	{ 67.2, -2450 }, -- N55
+	{ 127.2, -2466.1 }, -- N56
+	{ 171.1, -2510 }, -- N57
+	{ 187.2, -2570 }, -- N58  onto the final straight
+	{ 187.2, -2870 }, -- N59  runoff past the finish
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -76,12 +110,13 @@ Track.sections = {
 	{ name = "S3 open channel",   from = 8,  to = 13 },
 	{ name = "S4 reef U-bend",    from = 13, to = 20 },
 	{ name = "S5 return channel", from = 20, to = 28 },
+	{ name = "S6 reef hairpin",   from = 28, to = 46 },
+	{ name = "S7 kelp channel",   from = 46, to = 59 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.OCEAN.zFinish.
--- On the straight after the last zigzag corner (N27), not on the corner
--- itself: there the finish poles stood inside the diagonal approach lane.
-Track.finishZ = -1530
+Track.finishZ = -2800
+Track.finishX = 187.2   -- on the N58 → N59 final straight
 
 -- Start grid: CraftingManager._buildSpawnGrid (x = (col-3)*7, rows 8 apart
 -- from BiomeConfig.OCEAN.raceStartZ = 590).
@@ -103,6 +138,8 @@ Track.boostPads = {
 	{ 160,    0 },   -- S2 inner apex (rewards the tight line; fully on the lane)
 	{   0, -550 },   -- S3 mid-channel
 	{   0, -1080 },  -- post-S4 U-bend exit (N21)
+	{ 250, -1770 },  -- S6 east channel, into the hairpin
+	{ -60, -2450 },  -- S7 east channel
 }
 
 -- Drift corner trigger centres { x, z } (spec §3.3).
@@ -110,12 +147,16 @@ Track.driftCorners = {
 	{ 180,    0 },   -- S2 island arc apex (N5)
 	{ 380, -900 },   -- S4 reef U-bend apex (N17)
 	{   0, -1220 },  -- S5 return channel mid-zigzag (N23)
+	{ 480, -1880 },  -- S6 reef hairpin apex (N35)
+	{ 0, -1935 },    -- S6 buoy slalom crest (N42/N43)
 }
 
 -- Wave ramps / jump zones { x, z }.
 Track.jumpRamps = {
 	{ 0, -240 },     -- post-S2 wave swell (between N8 and N9)
 	{ 0, -500 },     -- mid-S3 skill shot (N11)
+	{ -312.8, -2220 }, -- S7 kelp channel swell
+	{ 187.2, -2700 },  -- S7 final straight swell
 }
 
 -- Trigger sizes: { across the track, height, along the track }.
