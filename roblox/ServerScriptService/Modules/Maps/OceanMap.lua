@@ -292,6 +292,10 @@ local function _buildStartAndFinish(root)
 		Name = "StartDock", Size = Vector3.new(LANE_W - 6, 1, dock.length),
 		Position = Vector3.new(0, WATER_Y + 0.5, dock.z),
 		Color = C.DOCK, Material = MAT.WOOD,
+		-- Decoration: boats float with their hull bottom below the dock top,
+		-- so a solid dock pinned boats on the grid and on respawn (Studio
+		-- run 2026-10-20). Track.obstacleBand already treats it as ridden over.
+		CanCollide = false,
 	})
 	KIT:buildStartGrid(root, { boxY = WATER_Y + 1, poleColor = C.BUOY_WHITE })
 	KIT:buildFinish(root, { poleColor = C.BUOY_WHITE, archColor = Color3.fromRGB(40, 160, 255) })

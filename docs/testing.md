@@ -102,6 +102,42 @@ Rebuild the plugin (`rojo build studio-plugin/default.project.json -o …`) and
 use the toolbar buttons **Race Sim**, **Race Sim (Run)** and **Bot Match**.
 Each prints a summary to Output, followed by `[HarnessReport] {json}`.
 
+### From the command line (saved experiments)
+
+`tools/studio/sim.py` runs Studio real-physics experiments without MCP or an
+open Studio window (macOS: Rojo builds the place, `RobloxStudio -task
+RunScript` runs it, the result is read back from the Studio log):
+
+```sh
+python3 tools/studio/sim.py list                 # scenarios and tags
+python3 tools/studio/sim.py run smoke            # 3 races, ~6 min
+python3 tools/studio/sim.py run core             # + escape tests and bot matches, ~40 min
+python3 tools/studio/sim.py run full             # + builds, car contact, ballast, 2 rounds
+python3 tools/studio/sim.py run race-ocean --set seconds=200 --samples
+```
+
+Scenarios live in `tools/studio/scenarios.json` (kind `race`, `escape` or
+`match`, Runner options, checks). Results go to `reports/studio/<name>.json`
+and `reports/studio/summary.md`; the exit code is 1 when a check fails. Add a
+scenario there instead of running one-off scripts, so the next change is
+checked the same way.
+
+| Kind | Runner call | Checks |
+|---|---|---|
+| `race` | `runRace{ mode = "run", ... }` (profiles, `car`, or `cases` = one car each with its own `car` / `profile` / `spawn`) | every car finishes, respawns per car, winner time vs `FUN_TARGETS` (warning) |
+| `escape` | `runEscape{ biome }` | every case drives `RaceSim.ESCAPE_GAIN` studs on within `ESCAPE_SECONDS`: nose in the left / right wall at 70°, facing backwards (every 500 studs), on each jump ramp, mud zone and drift corner. "Needed a respawn" is a warning, "stuck" a failure |
+| `match` | `runMatch{ biome, players, rounds }` | all bot clients joined, finish rate, no server errors |
+
+Harness cars in one race are ghosts to each other (collision group
+`HarnessCars`) unless `contact = true`; the `*-contact` scenarios test
+car-to-car contact from the grid.
+
+Command-line caveats (Studio 0.743): `workspace:StepPhysics` crashes Studio
+under `-task RunScript`, so only `mode = "run"` works there; `-outputFile`
+writes nothing; log lines are cut at ~1000 characters (the runner prints the
+JSON in chunks). The first session after a place opens can end at once with
+no result; `Runner` retries it.
+
 ### From an AI agent (Roblox Studio MCP server)
 
 With Studio open and Rojo syncing, run Luau through the MCP server's code

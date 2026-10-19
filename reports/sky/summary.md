@@ -33,7 +33,7 @@ Cars by top speed: slowest = Microwave + Fan + Umbrella (top speed 51.8, turn 1.
 
 ## Simulated matches (12 × 6 bots, authored map)
 
-- Finish rate within 180 s: 100%
+- Finish rate within 240 s: 100%
 - Fastest car won 4 of 12 matches that had a finisher
 - Rank correlation, top speed vs place: -0.40 (−1 = faster always places better)
 - Rank correlation, rarity points collected vs place: -0.22

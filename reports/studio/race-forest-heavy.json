@@ -1,0 +1,98 @@
+{
+ "checks": [],
+ "commit": "c7dab7c",
+ "dirty": false,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-19T17:47:15.394Z,12.394096,6c6cf000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T17:47:15.737Z,12.737654,6ba87000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:48:04.798Z,61.798534,6b627000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:49:04.799Z,121.799675,6c0ab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:49:23.102Z,140.102966,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-19T17:49:23.102Z,140.102982,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-19T17:49:23.102Z,140.102997,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-19T17:49:23.102Z,140.102997,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-19T17:49:23.280Z,140.280441,6b41b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"b11d5680-56b7-4bf2-9671-08190df494c6\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "driverMass": 20,
+  "mode": "run",
+  "profiles": [
+   "expert",
+   "novice"
+  ]
+ },
+ "ranAt": "2026-10-20T02:49:24+0900",
+ "report": {
+  "biome": "FOREST",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 32.07
+     },
+     {
+      "index": 2,
+      "t": 45.22
+     }
+    ],
+    "effects": [],
+    "endT": 113.38,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 31.53,
+    "maxProgress": 7559,
+    "maxSpeed": 67.55000305175781,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 113.38,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 34.98
+     },
+     {
+      "index": 2,
+      "t": 49.65
+     }
+    ],
+    "effects": [],
+    "endT": 126.35,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 31.53,
+    "maxProgress": 7559,
+    "maxSpeed": 67.55000305175781,
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 126.35,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim FOREST (shipped) \u2014 125.6s wall time\n  expert   car=p50 max=68 mass=31.53 \u2192 113.38s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=68 mass=31.53 \u2192 126.35s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 125.6
+ },
+ "scenario": "race-forest-heavy",
+ "studioExit": 0,
+ "summary": "RaceSim FOREST (shipped) \u2014 125.6s wall time\n  expert   car=p50 max=68 mass=31.53 \u2192 113.38s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=68 mass=31.53 \u2192 126.35s | CPs 2 | respawns 0 | blocked 0",
+ "wallSeconds": 141.5
+}

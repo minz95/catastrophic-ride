@@ -169,11 +169,21 @@ function VehicleController.apply(primary, cmd, opts)
 	elseif opts.biome == "FOREST" and opts.raycast then
 		local susp = primary:FindFirstChild("SuspensionHover")
 		if susp then
+			-- Probe under the centre, the nose and the tail and ride on the
+			-- highest hit. With the centre ray alone the nose ran into ramps
+			-- while the hover held the car at flat-ground height; without the
+			-- tail ray a slow car going over the ramp's top edge was pulled
+			-- down onto that edge and pinned there.
 			local halfH = primary.Size.Y * 0.5
-			local ray = opts.raycast(
-				primary.Position,
-				Vector3.new(0, -(halfH + VehicleController.SUSPENSION_REACH), 0)
-			)
+			local down = Vector3.new(0, -(halfH + VehicleController.SUSPENSION_REACH), 0)
+			local half = primary.CFrame.LookVector * (primary.Size.Z * 0.5)
+			local ray
+			for _, origin in ipairs({ primary.Position, primary.Position + half, primary.Position - half }) do
+				local hit = opts.raycast(origin, down)
+				if hit and (not ray or hit.Position.Y > ray.Position.Y) then
+					ray = hit
+				end
+			end
 			if ray then
 				susp.Position = Vector3.new(
 					primary.Position.X,

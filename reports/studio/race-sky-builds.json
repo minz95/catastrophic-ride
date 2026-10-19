@@ -1,0 +1,108 @@
+{
+ "checks": [],
+ "commit": "c7dab7c",
+ "dirty": false,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-19T17:52:49.951Z,1.951937,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:52:51.169Z,3.169977,6dcb7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"fb2df20f-c249-47c4-bac1-66862fc7ea56\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:53:00.369Z,12.369005,6daab000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T17:53:00.615Z,12.615924,6e117000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:53:49.952Z,61.952415,6daab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:54:49.954Z,121.954216,6eb53000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:55:49.955Z,181.955612,6f177000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:56:03.270Z,195.270386,6daab000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"fb2df20f-c249-47c4-bac1-66862fc7ea56\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "SKY",
+  "cases": [
+   {
+    "car": "slowest",
+    "label": "slowest-novice",
+    "profile": "novice"
+   },
+   {
+    "car": "fastest",
+    "label": "fastest-expert",
+    "profile": "expert"
+   }
+  ],
+  "mode": "run"
+ },
+ "ranAt": "2026-10-20T02:56:06+0900",
+ "report": {
+  "biome": "SKY",
+  "kind": "cases",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "slowest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 36.52
+     },
+     {
+      "index": 2,
+      "t": 86.43
+     }
+    ],
+    "effects": [],
+    "endT": 181.29,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "label": "slowest-novice",
+    "mass": 3.42,
+    "maxProgress": 7571,
+    "maxSpeed": 51.758663177490234,
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 181.29,
+    "trackLength": 7576,
+    "turnSpeed": 1.0047680139541626,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "fastest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 17
+     },
+     {
+      "index": 2,
+      "t": 39.63
+     }
+    ],
+    "effects": [],
+    "endT": 88.92,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "label": "fastest-expert",
+    "mass": 3.68,
+    "maxProgress": 7572,
+    "maxSpeed": 93.09765625,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 88.92,
+    "trackLength": 7576,
+    "turnSpeed": 1.0783518552780151,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim SKY (shipped) \u2014 180.6s wall time\n  novice   [slowest-novice] car=slowest max=52 mass=3.42 \u2192 181.29s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=93 mass=3.68 \u2192 88.92s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 180.6
+ },
+ "scenario": "race-sky-builds",
+ "studioExit": 0,
+ "summary": "RaceSim SKY (shipped) \u2014 180.6s wall time\n  novice   [slowest-novice] car=slowest max=52 mass=3.42 \u2192 181.29s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=93 mass=3.68 \u2192 88.92s | CPs 2 | respawns 0 | blocked 0",
+ "wallSeconds": 198.5
+}

@@ -30,6 +30,50 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 		end)
 	end
 
+	-- Studio 2026-10-20: the MapBuilders script replaced the map RaceSim had
+	-- built, checkpoint triggers included, and no car could finish.
+	R.it("in a running session it races on the server's map instead of building a copy", function()
+		local SSS = env.game.ServerScriptService
+		local built = {}
+		for _, b in ipairs({ "Forest", "Ocean", "Sky" }) do
+			built[b] = env.requirePath("ServerScriptService.Modules.Maps." .. b .. "Map").build()
+			SSS:SetAttribute("MapBuilt_" .. b:upper(), true)
+		end
+		local map = RaceSim.prepareMap("OCEAN", "shipped", "heartbeat")
+		R.expect(map == built.Ocean).toBe(true)
+		R.expect(built.Ocean.Parent ~= nil).toBe(true)
+		-- the other maps (same world coordinates) must not collide
+		local solid = {}
+		for _, d in ipairs(built.Forest:GetDescendants()) do
+			if d:IsA("BasePart") and d.CanCollide then table.insert(solid, d.Name) if #solid > 3 then break end end
+		end
+		R.expect(solid).toBeEmpty("solid ForestMap parts during an OCEAN race")
+	end)
+
+	R.it("escape cases cover every biome, start on the lane and face the stated way", function()
+		local TG = env.requirePath("ReplicatedStorage.Shared.TrackGeometry")
+		for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+			local track = env.requirePath("ReplicatedStorage.Shared.Tracks." .. biome:sub(1, 1) .. biome:sub(2):lower() .. "Track")
+			local geo = TG.new(track.nodes, track.width)
+			local cases = RaceSim.escapeCases(biome, track)
+			R.expect(#cases).toBeGreaterThan(8)
+			local off = {}
+			for _, c in ipairs(cases) do
+				local x, z = geo:offsetPoint(c.spawn.s, c.spawn.lateral)
+				local d = geo:project(x, z).dist
+				if d > track.width / 2 then table.insert(off, string.format("%s %s %.0f studs off", biome, c.label, d)) end
+			end
+			R.expect(off).toBeEmpty("escape spawns outside the lane")
+		end
+	end)
+
+	R.it("Runner.runEscape runs one car per case and summarizes them", function()
+		local Runner = env.requirePath("ServerScriptService.TestHarness.Runner")
+		local summary, json = Runner.runEscape({ biome = "FOREST", seconds = 0.5, yieldEvery = 1e9 })
+		R.expect(summary:find("cases %d+: drove out") ~= nil).toBe(true)
+		R.expect(json:find("wall%-left@150") ~= nil).toBe(true)
+	end)
+
 	R.it("Runner.runRace returns a summary and JSON", function()
 		local Runner = env.requirePath("ServerScriptService.TestHarness.Runner")
 		local summary, json = Runner.runRace({ profiles = { "novice" }, seconds = 3, yieldEvery = 1e9 })

@@ -1,0 +1,188 @@
+{
+ "checks": [],
+ "commit": "c7dab7c",
+ "dirty": false,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-19T17:56:07.527Z,1.527866,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-19T17:56:08.609Z,2.609354,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:56:09.696Z,3.696638,6b9cb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"975d8b2e-f481-4a12-867c-e34216bb0bf8\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:56:18.753Z,12.753589,6c243000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T17:56:18.994Z,12.994731,6bd13000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T17:57:08.610Z,62.610081,6c44f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:58:08.611Z,122.611099,6b7bf000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T17:58:43.236Z,157.236343,6b7bf000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"975d8b2e-f481-4a12-867c-e34216bb0bf8\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "contact": true,
+  "mode": "run",
+  "profiles": [
+   "expert",
+   "average",
+   "novice",
+   "average",
+   "expert"
+  ]
+ },
+ "ranAt": "2026-10-20T02:58:48+0900",
+ "report": {
+  "biome": "FOREST",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 62.64
+     },
+     {
+      "index": 2,
+      "t": 75.78
+     }
+    ],
+    "effects": [],
+    "endT": 142.91,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 11.53,
+    "maxProgress": 7560,
+    "maxSpeed": 67.55000305175781,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 142.91,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 36.9
+     },
+     {
+      "index": 2,
+      "t": 50.1
+     }
+    ],
+    "effects": [],
+    "endT": 117.58,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 11.53,
+    "maxProgress": 7560,
+    "maxSpeed": 67.55000305175781,
+    "profile": "average",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 117.58,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 38.74
+     },
+     {
+      "index": 2,
+      "t": 53.56
+     }
+    ],
+    "effects": [],
+    "endT": 131.11,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 11.53,
+    "maxProgress": 7559,
+    "maxSpeed": 67.55000305175781,
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 131.11,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 39.5
+     },
+     {
+      "index": 2,
+      "t": 52.68
+     }
+    ],
+    "effects": [],
+    "endT": 121.96,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 11.53,
+    "maxProgress": 7560,
+    "maxSpeed": 67.55000305175781,
+    "profile": "average",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 121.96,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "p50",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 62.36
+     },
+     {
+      "index": 2,
+      "t": 75.51
+     }
+    ],
+    "effects": [],
+    "endT": 142.29,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "mass": 11.53,
+    "maxProgress": 7560,
+    "maxSpeed": 67.55000305175781,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 142.29,
+    "trackLength": 7614,
+    "turnSpeed": 2.181529998779297,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim FOREST (shipped) \u2014 142.2s wall time\n  expert   car=p50 max=68 mass=11.53 \u2192 142.91s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=68 mass=11.53 \u2192 117.58s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=68 mass=11.53 \u2192 131.11s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=68 mass=11.53 \u2192 121.96s | CPs 2 | respawns 0 | blocked 0\n  expert   car=p50 max=68 mass=11.53 \u2192 142.29s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 142.2
+ },
+ "scenario": "race-forest-contact",
+ "studioExit": 0,
+ "summary": "RaceSim FOREST (shipped) \u2014 142.2s wall time\n  expert   car=p50 max=68 mass=11.53 \u2192 142.91s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=68 mass=11.53 \u2192 117.58s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=68 mass=11.53 \u2192 131.11s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=68 mass=11.53 \u2192 121.96s | CPs 2 | respawns 0 | blocked 0\n  expert   car=p50 max=68 mass=11.53 \u2192 142.29s | CPs 2 | respawns 0 | blocked 0",
+ "wallSeconds": 161.6
+}

@@ -7381,7 +7381,7 @@
 <text x="1408" y="456" font-size="13" fill="#eee">sim: novice driver</text>
 <circle cx="1389" cy="477" r="4" fill="none" stroke="#ffffff" stroke-width="2"/>
 <text x="1408" y="481" font-size="13" fill="#eee">sim: respawn (stuck)</text>
-<text x="1380" y="526" font-size="15" fill="#fff" font-weight="bold">Single-car sim (180 s limit)</text>
+<text x="1380" y="526" font-size="15" fill="#fff" font-weight="bold">Single-car sim (240 s limit)</text>
 <text x="1380" y="546" font-size="12" fill="#ddd">authored · expert: 106.4 s, 0 respawns</text>
 <text x="1380" y="562" font-size="12" fill="#ddd">live code · expert: 106.4 s, 0 respawns</text>
 <text x="1380" y="578" font-size="12" fill="#ddd">authored · average: 112.9 s, 0 respawns</text>

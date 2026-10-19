@@ -13,6 +13,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local BiomeConfig  = require(ServerScriptService.Modules.BiomeConfig)
 local GameManager  = require(ServerScriptService.GameManager)
 local MapVisibility = require(ServerScriptService.Modules.MapVisibility)
+local TerrainPainter = require(ServerScriptService.Modules.TerrainPainter)
 
 -- ─── Map folder convention ────────────────────────────────────────────────────
 -- Each map lives under workspace.Maps.<BiomeName>Map as a Model.
@@ -107,6 +108,7 @@ local function _selectAndLoadBiome()
 	_hideAllMaps()
 	local loaded = _showMap(biome)
 	_applyLighting(biome)
+	TerrainPainter.paint(biome)
 
 	-- Broadcast biome to all clients
 	RemoteEvents.BiomeSelected:FireAllClients(biome)
@@ -139,6 +141,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_hideAllMaps()
 		_showMap(biome)
 		_applyLighting(biome)
+		TerrainPainter.paint(biome)
 		-- Show farm area only; hide race track during farming phase
 		_setSubVisible(biome, "FarmArea",  true)
 		_setSubVisible(biome, "RaceTrack", false)
@@ -171,6 +174,7 @@ function MapManager.forceSelectBiome(biome)
 	_hideAllMaps()
 	_showMap(biome)
 	_applyLighting(biome)
+	TerrainPainter.paint(biome)
 	RemoteEvents.BiomeSelected:FireAllClients(biome)
 end
 

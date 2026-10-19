@@ -129,6 +129,44 @@ R.describe("VehicleController.apply on a VehicleBuilder car", function()
 		R.expect(susp.Position.Y).toBeNear(1 + primary.Size.Y / 2 + 0.2, 1e-4)
 	end)
 
+	-- Studio run (2026-10-20): with one ray from the chassis centre the nose
+	-- hit the JumpRamp face while SuspensionHover held the car at flat-ground
+	-- height; DriveVelocity (horizontal only) could not push it up. Expert
+	-- stopped at JumpRamp_1, 0/4 bots finished a FOREST match.
+	R.it("FOREST suspension rises when the nose is over a ramp", function()
+		local look = primary.CFrame.LookVector
+		local halfLen = primary.Size.Z / 2
+		local origins = {}
+		VC.apply(primary, { forwardSpeed = 40, yawRate = 0, climb = 0 }, {
+			biome = "FOREST",
+			raycast = function(origin)
+				table.insert(origins, origin)
+				-- ground at Y 1 under the centre, ramp top at Y 3 ahead of it
+				local ahead = (origin - primary.Position):Dot(look)
+				return { Position = Vector3.new(origin.X, ahead > halfLen * 0.5 and 3 or 1, origin.Z) }
+			end,
+		})
+		R.expect(#origins >= 2).toBe(true)
+		R.expect(primary.SuspensionHover.Position.Y).toBeNear(3 + primary.Size.Y / 2 + 0.2, 1e-4)
+	end)
+
+	-- Studio run (2026-10-20, after the nose probe): a slow car (mud just
+	-- before JumpRamp_2) whose centre passed the ramp's top edge was pulled
+	-- down onto that edge by the hover and stuck there until respawned.
+	R.it("FOREST suspension keeps riding the ramp while the tail is still on it", function()
+		local look = primary.CFrame.LookVector
+		local halfLen = primary.Size.Z / 2
+		VC.apply(primary, { forwardSpeed = 10, yawRate = 0, climb = 0 }, {
+			biome = "FOREST",
+			raycast = function(origin)
+				-- ramp top (Y 4.7) behind the centre, ground (Y 1) from the centre on
+				local behind = (origin - primary.Position):Dot(look) < -halfLen * 0.5
+				return { Position = Vector3.new(origin.X, behind and 4.7 or 1, origin.Z) }
+			end,
+		})
+		R.expect(primary.SuspensionHover.Position.Y).toBeNear(4.7 + primary.Size.Y / 2 + 0.2, 1e-4)
+	end)
+
 	R.it("returns false when the drive movers are missing", function()
 		local bare = env.mock.Instance.new("Part")
 		R.expect(VC.apply(bare, { forwardSpeed = 1, yawRate = 0, climb = 0 }, {})).toBe(false)

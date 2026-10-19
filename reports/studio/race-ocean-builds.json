@@ -1,0 +1,108 @@
+{
+ "checks": [],
+ "commit": "4b7461a",
+ "dirty": false,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-19T18:04:54.829Z,1.829070,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T18:04:56.181Z,3.181128,6f923000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e6b37b3c-a8d3-4d89-9f0c-147563a2168e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T18:05:05.047Z,12.047533,70fef000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-19T18:05:05.445Z,12.445312,6ff8f000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-19T18:05:54.829Z,61.829590,6f923000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T18:06:54.830Z,121.830452,6fb2f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T18:07:54.831Z,181.831528,6fb2f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-19T18:08:14.721Z,201.721420,6f923000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e6b37b3c-a8d3-4d89-9f0c-147563a2168e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "OCEAN",
+  "cases": [
+   {
+    "car": "slowest",
+    "label": "slowest-novice",
+    "profile": "novice"
+   },
+   {
+    "car": "fastest",
+    "label": "fastest-expert",
+    "profile": "expert"
+   }
+  ],
+  "mode": "run"
+ },
+ "ranAt": "2026-10-20T03:08:22+0900",
+ "report": {
+  "biome": "OCEAN",
+  "kind": "cases",
+  "results": [
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "slowest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 22.08
+     },
+     {
+      "index": 2,
+      "t": 62.5
+     }
+    ],
+    "effects": [],
+    "endT": 188.06,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "label": "slowest-novice",
+    "mass": 7.64,
+    "maxProgress": 5874,
+    "maxSpeed": 33.22620391845703,
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 188.06,
+    "trackLength": 5948,
+    "turnSpeed": 1.2194384336471558,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0,
+    "blocked": [],
+    "car": "fastest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 10.5
+     },
+     {
+      "index": 2,
+      "t": 32.03
+     }
+    ],
+    "effects": [],
+    "endT": 96.19,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "label": "fastest-expert",
+    "mass": 8.27,
+    "maxProgress": 5874,
+    "maxSpeed": 59.95097351074219,
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "time": 96.19,
+    "trackLength": 5948,
+    "turnSpeed": 1.2853926420211792,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim OCEAN (shipped) \u2014 187.3s wall time\n  novice   [slowest-novice] car=slowest max=33 mass=7.64 \u2192 188.06s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=60 mass=8.27 \u2192 96.19s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 187.3
+ },
+ "scenario": "race-ocean-builds",
+ "studioExit": 0,
+ "summary": "RaceSim OCEAN (shipped) \u2014 187.3s wall time\n  novice   [slowest-novice] car=slowest max=33 mass=7.64 \u2192 188.06s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=60 mass=8.27 \u2192 96.19s | CPs 2 | respawns 0 | blocked 0",
+ "wallSeconds": 208.8
+}
