@@ -42,6 +42,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   of every turn, dropped wherever they would stand inside the lane (inside of
   turns, SKY's figure-8 crossings). `wallGapHalfWidth` > 0 adds doorways
   (currently 0 everywhere: continuous walls).
+- Vehicle look: `Modules/VehicleDesign.lua` (car / boat / plane as data:
+  parts, slot boxes for the crafted items), built by `Modules/VehicleBuilder`.
+  Only the chassis has mass and collision, sized from the stats as before, so
+  the look never changes handling. Check a change with
+  `lune run tools/vehicle_gallery.luau` (`reports/vehicles/*.svg`, front on
+  the left) and `python3 tools/studio/sim.py run vehicles`.
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.

@@ -186,6 +186,19 @@ Caveats:
 - In edit mode no character sits in the car; set `driverMass` to the
   `mass` reported by the `vehicle_spawn` telemetry event of a real playtest.
 
+### Vehicle look
+
+`lune run tools/vehicle_gallery.luau` draws side / top / front views of the
+vehicles `VehicleBuilder` really assembles (procedural item models included)
+into `reports/vehicles/<biome>.svg`. `tests/specs/vehicle_design.spec.luau`
+builds every item in every slot plus 40 random full builds per biome and
+checks: only the chassis has mass and collision (sized as before), every
+part welded, width within the 7-stud grid slot, front parts at -Z, HEAD at
+the front and TAIL at the back, nothing under the road or the hull, mirrored
+left / right parts, and every item inside its slot box. In Studio,
+`python3 tools/studio/sim.py run vehicles` drives every BODY item and random
+full builds 700 studs on each biome (`maxTilt`, `minTopSpeedRatio`, stuck).
+
 ### Playtests: markers and the fun report
 
 In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)

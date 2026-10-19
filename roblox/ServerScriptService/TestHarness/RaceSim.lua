@@ -257,6 +257,7 @@ function RaceSim.runOne(opts)
 		spawn = opts.spawn, stopAt = opts.stopAt, reached = nil,
 		finished = false, checkpoints = {}, respawns = {}, blocked = {}, samples = {},
 		effects = {}, airborne = 0, trackLength = round(geo.length, 0),
+		maxTilt = 0, topSpeed = 0, slots = slots,
 	}
 
 	local cp = { false, false }
@@ -385,6 +386,10 @@ function RaceSim.runOne(opts)
 			blockedFor = 0
 		end
 
+		local tilt = math.deg(math.acos(math.clamp(primary.CFrame.UpVector.Y, -1, 1)))
+		if tilt > res.maxTilt then res.maxTilt = round(tilt, 1) end
+		if speed > res.topSpeed then res.topSpeed = round(speed, 1) end
+
 		local ground = workspace:Raycast(pos, Vector3.new(0, -8, 0), rayParams)
 		if not ground then res.airborne += dt end
 
@@ -459,6 +464,41 @@ function RaceSim.escapeCases(biome, track)
 	return cases
 end
 
+--- Vehicle cases: many item combinations driven from the grid for
+-- VEHICLE_DISTANCE studs (the look must not change how a car drives).
+-- Every BODY item once (with random other slots), a car with no items and
+-- `extra` fully random builds. Deterministic for a given seed.
+RaceSim.VEHICLE_DISTANCE = 700
+RaceSim.VEHICLE_SECONDS = 45
+
+function RaceSim.vehicleCases(biome, extra, seed)
+	local ItemTypes = require(Shared.ItemTypes)
+	local byType, all = { BODY = {}, ENGINE = {}, SPECIAL = {} }, {}
+	for _, it in ipairs(ItemTypes.ALL) do
+		table.insert(byType[it.slotType], it.name)
+		table.insert(all, it.name)
+	end
+	local rng = Random.new(seed or 1)
+	local function pick(list) return list[rng:NextInteger(1, #list)] end
+	local function full(body)
+		return { BODY = body or pick(byType.BODY), ENGINE = pick(byType.ENGINE), SPECIAL = pick(byType.SPECIAL),
+			MOBILITY = pick(all), HEAD = pick(all), TAIL = pick(all) }
+	end
+	local cases = { { label = "no items", car = {} } }
+	for _, body in ipairs(byType.BODY) do
+		table.insert(cases, { label = body, car = full(body) })
+	end
+	for i = 1, extra or 6 do
+		table.insert(cases, { label = "random" .. i, car = full() })
+	end
+	for i, c in ipairs(cases) do
+		c.stopAt = RaceSim.VEHICLE_DISTANCE
+		c.seconds = RaceSim.VEHICLE_SECONDS
+		c.slot = (i - 1) % 10 + 1
+	end
+	return cases
+end
+
 --- Runs several profiles on one prepared map. In "heartbeat" mode the cars
 -- run concurrently (one coroutine each); in "step" mode one after another.
 function RaceSim.run(opts)
@@ -472,7 +512,9 @@ function RaceSim.run(opts)
 	-- opts.cases: list of per-car overrides ({ label, spawn, stopAt, seconds,
 	-- profile }) or "escape" for RaceSim.escapeCases. One car per case.
 	local cases = opts.cases
-	if cases == "escape" then
+	if cases == "vehicles" then
+		cases = RaceSim.vehicleCases(biome, opts.extra, opts.seed)
+	elseif cases == "escape" then
 		cases = RaceSim.escapeCases(biome, track)
 		for _, c in ipairs(cases) do
 			c.stopAt = c.spawn.s + RaceSim.ESCAPE_GAIN
@@ -505,7 +547,8 @@ function RaceSim.run(opts)
 		end
 		return {
 			biome = biome, visibility = visibility, wallSeconds = round(os.clock() - started, 1),
-			kind = opts.cases == "escape" and "escape" or "cases", results = results,
+			kind = (opts.cases == "escape" or opts.cases == "vehicles") and "escape" or "cases",
+			results = results,
 		}
 	end
 	if (opts.mode or "step") == "heartbeat" then

@@ -1,5 +1,5 @@
 {
-  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. Tags: farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). Tags: vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
   "scenarios": [
     {
       "name": "race-forest",
@@ -645,6 +645,75 @@
         "autoFor": [
           "afk"
         ]
+      }
+    },
+    {
+      "name": "vehicles-forest",
+      "kind": "vehicles",
+      "tags": [
+        "vehicles",
+        "core",
+        "full"
+      ],
+      "_why": "every BODY item and random full builds (all 6 slots) drive 700 studs from the grid: the look must not tip, slow or block a vehicle",
+      "opts": {
+        "biome": "FOREST",
+        "profiles": [
+          "average"
+        ],
+        "extra": 6,
+        "seed": 3
+      },
+      "checks": {
+        "stuck": 0,
+        "maxTilt": 20,
+        "minTopSpeedRatio": 0.8
+      }
+    },
+    {
+      "name": "vehicles-ocean",
+      "kind": "vehicles",
+      "tags": [
+        "vehicles",
+        "core",
+        "full"
+      ],
+      "_why": "every BODY item and random full builds (all 6 slots) drive 700 studs from the grid: the look must not tip, slow or block a vehicle",
+      "opts": {
+        "biome": "OCEAN",
+        "profiles": [
+          "average"
+        ],
+        "extra": 6,
+        "seed": 3
+      },
+      "checks": {
+        "stuck": 0,
+        "maxTilt": 20,
+        "minTopSpeedRatio": 0.8
+      }
+    },
+    {
+      "name": "vehicles-sky",
+      "kind": "vehicles",
+      "tags": [
+        "vehicles",
+        "core",
+        "full"
+      ],
+      "_why": "every BODY item and random full builds (all 6 slots) drive 700 studs from the grid: the look must not tip, slow or block a vehicle",
+      "opts": {
+        "biome": "SKY",
+        "profiles": [
+          "average"
+        ],
+        "extra": 6,
+        "seed": 3
+      },
+      "checks": {
+        "stuck": 0,
+        "maxTilt": 20,
+        "minTopSpeedRatio": 0.8
       }
     }
   ]
