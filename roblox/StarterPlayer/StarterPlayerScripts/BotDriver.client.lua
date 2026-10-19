@@ -118,6 +118,7 @@ end)
 local function farmLoop()
 	local target, contestId, presses, giveUpAt = nil, nil, 0, 0
 	local hunt, huntUntil, nextHuntAt = nil, 0, 0
+	local targetUntil, skip = 0, {}
 	while phase == Constants.PHASES.FARMING do
 		local char = LocalPlayer.Character
 		local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -127,7 +128,7 @@ local function farmLoop()
 		if me and not contestId and not stealing and os.clock() >= nextStealAt then
 			victim, victimDist = BotBrain.pickVictim(farmProfile, me, otherPlayers())
 		end
-		if root and hum and victim and victimDist <= Constants.STEAL_RANGE * 0.8
+		if root and hum and victim and victimDist <= Constants.STEAL_RANGE * 0.6
 			and BotBrain.wantsSteal(farmProfile, 0.1) then
 			hunt = nil
 			trySteal(victim)
@@ -135,14 +136,14 @@ local function farmLoop()
 			and os.clock() >= nextHuntAt and BotBrain.wantsSteal(farmProfile, 0.1))) then
 			-- Hunting: follow the victim for a few seconds, then farm a while
 			-- (a thief that only hunted never picked anything up).
-			if not hunt then hunt, huntUntil = victim, os.clock() + 5 end
+			if not hunt then hunt, huntUntil = victim, os.clock() + BotBrain.HUNT_TIME end
 			local r = hunt.root
 			if os.clock() > huntUntil or not r.Parent then
 				hunt = nil
 				nextHuntAt = os.clock() + BotBrain.HUNT_REST
 			else
 				hum:MoveTo(r.Position)
-				if (r.Position - root.Position).Magnitude <= Constants.STEAL_RANGE * 0.8 and not stealing then
+				if (r.Position - root.Position).Magnitude <= Constants.STEAL_RANGE * 0.6 and not stealing then
 					trySteal(hunt)
 					hunt = nil
 					nextHuntAt = os.clock() + BotBrain.HUNT_REST
@@ -155,8 +156,17 @@ local function farmLoop()
 				if os.clock() > giveUpAt then contestId = nil end
 			else
 				local items = visibleItems()
+				if target and os.clock() > targetUntil then
+					skip[target.id] = true
+					target = nil
+				end
 				if not target or not target.part.Parent then
-					target = BotBrain.pickItem(farmProfile, { x = root.Position.X, z = root.Position.Z }, items, inventory)
+					local reachable = {}
+					for _, it in ipairs(items) do
+						if not skip[it.id] then table.insert(reachable, it) end
+					end
+					target = BotBrain.pickItem(farmProfile, { x = root.Position.X, z = root.Position.Z }, reachable, inventory)
+					targetUntil = os.clock() + BotBrain.ITEM_GIVE_UP
 				end
 				if target and farmProfile.mashRate > 0 then
 					local d = (Vector3.new(target.x, root.Position.Y, target.z) - root.Position).Magnitude

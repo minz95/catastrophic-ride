@@ -72,8 +72,12 @@ function BotBrain.wantsSteal(profile, dt, rng)
 	return (rng or math.random)() < (profile.stealChance or 0) * dt
 end
 
--- Seconds a hunting bot farms between two hunts.
-BotBrain.HUNT_REST = 6
+-- Seconds a hunting bot chases one victim, then farms before the next hunt.
+BotBrain.HUNT_TIME = 10
+BotBrain.HUNT_REST = 4
+-- Seconds a bot walks toward one item before giving up on it (unreachable
+-- items used to hold a bot for the whole phase).
+BotBrain.ITEM_GIVE_UP = 8
 
 --- Who to steal from: the nearest other player with items within reach
 -- (STEAL_RANGE, or huntRange when hunting), or nil.
