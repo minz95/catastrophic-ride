@@ -81,10 +81,18 @@ RaceSim.MAP_WAIT = 20
 -- was then destroyed mid-race with its checkpoint triggers (cars drove the
 -- whole track and never finished; Studio 2026-10-20). So in a running session
 -- wait for the server's build and use it.
+-- All three builders must have run, not only this biome's: every map shares
+-- world coordinates, and a map built after applyRacingState hid the others
+-- stayed solid (OCEAN boats stopped against ForestMap walls; Studio 2026-10-20).
 local function serverMap(biome)
-	local key = "MapBuilt_" .. biome
+	local function allBuilt()
+		for b in pairs(RaceSim.TRACKS) do
+			if ServerScriptService:GetAttribute("MapBuilt_" .. b) == nil then return false end
+		end
+		return true
+	end
 	local waited = 0
-	while ServerScriptService:GetAttribute(key) == nil and waited < RaceSim.MAP_WAIT do
+	while not allBuilt() and waited < RaceSim.MAP_WAIT do
 		task.wait(0.2)
 		waited += 0.2
 	end

@@ -33,12 +33,21 @@ R.describe("TestHarness.RaceSim (smoke, mock physics)", function()
 	-- Studio 2026-10-20: the MapBuilders script replaced the map RaceSim had
 	-- built, checkpoint triggers included, and no car could finish.
 	R.it("in a running session it races on the server's map instead of building a copy", function()
-		local OceanMap = env.requirePath("ServerScriptService.Modules.Maps.OceanMap")
-		local serverBuilt = OceanMap.build()
-		env.game.ServerScriptService:SetAttribute("MapBuilt_OCEAN", true)
+		local SSS = env.game.ServerScriptService
+		local built = {}
+		for _, b in ipairs({ "Forest", "Ocean", "Sky" }) do
+			built[b] = env.requirePath("ServerScriptService.Modules.Maps." .. b .. "Map").build()
+			SSS:SetAttribute("MapBuilt_" .. b:upper(), true)
+		end
 		local map = RaceSim.prepareMap("OCEAN", "shipped", "heartbeat")
-		R.expect(map == serverBuilt).toBe(true)
-		R.expect(serverBuilt.Parent ~= nil).toBe(true)
+		R.expect(map == built.Ocean).toBe(true)
+		R.expect(built.Ocean.Parent ~= nil).toBe(true)
+		-- the other maps (same world coordinates) must not collide
+		local solid = {}
+		for _, d in ipairs(built.Forest:GetDescendants()) do
+			if d:IsA("BasePart") and d.CanCollide then table.insert(solid, d.Name) if #solid > 3 then break end end
+		end
+		R.expect(solid).toBeEmpty("solid ForestMap parts during an OCEAN race")
 	end)
 
 	R.it("escape cases cover every biome, start on the lane and face the stated way", function()
