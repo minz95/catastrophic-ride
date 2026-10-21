@@ -151,6 +151,16 @@ spot with its track section; the RESULTS report lists them per section.
   (`Shared/PhaseClock`) instead of each counting its own default length
   (a 20 s harness crafting phase showed 2:00), and a UI script that starts
   late joins the running phase.
+- **2026-10-22 — Item abilities work and can be seen.** E never fired in a
+  real game (the client read a slot list nothing created), and the server
+  took any item name. Now the car's BODY / ENGINE / SPECIAL items are on the
+  model, the server refuses items that are not on the car and anything
+  before GO, and E fires the next item that is off cooldown (the HUD shows
+  which, with its cooldown). Every effect that lands on a car is drawn on
+  that car for everyone (label, glow, particles, a beam from the car that
+  caused it, a bubble for shields) and on the victim's screen. Lift
+  abilities raise the ride height (`LiftOffset`); the old upward force moved
+  cars less than 0.3 studs.
 
 ## Open questions (from the reports, not decided)
 

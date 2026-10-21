@@ -25,6 +25,7 @@ local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
 local Passives          = require(ReplicatedStorage.Shared.Passives)
+local EffectFx          = require(ServerScriptService.Modules.EffectFx)
 local Telemetry         = require(ServerScriptService.Modules.Telemetry)
 local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
@@ -453,8 +454,13 @@ local function _onCarContact(ownerA, vehicleA, hit)
 	if vps then vps.cleanSince = now end
 
 	local victimBlocked = (fx.victimPush > 0 or fx.victimSlow) and RaceEffects.blocksHit(victim)
-	if not victimBlocked then
+	if victimBlocked then
+		EffectFx.play("blocked", victim, nil)   -- Rubber Duck / shield ate the hit
+	elseif fx.victimPush == 0 and not fx.victimSlow then
+		EffectFx.play("bumperAbsorb", victim, nil, attacker)   -- Balloon Bunch TAIL
+	else
 		if fx.victimPush > 0 then
+			EffectFx.play(fx.victimPush > P.RAM_PUSH and "cartShove" or "rammed", victim, nil, attacker)
 			local dir = _flat(aVeh.PrimaryPart.CFrame.LookVector)
 			if dir.Magnitude > 1e-3 then
 				local bv = Instance.new("BodyVelocity")
@@ -465,10 +471,12 @@ local function _onCarContact(ownerA, vehicleA, hit)
 			end
 		end
 		if fx.victimSlow then
+			EffectFx.play("cactusSting", victim, fx.victimSlow.duration, attacker)
 			_speed(victim, _seatOf(vVeh), "cactusHead", fx.victimSlow.mult, fx.victimSlow.duration)
 		end
 	end
 	if fx.attackerSlow and not RaceEffects.blocksHit(attacker) then
+		EffectFx.play("cactusSting", attacker, fx.attackerSlow.duration, victim)
 		_speed(attacker, _seatOf(aVeh), "cactusTail", fx.attackerSlow.mult, fx.attackerSlow.duration)
 	end
 	Telemetry.record("contact", {
@@ -513,7 +521,12 @@ local function _updatePassives(ranked)
 
 		local lead = ps.head and ps.head.leadSpeedBonus
 		if lead then
-			if rank == 1 and #ranked > 1 then
+			local leading = rank == 1 and #ranked > 1
+			if leading and not ps.leadShown then
+				EffectFx.play("leadFlag", player, nil, nil, { text = string.format("+%d%%", math.floor(lead * 100 + 0.5)) })
+			end
+			ps.leadShown = leading
+			if leading then
 				VehicleTuning.set(seat, "MaxSpeed", "leadFlag", 1 + lead)
 			else
 				VehicleTuning.remove(seat, "MaxSpeed", "leadFlag")
@@ -523,6 +536,10 @@ local function _updatePassives(ranked)
 		local momentum = ps.head and ps.head.momentumBonus
 		if momentum then
 			local mult = Passives.momentumMult(now - (ps.cleanSince or now), momentum)
+			if mult > (ps.momentumShown or 1) + 1e-6 then
+				EffectFx.play("momentum", player, nil, nil, { text = string.format("+%d%%", math.floor((mult - 1) * 100 + 0.5)) })
+			end
+			ps.momentumShown = mult
 			if mult > 1 then
 				VehicleTuning.set(seat, "MaxSpeed", "momentum", mult)
 			else
@@ -538,6 +555,11 @@ local function _updatePassives(ranked)
 					local ops = _physState[other.player.UserId]
 					local ov = ops and ops.vehicle
 					if ov and ov.PrimaryPart and Passives.isDirectlyBehind(leader, _carPose(ov)) then
+						local key = "slip_" .. player.UserId
+						if (ops[key] or 0) < now then
+							EffectFx.play("slipstream", other.player, P.LEAD_PERIOD * 1.5, player)
+						end
+						ops[key] = now + P.LEAD_PERIOD * 2
 						VehicleTuning.set(_seatOf(ov), "MaxSpeed", "slipstream_" .. player.UserId,
 							1 - slip, P.LEAD_PERIOD * 1.5)
 					end
@@ -636,6 +658,7 @@ RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	duration += (ps.tail and ps.tail.boostDurationAdd) or 0   -- Rocket TAIL
 
 	ps.boostCooldownEnd = now + Constants.BOOST_COOLDOWN
+	EffectFx.play((ps.tail and ps.tail.boostDurationAdd) and "boostRocket" or "boost", player, duration)
 	_speed(player, seat, "boost", Constants.BOOST_MULTIPLIER, duration)
 
 	-- Soda Bottle TAIL: the car right behind gets a face full of fizz
@@ -647,6 +670,7 @@ RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 				local ov = od and od.vehicleModel
 				if ov and ov.PrimaryPart and Passives.isDirectlyBehind(me, _carPose(ov), P.SLIPSTREAM_RANGE * 1.5)
 					and not RaceEffects.blocksHit(other) then
+					EffectFx.play("steamed", other, P.BLIND_TIME, player)
 					RemoteEvents.ScreenEffect:FireClient(other, "steamBlind", { duration = P.BLIND_TIME })
 				end
 			end

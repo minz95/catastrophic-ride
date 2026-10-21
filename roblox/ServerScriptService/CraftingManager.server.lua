@@ -33,6 +33,18 @@ local function _processCraft(player, submitted, auto)
 	local biome = GameManager.getBiome()
 
 	local slots, rejected = CraftingRules.validate(submitted, data.inventory, ItemConfig)
+	-- Harness ability experiments: a fixed loadout per round and bot,
+	-- regardless of what was farmed (HarnessConfig `loadouts`; nil live).
+	local harness = GameManager.getHarness()
+	local loadouts = harness and harness.loadouts
+	local fixed = false
+	if type(loadouts) == "table" and #loadouts > 0 and player:GetAttribute("BotIndex") then
+		local round = loadouts[((GameManager.getRound() - 1) % #loadouts) + 1]
+		local loadout = round and round[player:GetAttribute("BotIndex")]
+		if type(loadout) == "table" then
+			slots, rejected, fixed = table.clone(loadout), {}, true
+		end
+	end
 	if not slots then return end
 	for _, r in ipairs(rejected) do
 		warn(string.format("[CraftingManager] %s: %s ← '%s' dropped (%s)", player.Name, r.slot, r.item, r.reason))
@@ -56,6 +68,7 @@ local function _processCraft(player, submitted, auto)
 	Telemetry.record("craft", {
 		userId = player.UserId,
 		auto = auto == true,
+		loadout = fixed or nil,
 		rejected = rejected,
 		slots = table.clone(slots),
 		stats = {
@@ -159,6 +172,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 				)
 
 				if model then
+					-- Whose car this is, for every client (EffectFx draws on it)
+					model:SetAttribute("OwnerUserId", player.UserId)
 					-- Anchor PrimaryPart so gravity doesn't drop the vehicle
 					-- before the player is seated (critical for SKY biome).
 					local primary = model.PrimaryPart

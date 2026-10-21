@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
+local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
 local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local LocalPlayer = Players.LocalPlayer
@@ -32,7 +33,10 @@ local _boostActive   = false
 local _boostGauge    = 1.0   -- 0–1, charges via DriftCorner zones
 local _heartbeatConn = nil
 local _baseFOV       = 70
-local _abilitySlots  = {}    -- { slotName → itemName } from crafting
+local _abilityReadyAt = {}   -- [itemName] = os.clock() when its cooldown ends
+local _abilityIndex  = 1     -- which equipped item (in AbilitySlots.ORDER) E tries first
+local _abilityBusy   = false -- a request is in flight
+local _prevBotE      = false -- harness bot's E key (InputSource override), last frame
 local _driveState    = VehicleController.newState()
 
 -- ─── Input tracking ───────────────────────────────────────────────────────────
@@ -568,7 +572,14 @@ local function _driveLoop(dt)
 	local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 
 	-- Keyboard state, or a harness bot's synthetic keys (InputSource override).
-	local input = VehicleController.readKeys(InputSource.read(_keys))
+	local rawKeys = InputSource.read(_keys)
+	local input = VehicleController.readKeys(rawKeys)
+	-- A bot presses E through the same path as the keyboard's InputBegan.
+	if InputSource.isOverridden() then
+		local e = rawKeys.E == true
+		if e and not _prevBotE then _triggerAbility() end
+		_prevBotE = e
+	end
 
 	if not isSky then
 		local vel = primary.AssemblyLinearVelocity.Magnitude
@@ -596,25 +607,52 @@ local function _driveLoop(dt)
 end
 
 -- ─── Ability activation ───────────────────────────────────────────────────────
+-- E fires the next equipped ability item that is off cooldown, in
+-- AbilitySlots.ORDER (SPECIAL → ENGINE → BODY). The car's items come from its
+-- model attributes (written by the server's VehicleBuilder). The HUD reads
+-- the LocalPlayer attributes AbilityNext / AbilityReadyAt set here.
 
-local _abilityOrder = { "SPECIAL", "ENGINE", "BODY" }
-local _abilityIndex = 1
+local function _publishAbilityHUD()
+	local slots = AbilitySlots.read(_vehicle)
+	local now = os.clock()
+	local item, _, soonest, soonestAt = AbilitySlots.pick(slots, _abilityReadyAt, now, _abilityIndex)
+	LocalPlayer:SetAttribute("AbilityNext", item or soonest)
+	LocalPlayer:SetAttribute("AbilityWait", (not item and soonestAt) and math.max(0, soonestAt - now) or 0)
+end
 
 function _triggerAbility()
-	local slotName = _abilityOrder[_abilityIndex]
-	local itemName = _abilitySlots[slotName]
-	if not itemName then
-		_abilityIndex = (_abilityIndex % #_abilityOrder) + 1
-		slotName  = _abilityOrder[_abilityIndex]
-		itemName  = _abilitySlots[slotName]
-		if not itemName then return end
-	end
-
-	local result = RemoteEvents.RequestAbility:InvokeServer(itemName)
-	if result == "ok" then
-		_abilityIndex = (_abilityIndex % #_abilityOrder) + 1
-	end
+	if _abilityBusy or not _vehicle then return end
+	local slots = AbilitySlots.read(_vehicle)
+	local itemName, index = AbilitySlots.pick(slots, _abilityReadyAt, os.clock(), _abilityIndex)
+	if not itemName then return end
+	_abilityBusy = true
+	task.spawn(function()
+		local ok, result = pcall(function()
+			return RemoteEvents.RequestAbility:InvokeServer(itemName)
+		end)
+		_abilityBusy = false
+		if ok and result == "ok" then
+			_abilityIndex = index + 1
+		elseif ok and result == "denied: cooldown" then
+			-- out of sync with the server: try the next item on the next press
+			_abilityReadyAt[itemName] = os.clock() + 1
+		end
+		_publishAbilityHUD()
+	end)
 end
+
+RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, _targets, _effectKey, info)
+	if userId ~= LocalPlayer.UserId or type(itemName) ~= "string" then return end
+	_abilityReadyAt[itemName] = os.clock() + ((type(info) == "table" and info.cooldown) or 0)
+	_publishAbilityHUD()
+end)
+
+task.spawn(function()
+	while true do
+		task.wait(0.25)
+		if _active and _vehicle then _publishAbilityHUD() end
+	end
+end)
 
 -- ─── ScreenEffect listener ───────────────────────────────────────────────────
 
@@ -732,14 +770,9 @@ function RacingClient.enable()
 	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 	if hum then hum.JumpHeight = 0 end
 
-	local tag = LocalPlayer.PlayerGui:FindFirstChild("CraftSlots")
-	if tag then
-		for _, v in ipairs(tag:GetChildren()) do
-			if v:IsA("StringValue") then
-				_abilitySlots[v.Name] = v.Value ~= "" and v.Value or nil
-			end
-		end
-	end
+	_abilityReadyAt = {}
+	_abilityBusy    = false
+	LocalPlayer:SetAttribute("AbilityNext", nil)
 
 	if _heartbeatConn then _heartbeatConn:Disconnect() end
 	_heartbeatConn = RunService.Heartbeat:Connect(function(dt)

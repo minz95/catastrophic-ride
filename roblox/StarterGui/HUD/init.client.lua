@@ -8,6 +8,7 @@ local TweenService     = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build GUI ────────────────────────────────────────────────────────────────
@@ -273,8 +274,11 @@ end
 
 -- ─── Ability icon update ──────────────────────────────────────────────────────
 
-RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, effectKey)
+-- Args: (userId, itemName, targetIds, effectKey, info = { cooldown, ... }).
+local _cooldownOf = {}   -- [itemName] = seconds (from the server)
+RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, _targetIds, _effectKey, info)
 	if userId ~= LocalPlayer.UserId then return end
+	if type(info) == "table" and info.cooldown then _cooldownOf[itemName] = info.cooldown end
 	-- Brief flash feedback
 	TweenService:Create(abilityFrame, TweenInfo.new(0.1), {
 		BackgroundColor3 = Color3.fromRGB(255, 220, 60)
@@ -285,6 +289,21 @@ RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, e
 		}):Play()
 	end)
 end)
+
+-- The item E fires next and its remaining cooldown (RacingClient sets the
+-- LocalPlayer attributes AbilityNext / AbilityWait).
+local function _updateAbilitySlot()
+	local item = LocalPlayer:GetAttribute("AbilityNext")
+	local wait = LocalPlayer:GetAttribute("AbilityWait") or 0
+	local cfg = item and ItemConfig[item]
+	abilityFrame.Visible = item ~= nil
+	abilityIcon.Text = cfg and cfg.icon or "E"
+	local total = (item and _cooldownOf[item]) or 10
+	abilityCooldownOverlay.Size = UDim2.fromScale(1, math.clamp(wait / total, 0, 1))
+	abilityKeyHint.Text = wait > 0 and string.format("%.0f", math.ceil(wait)) or "[E]"
+end
+LocalPlayer:GetAttributeChangedSignal("AbilityNext"):Connect(_updateAbilitySlot)
+LocalPlayer:GetAttributeChangedSignal("AbilityWait"):Connect(_updateAbilitySlot)
 
 -- ─── Phase / enable handling ──────────────────────────────────────────────────
 

@@ -21,10 +21,14 @@
 --   * Drifting (ctx.drifting) multiplies TurnSpeed by DRIFT_TURN_MULT inside
 --     the command; nothing writes VehicleSeat.TurnSpeed on the client.
 --   * SKY altitude moves ALTITUDE_RATE studs per second of real frame time.
+--   * Lift abilities: the chassis attribute "LiftOffset" (server, studs) is
+--     added to the hover / suspension target, eased at ABILITY_LIFT.RATE.
 
 local Constants = require(script.Parent.Constants)
 
 local VehicleController = {}
+
+local LIFT = Constants.ABILITY_LIFT
 
 VehicleController.REVERSE_THROTTLE  = -0.5
 VehicleController.SKY_TURN_CAP      = 1.5
@@ -162,14 +166,32 @@ function VehicleController.apply(primary, cmd, opts)
 		return false
 	end
 
+	-- Ability lift (Modules/VehicleLift): the server sets "LiftOffset"; the
+	-- offset actually applied ("LiftApplied", local) follows it at LIFT.RATE.
+	local dt = opts.altitudeDt or VehicleController.LEGACY_FRAME_DT
+	local liftTarget = primary:GetAttribute("LiftOffset") or 0
+	local lifted = primary:GetAttribute("LiftApplied") or 0
+	local liftStep = math.clamp(liftTarget - lifted, -LIFT.RATE * dt, LIFT.RATE * dt)
+	if liftStep ~= 0 then
+		primary:SetAttribute("LiftApplied", lifted + liftStep)
+	end
+
 	local hover = primary:FindFirstChild("HoverPosition")
 	if hover then
+		local dy = liftStep
 		if cmd.climb ~= 0 then
-			local dt = opts.altitudeDt or VehicleController.LEGACY_FRAME_DT
-			hover.Position = hover.Position
-				+ Vector3.new(0, cmd.climb * VehicleController.ALTITUDE_RATE * dt, 0)
+			dy += cmd.climb * VehicleController.ALTITUDE_RATE * dt
 		end
-	elseif opts.biome == "FOREST" and opts.raycast then
+		if dy ~= 0 then
+			hover.Position = hover.Position + Vector3.new(0, dy, 0)
+		end
+	elseif opts.biome ~= "FOREST" then
+		-- OCEAN: the ride height is fixed at the water; a lift moves it
+		local susp = primary:FindFirstChild("SuspensionHover")
+		if susp and liftStep ~= 0 then
+			susp.Position = susp.Position + Vector3.new(0, liftStep, 0)
+		end
+	elseif opts.raycast then
 		local susp = primary:FindFirstChild("SuspensionHover")
 		if susp then
 			-- Ride on the highest ground under the whole chassis (a probe
@@ -201,7 +223,7 @@ function VehicleController.apply(primary, cmd, opts)
 			if ray then
 				susp.Position = Vector3.new(
 					primary.Position.X,
-					ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT,
+					ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT + lifted + liftStep,
 					primary.Position.Z
 				)
 				susp.MaxForce = Vector3.new(0, 4e4, 0)

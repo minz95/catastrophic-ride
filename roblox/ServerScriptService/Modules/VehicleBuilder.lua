@@ -14,6 +14,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Constants       = require(game.ReplicatedStorage.Shared.Constants)
 local ItemConfig      = require(game.ServerScriptService.Modules.ItemConfig)
 local VehicleDesign   = require(game.ServerScriptService.Modules.VehicleDesign)
+local AbilitySlots    = require(game.ReplicatedStorage.Shared.AbilitySlots)
 
 local VehicleBuilder = {}
 
@@ -268,6 +269,9 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	ownerTag.Name  = "BiomeTag"
 	ownerTag.Value = biome
 	ownerTag.Parent = model
+
+	-- Items E can fire (RacingClient and the HUD read them from the model)
+	AbilitySlots.write(model, slots)
 
 	return model
 end

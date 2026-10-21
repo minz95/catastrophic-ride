@@ -211,6 +211,8 @@ def check(sc, report):
             out += check_fair_start(c, events)
         if c.get("hudTimer"):
             out += check_hud_timer(c, events)
+        if c.get("abilities"):
+            out += check_abilities(sc, events)
     return out
 
 
@@ -233,6 +235,114 @@ def check_fair_start(c, events):
         out.append(("fail", "cars left the grid %.1f s apart (limit %.1f s): %s" % (
             spread, c["fairStart"], ", ".join("%.1f" % a for a in sorted(after)))))
     return out
+
+
+# What each effect must do to the car it lands on (Modules/EffectFx probes:
+# the car just before the effect and over the next 0.5-1.5 s).
+LIFT_KEYS = {"rise", "hover", "emergencyFloat", "fullBuoyancy", "softLanding", "groundBounce",
+             "lifeFloat", "kiteLift", "kiteGlide", "parachute"}
+FASTER_KEYS = {"rocketBurst", "reverseBoost", "spinBurst", "overclock", "redline", "windRide",
+               "umbrellaSail", "raftGlide", "skateSlide", "kiteGlide", "flagAura", "barrelRoll",
+               "boost", "boostRocket", "leadFlag", "momentum"}
+SLOWER_KEYS = {"noodleSnare", "magnetPull", "slipped", "splashed", "cactusSting", "frozen",
+               "slipstream", "stall", "sofaFortress", "parachute"}
+STEER_LOCK_KEYS = {"steerDisable", "redline"}
+LIFT_MIN = 1.5   # studs
+
+
+def ability_table(events):
+    """Per item: ability request results; per effect key: probes and draws."""
+    items, probes, drawn = {}, {}, {}
+    for e in events:
+        k = e.get("kind")
+        if k == "ability":
+            items.setdefault(e.get("item"), {}).setdefault(e.get("result"), 0)
+            items[e.get("item")][e.get("result")] += 1
+        elif k == "ability_probe":
+            probes.setdefault(e.get("effect"), []).append(e)
+        elif k == "bot_fx":
+            d = e.get("data") or {}
+            drawn.setdefault(d.get("key"), []).append(d)
+    return items, probes, drawn
+
+
+def check_abilities(sc, events):
+    """Every loadout item fired; each landing did what it should; every
+    effect sent was drawn by the clients."""
+    out = []
+    items, probes, drawn = ability_table(events)
+    # Loadouts of the bots that joined (BotIndex = join order; Studio
+    # sometimes starts fewer client windows than asked).
+    joined = len({e.get("userId") for e in events if e.get("kind") == "bot_joined"})
+    want = set()
+    for rnd in sc["opts"].get("loadouts") or []:
+        for slots in rnd[:joined]:
+            want |= {slots.get(t) for t in ("SPECIAL", "ENGINE", "BODY") if slots.get(t)}
+    never = sorted(i for i in want if not (items.get(i) or {}).get("ok"))
+    if never:
+        out.append(("fail", "%d items never fired: %s" % (len(never), ", ".join(
+            "%s %s" % (i, items.get(i) or "no request") for i in never))))
+    wrong = sum((r or {}).get("denied: not equipped", 0) for r in items.values())
+    if wrong:
+        out.append(("fail", "%d requests for items that are not on the car" % wrong))
+    if not probes:
+        return out + [("fail", "no ability_probe events (EffectFx never measured an effect)")]
+
+    def bad(key, test):
+        ps = probes.get(key) or []
+        miss = [p for p in ps if not test(p)]
+        return ps, miss
+
+    for key in sorted(probes):
+        ps = probes[key]
+        problems = []
+        if key in LIFT_KEYS:
+            _, miss = bad(key, lambda p: (p.get("yMax") or 0) - (p.get("y0") or 0) >= LIFT_MIN)
+            if len(miss) == len(ps):
+                problems.append("never rose %.1f studs (rose %s)" % (LIFT_MIN, ", ".join(
+                    "%.1f" % ((p.get("yMax") or 0) - (p.get("y0") or 0)) for p in ps[:5])))
+        if key in FASTER_KEYS:
+            _, miss = bad(key, lambda p: (p.get("maxSpeedMid") or 0) > (p.get("maxSpeed0") or 0) * 1.03)
+            if len(miss) == len(ps):
+                problems.append("MaxSpeed never went up (%s)" % ", ".join(
+                    "%s→%s" % (p.get("maxSpeed0"), p.get("maxSpeedMid")) for p in ps[:5]))
+        if key in SLOWER_KEYS:
+            _, miss = bad(key, lambda p: (p.get("maxSpeedMid") or 0) < (p.get("maxSpeed0") or 0) * 0.97)
+            if len(miss) == len(ps):
+                problems.append("MaxSpeed never went down (%s)" % ", ".join(
+                    "%s→%s" % (p.get("maxSpeed0"), p.get("maxSpeedMid")) for p in ps[:5]))
+        if key in STEER_LOCK_KEYS:
+            _, miss = bad(key, lambda p: (p.get("turnMid") or 0) <= 0.01)
+            if len(miss) == len(ps):
+                problems.append("steering never locked (TurnSpeed %s)" % ", ".join(str(p.get("turnMid")) for p in ps[:5]))
+        if problems:
+            # One landing can be masked by other effects changing at the same
+            # moment (boost ending, another slow starting): a warning.
+            out.append(("fail" if len(ps) >= 2 else "warn", "%s (%d landings): %s" % (key, len(ps), "; ".join(problems))))
+    for key in sorted(probes):
+        ds = drawn.get(key) or []
+        if not ds:
+            out.append(("fail", "%s: sent %d times, no client drew it" % (key, len(probes[key]))))
+            continue
+        errs = [d for d in ds if d.get("error") or d.get("missing")]
+        if errs:
+            out.append(("warn", "%s: %d of %d client draws failed (%s)" % (
+                key, len(errs), len(ds), errs[0].get("error") or ("no " + str(errs[0].get("missing"))))))
+    return out
+
+
+def ability_summary(events):
+    """Text table for the summary: per effect key, landings and what was measured."""
+    items, probes, drawn = ability_table(events)
+    lines = ["abilities: %d items fired ok, %d effect keys measured" % (
+        sum(1 for r in items.values() if r.get("ok")), len(probes))]
+    for key in sorted(probes):
+        ps = probes[key]
+        rise = max((p.get("yMax") or 0) - (p.get("y0") or 0) for p in ps)
+        ms = ["%s→%s" % (p.get("maxSpeed0"), p.get("maxSpeedMid")) for p in ps[:2]]
+        lines.append("  %-15s x%-3d rise %.1f  MaxSpeed %s  drawn %d" % (
+            key, len(ps), rise, " ".join(ms), len(drawn.get(key) or [])))
+    return "\n".join(lines)
 
 
 def parse_clock(text):
@@ -337,6 +447,8 @@ def run_one(sc, place, args):
     log = find_log(token, t0)
     ok, summary, report, errors = read_log(log) if log else (None, "", None, ["no Studio log written"])
     checks = check(sc, report)
+    if sc.get("checks", {}).get("abilities") and isinstance(report, dict):
+        summary += "\n" + ability_summary((report.get("telemetry") or {}).get("events") or [])
     if code not in (0, "0"):
         checks.insert(0, ("fail" if report is None else "warn", "Studio exit code %s%s" % (
             code, " (139 = crash)" if code == 139 else "")))

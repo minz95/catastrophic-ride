@@ -147,6 +147,7 @@ function MatchHarness.start(args, endTest)
 		joined += 1
 		player:SetAttribute("BotFarmProfile", farmProfiles[((joined - 1) % #farmProfiles) + 1])
 		player:SetAttribute("BotDriverProfile", driverProfiles[((joined - 1) % #driverProfiles) + 1])
+		player:SetAttribute("BotIndex", joined)   -- loadouts[round][BotIndex]
 		player:SetAttribute("HarnessBot", true)
 		Telemetry.record("bot_joined", {
 			userId = player.UserId, name = player.Name,

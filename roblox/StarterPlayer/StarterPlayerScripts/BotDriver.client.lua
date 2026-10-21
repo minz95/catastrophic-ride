@@ -203,6 +203,8 @@ end
 local vehicle, autopilot, geo = nil, nil, nil
 local raceStart = 0
 local lastBoostTry = 0
+local lastAbilityTap = 0
+local ABILITY_EVERY = 2.5   -- s between E taps (items have 10-60 s cooldowns)
 
 RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, model)
 	if userId ~= LocalPlayer.UserId then return end
@@ -246,6 +248,13 @@ InputSource.setOverride(function()
 	if os.clock() - lastBoostTry > 1 and math.abs(info.err) < 0.1 then
 		lastBoostTry = os.clock()
 		task.spawn(function() RemoteEvents.RequestBoost:InvokeServer() end)
+	end
+	-- Abilities: tap E every ABILITY_EVERY s (one frame down), through
+	-- RacingClient's E handling like a keyboard press.
+	if os.clock() - lastAbilityTap > ABILITY_EVERY then
+		lastAbilityTap = os.clock()
+		keys = table.clone(keys)
+		keys.E = true
 	end
 	return keys
 end)
