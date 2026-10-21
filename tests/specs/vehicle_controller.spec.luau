@@ -167,6 +167,37 @@ R.describe("VehicleController.apply on a VehicleBuilder car", function()
 		R.expect(primary.SuspensionHover.Position.Y).toBeNear(4.7 + primary.Size.Y / 2 + 0.2, 1e-4)
 	end)
 
+	-- Studio match (2026-10-21): with probes only at the tail, centre and
+	-- nose, a car whose centre was 2 studs before JumpRamp_3's top edge rode
+	-- at the centre's slope height, its belly caught the higher slope just
+	-- ahead and it stopped (2 of 4 bots stuck for the rest of the race).
+	-- Ramp along the car's axis: rises from Y 1 to Y 5 over 14 studs, then
+	-- drops back to the ground (Y 1).
+	local function rampAt(edge)
+		local look = primary.CFrame.LookVector
+		return function(origin)
+			local a = (origin - primary.Position):Dot(look)
+			local y = 1
+			if a <= edge and a >= edge - 14 then y = 1 + 4 * (a - (edge - 14)) / 14 end
+			return { Position = Vector3.new(origin.X, y, origin.Z) }
+		end
+	end
+
+	R.it("FOREST suspension clears a ramp's top edge that is under the chassis between centre and nose", function()
+		VC.apply(primary, { forwardSpeed = 10, yawRate = 0, climb = 0 }, { biome = "FOREST", raycast = rampAt(2) })
+		R.expect(primary.SuspensionHover.Position.Y).toBeGreaterThan(4.9 + primary.Size.Y / 2)
+	end)
+
+	R.it("FOREST suspension lifts before the nose reaches a ramp at speed", function()
+		local halfLen = primary.Size.Z / 2
+		-- the ramp starts 3 studs ahead of the nose; at 68 studs/s that is 0.04 s away
+		VC.apply(primary, { forwardSpeed = 68, yawRate = 0, climb = 0 }, { biome = "FOREST", raycast = rampAt(halfLen + 3 + 14) })
+		R.expect(primary.SuspensionHover.Position.Y).toBeGreaterThan(1.5 + primary.Size.Y / 2)
+		-- standing still, nothing ahead is probed
+		VC.apply(primary, { forwardSpeed = 0, yawRate = 0, climb = 0 }, { biome = "FOREST", raycast = rampAt(halfLen + 3 + 14) })
+		R.expect(primary.SuspensionHover.Position.Y).toBeNear(1 + primary.Size.Y / 2 + 0.2, 1e-4)
+	end)
+
 	R.it("returns false when the drive movers are missing", function()
 		local bare = env.mock.Instance.new("Part")
 		R.expect(VC.apply(bare, { forwardSpeed = 1, yawRate = 0, climb = 0 }, {})).toBe(false)

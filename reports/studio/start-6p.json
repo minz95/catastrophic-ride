@@ -1,0 +1,7892 @@
+{
+ "checks": [
+  {
+   "level": "warn",
+   "message": "round 1: 5 of 6 players joined (Studio did not start every client)"
+  }
+ ],
+ "commit": "954581a",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-21T03:48:22.111Z,170.111465,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.142Z,170.142075,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.142Z,170.142136,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.144Z,170.144257,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.144Z,170.144348,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.148Z,170.148010,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.148Z,170.148056,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.176Z,170.176239,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.176Z,170.176315,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T03:48:22.526Z,170.526566,6fb93000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"119b98ca-bbe4-4acb-8fab-45e9870cd2bd\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 10,
+   "FARMING": 20,
+   "RACING": 30,
+   "RESULTS": 3
+  },
+  "maxSeconds": 400,
+  "players": 6
+ },
+ "ranAt": "2026-10-21T12:48:26+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "sweaty",
+     "casual"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 10,
+    "FARMING": 20,
+    "RACING": 30,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 400,
+   "players": 6,
+   "rounds": 1
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "rounds complete",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.8,
+       "boostDuration": 0.8,
+       "floatability": 0.25,
+       "flyability": 1.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     },
+     "-2": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Cup Noodle",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Cactus"
+      },
+      "stats": {
+       "acceleration": 39.52829363756381,
+       "boostDuration": 2.6,
+       "floatability": 0.13565790874905215,
+       "flyability": 2.1405587179337613,
+       "speed": 34.22753389976085,
+       "stability": 35.40128786715264
+      }
+     },
+     "-3": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "ENGINE": "Treadmill"
+      },
+      "stats": {
+       "acceleration": 26.095423563778,
+       "boostDuration": 0.8,
+       "floatability": 0.24342745861733206,
+       "flyability": 1.2171372930866604,
+       "speed": 31.158714703018504,
+       "stability": 28.899707887049658
+      }
+     },
+     "-4": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Life Preserver",
+       "ENGINE": "Compass",
+       "MOBILITY": "Red Sofa",
+       "SPECIAL": "Balloon Bunch"
+      },
+      "stats": {
+       "acceleration": 28.442904242774283,
+       "boostDuration": 8,
+       "floatability": 0.6930907515702838,
+       "flyability": 1.5041031935119002,
+       "speed": 29.41785189998315,
+       "stability": 70.84927682718457
+      }
+     },
+     "-5": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "SPECIAL": "Soda Bottle"
+      },
+      "stats": {
+       "acceleration": 11.8,
+       "boostDuration": 8,
+       "floatability": 0.25,
+       "flyability": 1.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     }
+    },
+    "craftT0": 115.49,
+    "durationSeconds": 56.156744999985676,
+    "farm": {
+     "attempts": {
+      "defended": 1,
+      "denied: too far": 1,
+      "stolen": 1
+     },
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": {
+        "denied: too far": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 1,
+       "robbed": 1,
+       "stolen": 0
+      },
+      "-2": {
+       "attempts": {
+        "stolen": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "drops": 2,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 9,
+       "robbed": 0,
+       "stolen": 1
+      },
+      "-3": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 1,
+       "ledger": 1,
+       "pickups": 1,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-4": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 1,
+       "inventory": 6,
+       "ledger": 6,
+       "pickups": 6,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-5": {
+       "attempts": {
+        "defended": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 1,
+       "ledger": 1,
+       "pickups": 1,
+       "robbed": 0,
+       "stolen": 0
+      }
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [],
+     "-2": [
+      "Cup Noodle",
+      "Hair Dryer",
+      "Skateboard",
+      "Cactus",
+      "Alarm Clock",
+      "Skateboard",
+      "Compass",
+      "Log"
+     ],
+     "-3": [
+      "Treadmill"
+     ],
+     "-4": [
+      "Compass",
+      "Life Preserver",
+      "Red Sofa",
+      "Balloon Bunch",
+      "Suitcase",
+      "Shopping Cart"
+     ],
+     "-5": [
+      "Soda Bottle"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 0.8,
+      "driver": "expert",
+      "farm": "sweaty",
+      "name": "Player1",
+      "progress": 1844.060326540106,
+      "slots": [],
+      "speed": 23,
+      "userId": -1
+     },
+     {
+      "boostDuration": 2.6,
+      "driver": "average",
+      "farm": "casual",
+      "name": "Player2",
+      "progress": 2488.0987229371563,
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Cup Noodle",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Cactus"
+      },
+      "speed": 34.22753389976085,
+      "userId": -2
+     },
+     {
+      "boostDuration": 0.8,
+      "driver": "novice",
+      "farm": "sweaty",
+      "name": "Player3",
+      "progress": 1750.8295549216243,
+      "slots": {
+       "ENGINE": "Treadmill"
+      },
+      "speed": 31.158714703018504,
+      "userId": -3
+     },
+     {
+      "boostDuration": 8,
+      "driver": "expert",
+      "farm": "casual",
+      "name": "Player4",
+      "progress": 2767.7959816630528,
+      "slots": {
+       "BODY": "Life Preserver",
+       "ENGINE": "Compass",
+       "MOBILITY": "Red Sofa",
+       "SPECIAL": "Balloon Bunch"
+      },
+      "speed": 29.41785189998315,
+      "userId": -4
+     },
+     {
+      "boostDuration": 8,
+      "driver": "average",
+      "farm": "sweaty",
+      "name": "Player5",
+      "progress": 2437.4607558796897,
+      "slots": {
+       "SPECIAL": "Soda Bottle"
+      },
+      "speed": 23,
+      "userId": -5
+     }
+    ],
+    "raceStartedAt": 120.88645774999168,
+    "round": 1,
+    "startedAt": 98.74600795833976,
+    "t0": 95.461
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 5\n    steal attempts: defended=1, denied: too far=1, stolen=1\n    -3: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0\n    -2: picked 9, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -1: picked 1, contests 0/0, stole 0, robbed 1, defences 0, items 0 | craft submitted, rejected 0\n    -4: picked 6, contests 0/0, stole 0, robbed 0, defences 1, items 6 | craft submitted, rejected 0\n    -5: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0\n  events: bot_craft=5 bot_defend=2 bot_hud=55 bot_joined=5 bot_ready=5 bot_steal=3 checkpoint=3 contact=17 craft=5 harness_crafting=1 harness_round=1 hazard=12 hit=7 item_drop=2 item_pickup=18 phase=4 race_go=1 race_launch=5 race_progress=150 race_sample=335 race_start=1 speed_effect=130 steal=1 steal_attempt=3 vehicle_spawn=5",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "driver": "expert",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 4.456,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 4.923,
+     "userId": -1
+    },
+    {
+     "driver": "average",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player2",
+     "t": 5.512,
+     "userId": -2
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 5.972,
+     "userId": -2
+    },
+    {
+     "driver": "novice",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player3",
+     "t": 8.202,
+     "userId": -3
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 9.588,
+     "userId": -3
+    },
+    {
+     "driver": "expert",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player4",
+     "t": 12.651,
+     "userId": -4
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 14.172,
+     "userId": -4
+    },
+    {
+     "driver": "average",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player5",
+     "t": 17.217,
+     "userId": -5
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 17.591,
+     "userId": -5
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 95.336
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 95.461
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.341205835342407
+     },
+     "kind": "bot_hud",
+     "t": 96.002,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.020986795425415
+     },
+     "kind": "bot_hud",
+     "t": 96.318,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.67050790786743
+     },
+     "kind": "bot_hud",
+     "t": 96.668,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.645296812057495
+     },
+     "kind": "bot_hud",
+     "t": 96.701,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.870662927627563
+     },
+     "kind": "bot_hud",
+     "t": 97.468,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.335461854934692
+     },
+     "kind": "bot_hud",
+     "t": 98.001,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.001109838485718
+     },
+     "kind": "bot_hud",
+     "t": 98.334,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.654032945632935
+     },
+     "kind": "bot_hud",
+     "t": 98.684,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.64596199989319
+     },
+     "kind": "bot_hud",
+     "t": 98.701,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.85457992553711
+     },
+     "kind": "bot_hud",
+     "t": 99.485,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.333274841308594
+     },
+     "kind": "bot_hud",
+     "t": 100.001,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.985002994537354
+     },
+     "kind": "bot_hud",
+     "t": 100.351,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.653453826904297
+     },
+     "kind": "bot_hud",
+     "t": 100.684,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.64562702178955
+     },
+     "kind": "bot_hud",
+     "t": 100.701,
+     "userId": -4
+    },
+    {
+     "inventory": 1,
+     "item": "Cup Noodle",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 101.235,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.853585958480835
+     },
+     "kind": "bot_hud",
+     "t": 101.484,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Compass",
+     "itemId": "59",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 101.768,
+     "userId": -4
+    },
+    {
+     "data": {
+      "thief": "Player2",
+      "tried": false
+     },
+     "kind": "bot_defend",
+     "t": 101.801,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.316910982131958
+     },
+     "kind": "bot_hud",
+     "t": 102.017,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.968477010726929
+     },
+     "kind": "bot_hud",
+     "t": 102.367,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.642200946807861
+     },
+     "kind": "bot_hud",
+     "t": 102.701,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.629618883132935
+     },
+     "kind": "bot_hud",
+     "t": 102.718,
+     "userId": -4
+    },
+    {
+     "item": "Cup Noodle",
+     "kind": "steal",
+     "t": 102.784,
+     "thief": -2,
+     "thiefInventory": 1,
+     "victim": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "stolen",
+     "t": 102.784,
+     "thief": -2,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "stolen",
+      "victim": -1
+     },
+     "kind": "bot_steal",
+     "t": 102.801,
+     "userId": -2
+    },
+    {
+     "inventory": 2,
+     "item": "Hair Dryer",
+     "itemId": "44",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 103.068,
+     "userId": -2
+    },
+    {
+     "inventory": 2,
+     "item": "Life Preserver",
+     "itemId": "48",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 103.434,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.840974807739258
+     },
+     "kind": "bot_hud",
+     "t": 103.501,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Skateboard",
+     "itemId": "12",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 104.034,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.304557800292969
+     },
+     "kind": "bot_hud",
+     "t": 104.051,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.972005844116211
+     },
+     "kind": "bot_hud",
+     "t": 104.368,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.625718832015991
+     },
+     "kind": "bot_hud",
+     "t": 104.717,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.610236883163452
+     },
+     "kind": "bot_hud",
+     "t": 104.734,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Cactus",
+     "itemId": "38",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 104.751,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 105.168,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 105.184,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Red Sofa",
+     "itemId": "29",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 105.218,
+     "userId": -4
+    },
+    {
+     "inventory": 5,
+     "item": "Gas Can",
+     "itemId": "51",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 105.351,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.83201289176941
+     },
+     "kind": "bot_hud",
+     "t": 105.502,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.28778600692749
+     },
+     "kind": "bot_hud",
+     "t": 106.051,
+     "userId": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Fan",
+     "itemId": "46",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 106.068,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.955788850784302
+     },
+     "kind": "bot_hud",
+     "t": 106.384,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.605978965759277
+     },
+     "kind": "bot_hud",
+     "t": 106.734,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.593255996704102
+     },
+     "kind": "bot_hud",
+     "t": 106.751,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 7.819626808166504
+     },
+     "kind": "bot_hud",
+     "t": 107.517,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 7.271184921264648
+     },
+     "kind": "bot_hud",
+     "t": 108.068,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Alarm Clock",
+     "itemId": "70",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 108.068,
+     "userId": -2
+    },
+    {
+     "data": {
+      "thief": "Player5",
+      "tried": true
+     },
+     "kind": "bot_defend",
+     "t": 108.368,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.936818838119507
+     },
+     "kind": "bot_hud",
+     "t": 108.401,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.605677843093872
+     },
+     "kind": "bot_hud",
+     "t": 108.734,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.5769288539886475
+     },
+     "kind": "bot_hud",
+     "t": 108.768,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Skateboard",
+     "itemId": "90",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 109.268,
+     "userId": -2
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "defended",
+     "t": 109.367,
+     "thief": -5,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "defended",
+      "victim": -4
+     },
+     "kind": "bot_steal",
+     "t": 109.401,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 5.803924798965454
+     },
+     "kind": "bot_hud",
+     "t": 109.534,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 5.25379490852356
+     },
+     "kind": "bot_hud",
+     "t": 110.084,
+     "userId": -3
+    },
+    {
+     "inventory": 4,
+     "item": "Balloon Bunch",
+     "itemId": "24",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 110.351,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.920868873596191
+     },
+     "kind": "bot_hud",
+     "t": 110.418,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.590118885040283
+     },
+     "kind": "bot_hud",
+     "t": 110.75,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.576870918273926
+     },
+     "kind": "bot_hud",
+     "t": 110.767,
+     "userId": -4
+    },
+    {
+     "inventory": 1,
+     "item": "Treadmill",
+     "itemId": "75",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 110.934,
+     "userId": -3
+    },
+    {
+     "inventory": 5,
+     "item": "Suitcase",
+     "itemId": "98",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 111.418,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 3.7913198471069336
+     },
+     "kind": "bot_hud",
+     "t": 111.551,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Shopping Cart",
+     "itemId": "39",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 111.901,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 3.237114906311035
+     },
+     "kind": "bot_hud",
+     "t": 112.1,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 112.1,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Compass",
+     "itemId": "21",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 112.101,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.9036149978637695
+     },
+     "kind": "bot_hud",
+     "t": 112.434,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.591158866882324
+     },
+     "kind": "bot_hud",
+     "t": 112.75,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.5607118606567383
+     },
+     "kind": "bot_hud",
+     "t": 112.783,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Fan",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 113.301,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "32",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 113.302,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 1.7876110076904297
+     },
+     "kind": "bot_hud",
+     "t": 113.55,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 1.2369718551635742
+     },
+     "kind": "bot_hud",
+     "t": 114.1,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.8876798152923584
+     },
+     "kind": "bot_hud",
+     "t": 114.45,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.5751628875732422
+     },
+     "kind": "bot_hud",
+     "t": 114.767,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.5442438125610352
+     },
+     "kind": "bot_hud",
+     "t": 114.8,
+     "userId": -4
+    },
+    {
+     "inventory": 1,
+     "item": "Soda Bottle",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 114.884,
+     "userId": -5
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 115.469
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 115.49
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.919704914093018
+     },
+     "kind": "bot_hud",
+     "t": 115.551,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:09"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 9.36928105354309
+     },
+     "kind": "bot_hud",
+     "t": 116.101,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:09"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 9.004240036010742
+     },
+     "kind": "bot_hud",
+     "t": 116.467,
+     "userId": -5
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:08"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 8.703559875488281
+     },
+     "kind": "bot_hud",
+     "t": 116.767,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:08"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 8.660660028457642
+     },
+     "kind": "bot_hud",
+     "t": 116.817,
+     "userId": -4
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "SPECIAL": "Soda Bottle"
+     },
+     "stats": {
+      "acceleration": 11.8,
+      "boostDuration": 8,
+      "floatability": 0.25,
+      "flyability": 1.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 116.917,
+     "userId": -5
+    },
+    {
+     "data": {
+      "inventory": [
+       "Soda Bottle"
+      ],
+      "result": "ok",
+      "slots": {
+       "SPECIAL": "Soda Bottle"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 116.95,
+     "userId": -5
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.8,
+      "boostDuration": 0.8,
+      "floatability": 0.25,
+      "flyability": 1.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 117.001,
+     "userId": -1
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Cup Noodle",
+      "MOBILITY": "Hair Dryer",
+      "SPECIAL": "Cactus"
+     },
+     "stats": {
+      "acceleration": 39.52829363756381,
+      "boostDuration": 2.6,
+      "floatability": 0.13565790874905215,
+      "flyability": 2.1405587179337613,
+      "speed": 34.22753389976085,
+      "stability": 35.40128786715264
+     },
+     "t": 117.017,
+     "userId": -2
+    },
+    {
+     "data": {
+      "inventory": [],
+      "result": "ok",
+      "slots": []
+     },
+     "kind": "bot_craft",
+     "t": 117.034,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Cup Noodle",
+       "Hair Dryer",
+       "Skateboard",
+       "Cactus",
+       "Alarm Clock",
+       "Skateboard",
+       "Compass",
+       "Log"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Cup Noodle",
+       "MOBILITY": "Hair Dryer",
+       "SPECIAL": "Cactus"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 117.051,
+     "userId": -2
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Life Preserver",
+      "ENGINE": "Compass",
+      "MOBILITY": "Red Sofa",
+      "SPECIAL": "Balloon Bunch"
+     },
+     "stats": {
+      "acceleration": 28.442904242774283,
+      "boostDuration": 8,
+      "floatability": 0.6930907515702838,
+      "flyability": 1.5041031935119002,
+      "speed": 29.41785189998315,
+      "stability": 70.84927682718457
+     },
+     "t": 117.384,
+     "userId": -4
+    },
+    {
+     "data": {
+      "inventory": [
+       "Compass",
+       "Life Preserver",
+       "Red Sofa",
+       "Balloon Bunch",
+       "Suitcase",
+       "Shopping Cart"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Life Preserver",
+       "ENGINE": "Compass",
+       "MOBILITY": "Red Sofa",
+       "SPECIAL": "Balloon Bunch"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 117.417,
+     "userId": -4
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "ENGINE": "Treadmill"
+     },
+     "stats": {
+      "acceleration": 26.095423563778,
+      "boostDuration": 0.8,
+      "floatability": 0.24342745861733206,
+      "flyability": 1.2171372930866604,
+      "speed": 31.158714703018504,
+      "stability": 28.899707887049658
+     },
+     "t": 117.55,
+     "userId": -3
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 117.55
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 7613.949699724847,
+     "racers": [
+      -1,
+      -2,
+      -3,
+      -4,
+      -5
+     ],
+     "round": 1,
+     "t": 117.601,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 117.601,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 117.601,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 117.601,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 117.601,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 117.601,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:07"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 7.907559871673584
+     },
+     "kind": "bot_hud",
+     "t": 117.636,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 65.61272430419922,
+     "seated": true,
+     "t": 117.767,
+     "torque": 47.20000076293945,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 73.13999938964844,
+     "seated": true,
+     "t": 117.767,
+     "torque": 158.11317443847656,
+     "turnSpeed": 2.2310192584991455,
+     "userId": -2
+    },
+    {
+     "at": {
+      "x": 0,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 71.75401306152344,
+     "seated": true,
+     "t": 117.767,
+     "torque": 104.3816909790039,
+     "turnSpeed": 2.133495569229126,
+     "userId": -3
+    },
+    {
+     "at": {
+      "x": 7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 70.44361877441406,
+     "seated": true,
+     "t": 117.767,
+     "torque": 113.77161407470703,
+     "turnSpeed": 2.7627391815185547,
+     "userId": -4
+    },
+    {
+     "at": {
+      "x": 14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 65.61272430419922,
+     "seated": true,
+     "t": 117.767,
+     "torque": 47.20000076293945,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -5
+    },
+    {
+     "data": {
+      "inventory": [
+       "Treadmill"
+      ],
+      "result": "ok",
+      "slots": {
+       "ENGINE": "Treadmill"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 117.784,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.117,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.117,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.117,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.117,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.117,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.617,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.617,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.617,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.617,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 118.617,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.133,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.133,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.133,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.133,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.133,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.633,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.633,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.634,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.634,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 119.634,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.15,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.15,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.15,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.15,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.15,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.667,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.667,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.667,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.667,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 120.667,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.184,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.184,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.184,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 70.44361877441406,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.184,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.184,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_go",
+     "released": 5,
+     "t": 121.584
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 70.44361877441406,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.7,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 121.7,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.7,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 121.7,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.7,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 121.7,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.7,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 121.7,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.7,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_progress",
+     "s": 10,
+     "t": 121.7,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 121.7,
+     "userId": -5,
+     "x": 14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.75,
+     "userId": -2
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.817,
+     "userId": -3
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.833,
+     "userId": -1
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 121.9,
+     "userId": -5
+    },
+    {
+     "attacker": -3,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 122.118,
+     "victim": -4,
+     "victimSlow": false
+    },
+    {
+     "afterGo": 0.6434831619262695,
+     "kind": "race_launch",
+     "t": 122.217,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 17.12396240234375,
+     "speed": 25.1,
+     "t": 122.217,
+     "userId": -1,
+     "x": -10.1,
+     "y": 2.7,
+     "z": 582.8
+    },
+    {
+     "afterGo": 0.6434938907623291,
+     "kind": "race_launch",
+     "t": 122.217,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 21.829345703125,
+     "speed": 42.7,
+     "t": 122.217,
+     "userId": -2,
+     "x": -1.7,
+     "y": 2.7,
+     "z": 578.1
+    },
+    {
+     "afterGo": 0.6434981822967529,
+     "kind": "race_launch",
+     "t": 122.217,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 15.814147949218748,
+     "speed": 23.7,
+     "t": 122.217,
+     "userId": -3,
+     "x": 1.9,
+     "y": 2.7,
+     "z": 584.1
+    },
+    {
+     "afterGo": 0.6435143947601318,
+     "kind": "race_launch",
+     "t": 122.217,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 19.32061767578125,
+     "speed": 34,
+     "t": 122.217,
+     "userId": -4,
+     "x": 3.8,
+     "y": 2.7,
+     "z": 580.6
+    },
+    {
+     "afterGo": 0.6435186862945557,
+     "kind": "race_launch",
+     "t": 122.217,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 15.210205078125,
+     "speed": 21.6,
+     "t": 122.217,
+     "userId": -5,
+     "x": 10.1,
+     "y": 2.7,
+     "z": 584.7
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 122.233,
+     "victim": -4,
+     "victimSlow": false
+    },
+    {
+     "attacker": -3,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 122.333,
+     "victim": -2,
+     "victimSlow": false
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 122.617,
+     "userId": -3
+    },
+    {
+     "after": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 122.634,
+     "userId": -1
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 122.667,
+     "victim": -3,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_progress",
+     "s": 33,
+     "t": 122.734,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 33.567626953125,
+     "speed": 42.6,
+     "t": 122.734,
+     "userId": -1,
+     "x": -4.2,
+     "y": 2.8,
+     "z": 566.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 51,
+     "t": 122.734,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 51.98614501953125,
+     "speed": 76.6,
+     "t": 122.734,
+     "userId": -2,
+     "x": 0.2,
+     "y": 2.8,
+     "z": 548
+    },
+    {
+     "kind": "race_progress",
+     "s": 40,
+     "t": 122.734,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 40.9217529296875,
+     "speed": 63.2,
+     "t": 122.734,
+     "userId": -3,
+     "x": 8.7,
+     "y": 2.7,
+     "z": 559
+    },
+    {
+     "kind": "race_progress",
+     "s": 44,
+     "t": 122.734,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 44.435791015625,
+     "speed": 62.2,
+     "t": 122.734,
+     "userId": -4,
+     "x": 1.1,
+     "y": 2.8,
+     "z": 555.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 29,
+     "t": 122.734,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 29.180419921875,
+     "speed": 38.5,
+     "t": 122.734,
+     "userId": -5,
+     "x": 5.9,
+     "y": 2.8,
+     "z": 570.8
+    },
+    {
+     "attacker": -1,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 123.033,
+     "victim": -4,
+     "victimSlow": false
+    },
+    {
+     "after": 153.593994140625,
+     "before": 109.70999908447266,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 123.167,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 59.48565673828124,
+     "speed": 60.1,
+     "t": 123.25,
+     "userId": -1,
+     "x": -1.3,
+     "y": 2.8,
+     "z": 540.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 153.593994140625,
+     "progress": 100.6458740234375,
+     "speed": 109.3,
+     "t": 123.25,
+     "userId": -2,
+     "x": -2.5,
+     "y": 3,
+     "z": 499.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 75.452392578125,
+     "speed": 71.7,
+     "t": 123.25,
+     "userId": -3,
+     "x": 6.4,
+     "y": 2.8,
+     "z": 524.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 85.0704345703125,
+     "speed": 90.4,
+     "t": 123.25,
+     "userId": -4,
+     "x": 0.1,
+     "y": 2.8,
+     "z": 514.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 50.93853759765625,
+     "speed": 43.8,
+     "t": 123.25,
+     "userId": -5,
+     "x": 12.8,
+     "y": 2.8,
+     "z": 549
+    },
+    {
+     "after": 147.9315948486328,
+     "before": 105.6654281616211,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 123.333,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 123.383,
+     "victim": -4,
+     "victimSlow": false
+    },
+    {
+     "attacker": -1,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 123.483,
+     "victim": -3,
+     "victimSlow": false
+    },
+    {
+     "after": 100.45561981201172,
+     "before": 71.75401306152344,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 123.5,
+     "userId": -3
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 123.633,
+     "victim": -1,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_progress",
+     "s": 90,
+     "t": 123.767,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 90.75457763671875,
+     "speed": 65.1,
+     "t": 123.767,
+     "userId": -1,
+     "x": -6.5,
+     "y": 2.8,
+     "z": 509.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 162,
+     "t": 123.767,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 153.593994140625,
+     "progress": 162.8199462890625,
+     "speed": 137.5,
+     "t": 123.767,
+     "userId": -2,
+     "x": -0.6,
+     "y": 2.8,
+     "z": 437.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 115,
+     "t": 123.767,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.45561981201172,
+     "progress": 115.7471923828125,
+     "speed": 82.9,
+     "t": 123.767,
+     "userId": -3,
+     "x": -4.7,
+     "y": 2.9,
+     "z": 484.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 139,
+     "t": 123.767,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 147.9315948486328,
+     "progress": 139.822509765625,
+     "speed": 119.1,
+     "t": 123.767,
+     "userId": -4,
+     "x": -0.6,
+     "y": 2.8,
+     "z": 460.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 73,
+     "t": 123.767,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 73.4576416015625,
+     "speed": 56.9,
+     "t": 123.767,
+     "userId": -5,
+     "x": 1,
+     "y": 2.7,
+     "z": 526.5
+    },
+    {
+     "attacker": -4,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 123.85,
+     "victim": -2,
+     "victimSlow": false
+    },
+    {
+     "after": 137.78672790527344,
+     "before": 98.41908264160156,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 123.967,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 121.04931640625,
+     "speed": 65.6,
+     "t": 124.267,
+     "userId": -1,
+     "x": -7,
+     "y": 2.8,
+     "z": 478.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 153.593994140625,
+     "progress": 237.3982238769531,
+     "speed": 153.5,
+     "t": 124.267,
+     "userId": -2,
+     "x": -2.7,
+     "y": 2.8,
+     "z": 362.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.45561981201172,
+     "progress": 160.39199829101562,
+     "speed": 100.4,
+     "t": 124.267,
+     "userId": -3,
+     "x": 6.7,
+     "y": 2.8,
+     "z": 439.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 147.9315948486328,
+     "progress": 209.96734619140628,
+     "speed": 149.7,
+     "t": 124.267,
+     "userId": -4,
+     "x": -0.9,
+     "y": 2.8,
+     "z": 390
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 137.78672790527344,
+     "progress": 107.33224487304686,
+     "speed": 77.3,
+     "t": 124.267,
+     "userId": -5,
+     "x": -4.2,
+     "y": 3.1,
+     "z": 492.6
+    },
+    {
+     "after": 102.39599609375,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 124.35,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 154,
+     "t": 124.783,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 154.50442504882812,
+     "speed": 65.6,
+     "t": 124.783,
+     "userId": -1,
+     "x": -1.7,
+     "y": 2.8,
+     "z": 445.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 313,
+     "t": 124.783,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 102.39599609375,
+     "progress": 313.87518310546875,
+     "speed": 130.8,
+     "t": 124.783,
+     "userId": -2,
+     "x": -5,
+     "y": 2.8,
+     "z": 286.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 208,
+     "t": 124.783,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.45561981201172,
+     "progress": 208.31338500976562,
+     "speed": 96.6,
+     "t": 124.783,
+     "userId": -3,
+     "x": 10,
+     "y": 2.8,
+     "z": 391.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 287,
+     "t": 124.783,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 147.9315948486328,
+     "progress": 287.7425231933594,
+     "speed": 147.9,
+     "t": 124.783,
+     "userId": -4,
+     "x": 1.8,
+     "y": 2.8,
+     "z": 312.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 151,
+     "t": 124.783,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 137.78672790527344,
+     "progress": 151.5980224609375,
+     "speed": 94.7,
+     "t": 124.783,
+     "userId": -5,
+     "x": -2.5,
+     "y": 2.8,
+     "z": 448.4
+    },
+    {
+     "after": 73.13999938964844,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 125.167,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 125.233,
+     "victim": -5,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 188.54849243164062,
+     "speed": 65.6,
+     "t": 125.301,
+     "userId": -1,
+     "x": -0.4,
+     "y": 2.8,
+     "z": 411.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 370.67555236816406,
+     "speed": 102.3,
+     "t": 125.301,
+     "userId": -2,
+     "x": 2.8,
+     "y": 2.8,
+     "z": 229.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.45561981201172,
+     "progress": 250.93429565429685,
+     "speed": 97.9,
+     "t": 125.301,
+     "userId": -3,
+     "x": -17.4,
+     "y": 2.8,
+     "z": 349
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 147.9315948486328,
+     "progress": 363.89280700683594,
+     "speed": 147.9,
+     "t": 125.301,
+     "userId": -4,
+     "x": 0.6,
+     "y": 2.8,
+     "z": 236.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 137.78672790527344,
+     "progress": 205.12863159179688,
+     "speed": 112,
+     "t": 125.301,
+     "userId": -5,
+     "x": -0.1,
+     "y": 2.8,
+     "z": 394.8
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 125.334,
+     "userId": -4
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 125.45,
+     "userId": -4
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 125.5,
+     "userId": -3
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 125.567,
+     "userId": -4
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 125.567,
+     "userId": -4
+    },
+    {
+     "kind": "hazard",
+     "s": 514,
+     "t": 125.567,
+     "type": "fallingLog",
+     "x": -1,
+     "z": 83
+    },
+    {
+     "kind": "hazard",
+     "s": 485,
+     "t": 125.567,
+     "type": "fallingLog",
+     "x": 5,
+     "z": 114
+    },
+    {
+     "kind": "hazard",
+     "s": 517,
+     "t": 125.567,
+     "type": "fallingLog",
+     "x": 6,
+     "z": 83
+    },
+    {
+     "after": 43.88399887084961,
+     "before": 73.13999938964844,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 125.583,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 244,
+     "t": 125.817,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 244.29415893554688,
+     "speed": 122.6,
+     "t": 125.817,
+     "userId": -1,
+     "x": 1,
+     "y": 2.8,
+     "z": 355.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 414,
+     "t": 125.817,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.88399887084961,
+     "progress": 414.42642617589166,
+     "speed": 66.2,
+     "t": 125.817,
+     "userId": -2,
+     "x": 2.4,
+     "y": 1.8,
+     "z": 185.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 295,
+     "t": 125.817,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 295.01263427734375,
+     "speed": 88.3,
+     "t": 125.817,
+     "userId": -3,
+     "x": -0.5,
+     "y": 2.8,
+     "z": 304.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 437,
+     "t": 125.817,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 63.39925765991211,
+     "progress": 437.38968127646655,
+     "speed": 121.7,
+     "t": 125.817,
+     "userId": -4,
+     "x": 0.5,
+     "y": 1.8,
+     "z": 163.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 267,
+     "t": 125.817,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 137.78672790527344,
+     "progress": 267.61279296875,
+     "speed": 130.1,
+     "t": 125.817,
+     "userId": -5,
+     "x": 1.8,
+     "y": 2.8,
+     "z": 332.3
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 125.95,
+     "victim": -3,
+     "victimSlow": false
+    },
+    {
+     "after": 98.41908264160156,
+     "effect": "boostPad",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 125.967,
+     "userId": -5
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 126.116,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 309.20819091796875,
+     "speed": 116.7,
+     "t": 126.333,
+     "userId": -1,
+     "x": -0.3,
+     "y": 2.8,
+     "z": 290.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.88399887084961,
+     "progress": 440.31635582085187,
+     "speed": 43.8,
+     "t": 126.333,
+     "userId": -2,
+     "x": 2.7,
+     "y": 1.8,
+     "z": 160.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 329.7139892578125,
+     "speed": 68.4,
+     "t": 126.333,
+     "userId": -3,
+     "x": 4.4,
+     "y": 2.8,
+     "z": 270.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 487.6755346923717,
+     "speed": 78.8,
+     "t": 126.333,
+     "userId": -4,
+     "x": 1,
+     "y": 1.9,
+     "z": 112.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 333.8035888671875,
+     "speed": 121.1,
+     "t": 126.333,
+     "userId": -5,
+     "x": 13.3,
+     "y": 2.8,
+     "z": 266.1
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 504,
+     "t": 126.55,
+     "userId": -4
+    },
+    {
+     "after": 52.83271408081055,
+     "before": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.55,
+     "userId": -4
+    },
+    {
+     "after": 65.82599639892578,
+     "before": 43.88399887084961,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.783,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 355,
+     "t": 126.834,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 355.3402862548828,
+     "speed": 72,
+     "t": 126.834,
+     "userId": -1,
+     "x": 0.1,
+     "y": 2.8,
+     "z": 244.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 462,
+     "t": 126.834,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.82599639892578,
+     "progress": 462.1050662105554,
+     "speed": 43.8,
+     "t": 126.834,
+     "userId": -2,
+     "x": 2.3,
+     "y": 1.8,
+     "z": 138.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 359,
+     "t": 126.834,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 359.5842742919922,
+     "speed": 71.5,
+     "t": 126.834,
+     "userId": -3,
+     "x": -15.2,
+     "y": 2.7,
+     "z": 240.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 531,
+     "t": 126.834,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 531.1741801701281,
+     "speed": 84.7,
+     "t": 126.834,
+     "userId": -4,
+     "x": 11.6,
+     "y": 1.8,
+     "z": 70.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 384,
+     "t": 126.834,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 384.2825012207031,
+     "speed": 98.2,
+     "t": 126.834,
+     "userId": -5,
+     "x": 1.7,
+     "y": 2.8,
+     "z": 215.7
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.916,
+     "userId": -3
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.933,
+     "userId": -5
+    },
+    {
+     "after": 52.83271408081055,
+     "before": 52.83271408081055,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.95,
+     "userId": -4
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 126.983,
+     "userId": -1
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 65.82599639892578,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 127,
+     "userId": -2
+    },
+    {
+     "after": 64.57861328125,
+     "before": 107.63101959228516,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 127.183,
+     "userId": -3
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 479,
+     "t": 127.216,
+     "userId": -2
+    },
+    {
+     "after": 54.85499954223633,
+     "before": 109.70999908447266,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 127.216,
+     "userId": -2
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 59.05145263671875,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 127.317,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 388.6297912597656,
+     "speed": 70.9,
+     "t": 127.334,
+     "userId": -1,
+     "x": 0.5,
+     "y": 2.8,
+     "z": 211.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 54.85499954223633,
+     "progress": 487.5420769415923,
+     "speed": 58.5,
+     "t": 127.334,
+     "userId": -2,
+     "x": 3.7,
+     "y": 1.7,
+     "z": 113.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 64.57861328125,
+     "progress": 393.31768798828125,
+     "speed": 82.8,
+     "t": 127.334,
+     "userId": -3,
+     "x": -4,
+     "y": 1.8,
+     "z": 206.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 561.78561117377,
+     "speed": 52.8,
+     "t": 127.334,
+     "userId": -4,
+     "x": 32.2,
+     "y": 1.8,
+     "z": 48.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 59.05145263671875,
+     "progress": 432.2669580830774,
+     "speed": 78,
+     "t": 127.334,
+     "userId": -5,
+     "x": 3.4,
+     "y": 1.8,
+     "z": 168.5
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 127.401,
+     "userId": -1
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 127.517,
+     "userId": -1
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 127.517,
+     "userId": -1
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 127.551,
+     "userId": -4
+    },
+    {
+     "after": 43.052406311035156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 127.718,
+     "userId": -3
+    },
+    {
+     "after": 39.36763381958008,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 127.784,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 426,
+     "t": 127.851,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 39.36763381958008,
+     "progress": 426.43943420062135,
+     "speed": 59,
+     "t": 127.851,
+     "userId": -1,
+     "x": 0.3,
+     "y": 1.8,
+     "z": 174.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 518,
+     "t": 127.851,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 54.85499954223633,
+     "progress": 518.0547856874632,
+     "speed": 54.8,
+     "t": 127.851,
+     "userId": -2,
+     "x": 12,
+     "y": 1.7,
+     "z": 85.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 426,
+     "t": 127.851,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.052406311035156,
+     "progress": 426.9367414749804,
+     "speed": 63.9,
+     "t": 127.851,
+     "userId": -3,
+     "x": 6.2,
+     "y": 1.8,
+     "z": 173.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 589,
+     "t": 127.851,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 589.5222525813682,
+     "speed": 59.4,
+     "t": 127.851,
+     "userId": -4,
+     "x": 56.6,
+     "y": 2.6,
+     "z": 34.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 464,
+     "t": 127.851,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 59.05145263671875,
+     "progress": 464.5980455125581,
+     "speed": 59,
+     "t": 127.851,
+     "userId": -5,
+     "x": 1,
+     "y": 1.8,
+     "z": 136.1
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 127.933,
+     "userId": -5
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 128.15,
+     "userId": -4
+    },
+    {
+     "after": 109.70999908447266,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 128.217,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 39.36763381958008,
+     "progress": 451.18831428359164,
+     "speed": 39.3,
+     "t": 128.367,
+     "userId": -1,
+     "x": -0.3,
+     "y": 1.9,
+     "z": 149.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 547.3254143021803,
+     "speed": 54.7,
+     "t": 128.367,
+     "userId": -2,
+     "x": 24.4,
+     "y": 1.8,
+     "z": 60.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.052406311035156,
+     "progress": 448.2297672113652,
+     "speed": 42.9,
+     "t": 128.367,
+     "userId": -3,
+     "x": -6.4,
+     "y": 1.8,
+     "z": 151.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 63.39925765991211,
+     "progress": 627.5042343816178,
+     "speed": 83.2,
+     "t": 128.367,
+     "userId": -4,
+     "x": 92.8,
+     "y": 2.9,
+     "z": 25.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 495.4668562919351,
+     "speed": 67.2,
+     "t": 128.367,
+     "userId": -5,
+     "x": 0.2,
+     "y": 1.8,
+     "z": 104.7
+    },
+    {
+     "after": 71.75401306152344,
+     "before": 43.052406311035156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 128.616,
+     "userId": -3
+    },
+    {
+     "after": 65.61272430419922,
+     "before": 39.36763381958008,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 128.716,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 471,
+     "t": 128.884,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 471.7553811447676,
+     "speed": 39.3,
+     "t": 128.884,
+     "userId": -1,
+     "x": -0.2,
+     "y": 1.8,
+     "z": 128.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 585,
+     "t": 128.884,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 585.1273483574265,
+     "speed": 87.4,
+     "t": 128.884,
+     "userId": -2,
+     "x": 53.7,
+     "y": 1.9,
+     "z": 38.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 469,
+     "t": 128.884,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 469.5901840233275,
+     "speed": 47.3,
+     "t": 128.884,
+     "userId": -3,
+     "x": -0.2,
+     "y": 1.8,
+     "z": 130.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 662,
+     "t": 128.884,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 63.39925765991211,
+     "progress": 662.3784290237837,
+     "speed": 63.3,
+     "t": 128.884,
+     "userId": -4,
+     "x": 126.9,
+     "y": 2.9,
+     "z": 20.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 535,
+     "t": 128.884,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 535.2517716329347,
+     "speed": 84.8,
+     "t": 128.884,
+     "userId": -5,
+     "x": 14.7,
+     "y": 1.8,
+     "z": 67.7
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 129.017,
+     "userId": -4
+    },
+    {
+     "after": 65.82599639892578,
+     "before": 109.70999908447266,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 129.133,
+     "userId": -2
+    },
+    {
+     "after": 43.88399887084961,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 129.383,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 496.3891245874816,
+     "speed": 56.4,
+     "t": 129.4,
+     "userId": -1,
+     "x": 2.1,
+     "y": 1.8,
+     "z": 104.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.88399887084961,
+     "progress": 637.439582523361,
+     "speed": 102.1,
+     "t": 129.4,
+     "userId": -2,
+     "x": 102.5,
+     "y": 2.9,
+     "z": 23.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 498.96206750333033,
+     "speed": 71.7,
+     "t": 129.4,
+     "userId": -3,
+     "x": 0.3,
+     "y": 1.7,
+     "z": 101.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 695.9261268858561,
+     "speed": 73.7,
+     "t": 129.4,
+     "userId": -4,
+     "x": 160.4,
+     "y": 2.9,
+     "z": 20.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 583.4175370918956,
+     "speed": 92.5,
+     "t": 129.4,
+     "userId": -5,
+     "x": 50.1,
+     "y": 1.9,
+     "z": 35.4
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 586,
+     "t": 129.45,
+     "userId": -5
+    },
+    {
+     "after": 49.20954132080078,
+     "before": 98.41908264160156,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 129.45,
+     "userId": -5
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 504,
+     "t": 129.5,
+     "userId": -3
+    },
+    {
+     "after": 35.87700653076172,
+     "before": 71.75401306152344,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 129.5,
+     "userId": -3
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 129.7,
+     "userId": -4
+    },
+    {
+     "after": 73.13999938964844,
+     "before": 43.88399887084961,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 129.783,
+     "userId": -2
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 129.883,
+     "userId": -4
+    },
+    {
+     "after": 49.20954132080078,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 129.9,
+     "userId": -5
+    },
+    {
+     "kind": "race_progress",
+     "s": 528,
+     "t": 129.9,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 528.2921278987675,
+     "speed": 65.5,
+     "t": 129.9,
+     "userId": -1,
+     "x": 13.4,
+     "y": 1.8,
+     "z": 75.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 677,
+     "t": 129.9,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 677.4845484010848,
+     "speed": 58.3,
+     "t": 129.9,
+     "userId": -2,
+     "x": 141.8,
+     "y": 2.9,
+     "z": 18.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 522,
+     "t": 129.9,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 35.87700653076172,
+     "progress": 522.7748125192674,
+     "speed": 36.8,
+     "t": 129.9,
+     "userId": -3,
+     "x": 7.2,
+     "y": 1.7,
+     "z": 78.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 740,
+     "t": 129.9,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 63.39925765991211,
+     "progress": 740.2285946738223,
+     "speed": 100.5,
+     "t": 129.9,
+     "userId": -4,
+     "x": 204.7,
+     "y": 3.2,
+     "z": 20
+    },
+    {
+     "kind": "race_progress",
+     "s": 616,
+     "t": 129.9,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 49.20954132080078,
+     "progress": 616.1155169255886,
+     "speed": 53,
+     "t": 129.9,
+     "userId": -5,
+     "x": 78.3,
+     "y": 2.9,
+     "z": 16
+    },
+    {
+     "after": 29.525726318359375,
+     "before": 49.20954132080078,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 129.934,
+     "userId": -5
+    },
+    {
+     "attacker": -3,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 130.05,
+     "victim": -1,
+     "victimSlow": false
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 130.216,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 563.1837089647167,
+     "speed": 65.6,
+     "t": 130.417,
+     "userId": -1,
+     "x": 35.8,
+     "y": 1.8,
+     "z": 50.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 711.0500859615598,
+     "speed": 73.1,
+     "t": 130.417,
+     "userId": -2,
+     "x": 175.3,
+     "y": 3.2,
+     "z": 16.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 35.87700653076172,
+     "progress": 551.7737287720809,
+     "speed": 55.1,
+     "t": 130.417,
+     "userId": -3,
+     "x": 27.6,
+     "y": 1.8,
+     "z": 57.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 789.1011795886357,
+     "speed": 76.7,
+     "t": 130.417,
+     "userId": -4,
+     "x": 253.6,
+     "y": 2.9,
+     "z": 20.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 29.525726318359375,
+     "progress": 635.8921564858033,
+     "speed": 31.5,
+     "t": 130.417,
+     "userId": -5,
+     "x": 100.4,
+     "y": 2.9,
+     "z": 20.5
+    },
+    {
+     "after": 59.05145263671875,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 130.45,
+     "userId": -5
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 130.5,
+     "userId": -3
+    },
+    {
+     "after": 43.88399887084961,
+     "before": 73.13999938964844,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 130.883,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 596,
+     "t": 130.917,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 596.6597851718893,
+     "speed": 65.6,
+     "t": 130.917,
+     "userId": -1,
+     "x": 63.4,
+     "y": 2.7,
+     "z": 33.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 747,
+     "t": 130.917,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.88399887084961,
+     "progress": 747.5743764537954,
+     "speed": 73.1,
+     "t": 130.917,
+     "userId": -2,
+     "x": 211.7,
+     "y": 3.1,
+     "z": 16.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 585,
+     "t": 130.917,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 585.2250155875507,
+     "speed": 61.3,
+     "t": 130.917,
+     "userId": -3,
+     "x": 53.3,
+     "y": 2,
+     "z": 37.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 834,
+     "t": 130.917,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 834.8073901523594,
+     "speed": 103.6,
+     "t": 130.917,
+     "userId": -4,
+     "x": 299.2,
+     "y": 2.9,
+     "z": 19.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 651,
+     "t": 130.917,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 59.05145263671875,
+     "progress": 651.77541738315,
+     "speed": 39.1,
+     "t": 130.917,
+     "userId": -5,
+     "x": 116,
+     "y": 2.9,
+     "z": 17.8
+    },
+    {
+     "after": 39.36763381958008,
+     "before": 65.61272430419922,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 131.05,
+     "userId": -1
+    },
+    {
+     "after": 73.13999938964844,
+     "before": 43.88399887084961,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 131.083,
+     "userId": -2
+    },
+    {
+     "after": 43.052406311035156,
+     "before": 71.75401306152344,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 131.267,
+     "userId": -3
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 131.367,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 39.36763381958008,
+     "progress": 629.5150006323188,
+     "speed": 47.3,
+     "t": 131.433,
+     "userId": -1,
+     "x": 94.9,
+     "y": 2.9,
+     "z": 25.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 781.703493651637,
+     "speed": 66.7,
+     "t": 131.433,
+     "userId": -2,
+     "x": 245.9,
+     "y": 2.9,
+     "z": 17
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.052406311035156,
+     "progress": 621.0587833588233,
+     "speed": 71.7,
+     "t": 131.433,
+     "userId": -3,
+     "x": 87.8,
+     "y": 2.9,
+     "z": 31.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 892.1178234535253,
+     "speed": 105.6,
+     "t": 131.433,
+     "userId": -4,
+     "x": 353.8,
+     "y": 2.9,
+     "z": 13.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 676.9747923386287,
+     "speed": 56.8,
+     "t": 131.433,
+     "userId": -5,
+     "x": 141.2,
+     "y": 2.9,
+     "z": 16.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 650,
+     "t": 131.95,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 39.36763381958008,
+     "progress": 650.5000838792693,
+     "speed": 39.3,
+     "t": 131.95,
+     "userId": -1,
+     "x": 115.2,
+     "y": 2.9,
+     "z": 21.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 818,
+     "t": 131.95,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 818.9360658485402,
+     "speed": 73.1,
+     "t": 131.95,
+     "userId": -2,
+     "x": 283.3,
+     "y": 2.9,
+     "z": 18.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 647,
+     "t": 131.95,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.052406311035156,
+     "progress": 647.4193789447127,
+     "speed": 42.9,
+     "t": 131.95,
+     "userId": -3,
+     "x": 113.2,
+     "y": 2.9,
+     "z": 30.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 946,
+     "t": 131.95,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 946.7711613340166,
+     "speed": 105.6,
+     "t": 131.95,
+     "userId": -4,
+     "x": 408,
+     "y": 2.9,
+     "z": 5.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 709,
+     "t": 131.95,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 709.806221725527,
+     "speed": 72.4,
+     "t": 131.95,
+     "userId": -5,
+     "x": 174,
+     "y": 3.2,
+     "z": 16.6
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.15,
+     "userId": -4
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 39.36763381958008,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.166,
+     "userId": -1
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.183,
+     "userId": -2
+    },
+    {
+     "after": 64.57861328125,
+     "before": 43.052406311035156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.283,
+     "userId": -3
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.35,
+     "userId": -5
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 132.433,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 670.8428697160766,
+     "speed": 42.7,
+     "t": 132.45,
+     "userId": -1,
+     "x": 135.3,
+     "y": 2.9,
+     "z": 20.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 857.6302340012822,
+     "speed": 79.4,
+     "t": 132.45,
+     "userId": -2,
+     "x": 320.3,
+     "y": 2.9,
+     "z": 15.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 64.57861328125,
+     "progress": 667.8395096082554,
+     "speed": 42.9,
+     "t": 132.45,
+     "userId": -3,
+     "x": 132.4,
+     "y": 2.9,
+     "z": 21.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 998.90938737977,
+     "speed": 105.6,
+     "t": 132.45,
+     "userId": -4,
+     "x": 455.5,
+     "y": 2.9,
+     "z": -13.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 59.05145263671875,
+     "progress": 750.1462712728014,
+     "speed": 89.6,
+     "t": 132.45,
+     "userId": -5,
+     "x": 214.4,
+     "y": 3.1,
+     "z": 17.6
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 64.57861328125,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 132.55,
+     "userId": -3
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 132.566,
+     "userId": -5
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 132.866,
+     "userId": -5
+    },
+    {
+     "kind": "race_progress",
+     "s": 697,
+     "t": 132.967,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 697.6285804080267,
+     "speed": 60.4,
+     "t": 132.967,
+     "userId": -1,
+     "x": 162.1,
+     "y": 2.9,
+     "z": 19.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 909,
+     "t": 132.967,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 909.1549107806591,
+     "speed": 109.6,
+     "t": 132.967,
+     "userId": -2,
+     "x": 369.9,
+     "y": 2.9,
+     "z": 8.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 695,
+     "t": 132.967,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 695.8535122194098,
+     "speed": 68.9,
+     "t": 132.967,
+     "userId": -3,
+     "x": 160.8,
+     "y": 2.9,
+     "z": 26.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 1054,
+     "t": 132.967,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1054.3301686442194,
+     "speed": 105.6,
+     "t": 132.967,
+     "userId": -4,
+     "x": 493.6,
+     "y": 2.9,
+     "z": -53.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 792,
+     "t": 132.967,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 792.7480586030209,
+     "speed": 82.3,
+     "t": 132.967,
+     "userId": -5,
+     "x": 257.1,
+     "y": 2.9,
+     "z": 18.6
+    },
+    {
+     "after": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 132.967,
+     "userId": -1
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 133.083,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 730.9201997600815,
+     "speed": 65.6,
+     "t": 133.483,
+     "userId": -1,
+     "x": 195.4,
+     "y": 3.2,
+     "z": 19.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 962.8556320978321,
+     "speed": 109.7,
+     "t": 133.483,
+     "userId": -2,
+     "x": 425.9,
+     "y": 2.9,
+     "z": 5.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 734.2966766039777,
+     "speed": 71.6,
+     "t": 133.483,
+     "userId": -3,
+     "x": 198.6,
+     "y": 3.2,
+     "z": 18.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1108.9364229112152,
+     "speed": 105.6,
+     "t": 133.483,
+     "userId": -4,
+     "x": 528.3,
+     "y": 2.9,
+     "z": -94.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 840.7923541731476,
+     "speed": 98.3,
+     "t": 133.483,
+     "userId": -5,
+     "x": 304.9,
+     "y": 2.9,
+     "z": 20.5
+    },
+    {
+     "after": 43.052406311035156,
+     "before": 71.75401306152344,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 133.549,
+     "userId": -3
+    },
+    {
+     "kind": "hazard",
+     "s": 1323,
+     "t": 133.583,
+     "type": "fallingLog",
+     "x": 580,
+     "z": -298
+    },
+    {
+     "kind": "hazard",
+     "s": 1312,
+     "t": 133.583,
+     "type": "fallingLog",
+     "x": 582,
+     "z": -287
+    },
+    {
+     "kind": "hazard",
+     "s": 1194,
+     "t": 133.583,
+     "type": "fallingLog",
+     "x": 552,
+     "z": -172
+    },
+    {
+     "after": 39.36763381958008,
+     "before": 65.61272430419922,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 133.633,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 762,
+     "t": 133.984,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 39.36763381958008,
+     "progress": 762.5370179460916,
+     "speed": 51,
+     "t": 133.984,
+     "userId": -1,
+     "x": 227,
+     "y": 2.9,
+     "z": 20.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1016,
+     "t": 133.984,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1016.4943794317455,
+     "speed": 109.7,
+     "t": 133.984,
+     "userId": -2,
+     "x": 471.3,
+     "y": 2.9,
+     "z": -21
+    },
+    {
+     "kind": "race_progress",
+     "s": 765,
+     "t": 133.984,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 43.052406311035156,
+     "progress": 765.2396026042966,
+     "speed": 49.2,
+     "t": 133.984,
+     "userId": -3,
+     "x": 230.2,
+     "y": 2.9,
+     "z": 26.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1163,
+     "t": 133.984,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1163.1298276069874,
+     "speed": 105.6,
+     "t": 133.984,
+     "userId": -4,
+     "x": 550.7,
+     "y": 2.9,
+     "z": -141.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 891,
+     "t": 133.984,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 891.22145404838,
+     "speed": 98.4,
+     "t": 133.984,
+     "userId": -5,
+     "x": 353.7,
+     "y": 2.9,
+     "z": 17
+    },
+    {
+     "after": 65.61272430419922,
+     "before": 39.36763381958008,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 134.183,
+     "userId": -1
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 1189,
+     "t": 134.249,
+     "userId": -4
+    },
+    {
+     "after": 52.83271408081055,
+     "before": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 134.249,
+     "userId": -4
+    },
+    {
+     "after": 71.75401306152344,
+     "before": 43.052406311035156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 134.3,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 783.4132676917061,
+     "speed": 43.5,
+     "t": 134.5,
+     "userId": -1,
+     "x": 247.9,
+     "y": 2.9,
+     "z": 20.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1072.4701783494238,
+     "speed": 109.7,
+     "t": 134.5,
+     "userId": -2,
+     "x": 506.4,
+     "y": 2.9,
+     "z": -66.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 785.5995584725749,
+     "speed": 44.6,
+     "t": 134.5,
+     "userId": -3,
+     "x": 249.8,
+     "y": 2.9,
+     "z": 16
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 1214.5856994983378,
+     "speed": 100,
+     "t": 134.5,
+     "userId": -4,
+     "x": 553.1,
+     "y": 2.9,
+     "z": -193.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 941.449090154828,
+     "speed": 98.4,
+     "t": 134.5,
+     "userId": -5,
+     "x": 403.7,
+     "y": 2.9,
+     "z": 8.8
+    },
+    {
+     "after": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 134.8,
+     "userId": -2
+    },
+    {
+     "after": 52.83271408081055,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 134.952,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 809,
+     "t": 135.001,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 809.563650697184,
+     "speed": 60.8,
+     "t": 135.001,
+     "userId": -1,
+     "x": 274,
+     "y": 2.9,
+     "z": 19.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1127,
+     "t": 135.001,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1127.8526974144274,
+     "speed": 107.6,
+     "t": 135.001,
+     "userId": -2,
+     "x": 541.4,
+     "y": 2.9,
+     "z": -108.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 812,
+     "t": 135.001,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 812.6916193027869,
+     "speed": 69.5,
+     "t": 135.001,
+     "userId": -3,
+     "x": 277.1,
+     "y": 2.9,
+     "z": 19.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1253,
+     "t": 135.001,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 1253.0730666977706,
+     "speed": 54.6,
+     "t": 135.001,
+     "userId": -4,
+     "x": 565.2,
+     "y": 2.9,
+     "z": -230
+    },
+    {
+     "kind": "race_progress",
+     "s": 988,
+     "t": 135.001,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 988.664768337058,
+     "speed": 98.3,
+     "t": 135.001,
+     "userId": -5,
+     "x": 451.5,
+     "y": 2.9,
+     "z": -0.8
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 135.25,
+     "userId": -4
+    },
+    {
+     "after": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 135.333,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 843.9955146439772,
+     "speed": 65.6,
+     "t": 135.517,
+     "userId": -1,
+     "x": 307.7,
+     "y": 2.9,
+     "z": 18
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1172.0235973302263,
+     "speed": 73.1,
+     "t": 135.517,
+     "userId": -2,
+     "x": 555.4,
+     "y": 2.9,
+     "z": -148.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 849.0750329231139,
+     "speed": 71.7,
+     "t": 135.517,
+     "userId": -3,
+     "x": 311.8,
+     "y": 2.9,
+     "z": 10.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1280.640697855662,
+     "speed": 56.6,
+     "t": 135.517,
+     "userId": -4,
+     "x": 571.9,
+     "y": 2.9,
+     "z": -256.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1037.3528315707183,
+     "speed": 98.4,
+     "t": 135.517,
+     "userId": -5,
+     "x": 483,
+     "y": 2.9,
+     "z": -39.8
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 1316,
+     "t": 136.033,
+     "userId": -4
+    },
+    {
+     "after": 52.83271408081055,
+     "before": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 136.033,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 879,
+     "t": 136.033,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 879.5080468157264,
+     "speed": 65.6,
+     "t": 136.033,
+     "userId": -1,
+     "x": 341.4,
+     "y": 2.9,
+     "z": 14.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1208,
+     "t": 136.033,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1208.9097517996438,
+     "speed": 73.1,
+     "t": 136.033,
+     "userId": -2,
+     "x": 559.3,
+     "y": 2.9,
+     "z": -186.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 886,
+     "t": 136.033,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 886.4578376888295,
+     "speed": 71.7,
+     "t": 136.033,
+     "userId": -3,
+     "x": 347.4,
+     "y": 2.9,
+     "z": 10.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1318,
+     "t": 136.033,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 1318.1705464052882,
+     "speed": 84.2,
+     "t": 136.033,
+     "userId": -4,
+     "x": 577.3,
+     "y": 2.9,
+     "z": -292.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1087,
+     "t": 136.033,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1087.9030342704336,
+     "speed": 98.4,
+     "t": 136.033,
+     "userId": -5,
+     "x": 515.8,
+     "y": 2.9,
+     "z": -78.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 913.8005933342583,
+     "speed": 65.6,
+     "t": 136.55,
+     "userId": -1,
+     "x": 375,
+     "y": 2.9,
+     "z": 10.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1246.7969144171436,
+     "speed": 73.1,
+     "t": 136.55,
+     "userId": -2,
+     "x": 564.4,
+     "y": 2.9,
+     "z": -223.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 923.5349677392228,
+     "speed": 71.7,
+     "t": 136.55,
+     "userId": -3,
+     "x": 381.9,
+     "y": 2.9,
+     "z": 0.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 52.83271408081055,
+     "progress": 1356.7776917937942,
+     "speed": 58.6,
+     "t": 136.55,
+     "userId": -4,
+     "x": 579.5,
+     "y": 2.9,
+     "z": -331.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1140.4756820266696,
+     "speed": 98.1,
+     "t": 136.55,
+     "userId": -5,
+     "x": 547.2,
+     "y": 2.9,
+     "z": -118.6
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 137.033,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 947,
+     "t": 137.066,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 947.0114713521587,
+     "speed": 65.6,
+     "t": 137.066,
+     "userId": -1,
+     "x": 408.6,
+     "y": 2.9,
+     "z": 6
+    },
+    {
+     "kind": "race_progress",
+     "s": 1285,
+     "t": 137.066,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1285.0220851792678,
+     "speed": 73.1,
+     "t": 137.066,
+     "userId": -2,
+     "x": 569.6,
+     "y": 2.9,
+     "z": -261.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 958,
+     "t": 137.066,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 958.3804690934265,
+     "speed": 71.7,
+     "t": 137.066,
+     "userId": -3,
+     "x": 416.7,
+     "y": 2.9,
+     "z": -3.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1383,
+     "t": 137.066,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1383.499747449131,
+     "speed": 52.8,
+     "t": 137.066,
+     "userId": -4,
+     "x": 571.9,
+     "y": 2.9,
+     "z": -357.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1190,
+     "t": 137.066,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1190.1751957977451,
+     "speed": 98.3,
+     "t": 137.066,
+     "userId": -5,
+     "x": 553.5,
+     "y": 2.9,
+     "z": -168.7
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 137.466,
+     "userId": -1
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 137.483,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 980,
+     "t": 137.583,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 980.3833231036903,
+     "speed": 65.4,
+     "t": 137.583,
+     "userId": -1,
+     "x": 441.8,
+     "y": 2.9,
+     "z": -1.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1324,
+     "t": 137.583,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1324.2778347762242,
+     "speed": 73.1,
+     "t": 137.583,
+     "userId": -2,
+     "x": 574.8,
+     "y": 2.9,
+     "z": -298.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 987,
+     "t": 137.583,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 987.9347915581191,
+     "speed": 71.1,
+     "t": 137.583,
+     "userId": -3,
+     "x": 451.9,
+     "y": 2.9,
+     "z": 1.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1414,
+     "t": 137.583,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1414.3083780531817,
+     "speed": 72.2,
+     "t": 137.583,
+     "userId": -4,
+     "x": 565.4,
+     "y": 2.9,
+     "z": -387.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1241,
+     "t": 137.583,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1241.734536982712,
+     "speed": 98.4,
+     "t": 137.583,
+     "userId": -5,
+     "x": 564,
+     "y": 2.9,
+     "z": -218.8
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 137.782,
+     "userId": -3
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 138.083,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1016.8660212484342,
+     "speed": 80.3,
+     "t": 138.083,
+     "userId": -1,
+     "x": 468.7,
+     "y": 2.9,
+     "z": -25.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1361.2350092266067,
+     "speed": 73.1,
+     "t": 138.083,
+     "userId": -2,
+     "x": 571.8,
+     "y": 2.9,
+     "z": -335
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 1020.4467553003012,
+     "speed": 77.2,
+     "t": 138.083,
+     "userId": -3,
+     "x": 472.6,
+     "y": 2.9,
+     "z": -25.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1457.924114389754,
+     "speed": 99.1,
+     "t": 138.083,
+     "userId": -4,
+     "x": 557.8,
+     "y": 2.9,
+     "z": -430.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1290.814291182234,
+     "speed": 98.4,
+     "t": 138.083,
+     "userId": -5,
+     "x": 570.9,
+     "y": 2.9,
+     "z": -266.6
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 138.132,
+     "userId": -2
+    },
+    {
+     "after": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 138.267,
+     "userId": -1
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 138.583,
+     "userId": -3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1061,
+     "t": 138.6,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1061.6787372473214,
+     "speed": 79.1,
+     "t": 138.6,
+     "userId": -1,
+     "x": 498.8,
+     "y": 2.9,
+     "z": -58.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1401,
+     "t": 138.6,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1401.7385446511576,
+     "speed": 91.9,
+     "t": 138.6,
+     "userId": -2,
+     "x": 565,
+     "y": 2.9,
+     "z": -374.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1062,
+     "t": 138.6,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1062.9809571592373,
+     "speed": 102.5,
+     "t": 138.6,
+     "userId": -3,
+     "x": 493.4,
+     "y": 2.9,
+     "z": -65.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1512,
+     "t": 138.6,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1512.5219722898898,
+     "speed": 105.6,
+     "t": 138.6,
+     "userId": -4,
+     "x": 544.7,
+     "y": 2.9,
+     "z": -482.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1342,
+     "t": 138.6,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1342.3939458002474,
+     "speed": 98.4,
+     "t": 138.6,
+     "userId": -5,
+     "x": 577.9,
+     "y": 2.9,
+     "z": -316.7
+    },
+    {
+     "by": "FallingLog",
+     "kind": "hit",
+     "s": 1401,
+     "t": 138.616,
+     "userId": -2
+    },
+    {
+     "after": 54.85499954223633,
+     "before": 109.70999908447266,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 138.616,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1095.1508966140252,
+     "speed": 65.6,
+     "t": 139.1,
+     "userId": -1,
+     "x": 519.8,
+     "y": 2.9,
+     "z": -84.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 54.85499954223633,
+     "progress": 1440.5189570277166,
+     "speed": 60,
+     "t": 139.1,
+     "userId": -2,
+     "x": 559.7,
+     "y": 2.9,
+     "z": -413.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1104.4187176596079,
+     "speed": 77.4,
+     "t": 139.1,
+     "userId": -3,
+     "x": 537.3,
+     "y": 2.9,
+     "z": -83.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1565.54669419651,
+     "speed": 105.6,
+     "t": 139.1,
+     "userId": -4,
+     "x": 521.4,
+     "y": 2.9,
+     "z": -529.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1390.658507903712,
+     "speed": 98.4,
+     "t": 139.1,
+     "userId": -5,
+     "x": 570.9,
+     "y": 2.9,
+     "z": -364.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1130,
+     "t": 139.616,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1130.0153702080304,
+     "speed": 65.5,
+     "t": 139.616,
+     "userId": -1,
+     "x": 541,
+     "y": 2.9,
+     "z": -110.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1468,
+     "t": 139.616,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 54.85499954223633,
+     "progress": 1468.4313747982953,
+     "speed": 54.8,
+     "t": 139.616,
+     "userId": -2,
+     "x": 557.2,
+     "y": 2.9,
+     "z": -441.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1140,
+     "t": 139.616,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1140.0279918405372,
+     "speed": 71.7,
+     "t": 139.616,
+     "userId": -3,
+     "x": 549.4,
+     "y": 2.9,
+     "z": -117.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1602,
+     "t": 139.616,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1602.2408370818835,
+     "speed": 9,
+     "t": 139.616,
+     "userId": -4,
+     "x": 502,
+     "y": 4.8,
+     "z": -560.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 1441,
+     "t": 139.616,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1441.7281084645674,
+     "speed": 98.4,
+     "t": 139.616,
+     "userId": -5,
+     "x": 563.2,
+     "y": 2.9,
+     "z": -415.1
+    },
+    {
+     "after": 109.70999908447266,
+     "effect": "obstacle",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 139.616,
+     "userId": -2
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 139.766,
+     "victim": -2,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1163.9399396488318,
+     "speed": 65.6,
+     "t": 140.116,
+     "userId": -1,
+     "x": 551.6,
+     "y": 2.9,
+     "z": -141.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1500.093109344941,
+     "speed": 76.9,
+     "t": 140.116,
+     "userId": -2,
+     "x": 551.2,
+     "y": 2.9,
+     "z": -472.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1175.9126331118318,
+     "speed": 71.6,
+     "t": 140.116,
+     "userId": -3,
+     "x": 565.1,
+     "y": 2.9,
+     "z": -149.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1615.3496547266482,
+     "speed": 41,
+     "t": 140.116,
+     "userId": -4,
+     "x": 496.4,
+     "y": 5.7,
+     "z": -572.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1490.79432709007,
+     "speed": 98.4,
+     "t": 140.116,
+     "userId": -5,
+     "x": 555.7,
+     "y": 2.9,
+     "z": -463.9
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 140.166,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 140.633,
+     "victim": -3,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_progress",
+     "s": 1198,
+     "t": 140.634,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1198.0000906571622,
+     "speed": 65.6,
+     "t": 140.634,
+     "userId": -1,
+     "x": 558.7,
+     "y": 2.9,
+     "z": -175.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1548,
+     "t": 140.634,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1548.780537835377,
+     "speed": 109.5,
+     "t": 140.634,
+     "userId": -2,
+     "x": 530.7,
+     "y": 2.9,
+     "z": -515.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 1208,
+     "t": 140.634,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1208.6665889177173,
+     "speed": 71.4,
+     "t": 140.634,
+     "userId": -3,
+     "x": 561.3,
+     "y": 2.9,
+     "z": -185.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1643,
+     "t": 140.634,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1643.6197245106116,
+     "speed": 68.9,
+     "t": 140.634,
+     "userId": -4,
+     "x": 483.4,
+     "y": 5.8,
+     "z": -597.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1541,
+     "t": 140.634,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1541.8335193058392,
+     "speed": 98.4,
+     "t": 140.634,
+     "userId": -5,
+     "x": 536.2,
+     "y": 2.9,
+     "z": -510.5
+    },
+    {
+     "after": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 140.734,
+     "userId": -2
+    },
+    {
+     "after": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 140.866,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1233.0194449486523,
+     "speed": 65.6,
+     "t": 141.15,
+     "userId": -1,
+     "x": 565.2,
+     "y": 2.9,
+     "z": -209.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1599.4684204446958,
+     "speed": 19.9,
+     "t": 141.15,
+     "userId": -2,
+     "x": 509,
+     "y": 3.9,
+     "z": -561.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1243.5581631232785,
+     "speed": 71.6,
+     "t": 141.15,
+     "userId": -3,
+     "x": 575.3,
+     "y": 2.9,
+     "z": -218.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1686.4879787509265,
+     "speed": 96.8,
+     "t": 141.15,
+     "userId": -4,
+     "x": 461,
+     "y": 5.8,
+     "z": -634.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1592.134586987355,
+     "speed": 93.3,
+     "t": 141.15,
+     "userId": -5,
+     "x": 511.7,
+     "y": 2.9,
+     "z": -554.6
+    },
+    {
+     "kind": "hazard",
+     "s": 1944,
+     "t": 141.6,
+     "type": "fallingLog",
+     "x": 245,
+     "z": -767
+    },
+    {
+     "kind": "hazard",
+     "s": 1914,
+     "t": 141.6,
+     "type": "fallingLog",
+     "x": 280,
+     "z": -774
+    },
+    {
+     "kind": "hazard",
+     "s": 1770,
+     "t": 141.6,
+     "type": "fallingLog",
+     "x": 394,
+     "z": -684
+    },
+    {
+     "kind": "race_progress",
+     "s": 1267,
+     "t": 141.667,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1267.0783223741287,
+     "speed": 65.6,
+     "t": 141.667,
+     "userId": -1,
+     "x": 570.3,
+     "y": 2.9,
+     "z": -243.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1607,
+     "t": 141.667,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1607.778338731836,
+     "speed": 33.3,
+     "t": 141.667,
+     "userId": -2,
+     "x": 503.8,
+     "y": 5.7,
+     "z": -568.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1278,
+     "t": 141.667,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1278.514602980321,
+     "speed": 71.6,
+     "t": 141.667,
+     "userId": -3,
+     "x": 580,
+     "y": 2.9,
+     "z": -253.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1740,
+     "t": 141.667,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1740.8773465387967,
+     "speed": 105.6,
+     "t": 141.667,
+     "userId": -4,
+     "x": 418.8,
+     "y": 5.8,
+     "z": -668.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1603,
+     "t": 141.667,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1603.4951835328031,
+     "speed": 10.2,
+     "t": 141.667,
+     "userId": -5,
+     "x": 503.5,
+     "y": 5,
+     "z": -563.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1301.1467205335655,
+     "speed": 65.6,
+     "t": 142.183,
+     "userId": -1,
+     "x": 576.3,
+     "y": 2.9,
+     "z": -276.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1634.1486012868463,
+     "speed": 68.6,
+     "t": 142.183,
+     "userId": -2,
+     "x": 490.9,
+     "y": 5.8,
+     "z": -591.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1313.567406705844,
+     "speed": 71.5,
+     "t": 142.183,
+     "userId": -3,
+     "x": 573,
+     "y": 2.9,
+     "z": -288.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1795.291135978507,
+     "speed": 105.6,
+     "t": 142.183,
+     "userId": -4,
+     "x": 375.8,
+     "y": 5.8,
+     "z": -701.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1617.5284390511765,
+     "speed": 36,
+     "t": 142.183,
+     "userId": -5,
+     "x": 496.7,
+     "y": 5.8,
+     "z": -575.3
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 142.382,
+     "userId": -4
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 142.499,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 142.533,
+     "victim": -3,
+     "victimSlow": false
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 142.549,
+     "userId": -1
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 142.633,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1335,
+     "t": 142.683,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1335.9787051230235,
+     "speed": 65.6,
+     "t": 142.683,
+     "userId": -1,
+     "x": 576.4,
+     "y": 2.9,
+     "z": -310.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1670,
+     "t": 142.683,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 1670.0387250085753,
+     "speed": 73.1,
+     "t": 142.683,
+     "userId": -2,
+     "x": 473.2,
+     "y": 5.8,
+     "z": -623.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1345,
+     "t": 142.683,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1345.280610912394,
+     "speed": 69.5,
+     "t": 142.683,
+     "userId": -3,
+     "x": 588.1,
+     "y": 2.9,
+     "z": -319.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1848,
+     "t": 142.683,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1848.363389999436,
+     "speed": 95.1,
+     "t": 142.683,
+     "userId": -4,
+     "x": 333.6,
+     "y": 6.3,
+     "z": -733.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 1639,
+     "t": 142.683,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1639.7235823822307,
+     "speed": 53,
+     "t": 142.683,
+     "userId": -5,
+     "x": 485.8,
+     "y": 5.8,
+     "z": -594.8
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 142.832,
+     "userId": -3
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 143.182,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1373.909282690373,
+     "speed": 82,
+     "t": 143.199,
+     "userId": -1,
+     "x": 571.8,
+     "y": 2.9,
+     "z": -347.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1707.2236451300723,
+     "speed": 73.1,
+     "t": 143.199,
+     "userId": -2,
+     "x": 446.9,
+     "y": 5.8,
+     "z": -649.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 1375.71864721245,
+     "speed": 77.8,
+     "t": 143.199,
+     "userId": -3,
+     "x": 572.5,
+     "y": 2.9,
+     "z": -349.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1901.880867311445,
+     "speed": 105.6,
+     "t": 143.199,
+     "userId": -4,
+     "x": 286.8,
+     "y": 5.8,
+     "z": -757.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1671.538424721272,
+     "speed": 70.5,
+     "t": 143.199,
+     "userId": -5,
+     "x": 470.1,
+     "y": 5.8,
+     "z": -622.6
+    },
+    {
+     "after": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 143.349,
+     "userId": -1
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 143.449,
+     "userId": -5
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 143.633,
+     "userId": -3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1417,
+     "t": 143.7,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1417.9750699298795,
+     "speed": 78.2,
+     "t": 143.7,
+     "userId": -1,
+     "x": 564.1,
+     "y": 2.9,
+     "z": -391
+    },
+    {
+     "kind": "race_progress",
+     "s": 1747,
+     "t": 143.7,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1747.4488236861646,
+     "speed": 94.9,
+     "t": 143.7,
+     "userId": -2,
+     "x": 415.3,
+     "y": 5.8,
+     "z": -674.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1413,
+     "t": 143.7,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1413.6364014873802,
+     "speed": 90.6,
+     "t": 143.7,
+     "userId": -3,
+     "x": 547,
+     "y": 2.9,
+     "z": -383.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1954,
+     "t": 143.7,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 1954.7220538862025,
+     "speed": 105.6,
+     "t": 143.7,
+     "userId": -4,
+     "x": 238.4,
+     "y": 5.8,
+     "z": -778.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1711,
+     "t": 143.7,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1711.5446855202706,
+     "speed": 87.3,
+     "t": 143.7,
+     "userId": -5,
+     "x": 443.5,
+     "y": 5.8,
+     "z": -651.8
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 143.849,
+     "userId": -4
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 143.949,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1452.986609046842,
+     "speed": 65.6,
+     "t": 144.216,
+     "userId": -1,
+     "x": 558.6,
+     "y": 2.9,
+     "z": -425.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1801.9547386891013,
+     "speed": 109.7,
+     "t": 144.216,
+     "userId": -2,
+     "x": 369.4,
+     "y": 5.8,
+     "z": -704.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1449.2195964825114,
+     "speed": 71.7,
+     "t": 144.216,
+     "userId": -3,
+     "x": 558.2,
+     "y": 2.9,
+     "z": -421.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2007.8989197720862,
+     "speed": 99.5,
+     "t": 144.216,
+     "userId": -4,
+     "x": 188.6,
+     "y": 6.3,
+     "z": -796.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1759.5224794035528,
+     "speed": 98.4,
+     "t": 144.216,
+     "userId": -5,
+     "x": 402.5,
+     "y": 5.8,
+     "z": -678
+    },
+    {
+     "after": 65.82599639892578,
+     "before": 109.70999908447266,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 144.333,
+     "userId": -2
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 65.82599639892578,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 144.433,
+     "userId": -2
+    },
+    {
+     "index": 1,
+     "kind": "checkpoint",
+     "t": 144.616,
+     "userId": -4
+    },
+    {
+     "after": 63.39925765991211,
+     "before": 105.6654281616211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 144.733,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1486,
+     "t": 144.733,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1486.6347659297392,
+     "speed": 65.6,
+     "t": 144.733,
+     "userId": -1,
+     "x": 553.5,
+     "y": 2.9,
+     "z": -458.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1858,
+     "t": 144.733,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1858.3602913765558,
+     "speed": 108.3,
+     "t": 144.733,
+     "userId": -2,
+     "x": 323.3,
+     "y": 6.3,
+     "z": -735.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1484,
+     "t": 144.733,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1484.841411366607,
+     "speed": 71.7,
+     "t": 144.733,
+     "userId": -3,
+     "x": 548.9,
+     "y": 2.9,
+     "z": -455.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 2062,
+     "t": 144.733,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 63.39925765991211,
+     "progress": 2062.2346950987026,
+     "speed": 105.5,
+     "t": 144.733,
+     "userId": -4,
+     "x": 137.6,
+     "y": 6.3,
+     "z": -815.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1811,
+     "t": 144.733,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1811.431698038254,
+     "speed": 98.4,
+     "t": 144.733,
+     "userId": -5,
+     "x": 361.7,
+     "y": 5.8,
+     "z": -709.7
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 144.783,
+     "userId": -5
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 63.39925765991211,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 144.832,
+     "userId": -4
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 144.882,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1520.8603370783053,
+     "speed": 65.5,
+     "t": 145.249,
+     "userId": -1,
+     "x": 542.2,
+     "y": 2.9,
+     "z": -490.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 1915.8945019304028,
+     "speed": 109.7,
+     "t": 145.249,
+     "userId": -2,
+     "x": 273.2,
+     "y": 5.8,
+     "z": -761.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1521.069500863413,
+     "speed": 71.7,
+     "t": 145.249,
+     "userId": -3,
+     "x": 537.4,
+     "y": 2.9,
+     "z": -489
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2115.856728868717,
+     "speed": 105.6,
+     "t": 145.249,
+     "userId": -4,
+     "x": 84.4,
+     "y": 5.8,
+     "z": -821.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1861.6169326759614,
+     "speed": 95.4,
+     "t": 145.249,
+     "userId": -5,
+     "x": 321.2,
+     "y": 6.3,
+     "z": -738.1
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 145.483,
+     "userId": -4
+    },
+    {
+     "after": 65.82599639892578,
+     "before": 109.70999908447266,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 145.749,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1553,
+     "t": 145.749,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1553.9464475495085,
+     "speed": 65.6,
+     "t": 145.749,
+     "userId": -1,
+     "x": 527.5,
+     "y": 2.9,
+     "z": -519.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1971,
+     "t": 145.749,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.82599639892578,
+     "progress": 1971.2185149553354,
+     "speed": 109.7,
+     "t": 145.749,
+     "userId": -2,
+     "x": 222,
+     "y": 5.8,
+     "z": -781.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1553,
+     "t": 145.749,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1553.7776020646727,
+     "speed": 66.7,
+     "t": 145.749,
+     "userId": -3,
+     "x": 535.5,
+     "y": 2.9,
+     "z": -523.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 2168,
+     "t": 145.749,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2168.92067404314,
+     "speed": 105.6,
+     "t": 145.749,
+     "userId": -4,
+     "x": 31.5,
+     "y": 5.8,
+     "z": -825.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 1910,
+     "t": 145.749,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1910.9506292199035,
+     "speed": 98.4,
+     "t": 145.749,
+     "userId": -5,
+     "x": 278.5,
+     "y": 5.8,
+     "z": -761.1
+    },
+    {
+     "after": 43.88399887084961,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 145.783,
+     "userId": -2
+    },
+    {
+     "after": 73.13999938964844,
+     "before": 43.88399887084961,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 145.883,
+     "userId": -2
+    },
+    {
+     "after": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 146.099,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1586.8402587088617,
+     "speed": 65.6,
+     "t": 146.249,
+     "userId": -1,
+     "x": 511.2,
+     "y": 2.9,
+     "z": -548.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2021.0605605296375,
+     "speed": 81.3,
+     "t": 146.249,
+     "userId": -2,
+     "x": 176.1,
+     "y": 6.3,
+     "z": -800.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1583.4291126507146,
+     "speed": 71.6,
+     "t": 146.249,
+     "userId": -3,
+     "x": 506.5,
+     "y": 2.9,
+     "z": -541.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2222.141101377631,
+     "speed": 105.6,
+     "t": 146.249,
+     "userId": -4,
+     "x": -21.4,
+     "y": 5.8,
+     "z": -828.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1960.0695402936508,
+     "speed": 98.4,
+     "t": 146.249,
+     "userId": -5,
+     "x": 233.2,
+     "y": 5.8,
+     "z": -779.5
+    },
+    {
+     "after": 59.05145263671875,
+     "before": 98.41908264160156,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 146.332,
+     "userId": -5
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 59.05145263671875,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 146.449,
+     "userId": -5
+    },
+    {
+     "index": 1,
+     "kind": "checkpoint",
+     "t": 146.732,
+     "userId": -2
+    },
+    {
+     "kind": "race_progress",
+     "s": 1600,
+     "t": 146.766,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1600.4333611977374,
+     "speed": 9,
+     "t": 146.766,
+     "userId": -1,
+     "x": 503,
+     "y": 4.1,
+     "z": -559.2
+    },
+    {
+     "kind": "race_progress",
+     "s": 2058,
+     "t": 146.766,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2058.392158368257,
+     "speed": 72.9,
+     "t": 146.766,
+     "userId": -2,
+     "x": 142,
+     "y": 6.2,
+     "z": -817.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 1599,
+     "t": 146.766,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1599.5870996736849,
+     "speed": 3.2,
+     "t": 146.766,
+     "userId": -3,
+     "x": 494.8,
+     "y": 3.9,
+     "z": -553.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 2276,
+     "t": 146.766,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2276.972401271689,
+     "speed": 105.6,
+     "t": 146.766,
+     "userId": -4,
+     "x": -74.9,
+     "y": 5.8,
+     "z": -836.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 2008,
+     "t": 146.766,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2008.907978122494,
+     "speed": 91.1,
+     "t": 146.766,
+     "userId": -5,
+     "x": 188.7,
+     "y": 6.3,
+     "z": -800.6
+    },
+    {
+     "index": 1,
+     "kind": "checkpoint",
+     "t": 147.232,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1606.2190754803573,
+     "speed": 21.2,
+     "t": 147.283,
+     "userId": -1,
+     "x": 499.3,
+     "y": 5.7,
+     "z": -563.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2096.5326097933867,
+     "speed": 73.1,
+     "t": 147.283,
+     "userId": -2,
+     "x": 104.7,
+     "y": 5.8,
+     "z": -824.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1600.6648267530838,
+     "speed": 2.2,
+     "t": 147.283,
+     "userId": -3,
+     "x": 494.8,
+     "y": 4.2,
+     "z": -554.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2332.051469758524,
+     "speed": 105.6,
+     "t": 147.283,
+     "userId": -4,
+     "x": -128.5,
+     "y": 5.8,
+     "z": -847.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2058.5003481749304,
+     "speed": 98.4,
+     "t": 147.283,
+     "userId": -5,
+     "x": 142,
+     "y": 6,
+     "z": -818.1
+    },
+    {
+     "after": 105.6654281616211,
+     "before": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 147.716,
+     "userId": -4
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 147.716,
+     "userId": -1
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 147.799,
+     "victim": -2,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_progress",
+     "s": 1621,
+     "t": 147.799,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1621.7998419992732,
+     "speed": 38.7,
+     "t": 147.799,
+     "userId": -1,
+     "x": 493.3,
+     "y": 5.8,
+     "z": -578.3
+    },
+    {
+     "kind": "race_progress",
+     "s": 2133,
+     "t": 147.799,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2133.821362650651,
+     "speed": 73.1,
+     "t": 147.799,
+     "userId": -2,
+     "x": 66.9,
+     "y": 5.8,
+     "z": -825.1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1601,
+     "t": 147.799,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1601.49808836636,
+     "speed": 2.5,
+     "t": 147.799,
+     "userId": -3,
+     "x": 495.3,
+     "y": 4.5,
+     "z": -555.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 2386,
+     "t": 147.799,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2386.4432777682214,
+     "speed": 105.5,
+     "t": 147.799,
+     "userId": -4,
+     "x": -181.6,
+     "y": 5.8,
+     "z": -860.5
+    },
+    {
+     "kind": "race_progress",
+     "s": 2108,
+     "t": 147.799,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2108.7050587193203,
+     "speed": 98.3,
+     "t": 147.799,
+     "userId": -5,
+     "x": 91.9,
+     "y": 5.8,
+     "z": -822.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 1646.2930067384239,
+     "speed": 56.7,
+     "t": 148.316,
+     "userId": -1,
+     "x": 482.2,
+     "y": 5.8,
+     "z": -600.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2171.6053406535316,
+     "speed": 73.1,
+     "t": 148.316,
+     "userId": -2,
+     "x": 29.4,
+     "y": 5.8,
+     "z": -828.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1602.3994746529436,
+     "speed": 2.8,
+     "t": 148.316,
+     "userId": -3,
+     "x": 495.8,
+     "y": 4.7,
+     "z": -557.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2440.7703650646868,
+     "speed": 105.5,
+     "t": 148.316,
+     "userId": -4,
+     "x": -231.5,
+     "y": 5.8,
+     "z": -880.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2150.160458496958,
+     "speed": 71.9,
+     "t": 148.316,
+     "userId": -5,
+     "x": 50.5,
+     "y": 5.8,
+     "z": -825.5
+    },
+    {
+     "after": 109.70999908447266,
+     "before": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 148.349,
+     "userId": -2
+    },
+    {
+     "after": 65.61272430419922,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 148.516,
+     "userId": -1
+    },
+    {
+     "after": 107.63101959228516,
+     "before": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 148.632,
+     "userId": -3
+    },
+    {
+     "after": 98.41908264160156,
+     "before": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 148.732,
+     "userId": -5
+    },
+    {
+     "attacker": -5,
+     "attackerSlow": false,
+     "kind": "contact",
+     "push": 30,
+     "t": 148.799,
+     "victim": -2,
+     "victimSlow": false
+    },
+    {
+     "kind": "race_progress",
+     "s": 1679,
+     "t": 148.833,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1679.343142895271,
+     "speed": 65.5,
+     "t": 148.833,
+     "userId": -1,
+     "x": 465.4,
+     "y": 5.8,
+     "z": -628.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 2212,
+     "t": 148.833,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 2212.8400364039544,
+     "speed": 93.3,
+     "t": 148.833,
+     "userId": -2,
+     "x": -11.4,
+     "y": 5.8,
+     "z": -832.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 1604,
+     "t": 148.833,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 1604.0307236062793,
+     "speed": 16.9,
+     "t": 148.833,
+     "userId": -3,
+     "x": 496.4,
+     "y": 5.4,
+     "z": -559.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 2495,
+     "t": 148.833,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2495.5552052602347,
+     "speed": 105.6,
+     "t": 148.833,
+     "userId": -4,
+     "x": -276.6,
+     "y": 5.8,
+     "z": -910.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 2189,
+     "t": 148.833,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2189.105480360199,
+     "speed": 82.3,
+     "t": 148.833,
+     "userId": -5,
+     "x": 11.9,
+     "y": 5.8,
+     "z": -829.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1713.7354883998532,
+     "speed": 65.6,
+     "t": 149.349,
+     "userId": -1,
+     "x": 440.8,
+     "y": 5.8,
+     "z": -652.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 2267.9693874701247,
+     "speed": 109.6,
+     "t": 149.349,
+     "userId": -2,
+     "x": -66,
+     "y": 5.8,
+     "z": -835.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 107.63101959228516,
+     "progress": 1616.8920865180803,
+     "speed": 42.8,
+     "t": 149.349,
+     "userId": -3,
+     "x": 497.2,
+     "y": 5.8,
+     "z": -574.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2549.8733494558064,
+     "speed": 105.6,
+     "t": 149.349,
+     "userId": -4,
+     "x": -321,
+     "y": 5.8,
+     "z": -942
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2236.5506368863803,
+     "speed": 98.4,
+     "t": 149.349,
+     "userId": -5,
+     "x": -35.7,
+     "y": 5.8,
+     "z": -829.1
+    },
+    {
+     "after": 71.75401306152344,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 149.432,
+     "userId": -3
+    },
+    {
+     "kind": "hazard",
+     "s": 2772,
+     "t": 149.616,
+     "type": "fallingLog",
+     "x": -455,
+     "z": -1119
+    },
+    {
+     "kind": "hazard",
+     "s": 2700,
+     "t": 149.616,
+     "type": "fallingLog",
+     "x": -414,
+     "z": -1058
+    },
+    {
+     "kind": "hazard",
+     "s": 2783,
+     "t": 149.616,
+     "type": "fallingLog",
+     "x": -462,
+     "z": -1131
+    },
+    {
+     "kind": "race_progress",
+     "s": 1746,
+     "t": 149.849,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1746.6742792375808,
+     "speed": 65.6,
+     "t": 149.849,
+     "userId": -1,
+     "x": 414.8,
+     "y": 5.8,
+     "z": -672.6
+    },
+    {
+     "kind": "race_progress",
+     "s": 2323,
+     "t": 149.849,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 2323.631797429524,
+     "speed": 109.7,
+     "t": 149.849,
+     "userId": -2,
+     "x": -119.7,
+     "y": 5.8,
+     "z": -847.8
+    },
+    {
+     "kind": "race_progress",
+     "s": 1644,
+     "t": 149.849,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1644.3107046173218,
+     "speed": 68.1,
+     "t": 149.849,
+     "userId": -3,
+     "x": 484.5,
+     "y": 5.8,
+     "z": -599.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 2603,
+     "t": 149.849,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2603.5466317289292,
+     "speed": 105.6,
+     "t": 149.849,
+     "userId": -4,
+     "x": -360.3,
+     "y": 5.8,
+     "z": -977.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 2286,
+     "t": 149.849,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2286.093673917093,
+     "speed": 98.4,
+     "t": 149.849,
+     "userId": -5,
+     "x": -84.1,
+     "y": 5.8,
+     "z": -836.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1780.4574524628401,
+     "speed": 65.6,
+     "t": 150.366,
+     "userId": -1,
+     "x": 388,
+     "y": 5.8,
+     "z": -693.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 2379.364637658788,
+     "speed": 109.7,
+     "t": 150.366,
+     "userId": -2,
+     "x": -175.3,
+     "y": 5.8,
+     "z": -857
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1680.4521340322895,
+     "speed": 71.7,
+     "t": 150.366,
+     "userId": -3,
+     "x": 468.2,
+     "y": 5.8,
+     "z": -632.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2658.231555702403,
+     "speed": 105.6,
+     "t": 150.366,
+     "userId": -4,
+     "x": -389.2,
+     "y": 5.8,
+     "z": -1023.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2337.1202849981096,
+     "speed": 98.4,
+     "t": 150.366,
+     "userId": -5,
+     "x": -133.9,
+     "y": 5.8,
+     "z": -847.1
+    },
+    {
+     "after": 105.6654281616211,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 150.649,
+     "userId": -4
+    },
+    {
+     "kind": "race_progress",
+     "s": 1814,
+     "t": 150.882,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1814.250819785754,
+     "speed": 65.6,
+     "t": 150.882,
+     "userId": -1,
+     "x": 360.6,
+     "y": 5.8,
+     "z": -713
+    },
+    {
+     "kind": "race_progress",
+     "s": 2435,
+     "t": 150.882,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 109.70999908447266,
+     "progress": 2435.273257939416,
+     "speed": 109.5,
+     "t": 150.882,
+     "userId": -2,
+     "x": -229.6,
+     "y": 5.8,
+     "z": -871.9
+    },
+    {
+     "kind": "race_progress",
+     "s": 1716,
+     "t": 150.882,
+     "userId": -3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1716.3532792380063,
+     "speed": 71.6,
+     "t": 150.882,
+     "userId": -3,
+     "x": 445.4,
+     "y": 5.8,
+     "z": -660.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 2712,
+     "t": 150.882,
+     "userId": -4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2712.8152321540088,
+     "speed": 105.6,
+     "t": 150.882,
+     "userId": -4,
+     "x": -416.1,
+     "y": 5.8,
+     "z": -1070.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 2387,
+     "t": 150.882,
+     "userId": -5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2387.0590369763563,
+     "speed": 98.4,
+     "t": 150.882,
+     "userId": -5,
+     "x": -183.3,
+     "y": 5.8,
+     "z": -857.6
+    },
+    {
+     "after": 39.36763381958008,
+     "before": 65.61272430419922,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 150.899,
+     "userId": -1
+    },
+    {
+     "after": 73.13999938964844,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 150.949,
+     "userId": -2
+    },
+    {
+     "after": 65.61272430419922,
+     "before": 39.36763381958008,
+     "effect": "slowZone",
+     "kind": "speed_effect",
+     "phase": "exit",
+     "t": 151.132,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 1844.060326540106,
+     "speed": 47.3,
+     "t": 151.399,
+     "userId": -1,
+     "x": 336.6,
+     "y": 6.3,
+     "z": -730.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 2488.0987229371563,
+     "speed": 85.8,
+     "t": 151.399,
+     "userId": -2,
+     "x": -272,
+     "y": 5.8,
+     "z": -904.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 71.75401306152344,
+     "progress": 1750.8295549216243,
+     "speed": 71.5,
+     "t": 151.399,
+     "userId": -3,
+     "x": 413.7,
+     "y": 5.8,
+     "z": -677.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 105.6654281616211,
+     "progress": 2767.7959816630528,
+     "speed": 105.6,
+     "t": 151.399,
+     "userId": -4,
+     "x": -442.6,
+     "y": 5.8,
+     "z": -1118.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 98.41908264160156,
+     "progress": 2437.4607558796897,
+     "speed": 98.4,
+     "t": 151.399,
+     "userId": -5,
+     "x": -230.7,
+     "y": 5.8,
+     "z": -874.5
+    },
+    {
+     "after": 98.41908264160156,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 151.466,
+     "userId": -5
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RESULTS",
+     "round": 1,
+     "t": 151.617
+    }
+   ],
+   "samplesTotal": 335
+  },
+  "timedOut": false
+ },
+ "scenario": "start-6p",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 5\n    steal attempts: defended=1, denied: too far=1, stolen=1\n    -3: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0\n    -2: picked 9, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -1: picked 1, contests 0/0, stole 0, robbed 1, defences 0, items 0 | craft submitted, rejected 0\n    -4: picked 6, contests 0/0, stole 0, robbed 0, defences 1, items 6 | craft submitted, rejected 0\n    -5: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0\n  events: bot_craft=5 bot_defend=2 bot_hud=55 bot_joined=5 bot_ready=5 bot_steal=3 checkpoint=3 contact=17 craft=5 harness_crafting=1 harness_round=1 hazard=12 hit=7 item_drop=2 item_pickup=18 phase=4 race_go=1 race_launch=5 race_progress=150 race_sample=335 race_sta",
+ "wallSeconds": 174.0
+}

@@ -24,12 +24,9 @@ local RARITY_COLOURS = {
 	Epic     = Color3.fromRGB(200, 80,  255),
 }
 
--- Seat values per biome (unchanged by the redesign; KineSim checks them).
-VehicleBuilder.SEAT = {
-	FOREST = { speed = { 2.5, 20, 120 }, torque = { 4, 20, 200 } },
-	OCEAN  = { speed = { 2.0, 15, 80 },  torque = { 3, 15, 120 } },
-	SKY    = { speed = { 3.0, 30, 160 }, torque = { 5, 30, 250 } },
-}
+-- Biomes with a vehicle layout. Seat values come from Constants.maxSpeedFor /
+-- torqueFor / turnSpeedFor (the simulators use the same functions).
+VehicleBuilder.SEAT = { FOREST = true, OCEAN = true, SKY = true }
 
 VehicleBuilder.SLOTS = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
 
@@ -192,9 +189,8 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	seat.CFrame = spawnCFrame * seatSpec.cf
 	seat.Color = Color3.fromRGB(50, 50, 50)
 	seat.Transparency = 1
-	local sv = VehicleBuilder.SEAT[biome]
-	seat.MaxSpeed  = math.clamp(stats.speed * sv.speed[1], sv.speed[2], sv.speed[3])
-	seat.Torque    = math.clamp(stats.acceleration * sv.torque[1], sv.torque[2], sv.torque[3])
+	seat.MaxSpeed  = Constants.maxSpeedFor(biome, stats)
+	seat.Torque    = Constants.torqueFor(biome, stats)
 	seat.TurnSpeed = Constants.turnSpeedFor(biome, stats)
 	seat.CanCollide = false
 	seat.Parent = model

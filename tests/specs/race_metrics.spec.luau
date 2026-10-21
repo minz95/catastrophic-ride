@@ -113,7 +113,8 @@ R.describe("live playtest loop (real RacingManager + PlaytestReporter)", functio
 		srv.SessionManager.setVehicle(player, model, stats)
 		cars[i] = model
 	end
-	srv.advance(0.5)
+	-- RACING, then the 3-2-1 countdown (Modules/RaceStart) before anyone drives.
+	srv.advance(0.5 + senv.requirePath("ReplicatedStorage.Shared.Constants").RACE_COUNTDOWN)
 	R.it("reaches RACING", function()
 		R.expect(srv.GameManager.getPhase()).toBe("RACING")
 	end)

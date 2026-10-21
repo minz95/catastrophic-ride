@@ -15,6 +15,8 @@
 --   steal_attempt    FarmingManager         { thief, victim, result = "stolen" | "defended" | "denied: <reason>" }
 --   craft            CraftingManager        { userId, slots, stats, auto }
 --   race_start       RacingManager          { biome, racers = { userId }, round, length, timeout }
+--   race_go          Modules/RaceStart      { released }  (countdown over, held cars let go)
+--   race_launch      RacingManager          { userId, afterGo }  (car first left its grid spot)
 --   race_progress    RacingManager          { userId, s }   every Constants.FUN.PROGRESS_EVERY s
 --   race_sample      RacingManager          { userId, x, y, z, speed, maxSpeed, progress }  (detailed only)
 --   speed_effect     RacingManager          { userId, effect, phase = "enter"|"exit"|"restore", before, after }

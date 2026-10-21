@@ -15,9 +15,11 @@ log at the end.
 
 Principles the code follows (keep them when changing things):
 
-1. **A better build helps, but does not decide the race.** Driving, pads,
-   drift corners and abilities must be able to beat a better car.
-   Measured by `speedPlaceCorr` and `fastestWinRate` (below).
+1. **A better build helps, but does not decide the race.** Everyone leaves
+   the grid together at GO, and every car's top speed is within ±6% of the
+   biome's (`Constants.RACE_SPEED`). Driving, pads, drift corners and
+   abilities must be able to beat a better car. Measured by
+   `speedPlaceCorr` and `fastestWinRate` (below).
 2. **Nobody gets stuck.** Every simulated driver profile finishes every map;
    respawns land on the centerline facing along the track.
 3. **What you see is what collides.** No invisible walls, no props in the
@@ -64,7 +66,7 @@ them when playtests say the game feels better somewhere else.
 | closeShare | ≥ 0.25 | the top two race each other a quarter of the time |
 | racingShare | ≥ 0.35 | share of a round spent racing |
 | fastestWinRate | ≤ 0.7 | the fastest build does not always win |
-| speedPlaceCorr | −0.85 to −0.3 | a better build helps, but is not everything |
+| speedPlaceCorr | −0.6 to 0.1 | the build helps a little; it must not decide the race |
 
 Per section the report gives mean time, the spread between racers (where
 races are won or lost), respawns, wall hits and playtest markers.
@@ -129,21 +131,42 @@ spot with its track section; the RESULTS report lists them per section.
   back), scaled to fit with its proportions kept. The chassis is unchanged
   and the only part with mass, so handling does not depend on the look.
 
+- **2026-10-21 — Everyone starts together.** Cars used to be seated one
+  after another and each was released right after its own seat (~0.4 s
+  apart, no countdown): with 6 players the last car left 2–3 s late. Now all
+  cars are seated in parallel and held on the grid (`Modules/RaceStart`), a
+  3-2-1 countdown runs to the server's GO time (`RaceGoAt`), and all are
+  released in the same frame; the race clock, boosts and respawns start at
+  GO. Studio, 5 bots: all left the grid in the same 0.5 s sample.
+- **2026-10-21 — The build no longer decides the race.** Top speed was
+  speed stat × 2.5 / 2.0 / 3.0: the fastest build was 1.8× the slowest and
+  the field finished 50–60 s apart in build order. Now the stat only picks a
+  place inside ±6% of a biome speed (`Constants.RACE_SPEED`, centers 69 /
+  63 / 87 so the best build with a good driver wins in ~85 s). Simulated:
+  winner 89 / 84 / 89 s, first → last 40 / 34 / 47 s, the fastest build won
+  5 / 5 / 2 of 12. The `speedPlaceCorr` target moved from −0.85…−0.3 to
+  −0.6…0.1.
+- **2026-10-21 — Phase timers show the server's time.** GameManager
+  publishes `PhaseEndsAt`; the farming and crafting timers count down to it
+  (`Shared/PhaseClock`) instead of each counting its own default length
+  (a 20 s harness crafting phase showed 2:00), and a UI script that starts
+  late joins the running phase.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
 
 | | Forest | Ocean | Sky | Target |
 |---|---|---|---|---|
-| Winner time | 81 s | 76 s | 94 s | 60–120 s |
-| Share of the round spent racing | 37% | 35% | 38% | ≥ 35% |
-| Spread first → last finisher | 60 s | 51 s | 50 s | ≤ 45 s |
-| Lead changes per race | 1.5 | 1.5 | 2.9 | ≥ 1 |
-| Top two within 40 studs | 14% | 12% | 24% | ≥ 25% |
+| Winner time | 89 s | 84 s | 89 s | 60–120 s |
+| Share of the round spent racing | 35% | 33% | 36% | ≥ 35% |
+| Spread first → last finisher | 40 s | 34 s | 47 s | ≤ 45 s |
+| Lead changes per race | 1.6 | 1.3 | 2.1 | ≥ 1 |
+| Top two within 40 studs | 17% | 19% | 23% | ≥ 25% |
 
-- The last finisher arrives 50–60 s after the winner on every map now that
-  the races are long enough. The spread comes from builds (top speed 33–75
-  on Ocean), not the tracks. End the race N seconds after the winner, or
-  narrow the speed range?
+- With the narrow speed band the remaining spread is driving: the novice
+  bot is 20–40 s slower than the expert in the same car. If playtests want
+  the field closer still, the next step is a catch-up for cars far behind
+  the leader (not built).
 - Close racing is low everywhere, but the simulation has no car-to-car
   contact or abilities; check with playtests (M / N markers) before acting.

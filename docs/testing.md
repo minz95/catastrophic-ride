@@ -126,7 +126,7 @@ checked the same way.
 |---|---|---|
 | `race` | `runRace{ mode = "run", ... }` (profiles, `car`, or `cases` = one car each with its own `car` / `profile` / `spawn`) | every car finishes, respawns per car, winner time vs `FUN_TARGETS` (warning) |
 | `escape` | `runEscape{ biome }` | every case drives `RaceSim.ESCAPE_GAIN` studs on within `ESCAPE_SECONDS`: nose in the left / right wall at 70°, facing backwards (every 500 studs), on each jump ramp, mud zone and drift corner. "Needed a respawn" is a warning, "stuck" a failure |
-| `match` | `runMatch{ biome, players, rounds }` | all bot clients joined, finish rate, no server errors |
+| `match` | `runMatch{ biome, players, rounds }` | all bot clients joined, finish rate, no server errors; `fairStart` (every car leaves the grid after GO and within N s of the others, from `race_go` / `race_launch`), `hudTimer` (each bot's FARMING / CRAFTING timer: one copy on screen, counting down, within 2 s of the server's `PhaseEndsAt`) |
 
 Farming and crafting scenarios (`match` with `stopAfter = "CRAFTING"`, tag
 `farm`) end when the race would start and check each round's

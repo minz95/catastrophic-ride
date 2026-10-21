@@ -910,6 +910,9 @@ function M.reset()
 	local ws = makeInstance("Workspace", "Workspace")
 	ws.Parent = game
 	M.services.Workspace = ws
+	rawset(ws, "GetServerTimeNow", function()
+		return M.clock
+	end)
 	for _, name in ipairs({
 		"ReplicatedStorage",
 		"ServerScriptService",
