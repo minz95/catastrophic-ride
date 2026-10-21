@@ -1,5 +1,6 @@
 -- ParticleClient.client.lua
--- Boost trail, mud splatter, water splash, finish confetti, ability VFX.
+-- Boost trail, mud splatter, water splash, finish confetti.
+-- (Ability / passive effects on cars: EffectFx.client.lua.)
 -- Resolves: Issue #50
 
 local Players          = game:GetService("Players")
@@ -301,24 +302,7 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(effectName, params)
 	end
 end)
 
--- ─── AbilityActivated → ability VFX ─────────────────────────────────────────
-
-RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, effectKey)
-	if userId ~= LocalPlayer.UserId then return end
-	local vehicle = _vehicle
-	if not vehicle or not vehicle.PrimaryPart then return end
-
-	-- Generic ability flash
-	_burst(vehicle.PrimaryPart, {
-		Color          = ColorSequence.new(Color3.fromRGB(255, 220, 60)),
-		LightEmission  = 0.7,
-		Size           = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 0) }),
-		Transparency   = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1) }),
-		Lifetime       = NumberRange.new(0.3, 0.6),
-		Speed          = NumberRange.new(10, 25),
-		SpreadAngle    = Vector2.new(180, 180),
-	}, 20, 0.7)
-end)
+-- Ability and passive effects on cars: EffectFx.client.lua.
 
 -- ─── RaceFinished → confetti ─────────────────────────────────────────────────
 

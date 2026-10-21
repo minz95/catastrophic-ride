@@ -6,3 +6,4 @@
 # Test harness output
 tests/out/
 tests/scratch/
+__pycache__/

@@ -76,6 +76,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Races start together: cars are held on the grid by `Modules/RaceStart`
   until GO (`RACE_COUNTDOWN` s after RACING begins); the race clock, boosts
   and respawns start at GO. Never unanchor a race car yourself.
+- Abilities (E): the server checks the item is in the car's BODY / ENGINE /
+  SPECIAL slot (`Shared/AbilitySlots`; VehicleBuilder writes them on the
+  model as attributes, RacingClient reads them there) and that the race has
+  gone. Every effect that lands on a car calls `Modules/EffectFx.play(key,
+  player, ...)` just before it applies: all clients draw it on that car
+  (`Shared/EffectLook` + `StarterPlayerScripts/EffectFx`) and the Studio
+  harness measures it. A new effect needs an `EffectLook.CAR` entry; a new
+  `ScreenEffect` name needs an `EffectLook.SCREEN` entry or a handler.
+- Lift abilities set the chassis attribute `LiftOffset` through
+  `Modules/VehicleLift`; an upward BodyForce cannot beat the ride-height
+  BodyPosition. Never tween or set a race car's CFrame from a client.
 - Client phase timers count down to the `PhaseEndsAt` attribute
   (`Shared/PhaseClock`), not to `Constants.PHASE_DURATION`.
 - Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range.

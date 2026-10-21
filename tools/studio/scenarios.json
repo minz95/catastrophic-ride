@@ -1,5 +1,5 @@
 {
-  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). Tags: vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). abilities (match): every loadout item fires ok at least once, no 'not equipped' denials, each landing measured by ability_probe does what it should (lift raises the car, speed effects change MaxSpeed, steer locks set TurnSpeed 0), every effect key sent is drawn by the bot clients (bot_fx). Tags: abilities (~25 min), vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
   "scenarios": [
     {
       "name": "race-forest",
@@ -754,6 +754,267 @@
         "stuck": 0,
         "maxTilt": 20,
         "minTopSpeedRatio": 0.8
+      }
+    },
+    {
+      "name": "abilities-forest",
+      "kind": "match",
+      "tags": [
+        "full",
+        "abilities"
+      ],
+      "_why": "every item's E ability fired by bots in a real race (4 rounds x 4 bots x 3 slots = all 39), each landing measured (ability_probe) and drawn on the clients (bot_fx)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 4,
+        "rounds": 4,
+        "durations": {
+          "FARMING": 8,
+          "CRAFTING": 4,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "maxSeconds": 1100,
+        "loadouts": [
+          [
+            {
+              "SPECIAL": "Gas Can",
+              "ENGINE": "Fan",
+              "BODY": "Barrel",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            },
+            {
+              "SPECIAL": "Pizza",
+              "ENGINE": "Flower",
+              "BODY": "Cardboard Box",
+              "HEAD": "Cactus",
+              "TAIL": "Soda Bottle"
+            },
+            {
+              "SPECIAL": "Toilet Paper",
+              "ENGINE": "Alarm Clock",
+              "BODY": "Bamboo Raft",
+              "HEAD": "Rubber Duck",
+              "TAIL": "Toilet Paper"
+            },
+            {
+              "SPECIAL": "Cactus",
+              "ENGINE": "Magnifying Glass",
+              "BODY": "Skateboard",
+              "HEAD": "Racing Flag",
+              "TAIL": "Balloon Bunch"
+            }
+          ],
+          [
+            {
+              "SPECIAL": "Magnet",
+              "ENGINE": "Hair Dryer",
+              "BODY": "Log",
+              "HEAD": "Flower",
+              "TAIL": "Cactus"
+            },
+            {
+              "SPECIAL": "Racing Flag",
+              "ENGINE": "Compass",
+              "BODY": "Shopping Cart",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            },
+            {
+              "SPECIAL": "Lantern",
+              "ENGINE": "Propeller Hat",
+              "BODY": "Life Preserver",
+              "HEAD": "Cactus",
+              "TAIL": "Soda Bottle"
+            },
+            {
+              "SPECIAL": "Camera",
+              "ENGINE": "Treadmill",
+              "BODY": "Kite",
+              "HEAD": "Rubber Duck",
+              "TAIL": "Toilet Paper"
+            }
+          ],
+          [
+            {
+              "SPECIAL": "Magic Wand",
+              "ENGINE": "Drill",
+              "BODY": "Suitcase",
+              "HEAD": "Racing Flag",
+              "TAIL": "Balloon Bunch"
+            },
+            {
+              "SPECIAL": "Umbrella",
+              "ENGINE": "Rocket",
+              "BODY": "Backpack",
+              "HEAD": "Flower",
+              "TAIL": "Cactus"
+            },
+            {
+              "SPECIAL": "Rubber Duck",
+              "ENGINE": "Cup Noodle",
+              "BODY": "Red Sofa",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            },
+            {
+              "SPECIAL": "Trophy",
+              "ENGINE": "Kettle",
+              "BODY": "Microwave",
+              "HEAD": "Cactus",
+              "TAIL": "Soda Bottle"
+            }
+          ],
+          [
+            {
+              "SPECIAL": "Balloon Bunch",
+              "ENGINE": "Fan",
+              "BODY": "Bathtub",
+              "HEAD": "Rubber Duck",
+              "TAIL": "Toilet Paper"
+            },
+            {
+              "SPECIAL": "Soda Bottle",
+              "ENGINE": "Flower",
+              "BODY": "Barrel",
+              "HEAD": "Racing Flag",
+              "TAIL": "Balloon Bunch"
+            },
+            {
+              "SPECIAL": "Gas Can",
+              "ENGINE": "Alarm Clock",
+              "BODY": "Cardboard Box",
+              "HEAD": "Flower",
+              "TAIL": "Cactus"
+            },
+            {
+              "SPECIAL": "Pizza",
+              "ENGINE": "Magnifying Glass",
+              "BODY": "Bamboo Raft",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            }
+          ]
+        ]
+      },
+      "checks": {
+        "abilities": true,
+        "allJoined": true
+      }
+    },
+    {
+      "name": "abilities-ocean",
+      "kind": "match",
+      "tags": [
+        "full",
+        "abilities"
+      ],
+      "_why": "biome variants (Rubber Duck, Umbrella, Magnifying Glass, Kite, Bathtub) and the lift abilities on water / in the air",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 4,
+        "rounds": 1,
+        "durations": {
+          "FARMING": 8,
+          "CRAFTING": 4,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500,
+        "loadouts": [
+          [
+            {
+              "SPECIAL": "Rubber Duck",
+              "ENGINE": "Magnifying Glass",
+              "BODY": "Kite",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            },
+            {
+              "SPECIAL": "Umbrella",
+              "ENGINE": "Propeller Hat",
+              "BODY": "Bathtub",
+              "HEAD": "Cactus",
+              "TAIL": "Soda Bottle"
+            },
+            {
+              "SPECIAL": "Balloon Bunch",
+              "ENGINE": "Alarm Clock",
+              "BODY": "Life Preserver",
+              "HEAD": "Rubber Duck",
+              "TAIL": "Toilet Paper"
+            },
+            {
+              "SPECIAL": "Lantern",
+              "ENGINE": "Rocket",
+              "BODY": "Microwave",
+              "HEAD": "Racing Flag",
+              "TAIL": "Balloon Bunch"
+            }
+          ]
+        ]
+      },
+      "checks": {
+        "abilities": true,
+        "allJoined": true
+      }
+    },
+    {
+      "name": "abilities-sky",
+      "kind": "match",
+      "tags": [
+        "full",
+        "abilities"
+      ],
+      "_why": "biome variants (Rubber Duck, Umbrella, Magnifying Glass, Kite, Bathtub) and the lift abilities on water / in the air",
+      "opts": {
+        "biome": "SKY",
+        "players": 4,
+        "rounds": 1,
+        "durations": {
+          "FARMING": 8,
+          "CRAFTING": 4,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500,
+        "loadouts": [
+          [
+            {
+              "SPECIAL": "Rubber Duck",
+              "ENGINE": "Magnifying Glass",
+              "BODY": "Kite",
+              "HEAD": "Shopping Cart",
+              "TAIL": "Rocket"
+            },
+            {
+              "SPECIAL": "Umbrella",
+              "ENGINE": "Propeller Hat",
+              "BODY": "Bathtub",
+              "HEAD": "Cactus",
+              "TAIL": "Soda Bottle"
+            },
+            {
+              "SPECIAL": "Balloon Bunch",
+              "ENGINE": "Alarm Clock",
+              "BODY": "Life Preserver",
+              "HEAD": "Rubber Duck",
+              "TAIL": "Toilet Paper"
+            },
+            {
+              "SPECIAL": "Lantern",
+              "ENGINE": "Rocket",
+              "BODY": "Microwave",
+              "HEAD": "Racing Flag",
+              "TAIL": "Balloon Bunch"
+            }
+          ]
+        ]
+      },
+      "checks": {
+        "abilities": true,
+        "allJoined": true
       }
     }
   ]

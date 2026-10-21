@@ -14,7 +14,10 @@
 --   ItemStolen          → (thiefName: string, victimName: string, itemName: string)
 --   VehicleSpawned      → (userId: number, vehicleModel: Model)
 --   PlayerPositionSync  → ({userId: number, progress: number, rank: number}[])
---   AbilityActivated    → (userId: number, itemName: string, targetIds: number[]|nil)
+--   AbilityActivated    → (userId: number, itemName: string, targetIds: number[], effectKey: string,
+--                          info: { cooldown, duration, label })
+--   EffectFx            → (key: string, userId: number, info: { duration, from, text })
+--                          an effect landed on userId's car (StarterPlayerScripts/EffectFx draws it)
 --   AbilityDenied       → (reason: string)                   -- fires to activator only
 --   EmoteFired          → (userId: number, emoteId: string)
 --   RaceFinished        → (finishOrder: {userId:number, time:number}[])
@@ -48,6 +51,7 @@ local EVENTS = {
 	"VehicleSpawned",
 	"PlayerPositionSync",
 	"AbilityActivated",
+	"EffectFx",
 	"AbilityDenied",
 	"EmoteFired",
 	"RaceFinished",

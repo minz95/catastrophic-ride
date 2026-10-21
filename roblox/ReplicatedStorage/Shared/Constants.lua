@@ -138,6 +138,33 @@ Constants.EPIC_ABILITY_BONUS = {
 	cooldown  = 0.80,  -- ×0.8 cooldown (shorter)
 }
 
+-- Lift abilities raise the car's ride height (studs) for their duration:
+-- Modules/VehicleLift sets the chassis "LiftOffset" attribute and
+-- VehicleController adds it to the hover target. (An upward BodyForce, as
+-- before, could not beat the ride-height BodyPosition: cars rose < 0.3 studs.)
+-- FOREST walls are 8 studs high: keep every lift below that.
+Constants.ABILITY_LIFT = {
+	rise           = 4,     -- Balloon Bunch, Lantern
+	hover          = 3.5,   -- Propeller Hat
+	emergencyFloat = 3,     -- Rubber Duck
+	fullBuoyancy   = 3,     -- Rubber Duck (OCEAN)
+	softLanding    = 3,     -- Rubber Duck (SKY)
+	groundBounce   = 3,     -- Rubber Duck (FOREST), short hop
+	lifeFloat      = 3.5,   -- Life Preserver
+	kiteLift       = 4,     -- Kite
+	kiteGlide      = 4,     -- Kite (SKY)
+	parachute      = 2,     -- Umbrella (SKY)
+	RATE           = 12,    -- studs per second the offset moves (up and down)
+}
+
+-- Studio harness: how each effect's car is measured (Modules/EffectFx).
+Constants.EFFECT_PROBE = {
+	STEP     = 0.1,   -- s between samples
+	FRACTION = 0.6,   -- of the effect duration
+	MIN      = 0.5,   -- s, shortest window (bursts)
+	MAX      = 1.5,   -- s, longest window
+}
+
 -- ─── Balance Tuning ───────────────────────────────────────────────────────────
 -- Centralised here so plytests can adjust without touching formulas (Issue #61)
 Constants.BALANCE = {

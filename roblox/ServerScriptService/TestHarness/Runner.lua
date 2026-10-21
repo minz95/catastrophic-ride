@@ -110,7 +110,8 @@ end
 -- opts: { players = 4, rounds = 1, biome = "FOREST",
 --         durations = { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 --         farmProfiles = { "sweaty", "casual" }, driverProfiles = { "expert", "average", "novice" },
---         maxSeconds = 600, stopAfter = "CRAFTING" }
+--         maxSeconds = 600, stopAfter = "CRAFTING",
+--         loadouts = { { { SPECIAL = "Pizza", ENGINE = "Rocket", BODY = "Log" }, ... }, ... } }
 function Runner.runMatch(opts)
 	opts = opts or {}
 	local players = opts.players or 4
@@ -124,6 +125,9 @@ function Runner.runMatch(opts)
 		stopAfter = opts.stopAfter,   -- "CRAFTING": end when the race would start
 		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
 		maxSeconds = opts.maxSeconds or 900,
+		-- loadouts[round][botIndex] = slots: crafted as given (CraftingManager),
+		-- whatever the bot farmed. For ability experiments.
+		loadouts = opts.loadouts,
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

@@ -175,7 +175,9 @@ end)
 
 -- ─── Ability SFX ─────────────────────────────────────────────────────────────
 
-RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, effectKey)
+-- Args: (userId, itemName, targetIds, effectKey, info). This used to read
+-- the third argument (targetIds) as the effect key: always the generic sound.
+RemoteEvents.AbilityActivated.OnClientEvent:Connect(function(userId, itemName, _targetIds, effectKey)
 	if userId ~= LocalPlayer.UserId then return end
 	local sfxKey = SoundConfig.ABILITY_SFX[effectKey] or "ABILITY_GENERIC"
 	_playSFX(sfxKey)

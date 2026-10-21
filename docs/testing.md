@@ -140,6 +140,20 @@ Farming and crafting scenarios (`match` with `stopAfter = "CRAFTING"`, tag
 | `autoFor` | players with these farm profiles got an automatic craft |
 | `minAttempts` / `maxAttempts` | steal attempts by result (`stolen`, `defended`, `denied: …`) |
 
+Ability scenarios (`abilities-forest` / `-ocean` / `-sky`, tag `abilities`)
+give each bot a fixed loadout per round (`loadouts[round][botIndex]`,
+crafted as given by `CraftingManager` whatever was farmed), so the four
+rounds of `abilities-forest` fire all 39 items. Bots tap E every 2.5 s
+through RacingClient's normal E handling. Every effect that lands on a car
+goes through `Modules/EffectFx.play`, which the server measures
+(`ability_probe`: height, speed, MaxSpeed and TurnSpeed just before and
+over the next 0.5–1.5 s) and the bot clients report drawing (`bot_fx`).
+The `abilities` check fails when an item never fired, a request named an
+item that is not on the car, a lift never raised the car 1.5 studs, a speed
+effect never moved MaxSpeed the right way, a steering lock never set
+TurnSpeed to 0, or an effect was never drawn. `summary` lists every effect
+key with what was measured.
+
 Bot farm profiles (`Shared/BotBrain`): `sweaty`, `casual`, `afk`, and two
 harness profiles, `thief` (hunts anyone within 120 studs and steals on every
 chance) and `guard` (always taps the defence 3 times). Studio bots steal and

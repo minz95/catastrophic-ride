@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "954581a",
- "dirty": true,
+ "commit": "aeab89c",
+ "dirty": false,
  "kind": "vehicles",
  "logErrors": [
-  "2026-10-21T04:11:29.282Z,1.282255,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
-  "2026-10-21T04:11:29.400Z,1.400421,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-21T04:11:29.528Z,1.528175,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-21T04:11:30.212Z,2.212218,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-21T04:11:30.937Z,2.937836,6d48b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"87d9cd75-499e-41a7-95e9-bdb40db5a588\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-21T16:01:01.645Z,3.645317,6c50f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c8241be8-19de-4b03-beec-4f92c87bb4e7\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-21T04:11:39.774Z,11.774211,6e11b000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-21T04:11:40.019Z,12.019691,6d7d3000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-21T16:01:10.643Z,12.643597,6c50f000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-21T16:01:10.877Z,12.877901,6c277000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-21T04:11:54.522Z,26.522593,6d27f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"87d9cd75-499e-41a7-95e9-bdb40db5a588\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-21T16:01:26.800Z,28.800756,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-21T16:01:26.800Z,28.800776,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-21T16:01:26.800Z,28.800793,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-21T16:01:26.800Z,28.800802,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-21T16:01:26.897Z,28.897352,6bc97000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c8241be8-19de-4b03-beec-4f92c87bb4e7\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "biome": "OCEAN",
@@ -25,7 +25,7 @@
   ],
   "seed": 3
  },
- "ranAt": "2026-10-21T13:11:57+0900",
+ "ranAt": "2026-10-22T01:01:30+0900",
  "report": {
   "biome": "OCEAN",
   "kind": "escape",
@@ -37,11 +37,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 13.03
+      "t": 13.74
      }
     ],
     "effects": [],
-    "endT": 13.76,
+    "endT": 14.48,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "no items",
@@ -50,7 +50,7 @@
     "maxSpeed": 60.20867156982422,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 13.76,
+    "reached": 14.48,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": [],
@@ -74,11 +74,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.28
+      "t": 11.99
      }
     ],
     "effects": [],
-    "endT": 11.93,
+    "endT": 12.64,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Backpack",
@@ -87,7 +87,7 @@
     "maxSpeed": 66.77999877929688,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11.93,
+    "reached": 12.64,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -118,11 +118,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.4
+      "t": 12.06
      }
     ],
     "effects": [],
-    "endT": 12.05,
+    "endT": 12.71,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Bamboo Raft",
@@ -131,7 +131,7 @@
     "maxSpeed": 65.7634048461914,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.05,
+    "reached": 12.71,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -162,11 +162,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 9.06
+      "t": 9.83
      }
     ],
     "effects": [],
-    "endT": 9.56,
+    "endT": 10.34,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Barrel",
@@ -175,7 +175,7 @@
     "maxSpeed": 63.07781219482422,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 9.56,
+    "reached": 10.34,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -206,11 +206,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.98
+      "t": 13.84
      }
     ],
     "effects": [],
-    "endT": 13.71,
+    "endT": 14.58,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Bathtub",
@@ -219,7 +219,7 @@
     "maxSpeed": 59.220001220703125,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 13.71,
+    "reached": 14.58,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -231,7 +231,7 @@
      "TAIL": "Magic Wand"
     },
     "stopAt": 700,
-    "topSpeed": 86.6,
+    "topSpeed": 83.5,
     "trackLength": 5948,
     "turnSpeed": 1.3346518278121948,
     "visibility": "shipped"
@@ -250,11 +250,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.55
+      "t": 12.29
      }
     ],
     "effects": [],
-    "endT": 12.23,
+    "endT": 12.98,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Cardboard Box",
@@ -263,7 +263,7 @@
     "maxSpeed": 62.901634216308594,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.23,
+    "reached": 12.98,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -294,11 +294,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.2
+      "t": 11.9
      }
     ],
     "effects": [],
-    "endT": 11.86,
+    "endT": 12.54,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Kite",
@@ -307,7 +307,7 @@
     "maxSpeed": 65.78663635253906,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11.86,
+    "reached": 12.54,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -338,20 +338,20 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.76
+      "t": 11.46
      }
     ],
     "effects": [],
-    "endT": 11.43,
+    "endT": 12.13,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Life Preserver",
     "mass": 7.58,
-    "maxProgress": 700,
+    "maxProgress": 701,
     "maxSpeed": 66.77999877929688,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11.43,
+    "reached": 12.13,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -382,11 +382,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.25
+      "t": 12.94
      }
     ],
     "effects": [],
-    "endT": 12.95,
+    "endT": 13.64,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Log",
@@ -395,7 +395,7 @@
     "maxSpeed": 61.770408630371094,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.95,
+    "reached": 13.64,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -426,11 +426,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.8
+      "t": 12.53
      }
     ],
     "effects": [],
-    "endT": 12.51,
+    "endT": 13.24,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Microwave",
@@ -439,7 +439,7 @@
     "maxSpeed": 59.82367706298828,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.51,
+    "reached": 13.24,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -470,11 +470,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.68
+      "t": 13.56
      }
     ],
     "effects": [],
-    "endT": 13.4,
+    "endT": 14.26,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Red Sofa",
@@ -483,7 +483,7 @@
     "maxSpeed": 61.33427429199219,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 13.4,
+    "reached": 14.26,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -514,11 +514,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 9.2
+      "t": 9.93
      }
     ],
     "effects": [],
-    "endT": 9.76,
+    "endT": 10.51,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Shopping Cart",
@@ -527,7 +527,7 @@
     "maxSpeed": 62.53965377807617,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 9.76,
+    "reached": 10.51,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -558,11 +558,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.3
+      "t": 10.96
      }
     ],
     "effects": [],
-    "endT": 11,
+    "endT": 11.66,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Skateboard",
@@ -571,7 +571,7 @@
     "maxSpeed": 62.748207092285156,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11,
+    "reached": 11.66,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -602,11 +602,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.38
+      "t": 10.99
      }
     ],
     "effects": [],
-    "endT": 11.06,
+    "endT": 11.68,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "Suitcase",
@@ -615,7 +615,7 @@
     "maxSpeed": 62.95457077026367,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11.06,
+    "reached": 11.68,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -646,11 +646,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.78
+      "t": 12.46
      }
     ],
     "effects": [],
-    "endT": 12.46,
+    "endT": 13.15,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random1",
@@ -659,7 +659,7 @@
     "maxSpeed": 62.780792236328125,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.46,
+    "reached": 13.15,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -690,11 +690,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 13.01
+      "t": 13.73
      }
     ],
     "effects": [],
-    "endT": 13.75,
+    "endT": 14.44,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random2",
@@ -703,7 +703,7 @@
     "maxSpeed": 60.5886344909668,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 13.75,
+    "reached": 14.44,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -734,11 +734,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.08
+      "t": 12.78
      }
     ],
     "effects": [],
-    "endT": 12.78,
+    "endT": 13.48,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random3",
@@ -747,7 +747,7 @@
     "maxSpeed": 61.60197830200195,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.78,
+    "reached": 13.48,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -778,11 +778,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.26
+      "t": 11.95
      }
     ],
     "effects": [],
-    "endT": 11.93,
+    "endT": 12.61,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random4",
@@ -791,7 +791,7 @@
     "maxSpeed": 64.4099349975586,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 11.93,
+    "reached": 12.61,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -822,11 +822,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.61
+      "t": 13.3
      }
     ],
     "effects": [],
-    "endT": 13.31,
+    "endT": 13.99,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random5",
@@ -835,7 +835,7 @@
     "maxSpeed": 63.02695083618164,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 13.31,
+    "reached": 13.99,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -866,11 +866,11 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 12
+      "t": 12.66
      }
     ],
     "effects": [],
-    "endT": 12.7,
+    "endT": 13.38,
     "engine": "studio-heartbeat",
     "finished": false,
     "label": "random6",
@@ -879,7 +879,7 @@
     "maxSpeed": 62.35850524902344,
     "maxTilt": 0,
     "profile": "average",
-    "reached": 12.7,
+    "reached": 13.38,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -904,5 +904,5 @@
  "scenario": "vehicles-ocean",
  "studioExit": 0,
  "summary": "RaceSim OCEAN (shipped) \u2014 13.3s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
- "wallSeconds": 28.6
+ "wallSeconds": 31.6
 }
