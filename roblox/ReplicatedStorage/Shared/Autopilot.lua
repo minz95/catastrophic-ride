@@ -7,12 +7,15 @@
 -- kinematic simulator in tests/.
 --
 --   local ap = Autopilot.new(geo, Autopilot.PROFILES.average, seed)
---   local keys, info = ap:update({ x, z, yaw, speed, forward, maxSpeed, turnSpeed, t })
+--   local keys, info = ap:update({ x, z, yaw, speed, forward, maxSpeed, turnSpeed, t,
+--                                  isSky, biome, travelYaw })
 --     speed    horizontal speed (studs/s)
 --     forward  signed speed along LookVector (negative = reversing); optional
 --     turnSpeed the rate the car really turns at (VehicleController.turnRate)
 --
 -- yaw follows Roblox: LookVector = (-sin(yaw), 0, -cos(yaw)).
+
+local VehicleController = require(script.Parent.VehicleController)
 
 local Autopilot = {}
 Autopilot.__index = Autopilot
@@ -31,15 +34,21 @@ Autopilot.__index = Autopilot
 --               Without it, keyboard steering at TurnSpeed 3 rad/s overshoots.
 --   cornerMargin how much of the car's turn rate a corner may demand before
 --               the driver lifts (×1) or brakes (×1.4); > 1 = brakes late.
+--   drift       holds Shift through a corner that is too sharp for grip at
+--               this speed but not for a drift (instead of braking).
 Autopilot.PROFILES = {
-	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0, cornerMargin = 0.95 },
-	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0, cornerMargin = 1.10 },
+	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0, cornerMargin = 0.95, drift = true },
+	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0, cornerMargin = 1.10, drift = true },
 	novice  = { lookahead = 10, speedLook = 0.20, deadband = 0.14, liftAngle = 0.95, reaction = 0.30, anticipation = 0.75, wobble = 6, lineOffset = 0, cornerMargin = 1.30 },
 }
 
 -- Corner speed check: compare the turn rate the next stretch needs at the
 -- current speed with what the car can do.
 Autopilot.CORNER_LOOK = 3.0   -- × lookahead distance
+Autopilot.CORNER_STEPS = { 1.5, 2.25, 3.0 }   -- windows checked (× lookahead)
+Autopilot.DRIFT_AIM = 0.6     -- while drifting, steer by nose + this share of the slide
+Autopilot.DRIFT_TURN = math.rad(50)   -- a bend this big ahead is worth a drift (turbo)
+Autopilot.DRIFT_HOLD = math.rad(15)   -- keep drifting while this much turn is still near
 
 -- "Stuck" = no new track progress, regardless of wiggling in place.
 Autopilot.PROGRESS_EPS  = 6     -- studs of new progress that count as moving on
@@ -112,11 +121,22 @@ function Autopilot:update(state)
 		wobble = p.wobble * math.sin(proj.s / 90 + self.seed * 1.7)
 	end
 	local tx, tz = self.geo:offsetPoint(proj.s + look, p.lineOffset + wobble)
-	local err = headingError(state.x, state.z, state.yaw, tx, tz)
+	-- While sliding, the car moves along travelYaw, not where its nose
+	-- points: steer by a heading between the two (by the nose alone the
+	-- driver counter-steers out of every drift).
+	local yaw = state.yaw
+	if self.drifting and state.travelYaw then
+		yaw = state.yaw - wrapAngle(state.yaw - state.travelYaw) * Autopilot.DRIFT_AIM
+	end
+	local err = headingError(state.x, state.z, yaw, tx, tz)
 
 	-- Anticipation: where will the car point when this decision lands?
 	-- Integrate the keys already "in the pipe" over the reaction delay.
-	local turn = state.turnSpeed or 1
+	-- The rate the car can really turn at this speed (grip), and drifting.
+	local speedNow = state.speed or 0
+	local gripTurn = VehicleController.effectiveTurn(state.turnSpeed or 1, speedNow, state.isSky, false, state.biome)
+	local driftTurn = VehicleController.effectiveTurn(state.turnSpeed or 1, speedNow, state.isSky, true, state.biome)
+	local turn = self.drifting and driftTurn or gripTurn
 	local function omega(k)
 		if k.A then return turn elseif k.D then return -turn end
 		return 0
@@ -133,8 +153,8 @@ function Autopilot:update(state)
 	end
 	dyaw += omega(active) * math.max(horizon - cursor, 0)
 	dyaw *= (p.anticipation or 1)
-	local pyaw = state.yaw + dyaw
-	local mid = state.yaw + dyaw * 0.5
+	local pyaw = yaw + dyaw
+	local mid = yaw + dyaw * 0.5
 	local travel = (state.speed or 0) * p.reaction * (p.anticipation or 1)
 	local px = state.x - math.sin(mid) * travel
 	local pz = state.z - math.cos(mid) * travel
@@ -153,17 +173,43 @@ function Autopilot:update(state)
 	local speed = state.speed or 0
 	local forward = state.forward or speed
 	if forward > 5 then
+		-- The sharpest bend within CORNER_LOOK × lookahead, judged over a few
+		-- distances (one long window averages a hairpin with its straights).
+		-- Brake / lift: the turn over CORNER_LOOK × lookahead. Drift: also
+		-- the sharpest bend over shorter windows (CORNER_STEPS), since one
+		-- long window averages a hairpin with its straights.
+		local yaw0 = self.geo:yawAt(proj.s)
 		local far = math.max(look * Autopilot.CORNER_LOOK, 20)
-		local turnNeeded = math.abs(wrapAngle(self.geo:yawAt(proj.s + far) - self.geo:yawAt(proj.s)))
-		local required = turnNeeded * speed / far
-		local margin = (p.cornerMargin or 1) * turn
-		if required > margin * 1.4 or math.abs(predErr) > p.liftAngle * 1.6 then
+		local required = math.abs(wrapAngle(self.geo:yawAt(proj.s + far) - yaw0)) * speed / far
+		local sharpest, bigTurn, nearTurn = required, 0, 0
+		for i, f in ipairs(Autopilot.CORNER_STEPS) do
+			local w = math.max(look * f, 12)
+			local turnNeeded = math.abs(wrapAngle(self.geo:yawAt(proj.s + w) - yaw0))
+			sharpest = math.max(sharpest, turnNeeded * speed / w)
+			bigTurn = turnNeeded   -- net turn over the longest window (a slalom cancels out)
+			if i == 1 then nearTurn = turnNeeded end
+		end
+		local margin = (p.cornerMargin or 1) * gripTurn
+		local canDrift = p.drift and not state.isSky and state.maxSpeed
+			and speed > state.maxSpeed * (VehicleController.DRIFT_SPEED_RATIO + 0.05)
+		local driftLimit = (p.cornerMargin or 1) * driftTurn * 1.15
+		local driftable = canDrift and sharpest <= driftLimit
+		if canDrift and sharpest > driftLimit then
+			-- too fast even for a drift (e.g. a turbo into the next corner): brake
+			keys.W = false
+			keys.S = true
+		elseif driftable and bigTurn >= Autopilot.DRIFT_TURN then
+			keys.Shift = true          -- drift through it (turbo on the way out), keep the throttle
+		elseif self.drifting and canDrift and (sharpest > margin * 0.7 or nearTurn >= Autopilot.DRIFT_HOLD) then
+			keys.Shift = true          -- hold the drift to the corner exit
+		elseif required > margin * 1.4 or math.abs(predErr) > p.liftAngle * 1.6 then
 			keys.W = false
 			keys.S = true
 		elseif required > margin then
 			keys.W = false
 		end
 	end
+	self.drifting = keys.Shift == true
 
 	-- Stuck handling: back out, then ask for a respawn.
 	local info = { s = proj.s, lateral = proj.lateral, seg = proj.seg, err = err, respawn = false }

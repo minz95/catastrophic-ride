@@ -38,7 +38,7 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
 | Length (centerline) | ~7,610 | ~5,950 | ~7,580 |
-| Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | crystal pillars 2×2, touching, Y 54–114 |
+| Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
 | Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, loop A, crossover plaza, loop B, crystal canyon, final descent |
 | Checkpoints | N14, N19 | N5, N17 | N8, N18 |
@@ -162,6 +162,35 @@ spot with its track section; the RESULTS report lists them per section.
   abilities raise the ride height (`LiftOffset`); the old upward force moved
   cars less than 0.3 studs.
 
+- **2026-10-22 — Cars hit each other.** The drive model sets every car's
+  velocity each frame, so Roblox's own collision response vanished and a
+  hit felt like touching a wall. The server now resolves every car-to-car
+  contact as an inelastic collision (`Shared/CarImpact`: heavier cars push
+  more, a hit near the nose or tail spins the car) and sends each driver a
+  knock that fades (`Constants.IMPACT`), with a camera shake and a "💥" on
+  hard hits. HEAD / TAIL passives adjust that push instead of adding their
+  own BodyVelocity.
+- **2026-10-22 — Drifting works.** Drifting used to only turn slower
+  (× 0.35). Now turning is limited by grip at speed (`GRIP_LAT`), a drift
+  turns tighter and slides (the travel direction lags the nose), and a
+  slide of 0.6 s / 1.4 s pays a mini / super turbo on release. Forest's two
+  switchback hairpins are each two tight 90° corners (R = 25) now. Offline:
+  drifting saves a good driver 1–2 s per Forest lap; in Ocean's zigzags it
+  only helps experts. Every car that slides smokes for everyone.
+- **2026-10-22 — Items left on the track show the item.** Pizza, Gas Can,
+  Magnifying Glass, Kettle, Cactus and Log drops are a copy of the item's
+  model on the track surface with a warning ring and a label
+  (`Modules/TrackDrops`); obstacle hitboxes are the model's size.
+- **2026-10-22 — Sky looks like sky.** The fence of alternating neon
+  pillars (60-stud stripes) is one even, see-through pale-blue barrier with
+  a cloud rail; the road is cloud coloured with gold edge lines, cloud puffs
+  line it, floating islands and balloons replace the neon crystal spires,
+  and the lighting is daytime blue. Collision is unchanged (the same packed
+  pillars; slabs left a pocket at the figure-8 crossings).
+- **2026-10-22 — Start apron.** Forest and Sky have 24 studs of floor and a
+  back wall behind the grid; cars nudged backwards at GO fell to the kill
+  plane in Studio.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
@@ -180,3 +209,5 @@ Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
   the leader (not built).
 - Close racing is low everywhere, but the simulation has no car-to-car
   contact or abilities; check with playtests (M / N markers) before acting.
+- Drift turbos are tuned on the offline driver; how often players drift,
+  and whether the turbo is worth it, needs playtests.

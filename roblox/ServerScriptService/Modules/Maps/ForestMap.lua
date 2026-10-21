@@ -462,6 +462,11 @@ end
 
 local function _buildStartGrid(root)
 	KIT:buildStartGrid(root, { poleColor = Color3.fromRGB(240, 240, 240) })
+	KIT:buildStartApron(root, {
+		length = 24,
+		floor = { name = "StartApron", color = C.TRACK, material = MAT.TRACK, thickness = 1 },
+		wall = { name = "TrackWall", color = C.WALL, material = MAT.WOOD },
+	})
 end
 
 -- ─── Main build ───────────────────────────────────────────────────────────────

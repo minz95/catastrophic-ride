@@ -18,8 +18,15 @@
 --     command jumps straight to the target (used by a few pure tests).
 --   * The command cannot run more than BLOCKED_SLACK ahead of the car's real
 --     forward speed, so a car pinned against a wall does not "store" speed.
---   * Drifting (ctx.drifting) multiplies TurnSpeed by DRIFT_TURN_MULT inside
---     the command; nothing writes VehicleSeat.TurnSpeed on the client.
+--   * Grip: on the ground the turn rate is capped at GRIP_LAT / speed, so a
+--     sharp corner at full speed needs a brake or a drift.
+--   * Drifting (ctx.drifting): turn rate × DRIFT_TURN_MULT, a higher lateral
+--     cap (DRIFT_LAT), and the travel direction lags behind the nose
+--     (DRIFT_FOLLOW), so the car slides; sliding costs DRIFT_DRAG. The time
+--     spent sliding (state.driftTime) pays a mini-turbo on release (client →
+--     server). Nothing writes VehicleSeat.TurnSpeed on the client.
+--   * Hits (Shared/CarImpact via the server): VehicleController.knock adds a
+--     velocity change and a spin; the sideways part and the spin fade out.
 --   * SKY altitude moves ALTITUDE_RATE studs per second of real frame time.
 --   * Lift abilities: the chassis attribute "LiftOffset" (server, studs) is
 --     added to the hover / suspension target, eased at ABILITY_LIFT.RATE.
@@ -35,7 +42,6 @@ VehicleController.SKY_TURN_CAP      = 1.5
 VehicleController.ALTITUDE_RATE     = 20     -- studs per second at 60 FPS
 VehicleController.LEGACY_FRAME_DT   = 1 / 60
 VehicleController.DRIFT_TURN_MULT   = Constants.DRIVE.DRIFT_TURN_MULT
-VehicleController.DRIFT_TURN_MIN    = Constants.DRIVE.DRIFT_TURN_MIN
 VehicleController.DRIFT_SPEED_RATIO = 0.5    -- must be above 50% of MaxSpeed
 VehicleController.SUSPENSION_REACH  = 5      -- ray length below the chassis
 VehicleController.SUSPENSION_LIFT   = 0.2    -- ride height above the hit
@@ -77,16 +83,73 @@ end
 
 --- TurnSpeed while drifting.
 function VehicleController.driftTurnSpeed(turnSpeed)
-	return math.max(turnSpeed * VehicleController.DRIFT_TURN_MULT, VehicleController.DRIFT_TURN_MIN)
+	return turnSpeed * VehicleController.DRIFT_TURN_MULT
+end
+
+--- Turn rate on the ground at `speed`: the seat's rate, capped by grip
+-- (GRIP_LAT / speed), or by DRIFT_LAT / speed while drifting. SKY flyers
+-- have no grip limit (they are capped at SKY_TURN_CAP instead).
+function VehicleController.effectiveTurn(turnSpeed, speed, isSky, drifting, biome)
+	local D = Constants.DRIVE
+	local turn = turnSpeed or 1
+	if drifting then turn = VehicleController.driftTurnSpeed(turn) end
+	turn = VehicleController.turnRate(turn, isSky)
+	if isSky then return turn end
+	local lat = (drifting and D.DRIFT_LAT or D.GRIP_LAT)
+	lat = lat[biome or "FOREST"] or lat.FOREST
+	local v = math.abs(speed or 0)
+	if v > 1 then turn = math.min(turn, lat / v) end
+	return turn
 end
 
 --- Fresh per-vehicle drive state (reset it on spawn and respawn).
 function VehicleController.newState()
-	return { speed = 0 }
+	return { speed = 0, knockX = 0, knockZ = 0, spin = 0, travelYaw = nil, driftTime = 0, drifting = false }
 end
 
 function VehicleController.reset(state)
-	if state then state.speed = 0 end
+	if not state then return end
+	state.speed, state.knockX, state.knockZ, state.spin = 0, 0, 0, 0
+	state.travelYaw, state.driftTime, state.drifting = nil, 0, false
+end
+
+--- Starts / ends a drift for this frame (the one rule for RacingClient,
+-- RaceSim and the offline simulator). Returns "enter", or "exit" plus the
+-- mini-turbo level earned (nil when the slide was too short), or nil.
+function VehicleController.updateDrift(state, input, speed, maxSpeed, isSky)
+	if not state.drifting then
+		if VehicleController.shouldEnterDrift(input, false, speed, maxSpeed, isSky) then
+			state.drifting, state.driftTime = true, 0
+			return "enter"
+		end
+	elseif not input.driftHeld or isSky or speed < maxSpeed * Constants.DRIVE.DRIFT_EXIT_RATIO then
+		state.drifting = false
+		local level = VehicleController.turboLevel(state.driftTime)
+		state.driftTime = 0
+		return "exit", level
+	end
+	return nil
+end
+
+local function wrapAngle(a)
+	return (a + math.pi) % (2 * math.pi) - math.pi
+end
+VehicleController.wrapAngle = wrapAngle
+
+--- A hit (Shared/CarImpact): velocity change (dvx, dvz) and spin (rad/s).
+-- The part along the car's facing (lx, lz) changes its drive speed; the
+-- sideways rest becomes a slide that fades (Constants.IMPACT.KNOCK_DECAY).
+function VehicleController.knock(state, dvx, dvz, spin, lx, lz, maxSpeed)
+	if not state then return end
+	local d = math.sqrt(lx * lx + lz * lz)
+	if d < 1e-6 then lx, lz, d = 0, -1, 1 end
+	lx, lz = lx / d, lz / d
+	local along = dvx * lx + dvz * lz
+	local cap = (maxSpeed or 80) * 1.5
+	state.speed = math.clamp((state.speed or 0) + along, -cap, cap)
+	state.knockX = (state.knockX or 0) + dvx - lx * along
+	state.knockZ = (state.knockZ or 0) + dvz - lz * along
+	state.spin = (state.spin or 0) + (spin or 0)
 end
 
 --- Acceleration in studs/s² for a seat Torque.
@@ -105,18 +168,20 @@ function VehicleController.turnRate(turnSpeed, isSky)
 end
 
 --- Drive command.
--- ctx: { maxSpeed, turnSpeed, isSky, drifting,
---        torque, dt, actualForward }   -- the last three only matter with `state`
+-- ctx: { maxSpeed, turnSpeed, isSky, drifting, biome,
+--        torque, dt, actualForward, yaw }   -- these only matter with `state`
+--   yaw: the car's current yaw (LookVector = (-sin, 0, -cos)); enables the
+--        travel direction (grip / slide).
+--   actualForward: the car's real speed along its TRAVEL direction
+--        (VehicleController.travelDir; while sliding that is not the nose).
 -- state: optional table from newState(); enables acceleration/coasting.
--- returns { forwardSpeed (studs/s along LookVector), yawRate (rad/s, +left),
---           climb (-1, 0, 1) }
+-- returns { forwardSpeed (studs/s), yawRate (rad/s, +left), climb (-1, 0, 1),
+--           travelYaw (direction of travel; nil = along LookVector),
+--           knockX, knockZ (extra velocity from hits), slide (rad) }
 function VehicleController.command(input, ctx, state)
-	local turn = ctx.turnSpeed or 1
-	if ctx.drifting then
-		turn = VehicleController.driftTurnSpeed(turn)
-	end
-	turn = VehicleController.turnRate(turn, ctx.isSky)
 	local maxSpeed = ctx.maxSpeed or 40
+	local speedNow = state and math.abs(state.speed or 0) or math.abs(input.throttle * maxSpeed)
+	local turn = VehicleController.effectiveTurn(ctx.turnSpeed, speedNow, ctx.isSky, ctx.drifting, ctx.biome)
 	local target = input.throttle * maxSpeed
 	local forward = target
 
@@ -143,11 +208,57 @@ function VehicleController.command(input, ctx, state)
 		forward = v
 	end
 
-	return {
+	local cmd = {
 		forwardSpeed = forward,
 		yawRate      = input.steer * turn,
 		climb        = ctx.isSky and input.climb or 0,
+		knockX = 0, knockZ = 0, slide = 0,
 	}
+	if state then
+		local D, I = Constants.DRIVE, Constants.IMPACT
+		local dt = ctx.dt or (1 / 60)
+		-- hits: fading slide and spin
+		local k = math.exp(-I.KNOCK_DECAY * dt)
+		state.knockX, state.knockZ = (state.knockX or 0) * k, (state.knockZ or 0) * k
+		state.spin = (state.spin or 0) * math.exp(-I.SPIN_DECAY * dt)
+		if math.abs(state.knockX) < 0.05 and math.abs(state.knockZ) < 0.05 then state.knockX, state.knockZ = 0, 0 end
+		if math.abs(state.spin) < 0.01 then state.spin = 0 end
+		cmd.knockX, cmd.knockZ = state.knockX, state.knockZ
+		cmd.yawRate += state.spin
+		-- travel direction: follows the nose, slowly while drifting
+		if ctx.yaw and not ctx.isSky then
+			local tyaw = state.travelYaw or ctx.yaw
+			local rate = ctx.drifting and D.DRIFT_FOLLOW or D.TRAVEL_FOLLOW
+			tyaw = tyaw + wrapAngle(ctx.yaw - tyaw) * (1 - math.exp(-rate * dt))
+			state.travelYaw = tyaw
+			cmd.travelYaw = tyaw
+			cmd.slide = math.abs(wrapAngle(ctx.yaw - tyaw))
+			if ctx.drifting and cmd.slide > 0 then
+				state.speed = math.max(0, state.speed - D.DRIFT_DRAG * math.sin(math.min(cmd.slide, math.pi / 2)) * dt)
+				cmd.forwardSpeed = state.speed
+			end
+			if ctx.drifting and cmd.slide >= D.DRIFT_TURBO.MIN_SLIDE then
+				state.driftTime = (state.driftTime or 0) + dt
+			end
+		end
+	end
+	return cmd
+end
+
+--- Unit travel direction (x, z) of a drive state for a car at `yaw`.
+function VehicleController.travelDir(state, yaw)
+	local ty = (state and state.travelYaw) or yaw
+	return -math.sin(ty), -math.cos(ty)
+end
+
+--- Mini-turbo level (index into Constants.DRIVE.DRIFT_TURBO, or nil) for a
+-- drift that slid `driftTime` seconds.
+function VehicleController.turboLevel(driftTime)
+	local level
+	for i, l in ipairs(Constants.DRIVE.DRIFT_TURBO) do
+		if (driftTime or 0) >= l.time then level = i end
+	end
+	return level
 end
 
 --- Applies a command to a vehicle built by VehicleBuilder.
@@ -233,7 +344,12 @@ function VehicleController.apply(primary, cmd, opts)
 		end
 	end
 
-	bv.Velocity         = primary.CFrame.LookVector * cmd.forwardSpeed
+	local dir = primary.CFrame.LookVector
+	if cmd.travelYaw then
+		-- sliding: travel along travelYaw, keeping the look vector's slope
+		dir = Vector3.new(-math.sin(cmd.travelYaw), dir.Y, -math.cos(cmd.travelYaw))
+	end
+	bv.Velocity         = dir * cmd.forwardSpeed + Vector3.new(cmd.knockX or 0, 0, cmd.knockZ or 0)
 	bav.AngularVelocity = Vector3.new(0, cmd.yawRate, 0)
 
 	local gyro = primary:FindFirstChild("UprightGyro")

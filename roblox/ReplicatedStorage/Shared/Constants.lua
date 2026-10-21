@@ -200,8 +200,26 @@ Constants.DRIVE = {
 	COAST_DECEL      = 30,   -- W released: roll to a stop
 	BRAKE_DECEL      = 90,   -- S held, or MaxSpeed dropped below the current speed
 	BLOCKED_SLACK    = 10,   -- command may not run more than this ahead of the real speed
-	DRIFT_TURN_MULT  = 0.35, -- drifting turns slower but keeps speed
-	DRIFT_TURN_MIN   = 0.3,
+	-- Grip: at speed a car cannot turn at its full TurnSpeed; the turn rate
+	-- is capped at GRIP_LAT / speed (lateral acceleration, studs/s²). Sharp
+	-- corners need a brake, or a drift.
+	GRIP_LAT         = { FOREST = 120, OCEAN = 110 },
+	-- Drift (Shift + steer above DRIFT_SPEED_RATIO of MaxSpeed): the car
+	-- turns faster and is allowed more lateral acceleration, but its travel
+	-- direction lags behind where it points (it slides) and it loses a
+	-- little speed while sliding. Releasing a long drift gives a mini-turbo.
+	-- (Before 2026-10-22 drifting only turned SLOWER, × 0.35: it never helped.)
+	DRIFT_TURN_MULT  = 1.35,
+	DRIFT_LAT        = { FOREST = 175, OCEAN = 150 },
+	TRAVEL_FOLLOW    = 14,     -- 1/s: travel direction follows the nose (grip)
+	DRIFT_FOLLOW     = 4.0,    -- 1/s: while drifting (slide angle ≈ turn rate / this)
+	DRIFT_DRAG       = 10,     -- studs/s² × sin(slide angle) while drifting
+	DRIFT_EXIT_RATIO = 0.35,   -- drift ends below this share of MaxSpeed
+	DRIFT_TURBO = {            -- released drift → speed × mult for duration (server)
+		MIN_SLIDE = 0.15,      -- rad: sliding at least this much counts as drifting
+		{ time = 0.6, mult = 1.25, duration = 1.0, label = "MINI TURBO" },
+		{ time = 1.4, mult = 1.38, duration = 1.4, label = "SUPER TURBO" },
+	},
 }
 
 -- ─── Top speed: stat → VehicleSeat.MaxSpeed ──────────────────────────────────
@@ -259,6 +277,24 @@ function Constants.turnSpeedFor(biome, stats)
 	local f = math.clamp((v - t.lo) / (t.hi - t.lo), 0, 1)
 	return t.min + f * (t.max - t.min)
 end
+
+-- ─── Car-to-car hits (Shared/CarImpact, RacingManager, VehicleController) ─────
+-- Every contact between two race cars is resolved on the server as an
+-- inelastic collision and each driver gets a velocity change ("knock") and
+-- a spin that fade out (the drive model overwrites Roblox's own response).
+Constants.IMPACT = {
+	RESTITUTION  = 0.4,    -- 0 = cars stick, 1 = full bounce
+	PUSH         = 1.0,    -- × the physical impulse (arcade feel)
+	MIN_CLOSING  = 4,      -- studs/s: slower touches do nothing
+	MAX_DV       = 45,     -- studs/s cap per car per hit
+	SPIN_PER_DV  = 0.09,   -- rad/s of spin per stud/s of sideways push at the nose/tail
+	MAX_SPIN     = 2.5,    -- rad/s
+	KNOCK_DECAY  = 2.5,    -- 1/s: sideways slide fades as exp(-KNOCK_DECAY × t)
+	SPIN_DECAY   = 3.0,    -- 1/s
+	PAIR_COOLDOWN = 0.35,  -- s before the same two cars can hit again
+	BIG_HIT      = 18,     -- closing speed that shows a "쾅!" label on both cars
+	SHAKE_PER_HIT = 0.02,  -- camera shake per stud/s of closing speed (driver's own car)
+}
 
 -- ─── HEAD / TAIL passives (RacingManager) ─────────────────────────────────────
 Constants.PASSIVES = {

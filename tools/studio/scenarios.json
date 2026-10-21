@@ -346,7 +346,9 @@
         "finishRate": 0.9,
         "allJoined": true,
         "fairStart": 1.0,
-        "hudTimer": true
+        "hudTimer": true,
+        "hits": 1,
+        "turbos": 1
       }
     },
     {

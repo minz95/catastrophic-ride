@@ -84,6 +84,11 @@ EffectLook.CAR = {
 	momentum       = { style = "badge",   color = PINK,   label = "🌻 가속" },
 	boost          = { style = "boost",   color = C(100, 200, 255) },
 	boostRocket    = { style = "boost",   color = ORANGE, label = "🚀 로켓 부스트!" },
+
+	-- ── driving: car-to-car hits and drift turbos ──────────────────────────
+	bump           = { style = "hit",     color = YELLOW, label = "💥" },
+	miniTurbo      = { style = "boost",   color = C(80, 190, 255), label = "🔵 미니 터보" },
+	superTurbo     = { style = "boost",   color = ORANGE, label = "🔥 슈퍼 터보" },
 }
 
 EffectLook.SCREEN = {

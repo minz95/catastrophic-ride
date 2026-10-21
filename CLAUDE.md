@@ -42,6 +42,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   of every turn, dropped wherever they would stand inside the lane (inside of
   turns, SKY's figure-8 crossings). `wallGapHalfWidth` > 0 adds doorways
   (currently 0 everywhere: continuous walls).
+- Look of a map or a drop without Studio: `tools/scene_dump.luau` +
+  `tools/scene_render.py` (PNG). Drift timing: `tools/drift_sim.luau`.
+- Studio runs are heavy: one small batch at a time, never in parallel with
+  another Studio run or the full offline suite.
 - Vehicle look: `Modules/VehicleDesign.lua` (car / boat / plane as data:
   parts, slot boxes for the crafted items), built by `Modules/VehicleBuilder`.
   Only the chassis has mass and collision, sized from the stats as before, so
@@ -87,6 +91,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Lift abilities set the chassis attribute `LiftOffset` through
   `Modules/VehicleLift`; an upward BodyForce cannot beat the ride-height
   BodyPosition. Never tween or set a race car's CFrame from a client.
+- Car-to-car hits: `RacingManager` resolves every contact with
+  `Shared/CarImpact` and sends each driver `RemoteEvents.CarImpact`;
+  `VehicleController.knock` adds it to the drive state. Never push a race
+  car with a second BodyVelocity (it fights `DriveVelocity`).
+- Drift: one rule, `VehicleController.updateDrift`, for RacingClient,
+  RaceSim and the offline sim. While sliding the car travels along
+  `state.travelYaw`, so `actualForward` must be measured along
+  `VehicleController.travelDir`, not the nose (else the blocked-car clamp
+  kills the speed). Mini-turbos are applied by the server (`DriftTurbo`).
+- Ability drops go through `Modules/TrackDrops` (item model on the ground,
+  ring, label, hitbox the model's size).
 - Client phase timers count down to the `PhaseEndsAt` attribute
   (`Shared/PhaseClock`), not to `Constants.PHASE_DURATION`.
 - Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range.

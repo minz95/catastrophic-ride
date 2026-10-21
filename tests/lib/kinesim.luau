@@ -113,6 +113,7 @@ function KineSim.run(world, opts)
 		pads = { active = 0 },
 		car = car, profile = opts.profileName, seed = seed,
 		visibility = world.visibility, respawnMode = respawnMode,
+		drifts = 0, turbos = 0, driftSeconds = 0,
 	}
 	for _ in pairs(active) do res.pads.active += 1 end
 
@@ -180,7 +181,9 @@ function KineSim.run(world, opts)
 			x = x, z = z, yaw = yaw, speed = speed,
 			forward = vx * -math.sin(yaw) + vz * -math.cos(yaw),
 			maxSpeed = mods:value(t), turnSpeed = effTurn, t = t,
+			isSky = isSky, biome = world.biome, travelYaw = driveState.travelYaw,
 		})
+		if opts.noDrift then keys.Shift = nil end
 		local s = info.s
 		if s > maxS then maxS = s end
 
@@ -277,14 +280,31 @@ function KineSim.run(world, opts)
 
 		-- Drive: exactly the client's command path.
 		local input = VehicleController.readKeys(keys)
-		local lx0, lz0 = -math.sin(yaw), -math.cos(yaw)
+		-- speed along the direction the car is travelling (the nose while gripping)
+		local ty0 = driveState.travelYaw or yaw
+		local tx0, tz0 = -math.sin(ty0), -math.cos(ty0)
+		-- Drift: entered and left exactly like RacingClient; a released
+		-- drift pays its mini-turbo (the server's VehicleTuning multiplier).
+		local maxNow = mods:value(t)
+		local change, level = VehicleController.updateDrift(driveState, input, speed, maxNow, isSky)
+		if change == "enter" then
+			res.drifts += 1
+		elseif level then
+			local tb = Constants.DRIVE.DRIFT_TURBO[level]
+			mods:set("driftTurbo", tb.mult, t + tb.duration)
+			res.turbos += 1
+		end
+		local drifting = driveState.drifting
 		local cmd = VehicleController.command(input, {
-			maxSpeed = mods:value(t), turnSpeed = car.turnSpeed, isSky = isSky,
-			torque = car.torque, dt = dt, actualForward = vx * lx0 + vz * lz0,
+			maxSpeed = maxNow, turnSpeed = car.turnSpeed, isSky = isSky, drifting = drifting,
+			biome = world.biome, yaw = yaw,
+			torque = car.torque, dt = dt, actualForward = vx * tx0 + vz * tz0,
 		}, driveState)
+		if drifting then res.driftSeconds += dt end
 		yaw += cmd.yawRate * dt
-		local lx, lz = -math.sin(yaw), -math.cos(yaw)
-		local tvx, tvz = lx * cmd.forwardSpeed, lz * cmd.forwardSpeed
+		local tyaw = cmd.travelYaw or yaw
+		local lx, lz = -math.sin(tyaw), -math.cos(tyaw)
+		local tvx, tvz = lx * cmd.forwardSpeed + cmd.knockX, lz * cmd.forwardSpeed + cmd.knockZ
 		local dvx, dvz = tvx - vx, tvz - vz
 		local dmag = math.sqrt(dvx * dvx + dvz * dvz)
 		local maxDv = accel * dt
@@ -345,6 +365,8 @@ function KineSim.run(world, opts)
 				x = math.floor(x * 10) / 10, z = math.floor(z * 10) / 10,
 				s = math.floor(s), lat = math.floor(info.lateral * 10) / 10,
 				speed = math.floor(math.sqrt(vx * vx + vz * vz) * 10) / 10,
+				drift = driveState.drifting or nil,
+				slide = driveState.drifting and math.floor((driveState.travelYaw and math.abs(VehicleController.wrapAngle(yaw - driveState.travelYaw)) or 0) * 100) / 100 or nil,
 			})
 		end
 	end
