@@ -297,7 +297,8 @@ def check_abilities(sc, events):
         ps = probes[key]
         problems = []
         if key in LIFT_KEYS:
-            _, miss = bad(key, lambda p: (p.get("yMax") or 0) - (p.get("y0") or 0) >= LIFT_MIN)
+            # lifts do not stack: a car already lifted (lift0) only rises the difference
+            _, miss = bad(key, lambda p: (p.get("yMax") or 0) - (p.get("y0") or 0) + (p.get("lift0") or 0) >= LIFT_MIN)
             if len(miss) == len(ps):
                 problems.append("never rose %.1f studs (rose %s)" % (LIFT_MIN, ", ".join(
                     "%.1f" % ((p.get("yMax") or 0) - (p.get("y0") or 0)) for p in ps[:5])))

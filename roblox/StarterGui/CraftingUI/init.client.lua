@@ -410,13 +410,16 @@ local _totalTime = Constants.PHASE_DURATION.CRAFTING
 local function _startTimer()
 	_startTick = tick()
 	if _runConn then _runConn:Disconnect() end
-	_runConn = RunService.Heartbeat:Connect(function()
-		if not screen.Enabled then return end
+	local function update()
 		local remaining = PhaseClock.remaining(math.max(0, _totalTime - (tick() - _startTick)))
 		timerLabel.Text = PhaseClock.format(remaining)
 		timerLabel.TextColor3 = remaining <= 15
 			and Color3.fromRGB(255, 60, 60)
 			or  Color3.fromRGB(80, 220, 80)
+	end
+	update()   -- right away: the label still says "2:00" until the first frame
+	_runConn = RunService.Heartbeat:Connect(function()
+		if screen.Enabled then update() end
 	end)
 end
 

@@ -27,7 +27,7 @@
 --   finish           RacingManager          { userId, time, place }
 --   ability          AbilityManager         { userId, item, result }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
---                                            maxSpeed0, maxSpeedMid, turn0, turnMid, window }  (detailed only)
+--                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)
 
 local Telemetry = {}
 

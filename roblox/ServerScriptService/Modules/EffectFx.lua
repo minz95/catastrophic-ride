@@ -6,7 +6,7 @@
 -- check that the effect really happened in Roblox physics:
 --
 --   ability_probe { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
---                   maxSpeed0, maxSpeedMid, turn0, turnMid, window }
+--                   maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }
 --
 -- Look of every key: ReplicatedStorage/Shared/EffectLook.lua.
 
@@ -34,6 +34,7 @@ local function snap(player)
 		v = Vector3.new(v.X, 0, v.Z).Magnitude,
 		maxSpeed = seat and seat.MaxSpeed,
 		turn = seat and seat.TurnSpeed,
+		lift = primary:GetAttribute("LiftOffset") or 0,
 	}
 end
 
@@ -65,6 +66,7 @@ local function probe(key, player, duration, from)
 			v0 = r1(s0.v), vMax = r1(vMax), vMin = r1(vMin),
 			maxSpeed0 = r1(s0.maxSpeed), maxSpeedMid = r1(mid.maxSpeed),
 			turn0 = r1(s0.turn), turnMid = r1(mid.turn),
+			lift0 = r1(s0.lift),   -- a lift already active (lifts do not stack)
 		})
 	end)
 end
