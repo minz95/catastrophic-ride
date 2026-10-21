@@ -122,6 +122,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (`Phase`, `Biome`) for client scripts that start after the event went out.
 - Craft submissions go through `Shared/CraftingRules.validate` (core slots
   only take their own item type; the rest is dropped and logged).
+- Fights (FARMING): `FarmingManager` RequestPunch / SetGuard with the
+  pure rules in `FarmingRules.canPunch` / `punch`; knock-outs drop through
+  `_dropItem` (reason "knocked_out"). Every fight or steal step is
+  broadcast as `RemoteEvents.FarmAction` and drawn by `FarmFx` for all.
+- A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
+  top of its script (the script runs again on every respawn).
 - Timed things end on a timer, not on the next client message (contests used
   to wait for one more press and locked items for the round).
 - `MapVisibility.restore` must keep a stored `false` (the old

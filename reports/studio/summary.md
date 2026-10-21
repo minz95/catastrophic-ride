@@ -14,6 +14,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-forest-4p](farm-forest-4p.json) | FAIL | aeab89c+ | 2026-10-22T01:29 |
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
+| [fight-4p](fight-4p.json) | PASS | aa48bae+ | 2026-10-22T02:19 |
 | [match-forest](match-forest.json) | WARN | fd36242+ | 2026-10-22T02:03 |
 | [match-ocean](match-ocean.json) | PASS | aeab89c | 2026-10-22T00:35 |
 | [match-sky](match-sky.json) | PASS | aeab89c | 2026-10-22T00:39 |
@@ -24,9 +25,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | aeab89c | 2026-10-22T00:20 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
-| [steal-4p](steal-4p.json) | WARN | aeab89c | 2026-10-22T00:57 |
+| [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
-| [steal-defended-2p](steal-defended-2p.json) | FAIL | aeab89c+ | 2026-10-22T01:32 |
+| [steal-defended-2p](steal-defended-2p.json) | PASS | aa48bae+ | 2026-10-22T02:21 |
 | [vehicles-forest](vehicles-forest.json) | PASS | aeab89c | 2026-10-22T01:00 |
 | [vehicles-ocean](vehicles-ocean.json) | PASS | aeab89c | 2026-10-22T01:01 |
 | [vehicles-sky](vehicles-sky.json) | PASS | aeab89c | 2026-10-22T01:02 |
@@ -243,6 +244,19 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
   events: bot_craft=4 bot_defend=7 bot_joined=4 bot_ready=4 bot_steal=13 contest_result=6 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=42 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal_attempt=13 vehicle_spawn=3
 ```
 
+## fight-4p — PASS
+
+```
+Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
+  round 1 (FOREST): 0 finished of 4
+    steal attempts: none
+    -4: picked 11, contests 1/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 15, contests 2/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 0, contests 0/1, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+  events: ability=2 bot_craft=4 bot_farmfx=64 bot_guard=61 bot_hud=184 bot_joined=4 bot_punch=277 bot_ready=4 contest_result=3 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=26 phase=3 punch=276 race_sample=8 race_start=1 vehicle_spawn=4
+```
+
 ## match-forest — WARN
 
 ```
@@ -368,17 +382,18 @@ Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
 - **fail** -6 CRAFTING: 2 timer screens at once
 - **fail** -6 FARMING: timer is 10 s off the server's
 
-## steal-4p — WARN
+## steal-4p — PASS
 
 ```
-Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 2
-  round 1 (FOREST): 0 finished of 2
-    steal attempts: defended=1, denied: too far=3, denied: victim has nothing=1, stolen=1
-    -1: picked 9, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 10, contests 0/0, stole 0, robbed 1, defences 1, items 8 | craft submitted, rejected 0
-  events: ability=2 bot_craft=2 bot_defend=2 bot_hud=90 bot_joined=2 bot_ready=2 bot_steal=6 craft=2 harness_crafting=1 harness_round=1 item_drop=3 item_pickup=19 phase=3 race_sample=2 race_start=1 steal=1 steal_attempt=6 vehicle_spawn=2
+Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
+  round 1 (FOREST): 0 finished of 4
+    steal attempts: defended=2, denied: too far=1, denied: victim has nothing=2, stolen=2
+    -4: picked 9, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 17, contests 4/4, stole 0, robbed 2, defences 2, items 8 | craft submitted, rejected 0
+    -1: picked 13, contests 0/1, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -3: picked 9, contests 0/2, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+  events: ability=4 bot_craft=4 bot_defend=4 bot_farmfx=72 bot_guard=1 bot_hud=182 bot_joined=4 bot_pickup_denied=1 bot_punch=2 bot_ready=4 bot_steal=7 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=16 item_pickup=48 phase=3 punch=2 race_sample=8 race_start=1 steal=2 steal_attempt=7 vehicle_spawn=4
 ```
-- **warn** round 1: 2 of 4 players joined (Studio did not start every client)
 
 ## steal-crowd-6p — PASS
 
@@ -395,17 +410,16 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
   events: bot_craft=6 bot_defend=13 bot_joined=6 bot_pickup_denied=46 bot_ready=6 bot_steal=27 contes
 ```
 
-## steal-defended-2p — FAIL
+## steal-defended-2p — PASS
 
 ```
-Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1
+Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
   round 1 (FOREST): 0 finished of 2
-    steal attempts: defended=2, denied: too far=2
-    -1: picked 16, contests 1/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 9, contests 2/3, stole 0, robbed 0, defences 2, items 8 | craft submitted, rejected 0
-  events: ability=2 bot_craft=2 bot_defend=2 bot_hud=91 bot_joined=2 bot_ready=2 bot_steal=4 contest_result=3 craft=2 harness_crafting=1 harness_round=1 item_drop=9 item_pickup=25 phase=3 race_sample=4 race_start=1 steal_attempt=4 vehicle_spawn=2
+    steal attempts: defended=3, denied: victim has nothing=1
+    -1: picked 17, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 9, contests 0/0, stole 0, robbed 0, defences 3, items 8 | craft submitted, rejected 0
+  events: ability=2 bot_craft=2 bot_defend=3 bot_farmfx=28 bot_hud=92 bot_joined=2 bot_ready=2 bot_steal=4 craft=2 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=26 phase=3 race_sample=4 race_start=1 steal_attempt=4 vehicle_spawn=2
 ```
-- **fail** -2 FARMING: timer is 20 s off the server's
 
 ## vehicles-forest — PASS
 

@@ -237,6 +237,16 @@ scenarios log `impact`, `drift_turbo` and `drop_placed`; `sim.py` prints a
 `driving:` line and fails on hits that push nobody or drops that miss the
 ground (`checks.hits` / `checks.turbos` set minimum counts).
 
+### Farming fights
+
+`tests/specs/farming.spec.luau` ("fights") runs the real FarmingManager:
+reach, facing, cooldown, guard, hit memory, knock-out drops and immunity.
+In Studio, `python3 tools/studio/sim.py run fight-4p` puts two "brawler" bots
+(walk up to players and punch) with a casual and a "guard" bot; checks:
+landed hits, at least one knock-out and one block (`minPunches`), the
+inventory ledger, and that every client drew the punch and guard animations
+(`fightFx`; the steal scenarios check the grab / swat animations).
+
 ### Playtests: markers and the fun report
 
 In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)

@@ -14,6 +14,13 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local LocalPlayer  = Players.LocalPlayer
 
+-- This script runs again after every respawn, but its ScreenGui
+-- (ResetOnSpawn = false) survives: drop the old copy so only one crafting
+-- screen shows (Studio bots had two or three timers at once).
+for _, old in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+	if old.Name == "CraftingUI" and old:IsA("ScreenGui") then old:Destroy() end
+end
+
 -- ─── Screen ───────────────────────────────────────────────────────────────────
 
 local screen = Instance.new("ScreenGui")

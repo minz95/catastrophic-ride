@@ -191,6 +191,20 @@ spot with its track section; the RESULTS report lists them per section.
   back wall behind the grid; cars nudged backwards at GO fell to the kill
   plane in Studio.
 
+- **2026-10-22 — Fights in FARMING.** F punches the player you face (6
+  studs, `Constants.FIGHT`); 4 landed hits within 4 s of each other knock a
+  random item onto the ground for anyone to grab, then the victim is immune
+  for 4 s. Holding G guards (blocks punches, walks at half speed, at most
+  3 s). Steals stay (hold E, the victim taps E three times) but now show:
+  the thief reaches, the victim wriggles and swats, and the victim gets a
+  big on-screen prompt (it was a console print). Every client animates
+  fights by rotating shoulder / waist joints (`StarterPlayerScripts/FarmFx`,
+  R6 and R15).
+- **2026-10-22 — Screens no longer pile up.** StarterGui scripts run again
+  after each respawn; screens kept across respawns (`ResetOnSpawn = false`)
+  were created again each time, so Studio bots saw two or three crafting
+  timers. Every such screen now removes its old copy (`tests/specs/ui`).
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

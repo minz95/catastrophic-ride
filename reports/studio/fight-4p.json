@@ -1,0 +1,9606 @@
+{
+ "checks": [],
+ "commit": "aa48bae",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-21T17:19:50.159Z,123.159004,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.162Z,123.162155,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.162Z,123.162231,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.174Z,123.174820,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.174Z,123.174881,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.175Z,123.175392,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.175Z,123.175430,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.496Z,123.496872,6b147000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"4d996d53-c7f3-4ba3-aa9c-051913ada241\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-21T17:19:50.497Z,123.497658,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-21T17:19:50.497Z,123.497742,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 20,
+   "FARMING": 90,
+   "RACING": 60,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "brawler",
+   "casual",
+   "brawler",
+   "guard"
+  ],
+  "maxSeconds": 400,
+  "players": 4,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-22T02:19:52+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "brawler",
+     "casual",
+     "brawler",
+     "guard"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 90,
+    "RACING": 60,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 400,
+   "players": 4,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.8,
+       "boostDuration": 0.8,
+       "floatability": 0.25,
+       "flyability": 1.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     },
+     "-2": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Propeller Hat",
+       "MOBILITY": "Suitcase",
+       "SPECIAL": "Magic Wand"
+      },
+      "stats": {
+       "acceleration": 9.362602486114785,
+       "boostDuration": 5.76,
+       "floatability": 0.7140967997884159,
+       "flyability": 0.2644802962179318,
+       "speed": 21.58159217138323,
+       "stability": 111.20867495371596
+      }
+     },
+     "-3": {
+      "auto": false,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.8,
+       "boostDuration": 0.8,
+       "floatability": 0.25,
+       "flyability": 1.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     },
+     "-4": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "ENGINE": "Kettle",
+       "HEAD": "Bathtub",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Life Preserver"
+      },
+      "stats": {
+       "acceleration": 35.80719204284621,
+       "boostDuration": 5.76,
+       "floatability": 0.1912777352716144,
+       "flyability": 0.956388676358072,
+       "speed": 33.66488140780413,
+       "stability": 20.566182096403978
+      }
+     }
+    },
+    "craftT0": 102.144,
+    "durationSeconds": 92.90555933333235,
+    "farm": {
+     "attempts": [],
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": [],
+       "contestsLost": 1,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 0,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-2": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 2,
+       "defencesTried": 0,
+       "drops": 7,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 15,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-3": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 0,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-4": {
+       "attempts": [],
+       "contestsLost": 2,
+       "contestsWon": 1,
+       "defencesTried": 0,
+       "drops": 3,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 11,
+       "robbed": 0,
+       "stolen": 0
+      }
+     },
+     "punches": {
+      "blocked": 6,
+      "hit": 258,
+      "knockout": 1,
+      "miss": 11
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [],
+     "-2": [
+      "Microwave",
+      "Magic Wand",
+      "Suitcase",
+      "Log",
+      "Life Preserver",
+      "Propeller Hat",
+      "Kite",
+      "Suitcase"
+     ],
+     "-3": [],
+     "-4": [
+      "Kettle",
+      "Bathtub",
+      "Magic Wand",
+      "Life Preserver",
+      "Magic Wand",
+      "Umbrella",
+      "Compass",
+      "Drill"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 0.8,
+      "driver": "expert",
+      "farm": "brawler",
+      "name": "Player1",
+      "slots": [],
+      "speed": 23,
+      "userId": -1
+     },
+     {
+      "boostDuration": 5.76,
+      "driver": "average",
+      "farm": "casual",
+      "name": "Player2",
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Propeller Hat",
+       "MOBILITY": "Suitcase",
+       "SPECIAL": "Magic Wand"
+      },
+      "speed": 21.58159217138323,
+      "userId": -2
+     },
+     {
+      "boostDuration": 0.8,
+      "driver": "novice",
+      "farm": "brawler",
+      "name": "Player3",
+      "slots": [],
+      "speed": 23,
+      "userId": -3
+     },
+     {
+      "boostDuration": 5.76,
+      "driver": "expert",
+      "farm": "guard",
+      "name": "Player4",
+      "slots": {
+       "ENGINE": "Kettle",
+       "HEAD": "Bathtub",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Life Preserver"
+      },
+      "speed": 33.66488140780413,
+      "userId": -4
+     }
+    ],
+    "raceStartedAt": 107.16002020833548,
+    "round": 1,
+    "startedAt": 15.262124916655011,
+    "t0": 12.081
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: none\n    -4: picked 11, contests 1/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -2: picked 15, contests 2/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -1: picked 0, contests 0/1, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: ability=2 bot_craft=4 bot_farmfx=64 bot_guard=61 bot_hud=184 bot_joined=4 bot_punch=277 bot_ready=4 contest_result=3 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=26 phase=3 punch=276 race_sample=8 race_start=1 vehicle_spawn=4",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "driver": "expert",
+     "farm": "brawler",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 4.684,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "brawler"
+     },
+     "kind": "bot_ready",
+     "t": 5.09,
+     "userId": -1
+    },
+    {
+     "driver": "average",
+     "farm": "casual",
+     "kind": "bot_joined",
+     "name": "Player2",
+     "t": 6.046,
+     "userId": -2
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "casual"
+     },
+     "kind": "bot_ready",
+     "t": 6.373,
+     "userId": -2
+    },
+    {
+     "driver": "novice",
+     "farm": "brawler",
+     "kind": "bot_joined",
+     "name": "Player3",
+     "t": 8.135,
+     "userId": -3
+    },
+    {
+     "data": {
+      "driver": "novice",
+      "farm": "brawler"
+     },
+     "kind": "bot_ready",
+     "t": 8.341,
+     "userId": -3
+    },
+    {
+     "driver": "expert",
+     "farm": "guard",
+     "kind": "bot_joined",
+     "name": "Player4",
+     "t": 8.659,
+     "userId": -4
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "guard"
+     },
+     "kind": "bot_ready",
+     "t": 8.906,
+     "userId": -4
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 12.056
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 12.081
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 12.306
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 12.323,
+     "victim": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.34,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "hit",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.34,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.34,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 12.34,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.34,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "hit",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.34,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "hit",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.373,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 89.69976806640625
+     },
+     "kind": "bot_hud",
+     "t": 12.373,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.374,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "hit",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.374,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 12.374,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 89.65587592124939
+     },
+     "kind": "bot_hud",
+     "t": 12.406,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 89.15777492523193
+     },
+     "kind": "bot_hud",
+     "t": 12.906,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 88.87647891044617
+     },
+     "kind": "bot_hud",
+     "t": 13.173,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 87.68401098251343
+     },
+     "kind": "bot_hud",
+     "t": 14.373,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 87.64158391952515
+     },
+     "kind": "bot_hud",
+     "t": 14.423,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 87.14476490020752
+     },
+     "kind": "bot_hud",
+     "t": 14.923,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 86.87516498565674
+     },
+     "kind": "bot_hud",
+     "t": 15.189,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 85.681804895401
+     },
+     "kind": "bot_hud",
+     "t": 16.373,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 85.6398389339447
+     },
+     "kind": "bot_hud",
+     "t": 16.423,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 85.12803983688354
+     },
+     "kind": "bot_hud",
+     "t": 16.939,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 84.85858488082886
+     },
+     "kind": "bot_hud",
+     "t": 17.206,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Microwave",
+     "itemId": "54",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 18.107,
+     "userId": -2
+    },
+    {
+     "inventory": 1,
+     "item": "Kettle",
+     "itemId": "80",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 18.14,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 83.68126797676086
+     },
+     "kind": "bot_hud",
+     "t": 18.373,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 83.62295389175415
+     },
+     "kind": "bot_hud",
+     "t": 18.44,
+     "userId": -2
+    },
+    {
+     "inventory": 2,
+     "item": "Magic Wand",
+     "itemId": "86",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 18.607,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 83.12756204605103
+     },
+     "kind": "bot_hud",
+     "t": 18.941,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 19.041
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.074,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.074,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.074,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.074,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 19.074,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 82.85825395584106
+     },
+     "kind": "bot_hud",
+     "t": 19.206,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Bathtub",
+     "itemId": "19",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 20.04,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 20.356
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.373,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.373,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 20.373,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.389,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 81.66979503631592
+     },
+     "kind": "bot_hud",
+     "t": 20.389,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.389,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 81.60662794113159
+     },
+     "kind": "bot_hud",
+     "t": 20.456,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 20.856
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.872,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.872,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.889,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.906,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 20.906,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 81.11185884475708
+     },
+     "kind": "bot_hud",
+     "t": 20.956,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 80.8379590511322
+     },
+     "kind": "bot_hud",
+     "t": 21.222,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Suitcase",
+     "itemId": "27",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 21.69,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 22.223
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.241,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.241,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 22.241,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.255,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.256,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 79.65329003334045
+     },
+     "kind": "bot_hud",
+     "t": 22.407,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 79.60509896278381
+     },
+     "kind": "bot_hud",
+     "t": 22.456,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 22.589
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.605,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.622,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.622,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 22.622,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.622,
+     "userId": -2
+    },
+    {
+     "inventory": 3,
+     "item": "Magic Wand",
+     "itemId": "28",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 22.639,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 79.09614706039429
+     },
+     "kind": "bot_hud",
+     "t": 22.972,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 78.83720302581787
+     },
+     "kind": "bot_hud",
+     "t": 23.222,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 23.855
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 23.873,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 23.873,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 23.873,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 23.873,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "miss",
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 23.889,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 24.307
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 24.339,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 77.65197896957397
+     },
+     "kind": "bot_hud",
+     "t": 24.406,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 77.59009099006653
+     },
+     "kind": "bot_hud",
+     "t": 24.473,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 24.739,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 24.773,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 1
+     },
+     "kind": "bot_guard",
+     "t": 24.773,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.791,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.806,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.806,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.806,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 77.09180784225464
+     },
+     "kind": "bot_hud",
+     "t": 24.972,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 24.972,
+     "victim": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.989,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.006,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.006,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.006,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 25.006,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 76.82070589065552
+     },
+     "kind": "bot_hud",
+     "t": 25.24,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 25.289,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 25.306,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 25.306,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.323,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.339,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.339,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.339,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 25.523,
+     "victim": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.539,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.539,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.539,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 25.539,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.557,
+     "userId": -2
+    },
+    {
+     "itemId": "20",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-2": 18,
+      "-4": 18
+     },
+     "t": 26.106,
+     "winner": -2
+    },
+    {
+     "inventory": 4,
+     "item": "Life Preserver",
+     "itemId": "20",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 26.106,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.173,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 26.19,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.19,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 26.207,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 75.63450503349304
+     },
+     "kind": "bot_hud",
+     "t": 26.439,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 75.59000897407532
+     },
+     "kind": "bot_hud",
+     "t": 26.472,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.839,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -2
+     },
+     "kind": "bot_punch",
+     "t": 26.872,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.939,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 26.956,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 26.972,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 75.07677984237671
+     },
+     "kind": "bot_hud",
+     "t": 26.989,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 26.989,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 26.989,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.006,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.006,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 74.82065606117249
+     },
+     "kind": "bot_hud",
+     "t": 27.241,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 27.372,
+     "victim": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.389,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.389,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.405,
+     "userId": -4
+    },
+    {
+     "data": {
+      "after": 1
+     },
+     "kind": "bot_guard",
+     "t": 27.405,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.405,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 27.405,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.422,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.422,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.439,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.439,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 27.472,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 27.489,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 27.506,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.523,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.523,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.539,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.539,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 28.023,
+     "victim": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Life Preserver",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 28.039,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Life Preserver",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 28.04,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 28.055,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 28.072,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 73.62034392356873
+     },
+     "kind": "bot_hud",
+     "t": 28.439,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 73.58898305892944
+     },
+     "kind": "bot_hud",
+     "t": 28.472,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 28.673,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 28.691,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 28.706,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 28.789
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 28.807,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 73.07838892936707
+     },
+     "kind": "bot_hud",
+     "t": 28.989,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 72.8032660484314
+     },
+     "kind": "bot_hud",
+     "t": 29.255,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 29.323,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 29.323,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 29.341,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 29.356,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 29.874,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 29.89,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.007,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 30.04,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 71.61842584609985
+     },
+     "kind": "bot_hud",
+     "t": 30.44,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.44,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 30.473,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 71.57329297065735
+     },
+     "kind": "bot_hud",
+     "t": 30.489,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.79,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 30.806,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.973,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 71.07705092430115
+     },
+     "kind": "bot_hud",
+     "t": 30.99,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 30.99,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 70.78935885429382
+     },
+     "kind": "bot_hud",
+     "t": 31.273,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 31.324,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 31.34,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 31.54,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 31.556,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 31.855,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 31.873,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 31.889,
+     "userId": -3
+    },
+    {
+     "itemId": "14",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-2": 18,
+      "-4": 18
+     },
+     "t": 31.889,
+     "winner": -2
+    },
+    {
+     "inventory": 4,
+     "item": "Racing Flag",
+     "itemId": "14",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 31.89,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 32.206,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 32.224,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 32.406,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 32.422,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 32.44,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 69.6005630493164
+     },
+     "kind": "bot_hud",
+     "t": 32.473,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 69.55659794807434
+     },
+     "kind": "bot_hud",
+     "t": 32.507,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 32.755,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 32.772,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 32.789,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 69.0617139339447
+     },
+     "kind": "bot_hud",
+     "t": 33.006,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 33.072,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 33.089,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 33.106,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 68.78761196136475
+     },
+     "kind": "bot_hud",
+     "t": 33.272,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 33.389,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 33.405,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 33.422,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 33.605,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 33.622,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 33.638,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 33.922,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 33.94,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 33.956,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 34.156,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 34.173,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 67.5849769115448
+     },
+     "kind": "bot_hud",
+     "t": 34.473,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 34.507,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 34.522,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 67.53970193862915
+     },
+     "kind": "bot_hud",
+     "t": 34.522,
+     "userId": -2
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 34.54,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 34.707,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 34.723,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 34.74,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 67.0636658668518
+     },
+     "kind": "bot_hud",
+     "t": 35.007,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 35.056,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 35.09,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 35.239,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 35.272,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 66.77802300453186
+     },
+     "kind": "bot_hud",
+     "t": 35.288,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 35.606,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 35.639,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 35.789,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 35.805,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.155,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 36.189,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 65.56939697265625
+     },
+     "kind": "bot_hud",
+     "t": 36.488,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 65.52365183830261
+     },
+     "kind": "bot_hud",
+     "t": 36.539,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.555,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 36.573,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.688,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 36.705,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 36.722,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 65.06356406211853
+     },
+     "kind": "bot_hud",
+     "t": 37.005,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 37.206,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 37.239,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 37.255,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 37.289,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 64.77773404121399
+     },
+     "kind": "bot_hud",
+     "t": 37.289,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 37.739,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 37.772,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 37.824,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 37.839,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 37.855,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.305,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 38.339,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 63.567237854003906
+     },
+     "kind": "bot_hud",
+     "t": 38.506,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 63.52270293235779
+     },
+     "kind": "bot_hud",
+     "t": 38.54,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.607,
+     "victim": -1
+    },
+    {
+     "itemId": "101",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-4": 18
+     },
+     "t": 38.607,
+     "winner": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Life Preserver",
+     "itemId": "101",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 38.607,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 38.64,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 38.64,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.955,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 38.973,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 38.973,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 63.044689893722534
+     },
+     "kind": "bot_hud",
+     "t": 39.022,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.172,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 39.205,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 62.77683687210083
+     },
+     "kind": "bot_hud",
+     "t": 39.29,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.522,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 39.54,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.723,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 39.739,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 40.056,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 40.072,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 40.272,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 40.305,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 40.322,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 61.553048849105835
+     },
+     "kind": "bot_hud",
+     "t": 40.505,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 61.50510001182556
+     },
+     "kind": "bot_hud",
+     "t": 40.555,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 40.606,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 40.638,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Bamboo Raft",
+     "itemId": "31",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 40.723,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 40.822,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 40.839,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 40.839,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 61.04360485076904
+     },
+     "kind": "bot_hud",
+     "t": 41.022,
+     "userId": -4
+    },
+    {
+     "attacker": -2,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.074,
+     "victim": -4
+    },
+    {
+     "data": {
+      "after": 1
+     },
+     "kind": "bot_guard",
+     "t": 41.107,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 41.107,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.139,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 41.172,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 60.75743293762207
+     },
+     "kind": "bot_hud",
+     "t": 41.305,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.506,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 41.539,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.672,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 41.706,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.039,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 42.089,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.223,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 42.239,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Camera",
+     "itemId": "95",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 42.472,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:59"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 59.535866022109985
+     },
+     "kind": "bot_hud",
+     "t": 42.523,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:59"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 59.49193000793457
+     },
+     "kind": "bot_hud",
+     "t": 42.572,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.605,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 42.639,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.872,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 42.905,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:59"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 59.04326891899109
+     },
+     "kind": "bot_hud",
+     "t": 43.023,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.255,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 43.273,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 43.273,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:58"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 58.75657296180725
+     },
+     "kind": "bot_hud",
+     "t": 43.307,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.422,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 43.44,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.889,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 43.906,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.988,
+     "victim": -3
+    },
+    {
+     "inventory": 6,
+     "item": "Gas Can",
+     "itemId": "24",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 44.005,
+     "userId": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 44.005,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 44.422,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 44.438,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 44.438,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:57"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 57.52045798301697
+     },
+     "kind": "bot_hud",
+     "t": 44.54,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 44.54,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 44.573,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:57"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 57.49152684211731
+     },
+     "kind": "bot_hud",
+     "t": 44.573,
+     "userId": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 44.573,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 44.956,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 44.972,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:57"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 57.03175187110901
+     },
+     "kind": "bot_hud",
+     "t": 45.038,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.088,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 45.105,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:56"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 56.73951601982117
+     },
+     "kind": "bot_hud",
+     "t": 45.322,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.522,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 45.54,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 45.54,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.739,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 45.772,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 46.072,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 46.121,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 46.288,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 46.306,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:55"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 55.519585847854614
+     },
+     "kind": "bot_hud",
+     "t": 46.538,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:55"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 55.47689986228943
+     },
+     "kind": "bot_hud",
+     "t": 46.588,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 46.621,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 46.655,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 46.84,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 46.873,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:55"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 55.01476502418518
+     },
+     "kind": "bot_hud",
+     "t": 47.055,
+     "userId": -4
+    },
+    {
+     "inventory": 6,
+     "item": "Magic Wand",
+     "itemId": "88",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 47.156,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.189,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 47.205,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:54"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 54.72336387634277
+     },
+     "kind": "bot_hud",
+     "t": 47.339,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.389,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 47.406,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Pizza",
+     "itemId": "33",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 47.522,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.721,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 47.74,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.94,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 47.973,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 48.489,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 48.506,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:53"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 53.50433397293091
+     },
+     "kind": "bot_hud",
+     "t": 48.555,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 48.572,
+     "victim": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:53"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 53.46080303192139
+     },
+     "kind": "bot_hud",
+     "t": 48.606,
+     "userId": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 48.606,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:53"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 53.01146197319031
+     },
+     "kind": "bot_hud",
+     "t": 49.056,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 49.056,
+     "victim": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Hair Dryer",
+     "itemId": "10",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 49.056,
+     "userId": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 49.089,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 49.122,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 49.139,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:52"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 52.70625591278076
+     },
+     "kind": "bot_hud",
+     "t": 49.355,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 49.59,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 49.605,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 49.639,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 49.672,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.173,
+     "victim": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Umbrella",
+     "itemId": "90",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 50.205,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 50.205,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 50.222,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.239,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 50.272,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:51"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 51.48759603500366
+     },
+     "kind": "bot_hud",
+     "t": 50.571,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:51"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 51.46067190170288
+     },
+     "kind": "bot_hud",
+     "t": 50.604,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.738,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 50.772,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "34",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 50.788,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.805,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 50.839,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:51"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 50.996527910232544
+     },
+     "kind": "bot_hud",
+     "t": 51.071,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 51.372,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:50"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 50.68834185600281
+     },
+     "kind": "bot_hud",
+     "t": 51.372,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 51.405,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 51.489,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 51.505,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Bamboo Raft",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 51.638,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Racing Flag",
+     "itemId": "49",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 51.639,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 51.888,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 51.921,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 52.222,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 52.238,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 52.238,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:49"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 49.48685693740845
+     },
+     "kind": "bot_hud",
+     "t": 52.573,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:49"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 49.44293284416199
+     },
+     "kind": "bot_hud",
+     "t": 52.622,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 52.689,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 52.721,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 52.772,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 52.804,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 52.823,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:48"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 48.979032039642334
+     },
+     "kind": "bot_hud",
+     "t": 53.09,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 53.338,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 53.372,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:48"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 48.67447900772095
+     },
+     "kind": "bot_hud",
+     "t": 53.39,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 53.888,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 53.888,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 53.906,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 53.921,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 54.44,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 54.44,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 54.455,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 54.473,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 54.473,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:47"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 47.46744084358215
+     },
+     "kind": "bot_hud",
+     "t": 54.589,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:47"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 47.44276189804077
+     },
+     "kind": "bot_hud",
+     "t": 54.622,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 54.988,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 55.022,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.088,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:46"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 46.9645209312439
+     },
+     "kind": "bot_hud",
+     "t": 55.105,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 55.105,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 55.123,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:46"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 46.673043966293335
+     },
+     "kind": "bot_hud",
+     "t": 55.388,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 55.606,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 55.638,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.655,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 55.673,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 56.155,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Camera",
+     "itemId": "26",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 56.155,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 56.188,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 56.206,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 56.206,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 56.221,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:45"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 45.45088791847229
+     },
+     "kind": "bot_hud",
+     "t": 56.606,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:45"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 45.426779985427856
+     },
+     "kind": "bot_hud",
+     "t": 56.637,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 56.756,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 56.789,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 56.838,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 56.872,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:44"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 44.947651863098145
+     },
+     "kind": "bot_hud",
+     "t": 57.122,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.271,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 57.289,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.356,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 57.389,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:44"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 44.67270302772522
+     },
+     "kind": "bot_hud",
+     "t": 57.39,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.804,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 57.821,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.888,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 57.904,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 58.371,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 58.388,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 58.438,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 58.471,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:43"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 43.43434286117554
+     },
+     "kind": "bot_hud",
+     "t": 58.621,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:43"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 43.426501989364624
+     },
+     "kind": "bot_hud",
+     "t": 58.638,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 58.922,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 58.938,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 58.954,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:42"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 42.93133783340454
+     },
+     "kind": "bot_hud",
+     "t": 59.138,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 59.204,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 59.221,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 59.239,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:42"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 42.656627893447876
+     },
+     "kind": "bot_hud",
+     "t": 59.405,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 59.588,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 59.622,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 59.773,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 59.788,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 59.806,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 60.154,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 60.172,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 60.172,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Pizza",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 60.254,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "56",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 60.255,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 60.355,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 60.389,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:41"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 41.43728804588318
+     },
+     "kind": "bot_hud",
+     "t": 60.623,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:41"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 41.41080284118652
+     },
+     "kind": "bot_hud",
+     "t": 60.655,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 60.705,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 60.722,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 61.138,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.91554284095764
+     },
+     "kind": "bot_hud",
+     "t": 61.156,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 61.156,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 61.238,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 61.256,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 61.256,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.639857053756714
+     },
+     "kind": "bot_hud",
+     "t": 61.423,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 61.705,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 61.721,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 61.804,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 61.821,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 62.354,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 62.371,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 62.388,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 62.388,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 62.388,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:39"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 39.42175102233887
+     },
+     "kind": "bot_hud",
+     "t": 62.638,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:39"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 39.40695285797119
+     },
+     "kind": "bot_hud",
+     "t": 62.654,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 62.921,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 62.938,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 62.956,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 62.972,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 62.988,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.89980983734131
+     },
+     "kind": "bot_hud",
+     "t": 63.172,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.62342596054077
+     },
+     "kind": "bot_hud",
+     "t": 63.437,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 63.504,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 63.538,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 63.571,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 63.604,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 64.038,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 64.072,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 64.105,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 64.138,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 64.605,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 64.638,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:37"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 37.41539287567139
+     },
+     "kind": "bot_hud",
+     "t": 64.638,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 64.638,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:37"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 37.4063458442688
+     },
+     "kind": "bot_hud",
+     "t": 64.654,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 64.672,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 64.705,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Racing Flag",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 64.955,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Life Preserver",
+     "itemId": "59",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 64.956,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.89907884597778
+     },
+     "kind": "bot_hud",
+     "t": 65.171,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 65.239,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 65.255,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 65.288,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 65.304,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.607383012771606
+     },
+     "kind": "bot_hud",
+     "t": 65.454,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 65.788,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 65.821,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 65.837,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 65.837,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 66.32,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 66.354,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 66.371,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 66.405,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:35"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 35.39980697631836
+     },
+     "kind": "bot_hud",
+     "t": 66.654,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:35"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 35.39632201194763
+     },
+     "kind": "bot_hud",
+     "t": 66.67,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 66.855,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 66.887,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 66.921,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 66.937,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.88245105743408
+     },
+     "kind": "bot_hud",
+     "t": 67.187,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.59143400192261
+     },
+     "kind": "bot_hud",
+     "t": 67.47,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 67.488,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 67.488,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 67.505,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 67.539,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Log",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 67.754,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Compass",
+     "itemId": "73",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 67.755,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 68.021,
+     "victim": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 68.039,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 68.039,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 68.054,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 68.555,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 68.571,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:33"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 33.39894485473633
+     },
+     "kind": "bot_hud",
+     "t": 68.655,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:33"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 33.395941972732544
+     },
+     "kind": "bot_hud",
+     "t": 68.671,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 68.705,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 68.722,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 69.121,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 69.138,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.88014888763428
+     },
+     "kind": "bot_hud",
+     "t": 69.188,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 69.371,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 69.388,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.57497191429138
+     },
+     "kind": "bot_hud",
+     "t": 69.49,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 69.688,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 69.721,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 69.721,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Racing Flag",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 69.888,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Drill",
+     "itemId": "23",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 69.889,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 69.921,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 69.954,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 70.239,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 70.271,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 70.455,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 70.487,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:31"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 31.384758949279785
+     },
+     "kind": "bot_hud",
+     "t": 70.687,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:31"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 31.38008403778076
+     },
+     "kind": "bot_hud",
+     "t": 70.687,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 70.887,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 70.904,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 71.022,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 71.056,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.86309504508972
+     },
+     "kind": "bot_hud",
+     "t": 71.204,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Camera",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 71.388,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Propeller Hat",
+     "itemId": "84",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 71.389,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 71.47,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 71.488,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.561264991760254
+     },
+     "kind": "bot_hud",
+     "t": 71.504,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 71.538,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 71.554,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 72.021,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 72.054,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 72.07,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 72.104,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 72.571,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 72.589,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 72.604,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 72.622,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 29.36965298652649
+     },
+     "kind": "bot_hud",
+     "t": 72.689,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 29.376410007476807
+     },
+     "kind": "bot_hud",
+     "t": 72.689,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 73.171,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 73.203,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.84944486618042
+     },
+     "kind": "bot_hud",
+     "t": 73.221,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 73.338,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 73.354,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.560982942581177
+     },
+     "kind": "bot_hud",
+     "t": 73.504,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 73.689,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 73.704,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Hair Dryer",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 73.754,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Kite",
+     "itemId": "72",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 73.754,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 74.005,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 74.02,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 74.254,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 74.27,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 74.287,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 74.653,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 74.687,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 27.368114948272705
+     },
+     "kind": "bot_hud",
+     "t": 74.705,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 27.359050989151
+     },
+     "kind": "bot_hud",
+     "t": 74.705,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 74.804,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 74.838,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 75.204,
+     "victim": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.847084999084473
+     },
+     "kind": "bot_hud",
+     "t": 75.22,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 75.22,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 75.337,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 75.371,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.54309606552124
+     },
+     "kind": "bot_hud",
+     "t": 75.522,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 75.77,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 75.789,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 75.855,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 75.871,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 76.305,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 76.32,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 76.405,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 76.438,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 25.353070974349976
+     },
+     "kind": "bot_hud",
+     "t": 76.705,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 25.345744848251343
+     },
+     "kind": "bot_hud",
+     "t": 76.72,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 76.822,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 76.855,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 76.955,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 76.971,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.83107900619507
+     },
+     "kind": "bot_hud",
+     "t": 77.239,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 77.372,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 77.388,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 77.504
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.541038036346436
+     },
+     "kind": "bot_hud",
+     "t": 77.521,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 77.554,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 77.921,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 77.953,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 78.055,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 78.087,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 78.471,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 78.489,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 78.604,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 78.637,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 23.352563858032227
+     },
+     "kind": "bot_hud",
+     "t": 78.704,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 23.329617977142334
+     },
+     "kind": "bot_hud",
+     "t": 78.737,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 78.989,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 79.02,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 79.171,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 79.205,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.81234383583069
+     },
+     "kind": "bot_hud",
+     "t": 79.254,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 79.537,
+     "victim": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.525786876678467
+     },
+     "kind": "bot_hud",
+     "t": 79.537,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 79.554,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 79.57,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 79.721,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 79.755,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 80.089,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 80.121,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 80.428,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 80.504,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 80.638,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 80.67,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 21.336483001708984
+     },
+     "kind": "bot_hud",
+     "t": 80.72,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 21.328917026519775
+     },
+     "kind": "bot_hud",
+     "t": 80.738,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 81.055,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 81.087,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 81.204,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 81.22,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 81.238,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.797502040863037
+     },
+     "kind": "bot_hud",
+     "t": 81.271,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.511006832122803
+     },
+     "kind": "bot_hud",
+     "t": 81.554,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 81.605,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 81.621,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Camera",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 81.638,
+     "userId": -2
+    },
+    {
+     "inventory": 8,
+     "item": "Suitcase",
+     "itemId": "60",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 81.639,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 81.772,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 81.805,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 82.321,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 82.337,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 82.355,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 82.37,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.336432933807373
+     },
+     "kind": "bot_hud",
+     "t": 82.72,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.31189799308777
+     },
+     "kind": "bot_hud",
+     "t": 82.754,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 82.887,
+     "victim": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 82.905,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 82.905,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 82.937,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 82.954,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.796159982681274
+     },
+     "kind": "bot_hud",
+     "t": 83.272,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 83.437,
+     "victim": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 83.437,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 83.471,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 83.471,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 83.471,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.510233879089355
+     },
+     "kind": "bot_hud",
+     "t": 83.554,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 84.071,
+     "victim": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 84.105,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 84.105,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 84.138,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 84.138,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 84.603,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 84.638,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 84.638,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 84.654,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 84.672,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.33910584449768
+     },
+     "kind": "bot_hud",
+     "t": 84.72,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.310956954956055
+     },
+     "kind": "bot_hud",
+     "t": 84.753,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 85.154,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 85.171,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 85.204,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 85.237,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.783872842788696
+     },
+     "kind": "bot_hud",
+     "t": 85.288,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.491418838500977
+     },
+     "kind": "bot_hud",
+     "t": 85.57,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 85.703,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 85.737,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 85.755,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 85.77,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 86.254,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 86.27,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 86.32,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 86.337,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.338361024856567
+     },
+     "kind": "bot_hud",
+     "t": 86.721,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.29581594467163
+     },
+     "kind": "bot_hud",
+     "t": 86.77,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 86.821,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 86.836,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 86.87,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 86.922,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.768457889556885
+     },
+     "kind": "bot_hud",
+     "t": 87.303,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 87.354,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 87.371,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 87.371,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 87.554,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 87.57,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.475077867507935
+     },
+     "kind": "bot_hud",
+     "t": 87.587,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 87.887,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 87.904,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 88.103,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 88.138,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 88.138,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 88.437,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 88.472,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.32169795036316
+     },
+     "kind": "bot_hud",
+     "t": 88.738,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 88.771,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.27956485748291
+     },
+     "kind": "bot_hud",
+     "t": 88.787,
+     "userId": -2
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 88.805,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 88.988,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 89.004,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.767196893692017
+     },
+     "kind": "bot_hud",
+     "t": 89.304,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 89.304,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 89.337,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 89.338,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 89.537,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 89.571,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 89.571,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.459121942520142
+     },
+     "kind": "bot_hud",
+     "t": 89.604,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 89.837,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 89.87,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 90.087,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 90.103,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 90.371,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 90.419,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 90.653,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 90.67,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 90.687,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.303946018218994
+     },
+     "kind": "bot_hud",
+     "t": 90.753,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.26386284828186
+     },
+     "kind": "bot_hud",
+     "t": 90.804,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 90.937,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 90.971,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 91.188,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 91.204,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.749376058578491
+     },
+     "kind": "bot_hud",
+     "t": 91.32,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 91.471,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 91.503,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.459017992019653
+     },
+     "kind": "bot_hud",
+     "t": 91.604,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 91.736,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 91.769,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 92.121,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 92.136,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 92.271,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 92.304,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 92.67,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 92.704,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.302232027053833
+     },
+     "kind": "bot_hud",
+     "t": 92.77,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.261263847351074
+     },
+     "kind": "bot_hud",
+     "t": 92.804,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 93.02,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 93.038,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 93.038,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 93.254,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 93.269,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.734521865844727
+     },
+     "kind": "bot_hud",
+     "t": 93.337,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 93.553,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 93.587,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.44298005104065
+     },
+     "kind": "bot_hud",
+     "t": 93.621,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 93.786,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 93.819,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 94.336,
+     "victim": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 94.353,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 94.353,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 94.369,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 94.387,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 7.289348840713501
+     },
+     "kind": "bot_hud",
+     "t": 94.77,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 7.245779037475586
+     },
+     "kind": "bot_hud",
+     "t": 94.82,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 94.886,
+     "victim": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 94.919,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 94.919,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 94.936,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.733228921890259
+     },
+     "kind": "bot_hud",
+     "t": 95.337,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 95.453,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 95.471,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 95.471,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 95.487,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.442497968673706
+     },
+     "kind": "bot_hud",
+     "t": 95.62,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 96.003,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 96.036,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 96.137,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 96.154,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 96.553,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 96.57,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 96.586,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 96.686,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 96.72,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 5.273905038833618
+     },
+     "kind": "bot_hud",
+     "t": 96.786,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 5.23134183883667
+     },
+     "kind": "bot_hud",
+     "t": 96.837,
+     "userId": -2
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 97.088,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 97.12,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 97.219,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 97.254,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 97.254,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.732771873474121
+     },
+     "kind": "bot_hud",
+     "t": 97.336,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 97.637,
+     "victim": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.427638053894043
+     },
+     "kind": "bot_hud",
+     "t": 97.637,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 97.686,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 97.787,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 97.82,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 98.187,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 98.203,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 98.221,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 98.32,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 98.354,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 98.736,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 98.753,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 98.769,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 3.2725698947906494
+     },
+     "kind": "bot_hud",
+     "t": 98.787,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 3.214622974395752
+     },
+     "kind": "bot_hud",
+     "t": 98.854,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 98.888,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 98.92,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.7133090496063232
+     },
+     "kind": "bot_hud",
+     "t": 99.353,
+     "userId": -4
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 99.403,
+     "victim": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 99.419,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 99.436,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 99.436,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 99.452,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.4268620014190674
+     },
+     "kind": "bot_hud",
+     "t": 99.637,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 100.003,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 100.021,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 100.07,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 100.103,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 100.553,
+     "victim": -3
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 100.571,
+     "userId": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 100.586,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 100.636,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 100.669,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 1.2552599906921387
+     },
+     "kind": "bot_hud",
+     "t": 100.821,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 1.213404893875122
+     },
+     "kind": "bot_hud",
+     "t": 100.854,
+     "userId": -2
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 101.104,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 101.119,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "kind": "punch",
+     "result": "miss",
+     "t": 101.269
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 101.32,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.6968040466308594
+     },
+     "kind": "bot_hud",
+     "t": 101.369,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 101.637,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 101.652,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.4109818935394287
+     },
+     "kind": "bot_hud",
+     "t": 101.652,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 3
+     },
+     "kind": "bot_guard",
+     "t": 101.669,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 101.803,
+     "victim": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -1
+     },
+     "kind": "bot_punch",
+     "t": 101.836,
+     "userId": -3
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 102.136
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 102.144
+    },
+    {
+     "data": {
+      "result": "denied: not farming",
+      "victim": -3
+     },
+     "kind": "bot_punch",
+     "t": 102.237,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:19"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 19.318354845046997
+     },
+     "kind": "bot_hud",
+     "t": 102.819,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:19"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 19.27208685874939
+     },
+     "kind": "bot_hud",
+     "t": 102.869,
+     "userId": -2
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Microwave",
+      "ENGINE": "Propeller Hat",
+      "MOBILITY": "Suitcase",
+      "SPECIAL": "Magic Wand"
+     },
+     "stats": {
+      "acceleration": 9.362602486114785,
+      "boostDuration": 5.76,
+      "floatability": 0.7140967997884159,
+      "flyability": 0.2644802962179318,
+      "speed": 21.58159217138323,
+      "stability": 111.20867495371596
+     },
+     "t": 103.303,
+     "userId": -2
+    },
+    {
+     "data": {
+      "inventory": [
+       "Microwave",
+       "Magic Wand",
+       "Suitcase",
+       "Log",
+       "Life Preserver",
+       "Propeller Hat",
+       "Kite",
+       "Suitcase"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Microwave",
+       "ENGINE": "Propeller Hat",
+       "MOBILITY": "Suitcase",
+       "SPECIAL": "Magic Wand"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 103.336,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:18"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 18.758075952529907
+     },
+     "kind": "bot_hud",
+     "t": 103.386,
+     "userId": -4
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "ENGINE": "Kettle",
+      "HEAD": "Bathtub",
+      "SPECIAL": "Magic Wand",
+      "TAIL": "Life Preserver"
+     },
+     "stats": {
+      "acceleration": 35.80719204284621,
+      "boostDuration": 5.76,
+      "floatability": 0.1912777352716144,
+      "flyability": 0.956388676358072,
+      "speed": 33.66488140780413,
+      "stability": 20.566182096403978
+     },
+     "t": 103.488,
+     "userId": -4
+    },
+    {
+     "data": {
+      "inventory": [
+       "Kettle",
+       "Bathtub",
+       "Magic Wand",
+       "Life Preserver",
+       "Magic Wand",
+       "Umbrella",
+       "Compass",
+       "Drill"
+      ],
+      "result": "ok",
+      "slots": {
+       "ENGINE": "Kettle",
+       "HEAD": "Bathtub",
+       "SPECIAL": "Magic Wand",
+       "TAIL": "Life Preserver"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 103.52,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:18"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 18.47069787979126
+     },
+     "kind": "bot_hud",
+     "t": 103.67,
+     "userId": -1
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.8,
+      "boostDuration": 0.8,
+      "floatability": 0.25,
+      "flyability": 1.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 103.686,
+     "userId": -3
+    },
+    {
+     "data": {
+      "inventory": [],
+      "result": "ok",
+      "slots": []
+     },
+     "kind": "bot_craft",
+     "t": 103.737,
+     "userId": -3
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.8,
+      "boostDuration": 0.8,
+      "floatability": 0.25,
+      "flyability": 1.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 103.954,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 103.954
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 7694.500908079038,
+     "racers": [
+      -1,
+      -2,
+      -3,
+      -4
+     ],
+     "round": 1,
+     "t": 103.979,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 103.979,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 64.86000061035156,
+     "progress": 10,
+     "speed": 0,
+     "t": 103.979,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 103.979,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 103.979,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "data": {
+      "inventory": [],
+      "result": "ok",
+      "slots": []
+     },
+     "kind": "bot_craft",
+     "t": 104.137,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 65.61272430419922,
+     "seated": true,
+     "t": 104.138,
+     "torque": 47.20000076293945,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 64.86000061035156,
+     "seated": true,
+     "t": 104.138,
+     "torque": 37.450408935546875,
+     "turnSpeed": 3.200000047683716,
+     "userId": -2
+    },
+    {
+     "at": {
+      "x": 0,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 65.61272430419922,
+     "seated": true,
+     "t": 104.138,
+     "torque": 47.20000076293945,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -3
+    },
+    {
+     "at": {
+      "x": 7,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 73.13999938964844,
+     "seated": true,
+     "t": 104.138,
+     "torque": 143.22877502441406,
+     "turnSpeed": 2.0084927082061768,
+     "userId": -4
+    },
+    {
+     "item": "Magic Wand",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 104.17,
+     "userId": -4
+    },
+    {
+     "item": "Magic Wand",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 104.17,
+     "userId": -2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 104.486,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 64.86000061035156,
+     "progress": 10,
+     "speed": 0,
+     "t": 104.486,
+     "userId": -2,
+     "x": -7,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 65.61272430419922,
+     "progress": 10,
+     "speed": 0,
+     "t": 104.486,
+     "userId": -3,
+     "x": 0,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 73.13999938964844,
+     "progress": 10,
+     "speed": 0,
+     "t": 104.486,
+     "userId": -4,
+     "x": 7,
+     "y": 2,
+     "z": 590
+    }
+   ],
+   "samplesTotal": 8
+  },
+  "timedOut": false
+ },
+ "scenario": "fight-4p",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: none\n    -4: picked 11, contests 1/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -2: picked 15, contests 2/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -1: picked 0, contests 0/1, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: ability=2 bot_craft=4 bot_farmfx=64 bot_guard=61 bot_hud=184 bot_joined=4 bot_punch=277 bot_ready=4 contest_result=3 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=26 phase=3 punch=276 race_sample=8 race_start=1 vehicle_spawn=4",
+ "wallSeconds": 124.7
+}

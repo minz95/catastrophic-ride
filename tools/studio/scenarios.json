@@ -569,7 +569,12 @@
         "maxAttempts": {
           "stolen": 0
         },
-        "hudTimer": true
+        "hudTimer": true,
+        "fightFx": [
+          "grab",
+          "grabEnd",
+          "swat"
+        ]
       }
     },
     {
@@ -608,6 +613,55 @@
         "minAttempts": {
           "stolen": 1
         },
+        "hudTimer": true,
+        "fightFx": [
+          "grab",
+          "grabEnd"
+        ]
+      }
+    },
+    {
+      "name": "fight-4p",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "core",
+        "full",
+        "fight"
+      ],
+      "_why": "two brawlers punch two players (one always guards): hits pile up, knock-outs drop items on the ground, guards block, every client animates it",
+      "opts": {
+        "biome": "FOREST",
+        "players": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 90,
+          "CRAFTING": 20,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "brawler",
+          "casual",
+          "brawler",
+          "guard"
+        ],
+        "maxSeconds": 400
+      },
+      "checks": {
+        "allJoined": true,
+        "ledger": true,
+        "everyoneCrafted": true,
+        "noRejected": true,
+        "minPunches": {
+          "hit": 4,
+          "knockout": 1,
+          "blocked": 1
+        },
+        "fightFx": [
+          "punch",
+          "guard"
+        ],
         "hudTimer": true
       }
     },
