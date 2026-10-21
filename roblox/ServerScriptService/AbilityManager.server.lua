@@ -22,6 +22,7 @@ local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 local EffectFx       = require(ServerScriptService.Modules.EffectFx)
 local VehicleLift    = require(ServerScriptService.Modules.VehicleLift)
 local AbilitySlots   = require(ReplicatedStorage.Shared.AbilitySlots)
+local TrackDrops     = require(ServerScriptService.Modules.TrackDrops)
 local CollectionService = game:GetService("CollectionService")
 
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
@@ -95,24 +96,22 @@ local function _flat(v)
 	return Vector3.new(v.X, 0, v.Z)
 end
 
-local function _dropPart(position, size, colour, tag, duration)
-	local p = Instance.new("Part")
-	p.Size     = size
-	p.CFrame   = CFrame.new(position)
-	p.Anchored = true
-	p.Color    = colour
-	-- Slippery zones / visual clouds are pass-through; obstacles stay solid.
-	p.CanCollide = not (tag == "Slippery" or tag == "SteamCloud")
-	p.Parent   = workspace
-	if tag then
-		local t = Instance.new("StringValue")
-		t.Value  = tag
-		t.Name   = "DropTag"
-		t.Parent = p
+-- Every drop is logged so the Studio harness can check it landed on the
+-- track and shows its item.
+local function _dropLogged(activator, itemName, effectKey, drop)
+	local pos = drop.position
+	local parts = 0
+	for _, d in ipairs(drop.folder:GetDescendants()) do
+		if d:IsA("BasePart") and d.Name ~= "DropHazard" and d.Name ~= "DropRing" and d.Name ~= "DropPuddle" then parts += 1 end
 	end
-	Debris:AddItem(p, duration)
-	return p
+	Telemetry.record("drop_placed", {
+		userId = activator.UserId, item = itemName, effect = effectKey,
+		x = math.floor(pos.X), y = math.floor(pos.Y * 10) / 10, z = math.floor(pos.Z),
+		onGround = drop.surfaceY ~= nil, modelParts = parts,
+		size = math.floor(math.max(drop.size.X, drop.size.Y, drop.size.Z) * 10) / 10,
+	})
 end
+
 
 -- Disguised players (Cardboard Box) cannot be targeted.
 local function _targetable(player)
@@ -203,21 +202,31 @@ EFFECTS.steerDisable = function(activator, target, cfg)
 	RemoteEvents.ScreenEffect:FireClient(target, "steerDisable", { duration = cfg.duration })
 end
 
-EFFECTS.slipperyPuddle = function(activator, _, cfg)
+EFFECTS.slipperyPuddle = function(activator, _, cfg, itemName)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play("dropTrap", activator, nil)
-	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
-	local pos = vehicle.PrimaryPart.Position - Vector3.new(0, 1.5, 0) - (back.Magnitude > 0 and back.Unit * 5 or Vector3.zero)
 	local isWater = cfg.effectKey ~= "slipperyPuddle"
 	local size = (cfg.radius or 4) * 2
-	local puddle = _dropPart(pos, Vector3.new(0.3, size, size),
-		isWater and Color3.fromRGB(70, 150, 255) or Color3.fromRGB(220, 140, 50), "Slippery", cfg.duration + 6)
-	puddle.Shape = Enum.PartType.Cylinder               -- a round puddle lying flat
-	puddle.CFrame = CFrame.new(pos) * CFrame.Angles(0, 0, math.pi / 2)
+	local colour = isWater and Color3.fromRGB(70, 150, 255) or Color3.fromRGB(220, 140, 50)
+	local drop = TrackDrops.place(itemName or "Pizza", vehicle, {
+		behind = 6, show = 4, lifetime = cfg.duration + 6,
+		hazard = { kind = "slick", size = Vector3.new(size, 3, size), color = colour },
+	})
+	if not drop then return end
+	-- the slick itself: a glossy puddle on the ground under the item
+	local puddle = Instance.new("Part")
+	puddle.Name = "DropPuddle"
+	puddle.Shape = Enum.PartType.Cylinder
+	puddle.Size = Vector3.new(0.2, size, size)
+	puddle.CFrame = CFrame.new(drop.position + Vector3.new(0, 0.12, 0)) * CFrame.Angles(0, 0, math.pi / 2)
+	puddle.Color = colour
 	puddle.Material = Enum.Material.Glass
-	puddle.Transparency = 0.25
-	_onDropTouched(puddle, activator, function(p, v)
+	puddle.Transparency = 0.3
+	puddle.Anchored, puddle.CanCollide, puddle.CanTouch, puddle.CanQuery, puddle.CastShadow = true, false, false, false, false
+	puddle.Parent = drop.folder
+	_dropLogged(activator, itemName, cfg.effectKey, drop)
+	_onDropTouched(drop.hazard, activator, function(p, v)
 		if not _hurts(p) then return end
 		EffectFx.play("slipped", p, 1.5, activator)
 		_applySpeedMult(v, 0.7, 1.5, "slippery")
@@ -250,17 +259,18 @@ EFFECTS.flagAura = function(activator, _, cfg)
 	end
 end
 
-EFFECTS.cactusObstacle = function(activator, _, cfg)
+EFFECTS.cactusObstacle = function(activator, _, cfg, itemName)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play("dropTrap", activator, nil)
-	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
-	local pos = vehicle.PrimaryPart.Position + Vector3.new(0, 0.5, 0) - (back.Magnitude > 0 and back.Unit * 6 or Vector3.zero)
-	local cactus = _dropPart(pos, Vector3.new(1.5, 3, 1.5),
-		Color3.fromRGB(30, 130, 40), "Obstacle_Drop", cfg.duration + 8)
-	cactus.Material = Enum.Material.Grass
+	local drop = TrackDrops.place(itemName or "Cactus", vehicle, {
+		behind = 7, show = 5, lifetime = cfg.duration + 8,
+		hazard = { kind = "obstacle", color = Color3.fromRGB(120, 220, 80) },
+	})
+	if not drop then return end
+	_dropLogged(activator, itemName, cfg.effectKey, drop)
 	-- RacingManager connects every part tagged Obstacle, including new ones
-	CollectionService:AddTag(cactus, "Obstacle")
+	CollectionService:AddTag(drop.hazard, "Obstacle")
 end
 
 EFFECTS.umbrellaBlock = function(activator, _, cfg)
@@ -336,17 +346,16 @@ EFFECTS.redline = function(activator, _, cfg)
 	RemoteEvents.ScreenEffect:FireClient(activator, "redlineActive", { duration = cfg.duration })
 end
 
-EFFECTS.steamCloud = function(activator, _, cfg)
+EFFECTS.steamCloud = function(activator, _, cfg, itemName)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play("dropTrap", activator, nil)
-	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
-	local pos = vehicle.PrimaryPart.Position - (back.Magnitude > 0 and back.Unit * 8 or Vector3.zero)
-	local cloud = _dropPart(pos, Vector3.new(10, 6, 10),
-		Color3.fromRGB(235, 235, 235), "SteamCloud", cfg.duration)
-	cloud.Transparency = 1          -- the cloud itself is particles
-	cloud.CanCollide   = false
-	local steam = Instance.new("ParticleEmitter")
+	local drop = TrackDrops.place(itemName or "Kettle", vehicle, {
+		behind = 8, show = 4, lifetime = cfg.duration,
+		hazard = { kind = "cloud", size = Vector3.new(12, 7, 12), color = Color3.fromRGB(235, 235, 245) },
+	})
+	if not drop then return end
+	local steam = Instance.new("ParticleEmitter")   -- the kettle keeps steaming
 	steam.Color = ColorSequence.new(Color3.fromRGB(245, 245, 245))
 	steam.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 3), NumberSequenceKeypoint.new(1, 6) })
 	steam.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.3), NumberSequenceKeypoint.new(1, 1) })
@@ -354,8 +363,9 @@ EFFECTS.steamCloud = function(activator, _, cfg)
 	steam.Rate = 40
 	steam.Speed = NumberRange.new(1, 3)
 	steam.SpreadAngle = Vector2.new(180, 180)
-	steam.Parent = cloud
-	_onDropTouched(cloud, activator, function(p)
+	steam.Parent = drop.hazard
+	_dropLogged(activator, itemName, cfg.effectKey, drop)
+	_onDropTouched(drop.hazard, activator, function(p)
 		if not _hurts(p) then return end
 		EffectFx.play("steamed", p, math.min(3, cfg.duration), activator)
 		RemoteEvents.ScreenEffect:FireClient(p, "steamBlind", { duration = math.min(3, cfg.duration) })
@@ -455,19 +465,17 @@ EFFECTS.raftGlide = function(activator, _, cfg)
 	_applySpeedMult(vehicle, 1.15, cfg.duration, "raftGlide")
 end
 
-EFFECTS.logObstacle = function(activator, _, cfg)
+EFFECTS.logObstacle = function(activator, _, cfg, itemName)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play("dropTrap", activator, nil)
-	local back = _flat(vehicle.PrimaryPart.CFrame.LookVector)
-	local pos = vehicle.PrimaryPart.Position + Vector3.new(0, 0.5, 0) - (back.Magnitude > 0 and back.Unit * 7 or Vector3.zero)
-	local log = _dropPart(pos, Vector3.new(4, 1, 1),
-		Color3.fromRGB(100, 60, 30), "Obstacle_Log", 12)
-	log.Shape    = Enum.PartType.Cylinder
-	log.Material = Enum.Material.Wood
-	log.Anchored = false
-	log.CFrame   = CFrame.new(pos) * CFrame.Angles(0, math.random() * math.pi, 0)
-	CollectionService:AddTag(log, "Obstacle")
+	local drop = TrackDrops.place(itemName or "Log", vehicle, {
+		behind = 7, show = 7, lifetime = 12,
+		hazard = { kind = "obstacle", color = Color3.fromRGB(200, 140, 70) },
+	})
+	if not drop then return end
+	_dropLogged(activator, itemName, cfg.effectKey, drop)
+	CollectionService:AddTag(drop.hazard, "Obstacle")
 end
 
 EFFECTS.sofaFortress = function(activator, _, cfg)
@@ -627,7 +635,7 @@ local function _handleAbilityRequest(player, itemName)
 	-- Dispatch effect
 	local effectFn = EFFECTS[abilCfg.effectKey]
 	if effectFn then
-		task.spawn(effectFn, player, target, abilCfg)
+		task.spawn(effectFn, player, target, abilCfg, itemName)
 	else
 		warn("[AbilityManager] No effect handler for:", abilCfg.effectKey)
 		Telemetry.record("ability_unhandled", { userId = userId, item = itemName, effect = abilCfg.effectKey })

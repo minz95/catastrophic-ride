@@ -30,10 +30,15 @@ R.describe("VehicleController.readKeys", function()
 end)
 
 R.describe("VehicleController.command", function()
-	R.it("forward speed is throttle × MaxSpeed and yaw is steer × TurnSpeed", function()
-		local cmd = VC.command({ throttle = 1, steer = -1, climb = 0 }, { maxSpeed = 70, turnSpeed = 3 })
-		R.expect(cmd.forwardSpeed).toBe(70)
+	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+	R.it("forward speed is throttle × MaxSpeed and yaw is steer × TurnSpeed (slow car)", function()
+		local cmd = VC.command({ throttle = 1, steer = -1, climb = 0 }, { maxSpeed = 30, turnSpeed = 3 })
+		R.expect(cmd.forwardSpeed).toBe(30)
 		R.expect(cmd.yawRate).toBe(-3)
+	end)
+	R.it("at speed the turn rate is capped by grip (GRIP_LAT / speed)", function()
+		local cmd = VC.command({ throttle = 1, steer = 1, climb = 0 }, { maxSpeed = 70, turnSpeed = 3 })
+		R.expect(cmd.yawRate).toBeNear(Constants.DRIVE.GRIP_LAT.FOREST / 70, 1e-9)
 	end)
 	R.it("SKY caps the turn rate at 1.5", function()
 		local cmd = VC.command({ throttle = 0, steer = 1, climb = 1 }, { maxSpeed = 70, turnSpeed = 3, isSky = true })
@@ -43,9 +48,10 @@ R.describe("VehicleController.command", function()
 	R.it("without a drive state the command jumps straight to the target", function()
 		R.expect(VC.command(VC.readKeys({}), { maxSpeed = 70, turnSpeed = 3 }).forwardSpeed).toBe(0)
 	end)
-	R.it("drifting lowers the yaw rate inside the command", function()
-		local cmd = VC.command({ throttle = 1, steer = 1, climb = 0 }, { maxSpeed = 70, turnSpeed = 3, drifting = true })
-		R.expect(cmd.yawRate).toBeNear(1.05, 1e-9)
+	R.it("drifting turns tighter than grip allows at the same speed", function()
+		local grip = VC.command({ throttle = 1, steer = 1, climb = 0 }, { maxSpeed = 70, turnSpeed = 3 })
+		local drift = VC.command({ throttle = 1, steer = 1, climb = 0 }, { maxSpeed = 70, turnSpeed = 3, drifting = true })
+		R.expect(drift.yawRate).toBeGreaterThan(grip.yawRate * 1.3)
 	end)
 end)
 
@@ -100,9 +106,77 @@ R.describe("drift", function()
 		R.expect(VC.shouldEnterDrift({ throttle = 1, steer = 0, driftHeld = true }, false, 60, 70, false)).toBe(false)
 		R.expect(VC.shouldEnterDrift(held, false, 60, 70, true)).toBe(false)
 	end)
-	R.it("drifting reduces TurnSpeed to 35% (min 0.3)", function()
-		R.expect(VC.driftTurnSpeed(3)).toBeNear(1.05, 1e-9)
-		R.expect(VC.driftTurnSpeed(0.5)).toBe(0.3)
+	R.it("drifting turns faster (DRIFT_TURN_MULT)", function()
+		R.expect(VC.driftTurnSpeed(2)).toBeNear(2 * VC.DRIFT_TURN_MULT, 1e-9)
+		R.expect(VC.DRIFT_TURN_MULT).toBeGreaterThan(1)
+	end)
+
+	-- History (2026-10-22): drifting multiplied the turn rate by 0.35 and
+	-- nothing else, so it never helped in a corner; there was no slide.
+	local function run(drifting, seconds)
+		local st = VC.newState()
+		st.speed = 66
+		local yaw = 0
+		local cmd
+		for _ = 1, math.floor(seconds * 60) do
+			cmd = VC.command({ throttle = 1, steer = 1, climb = 0 },
+				{ maxSpeed = 69, turnSpeed = 2.6, drifting = drifting, dt = 1 / 60, yaw = yaw, torque = 100 }, st)
+			yaw += cmd.yawRate / 60
+		end
+		return st, cmd, yaw
+	end
+
+	R.it("a drifting car slides: its travel direction lags behind the nose", function()
+		local _, cmd = run(true, 0.8)
+		R.expect(cmd.slide).toBeGreaterThan(0.3)
+		local _, gcmd = run(false, 0.8)
+		R.expect(gcmd.slide).toBeLessThan(0.15)
+	end)
+
+	R.it("a drift turns the car further than grip in the same time, for a little speed", function()
+		local dst, _, dyaw = run(true, 1.0)
+		local gst, _, gyaw = run(false, 1.0)
+		R.expect(dyaw).toBeGreaterThan(gyaw * 1.4)
+		R.expect(dst.speed).toBeLessThan(gst.speed)
+		R.expect(dst.speed).toBeGreaterThan(gst.speed * 0.75)
+	end)
+
+	R.it("sliding time pays a mini-turbo on release (longer = bigger)", function()
+		local st = run(true, 1.0)
+		R.expect(st.driftTime).toBeGreaterThan(0.7)
+		R.expect(VC.turboLevel(0.3)).toBe(nil)
+		R.expect(VC.turboLevel(0.8)).toBe(1)
+		R.expect(VC.turboLevel(2.0)).toBe(2)
+	end)
+end)
+
+R.describe("hits (knock)", function()
+	R.it("the forward part changes the drive speed; the sideways part slides and fades", function()
+		local st = VC.newState()
+		st.speed = 40
+		-- car faces -Z; pushed forward 10 and to the right (+X) 20
+		VC.knock(st, 20, -10, 1.0, 0, -1, 70)
+		R.expect(st.speed).toBeNear(50, 1e-9)
+		R.expect(st.knockX).toBeNear(20, 1e-9)
+		R.expect(math.abs(st.knockZ)).toBeLessThan(1e-9)
+		local cmd = VC.command({ throttle = 1, steer = 0, climb = 0 }, { maxSpeed = 70, turnSpeed = 2, dt = 1 / 60, torque = 100 }, st)
+		R.expect(cmd.knockX).toBeGreaterThan(19)
+		R.expect(cmd.yawRate).toBeGreaterThan(0.9)
+		for _ = 1, 90 do
+			cmd = VC.command({ throttle = 1, steer = 0, climb = 0 }, { maxSpeed = 70, turnSpeed = 2, dt = 1 / 60, torque = 100 }, st)
+		end
+		R.expect(math.abs(cmd.knockX)).toBeLessThan(1)
+		R.expect(math.abs(cmd.yawRate)).toBeLessThan(0.05)
+	end)
+
+	R.it("reset clears a running knock and slide", function()
+		local st = VC.newState()
+		VC.knock(st, 20, 0, 1, 0, -1, 70)
+		st.travelYaw = 1
+		VC.reset(st)
+		R.expect(st.knockX).toBe(0)
+		R.expect(st.spin).toBe(0)
+		R.expect(st.travelYaw).toBe(nil)
 	end)
 end)
 

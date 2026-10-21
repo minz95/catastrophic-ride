@@ -82,47 +82,56 @@ ForestTrack.nodes = {
 	{ 8, -1660 }, -- N33
 	{ 0, -1690 }, -- N34  onto the finish straight (X=0 from here)
 	-- S6 (2026-10-20, races were ~47 s vs the 60-120 s target): pine
-	-- switchbacks, two 180° hairpins (R=70) joined by long straights.
+	-- switchbacks joined by long straights. 2026-10-22: each hairpin is two
+	-- tight 90° corners (R=25) with a short straight between them (the old
+	-- R=70 half circles were taken at full speed). With grip a car must
+	-- brake to ~50 studs/s there; a drift carries ~66 (Constants.DRIVE).
 	{ 0, -1960 }, -- N35  end of the finish-straight mud + ramp; S6 begins
 	{ -10.7, -2000 }, -- N36
 	{ -40, -2029.3 }, -- N37
 	{ -80, -2040 }, -- N38  heading west
 	{ -340, -2040 }, -- N39  hairpin 1 entry
-	{ -375, -2049.4 }, -- N40
-	{ -400.6, -2075 }, -- N41
-	{ -410, -2110 }, -- N42  hairpin 1 apex (drift corner)
-	{ -400.6, -2145 }, -- N43
-	{ -375, -2170.6 }, -- N44
-	{ -340, -2180 }, -- N45  heading east
-	{ 220, -2180 }, -- N46  hairpin 2 entry
-	{ 255, -2189.4 }, -- N47
-	{ 280.6, -2215 }, -- N48
-	{ 290, -2250 }, -- N49  hairpin 2 apex (drift corner)
-	{ 280.6, -2285 }, -- N50
-	{ 255, -2310.6 }, -- N51
-	{ 220, -2320 }, -- N52  heading west
-	{ -200, -2320 }, -- N53
-	{ -245, -2332.1 }, -- N54
-	{ -277.9, -2365 }, -- N55
-	{ -290, -2410 }, -- N56  S6 end, heading -Z again
+	{ -385, -2040 }, -- N40  corner 1 (R=25)
+	{ -397.5, -2043.35 }, -- N41
+	{ -406.65, -2052.5 }, -- N42
+	{ -410, -2065 }, -- N43  heading south
+	{ -410, -2110 }, -- N44  hairpin 1 apex (drift corner)
+	{ -410, -2155 }, -- N45  corner 2 (R=25)
+	{ -406.65, -2167.5 }, -- N46
+	{ -397.5, -2176.65 }, -- N47
+	{ -385, -2180 }, -- N48  heading east
+	{ 220, -2180 }, -- N49  hairpin 2 entry
+	{ 265, -2180 }, -- N50  corner 3 (R=25)
+	{ 277.5, -2183.35 }, -- N51
+	{ 286.65, -2192.5 }, -- N52
+	{ 290, -2205 }, -- N53  heading south
+	{ 290, -2250 }, -- N54  hairpin 2 apex (drift corner)
+	{ 290, -2295 }, -- N55  corner 4 (R=25)
+	{ 286.65, -2307.5 }, -- N56
+	{ 277.5, -2316.65 }, -- N57
+	{ 265, -2320 }, -- N58  heading west
+	{ -200, -2320 }, -- N59
+	{ -245, -2332.1 }, -- N60
+	{ -277.9, -2365 }, -- N61
+	{ -290, -2410 }, -- N62  S6 end, heading -Z again
 	-- S7: ridge chicane and the final straight
-	{ -290, -2610 }, -- N57
-	{ -273.9, -2670 }, -- N58
-	{ -230, -2713.9 }, -- N59
-	{ -170, -2730 }, -- N60  heading east
-	{ 50, -2730 }, -- N61  ridge chicane
-	{ 73, -2734.6 }, -- N62
-	{ 92.4, -2747.6 }, -- N63
-	{ 119.3, -2763.1 }, -- N64
-	{ 150.4, -2763.1 }, -- N65
-	{ 177.3, -2747.6 }, -- N66
-	{ 196.7, -2734.6 }, -- N67
-	{ 219.7, -2730 }, -- N68  chicane exit
-	{ 339.7, -2730 }, -- N69
-	{ 394.7, -2744.7 }, -- N70
-	{ 435, -2785 }, -- N71
-	{ 449.7, -2840 }, -- N72  onto the final straight
-	{ 449.7, -3100 }, -- N73  runoff past the finish
+	{ -290, -2610 }, -- N63
+	{ -273.9, -2670 }, -- N64
+	{ -230, -2713.9 }, -- N65
+	{ -170, -2730 }, -- N66  heading east
+	{ 50, -2730 }, -- N67  ridge chicane
+	{ 73, -2734.6 }, -- N68
+	{ 92.4, -2747.6 }, -- N69
+	{ 119.3, -2763.1 }, -- N70
+	{ 150.4, -2763.1 }, -- N71
+	{ 177.3, -2747.6 }, -- N72
+	{ 196.7, -2734.6 }, -- N73
+	{ 219.7, -2730 }, -- N74  chicane exit
+	{ 339.7, -2730 }, -- N75
+	{ 394.7, -2744.7 }, -- N76
+	{ 435, -2785 }, -- N77
+	{ 449.7, -2840 }, -- N78  onto the final straight
+	{ 449.7, -3100 }, -- N79  runoff past the finish
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -132,8 +141,8 @@ ForestTrack.sections = {
 	{ name = "S3 river sweeper",   from = 8,  to = 15 },
 	{ name = "S4 farm U-bend",     from = 15, to = 23 },
 	{ name = "S5 mud hook",        from = 23, to = 35 },
-	{ name = "S6 pine switchbacks", from = 35, to = 56 },
-	{ name = "S7 ridge chicane",   from = 56, to = 73 },
+	{ name = "S6 pine switchbacks", from = 35, to = 62 },
+	{ name = "S7 ridge chicane",   from = 62, to = 79 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.FOREST.zFinish.

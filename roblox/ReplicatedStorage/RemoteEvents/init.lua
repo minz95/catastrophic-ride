@@ -27,6 +27,10 @@
 --   RaceIntroShown      → (intro: { biome: string })  -- broadcast at race start
 --   RaceSeedBroadcast   → (seed: number)  -- per-race seed for client-side variation
 --   PlaytestMark        → client→server (note: "bad" | "fun")  -- playtest marker, Studio / test servers only
+--   CarImpact           → server→driver (dvx, dvz, spin, strength, otherUserId)
+--                          a car-to-car hit (Shared/CarImpact): VehicleController.knock
+--   DriftTurbo          → client→server (level: number, slideSeconds: number)
+--                          a released drift earned Constants.DRIVE.DRIFT_TURBO[level]
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -61,6 +65,8 @@ local EVENTS = {
 	"RaceIntroShown",
 	"RaceSeedBroadcast",
 	"PlaytestMark",
+	"CarImpact",
+	"DriftTurbo",
 }
 
 local FUNCTIONS = {

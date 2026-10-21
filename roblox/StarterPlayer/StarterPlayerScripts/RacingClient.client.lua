@@ -97,9 +97,7 @@ UserInputService.InputEnded:Connect(function(input)
 
 	if not _active then return end
 
-	if k == "Shift" and _drifting then
-		_exitDrift()
-	end
+	-- Releasing Shift ends a drift in the drive loop (VehicleController.updateDrift).
 end)
 
 -- ─── Screen overlay helpers ───────────────────────────────────────────────────
@@ -257,7 +255,6 @@ end
 -- Drifting lowers the turn rate inside VehicleController.command (ctx.drifting);
 -- the seat's TurnSpeed is server-owned and never written here.
 local function _enterDrift()
-	if not _seat or _drifting then return end
 	_drifting        = true
 
 	local driftColor, driftText
@@ -272,11 +269,17 @@ local function _enterDrift()
 	_showDriftLabel(driftText, driftColor)
 end
 
-function _exitDrift()
-	if not _seat or not _drifting then return end
+function _exitDrift(level, slid)
 	_drifting = false
 	_hideDriftLabel()
-	-- No local slingshot: DriftCorner zones charge the boost gauge instead.
+	-- A long enough slide earns a mini-turbo; the server applies the speed
+	-- (VehicleTuning) and draws it on the car for everyone.
+	if level then
+		local tb = Constants.DRIVE.DRIFT_TURBO[level]
+		RemoteEvents.DriftTurbo:FireServer(level, slid)
+		_showDriftLabel(tb.label, level >= 2 and Color3.fromRGB(255, 120, 40) or Color3.fromRGB(80, 190, 255))
+		task.delay(0.6, _hideDriftLabel)
+	end
 end
 
 -- ─── DriftCharge listener ─────────────────────────────────────────────────────
@@ -581,22 +584,34 @@ local function _driveLoop(dt)
 		_prevBotE = e
 	end
 
-	if not isSky then
-		local vel = primary.AssemblyLinearVelocity.Magnitude
-		if VehicleController.shouldEnterDrift(input, _drifting, vel, maxSpeed, isSky) then
-			_enterDrift()
-		end
+	-- Drift: one rule for players, bots and simulators. A released drift
+	-- that slid long enough asks the server for its mini-turbo.
+	local vel = primary.AssemblyLinearVelocity
+	local flatSpeed = Vector3.new(vel.X, 0, vel.Z).Magnitude
+	local slid = _driveState.driftTime or 0
+	local change, level = VehicleController.updateDrift(_driveState, input, flatSpeed, maxSpeed, isSky)
+	if change == "enter" then
+		_enterDrift()
+	elseif change == "exit" then
+		_exitDrift(level, slid)
 	end
+	_drifting = _driveState.drifting
 
+	local _, yaw = primary.CFrame:ToEulerAnglesYXZ()
+	local tx, tz = VehicleController.travelDir(_driveState, yaw)
 	local cmd = VehicleController.command(input, {
 		maxSpeed      = maxSpeed,
 		turnSpeed     = turnSpeed,
 		isSky         = isSky,
 		drifting      = _drifting,
+		biome         = (_biome == "OCEAN") and "OCEAN" or "FOREST",
+		yaw           = yaw,
 		torque        = _seat and _seat.Torque or 0,
 		dt            = dt,
-		actualForward = primary.AssemblyLinearVelocity:Dot(primary.CFrame.LookVector),
+		actualForward = vel.X * tx + vel.Z * tz,
 	}, _driveState)
+	-- local only (not replicated): BotDriver's autopilot steers by the slide
+	primary:SetAttribute("TravelYaw", _driveState.travelYaw)
 	VehicleController.apply(primary, cmd, {
 		biome      = _biome,
 		altitudeDt = dt,
@@ -754,6 +769,29 @@ RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, vehicleModel)
 
 	Camera.CameraType  = Enum.CameraType.Scriptable
 	Camera.FieldOfView = _baseFOV
+end)
+
+-- ─── Car-to-car hits (server: RacingManager + Shared/CarImpact) ──────────────
+-- The drive model overwrites Roblox's own collision response every frame, so
+-- the server resolves each hit and sends this driver a knock: a velocity
+-- change (forward part → drive speed, sideways part → a fading slide) and a
+-- spin. The camera shakes with the closing speed.
+RemoteEvents.CarImpact.OnClientEvent:Connect(function(dvx, dvz, spin, strength)
+	if not _active or not _vehicle or not _vehicle.PrimaryPart then return end
+	local look = _vehicle.PrimaryPart.CFrame.LookVector
+	VehicleController.knock(_driveState, dvx or 0, dvz or 0, spin or 0, look.X, look.Z,
+		_seat and _seat.MaxSpeed or 60)
+	local amount = math.min((strength or 0) * Constants.IMPACT.SHAKE_PER_HIT, 0.8)
+	if amount > 0.05 then
+		local t0 = os.clock()
+		local conn
+		conn = RunService.RenderStepped:Connect(function()
+			local age = os.clock() - t0
+			if age > 0.35 then conn:Disconnect() return end
+			local k = amount * (1 - age / 0.35)
+			Camera.CFrame = Camera.CFrame * CFrame.Angles((math.random() - 0.5) * k * 0.1, (math.random() - 0.5) * k * 0.1, 0)
+		end)
+	end
 end)
 
 -- ─── Enable / Disable ─────────────────────────────────────────────────────────

@@ -222,3 +222,70 @@ R.describe("lift abilities raise the car", function()
 		R.expect(primary:GetAttribute("LiftOffset")).toBe(nil)
 	end)
 end)
+
+-- History (2026-10-22): drops were plain blocks / discs placed at car height
+-- − 1.5 (floating or sunk), not the item that made them.
+R.describe("items left on the track show the item, on the ground", function()
+	local srv, cars = abilityServer()
+	srv.env.run(srv.env.find("ServerScriptService.ItemModelPreloader"))
+	local TrackDropsFolder = function() return srv.env.workspace:FindFirstChild("TrackDrops") end
+	local DROPS = { "Pizza", "Gas Can", "Magnifying Glass", "Kettle", "Cactus", "Log" }
+
+	R.it("each drop item leaves a copy of its model on the ground, ringed and labelled", function()
+		local bad = {}
+		for _, item in ipairs(DROPS) do
+			local before = TrackDropsFolder() and #TrackDropsFolder():GetChildren() or 0
+			local result = fire(srv, cars[1], item)
+			srv.advance(0.3)
+			local f = TrackDropsFolder()
+			local drop = f and f:FindFirstChild("Drop_" .. item)
+			if result ~= "ok" then
+				table.insert(bad, item .. ": " .. tostring(result))
+			elseif not drop or #f:GetChildren() <= before then
+				table.insert(bad, item .. ": no drop")
+			else
+				local parts, lowest = 0, math.huge
+				for _, d in ipairs(drop:GetDescendants()) do
+					if d:IsA("BasePart") and not ({ DropHazard = 1, DropRing = 1, DropPuddle = 1 })[d.Name] then
+						parts += 1
+						local h = d.Size / 2
+						for _, sx in ipairs({ -1, 1 }) do for _, sy in ipairs({ -1, 1 }) do for _, sz in ipairs({ -1, 1 }) do
+							lowest = math.min(lowest, (d.CFrame * roblox.Vector3.new(sx * h.X, sy * h.Y, sz * h.Z)).Y)
+						end end end
+					end
+				end
+				if parts < 1 then table.insert(bad, item .. ": no item model") end
+				if math.abs(lowest - 1) > 0.6 then
+					table.insert(bad, ("%s: item bottom at Y %.1f, ground at 1"):format(item, lowest))
+				end
+				if not drop:FindFirstChild("DropRing") or not drop:FindFirstChild("DropLabel", true) then
+					table.insert(bad, item .. ": no ring / label")
+				end
+			end
+			srv.advance(Constants.RACE_COUNTDOWN)   -- next item off any shared cooldown
+		end
+		R.expect(bad).toBeEmpty("drops")
+	end)
+
+	R.it("obstacle drops collide with a hitbox the size of the model; slicks do not block", function()
+		R.expect(fire(srv, cars[1], "Pizza")).toBe("ok")
+		srv.advance(0.3)
+		local f = TrackDropsFolder()
+		local cactus = f and f:FindFirstChild("Drop_Cactus")
+		local log = f and f:FindFirstChild("Drop_Log")
+		local pizza = f and f:FindFirstChild("Drop_Pizza")
+		R.expect(cactus and cactus.DropHazard.CanCollide).toBe(true)
+		R.expect(srv.mock.CollectionService:HasTag(cactus.DropHazard, "Obstacle")).toBe(true)
+		R.expect(log and log.DropHazard.CanCollide).toBe(true)
+		R.expect(pizza and pizza.DropHazard.CanCollide).toBe(false)
+	end)
+
+	R.it("every drop is logged for the Studio harness", function()
+		local logged = {}
+		for _, e in ipairs(srv.Telemetry.events("drop_placed")) do logged[e.item] = e end
+		for _, item in ipairs(DROPS) do
+			R.expect(logged[item] ~= nil).toBe(true)
+			R.expect(logged[item].onGround).toBe(true)
+		end
+	end)
+end)

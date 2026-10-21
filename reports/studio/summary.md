@@ -4,7 +4,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 
 | Scenario | Result | Commit | Ran |
 |---|---|---|---|
-| [abilities-forest](abilities-forest.json) | PASS | aeab89c | 2026-10-22T01:08 |
+| [abilities-forest](abilities-forest.json) | WARN | fd36242+ | 2026-10-22T02:09 |
 | [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | aeab89c+ | 2026-10-22T01:34 |
@@ -14,11 +14,11 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-forest-4p](farm-forest-4p.json) | FAIL | aeab89c+ | 2026-10-22T01:29 |
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
-| [match-forest](match-forest.json) | WARN | aeab89c+ | 2026-10-22T01:24 |
+| [match-forest](match-forest.json) | WARN | fd36242+ | 2026-10-22T02:03 |
 | [match-ocean](match-ocean.json) | PASS | aeab89c | 2026-10-22T00:35 |
 | [match-sky](match-sky.json) | PASS | aeab89c | 2026-10-22T00:39 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
-| [race-forest](race-forest.json) | PASS | aeab89c | 2026-10-22T00:15 |
+| [race-forest](race-forest.json) | PASS | fd36242+ | 2026-10-22T01:58 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
 | [race-ocean](race-ocean.json) | PASS | aeab89c | 2026-10-22T00:18 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
@@ -31,65 +31,74 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [vehicles-ocean](vehicles-ocean.json) | PASS | aeab89c | 2026-10-22T01:01 |
 | [vehicles-sky](vehicles-sky.json) | PASS | aeab89c | 2026-10-22T01:02 |
 
-## abilities-forest — PASS
+## abilities-forest — WARN
 
 ```
-Bot match: 4 round(s), end: rounds complete, server errors: 0, client errors: 1
+Bot match: 4 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 0 finished of 4
-    steal attempts: denied: victim has nothing=1
-    -4: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
-    -2: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
-    -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-  round 2 (FOREST): 0 finished of 4
-    steal attempts: none
+    steal attempts: denied: too late=1
     -4: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
     -2: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
+    -1: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
+    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+  round 2 (FOREST): 0 finished of 4
+    steal attempts: denied: too late=2
+    -4: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
     -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -3: picked 
-abilities: 39 items fired ok, 41 effect keys measured
-  backpackBoost   x1   rise 0.0  MaxSpeed 101.5→60.9  drawn 4
-  barrelRoll      x10  rise 0.0  MaxSpeed 97.7→107.5 32.6→35.8  drawn 24
-  bathSplash      x4   rise 0.6  MaxSpeed 97.3→97.3 97.3→97.3  drawn 16
-  blocked         x4   rise 0.5  MaxSpeed 108.4→108.4 304.4→304.4  drawn 16
-  bloomCleanse    x6   rise 0.2  MaxSpeed 59.1→59.1 65.6→65.6  drawn 24
-  blown           x1   rise 0.0  MaxSpeed 98.4→55.8  drawn 4
-  boost           x139 rise 8.4  MaxSpeed 65.6→98.4 66.3→99.4  drawn 24
-  boostRocket     x46  rise 2.6  MaxSpeed 65.2→97.7 65.2→97.7  drawn 24
-  bumperAbsorb    x6   rise 0.0  MaxSpeed 108.1→108.1 376.2→395  drawn 24
-  cactusSting     x6   rise 1.5  MaxSpeed 97.7→48.9 76.2→33.1  drawn 24
-  cartRam         x5   rise 0.1  MaxSpeed 106.2→106.2 106.2→106.2  drawn 20
-  cartShove       x6   rise 1.3  MaxSpeed 39.4→39.4 99.4→99.4  drawn 24
-  digMode         x4   rise 4.0  MaxSpeed 131.7→131.7 104.5→104.5  drawn 16
-  disguise        x8   rise 1.9  MaxSpeed 65.6→39.4 65.6→98.4  drawn 24
-  dropTrap        x36  rise 0.6  MaxSpeed 108.1→108.1 65.6→65.6  drawn 24
-  flagAura        x8   rise 10.8  MaxSpeed 47.8→114.7 74.3→66  drawn 24
-  groundBounce    x4   rise 5.9  MaxSpeed 104.7→104.7 104.7→104.7  drawn 16
-  gustBlast       x9   rise 4.3  MaxSpeed 91.2→91.2 97.7→97.7  drawn 24
-  hover           x5   rise 7.1  MaxSpeed 66→82.5 68.8→103.2  drawn 20
-  kiteLift        x4   rise 8.5  MaxSpeed 43.4→108.4 72.3→108.4  drawn 16
-  leadFlag        x6   rise 0.2  MaxSpeed 103→108.1 69.7→73.2  drawn 24
-  lifeFloat       x4   rise 5.5  MaxSpeed 103.2→34.4 68.8→68.8  drawn 16
-  lockdown        x3   rise 0.1  MaxSpeed 125.4→125.4 104.5→104.5  drawn 12
-  magnetPull      x1   rise 10.8  MaxSpeed 92.8→66  drawn 4
-  microFreeze     x4   rise 0.2  MaxSpeed 61.5→123 123→123  drawn 16
-  momentum        x25  rise 0.6  MaxSpeed 68.3→70.3 102.4→105.5  drawn 24
-  raftGlide       x6   rise 0.6  MaxSpeed 47.7→34.3 66.3→76.2  drawn 24
-  rammed          x15  rise 2.5  MaxSpeed 97.7→48.9 65.6→65.6  drawn 24
-  redline         x4   rise 0.0  MaxSpeed 72.3→144.6 108.4→144.6  drawn 16
-  reverseBoost    x5   rise 0.6  MaxSpeed 98.4→196.8 103.3→206.7  drawn 24
-  rise            x8   rise 12.7  MaxSpeed 92.8→66 68.8→68.8  drawn 24
-  rocketBurst     x10  rise 0.6  MaxSpeed 125.4→395 101.5→304.4  drawn 24
-  skateSlide      x4   rise 0.6  MaxSpeed 32.4→81.1 108.1→67.6  drawn 16
-  slipstream      x12  rise 0.7  MaxSpeed 65.2→58.6 65.6→65.6  drawn 24
-  sofaFortress    x3   rise 0.0  MaxSpeed 104.7→0 104.7→0  drawn 12
-  spinBurst       x5   rise 2.1  MaxSpeed 127.5→153 70.8→212.5  drawn 20
-  steamed         x10  rise 2.8  MaxSpeed 65.2→97.7 97.7→97.7  drawn 24
-  steerDisable    x4   rise 0.5  MaxSpeed 65.6→65.6 65.6→65.6  drawn 16
-  umbrellaBlock   x3   rise 2.3  MaxSpeed 104.5→101.5 104.5→104.5  drawn 12
-  windBlast       x2   rise 0.0  MaxSpeed 102.4→102.4 105.5→105.5  drawn 8
-  windRide        x8   rise 0.6  MaxSpeed 92.8→79.5 99.4→79.5  drawn 24
+    -3: pic
+abilities: 39 items fired ok, 47 effect keys measured
+  backpackBoost   x1   rise 0.0  MaxSpeed 101.5→101.5  drawn 4
+  barrelRoll      x7   rise 0.0  MaxSpeed 29.3→64.5 65.2→71.7  drawn 24
+  bathSplash      x2   rise 0.1  MaxSpeed 97.3→97.3 97.3→97.3  drawn 8
+  blocked         x4   rise 0.0  MaxSpeed 65.6→65.6 108.4→108.4  drawn 16
+  bloomCleanse    x6   rise 0.0  MaxSpeed 65.6→65.6 65.6→65.6  drawn 24
+  blown           x1   rise 0.0  MaxSpeed 103→87.5  drawn 4
+  boost           x125 rise 5.5  MaxSpeed 65.6→98.4 66.3→99.4  drawn 24
+  boostRocket     x41  rise 5.3  MaxSpeed 65.2→97.7 65.2→29.3  drawn 24
+  bump            x16  rise 3.0  MaxSpeed 65.6→65.6 39.8→39.8  drawn 24
+  bumperAbsorb    x21  rise 1.1  MaxSpeed 103→103 108.1→108.1  drawn 24
+  cactusSting     x21  rise 5.6  MaxSpeed 65.2→32.6 97.7→29.3  drawn 24
+  cartRam         x2   rise 0.0  MaxSpeed 106.2→106.2 70.8→106.2  drawn 8
+  cartShove       x3   rise 1.3  MaxSpeed 102.5→102.5 99.4→69.6  drawn 12
+  digMode         x2   rise 0.0  MaxSpeed 104.5→104.5 73.2→73.2  drawn 8
+  disguise        x7   rise 0.1  MaxSpeed 29.5→19.7 65.6→65.6  drawn 24
+  dropTrap        x31  rise 3.0  MaxSpeed 65.6→65.6 97.7→97.7  drawn 24
+  flagAura        x12  rise 3.5  MaxSpeed 106.2→102 103.2→123.8  drawn 24
+  frozen          x1   rise 0.0  MaxSpeed 83.8→0  drawn 4
+  groundBounce    x4   rise 4.8  MaxSpeed 69.8→83.8 34.9→69.8  drawn 16
+  gustBlast       x7   rise 0.6  MaxSpeed 65.2→65.2 97.7→48.9  drawn 24
+  hover           x2   rise 0.0  MaxSpeed 82.5→82.5 68.8→68.8  drawn 8
+  kiteLift        x1   rise 3.0  MaxSpeed 72.3→72.3  drawn 4
+  leadFlag        x6   rise 0.1  MaxSpeed 103→108.1 69.7→73.2  drawn 24
+  lifeFloat       x1   rise 0.0  MaxSpeed 68.8→68.8  drawn 4
+  lockdown        x1   rise 0.0  MaxSpeed 104.5→104.5  drawn 4
+  magnetPull      x3   rise 3.4  MaxSpeed 127.5→102 68.8→55  drawn 12
+  microFreeze     x1   rise 0.0  MaxSpeed 86.1→123  drawn 4
+  miniTurbo       x2   rise 0.1  MaxSpeed 108.1→168.9 43.2→54.1  drawn 8
+  momentum        x22  rise 0.8  MaxSpeed 68.3→70.3 102.4→70.3  drawn 24
+  noodleSnare     x2   rise 0.0  MaxSpeed 123→86.1 104.5→73.2  drawn 8
+  raftGlide       x4   rise 2.9  MaxSpeed 119.3→114.4 66.3→76.2  drawn 16
+  rammed          x38  rise 3.5  MaxSpeed 65.2→32.6 97.7→29.3  drawn 24
+  redline         x1   rise 0.0  MaxSpeed 72.3→144.6  drawn 4
+  reverseBoost    x6   rise 3.0  MaxSpeed 103.3→206.7 103.3→206.7  drawn 24
+  rise            x8   rise 9.0  MaxSpeed 103.2→123.8 68.8→55  drawn 24
+  rocketBurst     x7   rise 3.5  MaxSpeed 109.7→329.2 101.5→304.4  drawn 24
+  skateSlide      x4   rise 0.6  MaxSpeed 32.4→135.1 54.1→67.6  drawn 16
+  slipped         x18  rise 9.0  MaxSpeed 65.6→45.9 99.4→69.6  drawn 24
+  slipstream      x16  rise 3.0  MaxSpeed 97.7→44 98.4→88.6  drawn 24
+  sofaFortress    x1   rise 0.0  MaxSpeed 0→0  drawn 4
+  spinBurst       x2   rise 0.0  MaxSpeed 102→255 127.5→255  drawn 8
+  splashed        x4   rise 0.0  MaxSpeed 79.5→63.6 68.6→63.1  drawn 16
+  steamed         x9   rise 0.4  MaxSpeed 92.2→92.2 72.3→108.4  drawn 24
+  steerDisable    x7   rise 3.5  MaxSpeed 65.6→65.6 65.6→65.6  drawn 24
+  umbrellaBlock   x3   rise 0.7  MaxSpeed 104.5→104.5 101.5→121.7  drawn 12
+  windBlast       x2   rise 0.4  MaxSpeed 92.2→92.2 121.6→121.6  drawn 8
+  windRide        x7   rise 3.0  MaxSpeed 66.3→79.5 99.4→79.5  drawn 24
+driving: 18 hits (closing speed max 70, push max 45 studs/s), 2 drift turbos, drops: Cactus, Gas Can, Kettle, Log, Magnifying Glass, Pizza
 ```
+- **warn** lifeFloat (1 landings): never rose 1.5 studs (rose 0.0)
+- **warn** sofaFortress (1 landings): MaxSpeed never went down (0→0)
 
 ## abilities-ocean — PASS
 
@@ -239,14 +248,15 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 3 finished of 3
-    steal attempts: defended=4, denied: victim has nothing=3, stolen=1
-    -3: picked 2, contests 1/1, stole 0, robbed 1, defences 1, items 1 | craft submitted, rejected 0
-    -2: picked 13, contests 0/4, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 6, contests 4/5, stole 1, robbed 0, defences 3, items 7 | craft submitted, rejected 0
-    #1 Player1 70.8s
-    #2 Player2 77.6s
-    #3 Player3 121.1s
-  events: ability=62 ability_probe=128 bot_craft=3 bot_defend=5 bot_fx=144 bot_hud=91 bot_joined=3 bot_ready=3 bot_respawn=10 bot_screen=2 bot_steal=8 checkpoint=6 contact=6 contest_result=5 craft=3 finish=3 harness_crafting=1 harness_round=1 hazard=27 hit=7 item_drop=5 item_pickup=21 phase=4 race_go=1 race_launch=3 race_progress=363 race_sample=732 race_start=1 respawn=36 speed_effect=237
+    steal attempts: defended=5, denied: too far=1, denied: victim has nothing=2
+    -3: picked 5, contests 4/6, stole 0, robbed 0, defences 2, items 5 | craft submitted, rejected 0
+    -2: picked 14, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 3, contests 2/6, stole 0, robbed 0, defences 3, items 3 | craft submitted, rejected 0
+    #1 Player2 77.5s
+    #2 Player1 106.4s
+    #3 Player3 113.7s
+  events: ability=53 ability_probe=130 bot_craft=3 bot_defend=5 bot_fx=177 bot_hud=92 bot_joined=3 bot_ready=3 bot_respawn=4 bot_screen=1 bot_steal=8 checkpoint=6 contact=5 contest_result=6 craft=3 drift_turbo=11 drop_placed=9 finish=3 harness_crafting=1 harness_round=1 hazard=28 hit=2 hit_blocked=2 impact=2 item_drop=6 item_pickup=22 phase=4 race_go=1 race_launch=3 race_progress=
+driving: 2 hits (closing speed max 36, push max 26 studs/s), 11 drift turbos, drops: Kettle
 ```
 - **warn** round 1: 3 of 4 players joined (Studio did not start every client)
 
@@ -295,10 +305,11 @@ RaceSim FOREST (shipped) — 128.9s wall time
 ## race-forest — PASS
 
 ```
-RaceSim FOREST (shipped) — 121.8s wall time
-  expert   car=p50 max=69 mass=8.03 → 110.82s | CPs 2 | respawns 0 | blocked 0
-  average  car=p50 max=69 mass=8.03 → 111.58s | CPs 2 | respawns 0 | blocked 0
-  novice   car=p50 max=69 mass=8.03 → 123.3s | CPs 2 | respawns 0 | blocked 0
+RaceSim FOREST (shipped) — 123.9s wall time
+  expert   car=p50 max=69 mass=8.03 → 111s | CPs 2 | respawns 0 | blocked 0
+  average  car=p50 max=69 mass=8.03 → 115.15s | CPs 2 | respawns 0 | blocked 0
+  novice   car=p50 max=69 mass=8.03 → 124.18s | CPs 2 | respawns 0 | blocked 0
+drifts: expert 14/10, average 14/6, novice 0/0
 ```
 
 ## race-ocean-builds — PASS

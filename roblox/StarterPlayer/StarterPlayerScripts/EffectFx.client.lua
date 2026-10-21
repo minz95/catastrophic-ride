@@ -145,6 +145,62 @@ local function particles(primary, offset, props, seconds, count)
 	Debris:AddItem(att, life)
 end
 
+-- ─── Drift smoke (every car, seen by everyone) ───────────────────────────────
+-- A car whose velocity points away from its nose (VehicleController slide)
+-- smokes from the rear corners. Worked out from the replicated velocity,
+-- so no network message is needed. Boats throw spray instead.
+
+local DRIFT_SMOKE = { MIN_SPEED = 25, MIN_ANGLE = math.rad(12) }
+local _smoke = {}   -- [model] = { emitters }
+local _smokeT = 0
+
+local function smokeFor(model)
+	local s = _smoke[model]
+	if s then return s end
+	local primary = model.PrimaryPart
+	local half = primary.Size * 0.5
+	local isBoat = ReplicatedStorage:GetAttribute("Biome") == "OCEAN"
+	s = {}
+	for _, side in ipairs({ -1, 1 }) do
+		local _, e = emitter(primary, Vector3.new(side * half.X, -half.Y, half.Z), {
+			Name = "DriftSmoke",
+			Color = ColorSequence.new(isBoat and Color3.fromRGB(220, 240, 255) or Color3.fromRGB(235, 235, 235)),
+			Size = seq(1.2, 3.5), Transparency = seq(0.35, 1),
+			Lifetime = NumberRange.new(0.5, 0.9), Speed = NumberRange.new(2, 5),
+			SpreadAngle = Vector2.new(40, 40), LightEmission = 0.1,
+		})
+		table.insert(s, e)
+	end
+	_smoke[model] = s
+	return s
+end
+
+RunService.Heartbeat:Connect(function(dt)
+	_smokeT += dt
+	if _smokeT < 0.1 then return end
+	_smokeT = 0
+	for model in pairs(_smoke) do
+		if not model.Parent or not model.PrimaryPart then _smoke[model] = nil end
+	end
+	for _, child in ipairs(workspace:GetChildren()) do
+		local primary = child:IsA("Model") and child:GetAttribute("OwnerUserId") and child.PrimaryPart
+		if primary and primary:FindFirstChild("HoverPosition") == nil then
+			local v = primary.AssemblyLinearVelocity
+			local flat = Vector3.new(v.X, 0, v.Z)
+			local look = primary.CFrame.LookVector
+			look = Vector3.new(look.X, 0, look.Z)
+			local sliding = false
+			if flat.Magnitude > DRIFT_SMOKE.MIN_SPEED and look.Magnitude > 1e-3 then
+				local cosA = flat.Unit:Dot(look.Unit)
+				sliding = math.acos(math.clamp(cosA, -1, 1)) > DRIFT_SMOKE.MIN_ANGLE
+			end
+			if sliding or _smoke[child] then
+				for _, e in ipairs(smokeFor(child)) do e.Rate = sliding and 40 or 0 end
+			end
+		end
+	end
+end)
+
 -- ─── Follow part (shield bubble, ring) ───────────────────────────────────────
 
 local _followers = {}   -- { part, primary, untilT, offset }

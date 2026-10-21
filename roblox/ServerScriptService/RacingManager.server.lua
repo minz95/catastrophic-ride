@@ -25,6 +25,7 @@ local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
 local Passives          = require(ReplicatedStorage.Shared.Passives)
+local CarImpact         = require(ReplicatedStorage.Shared.CarImpact)
 local EffectFx          = require(ServerScriptService.Modules.EffectFx)
 local Telemetry         = require(ServerScriptService.Modules.Telemetry)
 local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
@@ -427,26 +428,22 @@ local function _carPose(vehicle)
 	return { x = cf.Position.X, z = cf.Position.Z, lx = look.X, lz = look.Z }
 end
 
-local _contactCooldown = {}   -- ["a:b"] = expireTick
+local _contactCooldown = {}   -- ["a:b"] = expireTick (HEAD / TAIL passives)
+local _impactCooldown  = {}   -- ["a:b"] = expireTick (the physical hit)
 
-local function _onCarContact(ownerA, vehicleA, hit)
-	if not _active then return end
-	local ownerB, vehicleB = _ownerOf(hit)
-	if not ownerB or ownerB == ownerA then return end
-	if not vehicleA.PrimaryPart or not vehicleB.PrimaryPart then return end
-	if RaceEffects.has(ownerA, "disguised") or RaceEffects.has(ownerB, "disguised") then return end
+local function _body(vehicle)
+	local pp = vehicle.PrimaryPart
+	local v = pp.AssemblyLinearVelocity
+	local look = _flat(pp.CFrame.LookVector)
+	return {
+		x = pp.Position.X, z = pp.Position.Z, vx = v.X, vz = v.Z,
+		mass = pp.AssemblyMass, lx = look.X, lz = look.Z,
+	}
+end
 
-	local a, b = ownerA.UserId, ownerB.UserId
-	local key = (a < b) and (a .. ":" .. b) or (b .. ":" .. a)
-	if (_contactCooldown[key] or 0) > tick() then return end
-	_contactCooldown[key] = tick() + P.CONTACT_COOLDOWN
-
-	local who = Passives.rearEnd(_carPose(vehicleA), _carPose(vehicleB))
-	if not who then return end
-	local attacker, victim = ownerA, ownerB
-	local aVeh, vVeh = vehicleA, vehicleB
-	if who == "b" then attacker, victim, aVeh, vVeh = ownerB, ownerA, vehicleB, vehicleA end
-
+-- HEAD / TAIL passives of a rear-end contact. Adjusts the victim's side of
+-- the physical hit (`hit`, may be nil) instead of adding its own mover.
+local function _rearEndPassives(attacker, victim, aVeh, vVeh, hitAttacker, hitVictim)
 	local aps, vps = _physState[attacker.UserId], _physState[victim.UserId]
 	local fx = Passives.contactEffects(aps and aps.slots, vps and vps.slots)
 	local now = tick()
@@ -456,19 +453,20 @@ local function _onCarContact(ownerA, vehicleA, hit)
 	local victimBlocked = (fx.victimPush > 0 or fx.victimSlow) and RaceEffects.blocksHit(victim)
 	if victimBlocked then
 		EffectFx.play("blocked", victim, nil)   -- Rubber Duck / shield ate the hit
+		if hitVictim then hitVictim.dvx, hitVictim.dvz, hitVictim.spin = 0, 0, 0 end
 	elseif fx.victimPush == 0 and not fx.victimSlow then
 		EffectFx.play("bumperAbsorb", victim, nil, attacker)   -- Balloon Bunch TAIL
+		if hitVictim then hitVictim.dvx, hitVictim.dvz, hitVictim.spin = 0, 0, 0 end
 	else
-		if fx.victimPush > 0 then
-			EffectFx.play(fx.victimPush > P.RAM_PUSH and "cartShove" or "rammed", victim, nil, attacker)
-			local dir = _flat(aVeh.PrimaryPart.CFrame.LookVector)
-			if dir.Magnitude > 1e-3 then
-				local bv = Instance.new("BodyVelocity")
-				bv.Velocity = dir.Unit * fx.victimPush
-				bv.MaxForce = Vector3.new(1e5, 1e4, 1e5)
-				bv.Parent   = vVeh.PrimaryPart
-				Debris:AddItem(bv, 0.25)
+		if fx.victimPush > P.RAM_PUSH then
+			-- Shopping Cart HEAD: an extra shove on top of the hit
+			EffectFx.play("cartShove", victim, nil, attacker)
+			if hitVictim then
+				local dir = _flat(aVeh.PrimaryPart.CFrame.LookVector)
+				CarImpact.addPush(hitVictim, dir.X, dir.Z, fx.victimPush - P.RAM_PUSH)
 			end
+		elseif fx.victimPush > 0 then
+			EffectFx.play("rammed", victim, nil, attacker)
 		end
 		if fx.victimSlow then
 			EffectFx.play("cactusSting", victim, fx.victimSlow.duration, attacker)
@@ -483,6 +481,54 @@ local function _onCarContact(ownerA, vehicleA, hit)
 		attacker = attacker.UserId, victim = victim.UserId,
 		push = fx.victimPush, victimSlow = fx.victimSlow ~= nil and not victimBlocked,
 		attackerSlow = fx.attackerSlow ~= nil,
+	})
+end
+
+-- Any contact between two race cars: a physical hit for both (Shared/
+-- CarImpact → RemoteEvents.CarImpact → VehicleController.knock on each
+-- driver's client), plus the HEAD / TAIL passives when it was a rear-end.
+-- The drive model sets each car's velocity every frame, so without this a
+-- hit felt like touching a wall.
+local function _onCarContact(ownerA, vehicleA, hit)
+	if not _active then return end
+	local ownerB, vehicleB = _ownerOf(hit)
+	if not ownerB or ownerB == ownerA then return end
+	if not vehicleA.PrimaryPart or not vehicleB.PrimaryPart then return end
+	if RaceEffects.has(ownerA, "disguised") or RaceEffects.has(ownerB, "disguised") then return end
+
+	local a, b = ownerA.UserId, ownerB.UserId
+	local key = (a < b) and (a .. ":" .. b) or (b .. ":" .. a)
+	local now = tick()
+	if (_impactCooldown[key] or 0) > now then return end
+	_impactCooldown[key] = now + Constants.IMPACT.PAIR_COOLDOWN
+
+	local impact = CarImpact.resolve(_body(vehicleA), _body(vehicleB))
+
+	-- Rear-end passives (own, longer cooldown)
+	if (_contactCooldown[key] or 0) <= now then
+		local who = Passives.rearEnd(_carPose(vehicleA), _carPose(vehicleB))
+		if who then
+			_contactCooldown[key] = now + P.CONTACT_COOLDOWN
+			if who == "a" then
+				_rearEndPassives(ownerA, ownerB, vehicleA, vehicleB, impact and impact.a, impact and impact.b)
+			else
+				_rearEndPassives(ownerB, ownerA, vehicleB, vehicleA, impact and impact.b, impact and impact.a)
+			end
+		end
+	end
+
+	if not impact then return end
+	RemoteEvents.CarImpact:FireClient(ownerA, impact.a.dvx, impact.a.dvz, impact.a.spin, impact.strength, b)
+	RemoteEvents.CarImpact:FireClient(ownerB, impact.b.dvx, impact.b.dvz, impact.b.spin, impact.strength, a)
+	if impact.strength >= Constants.IMPACT.BIG_HIT then
+		EffectFx.play("bump", ownerA, nil, ownerB)
+		EffectFx.play("bump", ownerB, nil, ownerA)
+	end
+	local function r1(x) return math.floor(x * 10 + 0.5) / 10 end
+	Telemetry.record("impact", {
+		a = a, b = b, strength = r1(impact.strength),
+		dvA = r1(math.sqrt(impact.a.dvx ^ 2 + impact.a.dvz ^ 2)), spinA = r1(impact.a.spin),
+		dvB = r1(math.sqrt(impact.b.dvx ^ 2 + impact.b.dvz ^ 2)), spinB = r1(impact.b.spin),
 	})
 end
 
@@ -633,6 +679,31 @@ local function _startPositionSync()
 	end)
 end
 
+-- ─── Drift mini-turbo ─────────────────────────────────────────────────────────
+-- The client times the slide (VehicleController.updateDrift) and asks for
+-- the turbo it earned; the server checks the level against the slide time it
+-- reports and caps how often a car can claim one.
+
+local DRIFT_TURBO_GAP = 1.0   -- s between two turbos of one car (a drift + release takes longer)
+
+RemoteEvents.DriftTurbo.OnServerEvent:Connect(function(player, level, slid)
+	if not _active or not RaceStart.isGo() then return end
+	if type(level) ~= "number" or type(slid) ~= "number" then return end
+	local tb = Constants.DRIVE.DRIFT_TURBO[level]
+	if not tb or slid < tb.time then return end
+	local ps = _physState[player.UserId]
+	if not ps then return end
+	local now = tick()
+	if now < (ps.driftTurboAt or 0) + DRIFT_TURBO_GAP then return end
+	ps.driftTurboAt = now
+	local pdata = SessionManager.getData(player)
+	local seat = _seatOf(pdata and pdata.vehicleModel)
+	if not seat then return end
+	EffectFx.play(level >= 2 and "superTurbo" or "miniTurbo", player, tb.duration)
+	_speed(player, seat, "driftTurbo", tb.mult, tb.duration)
+	Telemetry.record("drift_turbo", { userId = player.UserId, level = level, slid = math.floor(slid * 10) / 10 })
+end)
+
 -- ─── Manual boost activation (F key) ─────────────────────────────────────────
 
 RemoteEvents.RequestBoost.OnServerInvoke = function(player)
@@ -740,6 +811,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_physState   = {}
 		_totalRacers = #Players:GetPlayers()
 		_contactCooldown = {}
+		_impactCooldown  = {}
 		_cornerCooldowns = {}
 
 		for _, player in ipairs(Players:GetPlayers()) do

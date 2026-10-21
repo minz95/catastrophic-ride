@@ -2,8 +2,9 @@
 -- Builds the SKY biome map per racetrack spec §4:
 --   - planar figure-8 centerline (two 360° loops + plaza + canyon + descent)
 --     Z = 1500 → -2000 at altitude Y = 80
---   - 50-wide corridor on a continuous floor, fenced by touching crystal
---     pillars (open where the figure-8 crosses itself), invisible ceiling
+--   - 50-wide cloud road on a continuous floor, fenced by a see-through air
+--     barrier with a cloud rail at flyer height (open where the figure-8
+--     crosses itself), cloud puffs along the edges, invisible ceiling
 --   - CP1 at Loop A's western extent, CP2 at Loop B's eastern extent
 --
 -- Every position and size comes from ReplicatedStorage.Shared.Tracks.SkyTrack.
@@ -24,6 +25,13 @@ local C = {
 	CLOUD_FLAT   = Color3.fromRGB(240, 245, 255),
 	CLOUD_PUFF   = Color3.fromRGB(255, 255, 255),
 	CLOUD_SHADOW = Color3.fromRGB(230, 233, 248),
+	-- the road: soft cloud tones, a little blue so a sunlit floor is not glaring
+	ROAD         = Color3.fromRGB(222, 230, 244),
+	ROAD2        = Color3.fromRGB(212, 222, 240),
+	ROAD_EDGE    = Color3.fromRGB(246, 206, 120),   -- gold edge line
+	BARRIER      = Color3.fromRGB(170, 210, 250),   -- air barrier (see-through)
+	RAIL         = Color3.fromRGB(236, 242, 252),   -- cloud rail
+	SEA          = Color3.fromRGB(176, 200, 236),   -- cloud sea far below
 	PLATFORM     = Color3.fromRGB(175, 155, 218),
 	PLATFORM2    = Color3.fromRGB(135, 115, 188),
 	PLATFORM3    = Color3.fromRGB(200, 180, 240),
@@ -50,6 +58,18 @@ local SKY_BASE_Y = Track.trackTop   -- floor top surface
 local CORRIDOR_W = Track.width
 local NODES      = Track.nodes
 
+-- A squashed ball (Ball parts stay round; a Sphere mesh follows the size).
+local function _ellipsoid(root, props)
+	props.Material = props.Material or MAT.CLOUD
+	props.CanCollide = false
+	props.CastShadow = false
+	local p = _part(root, props)
+	local mesh = Instance.new("SpecialMesh")
+	mesh.MeshType = Enum.MeshType.Sphere
+	mesh.Parent = p
+	return p
+end
+
 -- Track bounding box (farm included) plus margin.
 local function _bbox(margin)
 	local x0, x1, z0, z1 = math.huge, -math.huge, math.huge, -math.huge
@@ -70,7 +90,7 @@ local function _buildClouds(root)
 	_part(root, {
 		Name = "SkyBackdrop", Size = Vector3.new(w, 6, d),
 		Position = Vector3.new(cx, SKY_BASE_Y - 55, cz),
-		Color = Color3.fromRGB(140, 165, 220), Material = MAT.CLOUD,
+		Color = C.SEA, Material = MAT.CLOUD,
 		CanCollide = false, CastShadow = false,
 	})
 	_part(root, {
@@ -79,40 +99,63 @@ local function _buildClouds(root)
 		Color = Color3.fromRGB(175, 195, 235), Material = MAT.CLOUD,
 		CanCollide = false, CastShadow = false, Transparency = 0.5,
 	})
+	-- Puffy cloud clusters: a cloud sea below the road and big clouds
+	-- beside it at road height (only where they cannot touch the lane).
 	local ix0, ix1, iz0, iz1 = _bbox(300)
 	local rng = Random.new(77)
-	for _ = 1, 35 do
-		local px, pz = rng:NextNumber(ix0, ix1), rng:NextNumber(iz0, iz1)
-		local py = SKY_BASE_Y + rng:NextNumber(-45, -20)
-		local cw, cd = rng:NextNumber(50, 140), rng:NextNumber(25, 70)
-		_part(root, {
-			Name = "CloudSlab", Size = Vector3.new(cw, rng:NextNumber(4, 8), cd),
-			Position = Vector3.new(px, py, pz),
-			Color = C.CLOUD_SHADOW, Material = MAT.CLOUD,
-			CanCollide = false, CastShadow = false, Transparency = 0.55,
-		})
-		_part(root, {
-			Name = "CloudSlabTop", Size = Vector3.new(cw * 0.85, 3, cd * 0.85),
-			Position = Vector3.new(px, py + 4, pz),
-			Color = C.CLOUD_FLAT, Material = MAT.CLOUD,
-			CanCollide = false, CastShadow = false, Transparency = 0.45,
-		})
+	local function cluster(px, py, pz, size, name)
+		local n = rng:NextInteger(4, 7)
+		for k = 1, n do
+			local r = size * rng:NextNumber(0.45, 0.8)
+			_ellipsoid(root, {
+				Name = name, Size = Vector3.new(r * 2, r * 1.1, r * 1.7),
+				Position = Vector3.new(px + rng:NextNumber(-size, size), py + rng:NextNumber(0, size * 0.35)
+					- (k == 1 and 0 or size * 0.1), pz + rng:NextNumber(-size * 0.6, size * 0.6)),
+				Color = (k % 3 == 0) and C.CLOUD_SHADOW or C.CLOUD_PUFF,
+			})
+		end
 	end
-	-- Puffs at corridor height only where they cannot sit on the corridor.
+	for _ = 1, 60 do
+		cluster(rng:NextNumber(ix0, ix1), SKY_BASE_Y + rng:NextNumber(-50, -25), rng:NextNumber(iz0, iz1),
+			rng:NextNumber(25, 55), "CloudSea")
+	end
 	local placed, tries = 0, 0
-	while placed < 45 and tries < 400 do
+	while placed < 40 and tries < 600 do
 		tries += 1
 		local px, pz = rng:NextNumber(ix0, ix1), rng:NextNumber(iz0, iz1)
-		local pr = rng:NextNumber(10, 28)
-		local py = SKY_BASE_Y + rng:NextNumber(-12, 25)
-		if not KIT:inLane(px, pz, pr * 1.3 + 4) then
+		local size = rng:NextNumber(14, 30)
+		if not KIT:inLane(px, pz, size * 1.9 + 8) then
 			placed += 1
-			_part(root, {
-				Name = "CloudPuff", Size = Vector3.new(pr * 2, pr, pr * 1.3),
-				Position = Vector3.new(px, py, pz),
-				Color = C.CLOUD_PUFF, Material = MAT.CLOUD,
-				CanCollide = false, CastShadow = false, Transparency = 0.4,
-			})
+			cluster(px, SKY_BASE_Y + rng:NextNumber(-10, 30), pz, size, "CloudPuff")
+		end
+	end
+end
+
+-- Cloud puffs hugging the outside of the barrier, so the road reads as a
+-- road through the clouds. Decoration only: outside the lane, no collision.
+local PUFF_EVERY = 26
+
+local function _buildEdgePuffs(root)
+	local rng = Random.new(91)
+	local geo = KIT.geo
+	local idx = 0
+	for _, seg in ipairs(geo.segments) do
+		local nx, nz = -seg.dz, seg.dx
+		for t = PUFF_EVERY / 2, seg.len, PUFF_EVERY do
+			for _, side in ipairs({ -1, 1 }) do
+				local off = CORRIDOR_W / 2 + rng:NextNumber(7, 14)
+				local px = seg.ax + seg.dx * t + nx * side * off
+				local pz = seg.az + seg.dz * t + nz * side * off
+				local r = rng:NextNumber(9, 15)
+				if not KIT:inLane(px, pz, r * 0.8 + 3) then
+					idx += 1
+					_ellipsoid(root, {
+						Name = "EdgePuff_" .. idx, Size = Vector3.new(r * 1.6, r * 0.8, r * 1.3),
+						Position = Vector3.new(px, SKY_BASE_Y + rng:NextNumber(-2, 2), pz),
+						Color = (idx % 3 == 0) and C.CLOUD_SHADOW or C.CLOUD_FLAT,
+					})
+				end
+			end
 		end
 	end
 end
@@ -122,29 +165,36 @@ end
 local function _buildCorridor(root)
 	KIT:buildSurface(root, {
 		name = "TrackFloor", jointName = "TrackFloorJoint", thickness = 4, overlap = 4,
-		colors = { C.PLATFORM, C.PLATFORM2, C.PLATFORM3 }, material = MAT.ROCK,
+		colors = { C.ROAD, C.ROAD2 }, material = MAT.CLOUD,
 		decorate = function(r, i, cf, segLen)
 			for _, side in ipairs({ -1, 1 }) do
 				_part(r, {
-					Name = "EdgeGlow_" .. i .. (side > 0 and "R" or "L"),
-					Size = Vector3.new(1.2, 0.6, segLen + 8),
-					CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 - 0.8), 2.4, 0),
-					Color = (i % 2 == 0) and C.CRYSTAL or C.CRYSTAL2,
-					Material = MAT.NEON, CanCollide = false, CastShadow = false,
+					Name = "EdgeLine_" .. i .. (side > 0 and "R" or "L"),
+					Size = Vector3.new(1.2, 0.3, segLen),
+					CFrame = cf * CFrame.new(side * (CORRIDOR_W / 2 - 3), 2.1, 0),
+					Color = C.ROAD_EDGE, Material = MAT.CLOUD, CanCollide = false, CastShadow = false,
 				})
 			end
 		end,
 	})
-	-- Crystal pillar fence, packed edge to edge (flyers are ~1.5 studs wide,
-	-- any gap is passable and below is the kill plane).
+	-- Air barrier: the touching pillar fence (flyers are ~1.5 studs wide;
+	-- any gap is passable and below is the kill plane), drawn as one
+	-- see-through pale-blue glass wall, with a cloud rail at flyer height so
+	-- the edge is easy to read. Until 2026-10-22 the pillars alternated two
+	-- neon colours: 60-stud stripes on both sides, hard on the eyes and not
+	-- like a sky. (One slab per stretch instead of pillars left a pocket at
+	-- the figure-8 crossings that trapped the offline sim's novice driver.)
 	KIT:buildWalls(root, {
-		name = "EdgePillar_",
+		name = "SkyBarrier_",
 		pillars = {
 			size = Track.wallThickness, spacing = Track.wallThickness,
-			colors = { C.CRYSTAL, C.CRYSTAL2 }, material = MAT.CRYSTAL,
+			colors = { C.BARRIER }, material = Enum.Material.Glass, transparency = 0.85,
 			yLo = Track.wallYLo, yHi = Track.wallYHi,
 		},
+		rail = { name = "CloudRail", color = C.RAIL, material = MAT.CLOUD,
+			y = Track.wallRailY, height = Track.wallRailHeight },
 	})
+	_buildEdgePuffs(root)
 	local x0, x1, z0, z1 = _bbox(200)
 	_part(root, {
 		Name = "InvisibleCeiling", Size = Vector3.new(x1 - x0, 2, z1 - z0),
@@ -193,29 +243,88 @@ local function _buildWayfindingArrows(root)
 	end
 end
 
--- ─── Crystal clusters (decoration, off the corridor) ─────────────────────────
+-- ─── Floating islands and balloons (decoration, off the corridor) ───────────
+-- At Track.crystalSeeds (the old crystal spires: neon sticks that read as
+-- glare, not sky). Every fourth seed is a hot-air balloon instead.
+
+local ISLAND = {
+	GRASS   = Color3.fromRGB(120, 190, 95),
+	ROCK    = Color3.fromRGB(150, 130, 115),
+	ROCK2   = Color3.fromRGB(120, 104, 94),
+	TRUNK   = Color3.fromRGB(120, 85, 55),
+	LEAVES  = Color3.fromRGB(80, 160, 85),
+	BALLOON = { Color3.fromRGB(240, 120, 110), Color3.fromRGB(250, 205, 100), Color3.fromRGB(120, 175, 240) },
+	BASKET  = Color3.fromRGB(150, 105, 60),
+}
+
+local function _disc(root, name, cf, radius, height, color, material)
+	return _part(root, {
+		Name = name, Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(height, radius * 2, radius * 2),
+		CFrame = cf * CFrame.Angles(0, 0, math.pi / 2),
+		Color = color, Material = material, CanCollide = false, CastShadow = false,
+	})
+end
+
+local function _island(root, i, x, y, z, radius, rng)
+	local cf = CFrame.new(x, y, z)
+	_disc(root, "IslandGrass_" .. i, cf, radius, 2, ISLAND.GRASS, Enum.Material.Grass)
+	-- rocky underside: shrinking discs
+	for k = 1, 4 do
+		local r = radius * (1 - k * 0.2)
+		_disc(root, "IslandRock_" .. i, cf * CFrame.new(0, -1 - k * radius * 0.22, 0), r, radius * 0.24,
+			(k % 2 == 0) and ISLAND.ROCK2 or ISLAND.ROCK, Enum.Material.Rock)
+	end
+	for t = 1, rng:NextInteger(1, 3) do
+		local a = rng:NextNumber(0, math.pi * 2)
+		local d = rng:NextNumber(0, radius * 0.5)
+		local h = rng:NextNumber(6, 11)
+		local tx, tz = x + math.cos(a) * d, z + math.sin(a) * d
+		_part(root, {
+			Name = "IslandTrunk_" .. i, Size = Vector3.new(1.2, h, 1.2),
+			Position = Vector3.new(tx, y + 1 + h / 2, tz),
+			Color = ISLAND.TRUNK, Material = Enum.Material.Wood, CanCollide = false, CastShadow = false,
+		})
+		_ellipsoid(root, {
+			Name = "IslandTree_" .. i, Size = Vector3.new(h * 0.8, h * 0.7, h * 0.8),
+			Position = Vector3.new(tx, y + 1 + h, tz), Color = ISLAND.LEAVES, Material = Enum.Material.Grass,
+		})
+	end
+end
+
+local function _balloon(root, i, x, y, z, rng)
+	local color = ISLAND.BALLOON[(i % #ISLAND.BALLOON) + 1]
+	_ellipsoid(root, {
+		Name = "Balloon_" .. i, Size = Vector3.new(16, 19, 16),
+		Position = Vector3.new(x, y + 14, z), Color = color, Material = Enum.Material.SmoothPlastic,
+	})
+	_ellipsoid(root, {
+		Name = "BalloonBand_" .. i, Size = Vector3.new(16.4, 4, 16.4),
+		Position = Vector3.new(x, y + 14, z), Color = Color3.fromRGB(250, 248, 240), Material = Enum.Material.SmoothPlastic,
+	})
+	_part(root, {
+		Name = "BalloonBasket_" .. i, Size = Vector3.new(3.5, 3, 3.5),
+		Position = Vector3.new(x, y, z), Color = ISLAND.BASKET, Material = Enum.Material.WoodPlanks,
+		CanCollide = false, CastShadow = false,
+	})
+	for _, c in ipairs({ { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }) do
+		_part(root, {
+			Name = "BalloonRope_" .. i, Size = Vector3.new(0.2, 4.5, 0.2),
+			Position = Vector3.new(x + c[1] * 1.6, y + 3.6, z + c[2] * 1.6),
+			Color = Color3.fromRGB(90, 70, 50), CanCollide = false, CastShadow = false,
+		})
+	end
+end
 
 local function _buildCrystalClusters(root)
-	local crystalColors = { C.CRYSTAL, C.CRYSTAL2, C.CRYSTAL3 }
 	local rng = Random.new(33)
 	for ci, cs in ipairs(Track.crystalSeeds) do
-		local baseY = SKY_BASE_Y - 5
-		for s = 1, rng:NextInteger(3, 5) do
-			local ox = cs[1] + rng:NextNumber(-12, 12)
-			local oz = cs[2] + rng:NextNumber(-10, 10)
-			local sh = rng:NextNumber(20, 50)
-			local sw = rng:NextNumber(2, 5)
-			local color = crystalColors[rng:NextInteger(1, 3)]
-			_part(root, {
-				Name = "CrystalSpire_" .. ci .. "_" .. s, Size = Vector3.new(sw, sh, sw),
-				Position = Vector3.new(ox, baseY + sh / 2, oz),
-				Color = color, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
-			})
-			local tip = _wedge(root, {
-				Name = "CrystalTip_" .. ci .. "_" .. s, Size = Vector3.new(sw, sh * 0.35, sw),
-				Color = color, Material = MAT.CRYSTAL, CanCollide = false, CastShadow = false,
-			})
-			tip.CFrame = CFrame.new(ox, baseY + sh + sh * 0.18, oz) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+		if ci % 4 == 0 then
+			_balloon(root, ci, cs[1], SKY_BASE_Y + rng:NextNumber(15, 40), cs[2], rng)
+		else
+			local radius = rng:NextNumber(10, 18)
+			while radius > 4 and KIT:inLane(cs[1], cs[2], radius + 4) do radius -= 2 end
+			_island(root, ci, cs[1], SKY_BASE_Y - rng:NextNumber(4, 16), cs[2], radius, rng)
 		end
 	end
 end
@@ -322,6 +431,11 @@ end
 
 local function _buildStartAndFinish(root)
 	KIT:buildStartGrid(root, { poleColor = C.ARCH })
+	KIT:buildStartApron(root, {
+		length = 24,
+		floor = { name = "StartApron", color = C.ROAD, material = MAT.CLOUD, thickness = 4 },
+		wall = { name = "SkyBarrier_Apron", color = C.BARRIER, material = Enum.Material.Glass, transparency = 0.8 },
+	})
 	KIT:buildFinish(root, { poleColor = C.ARCH, poleMaterial = MAT.CRYSTAL, archColor = C.ARCH })
 	local x0, x1, z0, z1 = _bbox(600)
 	local kill = _part(root, {

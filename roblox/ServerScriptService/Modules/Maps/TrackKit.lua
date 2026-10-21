@@ -15,6 +15,7 @@
 --   kit:buildJumpZones(root, style)
 --   kit:buildFinish(root, style)
 --   kit:buildStartGrid(root, style)
+--   kit:buildStartApron(root, style)  floor + walls behind the start line
 --
 -- Geometry rules (checked by tests/lib/mapchecks.luau):
 --   * walls follow TrackGeometry:boundaryRuns — closed on the outside of every
@@ -215,14 +216,65 @@ function TrackKit:buildSurface(root, style)
 	end
 end
 
+-- ─── Start apron ─────────────────────────────────────────────────────────────
+
+--- Floor behind the start line, closed by side walls and a back wall, so a
+-- car knocked backwards at GO lands on track. (Studio, 2026-10-21: the floor
+-- ended 4 studs behind the back grid row and cars nudged at GO fell to the
+-- kill plane.) style = { length, floor = { name, color, material, thickness },
+-- wall = { name, color, material, transparency } } — the wall is as tall as
+-- the track walls (Track.wallHeight / wallBaseY).
+function TrackKit:buildStartApron(root, style)
+	local a, b = self.nodes[1], self.nodes[2]
+	local dx, dz = b[1] - a[1], b[2] - a[2]
+	local d = math.sqrt(dx * dx + dz * dz)
+	dx, dz = dx / d, dz / d
+	local L = style.length or 24
+	local yaw = math.atan2(dx, dz)
+	local f = style.floor
+	local th = f.thickness or 1
+	-- overlaps the first slab by 2 studs
+	local cx, cz = a[1] - dx * (L / 2 - 1), a[2] - dz * (L / 2 - 1)
+	local floor = TrackKit.part(root, {
+		Name = f.name or "StartApron", Size = Vector3.new(self.width, th, L + 2),
+		CFrame = CFrame.new(cx, self.top - th / 2, cz) * CFrame.Angles(0, yaw, 0),
+		Color = f.color, Material = f.material,
+	})
+	floor.CustomPhysicalProperties = TrackKit.LOW_FRICTION
+	local w = style.wall
+	if not w then return end
+	local t = self.track
+	local thick = t.wallThickness or 2
+	local h = t.wallHeight or 8
+	local baseY = t.wallBaseY or (self.top - 0.5)
+	local midY = baseY + h / 2
+	local base = CFrame.new(cx, midY, cz) * CFrame.Angles(0, yaw, 0)
+	local function wall(size, offset)
+		local p = TrackKit.part(root, {
+			Name = w.name or "StartApronWall", Size = size, CFrame = base * CFrame.new(offset),
+			Color = w.color, Material = w.material, Transparency = w.transparency or 0,
+		})
+		p.CustomPhysicalProperties = TrackKit.LOW_FRICTION
+	end
+	local off = self.half + thick / 2
+	wall(Vector3.new(thick, h, L + 2), Vector3.new(-off, 0, 0))
+	wall(Vector3.new(thick, h, L + 2), Vector3.new(off, 0, 0))
+	wall(Vector3.new(self.width + thick * 2, h, thick), Vector3.new(0, 0, -(L / 2 + 1) - thick / 2))
+end
+
 -- ─── Walls ────────────────────────────────────────────────────────────────────
 
---- Box walls. style: { name, color, material, cap = { name, color, material } }
+--- Box walls. style: { name, color, material, transparency,
+--   cap = { name, color, material },
+--   rail = { name, color, material, y, height } }   -- solid band from trackTop + y
 -- Height and thickness come from Track.wallHeight / Track.wallThickness;
 -- the wall stands on Track.wallBaseY (default trackTop - 0.5).
 --
 -- Pillar fence instead of boxes: style.pillars = { size, spacing, colors,
--- material, yLo, yHi } (SKY). Pillars are packed at <= spacing so no gap opens.
+-- material, transparency, yLo, yHi }. Pillars are packed at <= spacing so no
+-- gap opens; style.rail then adds a visual band per stretch (rail.collide
+-- = true to make it solid). SKY: one colour, see-through glass (until
+-- 2026-10-22 alternating neon colours: 60-stud stripes, hard on the eyes).
 function TrackKit:buildWalls(root, style)
 	local t = self.track
 	local thick = t.wallThickness or 2
@@ -254,18 +306,30 @@ function TrackKit:buildWalls(root, style)
 							Name = style.name .. i .. "_" .. slot .. (side > 0 and "R" or "L"),
 							Size = Vector3.new(pillars.size, h, pillars.size),
 							Color = pillars.colors[(slot % #pillars.colors) + 1],
-							Material = pillars.material,
+							Material = pillars.material, Transparency = pillars.transparency or 0,
 							CanCollide = true, CastShadow = false,
 						})
 						p.CustomPhysicalProperties = TrackKit.LOW_FRICTION
 						p.CFrame = cf * CFrame.new(side * offset, 0, along)
 						slot += 1
 					end
+					if style.rail then
+						local r = style.rail
+						local along = (run[1] + run[2]) / 2 - len / 2
+						local rail = TrackKit.part(root, {
+							Name = r.name, Size = Vector3.new(pillars.size + 0.6, r.height, runLen),
+							Color = r.color, Material = r.material, CastShadow = false,
+							CanCollide = r.collide == true,
+						})
+						rail.CFrame = cf * CFrame.new(side * offset, (self.top + r.y + r.height / 2) - midY, along)
+					end
 				else
 					local along = (run[1] + run[2]) / 2 - len / 2
 					local wall = TrackKit.part(root, {
 						Name = style.name, Size = Vector3.new(thick, h, runLen),
 						Color = style.color, Material = style.material,
+						Transparency = style.transparency or 0,
+						CastShadow = not style.transparency,
 					})
 					wall.CustomPhysicalProperties = TrackKit.LOW_FRICTION
 					wall.CFrame = cf * CFrame.new(side * offset, 0, along)
@@ -276,6 +340,17 @@ function TrackKit:buildWalls(root, style)
 							CastShadow = false,
 						})
 						cap.CFrame = cf * CFrame.new(side * offset, h / 2 + 0.3, along)
+					end
+					if style.rail then
+						-- solid band at vehicle height (for see-through walls:
+						-- the edge stays easy to read)
+						local r = style.rail
+						local rail = TrackKit.part(root, {
+							Name = r.name, Size = Vector3.new(thick + 0.6, r.height, runLen),
+							Color = r.color, Material = r.material, CastShadow = false,
+						})
+						rail.CustomPhysicalProperties = TrackKit.LOW_FRICTION
+						rail.CFrame = cf * CFrame.new(side * offset, (self.top + r.y + r.height / 2) - midY, along)
 					end
 				end
 			end

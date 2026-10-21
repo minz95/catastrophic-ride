@@ -213,6 +213,30 @@ left / right parts, and every item inside its slot box. In Studio,
 `python3 tools/studio/sim.py run vehicles` drives every BODY item and random
 full builds 700 studs on each biome (`maxTilt`, `minTopSpeedRatio`, stuck).
 
+### Map and item look (3D preview without Studio)
+
+`lune run tools/scene_dump.luau <BIOME> <node> [out.json] [radius] [cars|drops]`
+builds a map with the real builders in the mock engine and writes the parts
+near a chase camera at that centerline node; `python3 tools/scene_render.py
+out.json` draws them as a PNG (flat shading, Neon glow, transparency, fog;
+no textures or shadows). `cars` adds four cars on the lane, `drops` every
+item an ability leaves on the track (`Modules/TrackDrops`). Use it to check
+colours, brightness and that things are where they should be before a
+Studio run.
+
+### Driving: grip, drift and hits
+
+`lune run tools/drift_sim.luau [FOREST|OCEAN] [profile]` drives the slowest /
+median / fastest build around the track with and without drifting (offline
+kinematic sim, real `VehicleController` and `Autopilot`) and prints the lap
+and section times, drifts and mini-turbos. Drifting should win a little time
+for a good driver (2026-10-22: 1–2 s per Forest lap), never a lot.
+`tests/specs/vehicle_controller.spec.luau` covers grip, slide, turbo and
+knock; `tests/specs/car_impact.spec.luau` the hit model. In Studio, match
+scenarios log `impact`, `drift_turbo` and `drop_placed`; `sim.py` prints a
+`driving:` line and fails on hits that push nobody or drops that miss the
+ground (`checks.hits` / `checks.turbos` set minimum counts).
+
 ### Playtests: markers and the fun report
 
 In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)

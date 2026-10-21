@@ -305,6 +305,7 @@ function RaceSim.runOne(opts)
 			x = pos.X, z = pos.Z, yaw = yaw, speed = speed,
 			forward = vel:Dot(primary.CFrame.LookVector),
 			maxSpeed = seat.MaxSpeed, turnSpeed = VehicleController.turnRate(seat.TurnSpeed, isSky), t = t,
+			isSky = isSky, biome = biome, travelYaw = driveState.travelYaw,
 		})
 		if info.s > maxS then maxS = info.s end
 		if opts.stopAt and not res.reached and info.s >= opts.stopAt then
@@ -358,11 +359,23 @@ function RaceSim.runOne(opts)
 			return
 		end
 
-		-- Drive exactly like RacingClient
+		-- Drive exactly like RacingClient (drift rule and mini-turbo included)
 		local input = VehicleController.readKeys(keys)
+		local change, level = VehicleController.updateDrift(driveState, input, speed, maxSpeed, isSky)
+		if change == "enter" then
+			res.drifts = (res.drifts or 0) + 1
+		elseif level then
+			local tb = Constants.DRIVE.DRIFT_TURBO[level]
+			mods:set("driftTurbo", tb.mult, t + tb.duration)
+			res.turbos = (res.turbos or 0) + 1
+			maxSpeed = mods:value(t)
+		end
+		local _, yawNow = primary.CFrame:ToEulerAnglesYXZ()
+		local tdx, tdz = VehicleController.travelDir(driveState, yawNow)
 		local cmd = VehicleController.command(input, {
 			maxSpeed = maxSpeed, turnSpeed = seat.TurnSpeed, isSky = isSky,
-			torque = seat.Torque, dt = dt, actualForward = vel:Dot(primary.CFrame.LookVector),
+			drifting = driveState.drifting, biome = biome, yaw = yawNow,
+			torque = seat.Torque, dt = dt, actualForward = vel.X * tdx + vel.Z * tdz,
 		}, driveState)
 		VehicleController.apply(primary, cmd, {
 			biome = biome, altitudeDt = dt,

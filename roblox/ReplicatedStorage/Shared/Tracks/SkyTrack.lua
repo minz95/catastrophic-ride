@@ -15,12 +15,17 @@ Track.trackTop = 80   -- floor top surface Y (SkyMap SKY_BASE_Y)
 Track.obstacleBand = { 2, 8 }
 
 -- ─── Edge fence ──────────────────────────────────────────────────────────────
--- Crystal pillars (wallThickness × wallThickness) packed edge to edge from
--- wallYLo to wallYHi; no doorways (a flyer that slips out falls to the kill
--- plane). Invisible ceiling above.
+-- Air barrier: touching see-through pillars (wallThickness square) from
+-- wallYLo to wallYHi, with a cloud rail (decoration) at flyer height; no
+-- doorways (a flyer that slips out falls to the kill plane). wallBaseY /
+-- wallHeight size the start apron's walls. Invisible ceiling above.
 Track.wallThickness    = 2
 Track.wallYLo          = 54
 Track.wallYHi          = 114
+Track.wallBaseY        = Track.wallYLo
+Track.wallHeight       = Track.wallYHi - Track.wallYLo
+Track.wallRailY        = 0      -- rail from trackTop + wallRailY ...
+Track.wallRailHeight   = 3      -- ... this tall (decoration; the pillars collide)
 Track.wallGapInterval  = 1000
 Track.wallGapHalfWidth = 0
 Track.ceilingY         = 120

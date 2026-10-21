@@ -237,6 +237,8 @@ InputSource.setOverride(function()
 		maxSpeed = seat and seat.MaxSpeed or 40,
 		turnSpeed = VehicleController.turnRate(seat and seat.TurnSpeed or 1, isSky),
 		t = os.clock() - raceStart,
+		isSky = isSky, biome = ReplicatedStorage:GetAttribute("Biome"),
+		travelYaw = primary:GetAttribute("TravelYaw"),
 	})
 	if info.respawn then
 		task.spawn(function()

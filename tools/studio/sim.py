@@ -213,7 +213,49 @@ def check(sc, report):
             out += check_hud_timer(c, events)
         if c.get("abilities"):
             out += check_abilities(sc, events)
+        out += check_driving(c, events)
     return out
+
+
+def check_driving(c, events):
+    """Car-to-car hits, drift turbos and track drops (2026-10-22).
+    Drops must lie on the ground and show their item; hits must reach both
+    drivers with a push. `c["hits"]` / `c["turbos"]`: minimum counts."""
+    out = []
+    impacts = [e for e in events if e.get("kind") == "impact"]
+    if impacts:
+        weak = [e for e in impacts if (e.get("dvA") or 0) + (e.get("dvB") or 0) <= 0]
+        if weak:
+            out.append(("fail", "%d of %d hits pushed nobody" % (len(weak), len(impacts))))
+    if len(impacts) < c.get("hits", 0):
+        out.append(("fail", "%d car-to-car hits (want at least %d)" % (len(impacts), c["hits"])))
+    turbos = [e for e in events if e.get("kind") == "drift_turbo"]
+    if len(turbos) < c.get("turbos", 0):
+        out.append(("fail", "%d drift turbos (want at least %d)" % (len(turbos), c["turbos"])))
+    for e in events:
+        if e.get("kind") == "drop_placed":
+            if not e.get("onGround"):
+                out.append(("fail", "%s drop did not find the ground at (%s, %s)" % (e.get("item"), e.get("x"), e.get("z"))))
+            if not e.get("modelParts"):
+                out.append(("fail", "%s drop shows no item model" % e.get("item")))
+    return out
+
+
+def driving_summary(events):
+    impacts = [e for e in events if e.get("kind") == "impact"]
+    turbos = [e for e in events if e.get("kind") == "drift_turbo"]
+    drops = [e for e in events if e.get("kind") == "drop_placed"]
+    if not (impacts or turbos or drops):
+        return ""
+    line = "driving: %d hits" % len(impacts)
+    if impacts:
+        line += " (closing speed max %.0f, push max %.0f studs/s)" % (
+            max(e.get("strength") or 0 for e in impacts),
+            max(max(e.get("dvA") or 0, e.get("dvB") or 0) for e in impacts))
+    line += ", %d drift turbos" % len(turbos)
+    if drops:
+        line += ", drops: " + ", ".join(sorted(set("%s%s" % (e.get("item"), "" if e.get("onGround") else "(air!)") for e in drops)))
+    return line
 
 
 def check_fair_start(c, events):
@@ -450,6 +492,15 @@ def run_one(sc, place, args):
     checks = check(sc, report)
     if sc.get("checks", {}).get("abilities") and isinstance(report, dict):
         summary += "\n" + ability_summary((report.get("telemetry") or {}).get("events") or [])
+    if sc["kind"] == "match" and isinstance(report, dict):
+        d = driving_summary((report.get("telemetry") or {}).get("events") or [])
+        if d:
+            summary += "\n" + d
+    if sc["kind"] == "race" and isinstance(report, dict):
+        res = report.get("results") or report.get("cars") or []
+        if isinstance(res, list) and any(isinstance(r, dict) and r.get("drifts") for r in res):
+            summary += "\ndrifts: " + ", ".join("%s %d/%d" % (r.get("label") or r.get("profile"), r.get("drifts") or 0, r.get("turbos") or 0)
+                                                for r in res if isinstance(r, dict))
     if code not in (0, "0"):
         checks.insert(0, ("fail" if report is None else "warn", "Studio exit code %s%s" % (
             code, " (139 = crash)" if code == 139 else "")))
