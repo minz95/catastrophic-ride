@@ -13,6 +13,13 @@ local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build screen ─────────────────────────────────────────────────────────────
 
+
+-- This script runs again after every respawn, but its ScreenGui
+-- (ResetOnSpawn = false) survives: drop the old copy so it is not shown twice.
+for _, old in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()) do
+	if old.Name == "TutorialUI" and old:IsA("ScreenGui") then old:Destroy() end
+end
+
 local screen = Instance.new("ScreenGui")
 screen.Name           = "TutorialUI"
 screen.ResetOnSpawn   = false

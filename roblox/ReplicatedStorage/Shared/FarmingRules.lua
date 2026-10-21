@@ -67,4 +67,35 @@ function FarmingRules.stealOutcome(presses, required)
 	return (presses or 0) >= required and "defended" or "stolen"
 end
 
+--- Can `s.attacker` punch now? s = { now, self, cooldownEnd, distance, range,
+-- facing (dot of the attacker's look and the direction to the victim), arc }
+-- → true | false, reason
+function FarmingRules.canPunch(s)
+	if s.self then return false, "self" end
+	if s.now < (s.cooldownEnd or 0) then return false, "cooldown" end
+	if s.distance > s.range then return false, "too far" end
+	if s.facing < s.arc then return false, "not facing" end
+	return true
+end
+
+--- A punch that reached the victim. hits / lastHitAt: the victim's running
+-- count; returns the outcome and the new count:
+--   "blocked"  victim is guarding (count unchanged)
+--   "immune"   victim was just knocked out (count unchanged)
+--   "hit"      count + 1
+--   "knockout" count reached `needed`: drop an item, count back to 0
+-- Hits older than `memory` seconds are forgotten first.
+function FarmingRules.punch(v)
+	local hits = v.hits or 0
+	if v.lastHitAt and v.now - v.lastHitAt > v.memory then hits = 0 end
+	if v.guarding then return "blocked", hits end
+	if v.now < (v.immuneEnd or 0) then return "immune", hits end
+	hits += 1
+	if hits >= v.needed then
+		if (v.items or 0) > 0 then return "knockout", 0 end
+		return "hit", hits - 1   -- nothing to drop: stay one short
+	end
+	return "hit", hits
+end
+
 return FarmingRules

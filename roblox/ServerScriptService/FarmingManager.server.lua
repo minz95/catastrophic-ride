@@ -623,8 +623,12 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	local victimRoot = victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
 	if not thiefRoot or not victimRoot then return "denied: no character" end
 
+	local opened = false
 	local function attempt(result)
 		Telemetry.record("steal_attempt", { thief = thief.UserId, victim = victim.UserId, result = result })
+		if opened then
+			RemoteEvents.FarmAction:FireAllClients("grabEnd", thief.UserId, victim.UserId, { result = result })
+		end
 		return result
 	end
 
@@ -647,9 +651,11 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	-- Open the defence window: the victim's DefendSteal taps count only while
 	-- it is open, and nobody else can start a steal on either player.
 	local window = { thief = thief.UserId, presses = 0 }
+	opened = true
 	victimData._stealWindow = window
 	thiefData._stealing = window
 	RemoteEvents.StealAttempt:FireClient(victim, thief.Name)
+	RemoteEvents.FarmAction:FireAllClients("grab", thief.UserId, victim.UserId, { window = Constants.STEAL_DEFEND_WINDOW })
 	task.wait(Constants.STEAL_DEFEND_WINDOW)
 	victimData._stealWindow = nil
 	thiefData._stealing = nil
@@ -688,9 +694,109 @@ RemoteEvents.DefendSteal.OnServerInvoke = function(player)
 	local window = data and data._stealWindow
 	if window then
 		window.presses += 1
+		RemoteEvents.FarmAction:FireAllClients("swat", player.UserId, window.thief, { presses = window.presses })
 		return window.presses
 	end
 	return 0
+end
+
+-- ─── Fights: punch (F) and guard (G) ─────────────────────────────────────────
+-- Constants.FIGHT, FarmingRules.canPunch / punch. Every punch, guard, and
+-- knock-out is broadcast as RemoteEvents.FarmAction so every client animates
+-- it (StarterPlayerScripts/FarmFx); the victim's client also gets pushed back.
+
+local F = Constants.FIGHT
+
+local function _root(player)
+	local c = player and player.Character
+	return c and c:FindFirstChild("HumanoidRootPart")
+end
+
+local function _flatUnit(v)
+	local f = Vector3.new(v.X, 0, v.Z)
+	return f.Magnitude > 1e-3 and f.Unit or Vector3.new(0, 0, -1)
+end
+
+-- The player the attacker is facing within reach (nearest), or nil.
+local function _punchTarget(attacker, aRoot)
+	local look = _flatUnit(aRoot.CFrame.LookVector)
+	local best, bestD
+	for _, other in ipairs(Players:GetPlayers()) do
+		local r = other ~= attacker and _root(other)
+		if r then
+			local to = Vector3.new(r.Position.X - aRoot.Position.X, 0, r.Position.Z - aRoot.Position.Z)
+			local d = to.Magnitude
+			local facing = d > 1e-3 and look:Dot(to.Unit) or 1
+			local ok = FarmingRules.canPunch({ now = 0, distance = d, range = F.RANGE, facing = facing, arc = F.ARC })
+			if ok and (not bestD or d < bestD) then best, bestD = other, d end
+		end
+	end
+	return best
+end
+
+local function _setGuard(player, data, on)
+	data._guardUntil = on and (tick() + F.GUARD_MAX) or nil
+	local c = player.Character
+	if c then c:SetAttribute("Guarding", on or nil) end
+	RemoteEvents.FarmAction:FireAllClients("guard", player.UserId, nil, { on = on })
+end
+
+RemoteEvents.SetGuard.OnServerEvent:Connect(function(player, on)
+	if not _active then return end
+	local data = SessionManager.getData(player)
+	if not data then return end
+	on = on == true
+	if on == ((data._guardUntil or 0) > tick()) then return end
+	_setGuard(player, data, on)
+	if on then
+		-- a guard cannot be held forever
+		local untilT = data._guardUntil
+		task.delay(F.GUARD_MAX, function()
+			if data._guardUntil == untilT then _setGuard(player, data, false) end
+		end)
+	end
+end)
+
+RemoteEvents.RequestPunch.OnServerInvoke = function(attacker)
+	if not _active then return "denied: not farming" end
+	local aData = SessionManager.getData(attacker)
+	local aRoot = _root(attacker)
+	if not aData or not aRoot then return "denied: no character" end
+	local now = tick()
+	if now < (aData._punchCooldownEnd or 0) then return "denied: cooldown" end
+	aData._punchCooldownEnd = now + F.COOLDOWN
+	if (aData._guardUntil or 0) > now then _setGuard(attacker, aData, false) end   -- punching drops your guard
+
+	local victim = _punchTarget(attacker, aRoot)
+	if not victim then
+		RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, nil, { result = "miss" })
+		Telemetry.record("punch", { attacker = attacker.UserId, result = "miss" })
+		return "miss"
+	end
+	local vData = SessionManager.getData(victim)
+	local result, hits = FarmingRules.punch({
+		now = now, hits = vData._hits, lastHitAt = vData._lastHitAt, memory = F.HIT_MEMORY,
+		guarding = (vData._guardUntil or 0) > now, immuneEnd = vData._knockImmuneEnd,
+		needed = F.HITS_TO_DROP, items = #vData.inventory,
+	})
+	if result == "hit" or result == "knockout" then
+		vData._hits, vData._lastHitAt = hits, now
+	end
+	local dropped
+	if result == "knockout" then
+		vData._knockImmuneEnd = now + F.DROP_IMMUNE
+		dropped = _dropItem(victim, math.random(#vData.inventory), "knocked_out")
+	end
+	local vRoot = _root(victim)
+	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK or Vector3.zero
+	RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, victim.UserId, {
+		result = result, hits = (result == "knockout") and F.HITS_TO_DROP or hits, needed = F.HITS_TO_DROP,
+		item = dropped, push = (result == "hit" or result == "knockout") and push or nil,
+	})
+	Telemetry.record("punch", {
+		attacker = attacker.UserId, victim = victim.UserId, result = result, hits = hits, item = dropped,
+	})
+	return result
 end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
@@ -712,6 +818,14 @@ GameManager.onPhaseChanged(function(phase, biome)
 	elseif phase == Constants.PHASES.CRAFTING then
 		_active = false
 		_contests = {}
+		-- fights end with the phase: drop guards and hit counts
+		for _, p in ipairs(Players:GetPlayers()) do
+			local d = SessionManager.getData(p)
+			if d then
+				d._hits, d._lastHitAt, d._knockImmuneEnd, d._punchCooldownEnd = nil, nil, nil, nil
+				if (d._guardUntil or 0) > 0 then _setGuard(p, d, false) end
+			end
+		end
 		-- Destroy any remaining unclaimed items
 		for _, item in pairs(_items) do
 			if not item.taken then

@@ -1,5 +1,6 @@
 -- FarmingClient.client.lua
--- Proximity detection, pickup prompt, contest UI, and steal prompt.
+-- Proximity detection, pickup prompt, contest UI, steal prompt, and fight
+-- keys (F punch, hold G guard). Animations and the defence prompt: FarmFx.
 -- Resolves: Issue #18, #64
 
 print("[FarmingClient] LocalScript started")
@@ -243,6 +244,23 @@ UserInputService.InputEnded:Connect(function(input)
 			RemoteEvents.RequestSteal:InvokeServer(_nearestPlayer.UserId)
 		end
 		_eHoldStart = nil
+	end
+end)
+
+-- ─── Fight: F punches the player you face, hold G to guard ───────────────────
+-- (server: FarmingManager RequestPunch / SetGuard; looks: FarmFx)
+UserInputService.InputBegan:Connect(function(input, processed)
+	if processed or not _enabled then return end
+	if input.KeyCode == Enum.KeyCode.F then
+		task.spawn(function() RemoteEvents.RequestPunch:InvokeServer() end)
+	elseif input.KeyCode == Enum.KeyCode.G then
+		RemoteEvents.SetGuard:FireServer(true)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.G and _enabled then
+		RemoteEvents.SetGuard:FireServer(false)
 	end
 end)
 

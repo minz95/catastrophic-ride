@@ -115,6 +115,28 @@ RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
 	end)
 end)
 
+-- Fights: punch a player in reach (facing them first), guard when punched.
+local punching = false
+local function punchAt(root, foe)
+	punching = true
+	root.CFrame = CFrame.lookAt(root.Position, Vector3.new(foe.x, root.Position.Y, foe.z))
+	task.spawn(function()
+		local ok, result = pcall(function() return RemoteEvents.RequestPunch:InvokeServer() end)
+		report("punch", { victim = foe.userId, result = ok and result or ("error: " .. tostring(result)) })
+		task.wait(Constants.FIGHT.COOLDOWN)
+		punching = false
+	end)
+end
+
+RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, _, targetId, info)
+	if phase ~= Constants.PHASES.FARMING or kind ~= "punch" or targetId ~= LocalPlayer.UserId then return end
+	if info and (info.result == "hit") and BotBrain.guards(farmProfile) then
+		RemoteEvents.SetGuard:FireServer(true)
+		report("guard", { after = info.hits })
+		task.delay(1.2, function() RemoteEvents.SetGuard:FireServer(false) end)
+	end
+end)
+
 local function farmLoop()
 	local target, contestId, presses, giveUpAt = nil, nil, 0, 0
 	local hunt, huntUntil, nextHuntAt = nil, 0, 0
@@ -124,6 +146,24 @@ local function farmLoop()
 		local root = char and char:FindFirstChild("HumanoidRootPart")
 		local hum = char and char:FindFirstChildOfClass("Humanoid")
 		local me = root and { x = root.Position.X, z = root.Position.Z, items = #inventory }
+		-- fight first: a player in reach (or, for brawlers, in sight)
+		local foe, foeDist = nil, math.huge
+		if me and not contestId and not stealing then
+			foe, foeDist = BotBrain.pickFoe(farmProfile, me, otherPlayers())
+		end
+		if foe and root and hum then
+			if foeDist <= Constants.FIGHT.RANGE * 0.8 then
+				if not punching and BotBrain.wantsPunch(farmProfile, 0.1) then punchAt(root, foe) end
+				if (farmProfile.punchChance or 0) >= 1 then
+					task.wait(0.1)
+					continue
+				end
+			elseif (farmProfile.punchChance or 0) >= 1 then
+				hum:MoveTo(foe.root.Position)
+				task.wait(0.1)
+				continue
+			end
+		end
 		local victim, victimDist = nil, math.huge
 		if me and not contestId and not stealing and os.clock() >= nextStealAt then
 			victim, victimDist = BotBrain.pickVictim(farmProfile, me, otherPlayers())

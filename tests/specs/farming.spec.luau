@@ -362,3 +362,73 @@ R.describe("late client scripts", function()
 		R.expect(RS:GetAttribute("Phase")).toBe("CRAFTING")
 	end)
 end)
+
+-- Fights (2026-10-22): F punches the player you face; HITS_TO_DROP landed
+-- hits knock a random item onto the ground; G guards.
+R.describe("fights: punches pile up and knock an item loose", function()
+	local function setup()
+		local srv = farmServer(2)
+		local a, b = srv.players[1], srv.players[2]
+		-- A faces -Z (default), B stands 4 studs in front of A
+		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 850)
+		b.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 846)
+		srv.SessionManager.getData(b).inventory = { "Kettle", "Log", "Pizza" }
+		local F = srv.env.requirePath("ReplicatedStorage.Shared.Constants").FIGHT
+		local function punch() local r = srv.mock.invoke(srv.RemoteEvents.RequestPunch, a); srv.advance(F.COOLDOWN + 0.05); return r end
+		return srv, a, b, F, punch
+	end
+
+	R.it("HITS_TO_DROP landed punches drop one item on the ground", function()
+		local srv, _, b, F, punch = setup()
+		for i = 1, F.HITS_TO_DROP - 1 do R.expect(punch()).toBe("hit") end
+		R.expect(#srv.SessionManager.getData(b).inventory).toBe(3)
+		R.expect(punch()).toBe("knockout")
+		R.expect(#srv.SessionManager.getData(b).inventory).toBe(2)
+		local drops = srv.Telemetry.events("item_drop")
+		R.expect(drops[#drops].reason).toBe("knocked_out")
+	end)
+
+	R.it("right after a knock-out the victim is immune", function()
+		local srv, _, _, F, punch = setup()
+		for _ = 1, F.HITS_TO_DROP do punch() end
+		R.expect(punch()).toBe("immune")
+		srv.advance(F.DROP_IMMUNE)
+		R.expect(punch()).toBe("hit")
+	end)
+
+	R.it("a guarding victim blocks; hits are forgotten after HIT_MEMORY", function()
+		local srv, _, b, F, punch = setup()
+		R.expect(punch()).toBe("hit")
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(b, true)
+		R.expect(punch()).toBe("blocked")
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(b, false)
+		srv.advance(F.HIT_MEMORY + 0.5)
+		for _ = 1, F.HITS_TO_DROP - 1 do R.expect(punch()).toBe("hit") end   -- the first hit was forgotten
+	end)
+
+	R.it("a guard cannot be held forever", function()
+		local srv, _, b, F, punch = setup()
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(b, true)
+		srv.advance(F.GUARD_MAX + 0.2)
+		R.expect(punch()).toBe("hit")
+	end)
+
+	R.it("a punch needs reach, facing, and the cooldown", function()
+		local srv, a, b, F = setup()
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("hit")
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("denied: cooldown")
+		srv.advance(F.COOLDOWN + 0.05)
+		b.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 854)   -- behind A
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("miss")
+		srv.advance(F.COOLDOWN + 0.05)
+		b.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 850 - F.RANGE - 2)   -- too far
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("miss")
+	end)
+
+	R.it("every punch is logged with its result", function()
+		local srv, _, _, _, punch = setup()
+		punch()
+		local ev = srv.Telemetry.events("punch")
+		R.expect(ev[#ev].result).toBe("hit")
+	end)
+end)

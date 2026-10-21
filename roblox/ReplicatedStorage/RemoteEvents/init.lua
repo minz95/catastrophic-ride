@@ -29,6 +29,13 @@
 --   PlaytestMark        → client→server (note: "bad" | "fun")  -- playtest marker, Studio / test servers only
 --   CarImpact           → server→driver (dvx, dvz, spin, strength, otherUserId)
 --                          a car-to-car hit (Shared/CarImpact): VehicleController.knock
+--   SetGuard            → client→server (on: boolean)  -- FARMING: hold G to guard against punches
+--   FarmAction          → server→all (kind, actorUserId, targetUserId, info)
+--                          what a player does to another in FARMING, for every
+--                          client to animate (StarterPlayerScripts/FarmFx):
+--                          "punch" (info.result = hit | blocked | immune | knockout, info.hits),
+--                          "guard" (info.on), "grab" (steal opens), "swat" (defence tap),
+--                          "grabEnd" (info.result = stolen | defended | denied ...)
 --   DriftTurbo          → client→server (level: number, slideSeconds: number)
 --                          a released drift earned Constants.DRIVE.DRIFT_TURBO[level]
 --
@@ -40,6 +47,7 @@
 --   SubmitCraft         → slotAssignments: table  → "ok" | "denied: <reason>"
 --   RequestBoost        → (none)                  → "ok" | "denied: <reason>"
 --   RequestAbility      → itemName: string        → "ok" | "denied: <reason>"
+--   RequestPunch        → (none)                  → "hit" | "blocked" | "immune" | "knockout" | "miss" | "denied: <reason>"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -67,6 +75,8 @@ local EVENTS = {
 	"PlaytestMark",
 	"CarImpact",
 	"DriftTurbo",
+	"SetGuard",
+	"FarmAction",
 }
 
 local FUNCTIONS = {
@@ -79,6 +89,7 @@ local FUNCTIONS = {
 	"RequestAbility",
 	"RequestRespawn",
 	"RequestDrop",
+	"RequestPunch",
 }
 
 local RemoteEvents = {}

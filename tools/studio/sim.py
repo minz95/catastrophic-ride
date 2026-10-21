@@ -232,6 +232,15 @@ def check_driving(c, events):
     turbos = [e for e in events if e.get("kind") == "drift_turbo"]
     if len(turbos) < c.get("turbos", 0):
         out.append(("fail", "%d drift turbos (want at least %d)" % (len(turbos), c["turbos"])))
+    fx = [e for e in events if e.get("kind") == "bot_farmfx"]
+    broken = [e for e in fx if (e.get("data") or {}).get("error")]
+    if broken:
+        out.append(("fail", "%d fight animations errored on clients, first: %s" % (len(broken), (broken[0].get("data") or {}).get("error"))))
+    if c.get("fightFx"):
+        drawn = set((e.get("data") or {}).get("what") for e in fx if (e.get("data") or {}).get("drawn"))
+        missing = [w for w in c["fightFx"] if w not in drawn]
+        if missing:
+            out.append(("fail", "fight animations never drawn on a client: " + ", ".join(missing)))
     for e in events:
         if e.get("kind") == "drop_placed":
             if not e.get("onGround"):
@@ -451,6 +460,10 @@ def check_farm(c, r, report):
     for res, n in (c.get("minAttempts") or {}).items():
         if attempts.get(res, 0) < n:
             out.append(("fail", tag + "steal attempts %s: %d (want at least %d; all: %s)" % (res, attempts.get(res, 0), n, attempts)))
+    punches = farm.get("punches") or {}
+    for res, n in (c.get("minPunches") or {}).items():
+        if punches.get(res, 0) < n:
+            out.append(("fail", tag + "punches %s: %d (want at least %d; all: %s)" % (res, punches.get(res, 0), n, punches)))
     for res, n in (c.get("maxAttempts") or {}).items():
         if attempts.get(res, 0) > n:
             out.append(("fail", tag + "steal attempts %s: %d (want at most %d)" % (res, attempts.get(res, 0), n)))

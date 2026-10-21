@@ -20,15 +20,19 @@ BotBrain.RARITY_VALUE = RARITY_VALUE
 -- stealChance   probability per second of trying to steal when in range
 -- defendChance  probability of tapping fast enough to block a steal
 -- crafter       "optimal" (search best top speed) | "casual" (first fit)
+-- punchChance   probability per second of punching a player in reach
+--               (>= 1: also walks up to players within huntRange to fight)
+-- guardChance   probability of holding G after being punched
 -- huntRange     studs a bot walks to reach a steal victim (0 = only steals
 --               from players it happens to pass)
 BotBrain.PROFILES = {
-	sweaty = { mashRate = 11, greed = 40, stealChance = 0.6, defendChance = 0.8, crafter = "optimal", huntRange = 40 },
-	casual = { mashRate = 7,  greed = 15, stealChance = 0.1, defendChance = 0.4, crafter = "casual",  huntRange = 0 },
-	afk    = { mashRate = 0,  greed = 0,  stealChance = 0,   defendChance = 0,   crafter = "none",    huntRange = 0 },
-	-- harness profiles: every encounter turns into a steal attempt
-	thief  = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, crafter = "casual",  huntRange = 120 },
-	guard  = { mashRate = 9,  greed = 20, stealChance = 0,   defendChance = 1,   crafter = "optimal", huntRange = 0 },
+	sweaty  = { mashRate = 11, greed = 40, stealChance = 0.6, defendChance = 0.8, punchChance = 0.5, guardChance = 0.6, crafter = "optimal", huntRange = 40 },
+	casual  = { mashRate = 7,  greed = 15, stealChance = 0.1, defendChance = 0.4, punchChance = 0.1, guardChance = 0.3, crafter = "casual",  huntRange = 0 },
+	afk     = { mashRate = 0,  greed = 0,  stealChance = 0,   defendChance = 0,   punchChance = 0,   guardChance = 0,   crafter = "none",    huntRange = 0 },
+	-- harness profiles: every encounter turns into a steal attempt / a fight
+	thief   = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, punchChance = 0,   guardChance = 0.2, crafter = "casual",  huntRange = 120 },
+	guard   = { mashRate = 9,  greed = 20, stealChance = 0,   defendChance = 1,   punchChance = 0,   guardChance = 1,   crafter = "optimal", huntRange = 0 },
+	brawler = { mashRate = 9,  greed = 10, stealChance = 0,   defendChance = 0.3, punchChance = 8,   guardChance = 0.2, crafter = "casual",  huntRange = 120 },
 }
 
 local function rarityRank(name)
@@ -96,6 +100,31 @@ function BotBrain.pickVictim(profile, me, others)
 		end
 	end
 	return best, bestD
+end
+
+--- Fights (Constants.FIGHT): whether to throw a punch this tick at a player
+-- in reach, whom to go after (nearest other player within FIGHT.RANGE, or
+-- huntRange for a profile with punchChance >= 1), and whether a punched bot
+-- raises its guard.
+function BotBrain.wantsPunch(profile, dt, rng)
+	return (rng or math.random)() < (profile.punchChance or 0) * dt
+end
+
+function BotBrain.pickFoe(profile, me, others)
+	if (profile.punchChance or 0) <= 0 then return nil end
+	local reach = (profile.punchChance >= 1) and math.max(Constants.FIGHT.RANGE, profile.huntRange or 0)
+		or Constants.FIGHT.RANGE
+	local best, bestD = nil, math.huge
+	for _, o in ipairs(others) do
+		local dx, dz = o.x - me.x, o.z - me.z
+		local d = math.sqrt(dx * dx + dz * dz)
+		if d <= reach and d < bestD then best, bestD = o, d end
+	end
+	return best, bestD
+end
+
+function BotBrain.guards(profile, rng)
+	return (rng or math.random)() < (profile.guardChance or 0)
 end
 
 --- Whether a steal attempt against this bot gets defended.

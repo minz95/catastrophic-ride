@@ -35,7 +35,7 @@ end
 -- defences tried (bot notes), and the inventory ledger: the size expected
 -- from the events vs the real one (a mismatch = an item copied or lost).
 function MatchHarness.farmStats(t0, inventories)
-	local per, attempts = {}, {}
+	local per, attempts, punches = {}, {}, {}
 	local function P(uid)
 		local key = tostring(uid)
 		per[key] = per[key] or { pickups = 0, contestsWon = 0, contestsLost = 0, stolen = 0, robbed = 0,
@@ -60,6 +60,8 @@ function MatchHarness.farmStats(t0, inventories)
 				attempts[e.result] = (attempts[e.result] or 0) + 1
 			elseif e.kind == "bot_defend" and e.data and e.data.tried then
 				P(e.userId).defencesTried += 1
+			elseif e.kind == "punch" then
+				punches[e.result] = (punches[e.result] or 0) + 1
 			end
 		end
 	end
@@ -71,7 +73,7 @@ function MatchHarness.farmStats(t0, inventories)
 			table.insert(mismatches, string.format("%s: events say %d items, has %d", uid, p.ledger, #inv))
 		end
 	end
-	return { players = per, attempts = attempts, ledgerMismatches = mismatches }
+	return { players = per, attempts = attempts, punches = punches, ledgerMismatches = mismatches }
 end
 
 --- CRAFTING numbers: every craft event since t0 (submitted or auto, slots,

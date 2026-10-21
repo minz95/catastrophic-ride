@@ -113,6 +113,24 @@ Constants.STEAL_DEFEND_WINDOW = 1   -- seconds victim has to defend
 Constants.STEAL_DEFEND_PRESSES = 3  -- taps needed to block
 Constants.STEAL_DEFENDED_COOLDOWN = 0.5 -- thief may try again this soon after a defended attempt
 
+-- ─── Farming fights (FarmingManager, FarmingRules.punch) ─────────────────────
+-- F punches the player in front of you; landed hits pile up on the victim
+-- and HITS_TO_DROP of them (each within HIT_MEMORY s of the last) knock a
+-- random item out onto the ground, for anyone to grab. Holding G guards:
+-- punches on a guarding player are blocked. A knocked-out player cannot be
+-- knocked out again for DROP_IMMUNE s.
+Constants.FIGHT = {
+	RANGE        = 6,     -- studs between root parts
+	ARC          = 0.35,  -- attacker must face the victim: dot(look, toVictim) >= this
+	COOLDOWN     = 0.45,  -- s between two punches of one player
+	HITS_TO_DROP = 4,
+	HIT_MEMORY   = 4,     -- s: hits older than this are forgotten
+	DROP_IMMUNE  = 4,     -- s after a knock-out
+	KNOCKBACK    = 26,    -- studs/s pushed away on a landed hit
+	GUARD_MAX    = 3,     -- s a guard can be held before it drops
+	GUARD_SLOW   = 0.5,   -- walk speed × this while guarding
+}
+
 -- ─── Rarity ───────────────────────────────────────────────────────────────────
 Constants.RARITY = {
 	COMMON   = "Common",
