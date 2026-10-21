@@ -139,6 +139,7 @@ local function multiServer(cars, extraScripts)
 	end
 	srv.advance(0.5)
 	assert(srv.GameManager.getPhase() == "RACING")
+	srv.advance(env.requirePath("ReplicatedStorage.Shared.Constants").RACE_COUNTDOWN) -- until GO
 	srv.advance(0.6) -- one position-sync tick so passives are set up
 	return out
 end
@@ -268,7 +269,8 @@ R.describe("rounds", function()
 			harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 0,
 				durations = { FARMING = 0.1, CRAFTING = 0.1, RACING = 2, RESULTS = 0.5 } },
 		})
-		srv.advance(3.5)   -- round 1 races and times out; round 2 starts
+		-- round 1 counts down, races and times out; round 2 starts
+		srv.advance(3.5 + srv.env.requirePath("ReplicatedStorage.Shared.Constants").RACE_COUNTDOWN)
 		srv.advance(0.3)
 		R.expect(srv.GameManager.getRound()).toBe(2)
 		R.expect(srv.GameManager.getPhase()).toBe("RACING")

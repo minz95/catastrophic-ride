@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService        = game:GetService("RunService")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemTypes    = require(ReplicatedStorage.Shared.ItemTypes)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
@@ -749,10 +750,8 @@ local function _startTimer(duration)
 	if _timerConn then _timerConn:Disconnect() end
 	_timerConn = RunService.Heartbeat:Connect(function()
 		if not _timerLabel then return end
-		local remaining = math.max(0, endTime - tick())
-		local mins = math.floor(remaining / 60)
-		local secs = math.floor(remaining % 60)
-		_timerLabel.Text = string.format("%d:%02d", mins, secs)
+		local remaining = PhaseClock.remaining(math.max(0, endTime - tick()))
+		_timerLabel.Text = PhaseClock.format(remaining)
 
 		if remaining > 30 then
 			_timerLabel.TextColor3 = COLOURS.timerOk

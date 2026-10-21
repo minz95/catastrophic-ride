@@ -272,4 +272,29 @@ if ReplicatedStorage:GetAttribute("Phase") then
 	onPhase(ReplicatedStorage:GetAttribute("Phase"))
 end
 
+-- What a player sees: the phase timers on screen, sampled every 2 s, so the
+-- harness can check they count down (MatchHarness `hud`).
+-- Every ScreenGui with that name (a respawn must not leave a second, frozen
+-- copy behind) and the timer text of each.
+local function timerTexts(guiName)
+	local out = {}
+	for _, gui in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+		if gui.Name == guiName and gui:IsA("ScreenGui") then
+			local label = gui:FindFirstChild("TimerLabel", true)
+			table.insert(out, { text = label and label.Text, shown = gui.Enabled })
+		end
+	end
+	return out
+end
+task.spawn(function()
+	while true do
+		task.wait(2)
+		if phase == Constants.PHASES.FARMING or phase == Constants.PHASES.CRAFTING then
+			local guis = timerTexts(phase == Constants.PHASES.FARMING and "FarmingUI" or "CraftingUI")
+			report("hud", { phase = phase, guis = guis, serverLeft = ReplicatedStorage:GetAttribute("PhaseEndsAt")
+				and ReplicatedStorage:GetAttribute("PhaseEndsAt") - workspace:GetServerTimeNow() })
+		end
+	end
+end)
+
 report("ready", { farm = LocalPlayer:GetAttribute("BotFarmProfile"), driver = driverName })

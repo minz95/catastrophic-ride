@@ -344,6 +344,33 @@
       },
       "checks": {
         "finishRate": 0.9,
+        "allJoined": true,
+        "fairStart": 1.0,
+        "hudTimer": true
+      }
+    },
+    {
+      "name": "start-6p",
+      "kind": "match",
+      "tags": [
+        "core",
+        "full"
+      ],
+      "_why": "six cars on the grid: everyone is seated, held through the 3-2-1 countdown and leaves at GO together",
+      "opts": {
+        "biome": "FOREST",
+        "players": 6,
+        "durations": {
+          "FARMING": 20,
+          "CRAFTING": 10,
+          "RACING": 30,
+          "RESULTS": 3
+        },
+        "maxSeconds": 400
+      },
+      "checks": {
+        "fairStart": 1.0,
+        "hudTimer": true,
         "allJoined": true
       }
     },
@@ -360,7 +387,9 @@
       },
       "checks": {
         "finishRate": 0.9,
-        "allJoined": true
+        "allJoined": true,
+        "fairStart": 1.0,
+        "hudTimer": true
       }
     },
     {
@@ -376,7 +405,9 @@
       },
       "checks": {
         "finishRate": 0.9,
-        "allJoined": true
+        "allJoined": true,
+        "fairStart": 1.0,
+        "hudTimer": true
       }
     },
     {
@@ -394,7 +425,9 @@
       },
       "checks": {
         "finishRate": 0.9,
-        "allJoined": true
+        "allJoined": true,
+        "fairStart": 1.0,
+        "hudTimer": true
       }
     },
     {
@@ -427,7 +460,8 @@
         "ledger": true,
         "everyonePicks": true,
         "everyoneCrafted": true,
-        "noRejected": true
+        "noRejected": true,
+        "hudTimer": true
       }
     },
     {
@@ -459,7 +493,8 @@
         "ledger": true,
         "everyonePicks": true,
         "everyoneCrafted": true,
-        "noRejected": true
+        "noRejected": true,
+        "hudTimer": true
       }
     },
     {
@@ -491,7 +526,8 @@
         "ledger": true,
         "everyonePicks": true,
         "everyoneCrafted": true,
-        "noRejected": true
+        "noRejected": true,
+        "hudTimer": true
       }
     },
     {
@@ -530,7 +566,8 @@
         },
         "maxAttempts": {
           "stolen": 0
-        }
+        },
+        "hudTimer": true
       }
     },
     {
@@ -568,7 +605,8 @@
         "noRejected": true,
         "minAttempts": {
           "stolen": 1
-        }
+        },
+        "hudTimer": true
       }
     },
     {
@@ -607,7 +645,8 @@
         "noRejected": true,
         "minAttempts": {
           "stolen": 1
-        }
+        },
+        "hudTimer": true
       }
     },
     {
@@ -644,7 +683,8 @@
         "noRejected": true,
         "autoFor": [
           "afk"
-        ]
+        ],
+        "hudTimer": true
       }
     },
     {

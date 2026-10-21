@@ -35,6 +35,9 @@ VehicleController.DRIFT_TURN_MIN    = Constants.DRIVE.DRIFT_TURN_MIN
 VehicleController.DRIFT_SPEED_RATIO = 0.5    -- must be above 50% of MaxSpeed
 VehicleController.SUSPENSION_REACH  = 5      -- ray length below the chassis
 VehicleController.SUSPENSION_LIFT   = 0.2    -- ride height above the hit
+VehicleController.SUSPENSION_STEP   = 1      -- studs between probes along the chassis
+VehicleController.SUSPENSION_AHEAD  = 0.12   -- s of travel probed ahead of the nose
+VehicleController.SUSPENSION_AHEAD_MAX = 8   -- studs
 
 --- Converts a key-state table into a normalized input.
 -- keys: { W, A, S, D, Up, Down, Left, Right, Shift, Space, Ctrl } booleans.
@@ -169,20 +172,31 @@ function VehicleController.apply(primary, cmd, opts)
 	elseif opts.biome == "FOREST" and opts.raycast then
 		local susp = primary:FindFirstChild("SuspensionHover")
 		if susp then
-			-- Probe under the centre, the nose and the tail and ride on the
-			-- highest hit. With the centre ray alone the nose ran into ramps
-			-- while the hover held the car at flat-ground height; without the
-			-- tail ray a slow car going over the ramp's top edge was pulled
-			-- down onto that edge and pinned there.
+			-- Ride on the highest ground under the whole chassis (a probe
+			-- every SUSPENSION_STEP studs from tail to nose) and a little
+			-- ahead of the nose (SUSPENSION_AHEAD s of travel).
+			-- History (Studio): with the centre ray alone the nose ran into
+			-- ramps; with centre + nose + tail, a car whose centre was 2
+			-- studs before a ramp's top edge hung on the slope between the
+			-- probes and stopped (2 of 4 bots stuck on JumpRamp_3, 2026-10-21),
+			-- and every car hit the ramp face before the hover lifted it,
+			-- dropping from ~68 to ~8 studs/s.
 			local halfH = primary.Size.Y * 0.5
+			local halfL = primary.Size.Z * 0.5
 			local down = Vector3.new(0, -(halfH + VehicleController.SUSPENSION_REACH), 0)
-			local half = primary.CFrame.LookVector * (primary.Size.Z * 0.5)
+			local look = primary.CFrame.LookVector
+			local step = VehicleController.SUSPENSION_STEP
+			local ahead = math.clamp((cmd.forwardSpeed or 0) * VehicleController.SUSPENSION_AHEAD,
+				0, VehicleController.SUSPENSION_AHEAD_MAX)
 			local ray
-			for _, origin in ipairs({ primary.Position, primary.Position + half, primary.Position - half }) do
-				local hit = opts.raycast(origin, down)
+			local d = -halfL
+			while true do
+				local hit = opts.raycast(primary.Position + look * d, down)
 				if hit and (not ray or hit.Position.Y > ray.Position.Y) then
 					ray = hit
 				end
+				if d >= halfL + ahead then break end
+				d = math.min(d + step, halfL + ahead)
 			end
 			if ray then
 				susp.Position = Vector3.new(

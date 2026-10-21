@@ -28,6 +28,7 @@ local Passives          = require(ReplicatedStorage.Shared.Passives)
 local Telemetry         = require(ServerScriptService.Modules.Telemetry)
 local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
+local RaceStart         = require(ServerScriptService.Modules.RaceStart)
 
 local P = Constants.PASSIVES
 
@@ -294,6 +295,7 @@ local _manualRespawnCooldown = {}   -- { [userId] = expireTick }
 
 RemoteEvents.RequestRespawn.OnServerInvoke = function(player)
 	if not _active then return "denied: not racing" end
+	if not RaceStart.isGo() then return "denied: countdown" end
 	local now = tick()
 	if (_manualRespawnCooldown[player.UserId] or 0) > now then
 		return "denied: cooldown"
@@ -561,6 +563,13 @@ local function _startPositionSync()
 				if pdata and pdata.vehicleModel and _physState[player.UserId] then
 					local progress = _progressFor(player, pdata.vehicleModel)
 					table.insert(data, { userId = player.UserId, progress = progress, rank = 0 })
+					-- When each car first leaves its grid spot (fair-start check).
+					local ps = _physState[player.UserId]
+					ps.gridS = ps.gridS or progress
+					if not ps.launched and progress - ps.gridS > 2 then
+						ps.launched = true
+						Telemetry.record("race_launch", { userId = player.UserId, afterGo = tick() - _startTick })
+					end
 					if logProgress then
 						Telemetry.record("race_progress", { userId = player.UserId, s = math.floor(progress) })
 					end
@@ -606,6 +615,7 @@ end
 
 RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	if not _active then return "denied: not racing" end
+	if not RaceStart.isGo() then return "denied: countdown" end
 	local ps = _physState[player.UserId]
 	if not ps then return "denied: no state" end
 
@@ -699,7 +709,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.RACING then
 		_active      = true
 		_biome       = biome
-		_startTick   = tick()
+		-- The clock starts at GO: cars wait on the grid until then (RaceStart).
+		RaceStart.begin(Constants.RACE_COUNTDOWN)
+		_startTick   = tick() + Constants.RACE_COUNTDOWN
 		_finishOrder = {}
 		_physState   = {}
 		_totalRacers = #Players:GetPlayers()
@@ -753,6 +765,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 
 	elseif phase == Constants.PHASES.RESULTS then
 		_active = false
+		RaceStart.reset()
 		for _, pdata in pairs(SessionManager.getAllData()) do
 			VehicleTuning.clear(_seatOf(pdata.vehicleModel))
 		end

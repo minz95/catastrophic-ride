@@ -27,25 +27,18 @@ KineSim.DEFAULT_ACCEL = 400        -- studs/s², ≈ MaxForce 1e4 / assembly mas
 KineSim.IMPACT_SPEED = 8           -- normal speed (studs/s) that counts as a hit
 KineSim.OFFTRACK_RESCUE = 3        -- seconds off the corridor before pressing R
 
---- Seat formulas per biome, exactly as VehicleBuilder derives them
--- (buildCar / buildBoat / buildFlyer). A spec checks these against seats the
--- real VehicleBuilder produces, so they cannot drift apart silently.
-KineSim.SEAT = {
-	FOREST = { speed = 2.5, speedMin = 20, speedMax = 120, torque = 4, torqueMin = 20, torqueMax = 200 },
-	OCEAN  = { speed = 2.0, speedMin = 15, speedMax = 80,  torque = 3, torqueMin = 15, torqueMax = 120 },
-	SKY    = { speed = 3.0, speedMin = 30, speedMax = 160, torque = 5, torqueMin = 30, torqueMax = 250 },
-}
 
 --- Seat values for `stats` in `biome` (default FOREST).
 -- `Constants` is the game's Constants module (any loader env).
 function KineSim.carFromStats(stats, Constants, biome)
 	biome = biome or "FOREST"
-	local f = assert(KineSim.SEAT[biome], "unknown biome " .. tostring(biome))
+	assert(Constants.RACE_SPEED[biome], "unknown biome " .. tostring(biome))
+	-- Same functions VehicleBuilder uses; a spec checks the built seats too.
 	return {
 		biome     = biome,
-		maxSpeed  = math.clamp(stats.speed * f.speed, f.speedMin, f.speedMax),
+		maxSpeed  = Constants.maxSpeedFor(biome, stats),
 		turnSpeed = Constants.turnSpeedFor(biome, stats),
-		torque    = math.clamp(stats.acceleration * f.torque, f.torqueMin, f.torqueMax),
+		torque    = Constants.torqueFor(biome, stats),
 		boostDuration = stats.boostDuration or 2,
 		radius    = 1.9,
 	}

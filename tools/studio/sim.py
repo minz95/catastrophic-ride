@@ -206,6 +206,63 @@ def check(sc, report):
             out.append(("fail", "no round completed"))
         for r in report.get("rounds", []):
             out += check_farm(c, r, report)
+        events = (report.get("telemetry") or {}).get("events") or []
+        if c.get("fairStart"):
+            out += check_fair_start(c, events)
+        if c.get("hudTimer"):
+            out += check_hud_timer(c, events)
+    return out
+
+
+def check_fair_start(c, events):
+    """Every car leaves the grid within `fairStart` seconds of the others,
+    and only after GO (Modules/RaceStart)."""
+    out = []
+    gos = [e for e in events if e.get("kind") == "race_go"]
+    if not gos:
+        return [("fail", "no race_go event: the countdown never released the cars")]
+    launches = [e for e in events if e.get("kind") == "race_launch"]
+    if not launches:
+        return [("fail", "no car left the grid")]
+    after = [e.get("afterGo", 0) for e in launches]
+    early = [e for e in launches if e.get("afterGo", 0) < -0.05]
+    if early:
+        out.append(("fail", "%d cars moved before GO" % len(early)))
+    spread = max(after) - min(after)
+    if spread > c["fairStart"]:
+        out.append(("fail", "cars left the grid %.1f s apart (limit %.1f s): %s" % (
+            spread, c["fairStart"], ", ".join("%.1f" % a for a in sorted(after)))))
+    return out
+
+
+def parse_clock(text):
+    m = re.search(r"(\d+):(\d\d)", text or "")
+    return int(m.group(1)) * 60 + int(m.group(2)) if m else None
+
+
+def check_hud_timer(c, events):
+    """The FARMING / CRAFTING timer on each bot's screen: one copy, counting
+    down, within 2 s of the server's end time."""
+    out = []
+    by = {}
+    for e in events:
+        if e.get("kind") == "bot_hud":
+            by.setdefault((e.get("userId"), (e.get("data") or {}).get("phase")), []).append(e)
+    if not by:
+        return [("fail", "no HUD samples from the bot clients")]
+    for (uid, phase), samples in sorted(by.items(), key=lambda kv: str(kv[0])):
+        d = [s.get("data") or {} for s in samples]
+        dup = [x for x in d if len(x.get("guis") or []) != 1]
+        if dup:
+            out.append(("fail", "%s %s: %d timer screens at once" % (uid, phase, len(dup[0].get("guis") or []))))
+        shown = [parse_clock(x["guis"][0].get("text")) for x in d if x.get("guis") and x["guis"][0].get("shown")]
+        shown = [v for v in shown if v is not None]
+        if len(shown) >= 3 and shown[-1] >= shown[0]:
+            out.append(("fail", "%s %s: timer does not count down (%s)" % (uid, phase, shown[:6])))
+        off = [abs(parse_clock(x["guis"][0].get("text")) - x["serverLeft"]) for x in d
+               if x.get("guis") and x.get("serverLeft") is not None and parse_clock(x["guis"][0].get("text")) is not None]
+        if off and max(off) > 2:
+            out.append(("fail", "%s %s: timer is %.0f s off the server's" % (uid, phase, max(off))))
     return out
 
 

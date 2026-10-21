@@ -8,7 +8,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local LocalPlayer  = Players.LocalPlayer
+
+-- This script runs again after every respawn, but its ScreenGui
+-- (ResetOnSpawn = false) survives: drop the old copy so only one timer shows.
+for _, old in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+	if old.Name == "FarmingUI" and old:IsA("ScreenGui") then old:Destroy() end
+end
 
 -- ─── Screen ───────────────────────────────────────────────────────────────────
 
@@ -152,11 +159,9 @@ local function _startTimer()
 	if _runConn then _runConn:Disconnect() end
 	_runConn = RunService.Heartbeat:Connect(function()
 		if not screen.Enabled then return end
-		local elapsed = tick() - _startTick
-		local remaining = math.max(0, _totalTime - elapsed)
-		local mins = math.floor(remaining / 60)
-		local secs = math.floor(remaining % 60)
-		timerLabel.Text = string.format("FARMING  %d:%02d", mins, secs)
+		-- Server end time (PhaseClock); local count only as a fallback.
+		local remaining = PhaseClock.remaining(math.max(0, _totalTime - (tick() - _startTick)))
+		timerLabel.Text = "FARMING  " .. PhaseClock.format(remaining)
 
 		-- Pulse red in last 15 seconds
 		if remaining <= 15 then
@@ -176,7 +181,7 @@ end
 
 -- ─── Phase gate ───────────────────────────────────────────────────────────────
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+local function _onPhase(phase)
 	if phase == Constants.PHASES.FARMING then
 		_updateSlots({})
 		screen.Enabled = true
@@ -188,4 +193,10 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 		screen.Enabled = false
 		_stopTimer()
 	end
-end)
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
+
+-- Started after the FARMING event went out (respawn, slow client): join it.
+if ReplicatedStorage:GetAttribute("Phase") then
+	_onPhase(ReplicatedStorage:GetAttribute("Phase"))
+end

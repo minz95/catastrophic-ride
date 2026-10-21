@@ -253,19 +253,20 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	if _countdownConn then _countdownConn:Disconnect(); _countdownConn = nil end
 
 	if phase == Constants.PHASES.RACING then
-		-- 3-2-1-Go countdown at race start
-		local startTime = tick()
+		-- 3-2-1-Go, on the server's GO time (ReplicatedStorage "RaceGoAt",
+		-- Modules/RaceStart); the cars leave the grid on the GO sound.
 		local beepsFired = {}
 		_countdownConn = game:GetService("RunService").Heartbeat:Connect(function()
-			local elapsed = tick() - startTime
-			-- 3 beeps at t=0.5, 1.5, 2.5; Go at t=3.5
-			for i, t in ipairs({ 0.5, 1.5, 2.5 }) do
-				if elapsed >= t and not beepsFired[i] then
+			local goAt = ReplicatedStorage:GetAttribute("RaceGoAt")
+			if type(goAt) ~= "number" then return end
+			local left = goAt - workspace:GetServerTimeNow()
+			for i, t in ipairs({ 3, 2, 1 }) do
+				if left <= t and left > 0 and not beepsFired[i] then
 					beepsFired[i] = true
 					_playSFX("COUNTDOWN_BEEP")
 				end
 			end
-			if elapsed >= 3.5 and not beepsFired[4] then
+			if left <= 0 and not beepsFired[4] then
 				beepsFired[4] = true
 				_playSFX("COUNTDOWN_GO")
 				if _countdownConn then _countdownConn:Disconnect(); _countdownConn = nil end

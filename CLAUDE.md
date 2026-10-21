@@ -70,6 +70,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `_active`; connecting on every RACING phase doubles effects from round 2.
 - The drive command ramps: acceleration = `ACCEL_BASE + Torque × ACCEL_PER_TORQUE`
   (`Constants.DRIVE`). Reset `VehicleController` state on spawn and respawn.
+- Top speed: `Constants.maxSpeedFor(biome, stats)` puts every build within
+  ±6% of `Constants.RACE_SPEED[biome].center` (the build must not decide the
+  race). VehicleBuilder, the simulators and BotBrain all use it.
+- Races start together: cars are held on the grid by `Modules/RaceStart`
+  until GO (`RACE_COUNTDOWN` s after RACING begins); the race clock, boosts
+  and respawns start at GO. Never unanchor a race car yourself.
+- Client phase timers count down to the `PhaseEndsAt` attribute
+  (`Shared/PhaseClock`), not to `Constants.PHASE_DURATION`.
 - Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range.
   SKY is also capped at `VehicleController.SKY_TURN_CAP` (1.5) inside the
   controller; use `VehicleController.turnRate` for the real rate.

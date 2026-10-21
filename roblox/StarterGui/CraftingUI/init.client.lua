@@ -9,6 +9,7 @@ local TweenService      = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local LocalPlayer  = Players.LocalPlayer
@@ -411,10 +412,8 @@ local function _startTimer()
 	if _runConn then _runConn:Disconnect() end
 	_runConn = RunService.Heartbeat:Connect(function()
 		if not screen.Enabled then return end
-		local remaining = math.max(0, _totalTime - (tick() - _startTick))
-		local mins = math.floor(remaining / 60)
-		local secs = math.floor(remaining % 60)
-		timerLabel.Text = string.format("%d:%02d", mins, secs)
+		local remaining = PhaseClock.remaining(math.max(0, _totalTime - (tick() - _startTick)))
+		timerLabel.Text = PhaseClock.format(remaining)
 		timerLabel.TextColor3 = remaining <= 15
 			and Color3.fromRGB(255, 60, 60)
 			or  Color3.fromRGB(80, 220, 80)

@@ -118,7 +118,7 @@ BotBrain.statsFor = statsFor
 --- Seat MaxSpeed for a slot assignment, as VehicleBuilder derives it.
 function BotBrain.topSpeed(slots, biome)
 	local s = statsFor(slots, biome)
-	return math.clamp(s.speed * 2.5, 20, 120), s
+	return Constants.maxSpeedFor(biome or "FOREST", s), s
 end
 
 --- Picks slots from an inventory.
@@ -174,10 +174,11 @@ function BotBrain.chooseSlots(profile, inventory, biome)
 						SPECIAL = s and inventory[s] or nil,
 						MOBILITY = m and inventory[m] or nil,
 					}
-					local speed, st = BotBrain.topSpeed(slots, biome)
-					-- Top speed first; boost duration breaks ties (SPECIAL items
-					-- never change top speed, only boost length).
-					local score = speed * 1000 + (st.boostDuration or 0)
+					local _, st = BotBrain.topSpeed(slots, biome)
+					-- Speed stat first (MaxSpeed saturates at the top of the
+					-- Constants.RACE_SPEED band, the stat keeps ordering builds);
+					-- boost duration breaks ties (SPECIAL items never change speed).
+					local score = st.speed * 1000 + (st.boostDuration or 0)
 					if score > bestSpeed then
 						local u = table.clone(used)
 						if m then u[m] = true end

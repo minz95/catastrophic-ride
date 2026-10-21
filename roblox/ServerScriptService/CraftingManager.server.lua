@@ -16,6 +16,7 @@ local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
+local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -174,60 +175,60 @@ GameManager.onPhaseChanged(function(phase, biome)
 					end
 
 					SessionManager.setVehicle(player, model, stats)
+					-- Held on the grid until GO (Modules/RaceStart): every car
+					-- leaves at the same moment, whatever order they were seated in.
+					RaceStart.hold(primary)
 
-					-- One frame for replication before firing the client event.
-					task.wait()
+					-- Seat everyone in parallel (each waits for its own humanoid).
+					task.spawn(function()
+						-- One frame for replication before firing the client event.
+						task.wait()
 
-					local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
-					if seat then
-						print(string.format("[CraftingManager] Vehicle for %s spawned at %s | seat=%s",
-							player.Name, tostring(primary and primary.Position), tostring(seat)))
+						local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
+						if seat then
+							print(string.format("[CraftingManager] Vehicle for %s spawned at %s | seat=%s",
+								player.Name, tostring(primary and primary.Position), tostring(seat)))
 
-						-- Wait for character + humanoid to be ready. RACING can
-						-- start while the player is mid-respawn from the FARMING/
-						-- CRAFTING transition; firing Sit before the humanoid
-						-- exists silently fails and leaves the player standing
-						-- on the spawn pad with the vehicle invisible underneath.
-						local humanoid = nil
-						local deadline = tick() + 2
-						repeat
-							humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-							if not humanoid then task.wait(0.05) end
-						until humanoid or tick() > deadline
+							-- Wait for character + humanoid to be ready. RACING can
+							-- start while the player is mid-respawn from the FARMING/
+							-- CRAFTING transition; firing Sit before the humanoid
+							-- exists silently fails and leaves the player standing
+							-- on the spawn pad with the vehicle invisible underneath.
+							local humanoid = nil
+							local deadline = tick() + 2
+							repeat
+								humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+								if not humanoid then task.wait(0.05) end
+							until humanoid or tick() > deadline
 
-						if humanoid then
-							seat:Sit(humanoid)
-							task.wait(0.15)  -- let weld settle
-							-- Verify the sit actually took. Humanoid.Sit becomes
-							-- true once Roblox wires up the SeatWeld; if it's
-							-- still false the seat:Sit silently failed (common
-							-- if the humanoid was mid-Climb/Jump). Retry once.
-							if not humanoid.Sit then
+							if humanoid then
 								seat:Sit(humanoid)
-								task.wait(0.1)
+								task.wait(0.15)  -- let weld settle
+								-- Verify the sit actually took. Humanoid.Sit becomes
+								-- true once Roblox wires up the SeatWeld; if it's
+								-- still false the seat:Sit silently failed (common
+								-- if the humanoid was mid-Climb/Jump). Retry once.
+								if not humanoid.Sit then
+									seat:Sit(humanoid)
+									task.wait(0.1)
+								end
+							else
+								warn("[CraftingManager] Humanoid never ready for", player.Name)
 							end
-						else
-							warn("[CraftingManager] Humanoid never ready for", player.Name)
-						end
 
-						Telemetry.record("vehicle_spawn", {
-							userId = player.UserId,
-							seated = humanoid ~= nil and humanoid.Sit or false,
-							maxSpeed = seat.MaxSpeed, turnSpeed = seat.TurnSpeed, torque = seat.Torque,
-							mass = primary and primary.AssemblyMass,
-							at = primary and Telemetry.vec(primary.Position),
-						})
-						RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
-						-- Unanchor after sit takes effect so vehicle can move
-						task.wait(0.1)
-						if primary and primary.Parent then
-							primary.Anchored = false
+							Telemetry.record("vehicle_spawn", {
+								userId = player.UserId,
+								seated = humanoid ~= nil and humanoid.Sit or false,
+								maxSpeed = seat.MaxSpeed, turnSpeed = seat.TurnSpeed, torque = seat.Torque,
+								mass = primary and primary.AssemblyMass,
+								at = primary and Telemetry.vec(primary.Position),
+							})
+							RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
+						else
+							warn("[CraftingManager] No VehicleSeat found in vehicle for", player.Name)
+							RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
 						end
-					else
-						warn("[CraftingManager] No VehicleSeat found in vehicle for", player.Name)
-						if primary and primary.Parent then primary.Anchored = false end
-						RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, model)
-					end
+					end)
 				else
 					warn("[CraftingManager] VehicleBuilder.build returned nil for", player.Name)
 				end

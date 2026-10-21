@@ -66,8 +66,13 @@ end
 
 -- ─── Phase transition ─────────────────────────────────────────────────────────
 
-local function _transition(newPhase)
+-- `seconds`: how long the phase runs (nil = until something ends it). Clients
+-- count down to the ReplicatedStorage attribute PhaseEndsAt (server time), so
+-- every screen shows the server's real remaining time, harness overrides
+-- included, even when the UI script started late.
+local function _transition(newPhase, seconds)
 	_currentPhase = newPhase
+	ReplicatedStorage:SetAttribute("PhaseEndsAt", seconds and (workspace:GetServerTimeNow() + seconds) or nil)
 	print("[GameManager] Phase →", newPhase)
 	Telemetry.record("phase", { phase = newPhase, biome = _currentBiome, round = _round })
 
@@ -127,19 +132,21 @@ function _startFarming()
 	_currentBiome = (_harness and _harness.biome) or BiomeConfig.random()
 	RemoteEvents.BiomeSelected:FireAllClients(_currentBiome)
 
-	_transition(Constants.PHASES.FARMING)
+	local seconds = _duration("FARMING", Constants.PHASE_DURATION.FARMING)
+	_transition(Constants.PHASES.FARMING, seconds)
 
 	-- Countdown and auto-advance
-	_phaseTimer = task.delay(_duration("FARMING", Constants.PHASE_DURATION.FARMING), function()
+	_phaseTimer = task.delay(seconds, function()
 		_startCrafting()
 	end)
 end
 
 function _startCrafting()
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
-	_transition(Constants.PHASES.CRAFTING)
+	local seconds = _duration("CRAFTING", Constants.PHASE_DURATION.CRAFTING)
+	_transition(Constants.PHASES.CRAFTING, seconds)
 
-	_phaseTimer = task.delay(_duration("CRAFTING", Constants.PHASE_DURATION.CRAFTING), function()
+	_phaseTimer = task.delay(seconds, function()
 		_startRacing()
 	end)
 end
@@ -148,8 +155,8 @@ function _startRacing()
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
 	_transition(Constants.PHASES.RACING)
 
-	-- Failsafe timeout
-	_phaseTimer = task.delay(_duration("RACING", Constants.RACING_TIMEOUT), function()
+	-- Failsafe timeout, counted from GO (Modules/RaceStart)
+	_phaseTimer = task.delay(_duration("RACING", Constants.RACING_TIMEOUT) + Constants.RACE_COUNTDOWN, function()
 		_startResults({})
 	end)
 end

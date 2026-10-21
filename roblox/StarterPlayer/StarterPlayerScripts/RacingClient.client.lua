@@ -491,9 +491,52 @@ local function _showRaceIntro()
 	end)
 end
 
+-- 3-2-1-GO in the middle of the screen, counted to the server's GO time
+-- (ReplicatedStorage "RaceGoAt", set by Modules/RaceStart). Every car is
+-- held on the grid until then.
+local _countdownConn = nil
+local function _showCountdown()
+	local overlay = _getOverlay()
+	local old = overlay:FindFirstChild("RaceCountdown")
+	if old then old:Destroy() end
+	if _countdownConn then _countdownConn:Disconnect(); _countdownConn = nil end
+
+	local label = Instance.new("TextLabel")
+	label.Name                   = "RaceCountdown"
+	label.Size                   = UDim2.new(0, 260, 0, 160)
+	label.AnchorPoint            = Vector2.new(0.5, 0.5)
+	label.Position               = UDim2.new(0.5, 0, 0.22, 0)
+	label.BackgroundTransparency = 1
+	label.Font                   = Enum.Font.GothamBlack
+	label.TextScaled             = true
+	label.TextColor3             = Color3.fromRGB(255, 255, 255)
+	label.TextStrokeTransparency = 0.2
+	label.Text                   = ""
+	label.Parent                 = overlay
+
+	_countdownConn = RunService.Heartbeat:Connect(function()
+		local goAt = ReplicatedStorage:GetAttribute("RaceGoAt")
+		if type(goAt) ~= "number" then return end
+		local left = goAt - workspace:GetServerTimeNow()
+		if left > 3 then
+			label.Text = ""
+		elseif left > 0 then
+			label.Text = tostring(math.ceil(left))
+			label.TextColor3 = Color3.fromRGB(255, 220, 80)
+		elseif left > -0.8 then
+			label.Text = "GO!"
+			label.TextColor3 = Color3.fromRGB(90, 255, 120)
+		else
+			label:Destroy()
+			if _countdownConn then _countdownConn:Disconnect(); _countdownConn = nil end
+		end
+	end)
+end
+
 if RemoteEvents.RaceIntroShown then
 	RemoteEvents.RaceIntroShown.OnClientEvent:Connect(function(_intro)
 		_showRaceIntro()
+		_showCountdown()
 	end)
 end
 

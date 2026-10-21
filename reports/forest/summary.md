@@ -10,41 +10,41 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 48.8 | expert | 151.5 s | 0 | 0 |
-| live code | slowest | 48.8 | expert | 151.5 s | 0 | 0 |
-| authored | slowest | 48.8 | average | 153.3 s | 0 | 0 |
-| live code | slowest | 48.8 | average | 153.3 s | 0 | 0 |
-| authored | slowest | 48.8 | novice | 163.0 s | 0 | 0 |
-| live code | slowest | 48.8 | novice | 163.0 s | 0 | 0 |
-| authored | p50 | 67.5 | expert | 107.1 s | 0 | 0 |
-| live code | p50 | 67.5 | expert | 107.1 s | 0 | 0 |
-| authored | p50 | 67.5 | average | 108.4 s | 0 | 0 |
-| live code | p50 | 67.5 | average | 108.4 s | 0 | 0 |
-| authored | p50 | 67.5 | novice | 125.2 s | 0 | 8 |
-| live code | p50 | 67.5 | novice | 125.2 s | 0 | 8 |
-| authored | fastest | 86.8 | expert | 71.8 s | 0 | 0 |
-| live code | fastest | 86.8 | expert | 71.8 s | 0 | 0 |
-| authored | fastest | 86.8 | average | 73.1 s | 0 | 0 |
-| live code | fastest | 86.8 | average | 73.1 s | 0 | 0 |
-| authored | fastest | 86.8 | novice | 100.6 s | 0 | 46 |
-| live code | fastest | 86.8 | novice | 100.6 s | 0 | 46 |
+| authored | slowest | 64.9 | expert | 98.7 s | 0 | 0 |
+| live code | slowest | 64.9 | expert | 98.7 s | 0 | 0 |
+| authored | slowest | 64.9 | average | 99.9 s | 0 | 0 |
+| live code | slowest | 64.9 | average | 99.9 s | 0 | 0 |
+| authored | slowest | 64.9 | novice | 120.6 s | 0 | 12 |
+| live code | slowest | 64.9 | novice | 120.6 s | 0 | 12 |
+| authored | p50 | 68.6 | expert | 105.3 s | 0 | 0 |
+| live code | p50 | 68.6 | expert | 105.3 s | 0 | 0 |
+| authored | p50 | 68.6 | average | 106.7 s | 0 | 0 |
+| live code | p50 | 68.6 | average | 106.7 s | 0 | 0 |
+| authored | p50 | 68.6 | novice | 123.4 s | 0 | 6 |
+| live code | p50 | 68.6 | novice | 123.4 s | 0 | 6 |
+| authored | fastest | 73.1 | expert | 95.1 s | 0 | 0 |
+| live code | fastest | 73.1 | expert | 95.1 s | 0 | 0 |
+| authored | fastest | 73.1 | average | 96.3 s | 0 | 0 |
+| live code | fastest | 73.1 | average | 96.3 s | 0 | 0 |
+| authored | fastest | 73.1 | novice | 116.1 s | 0 | 14 |
+| live code | fastest | 73.1 | novice | 116.1 s | 0 | 14 |
 
-Cars by top speed: slowest = Microwave + Fan + Pizza (top speed 48.8, turn 2.52 rad/s); p50 = Barrel + Magnifying Glass + Lantern + Alarm Clock (top speed 67.5, turn 2.26 rad/s); fastest = Skateboard + Kettle + Umbrella + Log (top speed 86.8, turn 2.33 rad/s).
+Cars by top speed: slowest = Microwave + Hair Dryer + Balloon Bunch (top speed 64.9, turn 2.42 rad/s); p50 = Barrel + Magnifying Glass + Lantern + Alarm Clock (top speed 68.6, turn 2.26 rad/s); fastest = Bamboo Raft + Rocket + Cactus + Log (top speed 73.1, turn 2.48 rad/s).
 
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 4 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.64 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.43
+- Fastest car won 5 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.54 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.45
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 2.86 |
-| farming: casual | 4.14 |
-| driving: expert | 2.58 |
-| driving: average | 2.83 |
-| driving: novice | 5.08 |
+| farming: sweaty | 3.14 |
+| farming: casual | 3.86 |
+| driving: expert | 2.38 |
+| driving: average | 2.62 |
+| driving: novice | 5.50 |
 
 ## Fun metrics
 
@@ -52,26 +52,26 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✗ | closeShare | 0.14 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.33 |  .. 0.70 | the fastest build should not always win |
+| ✗ | closeShare | 0.17 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.42 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✗ | finishSpread | 59.84 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 1.50 | 1.00 ..  | the lead changes at least once |
-| ✓ | racingShare | 0.37 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.64 | -0.85 .. -0.30 | a better build helps, but driving and items matter too |
-| ✓ | winnerTime | 81.14 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | finishSpread | 39.71 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.58 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.35 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.54 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 88.62 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 6.5. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 7.3. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 start straight | 5.6 | 3.3 | 0 | 0 | 14 |
-| S2 outcrop hairpin | 8.2 | 5.1 | 0 | 0 | 20 |
-| S3 river sweeper | 17.1 | 10.2 | 0 | 0 | 69 |
-| S4 farm U-bend | 20.2 | 9.7 | 0 | 0 | 42 |
-| S5 mud hook | 9.9 | 6.7 | 0 | 0 | 65 |
-| S6 pine switchbacks | 26.3 | 17.0 | 12 | 0 | 124 |
-| S7 ridge chicane | 19.0 | 8.8 | 0 | 0 | 53 |
+| S1 start straight | 5.5 | 2.6 | 0 | 0 | 12 |
+| S2 outcrop hairpin | 8.1 | 3.5 | 0 | 0 | 13 |
+| S3 river sweeper | 16.9 | 7.0 | 0 | 0 | 62 |
+| S4 farm U-bend | 20.0 | 5.3 | 0 | 0 | 15 |
+| S5 mud hook | 9.6 | 4.9 | 0 | 0 | 45 |
+| S6 pine switchbacks | 26.0 | 11.9 | 12 | 0 | 83 |
+| S7 ridge chicane | 18.9 | 5.4 | 0 | 0 | 20 |
 
 ## Geometry findings
 

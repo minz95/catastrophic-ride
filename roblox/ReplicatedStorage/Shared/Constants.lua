@@ -23,6 +23,7 @@ Constants.PHASE_DURATION = {
 	RACING   = nil, -- ends on finish, timeout below
 	RESULTS  = 30,
 }
+Constants.RACE_COUNTDOWN = 4 -- s from RACING to GO (cars spawn and seat, then 3-2-1); Modules/RaceStart
 Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 
 -- ─── Player / Session ─────────────────────────────────────────────────────────
@@ -95,7 +96,7 @@ Constants.FUN_TARGETS = {
 	closeShare   = { min = 0.25,           why = "the top two race each other a quarter of the time" },
 	racingShare  = { min = 0.35,           why = "share of a round spent racing (vs farming / crafting / results)" },
 	fastestWinRate = {          max = 0.7, why = "the fastest build should not always win" },
-	speedPlaceCorr = { min = -0.85, max = -0.3, why = "a better build helps, but driving and items matter too" },
+	speedPlaceCorr = { min = -0.6, max = 0.1, why = "the build helps a little; it must not decide the race" },
 }
 
 -- ─── Drift / DriftCorner ──────────────────────────────────────────────────────
@@ -175,6 +176,38 @@ Constants.DRIVE = {
 	DRIFT_TURN_MULT  = 0.35, -- drifting turns slower but keeps speed
 	DRIFT_TURN_MIN   = 0.3,
 }
+
+-- ─── Top speed: stat → VehicleSeat.MaxSpeed ──────────────────────────────────
+-- The build may not decide the race: every car's top speed sits within
+-- ±`spread` of the biome's `center`. The speed stat (p10 `lo` .. p90 `hi` of
+-- all item combinations) only picks the place inside that band, so a better
+-- build is a little faster and driving, boosts and items decide the rest.
+-- Centers put the best build with a good driver at about 85 s per race.
+-- (Before 2026-10-21 MaxSpeed was speed × 2.5 / 2.0 / 3.0: the fastest
+-- build was 1.8× the slowest and the field finished 50–60 s apart.)
+Constants.RACE_SPEED = {
+	FOREST = { center = 69, spread = 0.06, lo = 22, hi = 33 },
+	OCEAN  = { center = 63, spread = 0.06, lo = 20, hi = 40 },
+	SKY    = { center = 87, spread = 0.06, lo = 21, hi = 30 },
+}
+
+function Constants.maxSpeedFor(biome, stats)
+	local t = Constants.RACE_SPEED[biome] or Constants.RACE_SPEED.FOREST
+	local f = math.clamp(((stats.speed or 0) - t.lo) / (t.hi - t.lo), 0, 1)
+	return t.center * (1 + t.spread * (2 * f - 1))
+end
+
+-- Acceleration: VehicleSeat.Torque = acceleration × scale, clamped.
+Constants.SEAT_TORQUE = {
+	FOREST = { scale = 4, min = 20, max = 200 },
+	OCEAN  = { scale = 3, min = 15, max = 120 },
+	SKY    = { scale = 5, min = 30, max = 250 },
+}
+
+function Constants.torqueFor(biome, stats)
+	local t = Constants.SEAT_TORQUE[biome] or Constants.SEAT_TORQUE.FOREST
+	return math.clamp((stats.acceleration or 0) * t.scale, t.min, t.max)
+end
 
 -- ─── Handling: stat → VehicleSeat.TurnSpeed ───────────────────────────────────
 -- Linear map of a biome's handling stat onto [min, max], clamped. The ranges
