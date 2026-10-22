@@ -115,10 +115,12 @@ function Autopilot:update(state)
 	local dt = self.lastT and math.max(t - self.lastT, 0) or 0
 	self.lastT = t
 
-	local proj = self.geo:project(state.x, state.z, self.segHint, 3)
+	-- state.y (optional): the car's height, so a road passing over itself
+	-- is told apart
+	local proj = self.geo:project(state.x, state.z, self.segHint, 3, state.y)
 	if self.segHint == nil then
 		-- First frame / after respawn: global search to find our place.
-		proj = self.geo:project(state.x, state.z)
+		proj = self.geo:project(state.x, state.z, nil, nil, state.y)
 	end
 	self.segHint = proj.seg
 

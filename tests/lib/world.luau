@@ -52,7 +52,7 @@ function World.build(biome, opts)
 
 	local track = env.requirePath("ReplicatedStorage.Shared.Tracks." .. spec.track)
 	local TrackGeometry = env.requirePath("ReplicatedStorage.Shared.TrackGeometry")
-	local geo = TrackGeometry.new(track.nodes, track.width)
+	local geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 
 	local w = {
 		env = env,
@@ -62,7 +62,10 @@ function World.build(biome, opts)
 		biome = biome,
 		visibility = visibility,
 	}
-	w.obstacles = MapQuery.obstacles(map, track.trackTop, track.obstacleBand)
+	local topHi = track.trackTop
+	for _, nd in ipairs(track.nodes) do topHi = math.max(topHi, nd[3] or track.trackTop) end
+	w.band = track.obstacleBand or { 0.6, 3.0 }
+	w.obstacles = MapQuery.obstacles(map, track.trackTop, track.obstacleBand, topHi)
 	w.obstacleGrid = MapQuery.grid(w.obstacles, 32)
 	w.triggers = MapQuery.shapes(map, function(sh)
 		return (MapQuery.isTrigger(sh))

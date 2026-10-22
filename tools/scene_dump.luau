@@ -29,8 +29,8 @@ local w = World.build(biome, { visibility = "shipped" })
 local env, track, geo = w.env, w.track, w.geo
 
 local seg = geo.segments[math.clamp(node, 1, #geo.segments)]
-local y = track.trackTop or 0
-if biome == "SKY" then y = 84 - 2 end
+local y = geo:heightAt(seg.s0)
+if biome == "SKY" then y = 84 - 2 + (y - track.trackTop) end
 local fx, fz = seg.dx, seg.dz
 local cam = {
 	eye = { seg.ax - fx * 30, y + 12, seg.az - fz * 30 },

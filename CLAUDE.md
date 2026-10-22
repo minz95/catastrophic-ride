@@ -136,6 +136,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Shoves (abilities, obstacles) go to the driver as a `CarImpact` knock.
 - Falling-log spots come from `Shared/HazardPlan` (always a way past);
   `Autopilot` avoids `state.hazards`.
+- Road heights: a track node may be `{ x, z, y }` (road surface Y). Pass
+  the car's Y to `TrackGeometry:project` / `progressAt`,
+  `RaceProgress.progress` / `respawnPoint` and `Autopilot` state, or a
+  road passing over itself (FOREST's spiral) is read on the wrong layer.
+  Build things on the road with `TrackKit:segCF` / `trackCF` (they follow
+  the height). Suspension and ground rays use `RespectCanCollide = true`.
 - Phase timers: `GameManager.shortenPhase` (crafting hurry, finish grace).
   A finished car is parked (MaxSpeed 0) and may not respawn; each road has a
   run-off and an end wall (`TrackKit:buildEndWall`).

@@ -51,6 +51,10 @@ local _keys = {
 
 local _suspParams = RaycastParams.new()
 _suspParams.FilterType = Enum.RaycastFilterType.Exclude
+-- Only solid parts carry the car: trigger volumes and see-through scenery
+-- (the Sky map's haze planes at Y 28-34 overlap FOREST's spiral, Studio
+-- 2026-10-22: cars rode on them 10 studs above the road) are skipped.
+_suspParams.RespectCanCollide = true
 
 local KEY_MAP = {
 	[Enum.KeyCode.W]           = "W",

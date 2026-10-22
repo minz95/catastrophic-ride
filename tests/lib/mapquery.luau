@@ -34,15 +34,24 @@ function MapQuery.shape(part)
 		yMin = yMin, yMax = yMax,
 		aabb = { xMin, zMin, xMax, zMax },
 		canCollide = p.CanCollide,
+		floor = part:GetAttribute("TrackFloor") == true,
 	}
 	local up = cf.UpVector
+	local r, l = cf.RightVector, cf.LookVector
 	if math.abs(up.Y) > 0.999 then
-		local r, l = cf.RightVector, cf.LookVector
 		local rl = math.sqrt(r.X * r.X + r.Z * r.Z)
 		local ll = math.sqrt(l.X * l.X + l.Z * l.Z)
 		shape.cx, shape.cz = cf.Position.X, cf.Position.Z
 		shape.ux, shape.uz, shape.hu = r.X / rl, r.Z / rl, size.X / 2
 		shape.vx, shape.vz, shape.hv = l.X / ll, l.Z / ll, size.Z / 2
+	elseif math.abs(up.Y) > 0.98 and math.abs(r.Y) < 1e-3 then
+		-- pitched along its length only (a road or wall on a slope): the
+		-- footprint is still a box turned to the road
+		local ll = math.sqrt(l.X * l.X + l.Z * l.Z)
+		shape.cx, shape.cz = cf.Position.X, cf.Position.Z
+		shape.ux, shape.uz, shape.hu = r.X, r.Z, size.X / 2
+		shape.vx, shape.vz = l.X / ll, l.Z / ll
+		shape.hv = size.Z / 2 * ll + size.Y / 2 * math.abs(l.Y)
 	else
 		shape.cx, shape.cz = (xMin + xMax) / 2, (zMin + zMax) / 2
 		shape.ux, shape.uz, shape.hu = 1, 0, (xMax - xMin) / 2
@@ -166,15 +175,22 @@ function MapQuery.isTrigger(shape)
 end
 
 --- Obstacles a car body can hit: collidable, rising into the body band, and
--- not a ramp (WedgeParts are driven over).
-function MapQuery.obstacles(root, trackTop, band)
+-- not a ramp (WedgeParts are driven over) or the road itself. On a road
+-- with heights the band covers every height the road reaches (`topHi`);
+-- the simulator then keeps only those at the car's own height.
+function MapQuery.obstacles(root, trackTop, band, topHi)
 	band = band or { 0.6, 3.0 }
-	local lo, hi = trackTop + band[1], trackTop + band[2]
+	local lo, hi = trackTop + band[1], (topHi or trackTop) + band[2]
 	return MapQuery.shapes(root, function(sh)
 		if not sh.canCollide then return false end
-		if sh.class == "WedgePart" then return false end
+		if sh.class == "WedgePart" or sh.floor then return false end
 		return sh.yMax > lo and sh.yMin < hi
 	end)
+end
+
+--- Does a shape reach into the body band of a car on a road at height y?
+function MapQuery.inBand(sh, y, band)
+	return sh.yMax > y + band[1] and sh.yMin < y + band[2]
 end
 
 return MapQuery

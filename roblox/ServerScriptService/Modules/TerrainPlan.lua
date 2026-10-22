@@ -138,7 +138,7 @@ function TerrainPlan.build(biome)
 	local mod = TerrainPlan.TRACKS[biome]
 	assert(mod and PLANS[biome], "TerrainPlan: unknown biome " .. tostring(biome))
 	local track = require(mod)
-	local geo = TrackGeometry.new(track.nodes, track.width)
+	local geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 	return PLANS[biome](track, geo), track, geo
 end
 

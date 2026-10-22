@@ -254,6 +254,22 @@ R.describe("protection and track effects (real RacingManager)", function()
 		local _, _, dx, dz = geo:pointAt(p.s)
 		local look = car.chassis.CFrame.LookVector
 		R.expect(look.X * dx + look.Z * dz).toBeGreaterThan(0.9)
+		-- S3 is a raised trestle here: the car is put back up on the road
+		R.expect(pos.Y).toBeGreaterThan(geo:heightAt(p.s))
+		R.expect(pos.Y).toBeLessThan(geo:heightAt(p.s) + 8)
+	end)
+
+	R.it("a car that falls off the raised road is put back on it", function()
+		local m = multiServer({ { slots = {}, at = CFrame.new(460, 25, -640) } })   -- on the S3 trestle (Y ~23)
+		local car = m.cars[1]
+		m.srv.advance(1)   -- the server learns where the car is
+		car.model:PivotTo(CFrame.new(460, 2, -640))   -- on the ground under the trestle
+		local hb = m.srv.mock.services.RunService.Heartbeat
+		m.srv.advance(0.5, 1 / 30, function() hb:Fire(1 / 30) end)
+		local ev = m.srv.Telemetry.events("respawn")
+		R.expect(#ev).toBeGreaterThan(0)
+		R.expect(ev[#ev].reason).toBe("fell")
+		R.expect(car.chassis.Position.Y).toBeGreaterThan(20)
 	end)
 end)
 

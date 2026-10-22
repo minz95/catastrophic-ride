@@ -33,6 +33,7 @@ local function _visibleHazards(pos)
 	local out = {}
 	local function add(part)
 		if (part.Position - pos).Magnitude > SEE_RANGE then return end
+		if math.abs(part.Position.Y - pos.Y) > 12 then return end   -- another layer of the road
 		local half = math.max(part.Size.X, part.Size.Z) / 2
 		if part.Name == "LogWarning" then half = Constants.HAZARDS.LOG_SIZE[1] / 2 end
 		table.insert(out, { x = part.Position.X, z = part.Position.Z, half = half })
@@ -279,7 +280,7 @@ RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, model)
 	local data = TRACKS[biome or "FOREST"]
 	if data then
 		local track = require(data)
-		geo = TrackGeometry.new(track.nodes, track.width)
+		geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 		autopilot = Autopilot.new(geo, Autopilot.PROFILES[driverName] or Autopilot.PROFILES.average, LocalPlayer.UserId)
 	end
 	raceStart = os.clock()
@@ -299,7 +300,7 @@ InputSource.setOverride(function()
 	local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 	local keys, info = autopilot:update({
 		hazards = _visibleHazards(primary.Position),
-		x = primary.Position.X, z = primary.Position.Z, yaw = yaw,
+		x = primary.Position.X, z = primary.Position.Z, y = primary.Position.Y, yaw = yaw,
 		speed = Vector3.new(v.X, 0, v.Z).Magnitude,
 		forward = v:Dot(primary.CFrame.LookVector),
 		maxSpeed = seat and seat.MaxSpeed or 40,

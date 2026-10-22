@@ -295,6 +295,21 @@ ignores them). `Autopilot` steers around `state.hazards`; Studio bots pass
 the logs and obstacle drops they see. Look:
 `lune run tools/scene_dump.luau FOREST 34 out.json 300 logs`.
 
+### Roads with heights
+
+`track_heights.spec.luau`: layered projection and walls on a test loop,
+FOREST's grades (≤ 6%, change ≤ 6% per node), 24+ studs where the road
+passes over itself, respawns on the right layer, logs never under a deck, a
+KineSim driver whose progress never jumps a layer; `racing_manager.spec`
+puts a car under the trestle and expects a "fell" respawn. The map checks
+(`mapchecks.luau`) look only at parts in the body band of the road layer
+they test. Look: `lune run tools/topview.luau FOREST` + `python3
+tools/topview.py reports/forest/topview.json` (top-down, respawns marked)
+and `lune run tools/scene_dump.luau FOREST 29 out.json 300` (under the
+spiral). Studio: `race-forest`, `escape-forest`, `match-forest`; the race
+samples (`--samples`) carry the car's Y, the road's Y and what the ground
+ray hit.
+
 ### Playtests: markers and the fun report
 
 In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)

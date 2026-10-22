@@ -421,6 +421,7 @@ AbilityConfig["Log"] = {
 	animKey     = "logRoll",
 	sfxKey      = "log_thud",
 	uiHint      = "🪵 Drop!",
+	biomeEffect = { SKY = { cooldown = 7 } },   -- the wide Sky lane is easy to dodge
 }
 
 AbilityConfig["Red Sofa"] = {
@@ -432,6 +433,7 @@ AbilityConfig["Red Sofa"] = {
 	animKey     = "sofaSit",
 	sfxKey      = "sofa_flump",
 	uiHint      = "🛋️ Chill!",
+	biomeEffect = { SKY = { radius = 15 } },   -- flyers spread out
 }
 
 AbilityConfig["Shopping Cart"] = {
@@ -443,10 +445,12 @@ AbilityConfig["Shopping Cart"] = {
 	animKey     = "cartCharge",
 	sfxKey      = "cart_clang",
 	uiHint      = "🛒 RAM!",
+	-- balance (2026-10-22 Sky bends): an Uncommon must beat the Commons
+	biomeEffect = { SKY = { selfSpeed = 1.3 } },
 }
 
 AbilityConfig["Microwave"] = {
-	cooldown    = 20,
+	cooldown    = 18,
 	duration    = 1,
 	targetType  = "all_in_radius",
 	radius      = 12,
@@ -455,7 +459,9 @@ AbilityConfig["Microwave"] = {
 	animKey     = "microwavePulse",
 	sfxKey      = "microwave_ding",
 	uiHint      = "🧊 Freeze!",
-	biomeEffect = { SKY = { radius = 16 } },   -- flyers spread out
+	-- flyers spread out; the 2026-10-22 Sky bends are smooth, so a slow
+	-- costs less there and lasts longer (balance: Epic BODY edge in SKY)
+	biomeEffect = { SKY = { radius = 16, duration = 1.4 } },
 }
 
 AbilityConfig["Bathtub"] = {
@@ -470,7 +476,7 @@ AbilityConfig["Bathtub"] = {
 	uiHint      = "🛁 Splash!",
 	biomeEffect = {
 		OCEAN = { radius = 16 },
-		SKY   = { radius = 15 },   -- flyers spread out
+		SKY   = { radius = 15, victimFor = 2.2 },   -- flyers spread out; smooth Sky bends (see Microwave)
 	},
 }
 

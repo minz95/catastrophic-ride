@@ -83,18 +83,44 @@ function TrackKit.new(track)
 	self.width = track.width
 	self.half  = track.width / 2
 	self.top   = track.trackTop
-	self.geo   = TrackGeometry.new(track.nodes, track.width)
+	self.geo   = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 	return self
+end
+
+--- Road surface Y at node i (nodes may carry a height: { x, z, y }).
+function TrackKit:nodeY(i)
+	return self.nodes[i][3] or self.top
+end
+
+--- How far the road at (x, z) is above trackTop. `y` (optional) picks the
+-- layer where the road passes over itself (data entries { x, z, y }).
+function TrackKit:riseAt(x, z, y)
+	if not self.geo.hasHeights then return 0 end
+	local p = self.geo:project(x, z, nil, nil, y)
+	return self.geo:segHeight(p.seg, p.t) - self.top
 end
 
 -- ─── Helpers ──────────────────────────────────────────────────────────────────
 
---- Segment frame at height y: centred between the nodes, local +Z along
--- travel, local +X = LEFT of travel.
+--- Segment frame at height y (given for a flat road at trackTop): centred
+-- between the nodes, local +Z along travel, local +X = LEFT of travel. On a
+-- raised or sloped road it is lifted by the road's rise and pitched to its
+-- grade, so anything placed in it follows the road.
 function TrackKit:segCF(i, y)
 	local a, b = self.nodes[i], self.nodes[i + 1]
 	local mx, mz = (a[1] + b[1]) * 0.5, (a[2] + b[2]) * 0.5
-	return CFrame.new(mx, y, mz) * CFrame.Angles(0, math.atan2(b[1] - a[1], b[2] - a[2]), 0)
+	local ya, yb = self:nodeY(i), self:nodeY(i + 1)
+	local rise = (ya + yb) * 0.5 - self.top
+	local len = self.geo.segments[i].len
+	return CFrame.new(mx, y + rise, mz) * CFrame.Angles(0, math.atan2(b[1] - a[1], b[2] - a[2]), 0)
+		* CFrame.Angles(-math.atan2(yb - ya, math.max(len, 1e-6)), 0, 0)
+end
+
+--- Length of segment i along its slope.
+function TrackKit:segLen3(i)
+	local len = self.geo.segments[i].len
+	local dy = self:nodeY(i + 1) - self:nodeY(i)
+	return math.sqrt(len * len + dy * dy)
 end
 
 function TrackKit:segLen(i)
@@ -103,16 +129,19 @@ end
 
 --- Track heading (Roblox yaw) near a point, averaged over a few studs so a
 -- prop on a node faces the bisector of the turn.
-function TrackKit:yawNear(x, z)
-	local s = self.geo:project(x, z).s
+function TrackKit:yawNear(x, z, layer)
+	local s = self.geo:project(x, z, nil, nil, layer).s
 	local ax, az = self.geo:pointAt(s - 4)
 	local bx, bz = self.geo:pointAt(s + 4)
 	return math.atan2(-(bx - ax), -(bz - az))
 end
 
---- CFrame at (x, y, z) whose LookVector points down the track.
-function TrackKit:trackCF(x, y, z)
-	return CFrame.new(x, y, z) * CFrame.Angles(0, self:yawNear(x, z), 0)
+--- CFrame at (x, y, z) whose LookVector points down the track. y is given
+-- for a flat road at trackTop; a raised road lifts it. `layer` (optional,
+-- the Y of the road wanted) picks the stretch where the road passes over
+-- itself.
+function TrackKit:trackCF(x, y, z, layer)
+	return CFrame.new(x, y + self:riseAt(x, z, layer), z) * CFrame.Angles(0, self:yawNear(x, z, layer), 0)
 end
 
 --- Inside the lane (plus a margin)?
@@ -197,19 +226,25 @@ function TrackKit:buildSurface(root, style)
 		local color = colors[((i - 1) % #colors) + 1]
 		local slab = TrackKit.part(root, {
 			Name = style.name .. "_" .. i,
-			Size = Vector3.new(self.width, th, len + overlap * 2),
+			Size = Vector3.new(self.width, th, self:segLen3(i) + overlap * 2),
 			CFrame = cf, Color = color, Material = style.material,
 		})
+		slab:SetAttribute("TrackFloor", true)
 		if style.physics ~= false then slab.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
 		if style.joints ~= false and i < #self.nodes - 1 then
 			local b = self.nodes[i + 1]
+			-- Where the grade changes the flat disc would stand proud of the
+			-- slab on one side of the node: sink it by that much.
+			local dg = math.abs(self.geo:grade(i + 1) - self.geo:grade(i))
+			local sink = 0.05 + dg * self.half
 			local joint = TrackKit.part(root, {
 				Name = (style.jointName or (style.name .. "Joint")) .. "_" .. (i + 1),
 				Shape = Enum.PartType.Cylinder,
 				Size = Vector3.new(th, self.width, self.width),
-				CFrame = CFrame.new(b[1], self.top - 0.05 - th / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
+				CFrame = CFrame.new(b[1], self:nodeY(i + 1) - sink - th / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
 				Color = color, Material = style.material,
 			})
+			joint:SetAttribute("TrackFloor", true)
 			if style.physics ~= false then joint.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
 		end
 		if style.decorate then style.decorate(root, i, cf, len) end
@@ -276,7 +311,7 @@ function TrackKit:buildEndWall(root, style)
 	local t = self.track
 	local thick = t.wallThickness or 2
 	local h = t.wallHeight or 8
-	local baseY = t.wallBaseY or (self.top - 0.5)
+	local baseY = (t.wallBaseY or (self.top - 0.5)) + (self:nodeY(n) - self.top)
 	local yaw = math.atan2(dx, dz)
 	local cf = CFrame.new(b[1] - dx * thick / 2, baseY + h / 2, b[2] - dz * thick / 2) * CFrame.Angles(0, yaw, 0)
 	local wall = TrackKit.part(root, {
@@ -349,6 +384,12 @@ function TrackKit:buildWalls(root, style)
 						})
 						p.CustomPhysicalProperties = TrackKit.LOW_FRICTION
 						p.CFrame = cf * CFrame.new(side * offset, 0, along)
+						if self.geo.hasHeights then
+							-- upright, at the road height where the pillar stands
+							local rise = self.geo:segHeight(i, along + len / 2) - self.top
+							p.CFrame = CFrame.new(p.Position.X, midY + rise, p.Position.Z)
+								* CFrame.Angles(0, math.atan2(self.geo.segments[i].dx, self.geo.segments[i].dz), 0)
+						end
 						slot += 1
 					end
 					if style.rail then
@@ -417,6 +458,8 @@ function TrackKit:buildSlowZones(root, style)
 		local chunkLen = len / chunks
 		for c = 1, chunks do
 			local mid = -len / 2 + (c - 0.5) * chunkLen
+			-- none beside a raised road (they would hang in the air)
+			if self.geo:segHeight(i, mid + len / 2) - self.top > 2 then continue end
 			for _, side in ipairs({ -1, 1 }) do
 				local centre = cf * CFrame.new(side * offset, 0, mid)
 				local clear = true
@@ -458,7 +501,7 @@ function TrackKit:buildCheckpoints(root, style)
 	local archH = style.archHeight or 18
 	for idx, cp in ipairs(self.track.checkpoints) do
 		local x, z = cp[1], cp[2]
-		local gateCF = self:trackCF(x, self.top, z)
+		local gateCF = self:trackCF(x, self.top, z, cp[3])
 		local color = TrackKit.CHECKPOINT_COLORS[idx] or TrackKit.CHECKPOINT_COLORS[1]
 		local trigger = TrackKit.part(root, {
 			Name = "Checkpoint" .. idx,
@@ -526,7 +569,7 @@ end
 function TrackKit:buildBoostPads(root, style)
 	local ps = self.track.boostPadSize
 	for i, pd in ipairs(self.track.boostPads) do
-		local cf = self:trackCF(pd[1], self.top + ps[2] / 2, pd[2])
+		local cf = self:trackCF(pd[1], self.top + ps[2] / 2, pd[2], pd[3])
 		local pad = TrackKit.part(root, {
 			Name = "BoostPad_" .. i, Size = Vector3.new(ps[1], ps[2], ps[3]), CFrame = cf,
 			Color = style.color, Material = Enum.Material.Neon,
@@ -557,7 +600,7 @@ end
 function TrackKit:buildDriftCorners(root, style)
 	local s = self.track.driftCornerSize
 	for i, c in ipairs(self.track.driftCorners) do
-		local cf = self:trackCF(c[1], self.top, c[2])
+		local cf = self:trackCF(c[1], self.top, c[2], c[3])
 		local trigger = TrackKit.part(root, {
 			Name = "DriftCorner_" .. i, Size = Vector3.new(s[1], s[2], s[3]),
 			CFrame = cf * CFrame.new(0, s[2] / 2, 0),

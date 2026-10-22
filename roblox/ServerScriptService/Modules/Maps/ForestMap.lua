@@ -18,6 +18,7 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Track = require(ReplicatedStorage.Shared.Tracks.ForestTrack)
+local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
 local TrackKit = require(script.Parent.TrackKit)
 
 local KIT = TrackKit.new(Track)
@@ -235,6 +236,7 @@ end
 local function _buildRiverBridge(root)
 	local riverZ = Track.river.z              -- aligns with N10 mid-sweep
 	local centerX = Track.river.bridgeX       -- approx N10 x
+	local rise = KIT:riseAt(centerX, riverZ)  -- the S3 trestle is raised here
 	-- Wide cross-river belt (east-west under the corridor). Track surface
 	-- continues over the water; bridge planks visually overlay.
 	_part(root, {
@@ -264,7 +266,7 @@ local function _buildRiverBridge(root)
 		_part(root, {
 			Name     = "BridgePlank",
 			Size     = Vector3.new(4, 0.6, 60),
-			Position = Vector3.new(centerX + plank, 1.3, riverZ),
+			Position = Vector3.new(centerX + plank, 1.3 + rise, riverZ),
 			Color    = C.BRIDGE,
 			Material = MAT.WOOD,
 			CanCollide = false,
@@ -276,11 +278,100 @@ local function _buildRiverBridge(root)
 		_part(root, {
 			Name     = "BridgeRailing",
 			Size     = Vector3.new(0.6, 3, 64),
-			Position = Vector3.new(centerX + side * (TRACK_W / 2 + 3), 3, riverZ),
+			Position = Vector3.new(centerX + side * (TRACK_W / 2 + 3), 3 + rise, riverZ),
 			Color    = C.BRIDGE,
 			Material = MAT.WOOD,
 			CanCollide = false,
 			CastShadow = false,
+		})
+	end
+end
+
+-- ─── Trestle under the raised road (S3 climb, S4 spiral) ────────────────────
+
+-- Wooden posts from the ground up to the road in both wall lines, with a
+-- cross beam under the deck. Decoration only (no collision): the walls keep
+-- cars on the road. A post that would stand in the lane of a lower layer
+-- (the spiral's turns below, a road passing underneath) is left out.
+local function _inLowerLane(px, pz, y)
+	for k, seg in ipairs(GEO.segments) do
+		if math.min(seg.ay, seg.by) < y - TrackGeometry.LAYER_GAP then
+			local p = GEO:project(px, pz, k, 0)
+			if p.dist < GEO.halfWidth + 1 and GEO:segHeight(k, p.t) < y - TrackGeometry.LAYER_GAP then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+local function _buildTrestle(root)
+	local tr = Track.trestle
+	if not tr or not GEO.hasHeights then return end
+	local off = KIT:wallOffset()
+	for i, seg in ipairs(GEO.segments) do
+		local n = math.max(1, math.floor(seg.len / tr.spacing))
+		for k = 0, n - 1 do
+			local t = (k + 0.5) * seg.len / n
+			local y = GEO:segHeight(i, t)
+			if y - Track.trackTop >= tr.minRise then
+				local cx, cz = seg.ax + seg.dx * t, seg.az + seg.dz * t
+				local yaw = math.atan2(seg.dx, seg.dz)
+				local placed = 0
+				for _, side in ipairs({ -1, 1 }) do
+					local px, pz = cx - seg.dz * side * off, cz + seg.dx * side * off
+					if not _inLowerLane(px, pz, y) then
+						local h = y - 1   -- ground (0) to just under the deck
+						_part(root, {
+							Name = "TrestlePost", Size = Vector3.new(tr.size, h, tr.size),
+							CFrame = CFrame.new(px, h / 2, pz) * CFrame.Angles(0, yaw, 0),
+							Color = C.BRIDGE, Material = MAT.WOOD, CanCollide = false,
+						})
+						placed += 1
+					end
+				end
+				if placed == 2 then
+					_part(root, {
+						Name = "TrestleBeam", Size = Vector3.new(off * 2 + tr.size, 1.6, 1.6),
+						CFrame = CFrame.new(cx, y - 2, cz) * CFrame.Angles(0, yaw, 0),
+						Color = C.BRIDGE, Material = MAT.WOOD, CanCollide = false, CastShadow = false,
+					})
+				end
+			end
+		end
+	end
+end
+
+-- ─── Giant tree inside the S4 spiral ────────────────────────────────────────
+
+local function _buildGiantTree(root)
+	local g = Track.giantTree
+	if not g then return end
+	_part(root, {
+		Name = "GiantTreeTrunk", Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(g.height, g.r * 2, g.r * 2),
+		CFrame = CFrame.new(g.x, g.height / 2, g.z) * CFrame.Angles(0, 0, math.pi / 2),
+		Color = C.OAK_TRUNK, Material = MAT.WOOD, CanCollide = false,
+	})
+	-- root flares at the foot, inside the spiral's inner wall
+	for k = 0, 5 do
+		local a = k * math.pi / 3
+		_part(root, {
+			Name = "GiantTreeRoot", Size = Vector3.new(10, 8, 22),
+			CFrame = CFrame.new(g.x + math.cos(a) * (g.r + 4), 3, g.z + math.sin(a) * (g.r + 4))
+				* CFrame.Angles(0, -a + math.pi / 2, 0) * CFrame.Angles(-0.5, 0, 0),
+			Color = C.OAK_TRUNK, Material = MAT.WOOD, CanCollide = false,
+		})
+	end
+	-- canopy high above the top turn of the road (Y 40 + car + camera)
+	local blobs = { { 0, 0, 0, 60 }, { 40, -8, 20, 42 }, { -38, -6, -22, 44 }, { 10, 10, -40, 38 }, { -20, 12, 40, 40 } }
+	for i, b in ipairs(blobs) do
+		_part(root, {
+			Name = "GiantTreeLeaf", Shape = Enum.PartType.Ball,
+			Size = Vector3.new(b[4] * 2, b[4] * 2, b[4] * 2),
+			Position = Vector3.new(g.x + b[1], g.height + b[2], g.z + b[3]),
+			Color = i % 2 == 0 and C.OAK_LEAF2 or C.OAK_LEAF, Material = MAT.LEAVES,
+			CanCollide = false, CastShadow = false,
 		})
 	end
 end
@@ -482,7 +573,9 @@ local function _buildTrees(root)
 
 	-- Reject tree positions near ANY part of the centerline (the old check
 	-- only looked at node points, so trees grew inside long straights).
+	local g = Track.giantTree
 	local function _insideTrack(tx, tz)
+		if g and (tx - g.x) ^ 2 + (tz - g.z) ^ 2 < (g.r + 100) ^ 2 then return true end   -- the spiral
 		return GEO:project(tx, tz).dist < TRACK_W / 2 + 10
 	end
 
@@ -533,6 +626,8 @@ local function buildForest()
 	_buildWalls(trackSub)
 	_buildSlowZones(trackSub)
 	_buildRiverBridge(trackSub)
+	_buildTrestle(trackSub)
+	_buildGiantTree(trackSub)
 	_buildMudZones(trackSub)
 	_buildRockDecor(trackSub)
 	_buildJumpRamps(trackSub)

@@ -12,6 +12,25 @@ local MapChecks = {}
 
 local function round(n) return math.floor(n + 0.5) end
 
+--- Road surface Y at progress s (trackTop on a flat road).
+local function roadY(w, s)
+	return w.geo:heightAt(s)
+end
+MapChecks.roadY = roadY
+
+--- Does a shape reach the body band of a car on the road at progress s?
+-- (on a road that passes over itself, parts of the other layer do not)
+local function atRoad(w, sh, s)
+	if not w.geo.hasHeights then return true end
+	return MapQuery.inBand(sh, roadY(w, s), w.band or { 0.6, 3.0 })
+end
+MapChecks.atRoad = atRoad
+
+--- Is (x, z) inside the lane of the road layer at height y?
+local function inLaneAt(w, x, z, y)
+	return w.geo:project(x, z, nil, nil, w.geo.hasHeights and y or nil).dist < w.track.width / 2
+end
+
 function MapChecks.tagged(w, tag)
 	local out = {}
 	for _, sh in ipairs(w.allShapes) do
@@ -115,7 +134,8 @@ function MapChecks.laneObstacles(w, isWall)
 	local hits, seen = {}, {}
 	MapChecks.eachLanePoint(w, 1, 3, 1.5, function(x, z, s, lat)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) and not MapChecks.isEndWall(w, ob) then
+			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) and atRoad(w, ob, s)
+				and not MapChecks.isEndWall(w, ob) then
 				seen[ob] = true
 				table.insert(hits, string.format("%s at s=%d lateral=%d", ob.name, s, lat))
 			end
@@ -131,7 +151,7 @@ function MapChecks.wallIntrusions(w, isWall, margin)
 	local worst = {}
 	MapChecks.eachLanePoint(w, 2, margin, 2, function(x, z, s, lat, seg)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if isWall(ob.name) and MapQuery.contains(ob, x, z) and not MapChecks.isEndWall(w, ob) then
+			if isWall(ob.name) and MapQuery.contains(ob, x, z) and atRoad(w, ob, s) and not MapChecks.isEndWall(w, ob) then
 				local node = seg + 1
 				local depth = half - math.abs(lat)
 				if not worst[node] or depth > worst[node].depth then
@@ -181,7 +201,7 @@ function MapChecks.slowZonesInLane(w)
 	local hit = {}
 	MapChecks.eachLanePoint(w, 4, 3, 3, function(x, z, s, _, seg)
 		for _, zsh in ipairs(grid.near(x, z, 1)) do
-			if MapQuery.contains(zsh, x, z) then
+			if MapQuery.contains(zsh, x, z) and atRoad(w, zsh, s) then
 				hit[zsh.name] = hit[zsh.name] or { s = s, seg = seg }
 			end
 		end
@@ -202,7 +222,7 @@ local crosses = MapQuery.crosses
 function MapChecks.gateSpan(w, tag, label)
 	local gaps, half = {}, w.track.width / 2
 	for _, box in ipairs(MapChecks.tagged(w, tag)) do
-		local p = w.geo:project(box.cx, box.cz)
+		local p = w.geo:project(box.cx, box.cz, nil, nil, w.geo.hasHeights and box.yMin + 1 or nil)
 		local missed, total, worst = 0, 0, nil
 		for lat = -(half - 2), half - 2, 1 do
 			total += 1
@@ -239,14 +259,14 @@ function MapChecks.wallGaps(w, isWall, offset, maxGap)
 	end
 	local grid = MapQuery.grid(walls, 32)
 	local geo, half = w.geo, w.track.width / 2
-	local function covered(x, z)
+	local function covered(x, z, y)
 		for _, wl in ipairs(grid.near(x, z, 1)) do
-			if MapQuery.contains(wl, x, z) then return true end
+			if MapQuery.contains(wl, x, z) and (not geo.hasHeights or MapQuery.inBand(wl, y, w.band)) then return true end
 		end
 		return false
 	end
-	local function inLane(x, z)
-		return geo:project(x, z).dist < half
+	local function inLane(x, z, y)
+		return inLaneAt(w, x, z, y)
 	end
 	local gaps = {}
 	for _, side in ipairs({ -1, 1 }) do
@@ -261,7 +281,8 @@ function MapChecks.wallGaps(w, isWall, offset, maxGap)
 		end
 		for s = 2, geo.length - 2, 0.5 do
 			local x, z = geo:offsetPoint(s, side * offset)
-			if covered(x, z) or inLane(x, z) then
+			local y = geo:heightAt(s)
+			if covered(x, z, y) or inLane(x, z, y) then
 				flush()
 			else
 				runStart = runStart or s
@@ -289,7 +310,8 @@ function MapChecks.wallGaps(w, isWall, offset, maxGap)
 				for t = ta, tb, 0.5 do
 					local x = sg.ax + sg.dx * t + rx * offset
 					local z = sg.az + sg.dz * t + rz * offset
-					if covered(x, z) or inLane(x, z) then
+					local y = geo:segHeight(i, 0)   -- the node between A and B
+					if covered(x, z, y) or inLane(x, z, y) then
 						run = 0
 					else
 						run += 0.5
@@ -309,7 +331,7 @@ end
 function MapChecks.onLane(w, tag)
 	local bad, half = {}, w.track.width / 2
 	for _, sh in ipairs(MapChecks.tagged(w, tag)) do
-		local p = w.geo:project(sh.cx, sh.cz)
+		local p = w.geo:project(sh.cx, sh.cz, nil, nil, w.geo.hasHeights and sh.yMin + 1 or nil)
 		local reach = math.max(sh.hu, sh.hv)
 		if p.dist + reach > half then
 			table.insert(bad, string.format("%s at (%d,%d): %d studs from the centerline, edge %d studs past the lane edge",
@@ -327,7 +349,7 @@ function MapChecks.onCenterline(w, tag)
 	for s = 0, w.geo.length, 1 do
 		local x, z = w.geo:pointAt(s)
 		for _, sh in ipairs(list) do
-			if not hit[sh] and MapQuery.contains(sh, x, z) then hit[sh] = true end
+			if not hit[sh] and MapQuery.contains(sh, x, z) and atRoad(w, sh, s) then hit[sh] = true end
 		end
 	end
 	local bad = {}
@@ -345,24 +367,31 @@ end
 function MapChecks.floorCoverage(w, isFloor)
 	local floors = {}
 	for _, sh in ipairs(w.allShapes) do
-		if sh.canCollide and isFloor(sh.name) and math.abs(sh.yMax - w.track.trackTop) < 0.5 then
+		if sh.canCollide and isFloor(sh.name)
+			and (w.geo.hasHeights or math.abs(sh.yMax - w.track.trackTop) < 0.5) then
 			table.insert(floors, sh)
 		end
 	end
 	local grid = MapQuery.grid(floors, 32)
 	local holes = {}
-	MapChecks.eachLanePoint(w, 2, 2, 2, function(x, z, s, _, seg)
+	-- a floor part under (x, z) whose top is at the road height there
+	-- (`dip`: the round joint outside a turn is sunk where the grade
+	-- changes, TrackKit:buildSurface, so it never stands proud of a slab)
+	local function floored(x, z, y, dip)
 		for _, f in ipairs(grid.near(x, z, 1)) do
-			if MapQuery.contains(f, x, z) then return end
+			if MapQuery.contains(f, x, z) and f.yMin <= y and f.yMax >= y - (dip or 0.6) then return true end
 		end
+		return false
+	end
+	MapChecks.eachLanePoint(w, 2, 2, 2, function(x, z, s, _, seg)
+		if floored(x, z, roadY(w, s)) then return end
 		local node = seg + 1
 		holes[node] = (holes[node] or 0) + 1
 	end)
 	for r = 2, w.track.width / 2 - 2, 2 do
 		MapChecks.eachCornerPoint(w, r, "outer", 2, function(x, z, node)
-			for _, f in ipairs(grid.near(x, z, 1)) do
-				if MapQuery.contains(f, x, z) then return end
-			end
+			local dg = math.abs(w.geo:grade(node) - w.geo:grade(node - 1))
+			if floored(x, z, w.track.nodes[node][3] or w.track.trackTop, 0.6 + dg * w.track.width / 2) then return end
 			holes[node] = (holes[node] or 0) + 1
 		end)
 	end
