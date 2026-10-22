@@ -56,8 +56,7 @@ Outputs:
   (`trackTop`, `obstacleBand`): boats ride over the 1-stud dock, flyers hover
   at Y 84.
 - `mapchecks.luau` / `biomespecs.luau` are the geometry checks every map gets:
-  lane obstacles, walls cutting into the lane (inside of turns, the Sky
-  figure-8 crossings), any hole in the walls (outside of turns included),
+  lane obstacles, walls cutting into the lane (inside of turns), any hole in the walls (outside of turns included),
   wall spurs past a corner, slow zones on the lane, gates a car can drive
   past, pads off the lane, floor holes, decoration in the lane.
 - `kinesim.luau` is a 2D kinematic race simulator. It is a fair model of this

@@ -1,11 +1,11 @@
 -- SkyMap.lua (ModuleScript; called by MapBuilders/SkyMapBuilder.server.lua)
 -- Builds the SKY biome map per racetrack spec §4:
---   - planar figure-8 centerline (two 360° loops + plaza + canyon + descent)
+--   - planar centerline: two 270° cloud bends (an S, never crossing
+--     itself) + canyon + descent
 --     Z = 1500 → -2000 at altitude Y = 80
 --   - 50-wide cloud road on a continuous floor, fenced by a see-through air
---     barrier with a cloud rail at flyer height (open where the figure-8
---     crosses itself), cloud puffs along the edges, invisible ceiling
---   - CP1 at Loop A's western extent, CP2 at Loop B's eastern extent
+--     barrier with a cloud rail at flyer height, cloud puffs along the edges, invisible ceiling
+--   - CP1 at bend A's western extent, CP2 at bend B's eastern extent
 --
 -- Every position and size comes from ReplicatedStorage.Shared.Tracks.SkyTrack.
 -- The parts all tracks share (floor, fence, triggers, finish, start) come
@@ -183,7 +183,7 @@ local function _buildCorridor(root)
 	-- the edge is easy to read. Until 2026-10-22 the pillars alternated two
 	-- neon colours: 60-stud stripes on both sides, hard on the eyes and not
 	-- like a sky. (One slab per stretch instead of pillars left a pocket at
-	-- the figure-8 crossings that trapped the offline sim's novice driver.)
+	-- the old figure-8 crossings that trapped the offline sim's novice driver.)
 	KIT:buildWalls(root, {
 		name = "SkyBarrier_",
 		pillars = {

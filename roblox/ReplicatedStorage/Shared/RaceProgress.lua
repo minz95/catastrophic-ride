@@ -7,7 +7,7 @@
 --
 -- Pass the segment index returned last time (`lastSeg`) for each car: the
 -- search then stays near it, so a car is never "teleported" to another part
--- of the track that happens to pass close by (SKY's figure-8 crosses itself).
+-- of the track that happens to pass close by (two stretches of a track can run close by).
 --
 -- Biomes without track data fall back to distance along -Z.
 

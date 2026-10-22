@@ -51,7 +51,30 @@ function BiomeSpecs.map(biome, cfg)
 			R.expect(MapChecks.laneObstacles(intended, cfg.isWall)).toBeEmpty("non-wall obstacles inside the lane")
 		end)
 
-		R.it("walls never cut into the lane (inside of turns, track crossings)", function()
+		R.it("the track never crosses or touches itself (no forks, no open fence)", function()
+			-- two stretches far apart along the track must not share lane:
+			-- a crossing looks like a fork and leaves the fence open
+			local geo, w = intended.geo, intended.track.width
+			local pts = {}
+			for s = 0, geo.length, 10 do
+				local x, z = geo:pointAt(s)
+				table.insert(pts, { s, x, z })
+			end
+			local bad = {}
+			for i = 1, #pts do
+				for j = i + 1, #pts do
+					local a, b = pts[i], pts[j]
+					if b[1] - a[1] > 4 * w and math.sqrt((a[2] - b[2]) ^ 2 + (a[3] - b[3]) ^ 2) < w + 4 then
+						table.insert(bad, string.format("s=%d (%d,%d) meets s=%d", a[1], a[2], a[3], b[1]))
+						break
+					end
+				end
+				if #bad >= 5 then break end
+			end
+			R.expect(bad).toBeEmpty("places where the lane meets itself")
+		end)
+
+		R.it("walls never cut into the lane (inside of turns)", function()
 			R.expect(MapChecks.wallIntrusions(intended, cfg.isWall, 6)).toBeEmpty("wall intrusions deeper than 6 studs from the lane edge")
 		end)
 
@@ -208,18 +231,7 @@ function BiomeSpecs.sim(biome)
 			for i, rep in ipairs(reps) do
 				for _, profile in ipairs({ "expert", "average", "novice" }) do
 					local r = run(shipped, profile, 1, car(i))
-					-- a novice may need one off-track rescue (R): SKY's figure-8
-					-- crossings leave the wall open where the other lane passes,
-					-- and a wobbly line slips out there now and then (1 in 4
-					-- seeds, any build). Getting stuck is never allowed.
-					local allowed = 0
-					if profile == "novice" then
-						allowed = 1
-						for _, e in ipairs(r.respawns) do
-							if e.reason ~= "off_track" then allowed = 0 end
-						end
-					end
-					if not r.finished or #r.respawns > allowed then
+					if not r.finished or #r.respawns > 0 then
 						table.insert(bad, string.format("%s / %s: finished=%s at s=%d/%d, %d respawns",
 							rep.label, profile, tostring(r.finished), r.maxProgress, r.trackLength, #r.respawns))
 					end
