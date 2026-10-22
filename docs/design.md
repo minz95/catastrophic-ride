@@ -205,6 +205,34 @@ spot with its track section; the RESULTS report lists them per section.
   were created again each time, so Studio bots saw two or three crafting
   timers. Every such screen now removes its old copy (`tests/specs/ui`).
 
+- **2026-10-22 — Crafting balance from simulation.** `tools/balance.luau`
+  measured every item. Before: an Epic ENGINE + SPECIAL was worth ~25 s of a
+  100 s race (Rocket ×3 bursts, an 8 s boost), Rare / Epic bodies were the
+  worst (weight was × rarity by mistake), Red Sofa and Suitcase stopped their
+  own car, Toilet Paper (Common) cost a rival 12 s. Now: rarity × 1 / 1.15 /
+  1.3 / 1.5; boost 1.6 s + 0.01 s per point (≤ 3.6 s); top-speed band ±1.5%;
+  OCEAN / SKY turn ranges narrow (turning decides those races); bursts sized
+  by (multiplier − 1) × duration × uses ≈ 2–4 s per race; lifts glide ×1.1–1.2;
+  speed buffs stack to ×2 at most. Result: each tier is worth more than the
+  one below, Epic − Common ≈ 1–4.5 s per slot, no item is in more than ~20%
+  of winning builds, the rarest build of a field wins about half the time.
+- **2026-10-22 — Less waiting.** FARMING starts with 12 + 6 × players items
+  and drops two waves of rarer items at 35% and 65% of the phase (100 items
+  for 4 players filled every inventory in 15–50 s of 90). CRAFTING: once half
+  the players have submitted, the rest get 25 s. RACING: the winner's finish
+  leaves the others 30 s (a HUD countdown), then non-finishers are listed as
+  DNF (a timed-out race used to show nobody).
+- **2026-10-22 — Nobody falls off after the finish.** A finished car is parked
+  (MaxSpeed 0, no respawns); the road runs 150 studs (Sky 220) past the line
+  to an end wall. In Studio the winner ran off the 50-stud run-off and fell
+  again and again.
+- **2026-10-22 — Obstacles that look like obstacles.** Falling logs are round
+  trunks with bark, cut ends and moss, marked by a red ring 1.2 s before they
+  drop, lying still where they land with a gap always open; mud is a dark wet
+  patch with puddles (was a see-through brown box). Hitting either knocks the
+  car through `CarImpact` (a second BodyVelocity did nothing). All effect and
+  notice text is English.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

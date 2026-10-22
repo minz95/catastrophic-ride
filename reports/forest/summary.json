@@ -2,118 +2,118 @@
   "biome": "FOREST",
   "fun": {
     "aggregate": {
-      "closeShare": 0.16965229517115457,
-      "fastestWinRate": 0.4166666666666667,
+      "closeShare": 0.44939272436388156,
+      "fastestWinRate": 0.25,
       "finishRate": 1,
-      "finishSpread": 39.71249999999901,
-      "gap12": 5.591666666666349,
-      "lastTime": 128.33749999999526,
-      "leadChanges": 1.5833333333333333,
-      "overtakes": 7.333333333333333,
+      "finishSpread": 19.006944444443363,
+      "gap12": 2.4222222222220844,
+      "lastTime": 124.31388888888311,
+      "leadChanges": 2.3333333333333335,
+      "overtakes": 11.083333333333334,
       "races": 12,
-      "racingShare": 0.34842366036582456,
+      "racingShare": 0.34122742140857343,
       "sections": [
         {
           "deciding": 0,
-          "hits": 12,
+          "hits": 0,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 5.52527998458686,
+          "meanTime": 6.364384397342282,
           "name": "S1 start straight",
           "respawns": 0,
-          "spread": 2.625566637319495
+          "spread": 1.350744162324102
         },
         {
           "deciding": 0,
-          "hits": 13,
+          "hits": 2,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 8.050457984177323,
+          "meanTime": 8.503760257187421,
           "name": "S2 outcrop hairpin",
           "respawns": 0,
-          "spread": 3.4529192324975733
+          "spread": 0.724122771884523
         },
         {
           "deciding": 0,
-          "hits": 62,
+          "hits": 47,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 16.935110763292123,
+          "meanTime": 17.924244985987013,
           "name": "S3 river sweeper",
           "respawns": 0,
-          "spread": 6.971077242751826
+          "spread": 2.6439467377392725
         },
         {
           "deciding": 0,
-          "hits": 15,
+          "hits": 38,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 19.973655778947474,
+          "meanTime": 19.886960532229608,
           "name": "S4 farm U-bend",
           "respawns": 0,
-          "spread": 5.34428114293313
+          "spread": 2.8083005386957343
         },
         {
           "deciding": 0,
-          "hits": 45,
+          "hits": 112,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.617999528016831,
+          "meanTime": 10.577582999559326,
           "name": "S5 mud hook",
           "respawns": 0,
-          "spread": 4.905524653690609
+          "spread": 3.12414821555689
         },
         {
           "deciding": 12,
-          "hits": 83,
+          "hits": 230,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 25.971440787581287,
+          "meanTime": 31.06890264874731,
           "name": "S6 pine switchbacks",
           "respawns": 0,
-          "spread": 11.854976365526776
+          "spread": 7.571964844230121
         },
         {
           "deciding": 0,
-          "hits": 20,
+          "hits": 23,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 18.92235146968994,
+          "meanTime": 18.970460475238184,
           "name": "S7 ridge chicane",
           "respawns": 0,
-          "spread": 5.376835759736513
+          "spread": 3.0467119665173676
         }
       ],
-      "speedPlaceCorr": -0.5359508650073961,
-      "winnerTime": 88.62499999999625
+      "speedPlaceCorr": -0.16377258987716248,
+      "winnerTime": 105.30694444443975
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
-        "ok": false,
-        "value": 0.16965229517115457,
+        "ok": true,
+        "value": 0.44939272436388156,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.4166666666666667,
+        "value": 0.25,
         "why": "the fastest build should not always win"
       },
       {
@@ -127,21 +127,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 39.71249999999901,
+        "value": 19.006944444443363,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 1.5833333333333333,
+        "value": 2.3333333333333335,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.34842366036582456,
+        "value": 0.34122742140857343,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -149,7 +149,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.5359508650073961,
+        "value": -0.16377258987716248,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -157,7 +157,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 88.62499999999625,
+        "value": 105.30694444443975,
         "why": "a race should take about 90 s"
       }
     ]
@@ -165,7 +165,7 @@
   "generatedBy": "tools/report.luau",
   "geometry": {
     "respawnOffTrackSamples": 0,
-    "respawnSamples": 153,
+    "respawnSamples": 156,
     "solidOnlyBecauseOfCanCollideBug": 0,
     "treesInLane": 0,
     "wallIntrusionSpots": 0
@@ -173,241 +173,241 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 5,
+    "fastestCarWins": 3,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
-      "average": 2.625,
-      "expert": 2.375,
+      "average": 3.4583333333333335,
+      "expert": 1.5416666666666667,
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.861111111111111,
-      "sweaty": 3.138888888888889
+      "casual": 3.6666666666666665,
+      "sweaty": 3.3333333333333335
     },
-    "spearmanRarityVsPlace": -0.4508650073959741,
-    "spearmanTopSpeedVsPlace": -0.5359508650073961
+    "spearmanRarityVsPlace": -0.2647758698308573,
+    "spearmanTopSpeedVsPlace": -0.16377258987716248
   },
   "raceRuns": [
     {
       "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 64.86,
-      "progress": 7561,
+      "maxSpeed": 67.965,
+      "progress": 7641,
       "respawns": 0,
-      "time": 98.74999999999568,
+      "time": 106.43333333332858,
       "world": "authored"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 64.86,
-      "progress": 7561,
+      "maxSpeed": 67.965,
+      "progress": 7641,
       "respawns": 0,
-      "time": 98.74999999999568,
+      "time": 106.43333333332858,
       "world": "live code"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
       "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 64.86,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 99.93333333332895,
-      "world": "authored"
-    },
-    {
-      "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 64.86,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 99.93333333332895,
-      "world": "live code"
-    },
-    {
-      "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 12,
-      "maxSpeed": 64.86,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 120.6166666666611,
-      "world": "authored"
-    },
-    {
-      "car": "slowest",
-      "carBuild": "Microwave + Hair Dryer + Balloon Bunch",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 12,
-      "maxSpeed": 64.86,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 120.6166666666611,
-      "world": "live code"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "expert",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 105.3499999999953,
-      "world": "authored"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "expert",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 105.3499999999953,
-      "world": "live code"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 106.6666666666619,
-      "world": "authored"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 106.6666666666619,
-      "world": "live code"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "novice",
       "finished": true,
       "impacts": 6,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
+      "maxSpeed": 67.965,
+      "progress": 7642,
       "respawns": 0,
-      "time": 123.36666666666095,
+      "time": 111.13333333332831,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "driver": "average",
+      "finished": true,
+      "impacts": 6,
+      "maxSpeed": 67.965,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 111.13333333332831,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 9,
+      "maxSpeed": 67.965,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 122.93333333332764,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 9,
+      "maxSpeed": 67.965,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 122.93333333332764,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Red Sofa + Drill + Umbrella",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 2,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7641,
+      "respawns": 0,
+      "time": 105.59999999999529,
       "world": "authored"
     },
     {
       "car": "p50",
-      "carBuild": "Barrel + Magnifying Glass + Lantern + Alarm Clock",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 6,
-      "maxSpeed": 68.63869090909091,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 123.36666666666095,
-      "world": "live code"
-    },
-    {
-      "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
+      "carBuild": "Red Sofa + Drill + Umbrella",
       "driver": "expert",
       "finished": true,
-      "impacts": 0,
-      "maxSpeed": 73.14,
-      "progress": 7561,
+      "impacts": 2,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7641,
       "respawns": 0,
-      "time": 95.11666666666255,
+      "time": 105.59999999999529,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Red Sofa + Drill + Umbrella",
+      "driver": "average",
+      "finished": true,
+      "impacts": 8,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 109.86666666666171,
       "world": "authored"
     },
     {
+      "car": "p50",
+      "carBuild": "Red Sofa + Drill + Umbrella",
+      "driver": "average",
+      "finished": true,
+      "impacts": 8,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 109.86666666666171,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Red Sofa + Drill + Umbrella",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 20,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 123.29999999999428,
+      "world": "authored"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Red Sofa + Drill + Umbrella",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 20,
+      "maxSpeed": 68.7411868309327,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 123.29999999999428,
+      "world": "live code"
+    },
+    {
       "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
       "driver": "expert",
       "finished": true,
-      "impacts": 0,
-      "maxSpeed": 73.14,
-      "progress": 7561,
+      "impacts": 1,
+      "maxSpeed": 70.035,
+      "progress": 7642,
       "respawns": 0,
-      "time": 95.11666666666255,
-      "world": "live code"
-    },
-    {
-      "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
-      "driver": "average",
-      "finished": true,
-      "impacts": 0,
-      "maxSpeed": 73.14,
-      "progress": 7561,
-      "respawns": 0,
-      "time": 96.28333333332915,
+      "time": 103.5499999999954,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
-      "driver": "average",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "driver": "expert",
       "finished": true,
-      "impacts": 0,
-      "maxSpeed": 73.14,
-      "progress": 7561,
+      "impacts": 1,
+      "maxSpeed": 70.035,
+      "progress": 7642,
       "respawns": 0,
-      "time": 96.28333333332915,
+      "time": 103.5499999999954,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
-      "driver": "novice",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "driver": "average",
       "finished": true,
-      "impacts": 14,
-      "maxSpeed": 73.14,
-      "progress": 7561,
+      "impacts": 5,
+      "maxSpeed": 70.035,
+      "progress": 7641,
       "respawns": 0,
-      "time": 116.06666666666136,
+      "time": 107.69999999999517,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Bamboo Raft + Rocket + Cactus + Log",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "driver": "average",
+      "finished": true,
+      "impacts": 5,
+      "maxSpeed": 70.035,
+      "progress": 7641,
+      "respawns": 0,
+      "time": 107.69999999999517,
+      "world": "live code"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
       "driver": "novice",
       "finished": true,
-      "impacts": 14,
-      "maxSpeed": 73.14,
-      "progress": 7561,
+      "impacts": 16,
+      "maxSpeed": 70.035,
+      "progress": 7642,
       "respawns": 0,
-      "time": 116.06666666666136,
+      "time": 123.16666666666096,
+      "world": "authored"
+    },
+    {
+      "car": "fastest",
+      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 16,
+      "maxSpeed": 70.035,
+      "progress": 7642,
+      "respawns": 0,
+      "time": 123.16666666666096,
       "world": "live code"
     }
   ],
   "track": {
-    "length": 7613.949699724847,
-    "nodes": 73
+    "length": 7794.500908079038,
+    "nodes": 79
   }
 }

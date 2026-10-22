@@ -10,8 +10,10 @@
 local SpeedModifiers = {}
 SpeedModifiers.__index = SpeedModifiers
 
-function SpeedModifiers.new(baseSpeed)
-	return setmetatable({ base = baseSpeed, effects = {} }, SpeedModifiers)
+--- `maxBoost` (optional): the product of the multipliers above 1 is capped
+-- at this (Constants.SPEED_STACK_MAX for MaxSpeed); slowdowns still apply.
+function SpeedModifiers.new(baseSpeed, maxBoost)
+	return setmetatable({ base = baseSpeed, effects = {}, maxBoost = maxBoost }, SpeedModifiers)
 end
 
 --- Adds or replaces an effect. `expiresAt` (seconds, same clock as `now`
@@ -36,15 +38,18 @@ end
 
 --- Effective speed at time `now`; expired effects are dropped.
 function SpeedModifiers:value(now)
-	local v = self.base
+	local up, down = 1, 1
 	for id, e in pairs(self.effects) do
 		if e.expiresAt and now and now >= e.expiresAt then
 			self.effects[id] = nil
+		elseif e.mult > 1 then
+			up *= e.mult
 		else
-			v *= e.mult
+			down *= e.mult
 		end
 	end
-	return v
+	if self.maxBoost then up = math.min(up, self.maxBoost) end
+	return self.base * up * down
 end
 
 return SpeedModifiers

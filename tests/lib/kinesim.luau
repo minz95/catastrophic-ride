@@ -15,7 +15,18 @@
 --     car = { maxSpeed, turnSpeed, boostDuration, radius },
 --     profile = Autopilot.PROFILES.average, seed = 1,
 --     respawn = "legacy" | "track", timeout = 180,
+--     onStep = function(ctx) end,   -- optional: abilities (tests/lib/balance.luau)
+--     logs = true | { interval = 8, count = 3 },   -- FOREST falling logs (HazardPlan)
+--     avoid = false,                -- the driver does not look out for them
 --   })
+--
+-- onStep gets, every step: ctx.t, ctx.s (progress), ctx.speed, ctx.maxSpeed
+-- (with every multiplier), ctx.err (heading error), ctx.straight(dist)
+-- (true when the next `dist` studs bend less than 12°), ctx.mods / ctx.turn
+-- (SpeedModifiers for MaxSpeed / TurnSpeed, expiry on the race clock),
+-- ctx.knock(along, side) (a CarImpact shove), ctx.refillBoost(), ctx.gauge(),
+-- ctx.ground(untilT) (mud and slow zones do not touch the car until untilT:
+-- Drill, or a lift above them) and ctx.res (the result table).
 
 local KineSim = {}
 
@@ -83,7 +94,22 @@ function KineSim.run(world, opts)
 
 	local ap = Autopilot.new(geo, opts.profile, seed)
 	local driveState = VehicleController.newState()
-	local mods = SpeedModifiers.new(car.maxSpeed)
+	local mods = SpeedModifiers.new(car.maxSpeed, Constants.SPEED_STACK_MAX)
+	-- Falling logs, as HazardManager drops them: a warning marker LOG_WARN s
+	-- before the log, which then lies still for LOG_LIFETIME s.
+	local HazardPlan = env.requirePath("ReplicatedStorage.Shared.HazardPlan")
+	local H = Constants.HAZARDS
+	local logCfg = opts.logs == true and {} or opts.logs
+	local logs, nextDrop, logClear = {}, (logCfg and (logCfg.interval or 8)) or math.huge, nil
+	local logRng = (function()
+		local st = (opts.seed or 1) * 7907 + 3
+		return function()
+			st = (st * 1103515245 + 12345) % 2147483648
+			return st / 2147483648
+		end
+	end)()
+	local turnMods = SpeedModifiers.new(1)
+	local groundFreeUntil = -1
 	local raceStartY = BiomeConfig[world.biome].raceStartY
 
 	-- Boost pads: the race activates a seeded K-of-N subset (RacingManager).
@@ -110,7 +136,7 @@ function KineSim.run(world, opts)
 		finished = false, time = nil,
 		checkpoints = {}, impacts = {}, contacts = 0, escapes = {}, respawns = {},
 		samples = {}, sections = {}, effects = {}, blockedBy = {},
-		pads = { active = 0 },
+		pads = { active = 0 }, logHits = 0, logsDropped = 0,
 		car = car, profile = opts.profileName, seed = seed,
 		visibility = world.visibility, respawnMode = respawnMode,
 		drifts = 0, turbos = 0, driftSeconds = 0,
@@ -177,15 +203,56 @@ function KineSim.run(world, opts)
 	for _ = 1, steps do
 		t += dt
 		local speed = math.sqrt(vx * vx + vz * vz)
+		local turnK = turnMods:value(t)
+		local seen = nil
+		if logCfg then
+			if t >= nextDrop then
+				nextDrop = t + (logCfg.interval or 8)
+				logClear = logClear or HazardPlan.keepClear(geo, track)
+				for _, sp in ipairs(HazardPlan.logSpots(geo, track.width, maxS, logCfg.count or 3, logRng, logClear)) do
+					local lo, hi = HazardPlan.span(sp)
+					table.insert(logs, { spot = sp, landAt = t + H.LOG_WARN, goneAt = t + H.LOG_WARN + H.LOG_LIFETIME,
+						half = (hi - lo) / 2, hit = false })
+					res.logsDropped += 1
+				end
+			end
+			if opts.avoid ~= false then
+				seen = {}
+				for _, lg in ipairs(logs) do
+					if t < lg.goneAt then table.insert(seen, { x = lg.spot.x, z = lg.spot.z, half = lg.half }) end
+				end
+			end
+		end
 		local keys, info = ap:update({
+			hazards = seen,
 			x = x, z = z, yaw = yaw, speed = speed,
 			forward = vx * -math.sin(yaw) + vz * -math.cos(yaw),
-			maxSpeed = mods:value(t), turnSpeed = effTurn, t = t,
+			maxSpeed = mods:value(t), turnSpeed = effTurn * turnK, t = t,
 			isSky = isSky, biome = world.biome, travelYaw = driveState.travelYaw,
 		})
 		if opts.noDrift then keys.Shift = nil end
 		local s = info.s
 		if s > maxS then maxS = s end
+		if opts.onStep then
+			opts.onStep({
+				t = t, s = s, speed = speed, maxSpeed = mods:value(t), err = info.err, keys = keys,
+				mods = mods, turn = turnMods, res = res,
+				straight = function(dist)
+					local y0 = geo:yawAt(s)
+					for d = 10, dist, 10 do
+						if math.abs(VehicleController.wrapAngle(geo:yawAt(s + d) - y0)) > math.rad(12) then return false end
+					end
+					return true
+				end,
+				knock = function(along, side)
+					local lx, lz = -math.sin(yaw), -math.cos(yaw)
+					VehicleController.knock(driveState, lx * along - lz * (side or 0), lz * along + lx * (side or 0), 0, lx, lz, mods:value(t))
+				end,
+				refillBoost = function() gauge = 1 end,
+				gauge = function() return gauge end,
+				ground = function(untilT) groundFreeUntil = math.max(groundFreeUntil, untilT) end,
+			})
+		end
 
 		-- Section bookkeeping (by furthest progress)
 		local sec = sectionFor(maxS)
@@ -260,6 +327,7 @@ function KineSim.run(world, opts)
 			end
 		end
 		if res.finished then break end
+		if t < groundFreeUntil then nowMud, nowSlow = false, false end
 		if nowMud ~= insideMud then
 			insideMud = nowMud
 			if nowMud then mods:set("mud", Constants.MUD_SPEED_MULT) else mods:remove("mud") end
@@ -296,7 +364,7 @@ function KineSim.run(world, opts)
 		end
 		local drifting = driveState.drifting
 		local cmd = VehicleController.command(input, {
-			maxSpeed = maxNow, turnSpeed = car.turnSpeed, isSky = isSky, drifting = drifting,
+			maxSpeed = maxNow, turnSpeed = car.turnSpeed * turnK, isSky = isSky, drifting = drifting,
 			biome = world.biome, yaw = yaw,
 			torque = car.torque, dt = dt, actualForward = vx * tx0 + vz * tz0,
 		}, driveState)
@@ -356,6 +424,41 @@ function KineSim.run(world, opts)
 				end
 			end
 			if not pushed then break end
+		end
+
+		-- Landed logs: a rectangle (long axis across the lane); the first touch
+		-- is the RacingManager obstacle hit (× OBSTACLE_BOUNCE_SPEED_MULT and a
+		-- knock away), then the car slides along it.
+		for _, lg in ipairs(logs) do
+			if t >= lg.landAt and t < lg.goneAt then
+				local sp = lg.spot
+				local ux, uz = math.cos(sp.yaw), -math.sin(sp.yaw)     -- CFrame X axis (long)
+				local wx, wz = -uz, ux
+				local dx, dz = x - sp.x, z - sp.z
+				local u, w = dx * ux + dz * uz, dx * wx + dz * wz
+				local hu, hw = sp.length / 2 + r, H.LOG_SIZE[2] / 2 + r
+				if math.abs(u) < hu and math.abs(w) < hw then
+					local pu, pw = hu - math.abs(u), hw - math.abs(w)
+					local nx, nz
+					if pu < pw then
+						nx, nz = ux * (u >= 0 and 1 or -1), uz * (u >= 0 and 1 or -1)
+						x += nx * pu; z += nz * pu
+					else
+						nx, nz = wx * (w >= 0 and 1 or -1), wz * (w >= 0 and 1 or -1)
+						x += nx * pw; z += nz * pw
+					end
+					local vn = vx * nx + vz * nz
+					if vn < 0 then vx -= vn * nx; vz -= vn * nz end
+					if not lg.hit then
+						lg.hit = true
+						res.logHits += 1
+						mods:set("obstacle", Constants.OBSTACLE_BOUNCE_SPEED_MULT, t + Constants.OBSTACLE_BOUNCE_PENALTY_DURATION)
+						local lx, lz = -math.sin(yaw), -math.cos(yaw)
+						VehicleController.knock(driveState, nx * Constants.OBSTACLE_BOUNCE_PUSH, nz * Constants.OBSTACLE_BOUNCE_PUSH, 0, lx, lz, mods:value(t))
+						table.insert(res.effects, { t = t, effect = "log_hit", s = s })
+					end
+				end
+			end
 		end
 
 		if t - lastSample >= KineSim.SAMPLE_EVERY then

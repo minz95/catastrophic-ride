@@ -162,6 +162,7 @@ voteLabel.Parent            = bg
 -- ─── Populate results ─────────────────────────────────────────────────────────
 
 local function _formatTime(seconds)
+	if type(seconds) ~= "number" then return "DNF" end   -- did not finish in time
 	return string.format("%d:%05.2f", math.floor(seconds / 60), seconds % 60)
 end
 

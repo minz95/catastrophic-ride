@@ -214,6 +214,28 @@ def check(sc, report):
         if c.get("abilities"):
             out += check_abilities(sc, events)
         out += check_driving(c, events)
+        out += check_after_finish(c, events)
+    return out
+
+
+def check_after_finish(c, events):
+    """Nobody falls or respawns after crossing the line (2026-10-22: the
+    winner ran off the end of the road and fell again and again), the
+    others get the finish grace, logs are seen and passed."""
+    out = []
+    fin = {}
+    for e in events:
+        if e.get("kind") == "finish":
+            fin.setdefault(e.get("userId"), e.get("t"))
+    late = [e for e in events if e.get("kind") == "respawn" and e.get("userId") in fin and e.get("t", 0) > fin[e.get("userId")]]
+    if late:
+        out.append(("fail", "%d respawns after a racer finished (%s)" % (
+            len(late), ", ".join("%s %s" % (e.get("userId"), e.get("reason")) for e in late[:5]))))
+    grace = [e for e in events if e.get("kind") == "phase_shortened" and e.get("phase") == "RACING"]
+    logs = [e for e in events if e.get("kind") == "hazard" and e.get("type") == "fallingLog"]
+    log_hits = [e for e in events if e.get("kind") == "hit" and e.get("by") == "FallingLog"]
+    print("    after finish: %d finished, %d late respawns, grace %s; falling logs %d, hit %d times" % (
+        len(fin), len(late), "yes" if grace else "no", len(logs), len(log_hits)))
     return out
 
 
@@ -295,8 +317,9 @@ LIFT_KEYS = {"rise", "hover", "emergencyFloat", "fullBuoyancy", "softLanding", "
 FASTER_KEYS = {"rocketBurst", "reverseBoost", "spinBurst", "overclock", "redline", "windRide",
                "umbrellaSail", "raftGlide", "skateSlide", "kiteGlide", "flagAura", "barrelRoll",
                "boost", "boostRocket", "leadFlag", "momentum"}
+# (2026-10-22: Red Sofa and the SKY Umbrella no longer slow their own car)
 SLOWER_KEYS = {"noodleSnare", "magnetPull", "slipped", "splashed", "cactusSting", "frozen",
-               "slipstream", "stall", "sofaFortress", "parachute"}
+               "slipstream", "stall"}
 STEER_LOCK_KEYS = {"steerDisable", "redline"}
 LIFT_MIN = 1.5   # studs
 

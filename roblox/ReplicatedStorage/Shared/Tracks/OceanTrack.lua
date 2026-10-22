@@ -100,7 +100,7 @@ Track.nodes = {
 	{ 127.2, -2466.1 }, -- N56
 	{ 171.1, -2510 }, -- N57
 	{ 187.2, -2570 }, -- N58  onto the final straight
-	{ 187.2, -2870 }, -- N59  runoff past the finish
+	{ 187.2, -2950 }, -- N59  runoff past the finish (150 studs, end wall; was 70)
 }
 
 -- Named sections for reports (inclusive node index ranges).

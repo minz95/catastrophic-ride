@@ -31,6 +31,7 @@ local _contests   = {}   -- { [itemId] = { players={}, presses={}, endTick } }
 local _phaseTimer = nil
 local _active     = false
 local _itemCounter = 0   -- monotonic ID so every spawned part gets a unique key
+local _farmRound   = 0   -- item waves of an older round do nothing
 
 -- Per-biome farm zone constants. Hardcoded baseY values match the surface Y
 -- each MapBuilder uses for its farm ground; bounding-box inference is unreliable
@@ -44,10 +45,10 @@ local BIOME_ZONES = {
 
 -- ─── Weighted spawn pool ──────────────────────────────────────────────────────
 
-local function _buildSpawnPool()
+local function _buildSpawnPool(dist)
 	local pool = {}
 	for rarity, names in pairs(ItemConfig._byRarity) do
-		local count = Constants.RARITY_SPAWN_DIST[rarity] or 0
+		local count = (dist or Constants.RARITY_SPAWN_DIST)[rarity] or 0
 		for _ = 1, count do
 			if #names == 0 then continue end
 			local name = names[math.random(#names)]
@@ -64,10 +65,13 @@ end
 
 -- ─── Spawn items ──────────────────────────────────────────────────────────────
 
-local function _spawnItems(biome)
-	_items = {}
-	print(string.format("[FarmingManager] _spawnItems called, biome=%s", tostring(biome)))
-	local pool = _buildSpawnPool()
+-- `count` items (default: the whole pool) drawn with the rarity odds `dist`
+-- (default RARITY_SPAWN_DIST). `keep`: add to the items already out (a wave).
+local function _spawnItems(biome, count, dist, keep)
+	if not keep then _items = {} end
+	count = count or Constants.ITEM_SPAWN_COUNT
+	print(string.format("[FarmingManager] _spawnItems called, biome=%s count=%d", tostring(biome), count))
+	local pool = _buildSpawnPool(dist)
 	print(string.format("[FarmingManager] Pool size: %d", #pool))
 	local mapCfg = require(ServerScriptService.Modules.BiomeConfig).get(biome)
 	-- Convert "FOREST" → "ForestMap" to match MapBuilder naming convention
@@ -108,10 +112,16 @@ local function _spawnItems(biome)
 		tostring(biome), spawnCX, spawnCZ, halfX, halfZ, baseY))
 
 	local usedPositions = {}
+	if keep then
+		for _, it in pairs(_items) do
+			if not it.taken and it.part and it.part.Parent then table.insert(usedPositions, it.part.Position) end
+		end
+	end
+	local already = #usedPositions
 	local MIN_SEPARATION = 6  -- studs
 
 	for i, entry in ipairs(pool) do
-		if i > Constants.ITEM_SPAWN_COUNT then break end
+		if i > count then break end
 
 		local cfg = ItemConfig[entry.name]
 		if not cfg then continue end
@@ -279,7 +289,8 @@ local function _spawnItems(biome)
 		}
 	end
 
-	print(string.format("[FarmingManager] Spawned %d items in %s", #usedPositions, biome))
+	print(string.format("[FarmingManager] Spawned %d items in %s", #usedPositions - already, biome))
+	return #usedPositions - already
 end
 
 -- ─── Rarity rank (lower = weaker) ────────────────────────────────────────────
@@ -809,8 +820,25 @@ GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.FARMING then
 		_active = true
 		_farmingStartTick = tick()
+		_farmRound += 1
+		local round = _farmRound
 		print("[FarmingManager] Starting FARMING phase, biome =", biome)
-		_spawnItems(biome)
+		-- Item supply follows the player count, and waves of rarer items land
+		-- later in the phase (Constants.FARM_SUPPLY): with 100 items for 4
+		-- players every inventory was full 15–50 s into a 90 s phase.
+		local n = #Players:GetPlayers()
+		local first = _spawnItems(biome, Constants.farmSupply(n))
+		Telemetry.record("item_wave", { wave = 0, count = first, players = n })
+		local length = GameManager.phaseDuration(Constants.PHASES.FARMING) or Constants.PHASE_DURATION.FARMING
+		for w, wave in ipairs(Constants.FARM_SUPPLY.WAVES) do
+			task.delay(length * wave.at, function()
+				if not _active or _farmRound ~= round then return end
+				local players = #Players:GetPlayers()
+				local count = _spawnItems(biome, math.max(1, math.ceil(players * wave.perPlayer)), wave.dist, true)
+				Telemetry.record("item_wave", { wave = w, count = count, players = players })
+				RemoteEvents.ScreenEffect:FireAllClients("itemWave", { count = count, rare = wave.label })
+			end)
+		end
 		print("[FarmingManager] After spawn: total items registered =", (function()
 			local n = 0; for _ in pairs(_items) do n = n + 1 end; return n
 		end)())

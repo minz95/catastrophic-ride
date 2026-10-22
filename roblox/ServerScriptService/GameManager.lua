@@ -88,6 +88,39 @@ local function _transition(newPhase, seconds)
 	RemoteEvents.PhaseChanged:FireAllClients(newPhase)
 end
 
+-- Phase timer: `fn` runs `seconds` from now (replacing the previous timer).
+-- Kept so a phase can be shortened (GameManager.shortenPhase).
+local _phaseEnd, _phaseEndsAt = nil, nil
+local function _schedule(seconds, fn)
+	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
+	_phaseEnd = fn
+	_phaseEndsAt = workspace:GetServerTimeNow() + seconds
+	_phaseTimer = task.delay(seconds, function()
+		_phaseEnd = nil
+		fn()
+	end)
+end
+
+--- Ends `phase` (if it is the current one) at most `seconds` from now and
+-- moves the clients' countdown (PhaseEndsAt). Returns true when it did.
+-- Crafting: once most players have submitted; racing: after the winner.
+function GameManager.shortenPhase(phase, seconds, showClock)
+	if _currentPhase ~= phase or not _phaseEnd then return false end
+	local now = workspace:GetServerTimeNow()
+	if _phaseEndsAt and _phaseEndsAt - now <= seconds then return false end
+	_schedule(seconds, _phaseEnd)
+	if showClock ~= false then ReplicatedStorage:SetAttribute("PhaseEndsAt", now + seconds) end
+	Telemetry.record("phase_shortened", { phase = phase, seconds = seconds })
+	return true
+end
+
+-- RacingManager: the standings when the race ends on its timer (finishers,
+-- then everyone else by progress). Without it a timed-out race showed no one.
+local _raceStandings = nil
+function GameManager.setRaceStandings(fn)
+	_raceStandings = fn
+end
+
 -- ─── Phase entry logic ────────────────────────────────────────────────────────
 
 local function _startLobby()
@@ -136,9 +169,7 @@ function _startFarming()
 	_transition(Constants.PHASES.FARMING, seconds)
 
 	-- Countdown and auto-advance
-	_phaseTimer = task.delay(seconds, function()
-		_startCrafting()
-	end)
+	_schedule(seconds, _startCrafting)
 end
 
 function _startCrafting()
@@ -146,23 +177,24 @@ function _startCrafting()
 	local seconds = _duration("CRAFTING", Constants.PHASE_DURATION.CRAFTING)
 	_transition(Constants.PHASES.CRAFTING, seconds)
 
-	_phaseTimer = task.delay(seconds, function()
-		_startRacing()
-	end)
+	_schedule(seconds, _startRacing)
 end
 
 function _startRacing()
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
 	_transition(Constants.PHASES.RACING)
 
-	-- Failsafe timeout, counted from GO (Modules/RaceStart)
-	_phaseTimer = task.delay(_duration("RACING", Constants.RACING_TIMEOUT) + Constants.RACE_COUNTDOWN, function()
-		_startResults({})
+	-- Failsafe timeout, counted from GO (Modules/RaceStart). A winner's
+	-- finish shortens it to Constants.FINISH_GRACE (RacingManager).
+	_schedule(_duration("RACING", Constants.RACING_TIMEOUT) + Constants.RACE_COUNTDOWN, function()
+		local ok, order = pcall(function() return _raceStandings and _raceStandings() end)
+		_startResults((ok and order) or {})
 	end)
 end
 
 function _startResults(finishOrder)
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
+	_phaseEnd = nil
 	_transition(Constants.PHASES.RESULTS)
 	RemoteEvents.RaceFinished:FireAllClients(finishOrder)
 
@@ -177,7 +209,6 @@ end
 
 function GameManager.allPlayersSubmittedCraft()
 	if _currentPhase == Constants.PHASES.CRAFTING then
-		task.cancel(_phaseTimer)
 		_startRacing()
 	end
 end

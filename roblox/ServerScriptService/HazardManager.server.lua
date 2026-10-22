@@ -1,6 +1,7 @@
 -- HazardManager.server.lua
 -- Periodic track hazards configured in BiomeConfig[biome].hazards:
---   fallingLog (FOREST) – logs drop onto the lane ahead of the leader
+--   fallingLog (FOREST) – logs drop onto the lane ahead of the leader, after a
+--                         warning marker (Shared/HazardPlan: always a way past)
 --   waveFlood  (OCEAN)  – the water level rises for a few seconds
 --   gustZone   (SKY)    – a sideways gust shoves every racer
 -- Runs only during RACING. Each race gets a new id; loops from an older race
@@ -19,6 +20,8 @@ local GameManager    = require(ServerScriptService.GameManager)
 local SessionManager = require(ServerScriptService.SessionManager)
 local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
+local HazardPlan     = require(ReplicatedStorage.Shared.HazardPlan)
+local HazardLook     = require(ServerScriptService.Modules.HazardLook)
 
 local H = Constants.HAZARDS
 
@@ -52,28 +55,37 @@ end
 local function _dropLogs(hz, biome)
 	local geo = RaceProgress.geometry(biome)
 	if not geo then return end
+	local H = Constants.HAZARDS
 	local cfg = BiomeConfig[biome]
-	local groundY = (cfg and cfg.raceStartY) or 2
-	local lead = _leaderProgress()
-	for _ = 1, hz.count or 3 do
-		local s = lead + H.LOG_AHEAD_MIN + math.random() * (H.LOG_AHEAD_MAX - H.LOG_AHEAD_MIN)
-		if s > geo.length - 60 then continue end   -- keep the finish clear
-		local lateral = (math.random() * 2 - 1) * H.LOG_LATERAL
-		local x, z = geo:offsetPoint(s, lateral)
-		local yaw = geo:yawAt(s) + (math.random() - 0.5) * 0.6
-		local log = Instance.new("Part")
-		log.Name = "FallingLog"
-		log.Size = Vector3.new(H.LOG_SIZE[1], H.LOG_SIZE[2], H.LOG_SIZE[3])
-		-- long axis across the lane
-		log.CFrame = CFrame.new(x, groundY + H.LOG_DROP_HEIGHT, z) * CFrame.Angles(0, yaw, 0)
-		log.Color = Color3.fromRGB(100, 65, 35)
-		log.Material = Enum.Material.Wood
-		log.Anchored = false
-		log.CanCollide = true
-		log.Parent = _folder()
-		CollectionService:AddTag(log, "Obstacle")   -- RacingManager connects it
-		Debris:AddItem(log, H.LOG_LIFETIME)
-		Telemetry.record("hazard", { type = "fallingLog", s = math.floor(s), x = math.floor(x), z = math.floor(z) })
+	local tracks = ReplicatedStorage.Shared:FindFirstChild("Tracks")
+	local mod = tracks and tracks:FindFirstChild(biome:sub(1, 1) .. biome:sub(2):lower() .. "Track")
+	local data = mod and require(mod)
+	local top = data and data.trackTop or (((cfg and cfg.raceStartY) or 2) - 1)
+	local spots = HazardPlan.logSpots(geo, geo.width, _leaderProgress(), hz.count or 3, math.random,
+		data and HazardPlan.keepClear(geo, data))
+	for _, spot in ipairs(spots) do
+		local ground = Vector3.new(spot.x, top, spot.z)
+		local marker = HazardLook.warnMarker(ground)
+		marker.Parent = _folder()
+		Debris:AddItem(marker, H.LOG_WARN + 0.6)
+		Telemetry.record("hazard", { type = "fallingLog", s = math.floor(spot.s), x = math.floor(spot.x), z = math.floor(spot.z),
+			lateral = math.floor(spot.lateral * 10) / 10 })
+		task.delay(H.LOG_WARN, function()
+			-- falls from LOG_DROP_HEIGHT onto the marked spot, then lies still
+			-- (anchored, so the open side of the lane stays open)
+			local rest = CFrame.new(ground + Vector3.new(0, H.LOG_SIZE[2] / 2, 0)) * CFrame.Angles(0, spot.yaw, 0)
+			local model = HazardLook.logModel(rest + Vector3.new(0, H.LOG_DROP_HEIGHT, 0))
+			model.Parent = _folder()
+			local steps = 8
+			for k = 1, steps do
+				local f = k / steps
+				model:PivotTo(rest + Vector3.new(0, H.LOG_DROP_HEIGHT * (1 - f * f), 0))
+				task.wait(0.04)
+			end
+			model:PivotTo(rest)
+			CollectionService:AddTag(model.PrimaryPart, "Obstacle")   -- RacingManager connects it
+			Debris:AddItem(model, H.LOG_LIFETIME)
+		end)
 	end
 end
 

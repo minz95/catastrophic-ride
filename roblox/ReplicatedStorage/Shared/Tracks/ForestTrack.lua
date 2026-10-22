@@ -131,7 +131,7 @@ ForestTrack.nodes = {
 	{ 394.7, -2744.7 }, -- N76
 	{ 435, -2785 }, -- N77
 	{ 449.7, -2840 }, -- N78  onto the final straight
-	{ 449.7, -3100 }, -- N79  runoff past the finish
+	{ 449.7, -3200 }, -- N79  runoff past the finish (150 studs, end wall; was 50)
 }
 
 -- Named sections for reports (inclusive node index ranges).

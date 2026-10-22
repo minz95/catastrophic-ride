@@ -76,6 +76,7 @@ Track.nodes = {
 	{   0,-1400 }, -- N31
 	{   0,-1700 }, -- N32
 	{   0,-2000 }, -- N33 FinishLine
+	{   0,-2220 }, -- N34 runoff past the finish (220 studs: flyers are fast; end wall; there was none)
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -85,7 +86,7 @@ Track.sections = {
 	{ name = "S3 crossover plaza", from = 12, to = 14 },
 	{ name = "S4 cloud loop B",   from = 14, to = 22 },
 	{ name = "S5 crystal canyon", from = 22, to = 30 },
-	{ name = "S6 final descent",  from = 30, to = 33 },
+	{ name = "S6 final descent",  from = 30, to = 34 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.SKY.zFinish.

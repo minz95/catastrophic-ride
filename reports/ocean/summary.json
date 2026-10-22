@@ -2,16 +2,16 @@
   "biome": "OCEAN",
   "fun": {
     "aggregate": {
-      "closeShare": 0.1925459507703432,
-      "fastestWinRate": 0.4166666666666667,
+      "closeShare": 0.46637511310813706,
+      "fastestWinRate": 0.25,
       "finishRate": 1,
-      "finishSpread": 34.365277777775816,
-      "gap12": 6.11527777777743,
-      "lastTime": 118.52638888888345,
-      "leadChanges": 1.3333333333333333,
-      "overtakes": 11,
+      "finishSpread": 26.509722222220717,
+      "gap12": 1.5458333333332455,
+      "lastTime": 117.57777777777238,
+      "leadChanges": 1.9166666666666667,
+      "overtakes": 10.083333333333334,
       "races": 12,
-      "racingShare": 0.3305932075354649,
+      "racingShare": 0.3288173513143892,
       "sections": [
         {
           "deciding": 0,
@@ -20,70 +20,70 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 5.4399588382447055,
+          "meanTime": 6.1848843358283325,
           "name": "S1 harbor launch",
           "respawns": 0,
-          "spread": 1.8404097266812915
+          "spread": 1.2826480983860638
         },
         {
           "deciding": 0,
-          "hits": 9,
+          "hits": 1,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.825555644095424,
+          "meanTime": 10.22118163049518,
           "name": "S2 island arc",
           "respawns": 0,
-          "spread": 4.50825264524334
+          "spread": 1.9381335894404532
         },
         {
           "deciding": 0,
-          "hits": 0,
+          "hits": 1,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.086646517319126,
+          "meanTime": 9.172007109392192,
           "name": "S3 open channel",
           "respawns": 0,
-          "spread": 2.6509240183723315
+          "spread": 2.2835014438393917
         },
         {
           "deciding": 0,
-          "hits": 19,
+          "hits": 30,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 13.903283933657496,
+          "meanTime": 15.16815863910283,
           "name": "S4 reef U-bend",
           "respawns": 0,
-          "spread": 6.42237097031703
+          "spread": 6.022126258440847
         },
         {
           "deciding": 12,
-          "hits": 24,
+          "hits": 26,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 20.53683511272706,
+          "meanTime": 20.080851466962276,
           "name": "S5 return channel",
           "respawns": 0,
-          "spread": 12.510160388874395
+          "spread": 12.594624279284387
         },
         {
           "deciding": 0,
-          "hits": 11,
+          "hits": 6,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 18.34912086922323,
+          "meanTime": 19.514880448622197,
           "name": "S6 reef hairpin",
           "respawns": 0,
-          "spread": 5.654341922584293
+          "spread": 3.6700791131548285
         },
         {
           "deciding": 0,
@@ -92,28 +92,28 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 21.369015751395313,
+          "meanTime": 21.542064147370272,
           "name": "S7 kelp channel",
           "respawns": 0,
-          "spread": 3.312989002434369
+          "spread": 1.5779690353066371
         }
       ],
-      "speedPlaceCorr": -0.2523313396359894,
-      "winnerTime": 84.16111111110762
+      "speedPlaceCorr": -0.20728021094604165,
+      "winnerTime": 91.06805555555167
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
-        "ok": false,
-        "value": 0.1925459507703432,
+        "ok": true,
+        "value": 0.46637511310813706,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.4166666666666667,
+        "value": 0.25,
         "why": "the fastest build should not always win"
       },
       {
@@ -127,21 +127,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 34.365277777775816,
+        "value": 26.509722222220717,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 1.3333333333333333,
+        "value": 1.9166666666666667,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.3305932075354649,
+        "value": 0.3288173513143892,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -149,7 +149,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.2523313396359894,
+        "value": -0.20728021094604165,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -157,7 +157,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 84.16111111110762,
+        "value": 91.06805555555167,
         "why": "a race should take about 90 s"
       }
     ]
@@ -165,7 +165,7 @@
   "generatedBy": "tools/report.luau",
   "geometry": {
     "respawnOffTrackSamples": 0,
-    "respawnSamples": 119,
+    "respawnSamples": 121,
     "solidOnlyBecauseOfCanCollideBug": 0,
     "treesInLane": 0,
     "wallIntrusionSpots": 0
@@ -173,241 +173,241 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 5,
+    "fastestCarWins": 3,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
-      "average": 2.9166666666666665,
-      "expert": 2.0833333333333335,
+      "average": 3.5,
+      "expert": 1.5,
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.861111111111111,
-      "sweaty": 3.138888888888889
+      "casual": 3.75,
+      "sweaty": 3.25
     },
-    "spearmanRarityVsPlace": -0.2440671425815164,
-    "spearmanTopSpeedVsPlace": -0.2523313396359894
+    "spearmanRarityVsPlace": -0.24892276030612903,
+    "spearmanTopSpeedVsPlace": -0.20728021094604165
   },
   "raceRuns": [
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 59.22,
+      "maxSpeed": 62.055,
       "progress": 5875,
       "respawns": 0,
-      "time": 96.03333333332917,
+      "time": 93.7833333333293,
       "world": "authored"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 59.22,
+      "maxSpeed": 62.055,
       "progress": 5875,
       "respawns": 0,
-      "time": 96.03333333332917,
+      "time": 93.7833333333293,
       "world": "live code"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "average",
       "finished": true,
-      "impacts": 0,
-      "maxSpeed": 59.22,
+      "impacts": 1,
+      "maxSpeed": 62.055,
       "progress": 5875,
       "respawns": 0,
-      "time": 101.9999999999955,
+      "time": 102.59999999999546,
       "world": "authored"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "average",
       "finished": true,
-      "impacts": 0,
-      "maxSpeed": 59.22,
+      "impacts": 1,
+      "maxSpeed": 62.055,
       "progress": 5875,
       "respawns": 0,
-      "time": 101.9999999999955,
+      "time": 102.59999999999546,
       "world": "live code"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "novice",
       "finished": true,
-      "impacts": 2,
-      "maxSpeed": 59.22,
-      "progress": 5874,
+      "impacts": 3,
+      "maxSpeed": 62.055,
+      "progress": 5875,
       "respawns": 0,
-      "time": 128.5833333333278,
+      "time": 114.99999999999476,
       "world": "authored"
     },
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Balloon Bunch",
+      "carBuild": "Microwave + Drill + Umbrella",
       "driver": "novice",
       "finished": true,
-      "impacts": 2,
-      "maxSpeed": 59.22,
-      "progress": 5874,
+      "impacts": 3,
+      "maxSpeed": 62.055,
+      "progress": 5875,
       "respawns": 0,
-      "time": 128.5833333333278,
+      "time": 114.99999999999476,
       "world": "live code"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 61.529216318696584,
-      "progress": 5874,
+      "maxSpeed": 62.56722917481424,
+      "progress": 5875,
       "respawns": 0,
-      "time": 96.43333333332914,
+      "time": 93.31666666666266,
       "world": "authored"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 61.529216318696584,
-      "progress": 5874,
+      "maxSpeed": 62.56722917481424,
+      "progress": 5875,
       "respawns": 0,
-      "time": 96.43333333332914,
+      "time": 93.31666666666266,
       "world": "live code"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "average",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 61.529216318696584,
+      "maxSpeed": 62.56722917481424,
       "progress": 5875,
       "respawns": 0,
-      "time": 101.19999999999554,
+      "time": 100.21666666666226,
       "world": "authored"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "average",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 61.529216318696584,
+      "maxSpeed": 62.56722917481424,
       "progress": 5875,
       "respawns": 0,
-      "time": 101.19999999999554,
+      "time": 100.21666666666226,
       "world": "live code"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "novice",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 61.529216318696584,
+      "impacts": 3,
+      "maxSpeed": 62.56722917481424,
       "progress": 5875,
       "respawns": 0,
-      "time": 131.69999999999695,
+      "time": 119.43333333332784,
       "world": "authored"
     },
     {
       "car": "p50",
-      "carBuild": "Skateboard + Magnifying Glass + Cactus",
+      "carBuild": "Log + Cup Noodle + Lantern + Alarm Clock",
       "driver": "novice",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 61.529216318696584,
+      "impacts": 3,
+      "maxSpeed": 62.56722917481424,
       "progress": 5875,
       "respawns": 0,
-      "time": 131.69999999999695,
+      "time": 119.43333333332784,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 66.78,
-      "progress": 5874,
+      "maxSpeed": 63.94499999999999,
+      "progress": 5875,
       "respawns": 0,
-      "time": 83.6666666666632,
+      "time": 89.91666666666285,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
-      "maxSpeed": 66.78,
-      "progress": 5874,
+      "maxSpeed": 63.94499999999999,
+      "progress": 5875,
       "respawns": 0,
-      "time": 83.6666666666632,
+      "time": 89.91666666666285,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "average",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 66.78,
+      "impacts": 0,
+      "maxSpeed": 63.94499999999999,
       "progress": 5875,
       "respawns": 0,
-      "time": 89.61666666666287,
+      "time": 95.69999999999585,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "average",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 66.78,
+      "impacts": 0,
+      "maxSpeed": 63.94499999999999,
       "progress": 5875,
       "respawns": 0,
-      "time": 89.61666666666287,
+      "time": 95.69999999999585,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "novice",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 66.78,
+      "impacts": 0,
+      "maxSpeed": 63.94499999999999,
       "progress": 5875,
       "respawns": 0,
-      "time": 109.34999999999508,
+      "time": 112.64999999999489,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Kite + Fan + Magnet + Bathtub",
+      "carBuild": "Kite + Treadmill + Camera + Bathtub",
       "driver": "novice",
       "finished": true,
-      "impacts": 1,
-      "maxSpeed": 66.78,
+      "impacts": 0,
+      "maxSpeed": 63.94499999999999,
       "progress": 5875,
       "respawns": 0,
-      "time": 109.34999999999508,
+      "time": 112.64999999999489,
       "world": "live code"
     }
   ],
   "track": {
-    "length": 5947.817859543297,
+    "length": 6027.817859543297,
     "nodes": 59
   }
 }

@@ -39,6 +39,27 @@ keyHint.TextScaled       = true
 keyHint.Font             = Enum.Font.Gotham
 keyHint.Parent           = screenGui
 
+-- ── Finish countdown: shown once the winner is in (RacingManager shortens the
+-- race to Constants.FINISH_GRACE and sets PhaseEndsAt) ──────────────────────
+local PhaseClock = require(ReplicatedStorage.Shared.PhaseClock)
+local raceClock = Instance.new("TextLabel")
+raceClock.Name             = "RaceClock"
+raceClock.Size             = UDim2.new(0, 260, 0, 34)
+raceClock.Position         = UDim2.new(0.5, -130, 0, 64)
+raceClock.BackgroundTransparency = 1
+raceClock.TextColor3       = Color3.fromRGB(255, 220, 90)
+raceClock.TextStrokeTransparency = 0.3
+raceClock.TextScaled       = true
+raceClock.Font             = Enum.Font.GothamBlack
+raceClock.Visible          = false
+raceClock.Parent           = screenGui
+
+local function _updateRaceClock()
+	local left = PhaseClock.remaining(nil)
+	raceClock.Visible = left ~= nil
+	if left then raceClock.Text = "🏁 TIME LEFT " .. PhaseClock.format(left) end
+end
+
 -- ── Boost Bar ──────────────────────────────────────────────────────────────
 local boostBar = Instance.new("Frame")
 boostBar.Name            = "BoostBar"
@@ -337,6 +358,7 @@ local function _enableHUD(biome)
 	if _runConn then _runConn:Disconnect() end
 	_runConn = RunService.Heartbeat:Connect(function()
 		_updateSpeed(_vehicle)
+		_updateRaceClock()
 	end)
 end
 

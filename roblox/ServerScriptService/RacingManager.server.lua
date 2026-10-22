@@ -297,6 +297,9 @@ local _manualRespawnCooldown = {}   -- { [userId] = expireTick }
 
 RemoteEvents.RequestRespawn.OnServerInvoke = function(player)
 	if not _active then return "denied: not racing" end
+	for _, f in ipairs(_finishOrder) do
+		if f.userId == player.UserId then return "denied: finished" end
+	end
 	if not RaceStart.isGo() then return "denied: countdown" end
 	local now = tick()
 	if (_manualRespawnCooldown[player.UserId] or 0) > now then
@@ -327,17 +330,20 @@ local function _onObstacleTouched(part, hit)
 	_speed(player, _seatOf(vehicle), "obstacle",
 		Constants.OBSTACLE_BOUNCE_SPEED_MULT, Constants.OBSTACLE_BOUNCE_PENALTY_DURATION)
 
+	-- Bounce off: a knock away from the obstacle plus a little spin, sent to
+	-- the driver like a car hit (a second body mover, as before, fought
+	-- DriveVelocity and did almost nothing).
 	local primary = vehicle.PrimaryPart
 	if primary then
 		local away = _flat(primary.Position - part.Position)
 		if away.Magnitude > 1e-3 then
-			local bv = Instance.new("BodyVelocity")
-			bv.Velocity = away.Unit * 30
-			bv.MaxForce = Vector3.new(1e5, 1e4, 1e5)
-			bv.Parent   = primary
-			Debris:AddItem(bv, 0.25)
+			local d = away.Unit * Constants.OBSTACLE_BOUNCE_PUSH
+			local look = primary.CFrame.LookVector
+			local side = look.X * away.Unit.Z - look.Z * away.Unit.X
+			RemoteEvents.CarImpact:FireClient(player, d.X, d.Z, side * Constants.IMPACT.MAX_SPIN * 0.4, Constants.IMPACT.BIG_HIT)
 		end
 	end
+	EffectFx.play("bump", player, nil)
 	RemoteEvents.ScreenEffect:FireClient(player, "collision", {})
 end
 
@@ -770,6 +776,15 @@ local function _onFinishTouched(hit)
 	local elapsed = tick() - _startTick
 	table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
 	SessionManager.setFinished(player, elapsed)
+	-- Park the car: it brakes to a stop in the run-off past the line. (Studio
+	-- 2026-10-22: finished cars kept driving, ran off the end of the road and
+	-- fell, respawned at the end and fell again until the race ended.)
+	local _, vehicle = _ownerOf(hit)
+	local seat = vehicle and _seatOf(vehicle)
+	if seat then
+		VehicleTuning.set(seat, "MaxSpeed", "finished", 0)
+		VehicleTuning.set(seat, "TurnSpeed", "finished", 0.5)
+	end
 	Telemetry.record("finish", { userId = player.UserId, time = elapsed, place = #_finishOrder })
 
 	RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
@@ -778,8 +793,35 @@ local function _onFinishTouched(hit)
 	if #_finishOrder >= math.max(1, _totalRacers) then
 		_active = false
 		GameManager.raceComplete(_finishOrder)
+	elseif #_finishOrder == 1 then
+		-- the winner is in: everyone else gets FINISH_GRACE s, not the full
+		-- timeout (finished players used to wait up to a minute)
+		if GameManager.shortenPhase(Constants.PHASES.RACING, Constants.FINISH_GRACE) then
+			RemoteEvents.ScreenEffect:FireAllClients("finishGrace", { duration = 3 })
+		end
 	end
 end
+
+-- Standings when the race ends on its timer: finishers in order, then the
+-- rest by how far they got (time = nil → "DNF" on the results screen).
+GameManager.setRaceStandings(function()
+	local out, done = {}, {}
+	for _, f in ipairs(_finishOrder) do
+		table.insert(out, f)
+		done[f.userId] = true
+	end
+	local rest = {}
+	for _, player in ipairs(Players:GetPlayers()) do
+		local d = SessionManager.getData(player)
+		if d and d.vehicleModel and not done[player.UserId] then
+			table.insert(rest, { userId = player.UserId, dnf = true, progress = math.floor(d.raceProgress or 0) })
+		end
+	end
+	table.sort(rest, function(a, b) return a.progress > b.progress end)
+	for _, r in ipairs(rest) do table.insert(out, r) end
+	Telemetry.record("race_timeout", { finished = #_finishOrder, dnf = #rest })
+	return out
+end)
 
 local function _setupFinishLine()
 	-- Prefer the active biome's map so another biome's sensor is never used.

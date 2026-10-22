@@ -26,6 +26,8 @@ local C = {
 	GRASS        = Color3.fromRGB(76,  120, 50),
 	DIRT         = Color3.fromRGB(120, 85,  50),
 	MUD          = Color3.fromRGB(80,  55,  30),
+	MUD_DARK     = Color3.fromRGB(58,  39,  22),
+	MUD_WATER    = Color3.fromRGB(96,  74,  48),
 	TRACK        = Color3.fromRGB(55,  50,  45),
 	TRACK_EDGE   = Color3.fromRGB(240, 240, 240),
 	RIVER        = Color3.fromRGB(55,  110, 200),
@@ -221,6 +223,7 @@ local function _buildWalls(root)
 		name = "TrackWall", color = C.WALL, material = MAT.WOOD,
 		cap = { name = "TrackWallCap", color = C.WALL_TOP, material = MAT.NEON },
 	})
+	KIT:buildEndWall(root, { name = "TrackWall_End", color = C.WALL, material = MAT.WOOD })
 end
 
 local function _buildSlowZones(root)
@@ -285,7 +288,11 @@ end
 -- ─── Mud zones (S5 chicane area only — outside the racing line) ──────────────
 
 local function _buildMudZones(root)
-	-- Mud patches in the S-chicane apex sides (rewards apex cutting).
+	-- Mud patches in the S-chicane apex sides (rewards apex cutting). The
+	-- tagged MudZone box is the trigger (invisible); what you see is a dark,
+	-- wet blob of overlapping discs inside it, with glossy puddles and clods
+	-- around the edge. (It used to be a see-through brown box that read as a
+	-- shadow, not as something to steer around.)
 	local size = Track.mudZoneSize
 	for i, mz in ipairs(Track.mudZones) do
 		local mud = _part(root, {
@@ -293,11 +300,55 @@ local function _buildMudZones(root)
 			Size     = Vector3.new(size[1], size[2], size[3]),
 			Position = Vector3.new(mz[1], 1.1, mz[2]),
 			Color    = C.MUD,
-			Material = MAT.MUD,
+			Material = Enum.Material.Mud,
+			Transparency = 1,
 		})
 		mud.CanCollide = false
 		mud.CastShadow = false
 		_tag(mud, "MudZone")
+
+		local top = 1.0 + 0.06
+		local hx, hz = size[1] / 2, size[3] / 2
+		local blobs = {
+			{ 0, 0, math.min(hx, hz) * 2 },
+			{ -hx * 0.45, -hz * 0.2, math.min(hx, hz) * 1.5 },
+			{ hx * 0.45, hz * 0.25, math.min(hx, hz) * 1.5 },
+			{ hx * 0.1, -hz * 0.45, math.min(hx, hz) * 1.1 },
+		}
+		for k, b in ipairs(blobs) do
+			local d = _part(root, {
+				Name     = "MudBlob_" .. i .. "_" .. k,
+				Shape    = Enum.PartType.Cylinder,
+				Size     = Vector3.new(0.12 + k * 0.01, b[3], b[3]),
+				CFrame   = CFrame.new(mz[1] + b[1], top + k * 0.01, mz[2] + b[2]) * CFrame.Angles(0, 0, math.pi / 2),
+				Color    = k == 1 and C.MUD_DARK or C.MUD,
+				Material = Enum.Material.Mud,
+			})
+			d.CanCollide, d.CanTouch, d.CanQuery, d.CastShadow = false, false, false, false
+		end
+		for k, b in ipairs({ { -0.2, 0.15, 3.2 }, { 0.3, -0.25, 2.4 }, { 0.05, 0.4, 1.8 } }) do
+			local pd = _part(root, {
+				Name     = "MudPuddle_" .. i .. "_" .. k,
+				Shape    = Enum.PartType.Cylinder,
+				Size     = Vector3.new(0.1, b[3], b[3] * 1.3),
+				CFrame   = CFrame.new(mz[1] + b[1] * hx, top + 0.08, mz[2] + b[2] * hz) * CFrame.Angles(0, 0, math.pi / 2),
+				Color    = C.MUD_WATER,
+				Material = Enum.Material.Glass,
+				Transparency = 0.15,
+			})
+			pd.CanCollide, pd.CanTouch, pd.CanQuery, pd.CastShadow = false, false, false, false
+		end
+		for k = 1, 6 do
+			local a = k / 6 * math.pi * 2 + i
+			local c = _part(root, {
+				Name     = "MudClod_" .. i .. "_" .. k,
+				Size     = Vector3.new(1.4, 0.5, 1.1),
+				CFrame   = CFrame.new(mz[1] + math.cos(a) * hx * 0.95, top + 0.2, mz[2] + math.sin(a) * hz * 0.95) * CFrame.Angles(0, a, 0.2),
+				Color    = C.MUD_DARK,
+				Material = Enum.Material.Mud,
+			})
+			c.CanCollide, c.CanTouch, c.CanQuery, c.CastShadow = false, false, false, false
+		end
 	end
 end
 

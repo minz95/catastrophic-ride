@@ -366,7 +366,7 @@ local function _ensureCheckpointHUD()
 		lbl.Font           = Enum.Font.GothamBold
 		lbl.TextScaled     = true
 		lbl.TextStrokeTransparency = 0.5
-		lbl.Text           = i .. "번 ☐"
+		lbl.Text           = "CP" .. i .. " ☐"
 		lbl.TextColor3     = CP_INACTIVE_COLOR
 		lbl.Parent         = frame
 		_cpLabels[i] = lbl
@@ -381,7 +381,7 @@ local function _updateCheckpointHUD()
 	for i = 1, 2 do
 		local lbl = _cpLabels[i]
 		if lbl then
-			lbl.Text       = i .. "번 " .. (_cpPassed[i] and "✓" or "☐")
+			lbl.Text       = "CP" .. i .. " " .. (_cpPassed[i] and "✓" or "☐")
 			lbl.TextColor3 = _cpPassed[i] and CP_PASSED_COLOR or CP_INACTIVE_COLOR
 		end
 	end
@@ -464,7 +464,7 @@ local function _showRaceIntro()
 	title.Size                   = UDim2.new(1, -20, 0, 36)
 	title.Position               = UDim2.new(0, 10, 0, 8)
 	title.BackgroundTransparency = 1
-	title.Text                   = "🏁 레이스 시작!"
+	title.Text                   = "🏁 RACE START!"
 	title.TextColor3             = Color3.fromRGB(255, 220, 80)
 	title.Font                   = Enum.Font.GothamBlack
 	title.TextScaled             = true

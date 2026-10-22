@@ -247,7 +247,7 @@ function RaceSim.runOne(opts)
 
 	local ap = Autopilot.new(geo, Autopilot.PROFILES[opts.profile or "average"], opts.seed or 1)
 	local driveState = VehicleController.newState()
-	local mods = SpeedModifiers.new(seat.MaxSpeed)
+	local mods = SpeedModifiers.new(seat.MaxSpeed, Constants.SPEED_STACK_MAX)
 
 	local res = {
 		engine = mode == "step" and "studio-stepphysics" or "studio-heartbeat",

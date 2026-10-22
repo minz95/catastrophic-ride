@@ -437,6 +437,7 @@ local function _buildStartAndFinish(root)
 		wall = { name = "SkyBarrier_Apron", color = C.BARRIER, material = Enum.Material.Glass, transparency = 0.8 },
 	})
 	KIT:buildFinish(root, { poleColor = C.ARCH, poleMaterial = MAT.CRYSTAL, archColor = C.ARCH })
+	KIT:buildEndWall(root, { name = "SkyBarrier_End", color = C.BARRIER, material = Enum.Material.Glass, transparency = 0.6 })
 	local x0, x1, z0, z1 = _bbox(600)
 	local kill = _part(root, {
 		Name = "KillPlane", Size = Vector3.new(x1 - x0, 4, z1 - z0),

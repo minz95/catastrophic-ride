@@ -22,10 +22,11 @@ R.describe("farming match (6 bots, real FarmingManager/CraftingManager)", functi
 		R.expect(bad).toBeEmpty("bots without items or cars")
 	end)
 
-	R.it("pickups never exceed the 100 spawned items", function()
+	R.it("pickups never exceed the items spawned (start + waves) and put back (swaps)", function()
 		local total = 0
 		for _, p in ipairs(m.results) do total += p.farm.pickups end
-		R.expect(total).toBeAtMost(100)
+		R.expect(m.spawned).toBeGreaterThan(0)
+		R.expect(total).toBeAtMost(m.spawned + m.dropped)
 	end)
 end)
 
@@ -430,5 +431,67 @@ R.describe("fights: punches pile up and knock an item loose", function()
 		punch()
 		local ev = srv.Telemetry.events("punch")
 		R.expect(ev[#ev].result).toBe("hit")
+	end)
+end)
+
+-- Idle time (Studio match reports, 2026-10-22): with 100 items for 4 players
+-- every inventory was full 15–50 s into the 90 s FARMING phase; ready
+-- crafters waited up to 2 minutes for the slowest one.
+R.describe("idle time", function()
+	local function itemCount(srv)
+		local n = 0
+		for _, d in ipairs(srv.env.workspace:GetDescendants()) do
+			if d.Name == "ItemId" and d.ClassName == "StringValue" and d.Parent and d.Parent.Parent then n += 1 end
+		end
+		return n
+	end
+	local function screenCalls(srv, name)
+		local n = 0
+		for _, c in ipairs(rawget(srv.RemoteEvents.ScreenEffect, "_calls") or {}) do
+			if c.args[1] == name or c.args[2] == name then n += 1 end
+		end
+		return n
+	end
+
+	R.it("FARMING starts with items for the players there, and waves of rarer items land later", function()
+		local C = Server.boot({ players = 1, scripts = {} }).env.requirePath("ReplicatedStorage.Shared.Constants")
+		local srv = farmServer(4)
+		local start = itemCount(srv)
+		R.expect(start).toBe(C.farmSupply(4))
+		srv.advance(60 * C.FARM_SUPPLY.WAVES[1].at + 0.5)
+		R.expect(itemCount(srv)).toBe(start + math.ceil(4 * C.FARM_SUPPLY.WAVES[1].perPlayer))
+		R.expect(screenCalls(srv, "itemWave")).toBe(1)
+		srv.advance(60 * (C.FARM_SUPPLY.WAVES[2].at - C.FARM_SUPPLY.WAVES[1].at))
+		R.expect(screenCalls(srv, "itemWave")).toBe(2)
+		local waves = srv.Telemetry.events("item_wave")
+		R.expect(#waves).toBe(3)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("once half the players have crafted, the rest get CRAFT_HURRY seconds, not the whole phase", function()
+		local srv = Server.boot({
+			players = 4,
+			scripts = { "ServerScriptService.MapBuilders.ForestMapBuilder", "ServerScriptService.GameBootstrap",
+				"ServerScriptService.FarmingManager", "ServerScriptService.CraftingManager" },
+			harness = { harness = "lune", biome = "FOREST", players = 4, lobbyDelay = 0,
+				durations = { FARMING = 1, CRAFTING = 120, RACING = 600 } },
+		})
+		srv.advance(2)
+		local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")
+		R.expect(srv.GameManager.getPhase()).toBe("CRAFTING")
+		local RS = srv.env.game:GetService("ReplicatedStorage")
+		local now = srv.env.workspace:GetServerTimeNow()
+		R.expect(RS:GetAttribute("PhaseEndsAt") - now).toBeGreaterThan(100)
+		srv.mock.invoke(srv.RemoteEvents.SubmitCraft, srv.players[1], {})
+		R.expect(RS:GetAttribute("PhaseEndsAt") - now).toBeGreaterThan(100)   -- one of four: no hurry yet
+		srv.mock.invoke(srv.RemoteEvents.SubmitCraft, srv.players[2], {})
+		R.expect(RS:GetAttribute("PhaseEndsAt") - now).toBeNear(C.CRAFT_HURRY.SECONDS, 0.5)
+		R.expect(screenCalls(srv, "craftHurry")).toBe(2)   -- told to the two still crafting
+		srv.advance(C.CRAFT_HURRY.SECONDS + 0.5)
+		R.expect(srv.GameManager.getPhase()).toBe("RACING")
+		local auto = 0
+		for _, e in ipairs(srv.Telemetry.events("craft")) do if e.auto then auto += 1 end end
+		R.expect(auto).toBe(2)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)

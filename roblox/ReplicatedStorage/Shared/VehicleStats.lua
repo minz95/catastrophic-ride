@@ -76,7 +76,10 @@ function VehicleStats.calculate(bodyCfg, engineCfg, specialCfg, biome)
 
 	-- Effective values after rarity + biome (guard against wrong-slot items missing fields)
 	local effectivePower  = (engine.power  or 10) * eMult * eBio
-	local effectiveWeight = (body.weight   or 8)  * bMult          -- weight is a cost, not buffed by rarity
+	-- Weight is a cost: rarity does not make it heavier. (Before 2026-10-22 it
+	-- was × bMult, so an Epic body weighed twice its listed weight and every
+	-- Rare / Epic body accelerated worst.)
+	local effectiveWeight = (body.weight   or 8)
 	local effectiveGrip   = (body.grip     or 0.5) * bMult * bBio
 	local effectiveBoost  = (special.boost or 10) * sMult
 
@@ -94,7 +97,7 @@ function VehicleStats.calculate(bodyCfg, engineCfg, specialCfg, biome)
 		- effectivePower  * 0.10  -- powerful engines slightly reduce stability
 
 	-- Biome-specific stats
-	local floatability = effectiveGrip * 0.5 * bBio
+	local floatability = effectiveGrip * B.gripFloatBonus * bBio
 	if body.floatabilityBonus then
 		floatability = floatability * body.floatabilityBonus
 	end
@@ -102,7 +105,9 @@ function VehicleStats.calculate(bodyCfg, engineCfg, specialCfg, biome)
 		floatability = floatability + 20
 	end
 
-	local flyability = (1 / math.max(effectiveWeight, 1)) * 10
+	-- light bodies fly better; grip (control surfaces, rarity included) helps
+	-- too, so a heavy Rare / Epic body is not a dead weight in SKY
+	local flyability = (1 / math.max(effectiveWeight, 1)) * 10 + effectiveGrip * B.gripFlyBonus
 	if body.flyabilityBonus then
 		flyability = flyability * body.flyabilityBonus
 	end
@@ -110,8 +115,10 @@ function VehicleStats.calculate(bodyCfg, engineCfg, specialCfg, biome)
 		flyability = flyability + 15
 	end
 
-	-- Boost duration in seconds (boost stat → seconds, capped at 8s)
-	local boostDuration = math.min(effectiveBoost * 0.08, 8)
+	-- Boost duration in seconds: a base plus the boost stat, capped. (Before
+	-- 2026-10-22 it was boost × 0.08 up to 8 s: 0.8 s for a Common SPECIAL,
+	-- 8 s for an Epic one, worth ~12 s per race on its own.)
+	local boostDuration = math.min(B.BOOST_BASE + effectiveBoost * B.BOOST_PER_POINT, B.BOOST_MAX)
 
 	-- Clamp negatives (e.g. very heavy body could make accel negative)
 	speed        = math.max(speed, 5)

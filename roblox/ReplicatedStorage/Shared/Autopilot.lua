@@ -36,10 +36,12 @@ Autopilot.__index = Autopilot
 --               the driver lifts (×1) or brakes (×1.4); > 1 = brakes late.
 --   drift       holds Shift through a corner that is too sharp for grip at
 --               this speed but not for a drift (instead of braking).
+--   avoid       seconds ahead the driver notices an obstacle on its line
+--               (state.hazards) and steers to the open side of the lane.
 Autopilot.PROFILES = {
-	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0, cornerMargin = 0.95, drift = true },
-	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0, cornerMargin = 1.10, drift = true },
-	novice  = { lookahead = 10, speedLook = 0.20, deadband = 0.14, liftAngle = 0.95, reaction = 0.30, anticipation = 0.75, wobble = 6, lineOffset = 0, cornerMargin = 1.30 },
+	expert  = { lookahead = 14, speedLook = 0.30, deadband = 0.04, liftAngle = 0.60, reaction = 0.12, anticipation = 1.00, wobble = 0, lineOffset = 0, cornerMargin = 0.95, drift = true, avoid = 2.4 },
+	average = { lookahead = 12, speedLook = 0.25, deadband = 0.08, liftAngle = 0.75, reaction = 0.20, anticipation = 0.90, wobble = 3, lineOffset = 0, cornerMargin = 1.10, drift = true, avoid = 1.8 },
+	novice  = { lookahead = 10, speedLook = 0.20, deadband = 0.14, liftAngle = 0.95, reaction = 0.30, anticipation = 0.75, wobble = 6, lineOffset = 0, cornerMargin = 1.30, avoid = 1.1 },
 }
 
 -- Corner speed check: compare the turn rate the next stretch needs at the
@@ -49,6 +51,11 @@ Autopilot.CORNER_STEPS = { 1.5, 2.25, 3.0 }   -- windows checked (× lookahead)
 Autopilot.DRIFT_AIM = 0.6     -- while drifting, steer by nose + this share of the slide
 Autopilot.DRIFT_TURN = math.rad(50)   -- a bend this big ahead is worth a drift (turbo)
 Autopilot.DRIFT_HOLD = math.rad(15)   -- keep drifting while this much turn is still near
+
+-- Obstacle avoidance: pass a hazard this far from its edge (studs, plus the
+-- car's half width).
+Autopilot.CAR_HALF = 2.2
+Autopilot.AVOID_MARGIN = 1.5
 
 -- "Stuck" = no new track progress, regardless of wiggling in place.
 Autopilot.PROGRESS_EPS  = 6     -- studs of new progress that count as moving on
@@ -120,7 +127,38 @@ function Autopilot:update(state)
 	if p.wobble > 0 then
 		wobble = p.wobble * math.sin(proj.s / 90 + self.seed * 1.7)
 	end
-	local tx, tz = self.geo:offsetPoint(proj.s + look, p.lineOffset + wobble)
+	local aimLat = p.lineOffset + wobble
+	-- Obstacles on the line (state.hazards: { x, z, half } with half = how far
+	-- it reaches across the lane from its centre): aim past the open side.
+	if state.hazards and p.avoid and #state.hazards > 0 then
+		local seeAhead = p.avoid * math.max(state.speed or 0, 10) + 10
+		local half = self.geo.halfWidth or 20
+		local edge = half - Autopilot.CAR_HALF - 0.5
+		local near = {}
+		for _, h in ipairs(state.hazards) do
+			local hp = self.geo:project(h.x, h.z, proj.seg, 8)
+			local ahead = hp.s - proj.s
+			if ahead > -3 and ahead < seeAhead then
+				table.insert(near, { ahead = ahead, lat = hp.lateral, need = (h.half or 3) + Autopilot.CAR_HALF + Autopilot.AVOID_MARGIN })
+			end
+		end
+		table.sort(near, function(a, b) return a.ahead < b.ahead end)
+		for _, h in ipairs(near) do
+			if math.abs(aimLat - h.lat) < h.need then
+				local left, right = h.lat - h.need, h.lat + h.need
+				local okL, okR = left >= -edge, right <= edge
+				if okL and okR then
+					aimLat = (math.abs(proj.lateral - left) <= math.abs(proj.lateral - right)) and left or right
+				elseif okL then
+					aimLat = left
+				elseif okR then
+					aimLat = right
+				end
+				self.avoiding = true
+			end
+		end
+	end
+	local tx, tz = self.geo:offsetPoint(proj.s + look, aimLat)
 	-- While sliding, the car moves along travelYaw, not where its nose
 	-- points: steer by a heading between the two (by the nose alone the
 	-- driver counter-steers out of every drift).

@@ -29,3 +29,30 @@ R.describe("StarterGui screens", function()
 		R.expect(bad).toBeEmpty("screens that pile up on respawn")
 	end)
 end)
+
+-- Player-facing text is English (2026-10-22). Comments may be in any language.
+R.describe("player-facing text", function()
+	R.it("no Korean in strings shown to players", function()
+		local bad = {}
+		local function scan(dir)
+			for _, name in ipairs(fs.readDir(dir)) do
+				local p = dir .. "/" .. name
+				if fs.isDir(p) then
+					scan(p)
+				elseif p:match("%.lua$") then
+					local n = 0
+					for line in fs.readFile(p):gmatch("[^\n]*") do
+						n += 1
+						local code = line:gsub("%-%-.*$", "")
+						-- Hangul syllables are U+AC00..U+D7A3: UTF-8 lead bytes EA..ED
+						if code:find("[\234-\237][\128-\191][\128-\191]") then
+							table.insert(bad, p .. ":" .. n)
+						end
+					end
+				end
+			end
+		end
+		scan("roblox")
+		R.expect(bad).toBeEmpty("lines with Korean text")
+	end)
+end)

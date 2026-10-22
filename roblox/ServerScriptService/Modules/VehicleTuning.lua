@@ -16,6 +16,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local SpeedModifiers = require(ReplicatedStorage.Shared.SpeedModifiers)
+local Constants      = require(ReplicatedStorage.Shared.Constants)
 
 local VehicleTuning = {}
 
@@ -35,7 +36,7 @@ local function stackFor(seat, prop)
 		_state[seat] = st
 	end
 	if not st[prop] then
-		st[prop] = SpeedModifiers.new(seat[prop])
+		st[prop] = SpeedModifiers.new(seat[prop], prop == "MaxSpeed" and Constants.SPEED_STACK_MAX or nil)
 	end
 	return st[prop]
 end

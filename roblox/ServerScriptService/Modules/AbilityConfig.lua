@@ -55,6 +55,15 @@ end
 --   sfxKey           sound asset key
 --   uiHint           short string shown in ability HUD
 --   biomeEffect      optional table { FOREST=..., OCEAN=..., SKY=... } for biome variants
+--
+-- How strong an effect is (AbilityManager applies these; the balance model in
+-- tests/lib/balance.luau reads the same numbers):
+--   selfSpeed / selfTurn   MaxSpeed / TurnSpeed × this on the user (selfFor s, default duration)
+--   push                   forward shove on the user (studs/s, a CarImpact knock)
+--   victimSpeed / victimTurn  × this on the car(s) hit (victimFor s, default duration)
+--   victimPush             shove on the car(s) hit (studs/s)
+--   hitSpeed / hitFor      slick drops: × this for hitFor s on whoever drives in
+--   allySpeed / allyRange  flag auras: the nearest racer within allyRange gets it too
 
 local AbilityConfig = {}
 
@@ -65,9 +74,11 @@ AbilityConfig["Toilet Paper"] = {
 	duration    = 2,
 	targetType  = "nearest",
 	effectKey   = "steerDisable",
+	victimTurn = 0.3, victimFor = 1.3,
 	animKey     = "throwTP",
 	sfxKey      = "tp_throw",
 	uiHint      = "🧻 Wrap!",
+	biomeEffect = { OCEAN = { victimTurn = 0.5 } },   -- turning decides OCEAN races
 }
 
 AbilityConfig["Pizza"] = {
@@ -75,6 +86,7 @@ AbilityConfig["Pizza"] = {
 	duration    = 2,
 	targetType  = "track_drop",
 	effectKey   = "slipperyPuddle",
+	hitSpeed = 0.7, hitFor = 1.5,
 	animKey     = "throwPizza",
 	sfxKey      = "pizza_splat",
 	uiHint      = "🍕 Slip Zone!",
@@ -85,6 +97,7 @@ AbilityConfig["Rubber Duck"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "emergencyFloat",
+	selfSpeed = 1.15,   -- glides while lifted
 	animKey     = "duckPopup",
 	sfxKey      = "duck_quack",
 	uiHint      = "🐤 Float!",
@@ -100,16 +113,18 @@ AbilityConfig["Balloon Bunch"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "rise",          -- float upward, bypass ground hazards
+	selfSpeed = 1.2,   -- glides while lifted
 	animKey     = "balloonRise",
 	sfxKey      = "balloon_stretch",
 	uiHint      = "🎈 Rise!",
 }
 
 AbilityConfig["Soda Bottle"] = {
-	cooldown    = 10,
+	cooldown    = 18,
 	duration    = 1.5,
 	targetType  = "self",
 	effectKey   = "reverseBoost",  -- propulsion backwards (net forward with momentum)
+	selfSpeed = 1.3, push = 25,
 	animKey     = "sodaExplosion",
 	sfxKey      = "soda_fizz",
 	uiHint      = "🥤 Blast!",
@@ -120,6 +135,7 @@ AbilityConfig["Racing Flag"] = {
 	duration    = 4,
 	targetType  = "self",          -- also buffs nearest ally (handled in effectKey)
 	effectKey   = "flagAura",      -- self +20% speed + nearest ally +20%
+	selfSpeed = 1.12, allySpeed = 1.20, allyRange = 40,
 	animKey     = "waveFlag",
 	sfxKey      = "flag_wave",
 	uiHint      = "🏁 Rally!",
@@ -145,6 +161,7 @@ AbilityConfig["Gas Can"] = {
 	duration    = 3,
 	targetType  = "track_drop",
 	effectKey   = "slipperyPuddle", -- reuses Pizza's slick effect; Gas Can is the new Common trap
+	hitSpeed = 0.7, hitFor = 1.5,
 	animKey     = "pourGasCan",
 	sfxKey      = "gas_pour",
 	uiHint      = "⛽ Slick!",
@@ -155,6 +172,7 @@ AbilityConfig["Lantern"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "rise",          -- brief lift, reuses Balloon Bunch rise logic
+	selfSpeed = 1.1,   -- glides while lifted
 	animKey     = "lanternGlow",
 	sfxKey      = "lantern_chime",
 	uiHint      = "🏮 Lift!",
@@ -165,16 +183,19 @@ AbilityConfig["Camera"] = {
 	duration    = 2,
 	targetType  = "nearest",
 	effectKey   = "steerDisable",  -- flash blinds nearest; reuses Toilet Paper effect
+	victimTurn = 0.15, victimFor = 1.0,
 	animKey     = "cameraFlash",
 	sfxKey      = "camera_flash",
 	uiHint      = "📸 Flash!",
+	biomeEffect = { OCEAN = { victimTurn = 0.4 } },
 }
 
 AbilityConfig["Magic Wand"] = {
-	cooldown    = 15,
+	cooldown    = 18,
 	duration    = 1.5,
 	targetType  = "self",
 	effectKey   = "rocketBurst",   -- magic speed burst; reuses Rocket effect
+	selfSpeed = 1.3, push = 20,
 	animKey     = "wandCast",
 	sfxKey      = "wand_sparkle",
 	uiHint      = "🪄 Cast!",
@@ -185,6 +206,7 @@ AbilityConfig["Trophy"] = {
 	duration    = 5,
 	targetType  = "self",          -- also buffs nearest ally (handled in flagAura)
 	effectKey   = "flagAura",      -- champion's aura; reuses Racing Flag effect
+	selfSpeed = 1.15, allySpeed = 1.20, allyRange = 40,
 	animKey     = "trophyRaise",
 	sfxKey      = "trophy_cheer",
 	uiHint      = "🏆 Rally!",
@@ -195,6 +217,7 @@ AbilityConfig["Magnet"] = {
 	duration    = 2.5,
 	targetType  = "nearest",
 	effectKey   = "magnetPull",    -- pulls nearest vehicle toward activator
+	victimSpeed = 0.8, victimPush = 35,
 	animKey     = "magnetPulse",
 	sfxKey      = "magnet_hum",
 	uiHint      = "🧲 Pull!",
@@ -206,13 +229,14 @@ AbilityConfig["Umbrella"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "umbrellaBlock", -- per-biome variants below; FOREST behaviour is the default
+	selfSpeed = 1.15,   -- the open canopy catches wind (every biome)
 	animKey     = "umbrellaOpen",
 	sfxKey      = "umbrella_pop",
 	uiHint      = "☂️ Shield!",
 	biomeEffect = {
 		FOREST = { effectKey = "umbrellaBlock",  duration = 3 },   -- absorb 1 collision
 		OCEAN  = { effectKey = "umbrellaSail",   duration = 4 },   -- side-wind speed bonus
-		SKY    = { effectKey = "parachute",      duration = 6 },   -- fall at 20% speed
+		SKY    = { effectKey = "parachute",      duration = 4 },   -- canopy: lift + blocks the next hit
 	},
 }
 
@@ -224,8 +248,9 @@ AbilityConfig["Fan"] = {
 	cooldown    = 12,
 	duration    = 1.5,
 	targetType  = "all_in_radius",
-	radius      = 10,
+	radius      = 18,
 	effectKey   = "gustBlast",     -- forward wind push; affects vehicles in front
+	victimSpeed = 0.7, victimPush = 45,
 	animKey     = "fanSpin",
 	sfxKey      = "fan_whirr",
 	uiHint      = "🌬️ Gust!",
@@ -238,6 +263,7 @@ AbilityConfig["Flower"] = {
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "bloomCleanse",  -- removes every slowdown on you + 2s shield
+	selfSpeed = 1.1,
 	animKey     = "flowerBloom",
 	sfxKey      = "flower_chime",
 	uiHint      = "🌻 Bloom!",
@@ -247,7 +273,8 @@ AbilityConfig["Drill"] = {
 	cooldown    = 14,
 	duration    = 4,
 	targetType  = "self",
-	effectKey   = "digMode",       -- ignore mud and off-track slow zones
+	effectKey   = "digMode",       -- ignore mud and off-track slow zones, bore ahead
+	selfSpeed = 1.15,
 	animKey     = "drillSpin",
 	sfxKey      = "drill_whirr",
 	uiHint      = "🔧 Dig!",
@@ -261,16 +288,18 @@ AbilityConfig["Propeller Hat"] = {
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "hover",        -- BodyForce upward; ignore ground hazards
+	selfSpeed = 1.15,   -- glides while lifted
 	animKey     = "propHover",
 	sfxKey      = "propeller_spin",
 	uiHint      = "🎩 Hover!",
 }
 
 AbilityConfig["Treadmill"] = {
-	cooldown    = 12,
+	cooldown    = 18,
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "redline",      -- instant max speed; A/D disabled
+	selfSpeed = 1.35, selfTurn = 0.5,
 	animKey     = "v8Rev",
 	sfxKey      = "v8_roar",
 	uiHint      = "🏃 Redline!",
@@ -281,6 +310,7 @@ AbilityConfig["Kettle"] = {
 	duration    = 3,
 	targetType  = "track_drop",
 	effectKey   = "steamCloud",   -- visibility block for entering vehicles
+	hitSpeed = 0.8, hitFor = 1.5,
 	animKey     = "kettleSteam",
 	sfxKey      = "kettle_hiss",
 	uiHint      = "🫖 Steam!",
@@ -291,16 +321,18 @@ AbilityConfig["Cup Noodle"] = {
 	duration    = 2,
 	targetType  = "nearest",
 	effectKey   = "noodleSnare",  -- 30% speed reduction via noodle trail
+	victimSpeed = 0.85,
 	animKey     = "noodleThrow",
 	sfxKey      = "noodle_splat",
 	uiHint      = "🍜 Snare!",
 }
 
 AbilityConfig["Rocket"] = {
-	cooldown    = 10,
+	cooldown    = 18,
 	duration    = 1.5,
 	targetType  = "self",
 	effectKey   = "rocketBurst",  -- speed ×3 for 1.5s
+	selfSpeed = 1.25, push = 20,
 	animKey     = "rocketIgnite",
 	sfxKey      = "rocket_ignite",
 	uiHint      = "🚀 IGNITE!",
@@ -310,8 +342,9 @@ AbilityConfig["Hair Dryer"] = {
 	cooldown    = 18,
 	duration    = 1,
 	targetType  = "all_in_radius",
-	radius      = 12,
+	radius      = 15,
 	effectKey   = "windBlast",    -- pushes nearby vehicles laterally
+	victimPush = 55, victimSpeed = 0.7, victimFor = 1.2,
 	animKey     = "leafBlowerOn",
 	sfxKey      = "leafblower_blast",
 	uiHint      = "💇 Blast!",
@@ -322,6 +355,7 @@ AbilityConfig["Magnifying Glass"] = {
 	duration    = 2,
 	targetType  = "track_drop",
 	effectKey   = "waterPuddle",  -- OCEAN bonus: bigger + floatability drain
+	hitSpeed = 0.6, hitFor = 2,
 	animKey     = "waterPour",
 	sfxKey      = "water_pour",
 	uiHint      = "🔍 Flood!",
@@ -331,23 +365,29 @@ AbilityConfig["Magnifying Glass"] = {
 }
 
 AbilityConfig["Compass"] = {
-	cooldown    = 12,
+	cooldown    = 16,
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "spinBurst",    -- high speed burst with random directional wobble
+	selfSpeed = 1.22, push = 20,
 	animKey     = "topSpin",
 	sfxKey      = "top_spin",
 	uiHint      = "🧭 Spin!",
 }
 
 AbilityConfig["Alarm Clock"] = {
-	cooldown    = 14,
+	cooldown    = 16,
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "windRide",     -- strong biome bonus for SKY/OCEAN
+	selfSpeed = 1.08,
 	animKey     = "pinwheelSpin",
 	sfxKey      = "pinwheel_spin",
 	uiHint      = "⏰ Wind!",
+	biomeEffect = {
+		OCEAN = { selfSpeed = 1.1 },
+		SKY   = { selfSpeed = 1.1 },
+	},
 }
 
 -- ── BODY tier ─────────────────────────────────────────────────────────────────
@@ -367,13 +407,14 @@ AbilityConfig["Bamboo Raft"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "raftGlide",    -- friction = 0; glides over any surface
+	selfSpeed = 1.1, selfTurn = 1.5,
 	animKey     = "raftGlide",
 	sfxKey      = "bamboo_creak",
 	uiHint      = "🎍 Glide!",
 }
 
 AbilityConfig["Log"] = {
-	cooldown    = 12,
+	cooldown    = 9,
 	duration    = nil,
 	targetType  = "track_drop",
 	effectKey   = "logObstacle",  -- rolling log; contact → bounce + speed penalty
@@ -383,10 +424,11 @@ AbilityConfig["Log"] = {
 }
 
 AbilityConfig["Red Sofa"] = {
-	cooldown    = 20,
-	duration    = 2,
+	cooldown    = 15,
+	duration    = 3,
 	targetType  = "self",
-	effectKey   = "sofaFortress", -- full stop + damage immunity
+	effectKey   = "sofaFortress", -- nothing can hurt you; cars next to you bounce off
+	victimPush = 40, victimSpeed = 0.6, victimFor = 1.2, radius = 10,
 	animKey     = "sofaSit",
 	sfxKey      = "sofa_flump",
 	uiHint      = "🛋️ Chill!",
@@ -397,6 +439,7 @@ AbilityConfig["Shopping Cart"] = {
 	duration    = 1,
 	targetType  = "self",
 	effectKey   = "cartRam",      -- speed burst + lateral push on contact
+	selfSpeed = 1.2, push = 30, victimPush = 40, radius = 8,
 	animKey     = "cartCharge",
 	sfxKey      = "cart_clang",
 	uiHint      = "🛒 RAM!",
@@ -408,34 +451,38 @@ AbilityConfig["Microwave"] = {
 	targetType  = "all_in_radius",
 	radius      = 12,
 	effectKey   = "microFreeze",  -- complete stop for 1s
+	victimSpeed = 0.3,
 	animKey     = "microwavePulse",
 	sfxKey      = "microwave_ding",
 	uiHint      = "🧊 Freeze!",
+	biomeEffect = { SKY = { radius = 16 } },   -- flyers spread out
 }
 
 AbilityConfig["Bathtub"] = {
 	cooldown    = 15,
 	duration    = 1.5,
 	targetType  = "all_in_radius",
-	radius      = 8,
+	radius      = 10,
 	effectKey   = "bathSplash",   -- vision blur + mini-stun; OCEAN doubles radius
+	victimSpeed = 0.5, victimFor = 1.5,
 	animKey     = "bathSplash",
 	sfxKey      = "bath_splash",
 	uiHint      = "🛁 Splash!",
 	biomeEffect = {
 		OCEAN = { radius = 16 },
-		SKY   = { radius = 5  },
+		SKY   = { radius = 15 },   -- flyers spread out
 	},
 }
 
 AbilityConfig["Backpack"] = {
-	cooldown    = 60,
+	cooldown    = 25,
 	duration    = 30,
 	targetType  = "self",
 	effectKey   = "backpackBoost",  -- refills the boost gauge
 	animKey     = "backpackOpen",
 	sfxKey      = "backpack_zip",
 	uiHint      = "🎒 Gear Up!",
+	biomeEffect = { SKY = { selfSpeed = 1.15, duration = 3, cooldown = 18 } },   -- jetpack: a push as well
 }
 
 -- Laptop removed in #88 (body concept unclear; hack belongs to a SPECIAL item)
@@ -446,16 +493,19 @@ AbilityConfig["Barrel"] = {
 	duration    = 1.5,
 	targetType  = "self",
 	effectKey   = "barrelRoll",    -- lateral spin burst; pushes adjacent vehicles
+	selfSpeed = 1.1, victimPush = 45, radius = 8,
 	animKey     = "barrelSpin",
 	sfxKey      = "barrel_roll",
 	uiHint      = "🪣 Roll!",
 }
 
 AbilityConfig["Suitcase"] = {
-	cooldown    = 18,
-	duration    = 2,
+	cooldown    = 14,
+	duration    = 3,
 	targetType  = "self",
-	effectKey   = "lockdown",      -- brief stop + collision immunity; absorbs 1 hit
+	effectKey   = "lockdown",      -- locks shut: absorbs the next hit, rolls on its wheels
+	selfSpeed = 1.15,
+	
 	animKey     = "suitcaseLock",
 	sfxKey      = "suitcase_latch",
 	uiHint      = "🧳 Lock!",
@@ -466,6 +516,7 @@ AbilityConfig["Skateboard"] = {
 	duration    = 2,
 	targetType  = "self",
 	effectKey   = "skateSlide",   -- friction near-zero; maximum turn rate
+	selfSpeed = 1.15, selfTurn = 1.6,
 	animKey     = "skateSlide",
 	sfxKey      = "skate_grind",
 	uiHint      = "🛹 Slide!",
@@ -476,6 +527,7 @@ AbilityConfig["Life Preserver"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "lifeFloat",    -- emergency max buoyancy; works on all biomes
+	selfSpeed = 1.15,   -- glides while lifted
 	animKey     = "lifeRingThrow",
 	sfxKey      = "splash_ring",
 	uiHint      = "🛟 Float!",
@@ -486,11 +538,12 @@ AbilityConfig["Kite"] = {
 	duration    = 3,
 	targetType  = "self",
 	effectKey   = "kiteLift",     -- strong upward force; SKY ×2 lift
+	selfSpeed = 1.15,   -- glides while lifted
 	animKey     = "kiteLaunch",
 	sfxKey      = "kite_snap",
 	uiHint      = "🪁 Lift!",
 	biomeEffect = {
-		SKY = { effectKey = "kiteGlide", duration = 5 },
+		SKY = { effectKey = "kiteGlide", duration = 4, selfSpeed = 1.12 },
 	},
 }
 
@@ -517,6 +570,9 @@ function AbilityConfig.applyEpicBonus(cfg)
 	local out = {}
 	for k, v in pairs(cfg) do out[k] = v end
 	if out.duration then out.duration  = out.duration  * b.duration  end
+	for _, k in ipairs({ "selfFor", "victimFor", "hitFor" }) do
+		if out[k] then out[k] = out[k] * b.duration end
+	end
 	if out.radius   then out.radius    = out.radius    * b.radius    end
 	if out.cooldown then out.cooldown  = out.cooldown  * b.cooldown  end
 	return out

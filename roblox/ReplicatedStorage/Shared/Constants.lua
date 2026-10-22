@@ -23,6 +23,23 @@ Constants.PHASE_DURATION = {
 	RACING   = nil, -- ends on finish, timeout below
 	RESULTS  = 30,
 }
+-- Idle time (2026-10-22, from the Studio match reports): with 100 items for
+-- 4 players every inventory was full 15–50 s into FARMING; ready crafters
+-- waited for the slowest one up to 2 min; finished racers waited up to the
+-- 240 s timeout for the last car.
+Constants.FARM_SUPPLY = {
+	BASE = 12, PER_PLAYER = 6,        -- items at the start: BASE + PER_PLAYER × players (≤ ITEM_SPAWN_COUNT)
+	WAVES = {                         -- more items later, rarer ones (at = share of the phase)
+		{ at = 0.35, perPlayer = 1.5, dist = { Common = 30, Uncommon = 35, Rare = 25, Epic = 10 } },
+		{ at = 0.65, perPlayer = 1.5, dist = { Common = 15, Uncommon = 35, Rare = 35, Epic = 15 } },
+	},
+}
+function Constants.farmSupply(players)
+	local F = Constants.FARM_SUPPLY
+	return math.min(Constants.ITEM_SPAWN_COUNT, F.BASE + F.PER_PLAYER * math.max(players or 1, 1))
+end
+Constants.CRAFT_HURRY  = { SHARE = 0.5, SECONDS = 25 }  -- half the players submitted → the rest get 25 s
+Constants.FINISH_GRACE = 30   -- s the others get after the winner crosses the line
 Constants.RACE_COUNTDOWN = 4 -- s from RACING to GO (cars spawn and seat, then 3-2-1); Modules/RaceStart
 Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 
@@ -79,6 +96,10 @@ end
 Constants.BOOST_DURATION   = 2    -- seconds
 Constants.BOOST_MULTIPLIER = 1.5
 Constants.BOOST_COOLDOWN   = 5
+-- Speed buffs (boost, pads, turbos, abilities) multiply, but the product of
+-- the ones above 1 is capped at this (SpeedModifiers): a Rocket on a boost
+-- on a pad used to reach ×8 and pass through walls.
+Constants.SPEED_STACK_MAX  = 2.0
 Constants.POSITION_SYNC_RATE = 0.5  -- seconds between PlayerPositionSync broadcasts
 
 -- ─── Fun as numbers (Shared/RaceMetrics, tools/report.luau, PlaytestReport) ──
@@ -97,6 +118,21 @@ Constants.FUN_TARGETS = {
 	racingShare  = { min = 0.35,           why = "share of a round spent racing (vs farming / crafting / results)" },
 	fastestWinRate = {          max = 0.7, why = "the fastest build should not always win" },
 	speedPlaceCorr = { min = -0.6, max = 0.1, why = "the build helps a little; it must not decide the race" },
+}
+
+-- Crafting balance (tests/lib/balance.luau, `lune run tools/balance.luau`).
+-- An item's value = seconds it saves its owner per race (stats + its E
+-- ability), averaged over every partner build; matches are Monte Carlo
+-- fields of 6 players crafting from farmed inventories.
+Constants.BALANCE_TARGETS = {
+	tierStep        = 0.3,   -- s: each rarity tier beats the one below by this much on average
+	epicEdge        = { min = 1.0, max = 4.5 },   -- s: Epic vs Common item mean, per slot (~4% of a race)
+	maxAboveTier    = 2.0,   -- s: no item this far above its tier's mean
+	minItemValue    = 0.2,   -- s: every item is worth equipping
+	maxTopItemShare = 0.40,  -- the most common item in one slot of the winners
+	minDistinctWinnersPer1000 = 60,  -- distinct BODY+ENGINE+SPECIAL among 1000 winners
+	minUpsetRate    = 0.40,  -- the field's rarest build loses at least this often ...
+	maxUpsetRate    = 0.80,  -- ... and wins at least 1 − this often
 }
 
 -- ─── Drift / DriftCorner ──────────────────────────────────────────────────────
@@ -144,11 +180,14 @@ Constants.RARITY_SPAWN_DIST = {  -- out of ITEM_SPAWN_COUNT = 100
 	Rare     = 12,
 	Epic     = 3,
 }
+-- Item stats × this (tools/balance.luau: Epic items save ~2–4 s per race
+-- over Common ones; it was 1.3 / 1.6 / 2.0 and an Epic engine + special
+-- alone were worth ~25 s).
 Constants.RARITY_STAT_MULT = {
 	Common   = 1.0,
-	Uncommon = 1.3,
-	Rare     = 1.6,
-	Epic     = 2.0,
+	Uncommon = 1.15,
+	Rare     = 1.3,
+	Epic     = 1.5,
 }
 Constants.EPIC_ABILITY_BONUS = {
 	duration  = 1.30,  -- ×1.3 effect duration
@@ -191,13 +230,20 @@ Constants.BALANCE = {
 	BASE_STAB        = 30,
 
 	powerSpeedBonus  = 0.30,   -- engine power → speed
-	powerAccelBonus  = 0.50,   -- engine power → acceleration
-	weightAccelPenalty = 0.40, -- body weight → accel reduction
+	powerAccelBonus  = 0.35,   -- engine power → acceleration (0.5 before 2026-10-22)
+	weightAccelPenalty = 0.30, -- body weight → accel reduction (0.4 before 2026-10-22)
 	weightStabBonus    = 0.80, -- body weight → stability bonus
 	gripTurnBonus      = 20,   -- body grip → turn rate
+	gripFlyBonus       = 8,    -- body grip → flyability (SKY)
+	gripFloatBonus     = 4,    -- body grip → floatability (OCEAN; 0.5 before 2026-10-22)
 
 	STAT_BUDGET      = 100,    -- total stat normalisation cap (Issue #61)
 	biomeStatMult    = 1.30,   -- bonus for biome-matched items
+
+	-- SPECIAL boost stat → boost seconds (VehicleStats)
+	BOOST_BASE       = 1.6,
+	BOOST_PER_POINT  = 0.010,
+	BOOST_MAX        = 3.6,
 }
 
 -- ─── Biomes ───────────────────────────────────────────────────────────────────
@@ -248,10 +294,12 @@ Constants.DRIVE = {
 -- Centers put the best build with a good driver at about 85 s per race.
 -- (Before 2026-10-21 MaxSpeed was speed × 2.5 / 2.0 / 3.0: the fastest
 -- build was 1.8× the slowest and the field finished 50–60 s apart.)
+-- (2026-10-22: spread 0.06 → 0.015. tools/balance.luau measured ~1.7 s per
+-- stud/s in FOREST, so ±6% made the engine alone worth ~9 s per race.)
 Constants.RACE_SPEED = {
-	FOREST = { center = 69, spread = 0.06, lo = 22, hi = 33 },
-	OCEAN  = { center = 63, spread = 0.06, lo = 20, hi = 40 },
-	SKY    = { center = 87, spread = 0.06, lo = 21, hi = 30 },
+	FOREST = { center = 69, spread = 0.015, lo = 22, hi = 33 },
+	OCEAN  = { center = 63, spread = 0.015, lo = 20, hi = 40 },
+	SKY    = { center = 87, spread = 0.015, lo = 21, hi = 30 },
 }
 
 function Constants.maxSpeedFor(biome, stats)
@@ -276,13 +324,15 @@ end
 -- Linear map of a biome's handling stat onto [min, max], clamped. The ranges
 -- cover roughly the 10th–90th percentile of all item combinations, so BODY and
 -- MOBILITY choices change how the vehicle turns.
+-- OCEAN / SKY races are decided by turning (tools/balance.luau: 13 / 22 s per
+-- rad/s), so their ranges are narrow (2026-10-22: were 1.2–2.0 and 1.0–1.5).
 -- SKY tops out at VehicleController.SKY_TURN_CAP (1.5): the old map
 -- (flyability × 0.4, clamped 0.5–4.0) put every build at or above the cap, so
 -- flyability did nothing for handling.
 Constants.TURN_SPEED = {
 	FOREST = { stat = "stability",    lo = 20, hi = 100, min = 2.0, max = 3.2 },
-	OCEAN  = { stat = "floatability", lo = 10, hi = 45,  min = 1.2, max = 2.0 },
-	SKY    = { stat = "flyability",   lo = 8,  hi = 36,  min = 1.0, max = 1.5 },
+	OCEAN  = { stat = "floatability", lo = 10, hi = 45,  min = 1.5, max = 1.85 },
+	SKY    = { stat = "flyability",   lo = 8,  hi = 36,  min = 1.3, max = 1.5 },
 }
 
 function Constants.turnSpeedFor(biome, stats)
@@ -310,7 +360,7 @@ Constants.IMPACT = {
 	KNOCK_DECAY  = 2.5,    -- 1/s: sideways slide fades as exp(-KNOCK_DECAY × t)
 	SPIN_DECAY   = 3.0,    -- 1/s
 	PAIR_COOLDOWN = 0.35,  -- s before the same two cars can hit again
-	BIG_HIT      = 18,     -- closing speed that shows a "쾅!" label on both cars
+	BIG_HIT      = 18,     -- closing speed that shows a "BANG!" label on both cars
 	SHAKE_PER_HIT = 0.02,  -- camera shake per stud/s of closing speed (driver's own car)
 }
 
@@ -338,6 +388,13 @@ Constants.HAZARDS = {
 	LOG_AHEAD_MIN     = 80,     -- studs of track ahead of the leading car
 	LOG_AHEAD_MAX     = 260,
 	LOG_LATERAL       = 12,     -- max offset from the centerline
+	LOG_MIN_GAP       = 12,     -- studs of open lane always left beside a log (HazardPlan)
+	LOG_WALL_MARGIN   = 1,
+	LOG_SPACING       = 30,     -- studs along the track between logs of one drop
+	LOG_FINISH_CLEAR  = 60,     -- no logs this close to the finish
+	LOG_KEEP_CLEAR    = 25,     -- ... or to a jump ramp, mud patch or boost pad (HazardPlan.keepClear)
+	LOG_YAW_JITTER    = 0.3,    -- rad
+	LOG_WARN          = 1.2,    -- s the landing marker shows before the log drops
 	GUST_DURATION     = 2,
 	GUST_PULSE        = 0.25,   -- s between sideways shoves while a gust blows
 	GUST_PUSH_PER_FORCE = 0.12, -- shove speed (studs/s) per unit of BiomeConfig force
@@ -347,6 +404,7 @@ Constants.HAZARDS = {
 -- ─── Collision / Physics ──────────────────────────────────────────────────────
 Constants.OBSTACLE_BOUNCE_PENALTY_DURATION = 1.0  -- seconds
 Constants.OBSTACLE_BOUNCE_SPEED_MULT       = 0.5
+Constants.OBSTACLE_BOUNCE_PUSH             = 30   -- studs/s knock away from the obstacle
 Constants.MUD_SPEED_MULT                   = 0.5
 Constants.SLOW_ZONE_MULT                   = 0.6  -- off-corridor soft penalty
 Constants.RACE_BOOST_PAD_ACTIVE_RATIO      = 0.6  -- fraction of placed BoostPads active per race

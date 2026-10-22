@@ -34,35 +34,37 @@ local PHASE_GUIDES = {
 		title = "🌾  FARMING PHASE",
 		colour = Color3.fromRGB(80, 180, 60),
 		keys = {
-			{ key = "E",        desc = "아이템 줍기 / 경쟁 연타" },
-			{ key = "E (길게)", desc = "인벤토리 도둑질 시도 (0.9초)" },
-			{ key = "E (빠르게×3)", desc = "도둑질 방어" },
-			{ key = "Q (길게)",     desc = "이모트 메뉴 열기" },
+			{ key = "E",        desc = "Pick up items / mash in a contest" },
+			{ key = "Hold E", desc = "Steal from a player (0.9 s)" },
+			{ key = "E ×3 fast", desc = "Defend a steal" },
+			{ key = "F", desc = "Punch (4 hits knock an item loose)" },
+			{ key = "Hold G", desc = "Guard against punches" },
+			{ key = "Hold Q",     desc = "Emote menu" },
 		},
-		tip = "아이콘과 이름이 표시된 아이템을 수집하세요!\n희귀도: 회색(Common) < 초록(Uncommon) < 파랑(Rare) < 보라(Epic)",
+		tip = "Collect the items with icons and names!\nRarity: grey (Common) < green (Uncommon) < blue (Rare) < purple (Epic)",
 	},
 	CRAFTING = {
 		title = "🔧  CRAFTING PHASE",
 		colour = Color3.fromRGB(200, 140, 40),
 		keys = {
-			{ key = "클릭 & 드래그", desc = "인벤토리 아이템을 슬롯에 배치" },
-			{ key = "슬롯 클릭",     desc = "배치된 아이템 제거" },
-			{ key = "COMBINE",      desc = "차량 조합 완료 (버튼 클릭)" },
+			{ key = "Click & drag", desc = "Put an inventory item in a slot" },
+			{ key = "Click a slot",     desc = "Remove its item" },
+			{ key = "COMBINE",      desc = "Finish your vehicle (button)" },
 		},
-		tip = "BODY + ENGINE + SPECIAL 슬롯은 필수!\nMOBILITY(바퀴/돛/날개), HEAD, TAIL은 선택 슬롯입니다.",
+		tip = "BODY + ENGINE + SPECIAL are required!\nMOBILITY (wheels / sail / wings), HEAD and TAIL are optional.",
 	},
 	RACING = {
 		title = "🏎  RACING PHASE",
 		colour = Color3.fromRGB(60, 140, 255),
 		keys = {
-			{ key = "W / ↑",      desc = "전진" },
-			{ key = "S / ↓",      desc = "후진/감속" },
-			{ key = "A / ←  D / →", desc = "조향" },
-			{ key = "SHIFT",      desc = "부스트 발동 (게이지 필요)" },
-			{ key = "SHIFT + 방향", desc = "드리프트 (속도 50% 이상)" },
-			{ key = "E",          desc = "아이템 어빌리티 사용" },
+			{ key = "W / ↑",      desc = "Accelerate" },
+			{ key = "S / ↓",      desc = "Brake / reverse" },
+			{ key = "A / ←  D / →", desc = "Steer" },
+			{ key = "F",          desc = "Boost (needs a full gauge)" },
+			{ key = "SHIFT + steer", desc = "Drift (above half speed)" },
+			{ key = "E",          desc = "Use an item ability" },
 		},
-		tip = "드리프트 종료 시 순간 가속 보너스!\n부스트 패드(노란 패드)를 밟으면 추가 가속.",
+		tip = "Release a long drift for a mini turbo!\nBoost pads (yellow) give extra speed.",
 	},
 }
 
@@ -156,7 +158,7 @@ toastTipPad.Parent        = toastTip
 local toastDismiss = Instance.new("TextLabel")
 toastDismiss.Size          = UDim2.new(1, 0, 0, 18)
 toastDismiss.BackgroundTransparency = 1
-toastDismiss.Text          = "[ F1 ] 전체 조작 가이드 보기  •  잠시 후 자동으로 사라집니다"
+toastDismiss.Text          = "[ F1 ] Full controls guide  •  closes by itself"
 toastDismiss.TextScaled    = false
 toastDismiss.TextSize      = 10
 toastDismiss.Font          = Enum.Font.Gotham
@@ -325,7 +327,7 @@ refTitleBar.Parent            = refPanel
 local refTitle = Instance.new("TextLabel")
 refTitle.Size            = UDim2.new(0.8, 0, 1, 0)
 refTitle.BackgroundTransparency = 1
-refTitle.Text            = "🎮  조작 가이드"
+refTitle.Text            = "🎮  Controls"
 refTitle.TextScaled      = true
 refTitle.Font            = Enum.Font.GothamBlack
 refTitle.TextColor3      = Color3.fromRGB(255, 220, 60)
@@ -485,7 +487,7 @@ hintBtn.Position         = UDim2.new(0, 8, 1, -36)
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0
-hintBtn.Text             = "[ F1 ] 도움말"
+hintBtn.Text             = "[ F1 ] Help"
 hintBtn.TextScaled       = true
 hintBtn.Font             = Enum.Font.Gotham
 hintBtn.TextColor3       = Color3.fromRGB(180, 180, 220)

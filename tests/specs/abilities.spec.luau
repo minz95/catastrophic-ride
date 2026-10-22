@@ -113,7 +113,10 @@ R.describe("ability protection", function()
 		srv.advance(0.1)
 		fire(srv, cars[1], "Cup Noodle")
 		srv.advance(0.1)
-		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed"), 1e-6)
+		-- not slowed: only the canopy's own wind boost is on
+		local AbilityConfig = srv.env.requirePath("ServerScriptService.Modules.AbilityConfig")
+		local boost = AbilityConfig.get("Umbrella", "FOREST").selfSpeed or 1
+		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed") * boost, 1e-6)
 	end)
 
 	R.it("Flower removes active slowdowns", function()
@@ -124,7 +127,9 @@ R.describe("ability protection", function()
 		R.expect(cars[2].seat.MaxSpeed).toBeLessThan(VehicleTuning.base(cars[2].seat, "MaxSpeed"))
 		fire(srv, cars[2], "Flower")
 		srv.advance(0.1)
-		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed"), 1e-6)
+		local AbilityConfig = srv.env.requirePath("ServerScriptService.Modules.AbilityConfig")
+		local boost = AbilityConfig.get("Flower", "FOREST").selfSpeed or 1
+		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed") * boost, 1e-6)
 	end)
 end)
 
