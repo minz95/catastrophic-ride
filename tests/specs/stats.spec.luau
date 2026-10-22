@@ -28,7 +28,10 @@ R.describe("handling across biomes", function()
 			table.sort(values)
 			local p10 = values[math.floor(#values * 0.1) + 1]
 			local p90 = values[math.floor(#values * 0.9) + 1]
-			R.expect(p90 - p10).toBeGreaterThan(0.25)
+			-- over half the configured range (OCEAN / SKY ranges are narrow on
+			-- purpose since 2026-10-22: turning decides those races)
+			local t = Constants.TURN_SPEED[biome]
+			R.expect(p90 - p10).toBeGreaterThan((math.min(t.max, biome == "SKY" and VehicleController.SKY_TURN_CAP or t.max) - t.min) * 0.5)
 		end)
 	end
 end)

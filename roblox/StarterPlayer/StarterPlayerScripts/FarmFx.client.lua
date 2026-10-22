@@ -299,7 +299,7 @@ local function onPunch(attackerId, victimId, info)
 			label(vChar, pips(info.hits or 0, info.needed or F.HITS_TO_DROP), Color3.fromRGB(255, 120, 90), 2.5, "hits")
 			if result == "knockout" then
 				local icon = info.item and ItemConfig[info.item] and ItemConfig[info.item].icon or ""
-				label(vChar, "💥 " .. icon .. " " .. tostring(info.item or "") .. " 떨어뜨림!", Color3.fromRGB(255, 220, 80), 2.2)
+				label(vChar, "💥 " .. icon .. " " .. tostring(info.item or "") .. " DROPPED!", Color3.fromRGB(255, 220, 80), 2.2)
 			end
 			if victim == LocalPlayer then
 				pushMe(info.push)
@@ -308,9 +308,9 @@ local function onPunch(attackerId, victimId, info)
 		elseif result == "blocked" then
 			flash(vChar, Color3.fromRGB(90, 170, 255), 0.25)
 			burst(vChar, Color3.fromRGB(150, 210, 255), 8)
-			label(vChar, "🛡️ 막음!", Color3.fromRGB(140, 200, 255), 1.2)
+			label(vChar, "🛡️ BLOCKED!", Color3.fromRGB(140, 200, 255), 1.2)
 		elseif result == "immune" then
-			label(vChar, "✨ 무적", Color3.fromRGB(230, 230, 255), 1)
+			label(vChar, "✨ IMMUNE", Color3.fromRGB(230, 230, 255), 1)
 		end
 	end)
 end
@@ -322,14 +322,14 @@ local function onGrab(thiefId, victimId, info)
 	if tChar then
 		tweenTo(joint(tChar, "right"), POSE.reachR, 0.15)
 		tweenTo(joint(tChar, "left"), POSE.reachL, 0.15)
-		label(tChar, "🖐️ 훔치는 중…", Color3.fromRGB(255, 200, 90), window)
+		label(tChar, "🖐️ STEALING…", Color3.fromRGB(255, 200, 90), window)
 	end
 	if vChar then
 		_wriggle[vChar] = os.clock() + window
 	end
 	if victim == LocalPlayer then
 		local thief = Players:GetPlayerByUserId(thiefId)
-		prompt(("⚠️ %s이(가) 아이템을 훔치려 해요!  E 연타! (0/%d)"):format(thief and thief.DisplayName or "?",
+		prompt(("⚠️ %s is stealing from you!  Mash E! (0/%d)"):format(thief and thief.DisplayName or "?",
 			Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
 		shake(0.02, 0.3)
 	end
@@ -347,7 +347,7 @@ local function onSwat(victimId, thiefId, info)
 		local thief = Players:GetPlayerByUserId(thiefId)
 		local n = info and info.presses or 0
 		local done = n >= Constants.STEAL_DEFEND_PRESSES
-		prompt(done and "🛡️ 막았어요!" or ("⚠️ %s이(가) 훔치려 해요!  E 연타! (%d/%d)"):format(
+		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash E! (%d/%d)"):format(
 			thief and thief.DisplayName or "?", n, Constants.STEAL_DEFEND_PRESSES),
 			done and Color3.fromRGB(120, 230, 140) or Color3.fromRGB(255, 210, 80), done and 1 or 0.8)
 	end
@@ -364,10 +364,10 @@ local function onGrabEnd(thiefId, victimId, info)
 	if vChar then _wriggle[vChar] = 0 end
 	local result = info and info.result
 	if result == "stolen" then
-		if tChar then label(tChar, "😈 훔쳤다!", Color3.fromRGB(255, 150, 60), 1.6) end
-		if vChar then label(vChar, "😱 도둑맞음!", Color3.fromRGB(255, 110, 110), 1.6); flash(vChar, Color3.fromRGB(255, 120, 60), 0.4) end
+		if tChar then label(tChar, "😈 STOLEN!", Color3.fromRGB(255, 150, 60), 1.6) end
+		if vChar then label(vChar, "😱 ROBBED!", Color3.fromRGB(255, 110, 110), 1.6); flash(vChar, Color3.fromRGB(255, 120, 60), 0.4) end
 	elseif result == "defended" then
-		if vChar then label(vChar, "🛡️ 막아냄!", Color3.fromRGB(120, 230, 140), 1.4); flash(vChar, Color3.fromRGB(120, 230, 140), 0.3) end
+		if vChar then label(vChar, "🛡️ DEFENDED!", Color3.fromRGB(120, 230, 140), 1.4); flash(vChar, Color3.fromRGB(120, 230, 140), 0.3) end
 		if tChar then flash(tChar, Color3.fromRGB(200, 200, 200), 0.2) end
 		if thief == LocalPlayer and tChar and vChar then
 			local a, b = tChar:FindFirstChild("HumanoidRootPart"), vChar:FindFirstChild("HumanoidRootPart")
@@ -378,7 +378,7 @@ local function onGrabEnd(thiefId, victimId, info)
 		end
 	end
 	if victim == LocalPlayer and result ~= "defended" then
-		prompt(result == "stolen" and "😱 아이템을 도둑맞았어요!" or "", Color3.fromRGB(255, 120, 120), result == "stolen" and 1.5 or 0.01)
+		prompt(result == "stolen" and "😱 An item was stolen!" or "", Color3.fromRGB(255, 120, 120), result == "stolen" and 1.5 or 0.01)
 	end
 	report("farmfx", { what = "grabEnd", result = result, drawn = tChar ~= nil })
 end

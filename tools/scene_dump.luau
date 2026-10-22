@@ -84,6 +84,30 @@ if extra:find("drops") then
 	table.insert(roots, env.workspace:FindFirstChild("TrackDrops"))
 end
 
+if extra:find("logs") then
+	-- falling logs as HazardManager drops them: two landed, one still a warning
+	local HazardPlan = env.requirePath("ReplicatedStorage.Shared.HazardPlan")
+	local HazardLook = env.requirePath("ServerScriptService.Modules.HazardLook")
+	local H = env.requirePath("ReplicatedStorage.Shared.Constants").HAZARDS
+	local folder = Mock.Instance.new("Folder")
+	folder.Parent = env.workspace
+	local s0 = geo:project(seg.ax, seg.az).s
+	local st = 5
+	local spots = HazardPlan.logSpots(geo, geo.width, s0 - H.LOG_AHEAD_MIN + 15, 3, function()
+		st = (st * 1103515245 + 12345) % 2147483648
+		return st / 2147483648
+	end)
+	for i, sp in ipairs(spots) do
+		local ground = Vector3.new(sp.x, y, sp.z)
+		if i == #spots then
+			HazardLook.warnMarker(ground).Parent = folder
+		else
+			HazardLook.logModel(CFrame.new(ground + Vector3.new(0, H.LOG_SIZE[2] / 2, 0)) * CFrame.Angles(0, sp.yaw, 0)).Parent = folder
+		end
+	end
+	table.insert(roots, folder)
+end
+
 -- Extra parts other tools put in workspace (e.g. drops) are dumped too.
 local function shapeOf(p)
 	if p.ClassName == "WedgePart" then return "wedge" end

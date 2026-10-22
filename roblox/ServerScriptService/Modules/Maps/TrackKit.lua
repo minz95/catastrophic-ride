@@ -262,6 +262,44 @@ function TrackKit:buildStartApron(root, style)
 	wall(Vector3.new(self.width + thick * 2, h, thick), Vector3.new(0, 0, -(L / 2 + 1) - thick / 2))
 end
 
+--- A wall across the lane at the end of the run-off past the finish, as tall
+-- as the track walls, with chevrons facing the cars. (Studio, 2026-10-22:
+-- the road just ended 0–70 studs past the line; cars that kept going fell
+-- off and respawned at the end, again and again.) style = { name, color,
+-- material, transparency, stripe }
+function TrackKit:buildEndWall(root, style)
+	local n = #self.nodes
+	local a, b = self.nodes[n - 1], self.nodes[n]
+	local dx, dz = b[1] - a[1], b[2] - a[2]
+	local d = math.sqrt(dx * dx + dz * dz)
+	dx, dz = dx / d, dz / d
+	local t = self.track
+	local thick = t.wallThickness or 2
+	local h = t.wallHeight or 8
+	local baseY = t.wallBaseY or (self.top - 0.5)
+	local yaw = math.atan2(dx, dz)
+	local cf = CFrame.new(b[1] - dx * thick / 2, baseY + h / 2, b[2] - dz * thick / 2) * CFrame.Angles(0, yaw, 0)
+	local wall = TrackKit.part(root, {
+		Name = style.name or "EndWall", Size = Vector3.new(self.width + thick * 2, h, thick), CFrame = cf,
+		Color = style.color, Material = style.material, Transparency = style.transparency or 0,
+	})
+	wall.CustomPhysicalProperties = TrackKit.LOW_FRICTION
+	-- chevrons on the side the cars come from (decoration)
+	local stripe = style.stripe or Color3.fromRGB(255, 200, 40)
+	local count = math.floor(self.width / 6)
+	for i = 1, count do
+		local x = -self.width / 2 + (i - 0.5) * self.width / count
+		local p = TrackKit.part(root, {
+			Name = "EndWallChevron", Size = Vector3.new(1.4, math.min(h, 6) * 0.7, 0.2),
+			-- LookVector (−Z) points back down the road, at the cars coming in
+			CFrame = cf * CFrame.new(x, 0, -(thick / 2 + 0.1)) * CFrame.Angles(0, 0, (i % 2 == 0) and 0.6 or -0.6),
+			Color = stripe, Material = Enum.Material.Neon,
+		})
+		p.CanCollide, p.CanTouch, p.CanQuery, p.CastShadow = false, false, false, false
+	end
+	return wall
+end
+
 -- ─── Walls ────────────────────────────────────────────────────────────────────
 
 --- Box walls. style: { name, color, material, transparency,

@@ -203,7 +203,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
 				_contestPresses = 1
 			elseif result == "inventory_full" then
 				local ui = _getUIManager()
-				if ui then ui.showNotification("인벤토리 가득 참 — 더 좋은 아이템만 교체됩니다", 2, Color3.fromRGB(255, 140, 40)) end
+				if ui then ui.showNotification("Inventory full — only better items swap in", 2, Color3.fromRGB(255, 140, 40)) end
 				_flashPromptDenied()
 			else
 				_flashPromptDenied()
@@ -224,7 +224,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		local result = RemoteEvents.RequestDrop:InvokeServer(1)
 		if result == "ok" then
 			local ui = _getUIManager()
-			if ui then ui.showNotification("아이템 버림", 1.2, Color3.fromRGB(180, 180, 180)) end
+			if ui then ui.showNotification("Item dropped", 1.2, Color3.fromRGB(180, 180, 180)) end
 		end
 	end
 end)

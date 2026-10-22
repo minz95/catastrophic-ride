@@ -126,6 +126,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   pure rules in `FarmingRules.canPunch` / `punch`; knock-outs drop through
   `_dropItem` (reason "knocked_out"). Every fight or steal step is
   broadcast as `RemoteEvents.FarmAction` and drawn by `FarmFx` for all.
+- Ability strengths are data in `AbilityConfig` (selfSpeed, victimSpeed,
+  push, …); `tests/lib/balance.luau` reads the same numbers. After changing
+  items, stats or abilities run `lune run tools/balance.luau` and keep
+  `Constants.BALANCE_TARGETS` green. Speed buffs stack to `SPEED_STACK_MAX`.
+- Shoves (abilities, obstacles) go to the driver as a `CarImpact` knock.
+- Falling-log spots come from `Shared/HazardPlan` (always a way past);
+  `Autopilot` avoids `state.hazards`.
+- Phase timers: `GameManager.shortenPhase` (crafting hurry, finish grace).
+  A finished car is parked (MaxSpeed 0) and may not respawn; each road has a
+  run-off and an end wall (`TrackKit:buildEndWall`).
+- Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).
 - Timed things end on a timer, not on the next client message (contests used

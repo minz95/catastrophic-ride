@@ -121,6 +121,7 @@ local function _buildChannel(root)
 		name = "ReefWall", color = C.REEF, material = MAT.ROCK,
 		cap = { name = "ReefWallCap", color = C.REEF_TOP, material = MAT.NEON },
 	})
+	KIT:buildEndWall(root, { name = "ReefWall_End", color = C.REEF, material = MAT.ROCK })
 	KIT:buildSlowZones(root, { color = C.WATER_FOAM, material = MAT.NEON, transparency = 0.65 })
 end
 

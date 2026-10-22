@@ -82,14 +82,20 @@ local function _applyBodyForce(vehicle, force, duration, name)
 	Debris:AddItem(bf, duration)
 end
 
+-- A shove: sent to the car's driver as a CarImpact knock, which the drive
+-- model adds to its own velocity (a second BodyVelocity would fight
+-- DriveVelocity and do almost nothing).
 local function _impulse(vehicle, direction, magnitude)
 	local primary = vehicle and vehicle.PrimaryPart
-	if not primary or direction.Magnitude < 1e-3 then return end
-	local bv = Instance.new("BodyVelocity")
-	bv.Velocity  = direction.Unit * magnitude
-	bv.MaxForce  = Vector3.new(1e5, 1e4, 1e5)
-	bv.Parent    = primary
-	Debris:AddItem(bv, 0.3)
+	if not primary or direction.Magnitude < 1e-3 or not magnitude or magnitude <= 0 then return end
+	local d = direction.Unit * magnitude
+	for _, p in ipairs(Players:GetPlayers()) do
+		local pd = SessionManager.getData(p)
+		if pd and pd.vehicleModel == vehicle then
+			RemoteEvents.CarImpact:FireClient(p, d.X, d.Z, 0, magnitude)
+			return
+		end
+	end
 end
 
 local function _flat(v)
@@ -185,11 +191,15 @@ end
 
 local EFFECTS = {}
 
--- Ride-height lift (VehicleController reads LiftOffset).
+-- Ride-height lift (VehicleController reads LiftOffset). A lifted car
+-- skips mud and ground drops, and glides at selfSpeed (AbilityConfig).
 local function _lift(activator, cfg, studs)
 	local vehicle = _getVehicle(activator)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	VehicleLift.set(vehicle, cfg.effectKey, studs or LIFT[cfg.effectKey], cfg.duration)
+	if cfg.selfSpeed and cfg.selfSpeed ~= 1 then
+		_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "lift")
+	end
 	return vehicle
 end
 
@@ -198,7 +208,7 @@ end
 EFFECTS.steerDisable = function(activator, target, cfg)
 	if not _hurts(target) then return end
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
-	_applyTurnMult(_getVehicle(target), 0, cfg.duration, "steerDisable")
+	_applyTurnMult(_getVehicle(target), cfg.victimTurn or 0, cfg.victimFor or cfg.duration, "steerDisable")
 	RemoteEvents.ScreenEffect:FireClient(target, "steerDisable", { duration = cfg.duration })
 end
 
@@ -228,8 +238,8 @@ EFFECTS.slipperyPuddle = function(activator, _, cfg, itemName)
 	_dropLogged(activator, itemName, cfg.effectKey, drop)
 	_onDropTouched(drop.hazard, activator, function(p, v)
 		if not _hurts(p) then return end
-		EffectFx.play("slipped", p, 1.5, activator)
-		_applySpeedMult(v, 0.7, 1.5, "slippery")
+		EffectFx.play("slipped", p, cfg.hitFor, activator)
+		_applySpeedMult(v, cfg.hitSpeed, cfg.hitFor, "slippery")
 		RemoteEvents.ScreenEffect:FireClient(p, "slippery", {})
 	end)
 end
@@ -244,17 +254,17 @@ EFFECTS.reverseBoost = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_impulse(vehicle, vehicle.PrimaryPart.CFrame.LookVector, 90)
-	_applySpeedMult(vehicle, 2.0, cfg.duration, "sodaBlast")
+	_impulse(vehicle, vehicle.PrimaryPart.CFrame.LookVector, cfg.push)
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "sodaBlast")
 end
 
 EFFECTS.flagAura = function(activator, _, cfg)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(_getVehicle(activator), 1.20, cfg.duration, "flagAura")
-	local ally = _nearestEnemy(activator, 40)
+	_applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "flagAura")
+	local ally = (cfg.allySpeed or 1) ~= 1 and _nearestEnemy(activator, cfg.allyRange or 40)
 	if ally then
 		EffectFx.play(cfg.effectKey, ally, cfg.duration, activator)
-		_applySpeedMult(_getVehicle(ally), 1.20, cfg.duration, "flagAura")
+		_applySpeedMult(_getVehicle(ally), cfg.allySpeed, cfg.duration, "flagAura")
 		RemoteEvents.ScreenEffect:FireClient(ally, "flagBuff", { duration = cfg.duration })
 	end
 end
@@ -276,6 +286,7 @@ end
 EFFECTS.umbrellaBlock = function(activator, _, cfg)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	RaceEffects.grant(activator, "shield", cfg.duration)   -- blocks the next hit
+	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "umbrella") end
 end
 
 EFFECTS.umbrellaSail = function(activator, _, cfg)
@@ -284,12 +295,14 @@ EFFECTS.umbrellaSail = function(activator, _, cfg)
 	if not vehicle or not vehicle.PrimaryPart then return end
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	_applyBodyForce(vehicle, vehicle.PrimaryPart.CFrame.RightVector * 600, cfg.duration, "UmbrellaSail")
-	_applySpeedMult(vehicle, 1.15, cfg.duration, "umbrellaSail")
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "umbrellaSail")
 end
 
 EFFECTS.parachute = function(activator, _, cfg)
-	local vehicle = _lift(activator, cfg)
-	_applySpeedMult(vehicle, 0.5, cfg.duration, "parachute")   -- drift slowly
+	-- SKY Umbrella: a canopy that lifts the flyer and blocks the next hit
+	-- (it used to halve the flyer's speed for 6 s: a pure penalty)
+	_lift(activator, cfg)
+	RaceEffects.grant(activator, "shield", cfg.duration)
 end
 
 EFFECTS.magnetPull = function(activator, target, cfg)
@@ -298,8 +311,8 @@ EFFECTS.magnetPull = function(activator, target, cfg)
 	local me, them = _getVehicle(activator), _getVehicle(target)
 	if not me or not them or not me.PrimaryPart or not them.PrimaryPart then return end
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
-	_impulse(them, _flat(me.PrimaryPart.Position - them.PrimaryPart.Position), 35)
-	_applySpeedMult(them, 0.8, cfg.duration, "magnetPull")
+	_impulse(them, _flat(me.PrimaryPart.Position - them.PrimaryPart.Position), cfg.victimPush)
+	_applySpeedMult(them, cfg.victimSpeed, cfg.victimFor or cfg.duration, "magnetPull")
 	RemoteEvents.ScreenEffect:FireClient(target, "magnetPull", { duration = cfg.duration })
 end
 
@@ -309,6 +322,7 @@ EFFECTS.digMode = function(activator, _, cfg)
 	-- Drill: mud and off-track slow zones have no effect while active
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	RaceEffects.grant(activator, "dig", cfg.duration)
+	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "dig") end
 	local seat = _getSeat(_getVehicle(activator))
 	if seat then
 		VehicleTuning.remove(seat, "MaxSpeed", "mud")
@@ -322,6 +336,7 @@ EFFECTS.bloomCleanse = function(activator, _, cfg)
 	local seat = _getSeat(_getVehicle(activator))
 	local removed = seat and VehicleTuning.cleanse(seat) or 0
 	RaceEffects.grant(activator, "shield", cfg.duration)
+	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "bloom") end
 	Telemetry.record("cleanse", { userId = activator.UserId, removed = removed })
 end
 
@@ -341,8 +356,8 @@ EFFECTS.redline = function(activator, _, cfg)
 	-- Treadmill: much faster, but no steering while it lasts
 	local vehicle = _getVehicle(activator)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(vehicle, 2.0, cfg.duration, "redline")
-	_applyTurnMult(vehicle, 0, cfg.duration, "redline")
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "redline")
+	_applyTurnMult(vehicle, cfg.selfTurn or 0, cfg.duration, "redline")
 	RemoteEvents.ScreenEffect:FireClient(activator, "redlineActive", { duration = cfg.duration })
 end
 
@@ -369,22 +384,23 @@ EFFECTS.steamCloud = function(activator, _, cfg, itemName)
 		if not _hurts(p) then return end
 		EffectFx.play("steamed", p, math.min(3, cfg.duration), activator)
 		RemoteEvents.ScreenEffect:FireClient(p, "steamBlind", { duration = math.min(3, cfg.duration) })
+		if cfg.hitSpeed then _applySpeedMult(_getVehicle(p), cfg.hitSpeed, cfg.hitFor, "steamed") end
 	end)
 end
 
 EFFECTS.noodleSnare = function(activator, target, cfg)
 	if not _hurts(target) then return end
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
-	_applySpeedMult(_getVehicle(target), 0.70, cfg.duration, "noodleSnare")
+	_applySpeedMult(_getVehicle(target), cfg.victimSpeed, cfg.victimFor or cfg.duration, "noodleSnare")
 	RemoteEvents.ScreenEffect:FireClient(target, "noodleSnare", { duration = cfg.duration })
 end
 
 EFFECTS.rocketBurst = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(vehicle, 3.0, cfg.duration, "rocketBurst")
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "rocketBurst")
 	local primary = vehicle and vehicle.PrimaryPart
-	if primary then _impulse(vehicle, primary.CFrame.LookVector, 60) end
+	if primary then _impulse(vehicle, primary.CFrame.LookVector, cfg.push) end
 end
 
 EFFECTS.windBlast = function(activator, _, cfg)
@@ -395,7 +411,8 @@ EFFECTS.windBlast = function(activator, _, cfg)
 		local tv = _getVehicle(target)
 		if tv and tv.PrimaryPart and _hurts(target) then
 			EffectFx.play("blown", target, nil, activator)
-			_impulse(tv, _flat(tv.PrimaryPart.Position - origin), 55)
+			_impulse(tv, _flat(tv.PrimaryPart.Position - origin), cfg.victimPush)
+			if cfg.victimSpeed then _applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "windBlast") end
 			RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
 		end
 	end
@@ -418,8 +435,8 @@ EFFECTS.gustBlast = function(activator, _, cfg)
 				local side = Vector3.new(-look.Z, 0, look.X)
 				if side:Dot(to) < 0 then side = -side end
 				EffectFx.play("blown", target, cfg.duration, activator)
-				_impulse(tv, side, 45)
-				_applySpeedMult(tv, 0.85, cfg.duration, "gustBlast")
+				_impulse(tv, side, cfg.victimPush)
+				_applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "gustBlast")
 				RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
 			end
 		end
@@ -441,14 +458,14 @@ EFFECTS.spinBurst = function(activator, _, cfg)
 		fwd.Y,
 		fwd.X * math.sin(angle) + fwd.Z * math.cos(angle)
 	)
-	_impulse(vehicle, rotated, 70)
-	_applySpeedMult(vehicle, 2.0, cfg.duration, "spinBurst")
+	_impulse(vehicle, rotated, cfg.push)
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "spinBurst")
 end
 
 EFFECTS.windRide = function(activator, _, cfg)
-	local mult = (_biome == "SKY") and 1.6 or ((_biome == "OCEAN") and 1.4 or 1.2)
+	-- stronger in SKY / OCEAN: AbilityConfig biomeEffect
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(_getVehicle(activator), mult, cfg.duration, "windRide")
+	_applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "windRide")
 end
 
 -- ── BODY ──────────────────────────────────────────────────────────────────────
@@ -461,8 +478,8 @@ end
 EFFECTS.raftGlide = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applyTurnMult(vehicle, 3, cfg.duration, "raftGlide")   -- slippery but steerable
-	_applySpeedMult(vehicle, 1.15, cfg.duration, "raftGlide")
+	_applyTurnMult(vehicle, cfg.selfTurn or 1, cfg.duration, "raftGlide")   -- slippery but steerable
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "raftGlide")
 end
 
 EFFECTS.logObstacle = function(activator, _, cfg, itemName)
@@ -479,10 +496,23 @@ EFFECTS.logObstacle = function(activator, _, cfg, itemName)
 end
 
 EFFECTS.sofaFortress = function(activator, _, cfg)
-	-- Red Sofa: full stop, but nothing can hurt you meanwhile
+	-- Red Sofa: nothing can hurt you, and racers next to you bounce off
+	-- (it used to stop the sofa dead for 2 s: a trap for its own driver)
+	local vehicle = _getVehicle(activator)
+	local primary = vehicle and vehicle.PrimaryPart
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	RaceEffects.grant(activator, "invincible", cfg.duration)
-	_applySpeedMult(_getVehicle(activator), 0, cfg.duration, "sofaFortress")
+	if cfg.selfSpeed then _applySpeedMult(vehicle, cfg.selfSpeed, cfg.selfFor or cfg.duration, "sofaFortress") end
+	if not primary then return end
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 8)) do
+		local tv = _getVehicle(target)
+		if tv and tv.PrimaryPart and _hurts(target) then
+			EffectFx.play("rammed", target, nil, activator)
+			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), cfg.victimPush)
+			if cfg.victimSpeed then _applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "sofaBounce") end
+			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
+		end
+	end
 end
 
 EFFECTS.cartRam = function(activator, _, cfg)
@@ -490,12 +520,13 @@ EFFECTS.cartRam = function(activator, _, cfg)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return end
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_impulse(vehicle, primary.CFrame.LookVector, 50)
-	for _, target in ipairs(_allInRadius(activator, 6)) do
+	_impulse(vehicle, primary.CFrame.LookVector, cfg.push)
+	if cfg.selfSpeed then _applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "cartRam") end
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 6)) do
 		local tv = _getVehicle(target)
 		if tv and tv.PrimaryPart and _hurts(target) then
 			EffectFx.play("rammed", target, nil, activator)
-			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), 40)
+			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), cfg.victimPush)
 			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
 		end
 	end
@@ -507,24 +538,24 @@ EFFECTS.barrelRoll = function(activator, _, cfg)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return end
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(vehicle, 1.1, cfg.duration, "barrelRoll")
-	for _, target in ipairs(_allInRadius(activator, 8)) do
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "barrelRoll")
+	for _, target in ipairs(_allInRadius(activator, cfg.radius or 8)) do
 		local tv = _getVehicle(target)
 		if tv and tv.PrimaryPart and _hurts(target) then
 			local right = _flat(primary.CFrame.RightVector)
 			local to = _flat(tv.PrimaryPart.Position - primary.Position)
 			local dir = (right:Dot(to) >= 0) and right or -right
 			EffectFx.play("rammed", target, nil, activator)
-			_impulse(tv, dir, 45)
+			_impulse(tv, dir, cfg.victimPush)
 			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
 		end
 	end
 end
 
 EFFECTS.lockdown = function(activator, _, cfg)
-	-- Suitcase: brief stop, then the next hit is absorbed
+	-- Suitcase: locks shut, the next hit is absorbed
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applySpeedMult(_getVehicle(activator), 0.3, 0.5, "lockdown")
+	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.selfFor or 0.5, "lockdown") end
 	RaceEffects.grant(activator, "shield", cfg.duration)
 end
 
@@ -533,7 +564,7 @@ EFFECTS.microFreeze = function(activator, _, cfg)
 	for _, target in ipairs(_allInRadius(activator, cfg.radius or 12)) do
 		if _hurts(target) then
 			EffectFx.play("frozen", target, cfg.duration, activator)
-			_applySpeedMult(_getVehicle(target), 0, cfg.duration, "microFreeze")
+			_applySpeedMult(_getVehicle(target), cfg.victimSpeed, cfg.victimFor or cfg.duration, "microFreeze")
 			RemoteEvents.ScreenEffect:FireClient(target, "microFreeze", { duration = cfg.duration })
 		end
 	end
@@ -543,9 +574,9 @@ EFFECTS.bathSplash = function(activator, target, cfg)
 	EffectFx.play(cfg.effectKey, activator, nil)
 	for _, t in ipairs(_allInRadius(activator, cfg.radius or 8)) do
 		if _hurts(t) then
-			EffectFx.play("splashed", t, cfg.duration * 0.5, activator)
+			EffectFx.play("splashed", t, cfg.victimFor, activator)
 			RemoteEvents.ScreenEffect:FireClient(t, "bathSplash", { duration = cfg.duration })
-			_applySpeedMult(_getVehicle(t), 0.80, cfg.duration * 0.5, "bathSplash")
+			_applySpeedMult(_getVehicle(t), cfg.victimSpeed, cfg.victimFor, "bathSplash")
 		end
 	end
 end
@@ -554,20 +585,20 @@ EFFECTS.backpackBoost = function(activator, _, cfg)
 	-- Backpack: the client refills its boost gauge
 	EffectFx.play(cfg.effectKey, activator, nil)
 	RemoteEvents.ScreenEffect:FireClient(activator, "boostRecharge", {})
+	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "backpack") end
 end
 
 EFFECTS.skateSlide = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
-	_applyTurnMult(vehicle, 4, cfg.duration, "skateSlide")   -- very twitchy
-	_applySpeedMult(vehicle, 1.25, cfg.duration, "skateSlide")
+	_applyTurnMult(vehicle, cfg.selfTurn or 1, cfg.duration, "skateSlide")   -- very twitchy
+	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "skateSlide")
 end
 
 EFFECTS.lifeFloat = function(activator, _, cfg) _lift(activator, cfg) end
 EFFECTS.kiteLift  = EFFECTS.lifeFloat
 EFFECTS.kiteGlide = function(activator, _, cfg)
-	local vehicle = _lift(activator, cfg)
-	_applySpeedMult(vehicle, 1.3, cfg.duration, "kiteGlide")
+	_lift(activator, cfg)
 end
 
 -- ─── RequestAbility handler ───────────────────────────────────────────────────

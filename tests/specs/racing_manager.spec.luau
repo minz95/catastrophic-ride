@@ -287,3 +287,72 @@ R.describe("rounds", function()
 	end)
 end)
 
+
+-- Studio match-forest (2026-10-22): the winner kept driving after the line,
+-- ran off the end of the road (50 studs of run-off, no wall) and fell to the
+-- kill plane, respawned at the end and fell again until the race ended; the
+-- others waited up to the 240 s timeout, and a timed-out race showed no one.
+R.describe("after the finish line", function()
+	local function twoCarRace()
+		local srv = Server.boot({
+			players = 2,
+			scripts = {
+				"ServerScriptService.MapBuilders.ForestMapBuilder",
+				"ServerScriptService.GameBootstrap",
+				"ServerScriptService.RacingManager",
+			},
+			harness = { harness = "lune", biome = "FOREST", players = 2, lobbyDelay = 0,
+				durations = { FARMING = 0.1, CRAFTING = 0.1 } },
+		})
+		local env = srv.env
+		local VehicleBuilder = env.requirePath("ServerScriptService.Modules.VehicleBuilder")
+		local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+		local stats = VehicleStats.calculate(nil, nil, nil, "FOREST")
+		local cars = {}
+		for i, p in ipairs(srv.players) do
+			local model = VehicleBuilder.build(stats, "FOREST", CFrame.new(i * 7, 2, 590), {})
+			model.Parent = env.workspace
+			srv.SessionManager.setVehicle(p, model, stats)
+			cars[i] = model
+		end
+		srv.advance(0.5)
+		assert(srv.GameManager.getPhase() == "RACING")
+		srv.advance(env.requirePath("ReplicatedStorage.Shared.Constants").RACE_COUNTDOWN + 0.5)
+		local function tagged(tag) return srv.mock.CollectionService:GetTagged(tag)[1] end
+		local function finish(i)
+			for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine" }) do
+				tagged(tag).Touched:Fire(cars[i].PrimaryPart)
+				srv.advance(0.1)
+			end
+		end
+		return srv, cars, finish
+	end
+
+	R.it("a finished car is parked (brakes to a stop) and cannot ask for a respawn", function()
+		local srv, cars, finish = twoCarRace()
+		finish(1)
+		R.expect(#srv.Telemetry.events("finish")).toBe(1)
+		local seat = cars[1]:FindFirstChildWhichIsA("VehicleSeat", true)
+		R.expect(seat.MaxSpeed).toBe(0)
+		local other = cars[2]:FindFirstChildWhichIsA("VehicleSeat", true)
+		R.expect(other.MaxSpeed).toBeGreaterThan(0)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestRespawn, srv.players[1])).toBe("denied: finished")
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("after the winner the others get FINISH_GRACE seconds; who did not make it is listed as DNF", function()
+		local srv, _, finish = twoCarRace()
+		local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")
+		finish(1)
+		local RS = srv.env.game:GetService("ReplicatedStorage")
+		R.expect(RS:GetAttribute("PhaseEndsAt") - srv.env.workspace:GetServerTimeNow()).toBeNear(C.FINISH_GRACE, 0.5)
+		srv.advance(C.FINISH_GRACE + 0.5)
+		R.expect(srv.GameManager.getPhase()).toBe("RESULTS")
+		local calls = rawget(srv.RemoteEvents.RaceFinished, "_calls")
+		local order = calls[#calls].args[1]
+		R.expect(#order).toBe(2)
+		R.expect(order[1].userId).toBe(srv.players[1].UserId)
+		R.expect(order[2].dnf).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)

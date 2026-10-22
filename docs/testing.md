@@ -247,6 +247,55 @@ landed hits, at least one knock-out and one block (`minPunches`), the
 inventory ledger, and that every client drew the punch and guard animations
 (`fightFx`; the steal scenarios check the grab / swat animations).
 
+### Crafting balance
+
+`lune run tools/balance.luau [BIOME|all] [seeds] [matches]` (~5 min for all,
+2 seeds) measures what every item is worth and who wins, on the real game
+modules (`tests/lib/balance.luau`):
+
+1. **Pace**: KineSim races of ~20 builds spread over top speed and turning,
+   fitted to MaxSpeed / TurnSpeed / Torque / boost seconds (R² ≈ 0.99), so
+   any build's race time is known.
+2. **Abilities**: each item's E, with the numbers AbilityManager uses
+   (`AbilityConfig` selfSpeed / victimSpeed / push / …), fired by a sensible
+   player in a KineSim race (bursts on straights, lifts and Drill before mud,
+   Backpack when the gauge is empty). Harmful ones are applied to a victim
+   car to measure what one hit costs; hits per race = uses × `HIT_RATE`
+   (an assumption: nearest-target 75%, radius / 25, drops 30%).
+3. **Matches**: Monte Carlo fields of 6 players with inventories drawn with
+   the farming spawn odds; each crafts the items worth most; time = pace −
+   own gains + hits taken from rivals + driver noise.
+
+`reports/balance/summary.md` lists each item's value (stats / own gain /
+offense / protection, uses per race, win lift) and checks
+`Constants.BALANCE_TARGETS`: rarity tiers rise ≥ 0.3 s each, Epic − Common
+1–4.5 s per slot, no item > 2 s above its tier, every item worth ≥ 0.2 s,
+the most common winning item < 40% of wins, the rarest build of a field
+wins 20–60%. It exits 1 when a check fails. Not modelled: HEAD / TAIL
+passives, car contact, blinding screens on humans. Confirm a tuning change
+with `python3 tools/studio/sim.py run abilities-forest` (real abilities,
+bot clients).
+
+### Idle time
+
+`python3 tools/studio/idle_report.py` reads the saved Studio match reports
+and writes `reports/studio/idle.md`: when each inventory filled up and how
+long FARMING went on after a player's last pickup, how long crafters waited
+after submitting, and how long finished racers waited for the results.
+`tests/specs/farming.spec.luau` ("idle time") and
+`racing_manager.spec.luau` ("after the finish line") check the fixes below.
+
+### Obstacles
+
+Falling logs (FOREST, `HazardManager`) land where `Shared/HazardPlan` says:
+always a ≥ 12-stud gap beside them, 30 studs apart, never on a ramp, mud,
+pad or the finish stretch; a red ring + ⚠ marks the spot 1.2 s before.
+`hazards.spec.luau` checks 2000 random drops and races KineSim drivers
+through them (`KineSim.run{ logs = true, avoid = false }` = a driver who
+ignores them). `Autopilot` steers around `state.hazards`; Studio bots pass
+the logs and obstacle drops they see. Look:
+`lune run tools/scene_dump.luau FOREST 34 out.json 300 logs`.
+
 ### Playtests: markers and the fun report
 
 In Studio (or on a server with `ReplicatedStorage:SetAttribute("PlaytestMarkers", true)`)

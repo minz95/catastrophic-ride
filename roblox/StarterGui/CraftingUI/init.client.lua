@@ -48,7 +48,7 @@ local title = Instance.new("TextLabel")
 title.Size                  = UDim2.new(1, 0, 0, 44)
 title.Position              = UDim2.new(0, 0, 0, 8)
 title.BackgroundTransparency = 1
-title.Text                  = "⚙ 크래프팅 페이즈"
+title.Text                  = "⚙ CRAFTING"
 title.Font                  = Enum.Font.GothamBold
 title.TextScaled            = true
 title.TextColor3            = Color3.fromRGB(255, 200, 60)
@@ -84,7 +84,7 @@ local function _sectionLabel(text, yPos)
 	return lbl
 end
 
-_sectionLabel("수집한 아이템", 86)
+_sectionLabel("Your items", 86)
 
 -- ─── Inventory row ────────────────────────────────────────────────────────────
 
@@ -104,14 +104,14 @@ _il.Parent                   = invFrame
 
 -- ─── Slot section header + auto-assign button ─────────────────────────────────
 
-_sectionLabel("비히클 슬롯", 186)
+_sectionLabel("Vehicle slots", 186)
 
 local autoBtn = Instance.new("TextButton")
 autoBtn.Size              = UDim2.new(0, 90, 0, 20)
 autoBtn.Position          = UDim2.new(1, -100, 0, 186)
 autoBtn.BackgroundColor3  = Color3.fromRGB(50, 80, 140)
 autoBtn.BorderSizePixel   = 0
-autoBtn.Text              = "자동 배정"
+autoBtn.Text              = "Auto fill"
 autoBtn.Font              = Enum.Font.Gotham
 autoBtn.TextScaled        = false
 autoBtn.TextSize          = 11
@@ -124,7 +124,7 @@ local hintLbl = Instance.new("TextLabel")
 hintLbl.Size              = UDim2.new(1, -20, 0, 16)
 hintLbl.Position          = UDim2.new(0, 10, 0, 322)
 hintLbl.BackgroundTransparency = 1
-hintLbl.Text              = "아이템 선택 → 슬롯 클릭으로 배정 | 슬롯 클릭(선택 없음) → 해제"
+hintLbl.Text              = "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
 hintLbl.Font              = Enum.Font.Gotham
 hintLbl.TextScaled        = false
 hintLbl.TextSize          = 10
@@ -148,7 +148,7 @@ _sl.Padding                  = UDim.new(0, 4)
 _sl.Parent                   = slotsFrame
 
 local SLOT_ORDER  = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
-local SLOT_KR     = { BODY="몸체", ENGINE="엔진", SPECIAL="특수", MOBILITY="이동", HEAD="앞", TAIL="뒤" }
+local SLOT_KR     = { BODY="Body", ENGINE="Engine", SPECIAL="Special", MOBILITY="Mobility", HEAD="Head", TAIL="Tail" }
 
 local C_SLOT_EMPTY   = Color3.fromRGB(28,  28,  48)
 local C_SLOT_FILLED  = Color3.fromRGB(45,  45,  72)
@@ -212,7 +212,7 @@ submitBtn.Size              = UDim2.new(0, 220, 0, 48)
 submitBtn.Position          = UDim2.new(0.5, -110, 1, -64)
 submitBtn.BackgroundColor3  = Color3.fromRGB(60, 200, 80)
 submitBtn.BorderSizePixel   = 0
-submitBtn.Text              = "제출하기"
+submitBtn.Text              = "Submit"
 submitBtn.Font              = Enum.Font.GothamBold
 submitBtn.TextScaled        = true
 submitBtn.TextColor3        = Color3.new(1, 1, 1)
@@ -223,7 +223,7 @@ local emptyNote = Instance.new("TextLabel")
 emptyNote.Size              = UDim2.new(1, -20, 0, 18)
 emptyNote.Position          = UDim2.new(0, 10, 1, -38)
 emptyNote.BackgroundTransparency = 1
-emptyNote.Text              = "아이템 없음 → 기본 고물 vehicle 지급"
+emptyNote.Text              = "No items → you get a basic junk vehicle"
 emptyNote.Font              = Enum.Font.Gotham
 emptyNote.TextScaled        = false
 emptyNote.TextSize          = 11
@@ -394,7 +394,7 @@ submitBtn.MouseButton1Click:Connect(function()
 	end)
 	if ok and (result == "ok" or (type(result) == "string" and result:sub(1, 2) == "ok")) then
 		_submitted                 = true
-		submitBtn.Text             = "✓ 제출 완료"
+		submitBtn.Text             = "✓ Submitted"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
 	end
 end)
@@ -447,7 +447,7 @@ local guideTitle = Instance.new("TextLabel")
 guideTitle.Size               = UDim2.new(1, -12, 0, 26)
 guideTitle.Position           = UDim2.new(0, 6, 0, 6)
 guideTitle.BackgroundTransparency = 1
-guideTitle.Text               = "슬롯 가이드"
+guideTitle.Text               = "Slot guide"
 guideTitle.Font               = Enum.Font.GothamBold
 guideTitle.TextScaled         = false
 guideTitle.TextSize           = 13
@@ -456,12 +456,12 @@ guideTitle.TextXAlignment     = Enum.TextXAlignment.Left
 guideTitle.Parent             = guideBg
 
 local GUIDE_ROWS = {
-	{ hint = "몸체 — 무게·안정성" },
-	{ hint = "엔진 — 파워·가속력" },
-	{ hint = "특수 — 부스트" },
-	{ hint = "이동 — 바이옴 특화" },
-	{ hint = "앞 — 충돌 패시브" },
-	{ hint = "뒤 — 후방 패시브" },
+	{ hint = "Body — weight, stability" },
+	{ hint = "Engine — power, acceleration" },
+	{ hint = "Special — boost" },
+	{ hint = "Mobility — biome handling" },
+	{ hint = "Head — collision passive" },
+	{ hint = "Tail — rear passive" },
 }
 for i, row in ipairs(GUIDE_ROWS) do
 	local r = Instance.new("TextLabel")
@@ -506,7 +506,7 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 		_submitted              = false
 		_assignments            = {}
 		_selectedItem           = nil
-		submitBtn.Text          = "제출하기"
+		submitBtn.Text          = "Submit"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 200, 80)
 		_refreshDisplay()
 		screen.Enabled = true

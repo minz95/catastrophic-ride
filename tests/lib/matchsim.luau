@@ -185,7 +185,10 @@ function MatchSim.run(opts)
 	srv.advance(5)
 
 	-- Telemetry from the real server
+	local spawned, dropped = 0, 0
 	for _, e in ipairs(srv.Telemetry.events()) do
+		if e.kind == "item_wave" then spawned += e.count or 0 end
+		if e.kind == "item_drop" then dropped += 1 end
 		for _, b in ipairs(bots) do
 			local uid = b.player.UserId
 			if e.kind == "item_pickup" and e.userId == uid then b.stats.pickups += 1 end
@@ -258,7 +261,7 @@ function MatchSim.run(opts)
 	})
 
 	return {
-		seed = seed, players = n, results = results, biome = biome, fun = fun,
+		seed = seed, players = n, results = results, biome = biome, fun = fun, spawned = spawned, dropped = dropped,
 		itemsLeft = #itemList(map), log = log,
 		serverErrors = table.clone(Mock.errors or {}),
 	}

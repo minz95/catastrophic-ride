@@ -104,12 +104,18 @@ function MapChecks.solidTriggers(w)
 	return solid
 end
 
+--- The wall that closes the road at the end of the run-off past the finish
+-- (TrackKit:buildEndWall, named "*_End"): meant to stand across the lane.
+function MapChecks.isEndWall(w, ob)
+	return ob.name:match("_End$") ~= nil and w.geo:project(ob.cx, ob.cz).s >= w.geo.length - 4
+end
+
 --- Collidable parts other than walls that stand in the lane.
 function MapChecks.laneObstacles(w, isWall)
 	local hits, seen = {}, {}
 	MapChecks.eachLanePoint(w, 1, 3, 1.5, function(x, z, s, lat)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) then
+			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) and not MapChecks.isEndWall(w, ob) then
 				seen[ob] = true
 				table.insert(hits, string.format("%s at s=%d lateral=%d", ob.name, s, lat))
 			end
@@ -125,7 +131,7 @@ function MapChecks.wallIntrusions(w, isWall, margin)
 	local worst = {}
 	MapChecks.eachLanePoint(w, 2, margin, 2, function(x, z, s, lat, seg)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if isWall(ob.name) and MapQuery.contains(ob, x, z) then
+			if isWall(ob.name) and MapQuery.contains(ob, x, z) and not MapChecks.isEndWall(w, ob) then
 				local node = seg + 1
 				local depth = half - math.abs(lat)
 				if not worst[node] or depth > worst[node].depth then

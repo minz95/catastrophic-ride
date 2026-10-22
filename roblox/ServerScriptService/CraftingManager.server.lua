@@ -96,6 +96,16 @@ RemoteEvents.SubmitCraft.OnServerInvoke = function(player, slots)
 	for _ in pairs(_submitted) do count = count + 1 end
 	if count >= _totalPlayers then
 		GameManager.allPlayersSubmittedCraft()
+	elseif count >= math.ceil(_totalPlayers * Constants.CRAFT_HURRY.SHARE) then
+		-- most players are ready: the rest get CRAFT_HURRY.SECONDS more, not
+		-- the whole phase (ready players used to wait up to 2 minutes)
+		if GameManager.shortenPhase(Constants.PHASES.CRAFTING, Constants.CRAFT_HURRY.SECONDS) then
+			for _, p in ipairs(Players:GetPlayers()) do
+				if not _submitted[p.UserId] then
+					RemoteEvents.ScreenEffect:FireClient(p, "craftHurry", {})
+				end
+			end
+		end
 	end
 
 	return "ok"
