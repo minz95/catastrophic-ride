@@ -40,10 +40,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Change numbers in the data file, not the builders.
 - Walls come from `TrackGeometry:boundaryRuns`: extended to close the outside
   of every turn, dropped wherever they would stand inside the lane (inside of
-  turns, SKY's figure-8 crossings). `wallGapHalfWidth` > 0 adds doorways
+  turns). No track crosses itself (a crossing leaves the fence open; SKY's
+  old figure-8 let flyers slip out there). `wallGapHalfWidth` > 0 adds doorways
   (currently 0 everywhere: continuous walls).
 - Look of a map or a drop without Studio: `tools/scene_dump.luau` +
-  `tools/scene_render.py` (PNG). Drift timing: `tools/drift_sim.luau`.
+  `tools/scene_render.py` (PNG). Layout and where simulated drivers
+  slip out: `lune run tools/topview.luau <BIOME>` + `python3 tools/topview.py
+  reports/<biome>/topview.json` (top-down PNG, respawns marked). Drift timing: `tools/drift_sim.luau`.
 - Studio runs are heavy: one small batch at a time, never in parallel with
   another Studio run or the full offline suite.
 - Vehicle look: `Modules/VehicleDesign.lua` (car / boat / plane as data:

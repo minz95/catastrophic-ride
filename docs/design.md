@@ -37,16 +37,16 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~7,610 | ~5,950 | ~7,580 |
+| Length (centerline) | ~7,610 | ~5,950 | ~7,030 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, loop A, crossover plaza, loop B, crystal canyon, final descent |
-| Checkpoints | N14, N19 | N5, N17 | N8, N18 |
+| Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
+| Checkpoints | N14, N19 | N5, N17 | N6, N13 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
 close the outside of a turn and dropped wherever it would stand inside the
-lane — the inside of a turn and Sky's figure-8 crossings at (0, 800) and
-(0, 400). A wall stretch that only exists past a corner is dropped too (it
+lane — the inside of a turn. No track crosses itself: a crossing leaves the
+fence open (Sky's old figure-8 did, and flyers slipped out there). A wall stretch that only exists past a corner is dropped too (it
 would poke out of the next wall as a spur).
 
 ## Fun as numbers

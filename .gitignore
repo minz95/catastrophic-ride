@@ -7,3 +7,5 @@
 tests/out/
 tests/scratch/
 __pycache__/
+reports/*/topview.json
+reports/*/topview.png
