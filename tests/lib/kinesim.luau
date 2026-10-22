@@ -400,7 +400,7 @@ function KineSim.run(world, opts)
 		for _ = 1, 3 do
 			local pushed = false
 			for _, ob in ipairs(world.obstacleGrid.near(x, z, r + 2)) do
-				if layered and not MapQuery.inBand(ob, roadY, band) then continue end
+				if layered and not MapQuery.inBand(ob, roadY, band, x, z) then continue end
 				local cx, cz, inside = MapQuery.closest(ob, x, z)
 				local nx, nz = x - cx, z - cz
 				local d = math.sqrt(nx * nx + nz * nz)

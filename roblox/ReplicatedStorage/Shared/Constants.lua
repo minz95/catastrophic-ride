@@ -39,7 +39,10 @@ function Constants.farmSupply(players)
 	return math.min(Constants.ITEM_SPAWN_COUNT, F.BASE + F.PER_PLAYER * math.max(players or 1, 1))
 end
 Constants.CRAFT_HURRY  = { SHARE = 0.5, SECONDS = 25 }  -- half the players submitted → the rest get 25 s
-Constants.FINISH_GRACE = 30   -- s the others get after the winner crosses the line
+-- s the others get after the winner crosses the line. 45 = FUN_TARGETS
+-- finishSpread: a novice is ~1.35× the winner's time, 30-40 s on the
+-- 2026-10-22 tracks (30 s cut the Studio SKY novice short)
+Constants.FINISH_GRACE = 45
 Constants.RACE_COUNTDOWN = 4 -- s from RACING to GO (cars spawn and seat, then 3-2-1); Modules/RaceStart
 Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 

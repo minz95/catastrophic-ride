@@ -52,6 +52,8 @@ function MapQuery.shape(part)
 		shape.ux, shape.uz, shape.hu = r.X, r.Z, size.X / 2
 		shape.vx, shape.vz = l.X / ll, l.Z / ll
 		shape.hv = size.Z / 2 * ll + size.Y / 2 * math.abs(l.Y)
+		-- its height varies along v: centre-plane Y = cy + slope × v
+		shape.cy, shape.slope, shape.halfY = cf.Position.Y, l.Y / ll, size.Y / 2 / math.abs(up.Y)
 	else
 		shape.cx, shape.cz = (xMin + xMax) / 2, (zMin + zMax) / 2
 		shape.ux, shape.uz, shape.hu = 1, 0, (xMax - xMin) / 2
@@ -189,8 +191,17 @@ function MapQuery.obstacles(root, trackTop, band, topHi)
 end
 
 --- Does a shape reach into the body band of a car on a road at height y?
-function MapQuery.inBand(sh, y, band)
-	return sh.yMax > y + band[1] and sh.yMin < y + band[2]
+-- (x, z): where the car is; a sloped part (a ramp, a pitched wall or lid on
+-- a climbing road) is checked at its height there, not its whole Y extent.
+function MapQuery.inBand(sh, y, band, x, z)
+	local lo, hi = sh.yMin, sh.yMax
+	if sh.slope and x then
+		local v = (x - sh.cx) * sh.vx + (z - sh.cz) * sh.vz
+		v = math.clamp(v, -sh.hv, sh.hv)
+		local yc = sh.cy + sh.slope * v
+		lo, hi = yc - sh.halfY, yc + sh.halfY
+	end
+	return hi > y + band[1] and lo < y + band[2]
 end
 
 return MapQuery

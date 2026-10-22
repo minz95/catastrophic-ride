@@ -63,11 +63,31 @@ Track.nodes = {
 	{   80, -740 }, -- N20
 	{  -80, -900 }, -- N21
 	{    0,-1040 }, -- N22 end S5
-	-- S6 Final Descent (straight Z -1040 → -2000)
-	{    0,-1400 }, -- N23
-	{    0,-1700 }, -- N24
-	{    0,-2000 }, -- N25 FinishLine
-	{    0,-2220 }, -- N26 runoff past the finish (220 studs: flyers are fast; end wall)
+	-- S6 Cloud Corkscrew (2026-10-22, the final straight was 1000 studs of
+	-- nothing): one full turn (left) around the sky tower, centre
+	-- (160, -1250), R = 160, climbing 48 studs (4.8%), so the top of the turn
+	-- passes 48 over its own start; then a dive to Y 90 at the finish.
+	-- A third number on a node is the road surface Y.
+	{    0,-1150 },        -- N23 heading south
+	{    0,-1250, 80 },    -- N24 corkscrew entry (west)
+	{ 21.4,-1330, 84 },    -- N25
+	{   80,-1388.6, 88 },  -- N26
+	{  160,-1410, 92 },    -- N27 south
+	{  240,-1388.6, 96 },  -- N28
+	{ 298.6,-1330, 100 },  -- N29
+	{  320,-1250, 104 },   -- N30 east
+	{ 298.6,-1170, 108 },  -- N31
+	{  240,-1111.4, 112 }, -- N32
+	{  160,-1090, 116 },   -- N33 north
+	{   80,-1111.4, 120 }, -- N34
+	{ 21.4,-1170, 124 },   -- N35 over the entry
+	{    0,-1250, 128 },   -- N36 top, over N24
+	{    0,-1330, 128 },   -- N37 level ...
+	{    0,-1450, 128 },   -- N38 ... until past the first turn below
+	-- S7 Dive to the finish (7.6%); the finish stretch is 10 above the start
+	{    0,-1950, 90 },    -- N39
+	{    0,-2000, 90 },    -- N40 FinishLine
+	{    0,-2220, 90 },    -- N41 runoff past the finish (220 studs: flyers are fast; end wall)
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -77,7 +97,8 @@ Track.sections = {
 	{ name = "S3 crossover",       from = 8,  to = 10 },
 	{ name = "S4 cloud bend B",    from = 10, to = 15 },
 	{ name = "S5 crystal canyon",  from = 15, to = 22 },
-	{ name = "S6 final descent",   from = 22, to = 26 },
+	{ name = "S6 cloud corkscrew", from = 22, to = 38 },
+	{ name = "S7 dive",            from = 38, to = 41 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.SKY.zFinish.
@@ -103,7 +124,7 @@ Track.boostPads = {
 	{ -440,   390 },  -- N8 bend A south apex (rewards tight line)
 	{ -270,   395 },  -- S3 crossover
 	{  440,   770 },  -- N11 bend B north apex
-	{    0, -1400 },  -- S6 mid descent
+	{    0, -1700 },  -- S7 dive
 }
 
 -- Drift corner centres { x, z } (spec §4.3: loop apexes + canyon entry).
@@ -133,7 +154,7 @@ Track.finishSize      = { Track.width, 12, 6 }
 Track.updraftZones = {
 	{ -440,   830 },   -- inside bend A
 	{  440,   330 },   -- inside bend B
-	{    0, -1200 },   -- mid descent recovery
+	{    0, -1600 },   -- S7 dive (one layer only)
 }
 
 -- Decorative crystal clusters { x, z } (spec §4.7), all off the corridor.
@@ -145,6 +166,9 @@ Track.crystalSeeds = {
 	{ -170, -820 }, {  170, -960 },
 	{  90, -1500 }, { -90, -1500 }, {  90, -1800 }, { -90, -1800 },        -- S6 descent
 }
+
+-- The sky tower inside the S6 corkscrew (decoration; inner wall at R 160 - 25 - 2).
+Track.skyTower = { x = 160, z = -1250, r = 60 }
 
 -- Farming area (FarmArea model, hidden during RACING).
 Track.farm = { cx = 0, cz = 1850, size = { 200, 240 } }

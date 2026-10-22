@@ -233,21 +233,62 @@ function TrackKit:buildSurface(root, style)
 		if style.physics ~= false then slab.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
 		if style.joints ~= false and i < #self.nodes - 1 then
 			local b = self.nodes[i + 1]
-			-- Where the grade changes the flat disc would stand proud of the
-			-- slab on one side of the node: sink it by that much.
+			-- On a slope the disc is tilted to the mean of the two slabs'
+			-- slopes (flat, it would stand proud of the slab going uphill);
+			-- where the grade changes it would still stand proud on one side
+			-- of the node: sink it by that much.
 			local dg = math.abs(self.geo:grade(i + 1) - self.geo:grade(i))
 			local sink = 0.05 + dg * self.half
+			local jointCF = CFrame.new(b[1], self:nodeY(i + 1) - sink - th / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2)
+			if self.geo.hasHeights and (self.geo:grade(i) ~= 0 or self.geo:grade(i + 1) ~= 0) then
+				local up = (self:segCF(i, 0).UpVector + self:segCF(i + 1, 0).UpVector).Unit
+				local side = up:Cross(Vector3.new(0, 0, 1))
+				if side.Magnitude < 1e-3 then side = up:Cross(Vector3.new(1, 0, 0)) end
+				-- the cylinder's axis (local X) along the mean road normal
+				jointCF = CFrame.fromMatrix(Vector3.new(b[1], self:nodeY(i + 1), b[2]) - up * (sink + th / 2), up, side.Unit)
+			end
 			local joint = TrackKit.part(root, {
 				Name = (style.jointName or (style.name .. "Joint")) .. "_" .. (i + 1),
 				Shape = Enum.PartType.Cylinder,
 				Size = Vector3.new(th, self.width, self.width),
-				CFrame = CFrame.new(b[1], self:nodeY(i + 1) - sink - th / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
+				CFrame = jointCF,
 				Color = color, Material = style.material,
 			})
 			joint:SetAttribute("TrackFloor", true)
 			if style.physics ~= false then joint.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
 		end
 		if style.decorate then style.decorate(root, i, cf, len) end
+	end
+end
+
+-- ─── Ceiling over the lane ──────────────────────────────────────────────────
+
+--- An invisible lid over every segment, `relY` above the road and following
+-- it (SKY: flyers may climb but not over the fence). Wide enough to cover
+-- the walls and the outside of each turn (one disc per node). One part per
+-- segment instead of one sheet over the whole map: a road that passes over
+-- itself needs a lid per layer.
+function TrackKit:buildCeiling(root, relY, style)
+	style = style or {}
+	local th = style.thickness or 2
+	local w = self.width + (self.track.wallThickness or 2) * 2 + 4
+	for i = 1, #self.nodes - 1 do
+		local len = self:segLen(i)
+		if len < 0.1 then continue end
+		TrackKit.part(root, {
+			Name = (style.name or "Ceiling") .. "_" .. i, Size = Vector3.new(w, th, self:segLen3(i) + 4),
+			CFrame = self:segCF(i, self.top + relY + th / 2),
+			CanCollide = true, Transparency = 1, CastShadow = false,
+		})
+		if i < #self.nodes - 1 then
+			local b = self.nodes[i + 1]
+			TrackKit.part(root, {
+				Name = (style.name or "Ceiling") .. "Joint_" .. (i + 1), Shape = Enum.PartType.Cylinder,
+				Size = Vector3.new(th, w, w),
+				CFrame = CFrame.new(b[1], self:nodeY(i + 1) + relY + th / 2, b[2]) * CFrame.Angles(0, 0, math.pi / 2),
+				CanCollide = true, Transparency = 1, CastShadow = false,
+			})
+		end
 	end
 end
 
@@ -446,11 +487,19 @@ function TrackKit:buildWalls(root, style)
 				local runLen = run[2] - run[1]
 				if pillars then
 					local count = math.max(1, math.ceil(runLen / pillars.spacing))
+					-- raised stretch: pillars stand on the road (not 26 studs
+					-- below it, in the lane of a lower layer); same top
+					local ph, pmid = h, midY
+					local raisedP = (self:nodeY(i) + self:nodeY(i + 1)) / 2 - self.top > 2
+					if raisedP and baseY < self.top - TrackKit.RAISED_WALL_DROP then
+						ph = baseY + h - (self.top - TrackKit.RAISED_WALL_DROP)
+						pmid = self.top - TrackKit.RAISED_WALL_DROP + ph / 2
+					end
 					for k = 0, count - 1 do
 						local along = run[1] + (k + 0.5) * runLen / count - len / 2
 						local p = TrackKit.part(root, {
 							Name = style.name .. i .. "_" .. slot .. (side > 0 and "R" or "L"),
-							Size = Vector3.new(pillars.size, h, pillars.size),
+							Size = Vector3.new(pillars.size, ph, pillars.size),
 							Color = pillars.colors[(slot % #pillars.colors) + 1],
 							Material = pillars.material, Transparency = pillars.transparency or 0,
 							CanCollide = true, CastShadow = false,
@@ -460,7 +509,7 @@ function TrackKit:buildWalls(root, style)
 						if self.geo.hasHeights then
 							-- upright, at the road height where the pillar stands
 							local rise = self.geo:segHeight(i, along + len / 2) - self.top
-							p.CFrame = CFrame.new(p.Position.X, midY + rise, p.Position.Z)
+							p.CFrame = CFrame.new(p.Position.X, pmid + rise, p.Position.Z)
 								* CFrame.Angles(0, math.atan2(self.geo.segments[i].dx, self.geo.segments[i].dz), 0)
 						end
 						slot += 1

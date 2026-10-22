@@ -37,10 +37,10 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~8,020 | ~6,530 | ~7,030 |
+| Length (centerline) | ~8,020 | ~6,530 | ~8,160 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, lighthouse spiral (flume up 1¼ turns, Y 2 → 40), water slide (down to the sea, 6.2%) + lagoon run, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
+| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, lighthouse spiral (flume up 1¼ turns, Y 2 → 40), water slide (down to the sea, 6.2%) + lagoon run, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, cloud corkscrew (one turn up around the sky tower, Y 80 → 128), dive to the finish (Y 90) |
 | Checkpoints | N14, S4b straight | N5, water slide | N6, N13 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
@@ -220,7 +220,8 @@ spot with its track section; the RESULTS report lists them per section.
   and drops two waves of rarer items at 35% and 65% of the phase (100 items
   for 4 players filled every inventory in 15–50 s of 90). CRAFTING: once half
   the players have submitted, the rest get 25 s. RACING: the winner's finish
-  leaves the others 30 s (a HUD countdown), then non-finishers are listed as
+  leaves the others 45 s (a HUD countdown; was 30 s, raised with the longer
+  climbing / spiral tracks), then non-finishers are listed as
   DNF (a timed-out race used to show nobody).
 - **2026-10-22 — Nobody falls off after the finish.** A finished car is parked
   (MaxSpeed 0, no respawns); the road runs 150 studs (Sky 220) past the line
@@ -242,6 +243,17 @@ spot with its track section; the RESULTS report lists them per section.
   ("fell"), logs never drop under a higher turn. Studio found the suspension
   ray resting on the Sky map's haze planes (Y 28–34, same XZ) once the road
   went below them: suspension and drop rays now count only collidable parts.
+- **2026-10-22 — Sky corkscrew.** The 1000-stud final straight becomes a
+  corkscrew: one full turn (R 160) around a sky tower, climbing 48 studs so
+  the top passes over its own start, then a dive to the finish (Y 90).
+  The fence stands on a raised road (not 26 studs below it), the invisible
+  lid is one part per segment 40 above the road (one sheet over the map
+  would cap the upper turn), and the round road joints are tilted to the
+  slope (flat, they stood 1.2 studs proud going uphill). FINISH_GRACE
+  30 → 45 s (= FUN_TARGETS finishSpread): on the longer tracks a novice is
+  30-40 s behind the winner. Studio: escape cases spawned up a raised road
+  shot to the lid (the held height got the rise twice): `RaceSim` now calls
+  `resetRide` on spawn.
 - **2026-10-22 — Ocean flume.** A white water flume winds up 1¼ turns
   around a lighthouse (Y 2 → 40, each turn 30 studs over the one below, the
   top turn also over the end of S3) and slides back down to the sea,

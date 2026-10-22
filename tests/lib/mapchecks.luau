@@ -20,9 +20,9 @@ MapChecks.roadY = roadY
 
 --- Does a shape reach the body band of a car on the road at progress s?
 -- (on a road that passes over itself, parts of the other layer do not)
-local function atRoad(w, sh, s)
+local function atRoad(w, sh, s, x, z)
 	if not w.geo.hasHeights then return true end
-	return MapQuery.inBand(sh, roadY(w, s), w.band or { 0.6, 3.0 })
+	return MapQuery.inBand(sh, roadY(w, s), w.band or { 0.6, 3.0 }, x, z)
 end
 MapChecks.atRoad = atRoad
 
@@ -134,7 +134,7 @@ function MapChecks.laneObstacles(w, isWall)
 	local hits, seen = {}, {}
 	MapChecks.eachLanePoint(w, 1, 3, 1.5, function(x, z, s, lat)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) and atRoad(w, ob, s)
+			if not isWall(ob.name) and not seen[ob] and MapQuery.contains(ob, x, z) and atRoad(w, ob, s, x, z)
 				and not MapChecks.isEndWall(w, ob) then
 				seen[ob] = true
 				table.insert(hits, string.format("%s at s=%d lateral=%d", ob.name, s, lat))
@@ -151,7 +151,7 @@ function MapChecks.wallIntrusions(w, isWall, margin)
 	local worst = {}
 	MapChecks.eachLanePoint(w, 2, margin, 2, function(x, z, s, lat, seg)
 		for _, ob in ipairs(w.obstacleGrid.near(x, z, 1)) do
-			if isWall(ob.name) and MapQuery.contains(ob, x, z) and atRoad(w, ob, s) and not MapChecks.isEndWall(w, ob) then
+			if isWall(ob.name) and MapQuery.contains(ob, x, z) and atRoad(w, ob, s, x, z) and not MapChecks.isEndWall(w, ob) then
 				local node = seg + 1
 				local depth = half - math.abs(lat)
 				if not worst[node] or depth > worst[node].depth then
@@ -201,7 +201,7 @@ function MapChecks.slowZonesInLane(w)
 	local hit = {}
 	MapChecks.eachLanePoint(w, 4, 3, 3, function(x, z, s, _, seg)
 		for _, zsh in ipairs(grid.near(x, z, 1)) do
-			if MapQuery.contains(zsh, x, z) and atRoad(w, zsh, s) then
+			if MapQuery.contains(zsh, x, z) and atRoad(w, zsh, s, x, z) then
 				hit[zsh.name] = hit[zsh.name] or { s = s, seg = seg }
 			end
 		end
@@ -261,7 +261,7 @@ function MapChecks.wallGaps(w, isWall, offset, maxGap)
 	local geo, half = w.geo, w.track.width / 2
 	local function covered(x, z, y)
 		for _, wl in ipairs(grid.near(x, z, 1)) do
-			if MapQuery.contains(wl, x, z) and (not geo.hasHeights or MapQuery.inBand(wl, y, w.band)) then return true end
+			if MapQuery.contains(wl, x, z) and (not geo.hasHeights or MapQuery.inBand(wl, y, w.band, x, z)) then return true end
 		end
 		return false
 	end
@@ -349,7 +349,7 @@ function MapChecks.onCenterline(w, tag)
 	for s = 0, w.geo.length, 1 do
 		local x, z = w.geo:pointAt(s)
 		for _, sh in ipairs(list) do
-			if not hit[sh] and MapQuery.contains(sh, x, z) and atRoad(w, sh, s) then hit[sh] = true end
+			if not hit[sh] and MapQuery.contains(sh, x, z) and atRoad(w, sh, s, x, z) then hit[sh] = true end
 		end
 	end
 	local bad = {}
