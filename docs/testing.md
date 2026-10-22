@@ -298,7 +298,8 @@ the logs and obstacle drops they see. Look:
 ### Roads with heights
 
 `track_heights.spec.luau`: layered projection and walls on a test loop,
-FOREST's grades (≤ 6%, change ≤ 6% per node), 24+ studs where the road
+OCEAN's flume (grades ≤ 8%, 24+ studs where it passes over itself, a boat
+up and down without respawns), FOREST's grades (≤ 6%, change ≤ 6% per node), 24+ studs where the road
 passes over itself, respawns on the right layer, logs never under a deck, a
 KineSim driver whose progress never jumps a layer; `racing_manager.spec`
 puts a car under the trestle and expects a "fell" respawn. The map checks

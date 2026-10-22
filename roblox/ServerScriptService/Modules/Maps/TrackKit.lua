@@ -251,6 +251,66 @@ function TrackKit:buildSurface(root, style)
 	end
 end
 
+-- ─── Supports under a raised road ───────────────────────────────────────────
+
+--- Posts from the ground up to the road in both wall lines every
+-- cfg.spacing studs where the road is at least cfg.minRise above trackTop,
+-- with a cross beam under the deck. Decoration only (no collision; the
+-- walls keep cars on the road). A post that would stand in the lane of a
+-- lower layer (a spiral's turn below, a road passing underneath) is left out.
+-- cfg = { spacing, size, minRise, groundY (default 0) };
+-- style = { name, color, material }
+function TrackKit:supportBlocked(px, pz, y)
+	local geo = self.geo
+	for k, seg in ipairs(geo.segments) do
+		if math.min(seg.ay, seg.by) < y - TrackGeometry.LAYER_GAP then
+			local p = geo:project(px, pz, k, 0)
+			if p.dist < geo.halfWidth + 1 and geo:segHeight(k, p.t) < y - TrackGeometry.LAYER_GAP then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+function TrackKit:buildSupports(root, cfg, style)
+	local geo = self.geo
+	if not cfg or not geo.hasHeights then return end
+	local off = self:wallOffset()
+	local groundY = cfg.groundY or 0
+	for i, seg in ipairs(geo.segments) do
+		local n = math.max(1, math.floor(seg.len / cfg.spacing))
+		for k = 0, n - 1 do
+			local t = (k + 0.5) * seg.len / n
+			local y = geo:segHeight(i, t)
+			if y - self.top >= cfg.minRise then
+				local cx, cz = seg.ax + seg.dx * t, seg.az + seg.dz * t
+				local yaw = math.atan2(seg.dx, seg.dz)
+				local placed = 0
+				for _, side in ipairs({ -1, 1 }) do
+					local px, pz = cx - seg.dz * side * off, cz + seg.dx * side * off
+					if not self:supportBlocked(px, pz, y) then
+						local h = y - 1 - groundY   -- ground to just under the deck
+						TrackKit.part(root, {
+							Name = style.name .. "Post", Size = Vector3.new(cfg.size, h, cfg.size),
+							CFrame = CFrame.new(px, groundY + h / 2, pz) * CFrame.Angles(0, yaw, 0),
+							Color = style.color, Material = style.material, CanCollide = false,
+						})
+						placed += 1
+					end
+				end
+				if placed == 2 then
+					TrackKit.part(root, {
+						Name = style.name .. "Beam", Size = Vector3.new(off * 2 + cfg.size, 1.6, 1.6),
+						CFrame = CFrame.new(cx, y - 2, cz) * CFrame.Angles(0, yaw, 0),
+						Color = style.color, Material = style.material, CanCollide = false, CastShadow = false,
+					})
+				end
+			end
+		end
+	end
+end
+
 -- ─── Start apron ─────────────────────────────────────────────────────────────
 
 --- Floor behind the start line, closed by side walls and a back wall, so a
@@ -348,6 +408,8 @@ end
 -- gap opens; style.rail then adds a visual band per stretch (rail.collide
 -- = true to make it solid). SKY: one colour, see-through glass (until
 -- 2026-10-22 alternating neon colours: 60-stud stripes, hard on the eyes).
+TrackKit.RAISED_WALL_DROP = 2
+
 function TrackKit:buildWalls(root, style)
 	local t = self.track
 	local thick = t.wallThickness or 2
@@ -367,6 +429,17 @@ function TrackKit:buildWalls(root, style)
 		local len = self:segLen(i)
 		if len < 0.1 then continue end
 		local cf = self:segCF(i, midY)
+		-- A raised stretch's walls stand on the road (RAISED_WALL_DROP below
+		-- it), not down to the sea floor / ground: they would hang into a
+		-- lower layer of the road. The top stays at the same height above it.
+		local hSeg, midSeg = h, midY
+		if not pillars and (self:nodeY(i) + self:nodeY(i + 1)) / 2 - self.top > 2
+			and baseY < self.top - TrackKit.RAISED_WALL_DROP then
+			local base = self.top - TrackKit.RAISED_WALL_DROP
+			hSeg = baseY + h - base
+			midSeg = base + hSeg / 2
+			cf = self:segCF(i, midSeg)
+		end
 		for _, side in ipairs({ -1, 1 }) do
 			local slot = 0
 			for _, run in ipairs(self:wallStretches(i, side, offset, reach)) do
@@ -404,9 +477,15 @@ function TrackKit:buildWalls(root, style)
 					end
 				else
 					local along = (run[1] + run[2]) / 2 - len / 2
+					-- style.raised = { color, material }: the look of a raised
+					-- stretch (a flume's sides instead of reef rock)
+					local look = style
+					if style.raised and (self:nodeY(i) + self:nodeY(i + 1)) / 2 - self.top > 2 then
+						look = style.raised
+					end
 					local wall = TrackKit.part(root, {
-						Name = style.name, Size = Vector3.new(thick, h, runLen),
-						Color = style.color, Material = style.material,
+						Name = style.name, Size = Vector3.new(thick, hSeg, runLen),
+						Color = look.color, Material = look.material,
 						Transparency = style.transparency or 0,
 						CastShadow = not style.transparency,
 					})
@@ -418,7 +497,7 @@ function TrackKit:buildWalls(root, style)
 							Color = style.cap.color, Material = style.cap.material,
 							CastShadow = false,
 						})
-						cap.CFrame = cf * CFrame.new(side * offset, h / 2 + 0.3, along)
+						cap.CFrame = cf * CFrame.new(side * offset, hSeg / 2 + 0.3, along)
 					end
 					if style.rail then
 						-- solid band at vehicle height (for see-through walls:
@@ -429,7 +508,7 @@ function TrackKit:buildWalls(root, style)
 							Color = r.color, Material = r.material, CastShadow = false,
 						})
 						rail.CustomPhysicalProperties = TrackKit.LOW_FRICTION
-						rail.CFrame = cf * CFrame.new(side * offset, (self.top + r.y + r.height / 2) - midY, along)
+						rail.CFrame = cf * CFrame.new(side * offset, (self.top + r.y + r.height / 2) - midSeg, along)
 					end
 				end
 			end

@@ -152,3 +152,58 @@ R.describe("FOREST raised road and giant tree spiral", function()
 		R.expect(jumps).toBeEmpty("progress jumps")
 	end)
 end)
+
+R.describe("OCEAN lighthouse spiral and water slide", function()
+	local geo = RaceProgress.geometry("OCEAN")
+	local Ocean = env.requirePath("ReplicatedStorage.Shared.Tracks.OceanTrack")
+
+	-- (boats hold a height above the water instead of climbing a slope, so a
+	-- slide may be steeper than a road: 8%)
+	R.it("climbs from the sea and slides back down to it, no grade over 8%", function()
+		local top, bad = 0, {}
+		for _, n in ipairs(Ocean.nodes) do top = math.max(top, n[3] or Ocean.trackTop) end
+		R.expect(top).toBeGreaterThan(30)
+		R.expect(geo:heightAt(0)).toBe(Ocean.trackTop)
+		R.expect(geo:heightAt(geo.length)).toBe(Ocean.trackTop)
+		for i = 1, #geo.segments do
+			if math.abs(geo:grade(i)) > 0.08 then table.insert(bad, string.format("segment %d: %.1f%%", i, geo:grade(i) * 100)) end
+		end
+		R.expect(bad).toBeEmpty("too steep")
+	end)
+
+	R.it("where the flume passes over itself there are 24+ studs", function()
+		local half, worst, passes = Ocean.width / 2, math.huge, 0
+		for s = 0, geo.length, 5 do
+			local x, z = geo:pointAt(s)
+			for s2 = s + 4 * Ocean.width, geo.length, 5 do
+				local x2, z2 = geo:pointAt(s2)
+				if math.abs(x - x2) < half * 2 and math.abs(z - z2) < half * 2
+					and math.sqrt((x - x2) ^ 2 + (z - z2) ^ 2) < half * 2 - 6 then
+					passes += 1
+					worst = math.min(worst, math.abs(geo:heightAt(s2) - geo:heightAt(s)))
+				end
+			end
+		end
+		R.expect(passes).toBeGreaterThan(0)
+		R.expect(worst).toBeGreaterThan(24)
+	end)
+
+	R.it("a simulated boat goes up the spiral and down the slide without jumping a layer", function()
+		local w = World.build("OCEAN", { visibility = "shipped" })
+		local Autopilot = w.env.requirePath("ReplicatedStorage.Shared.Autopilot")
+		local Constants = w.env.requirePath("ReplicatedStorage.Shared.Constants")
+		local reps = Builds.representative(Builds.enumerate(w.env, "OCEAN"))
+		local r = KineSim.run(w, {
+			car = KineSim.carFromStats(reps[2].build.stats, Constants, "OCEAN"),
+			profile = Autopilot.PROFILES.average, profileName = "average", seed = 2, respawn = "track",
+		})
+		R.expect(r.finished).toBe(true)
+		R.expect(#r.respawns).toBe(0)
+		local jumps = {}
+		for i = 2, #r.samples do
+			local d = r.samples[i].s - r.samples[i - 1].s
+			if d > 60 or d < -20 then table.insert(jumps, string.format("t=%.1f", r.samples[i].t)) end
+		end
+		R.expect(jumps).toBeEmpty("progress jumps")
+	end)
+end)

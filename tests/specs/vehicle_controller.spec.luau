@@ -277,3 +277,39 @@ R.describe("VehicleController.apply on a VehicleBuilder car", function()
 		R.expect(VC.apply(bare, { forwardSpeed = 1, yawRate = 0, climb = 0 }, {})).toBe(false)
 	end)
 end)
+
+-- Boats and flyers hold a height instead of riding the ground; on a raised
+-- road (OCEAN's flume, a SKY corkscrew) that height follows the road.
+R.describe("VehicleController ride height on a raised road", function()
+	local function boat(biome)
+		local stats = VehicleStats.calculate(nil, nil, nil, biome)
+		local model = VehicleBuilder.build(stats, biome, CFrame.new(0, biome == "SKY" and 84 or 3, 0), {})
+		return model.PrimaryPart
+	end
+	local idle = { forwardSpeed = 0, yawRate = 0, climb = 0, knockX = 0, knockZ = 0 }
+
+	R.it("an OCEAN boat's water line rises and falls with the flume", function()
+		local p = boat("OCEAN")
+		local susp = p:FindFirstChild("SuspensionHover")
+		local y0 = susp.Position.Y
+		VC.apply(p, idle, { biome = "OCEAN", altitudeDt = 1 / 60, roadRise = 10 })
+		R.expect(susp.Position.Y).toBeNear(y0 + 10, 1e-6)
+		VC.apply(p, idle, { biome = "OCEAN", altitudeDt = 1 / 60, roadRise = 10 })
+		R.expect(susp.Position.Y).toBeNear(y0 + 10, 1e-6)   -- only the change is applied
+		VC.apply(p, idle, { biome = "OCEAN", altitudeDt = 1 / 60, roadRise = 4 })
+		R.expect(susp.Position.Y).toBeNear(y0 + 4, 1e-6)
+	end)
+
+	R.it("a SKY flyer's hover follows the road; after a respawn it starts from the new spot", function()
+		local p = boat("SKY")
+		local hover = p:FindFirstChild("HoverPosition")
+		local y0 = hover.Position.Y
+		VC.apply(p, idle, { biome = "SKY", altitudeDt = 1 / 60, roadRise = 20 })
+		R.expect(hover.Position.Y).toBeNear(y0 + 20, 1e-6)
+		p.CFrame = CFrame.new(0, 84 + 5, 0)   -- respawned where the road is 5 up
+		VC.resetRide(p, 5)
+		R.expect(hover.Position.Y).toBeNear(89, 1e-6)
+		VC.apply(p, idle, { biome = "SKY", altitudeDt = 1 / 60, roadRise = 6 })
+		R.expect(hover.Position.Y).toBeNear(90, 1e-6)
+	end)
+end)

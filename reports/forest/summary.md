@@ -81,8 +81,9 @@ Overtakes per match: 10.2. Per section (mean over matches; "decided" = matches w
 - 10 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 161 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (0)
+## Known bugs from the test suite (1)
 
+- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 

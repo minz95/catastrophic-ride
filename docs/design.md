@@ -37,11 +37,11 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~8,020 | ~5,950 | ~7,030 |
+| Length (centerline) | ~8,020 | ~6,530 | ~7,030 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
-| Checkpoints | N14, S4b straight | N5, N17 | N6, N13 |
+| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, lighthouse spiral (flume up 1¼ turns, Y 2 → 40), water slide (down to the sea, 6.2%) + lagoon run, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
+| Checkpoints | N14, S4b straight | N5, water slide | N6, N13 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
 close the outside of a turn and dropped wherever it would stand inside the
@@ -242,6 +242,15 @@ spot with its track section; the RESULTS report lists them per section.
   ("fell"), logs never drop under a higher turn. Studio found the suspension
   ray resting on the Sky map's haze planes (Y 28–34, same XZ) once the road
   went below them: suspension and drop rays now count only collidable parts.
+- **2026-10-22 — Ocean flume.** A white water flume winds up 1¼ turns
+  around a lighthouse (Y 2 → 40, each turn 30 studs over the one below, the
+  top turn also over the end of S3) and slides back down to the sea,
+  replacing the reef U-bend and the return zigzag. Boats hold a height above
+  the water instead of riding the ground, so that height now follows the
+  road (`VehicleController.apply{ roadRise }`, `RaceProgress.roadRise`,
+  `resetRide` on respawn; buoyancy uses the flume's water). A raised
+  stretch's walls stand on the road (`TrackKit.RAISED_WALL_DROP`), not down
+  to the sea floor where they hung into the turn below.
 - **2026-10-22 — Sky without crossings.** The two 360° loops met their own
   entry (a fork, and an open fence where the novice slipped out); they are
   now 270° / 225° bends forming an S. A map spec fails any track that meets
