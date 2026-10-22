@@ -10,40 +10,40 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 62.1 | expert | 93.8 s | 0 | 0 |
-| live code | slowest | 62.1 | expert | 93.8 s | 0 | 0 |
-| authored | slowest | 62.1 | average | 102.6 s | 0 | 1 |
-| live code | slowest | 62.1 | average | 102.6 s | 0 | 1 |
-| authored | slowest | 62.1 | novice | 115.0 s | 0 | 3 |
-| live code | slowest | 62.1 | novice | 115.0 s | 0 | 3 |
-| authored | p50 | 62.6 | expert | 93.3 s | 0 | 0 |
-| live code | p50 | 62.6 | expert | 93.3 s | 0 | 0 |
-| authored | p50 | 62.6 | average | 100.2 s | 0 | 0 |
-| live code | p50 | 62.6 | average | 100.2 s | 0 | 0 |
-| authored | p50 | 62.6 | novice | 119.4 s | 0 | 3 |
-| live code | p50 | 62.6 | novice | 119.4 s | 0 | 3 |
-| authored | fastest | 63.9 | expert | 89.9 s | 0 | 0 |
-| live code | fastest | 63.9 | expert | 89.9 s | 0 | 0 |
-| authored | fastest | 63.9 | average | 95.7 s | 0 | 0 |
-| live code | fastest | 63.9 | average | 95.7 s | 0 | 0 |
-| authored | fastest | 63.9 | novice | 112.6 s | 0 | 0 |
-| live code | fastest | 63.9 | novice | 112.6 s | 0 | 0 |
+| authored | slowest | 62.1 | expert | 98.4 s | 0 | 0 |
+| live code | slowest | 62.1 | expert | 98.4 s | 0 | 0 |
+| authored | slowest | 62.1 | average | 100.6 s | 0 | 0 |
+| live code | slowest | 62.1 | average | 100.6 s | 0 | 0 |
+| authored | slowest | 62.1 | novice | 111.8 s | 0 | 0 |
+| live code | slowest | 62.1 | novice | 111.8 s | 0 | 0 |
+| authored | p50 | 62.6 | expert | 98.2 s | 0 | 0 |
+| live code | p50 | 62.6 | expert | 98.2 s | 0 | 0 |
+| authored | p50 | 62.6 | average | 99.8 s | 0 | 0 |
+| live code | p50 | 62.6 | average | 99.8 s | 0 | 0 |
+| authored | p50 | 62.6 | novice | 108.1 s | 0 | 0 |
+| live code | p50 | 62.6 | novice | 108.1 s | 0 | 0 |
+| authored | fastest | 63.9 | expert | 95.3 s | 0 | 0 |
+| live code | fastest | 63.9 | expert | 95.3 s | 0 | 0 |
+| authored | fastest | 63.9 | average | 97.3 s | 0 | 0 |
+| live code | fastest | 63.9 | average | 97.3 s | 0 | 0 |
+| authored | fastest | 63.9 | novice | 107.4 s | 0 | 1 |
+| live code | fastest | 63.9 | novice | 107.4 s | 0 | 1 |
 
 Cars by top speed: slowest = Microwave + Drill + Umbrella (top speed 62.1, turn 1.52 rad/s); p50 = Log + Cup Noodle + Lantern + Alarm Clock (top speed 62.6, turn 1.57 rad/s); fastest = Kite + Treadmill + Camera + Bathtub (top speed 63.9, turn 1.77 rad/s).
 
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 3 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.21 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.25
+- Fastest car won 5 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.29 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.39
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.25 |
-| farming: casual | 3.75 |
-| driving: expert | 1.50 |
-| driving: average | 3.50 |
+| farming: sweaty | 3.17 |
+| farming: casual | 3.83 |
+| driving: expert | 1.79 |
+| driving: average | 3.21 |
 | driving: novice | 5.50 |
 
 ## Fun metrics
@@ -52,36 +52,38 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.47 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.25 |  .. 0.70 | the fastest build should not always win |
+| ✓ | closeShare | 0.54 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.42 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 26.51 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | finishSpread | 13.78 |  .. 45.00 | nobody waits long for the last car |
 | ✓ | leadChanges | 1.92 | 1.00 ..  | the lead changes at least once |
-| ✗ | racingShare | 0.33 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.21 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 91.07 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✗ | racingShare | 0.31 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.29 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 96.40 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 10.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 9.6. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
 | S1 harbor launch | 6.2 | 1.3 | 0 | 0 | 0 |
-| S2 island arc | 10.2 | 1.9 | 0 | 0 | 1 |
-| S3 open channel | 9.2 | 2.3 | 0 | 0 | 1 |
-| S4 reef U-bend | 15.2 | 6.0 | 0 | 0 | 30 |
-| S5 return channel | 20.1 | 12.6 | 12 | 0 | 26 |
-| S6 reef hairpin | 19.5 | 3.7 | 0 | 0 | 6 |
-| S7 kelp channel | 21.5 | 1.6 | 0 | 0 | 0 |
+| S2 island arc | 10.2 | 1.9 | 1 | 0 | 1 |
+| S3 open channel | 9.2 | 2.2 | 0 | 0 | 1 |
+| S3b to the lighthouse | 1.6 | 0.2 | 0 | 0 | 0 |
+| S4 lighthouse spiral | 13.2 | 3.4 | 5 | 0 | 6 |
+| S5 water slide | 20.5 | 1.9 | 0 | 0 | 0 |
+| S6 reef hairpin | 19.3 | 3.0 | 6 | 0 | 5 |
+| S7 kelp channel | 21.5 | 1.7 | 0 | 0 | 0 |
 
 ## Geometry findings
 
 - 0 parts inside or next to the lane are solid during RACING but not in the authored map (red boxes).
 - 0 decoration parts (^PalmTrunk$, ^ReefSpire_%d+$) stand inside the lane (red dots).
-- 0 spots where a wall cuts more than 6 studs into the lane (pink rings).
-- 0 of 121 sampled positions respawn off the track (pink ×).
+- 12 spots where a wall cuts more than 6 studs into the lane (pink rings).
+- 0 of 131 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (0)
+## Known bugs from the test suite (1)
 
+- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 

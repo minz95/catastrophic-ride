@@ -9,19 +9,19 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | aeab89c+ | 2026-10-22T01:34 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
-| [escape-ocean](escape-ocean.json) | PASS | aeab89c | 2026-10-22T00:21 |
+| [escape-ocean](escape-ocean.json) | WARN | 2315090+ | 2026-10-22T23:03 |
 | [escape-sky](escape-sky.json) | PASS | aeab89c | 2026-10-22T00:22 |
 | [farm-forest-4p](farm-forest-4p.json) | FAIL | aeab89c+ | 2026-10-22T01:29 |
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | aa48bae+ | 2026-10-22T02:19 |
 | [match-forest](match-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
-| [match-ocean](match-ocean.json) | PASS | aeab89c | 2026-10-22T00:35 |
+| [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | PASS | aeab89c | 2026-10-22T00:39 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
 | [race-forest](race-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:29 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
-| [race-ocean](race-ocean.json) | PASS | aeab89c | 2026-10-22T00:18 |
+| [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | 422309b+ | 2026-10-22T21:38 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
@@ -188,12 +188,14 @@ RaceSim FOREST (shipped) — 4.5s wall time
   cases 65: drove out 65, needed a respawn 0, stuck 0
 ```
 
-## escape-ocean — PASS
+## escape-ocean — WARN
 
 ```
-RaceSim OCEAN (shipped) — 7.2s wall time
-  cases 45: drove out 45, needed a respawn 0, stuck 0
+RaceSim OCEAN (shipped) — 9.7s wall time
+  cases 48: drove out 47, needed a respawn 1, stuck 0
+    wall-left@2150         reached in 10.91s respawns 1
 ```
+- **warn** 1 escaped only by respawning: wall-left@2150
 
 ## escape-sky — PASS
 
@@ -278,18 +280,19 @@ driving: 3 hits (closing speed max 67, push max 45 studs/s), 35 drift turbos
 ## match-ocean — PASS
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 2
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
   round 1 (OCEAN): 4 finished of 4
-    steal attempts: defended=8, denied: too far=1, stolen=2
-    -4: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 11, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 9, contests 1/3, stole 1, robbed 1, defences 3, items 8 | craft submitted, rejected 0
-    -3: picked 9, contests 2/3, stole 1, robbed 0, defences 5, items 8 | craft submitted, rejected 0
-    #1 Player4 58.2s
-    #2 Player2 70.3s
-    #3 Player1 84.6s
-    #4 Player3 114.8s
-  events: ability=90 ability_probe=180 bot_craft=4 bot_defend=10 bot_fx=300 bot_hud=122 bot_joined=4 bot_pickup_denied=3 bot_ready=4 bot_respawn=14 bot_screen=4 bot_steal=11 checkpoint=8 contact=16 contest_result=3 craft=4 finish=4 harness_crafting=1 harness_round=1 hazard=6 item_d
+    steal attempts: defended=5, denied: too far=4, stolen=2
+    -4: picked 12, contests 1/2, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 13, contests 1/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 10, contests 2/3, stole 1, robbed 1, defences 3, items 8 | craft submitted, rejected 0
+    -3: picked 7, contests 0/1, stole 1, robbed 0, defences 2, items 8 | craft submitted, rejected 0
+    #1 Player1 97.5s
+    #2 Player4 98.7s
+    #3 Player2 105.4s
+    #4 Player3 112.1s
+  events: ability=97 ability_probe=208 bot_craft=4 bot_defend=7 bot_farmfx=144 bot_fx=328 bot_guard=3 bot_hud=122 bot_joined=4 bot_punch=12 bot_ready=4 bot_respawn=3 bot_screen=22 bot_steal=11 checkpoint=8 cleanse=6 contact=8 contest_result=4 craft=4 drift_turbo=10 drop_placed=36
+driving: 4 hits (closing speed max 53, push max 37 studs/s), 10 drift turbos, drops: Cactus, Gas Can, Kettle, Log
 ```
 
 ## match-sky — PASS
@@ -338,10 +341,11 @@ RaceSim OCEAN (shipped) — 130.2s wall time
 ## race-ocean — PASS
 
 ```
-RaceSim OCEAN (shipped) — 126.8s wall time
-  expert   car=p50 max=61 mass=6.36 → 102.08s | CPs 2 | respawns 0 | blocked 0
-  average  car=p50 max=61 mass=6.36 → 106.53s | CPs 2 | respawns 0 | blocked 0
-  novice   car=p50 max=61 mass=6.36 → 128.14s | CPs 2 | respawns 0 | blocked 0
+RaceSim OCEAN (shipped) — 109.3s wall time
+  expert   car=p50 max=62 mass=6.46 → 102.36s | CPs 2 | respawns 0 | blocked 0
+  average  car=p50 max=62 mass=6.46 → 104.23s | CPs 2 | respawns 0 | blocked 0
+  novice   car=p50 max=62 mass=6.46 → 110.61s | CPs 2 | respawns 0 | blocked 0
+drifts: expert 24/3, average 29/0, novice 0/0
 ```
 
 ## race-sky-builds — PASS

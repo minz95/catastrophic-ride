@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
+local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
 local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
@@ -28,6 +29,7 @@ local _vehicle       = nil   -- Model
 local _seat          = nil   -- VehicleSeat
 local _stats         = nil   -- vehicleStats table
 local _biome         = nil
+local _riseSeg       = nil   -- track segment hint for the road height under the car
 local _drifting      = false
 local _boostActive   = false
 local _boostGauge    = 1.0   -- 0–1, charges via DriftCorner zones
@@ -616,9 +618,17 @@ local function _driveLoop(dt)
 	}, _driveState)
 	-- local only (not replicated): BotDriver's autopilot steers by the slide
 	primary:SetAttribute("TravelYaw", _driveState.travelYaw)
+	-- Boats and flyers hold a height: it follows a raised road (flume,
+	-- corkscrew). FOREST rides the ground with its suspension rays.
+	local rise = nil
+	if isSky or _biome == "OCEAN" then
+		local pos = primary.Position
+		rise, _riseSeg = RaceProgress.roadRise(isSky and "SKY" or "OCEAN", pos.X, pos.Z, _riseSeg, pos.Y)
+	end
 	VehicleController.apply(primary, cmd, {
 		biome      = _biome,
 		altitudeDt = dt,
+		roadRise   = rise,
 		raycast    = function(origin, direction)
 			return workspace:Raycast(origin, direction, _suspParams)
 		end,
@@ -759,6 +769,7 @@ RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, vehicleModel)
 	if userId ~= LocalPlayer.UserId then return end
 	_vehicle = vehicleModel
 	_seat    = vehicleModel:FindFirstChildWhichIsA("VehicleSeat", true)
+	_riseSeg = nil
 	VehicleController.reset(_driveState)
 	_suspParams.FilterDescendantsInstances = {vehicleModel}
 

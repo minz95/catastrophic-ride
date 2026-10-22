@@ -18,7 +18,6 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Track = require(ReplicatedStorage.Shared.Tracks.ForestTrack)
-local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
 local TrackKit = require(script.Parent.TrackKit)
 
 local KIT = TrackKit.new(Track)
@@ -290,56 +289,9 @@ end
 -- ─── Trestle under the raised road (S3 climb, S4 spiral) ────────────────────
 
 -- Wooden posts from the ground up to the road in both wall lines, with a
--- cross beam under the deck. Decoration only (no collision): the walls keep
--- cars on the road. A post that would stand in the lane of a lower layer
--- (the spiral's turns below, a road passing underneath) is left out.
-local function _inLowerLane(px, pz, y)
-	for k, seg in ipairs(GEO.segments) do
-		if math.min(seg.ay, seg.by) < y - TrackGeometry.LAYER_GAP then
-			local p = GEO:project(px, pz, k, 0)
-			if p.dist < GEO.halfWidth + 1 and GEO:segHeight(k, p.t) < y - TrackGeometry.LAYER_GAP then
-				return true
-			end
-		end
-	end
-	return false
-end
-
+-- cross beam under the deck (TrackKit:buildSupports).
 local function _buildTrestle(root)
-	local tr = Track.trestle
-	if not tr or not GEO.hasHeights then return end
-	local off = KIT:wallOffset()
-	for i, seg in ipairs(GEO.segments) do
-		local n = math.max(1, math.floor(seg.len / tr.spacing))
-		for k = 0, n - 1 do
-			local t = (k + 0.5) * seg.len / n
-			local y = GEO:segHeight(i, t)
-			if y - Track.trackTop >= tr.minRise then
-				local cx, cz = seg.ax + seg.dx * t, seg.az + seg.dz * t
-				local yaw = math.atan2(seg.dx, seg.dz)
-				local placed = 0
-				for _, side in ipairs({ -1, 1 }) do
-					local px, pz = cx - seg.dz * side * off, cz + seg.dx * side * off
-					if not _inLowerLane(px, pz, y) then
-						local h = y - 1   -- ground (0) to just under the deck
-						_part(root, {
-							Name = "TrestlePost", Size = Vector3.new(tr.size, h, tr.size),
-							CFrame = CFrame.new(px, h / 2, pz) * CFrame.Angles(0, yaw, 0),
-							Color = C.BRIDGE, Material = MAT.WOOD, CanCollide = false,
-						})
-						placed += 1
-					end
-				end
-				if placed == 2 then
-					_part(root, {
-						Name = "TrestleBeam", Size = Vector3.new(off * 2 + tr.size, 1.6, 1.6),
-						CFrame = CFrame.new(cx, y - 2, cz) * CFrame.Angles(0, yaw, 0),
-						Color = C.BRIDGE, Material = MAT.WOOD, CanCollide = false, CastShadow = false,
-					})
-				end
-			end
-		end
-	end
+	KIT:buildSupports(root, Track.trestle, { name = "Trestle", color = C.BRIDGE, material = MAT.WOOD })
 end
 
 -- ─── Giant tree inside the S4 spiral ────────────────────────────────────────

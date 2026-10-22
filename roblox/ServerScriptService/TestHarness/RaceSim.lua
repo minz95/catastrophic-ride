@@ -268,6 +268,7 @@ function RaceSim.runOne(opts)
 	local gauge, boostCooldownEnd = 1, 0
 	local lastSample, blockedFor = -1, 0
 	local maxS = 0
+	local riseSeg = nil   -- segment hint for the road height (OCEAN / SKY ride height)
 	local t = 0
 	local steps = math.floor(seconds / dt)
 
@@ -290,6 +291,8 @@ function RaceSim.runOne(opts)
 		model:PivotTo(target)
 		primary.AssemblyLinearVelocity = Vector3.zero
 		primary.AssemblyAngularVelocity = Vector3.zero
+		VehicleController.resetRide(primary, (RaceProgress.roadRise(biome, target.Position.X, target.Position.Z, nil, target.Position.Y)))
+		riseSeg = nil
 		primary.Anchored = false
 		VehicleController.reset(driveState)
 		table.insert(res.respawns, entry)
@@ -380,8 +383,12 @@ function RaceSim.runOne(opts)
 			drifting = driveState.drifting, biome = biome, yaw = yawNow,
 			torque = seat.Torque, dt = dt, actualForward = vel.X * tdx + vel.Z * tdz,
 		}, driveState)
+		local rise = nil
+		if biome ~= "FOREST" then
+			rise, riseSeg = RaceProgress.roadRise(biome, pos.X, pos.Z, riseSeg, pos.Y)
+		end
 		VehicleController.apply(primary, cmd, {
-			biome = biome, altitudeDt = dt,
+			biome = biome, altitudeDt = dt, roadRise = rise,
 			raycast = function(origin, direction)
 				return workspace:Raycast(origin, direction, rayParams)
 			end,

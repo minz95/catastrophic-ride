@@ -141,7 +141,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `RaceProgress.progress` / `respawnPoint` and `Autopilot` state, or a
   road passing over itself (FOREST's spiral) is read on the wrong layer.
   Build things on the road with `TrackKit:segCF` / `trackCF` (they follow
-  the height). Suspension and ground rays use `RespectCanCollide = true`.
+  the height). Suspension rays use `RespectCanCollide = true` (track drops
+  do not: OCEAN's water is not solid). Boats (OCEAN) and flyers (SKY)
+  hold a height: pass `roadRise = RaceProgress.roadRise(...)` to
+  `VehicleController.apply` and call `VehicleController.resetRide` after
+  moving a car.
 - Phase timers: `GameManager.shortenPhase` (crafting hurry, finish grace).
   A finished car is parked (MaxSpeed 0) and may not respawn; each road has a
   run-off and an end wall (`TrackKit:buildEndWall`).

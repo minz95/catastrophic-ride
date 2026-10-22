@@ -49,58 +49,72 @@ Track.nodes = {
 	{ -40, -600 }, -- N12
 	{   0, -700 }, -- N13
 
-	-- S4 Reef U-bend east around reef formation (~900)
-	{  40,  -730 }, -- N14
-	{ 180,  -730 }, -- N15
-	{ 330,  -800 }, -- N16
-	{ 380,  -900 }, -- N17  CP2 zone (apex south-east)
-	{ 330, -1000 }, -- N18
-	{ 180, -1010 }, -- N19
-	{  40, -1000 }, -- N20
-
-	-- S5 Return Channel + Finish Lagoon (~720)
-	{   0, -1080 }, -- N21
-	{  80, -1150 }, -- N22
-	{   0, -1220 }, -- N23
-	{ -80, -1290 }, -- N24
-	{   0, -1360 }, -- N25
-	{  80, -1430 }, -- N26
-	{   0, -1500 }, -- N27 end of the zigzag
-	-- S6 (2026-10-20, races were ~43 s vs the 60-120 s target): reef
-	-- hairpin (R=110) and a buoy slalom.
-	{ 0, -1650 }, -- N28  S6 begins
-	{ 16.1, -1710 }, -- N29
-	{ 60, -1753.9 }, -- N30
-	{ 120, -1770 }, -- N31  heading east
-	{ 370, -1770 }, -- N32  reef hairpin entry
-	{ 425, -1784.7 }, -- N33
-	{ 465.3, -1825 }, -- N34
-	{ 480, -1880 }, -- N35  hairpin apex (drift corner)
-	{ 465.3, -1935 }, -- N36
-	{ 425, -1975.3 }, -- N37
-	{ 370, -1990 }, -- N38  heading west
-	{ 190, -1990 }, -- N39  buoy slalom
-	{ 151.7, -1982.4 }, -- N40
-	{ 119.3, -1960.7 }, -- N41
-	{ 74.5, -1934.8 }, -- N42
-	{ 22.7, -1934.8 }, -- N43
-	{ -22.1, -1960.7 }, -- N44
-	{ -54.6, -1982.4 }, -- N45  slalom exit
+	-- S4 Lighthouse Spiral (2026-10-22, replaces the flat reef U-bend): a
+	-- water flume winds UP 1¼ turns (450°, left) around the lighthouse,
+	-- centre (110, -800), R = 110, from the sea (Y 2) to Y 40 (4.4%). Each
+	-- turn passes 30.4 studs over the one below; the top turn also passes
+	-- over the end of S3. A third number on a node is the water surface Y.
+	{   0,   -800,  2 },    -- N14 enter the spiral (west), heading south
+	{ 14.7,  -855,  4.53 },  -- N15
+	{   55, -895.3, 7.07 },  -- N16
+	{  110,  -910,  9.6 },  -- N17 south (under the slide's start)
+	{  165, -895.3, 12.13 }, -- N18
+	{ 205.3, -855, 14.67 },    -- N19
+	{  220,  -800, 17.2 },  -- N20 east (drift corner)
+	{ 205.3, -745, 19.73 },  -- N21
+	{  165, -704.7, 22.27 }, -- N22
+	{  110,  -690, 24.8 },  -- N23 north
+	{   55, -704.7, 27.33 },   -- N24
+	{ 14.7,  -745, 29.87 },  -- N25 over the S3 exit
+	{    0,  -800, 32.4 },  -- N26 over the spiral's entry
+	{ 14.7,  -855, 34.93 },  -- N27
+	{   55, -895.3, 37.47 }, -- N28
+	{  110,  -910, 40 },    -- N29 top, heading east
+	-- S5 Water Slide: down to the sea again (6.2%), then the lagoon run
+	{  300,  -910, 39 },    -- N30 (nearly level: passes 25+ studs over the spiral)
+	{  350, -923.4, 35.78 }, -- N31
+	{ 386.6, -960, 32.57 },  -- N32
+	{  400, -1010, 29.35 }, -- N33 heading south
+	{  400, -1450, 2 },     -- N34 splash-down
+	{ 386.6, -1500 }, -- N35
+	{  350, -1536.6 }, -- N36
+	{  300, -1550 }, -- N37 heading west
+	{  100, -1550 }, -- N38
+	{   50, -1563.4 }, -- N39
+	{ 13.4, -1600 }, -- N40
+	{ 0, -1650 }, -- N41  S6 begins
+	{ 16.1, -1710 }, -- N42
+	{ 60, -1753.9 }, -- N43
+	{ 120, -1770 }, -- N44  heading east
+	{ 370, -1770 }, -- N45  reef hairpin entry
+	{ 425, -1784.7 }, -- N46
+	{ 465.3, -1825 }, -- N47
+	{ 480, -1880 }, -- N48  hairpin apex (drift corner)
+	{ 465.3, -1935 }, -- N49
+	{ 425, -1975.3 }, -- N50
+	{ 370, -1990 }, -- N51  heading west
+	{ 190, -1990 }, -- N52  buoy slalom
+	{ 151.7, -1982.4 }, -- N53
+	{ 119.3, -1960.7 }, -- N54
+	{ 74.5, -1934.8 }, -- N55
+	{ 22.7, -1934.8 }, -- N56
+	{ -22.1, -1960.7 }, -- N57
+	{ -54.6, -1982.4 }, -- N58  slalom exit
 	-- S7: kelp channel and the final straight
-	{ -92.8, -1990 }, -- N46  S6 end
-	{ -192.8, -1990 }, -- N47
-	{ -252.8, -2006.1 }, -- N48
-	{ -296.8, -2050 }, -- N49
-	{ -312.8, -2110 }, -- N50  kelp channel, heading north
-	{ -312.8, -2330 }, -- N51
-	{ -296.8, -2390 }, -- N52
-	{ -252.8, -2433.9 }, -- N53
-	{ -192.8, -2450 }, -- N54  heading east
-	{ 67.2, -2450 }, -- N55
-	{ 127.2, -2466.1 }, -- N56
-	{ 171.1, -2510 }, -- N57
-	{ 187.2, -2570 }, -- N58  onto the final straight
-	{ 187.2, -2950 }, -- N59  runoff past the finish (150 studs, end wall; was 70)
+	{ -92.8, -1990 }, -- N59  S6 end
+	{ -192.8, -1990 }, -- N60
+	{ -252.8, -2006.1 }, -- N61
+	{ -296.8, -2050 }, -- N62
+	{ -312.8, -2110 }, -- N63  kelp channel, heading north
+	{ -312.8, -2330 }, -- N64
+	{ -296.8, -2390 }, -- N65
+	{ -252.8, -2433.9 }, -- N66
+	{ -192.8, -2450 }, -- N67  heading east
+	{ 67.2, -2450 }, -- N68
+	{ 127.2, -2466.1 }, -- N69
+	{ 171.1, -2510 }, -- N70
+	{ 187.2, -2570 }, -- N71  onto the final straight
+	{ 187.2, -2950 }, -- N72  runoff past the finish (150 studs, end wall; was 70)
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -108,10 +122,11 @@ Track.sections = {
 	{ name = "S1 harbor launch",  from = 1,  to = 2 },
 	{ name = "S2 island arc",     from = 2,  to = 8 },
 	{ name = "S3 open channel",   from = 8,  to = 13 },
-	{ name = "S4 reef U-bend",    from = 13, to = 20 },
-	{ name = "S5 return channel", from = 20, to = 28 },
-	{ name = "S6 reef hairpin",   from = 28, to = 46 },
-	{ name = "S7 kelp channel",   from = 46, to = 59 },
+	{ name = "S3b to the lighthouse", from = 13, to = 14 },
+	{ name = "S4 lighthouse spiral", from = 14, to = 29 },
+	{ name = "S5 water slide",    from = 29, to = 41 },
+	{ name = "S6 reef hairpin",   from = 41, to = 59 },
+	{ name = "S7 kelp channel",   from = 59, to = 72 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.OCEAN.zFinish.
@@ -129,7 +144,7 @@ Track.startGrid = {
 -- Checkpoints, in order: { x, z }. Gates are turned to face the track.
 Track.checkpoints = {
 	{ 180,    0 },   -- CP1 at N5, island arc apex
-	{ 380, -900 },   -- CP2 at N17, reef U-bend apex
+	{ 400, -1150, 20.65 }, -- CP2 on the water slide (N33 → N34)
 }
 
 -- Boost pads { x, z }, turned to the track direction.
@@ -137,7 +152,7 @@ Track.boostPads = {
 	{   0,  500 },   -- S1 launch
 	{ 160,    0 },   -- S2 inner apex (rewards the tight line; fully on the lane)
 	{   0, -550 },   -- S3 mid-channel
-	{   0, -1080 },  -- post-S4 U-bend exit (N21)
+	{  400, -1300 }, -- S5 water slide, before the splash-down
 	{ 250, -1770 },  -- S6 east channel, into the hairpin
 	{ -60, -2450 },  -- S7 east channel
 }
@@ -145,8 +160,8 @@ Track.boostPads = {
 -- Drift corner trigger centres { x, z } (spec §3.3).
 Track.driftCorners = {
 	{ 180,    0 },   -- S2 island arc apex (N5)
-	{ 380, -900 },   -- S4 reef U-bend apex (N17)
-	{   0, -1220 },  -- S5 return channel mid-zigzag (N23)
+	{ 220, -800, 17.2 }, -- S4 spiral, east side (one layer here; the third number picks it)
+	{ 370.7, -1520.7 },  -- S5 lagoon turn (N35/N36)
 	{ 480, -1880 },  -- S6 reef hairpin apex (N35)
 	{ 0, -1935 },    -- S6 buoy slalom crest (N42/N43)
 }
@@ -169,8 +184,12 @@ Track.finishSize      = { Track.width, 10, 6 }
 -- ─── Scenery (inside the turns, never on the lane; map_ocean checks) ────────
 -- Palm island inside the S2 arc: blocks the straight-line cut to CP1.
 Track.palmIsland = { cx = 40, cz = 0, size = { 110, 220 }, palms = 8, seed = 99 }
--- Reef formation inside the S4 U-bend.
-Track.reef = { cx = 220, cz = -870, size = { 80, 140 }, spires = 5 }
+-- Reef formation inside the S5 water slide's bend (was inside the S4 U-bend).
+Track.reef = { cx = 290, cz = -1290, size = { 80, 140 }, spires = 5 }
+-- Lighthouse inside the S4 spiral (decoration; inner wall at R 110 - 30 - 1.5).
+Track.lighthouse = { x = 110, z = -800, r = 26, height = 110 }
+-- Posts under the raised flume (TrackKit:buildSupports).
+Track.supports = { spacing = 28, size = 3, minRise = 3, groundY = -12 }
 -- Start dock under the grid (boats ride over it: obstacleBand starts at 1.2).
 Track.startDock = { z = 595, length = 24 }
 

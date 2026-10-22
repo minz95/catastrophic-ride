@@ -24,6 +24,7 @@ local SessionManager    = require(ServerScriptService.SessionManager)
 local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
+local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local Passives          = require(ReplicatedStorage.Shared.Passives)
 local CarImpact         = require(ReplicatedStorage.Shared.CarImpact)
 local EffectFx          = require(ServerScriptService.Modules.EffectFx)
@@ -157,9 +158,9 @@ local function _respawnVehicle(player, reason)
 	vehicle:PivotTo(CFrame.new(x, y, z) * CFrame.Angles(0, yaw, 0))
 	primary.AssemblyLinearVelocity  = Vector3.zero
 	primary.AssemblyAngularVelocity = Vector3.zero
-	-- SKY: hover target follows the respawn point
-	local hover = primary:FindFirstChild("HoverPosition")
-	if hover then hover.Position = primary.Position end
+	-- the held height (SKY hover, OCEAN water line) starts at the respawn
+	-- point, on a raised road too
+	VehicleController.resetRide(primary, (RaceProgress.roadRise(_biome, x, z, nil, y)))
 	task.wait(0.1)
 	primary.Anchored = false
 	if ps then ps.cleanSince = tick() end
@@ -225,11 +226,15 @@ RunService.Heartbeat:Connect(function()
 	for userId, pdata in pairs(SessionManager.getAllData()) do
 		local vehicle = pdata.vehicleModel
 		if not vehicle or not vehicle.PrimaryPart or not _physState[userId] then continue end
-		local partY    = vehicle.PrimaryPart.Position.Y
-		local submerge = math.max(0, waterY - partY)
+		local pos      = vehicle.PrimaryPart.Position
+		local partY    = pos.Y
+		-- a raised flume carries its own water at the road height
+		local ps = _physState[userId]
+		local rise = ps.progressSeg and RaceProgress.roadRise(_biome, pos.X, pos.Z, ps.progressSeg, partY) or 0
+		local submerge = math.max(0, waterY + rise - partY)
 		local floatStat = (pdata.vehicleStats and pdata.vehicleStats.floatability) or 20
 		local bf = vehicle.PrimaryPart:FindFirstChild("BuoyancyForce")
-		if submerge > 0 or partY < waterY + 1 then
+		if submerge > 0 or partY < waterY + rise + 1 then
 			if not bf then
 				bf = Instance.new("BodyForce")
 				bf.Name   = "BuoyancyForce"

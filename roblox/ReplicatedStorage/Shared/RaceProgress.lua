@@ -22,6 +22,15 @@ RaceProgress.SEARCH_WINDOW     = 3    -- segments either side of the hint
 -- A car this far below the road under it fell off a raised stretch.
 RaceProgress.FALL_BELOW        = 12
 
+--- How far the road under a car is above trackTop (0 on a flat track), and
+-- the segment for the next hint. y = the car's Y (picks the layer).
+function RaceProgress.roadRise(biome, x, z, hintSeg, y)
+	local geo = RaceProgress.geometry(biome)
+	if not geo or not geo.hasHeights then return 0, hintSeg end
+	local s, seg = RaceProgress.progress(biome, x, z, hintSeg, y)
+	return geo:heightAt(s) - (geo.trackTop or geo.baseY), seg
+end
+
 --- Road surface Y at progress s (trackTop on flat tracks).
 function RaceProgress.roadY(biome, s)
 	local geo = RaceProgress.geometry(biome)

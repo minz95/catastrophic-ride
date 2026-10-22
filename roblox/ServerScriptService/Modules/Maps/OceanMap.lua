@@ -36,6 +36,11 @@ local C = {
 	DRIFT_GLOW  = Color3.fromRGB(40,  220, 255),
 	REEF        = Color3.fromRGB(95,  75,  55),
 	REEF_TOP    = Color3.fromRGB(220, 60,  60),
+	FLUME       = Color3.fromRGB(235, 245, 250),
+	FLUME_POST  = Color3.fromRGB(200, 210, 220),
+	LIGHT_RED   = Color3.fromRGB(210, 45,  45),
+	LIGHT_WHITE = Color3.fromRGB(245, 245, 240),
+	LAMP        = Color3.fromRGB(255, 230, 120),
 	GRASS       = Color3.fromRGB(80,  160, 70),
 }
 
@@ -46,6 +51,7 @@ local MAT = {
 	NEON   = Enum.Material.Neon,
 	LEAVES = Enum.Material.LeafyGrass,
 	ROCK   = Enum.Material.Rock,
+	PLASTIC = Enum.Material.SmoothPlastic,
 }
 
 local WATER_Y = Track.trackTop   -- water surface Y
@@ -120,7 +126,22 @@ local function _buildChannel(root)
 	KIT:buildWalls(root, {
 		name = "ReefWall", color = C.REEF, material = MAT.ROCK,
 		cap = { name = "ReefWallCap", color = C.REEF_TOP, material = MAT.NEON },
+		raised = { color = C.FLUME, material = MAT.PLASTIC },   -- the flume's sides
 	})
+	-- Raised flume (S4 spiral, S5 slide): a white trough floor under the
+	-- water strip, on posts down to the sea floor
+	for i = 1, #NODES - 1 do
+		local rise = (KIT:nodeY(i) + KIT:nodeY(i + 1)) / 2 - WATER_Y
+		if rise > 1 then
+			_part(root, {
+				Name = "FlumeFloor_" .. i,
+				Size = Vector3.new(LANE_W + Track.wallThickness * 2, 1, KIT:segLen3(i) + 2),
+				CFrame = KIT:segCF(i, WATER_Y - 1.2),
+				Color = C.FLUME, Material = MAT.PLASTIC, CanCollide = false,
+			})
+		end
+	end
+	KIT:buildSupports(root, Track.supports, { name = "Flume", color = C.FLUME_POST, material = MAT.PLASTIC })
 	KIT:buildEndWall(root, { name = "ReefWall_End", color = C.REEF, material = MAT.ROCK })
 	KIT:buildSlowZones(root, { color = C.WATER_FOAM, material = MAT.NEON, transparency = 0.65 })
 end
@@ -131,7 +152,7 @@ local function _buildCourseBuoys(root)
 	local buoyIdx = 0
 	for i = 2, #NODES - 1, 2 do
 		buoyIdx += 1
-		local cf = KIT:trackCF(NODES[i][1], WATER_Y + 2, NODES[i][2])
+		local cf = KIT:trackCF(NODES[i][1], WATER_Y + 2, NODES[i][2], NODES[i][3])
 		local isRedSide = (buoyIdx % 2 == 0)
 		for _, side in ipairs({ -1, 1 }) do
 			local isRed = (side == 1) == isRedSide
@@ -224,6 +245,41 @@ local function _buildReefFormation(root)
 	end
 end
 
+-- ─── Lighthouse inside the S4 spiral ─────────────────────────────────────────
+
+local function _buildLighthouse(root)
+	local lh = Track.lighthouse
+	if not lh then return end
+	local bands = 6
+	for b = 0, bands - 1 do
+		local h = lh.height / bands
+		_part(root, {
+			Name = "LighthouseBand", Shape = Enum.PartType.Cylinder,
+			Size = Vector3.new(h, lh.r * 2 * (1 - b * 0.04), lh.r * 2 * (1 - b * 0.04)),
+			CFrame = CFrame.new(lh.x, WATER_Y - 4 + h * (b + 0.5), lh.z) * CFrame.Angles(0, 0, math.pi / 2),
+			Color = b % 2 == 0 and C.LIGHT_RED or C.LIGHT_WHITE, Material = MAT.PLASTIC, CanCollide = false,
+		})
+	end
+	local top = WATER_Y - 4 + lh.height
+	_part(root, {
+		Name = "LighthouseLamp", Shape = Enum.PartType.Ball,
+		Size = Vector3.new(lh.r * 1.2, lh.r * 1.2, lh.r * 1.2),
+		Position = Vector3.new(lh.x, top + lh.r * 0.5, lh.z),
+		Color = C.LAMP, Material = MAT.NEON, CanCollide = false, CastShadow = false,
+	})
+	_part(root, {
+		Name = "LighthouseCap", Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(3, lh.r * 1.6, lh.r * 1.6),
+		CFrame = CFrame.new(lh.x, top + lh.r * 1.15, lh.z) * CFrame.Angles(0, 0, math.pi / 2),
+		Color = C.LIGHT_RED, Material = MAT.PLASTIC, CanCollide = false,
+	})
+	_part(root, {
+		Name = "LighthouseRock", Size = Vector3.new(lh.r * 2.6, 8, lh.r * 2.6),
+		Position = Vector3.new(lh.x, WATER_Y - 3, lh.z),
+		Color = C.REEF, Material = MAT.ROCK, CanCollide = false,
+	})
+end
+
 -- ─── Triggers (TrackKit) ─────────────────────────────────────────────────────
 
 local function _buildTriggers(root)
@@ -312,6 +368,7 @@ local function buildOcean()
 
 	_buildPalmIsland(trackSub)
 	_buildReefFormation(trackSub)
+	_buildLighthouse(trackSub)
 	_buildChannel(trackSub)
 	_buildCourseBuoys(trackSub)
 	_buildTriggers(trackSub)

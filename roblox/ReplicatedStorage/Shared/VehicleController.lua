@@ -267,8 +267,23 @@ end
 --   raycast    = function(origin: Vector3, direction: Vector3) -> RaycastResult?
 --                (FOREST suspension; omit to skip the suspension update)
 --   altitudeDt = seconds since the last frame (climb rate is per second)
+--   roadRise   = how far the road under the car is above trackTop
+--                (RaceProgress.roadRise): OCEAN boats and SKY flyers hold a
+--                set height instead of riding the ground, so that height
+--                follows a raised road (a flume, a corkscrew)
 -- }
 -- Returns false when the vehicle is missing its drive movers.
+--- After a respawn (the car was moved): the held height (SKY hover, OCEAN
+-- water line) starts where the car now is, and `rise` is the road height
+-- there above trackTop (RaceProgress.roadRise).
+function VehicleController.resetRide(primary, rise)
+	for _, name in ipairs({ "HoverPosition", "SuspensionHover" }) do
+		local bp = primary:FindFirstChild(name)
+		if bp then bp.Position = primary.Position end
+	end
+	primary:SetAttribute("RoadRiseApplied", rise or 0)
+end
+
 function VehicleController.apply(primary, cmd, opts)
 	opts = opts or {}
 	local bv  = primary:FindFirstChild("DriveVelocity")
@@ -287,9 +302,19 @@ function VehicleController.apply(primary, cmd, opts)
 		primary:SetAttribute("LiftApplied", lifted + liftStep)
 	end
 
+	-- Road height: move the held height by however much the road rose or
+	-- fell since the last frame ("RoadRiseApplied"; the server resets it on
+	-- a respawn).
+	local riseStep = 0
+	if opts.roadRise then
+		local applied = primary:GetAttribute("RoadRiseApplied") or 0
+		riseStep = opts.roadRise - applied
+		if riseStep ~= 0 then primary:SetAttribute("RoadRiseApplied", opts.roadRise) end
+	end
+
 	local hover = primary:FindFirstChild("HoverPosition")
 	if hover then
-		local dy = liftStep
+		local dy = liftStep + riseStep
 		if cmd.climb ~= 0 then
 			dy += cmd.climb * VehicleController.ALTITUDE_RATE * dt
 		end
@@ -297,10 +322,11 @@ function VehicleController.apply(primary, cmd, opts)
 			hover.Position = hover.Position + Vector3.new(0, dy, 0)
 		end
 	elseif opts.biome ~= "FOREST" then
-		-- OCEAN: the ride height is fixed at the water; a lift moves it
+		-- OCEAN: the ride height is fixed at the water; a lift or a raised
+		-- flume moves it
 		local susp = primary:FindFirstChild("SuspensionHover")
-		if susp and liftStep ~= 0 then
-			susp.Position = susp.Position + Vector3.new(0, liftStep, 0)
+		if susp and (liftStep ~= 0 or riseStep ~= 0) then
+			susp.Position = susp.Position + Vector3.new(0, liftStep + riseStep, 0)
 		end
 	elseif opts.raycast then
 		local susp = primary:FindFirstChild("SuspensionHover")
