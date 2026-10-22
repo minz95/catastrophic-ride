@@ -91,13 +91,13 @@ local function _buildClouds(root)
 		Name = "SkyBackdrop", Size = Vector3.new(w, 6, d),
 		Position = Vector3.new(cx, SKY_BASE_Y - 55, cz),
 		Color = C.SEA, Material = MAT.CLOUD,
-		CanCollide = false, CastShadow = false,
+		CanCollide = false, CanQuery = false, CanTouch = false, CastShadow = false,
 	})
 	_part(root, {
 		Name = "SkyHaze", Size = Vector3.new(w, 4, d),
 		Position = Vector3.new(cx, SKY_BASE_Y - 48, cz),
 		Color = Color3.fromRGB(175, 195, 235), Material = MAT.CLOUD,
-		CanCollide = false, CastShadow = false, Transparency = 0.5,
+		CanCollide = false, CanQuery = false, CanTouch = false, CastShadow = false, Transparency = 0.5,
 	})
 	-- Puffy cloud clusters: a cloud sea below the road and big clouds
 	-- beside it at road height (only where they cannot touch the lane).

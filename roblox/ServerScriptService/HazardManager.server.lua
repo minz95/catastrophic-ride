@@ -64,7 +64,7 @@ local function _dropLogs(hz, biome)
 	local spots = HazardPlan.logSpots(geo, geo.width, _leaderProgress(), hz.count or 3, math.random,
 		data and HazardPlan.keepClear(geo, data))
 	for _, spot in ipairs(spots) do
-		local ground = Vector3.new(spot.x, top, spot.z)
+		local ground = Vector3.new(spot.x, geo.hasHeights and spot.y or top, spot.z)   -- on a raised road too
 		local marker = HazardLook.warnMarker(ground)
 		marker.Parent = _folder()
 		Debris:AddItem(marker, H.LOG_WARN + 0.6)

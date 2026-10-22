@@ -206,7 +206,7 @@ function RaceSim.runOne(opts)
 	if not map then
 		map, track = RaceSim.prepareMap(biome, opts.visibility or "shipped", mode)
 	end
-	local geo = TrackGeometry.new(track.nodes, track.width)
+	local geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 
 	local slots = type(opts.car) == "table" and opts.car or RaceSim.CARS[opts.car or "p50"]
 	local stats = statsFor(slots, biome)
@@ -223,7 +223,8 @@ function RaceSim.runOne(opts)
 		local sp = opts.spawn
 		local px, pz = geo:offsetPoint(sp.s or 0, sp.lateral or 0)
 		local yaw = geo:yawAt(sp.s or 0) + math.rad(sp.yawOffset or 0)
-		spawnCF = CFrame.new(px, startY + (sp.lift or 0), pz) * CFrame.Angles(0, yaw, 0)
+		local rise = geo:heightAt(sp.s or 0) - (track.trackTop or 0)
+		spawnCF = CFrame.new(px, startY + rise + (sp.lift or 0), pz) * CFrame.Angles(0, yaw, 0)
 	end
 
 	local model = VehicleBuilder.build(stats, biome, spawnCF, slots)
@@ -238,6 +239,7 @@ function RaceSim.runOne(opts)
 	local rayParams = RaycastParams.new()
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
 	rayParams.FilterDescendantsInstances = { model }
+	rayParams.RespectCanCollide = true   -- like RacingClient: only solid ground carries the car
 
 	local triggers = triggerParts(map)
 	assert(#triggers > 0, "RaceSim: the map has no trigger parts (checkpoints, finish)")
@@ -271,7 +273,7 @@ function RaceSim.runOne(opts)
 
 	local function respawn(reason, s)
 		local pos = primary.Position
-		local lx, ly, lz, lyaw = RaceProgress.respawnPoint(biome, pos.X, pos.Z, startY, ap.segHint)
+		local lx, ly, lz, lyaw = RaceProgress.respawnPoint(biome, pos.X, pos.Z, startY, ap.segHint, pos.Y)
 		local entry = { t = round(t, 2), reason = reason, s = math.floor(s), from = { x = round(pos.X), z = round(pos.Z) } }
 		local target
 		if respawnMode == "legacy" then
@@ -302,7 +304,7 @@ function RaceSim.runOne(opts)
 		local _, yaw = primary.CFrame:ToEulerAnglesYXZ()
 		local isSky = primary:FindFirstChild("HoverPosition") ~= nil
 		local keys, info = ap:update({
-			x = pos.X, z = pos.Z, yaw = yaw, speed = speed,
+			x = pos.X, z = pos.Z, y = pos.Y, yaw = yaw, speed = speed,
 			forward = vel:Dot(primary.CFrame.LookVector),
 			maxSpeed = seat.MaxSpeed, turnSpeed = VehicleController.turnRate(seat.TurnSpeed, isSky), t = t,
 			isSky = isSky, biome = biome, travelYaw = driveState.travelYaw,
@@ -354,7 +356,8 @@ function RaceSim.runOne(opts)
 			respawn("stuck", info.s)
 			return
 		end
-		if pos.Y < (BiomeConfig[biome].killPlaneY or -50) then
+		if pos.Y < (BiomeConfig[biome].killPlaneY or -50)
+			or pos.Y < geo:heightAt(info.s) - RaceProgress.FALL_BELOW then
 			respawn("fell", info.s)
 			return
 		end
@@ -408,7 +411,9 @@ function RaceSim.runOne(opts)
 
 		if t - lastSample >= (opts.sampleEvery or 0.5) then
 			lastSample = t
-			table.insert(res.samples, { t = round(t, 2), x = round(pos.X), z = round(pos.Z), s = math.floor(info.s), speed = round(speed) })
+			table.insert(res.samples, { t = round(t, 2), x = round(pos.X), z = round(pos.Z), s = math.floor(info.s), speed = round(speed),
+				y = round(pos.Y, 1), roadY = round(geo:heightAt(info.s), 1), hit = ground and ground.Instance.Name or nil,
+				hitY = ground and round(ground.Position.Y, 1) or nil })
 		end
 	end
 
@@ -454,7 +459,7 @@ RaceSim.ESCAPE_SECONDS = 25
 
 function RaceSim.escapeCases(biome, track)
 	track = track or require(RaceSim.TRACKS[biome].data)
-	local geo = TrackGeometry.new(track.nodes, track.width)
+	local geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 	local edge = track.width / 2 - 4
 	local cases = {}
 	local function add(label, s, lateral, yawOffset)

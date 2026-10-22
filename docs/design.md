@@ -37,11 +37,11 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~7,610 | ~5,950 | ~7,030 |
+| Length (centerline) | ~8,020 | ~5,950 | ~7,030 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, river sweeper, farm U-bend, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
-| Checkpoints | N14, N19 | N5, N17 | N6, N13 |
+| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, reef U-bend, return zigzag, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, final descent |
+| Checkpoints | N14, S4b straight | N5, N17 | N6, N13 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
 close the outside of a turn and dropped wherever it would stand inside the
@@ -232,6 +232,20 @@ spot with its track section; the RESULTS report lists them per section.
   patch with puddles (was a see-through brown box). Hitting either knocks the
   car through `CarImpact` (a second BodyVelocity did nothing). All effect and
   notice text is English.
+- **2026-10-22 — Roads that climb and spiral.** A node may carry the road
+  height ({ x, z, y }). FOREST climbs a wooden trestle through S3 (Y 1 → 44,
+  3.7%) and winds down 1½ turns around a giant tree (R 90, 5.1%), each turn
+  28.7 studs over the one below; it replaces the flat farm U-bend. Everything
+  that asks "where on the track is this car" passes the car's Y
+  (`TrackGeometry` layers, `LAYER_GAP` 10), walls of one layer are kept over
+  the lane of another, a car more than 12 studs under the road respawns
+  ("fell"), logs never drop under a higher turn. Studio found the suspension
+  ray resting on the Sky map's haze planes (Y 28–34, same XZ) once the road
+  went below them: suspension and drop rays now count only collidable parts.
+- **2026-10-22 — Sky without crossings.** The two 360° loops met their own
+  entry (a fork, and an open fence where the novice slipped out); they are
+  now 270° / 225° bends forming an S. A map spec fails any track that meets
+  itself on one layer.
 
 ## Open questions (from the reports, not decided)
 

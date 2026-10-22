@@ -55,16 +55,20 @@ function BiomeSpecs.map(biome, cfg)
 			-- two stretches far apart along the track must not share lane:
 			-- a crossing looks like a fork and leaves the fence open
 			local geo, w = intended.geo, intended.track.width
+			-- (a road may pass OVER itself, a spiral or an overpass: two layers
+			-- at least 2 × LAYER_GAP apart in height never meet)
 			local pts = {}
 			for s = 0, geo.length, 10 do
 				local x, z = geo:pointAt(s)
-				table.insert(pts, { s, x, z })
+				table.insert(pts, { s, x, z, geo:heightAt(s) })
 			end
+			local gap = 2 * intended.env.requirePath("ReplicatedStorage.Shared.TrackGeometry").LAYER_GAP
 			local bad = {}
 			for i = 1, #pts do
 				for j = i + 1, #pts do
 					local a, b = pts[i], pts[j]
-					if b[1] - a[1] > 4 * w and math.sqrt((a[2] - b[2]) ^ 2 + (a[3] - b[3]) ^ 2) < w + 4 then
+					if b[1] - a[1] > 4 * w and math.abs(a[4] - b[4]) < gap
+						and math.sqrt((a[2] - b[2]) ^ 2 + (a[3] - b[3]) ^ 2) < w + 4 then
 						table.insert(bad, string.format("s=%d (%d,%d) meets s=%d", a[1], a[2], a[3], b[1]))
 						break
 					end

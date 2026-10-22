@@ -5,8 +5,9 @@
 --     gap of at least Constants.HAZARDS.LOG_MIN_GAP studs stays on one side;
 --   * logs of one drop are at least LOG_SPACING studs apart along the track,
 --     so they never line up into a wall;
---   * none lands in the last stretch before the finish, or on a jump ramp,
---     a mud patch or a boost pad (keepClear).
+--   * none lands in the last stretch before the finish, on a jump ramp,
+--     a mud patch or a boost pad, or under a higher layer of the road
+--     (keepClear).
 -- No Roblox types.
 
 local Constants = require(script.Parent.Constants)
@@ -15,13 +16,21 @@ local HazardPlan = {}
 
 --- Log spots ahead of `leadS` (progress of the leading car).
 -- geo: TrackGeometry; width: lane width; rnd(): uniform [0, 1).
--- Returns { { s, lateral, x, z, yaw, trackYaw, length } }.
+-- Returns { { s, lateral, x, z, y (road height), yaw, trackYaw, length } }.
 --- Track progress of the features logs keep away from (track data).
 function HazardPlan.keepClear(geo, track)
 	local out = {}
 	for _, key in ipairs({ "jumpRamps", "mudZones", "boostPads" }) do
 		for _, p in ipairs(track[key] or {}) do
 			table.insert(out, geo:project(p[1], p[2]).s)
+		end
+	end
+	-- nor under a higher layer of the road (the spiral's lower turns): a log
+	-- would fall through the deck above
+	if geo.hasHeights then
+		for s = 0, geo.length, 10 do
+			local x, z = geo:pointAt(s)
+			if geo:coveredAt(x, z, geo:heightAt(s), 0) then table.insert(out, s) end
 		end
 	end
 	return out
@@ -51,7 +60,7 @@ function HazardPlan.logSpots(geo, width, leadS, count, rnd, keepClear)
 				local x, z = geo:offsetPoint(s, lateral)
 				local trackYaw = geo:yawAt(s)
 				local yaw = trackYaw + (rnd() - 0.5) * 2 * H.LOG_YAW_JITTER
-				table.insert(out, { s = s, lateral = lateral, x = x, z = z, yaw = yaw, trackYaw = trackYaw, length = len })
+				table.insert(out, { s = s, lateral = lateral, x = x, z = z, y = geo:heightAt(s), yaw = yaw, trackYaw = trackYaw, length = len })
 			end
 		end
 	end

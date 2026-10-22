@@ -563,7 +563,7 @@
     },
     "Microwave": {
       "block": 0,
-      "cooldown": 16,
+      "cooldown": 14.4,
       "duration": 1.3,
       "effect": "microFreeze",
       "hitCost": 1.009219858155971,

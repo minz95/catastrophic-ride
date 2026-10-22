@@ -1,47 +1,47 @@
 {
-  "baseTime": 94.8999999999959,
+  "baseTime": 87.14999999999634,
   "biome": "SKY",
   "checks": [
     {
       "name": "BODY tiers rise",
       "ok": true,
       "target": "each ≥ 0.3 s above the last",
-      "value": "1.7 / 2.1 / 2.4 / 3.2",
+      "value": "1.9 / 2.4 / 2.7 / 4.1",
       "why": "a rarer item is noticeably better on average"
     },
     {
       "name": "BODY Epic − Common",
       "ok": true,
       "target": "1.0 .. 4.5 s",
-      "value": "1.5 s",
+      "value": "2.2 s",
       "why": "rare is better, not overwhelming"
     },
     {
       "name": "ENGINE tiers rise",
       "ok": true,
       "target": "each ≥ 0.3 s above the last",
-      "value": "1.4 / 3.1 / 3.9 / 5.3",
+      "value": "1.6 / 2.7 / 4.0 / 5.2",
       "why": "a rarer item is noticeably better on average"
     },
     {
       "name": "ENGINE Epic − Common",
       "ok": true,
       "target": "1.0 .. 4.5 s",
-      "value": "3.9 s",
+      "value": "3.6 s",
       "why": "rare is better, not overwhelming"
     },
     {
       "name": "SPECIAL tiers rise",
       "ok": true,
       "target": "each ≥ 0.3 s above the last",
-      "value": "1.8 / 2.6 / 3.0 / 4.1",
+      "value": "1.5 / 2.4 / 3.4 / 4.7",
       "why": "a rarer item is noticeably better on average"
     },
     {
       "name": "SPECIAL Epic − Common",
       "ok": true,
       "target": "1.0 .. 4.5 s",
-      "value": "2.3 s",
+      "value": "3.2 s",
       "why": "rare is better, not overwhelming"
     },
     {
@@ -62,14 +62,14 @@
       "name": "winning item variety",
       "ok": true,
       "target": "≤ 40% of wins",
-      "value": "19% (BODY: Skateboard)",
+      "value": "18% (BODY: Shopping Cart)",
       "why": "many items show up in winning builds"
     },
     {
       "name": "distinct winning builds",
       "ok": true,
       "target": "≥ 60 per 1000 matches",
-      "value": "393 per 1000",
+      "value": "399 per 1000",
       "why": "different combinations win"
     },
     {
@@ -87,7 +87,7 @@
       "why": "farming rare items pays off"
     }
   ],
-  "incoming": 2.6789433704384606,
+  "incoming": 2.565311200894199,
   "items": {
     "Alarm Clock": {
       "block": 0,
@@ -101,12 +101,12 @@
       "name": "Alarm Clock",
       "offense": 0,
       "rarity": "Common",
-      "selfGain": 1.074999999999939,
+      "selfGain": 1.4416666666665847,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 0.8301355908631518,
-      "uses": 6,
-      "value": 1.9051355908630907
+      "statGain": 0.7593952352181208,
+      "uses": 5,
+      "value": 2.2010619018847057
     },
     "Backpack": {
       "block": 0,
@@ -120,31 +120,31 @@
       "name": "Backpack",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 4.016666666666438,
+      "selfGain": 4.041666666666437,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": -1.004746526816915,
+      "statGain": -1.1703451657316155,
       "uses": 5,
-      "value": 3.0119201398495234
+      "value": 2.8713215009348216
     },
     "Balloon Bunch": {
-      "block": 0.15855821121261077,
+      "block": 0.15208472738592999,
       "cooldown": 14.4,
       "duration": 3.9000000000000004,
       "effect": "rise",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.2465753424657641,
+      "liftUptime": 0.2685025817556051,
       "name": "Balloon Bunch",
       "offense": 0,
       "rarity": "Epic",
-      "selfGain": 3.3583333333331424,
+      "selfGain": 3.6999999999997897,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.7236614160418497,
+      "statGain": 0.5589538191226495,
       "uses": 6,
-      "value": 4.240552960587603
+      "value": 4.411038546508369
     },
     "Bamboo Raft": {
       "block": 0,
@@ -158,52 +158,52 @@
       "name": "Bamboo Raft",
       "offense": 0,
       "rarity": "Common",
-      "selfGain": 1.1583333333332675,
+      "selfGain": 1.5833333333332433,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 0.7339773768083511,
+      "statGain": 0.6300323111595235,
       "uses": 5,
-      "value": 1.8923107101416186
+      "value": 2.2133656444927667
     },
     "Barrel": {
       "block": 0,
       "cooldown": 11,
       "duration": 1.5,
       "effect": "barrelRoll",
-      "hitCost": 0.13114035087718554,
+      "hitCost": 0.06715686274509422,
       "hitRate": 0.32,
       "hits": 2.56,
       "kind": "self+offense",
       "liftUptime": 0,
       "name": "Barrel",
-      "offense": 0.335719298245595,
+      "offense": 0.1719215686274412,
       "rarity": "Common",
-      "selfGain": 0.39999999999997726,
+      "selfGain": 1.2249999999999304,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 0.9779831628691369,
+      "statGain": 0.8345539321496318,
       "uses": 8,
-      "value": 1.7137024611147091
+      "value": 2.2314755007770035
     },
     "Bathtub": {
       "block": 0,
       "cooldown": 12,
       "duration": 1.9500000000000002,
       "effect": "bathSplash",
-      "hitCost": 0.9876811594202337,
+      "hitCost": 1.3848148148147361,
       "hitRate": 0.6,
-      "hits": 4.8,
+      "hits": 4.2,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Bathtub",
-      "offense": 4.740869565217122,
+      "offense": 5.816222222221892,
       "rarity": "Epic",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": -1.0006261019143254,
-      "uses": 8,
-      "value": 3.7402434633027966
+      "statGain": -1.0862807545379927,
+      "uses": 7,
+      "value": 4.7299414676839
     },
     "Cactus": {
       "block": 0,
@@ -211,43 +211,43 @@
       "drop": true,
       "duration": 1.5,
       "effect": "cactusObstacle",
-      "hitCost": 0.6406504065040286,
+      "hitCost": 0.6049549549549206,
       "hitRate": 0.3,
-      "hits": 2.4,
+      "hits": 2.1,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Cactus",
-      "offense": 1.5375609756096686,
+      "offense": 1.2704054054053333,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.1696081443848101,
-      "uses": 8,
-      "value": 1.7071691199944787
+      "statGain": 0.1310048013568661,
+      "uses": 7,
+      "value": 1.4014102067621994
     },
     "Camera": {
       "block": 0,
       "cooldown": 14,
       "duration": 2,
       "effect": "steerDisable",
-      "hitCost": 0.7189922480619746,
+      "hitCost": 0.8570833333332846,
       "hitRate": 0.75,
-      "hits": 5.25,
+      "hits": 4.5,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Camera",
-      "offense": 3.7747093023253666,
+      "offense": 3.8568749999997807,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.1696081443848101,
-      "uses": 7,
-      "value": 3.9443174467101767
+      "statGain": 0.1310048013568661,
+      "uses": 6,
+      "value": 3.9878798013566468
     },
     "Cardboard Box": {
-      "block": 0.39520766265690277,
+      "block": 0.3532270156136739,
       "cooldown": 15,
       "duration": 2,
       "effect": "disguise",
@@ -259,11 +259,11 @@
       "offense": 0,
       "rarity": "Common",
       "selfGain": 0,
-      "shieldUptime": 0.14752370916755117,
+      "shieldUptime": 0.13769363166954107,
       "slot": "BODY",
-      "statGain": 1.2414592795704422,
-      "uses": 7,
-      "value": 1.636666942227345
+      "statGain": 1.0328317173402806,
+      "uses": 6,
+      "value": 1.3860587329539544
     },
     "Compass": {
       "block": 0,
@@ -277,32 +277,32 @@
       "name": "Compass",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 2.2999999999998693,
+      "selfGain": 1.8749999999998934,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.6901490691928667,
-      "uses": 6,
-      "value": 3.9901490691927357
+      "statGain": 1.5552328099656916,
+      "uses": 5,
+      "value": 3.430232809965585
     },
     "Cup Noodle": {
       "block": 0,
       "cooldown": 9.600000000000001,
       "duration": 2.6,
       "effect": "noodleSnare",
-      "hitCost": 0.3491452991452793,
+      "hitCost": 0.3328571428571239,
       "hitRate": 0.75,
-      "hits": 7.5,
+      "hits": 6.75,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Cup Noodle",
-      "offense": 2.618589743589595,
+      "offense": 2.2467857142855863,
       "rarity": "Epic",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 3.373868411189992,
-      "uses": 10,
-      "value": 5.992458154779587
+      "statGain": 3.14322994931561,
+      "uses": 9,
+      "value": 5.390015663601196
     },
     "Drill": {
       "block": 0,
@@ -316,35 +316,35 @@
       "name": "Drill",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 2.558333333333188,
+      "selfGain": 3.391666666666474,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.6901490691928667,
-      "uses": 7,
-      "value": 4.248482402526054
+      "statGain": 1.5552328099656916,
+      "uses": 6,
+      "value": 4.946899476632165
     },
     "Fan": {
       "block": 0,
       "cooldown": 12,
       "duration": 1.5,
       "effect": "gustBlast",
-      "hitCost": 0.5626016260162282,
+      "hitCost": 0.5238738738738441,
       "hitRate": 0.3,
-      "hits": 2.4,
+      "hits": 2.1,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Fan",
-      "offense": 1.3502439024389477,
+      "offense": 1.1001351351350726,
       "rarity": "Common",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": -0.20941828611091312,
-      "uses": 8,
-      "value": 1.1408256163280346
+      "statGain": -0.18876532830058051,
+      "uses": 7,
+      "value": 0.911369806834492
     },
     "Flower": {
-      "block": 0.5645823752241468,
+      "block": 0.5298405234205109,
       "cooldown": 20,
       "duration": 2,
       "effect": "bloomCleanse",
@@ -355,12 +355,12 @@
       "name": "Flower",
       "offense": 0,
       "rarity": "Common",
-      "selfGain": 0.6583333333332959,
-      "shieldUptime": 0.21074815595364452,
+      "selfGain": 1.008333333333276,
+      "shieldUptime": 0.2065404475043116,
       "slot": "ENGINE",
       "statGain": 0,
-      "uses": 5,
-      "value": 1.2229157085574427
+      "uses": 4.5,
+      "value": 1.538173856753787
     },
     "Gas Can": {
       "block": 0,
@@ -368,40 +368,40 @@
       "drop": true,
       "duration": 3,
       "effect": "slipperyPuddle",
-      "hitCost": 0.47166666666663987,
+      "hitCost": 0.41759259259256887,
       "hitRate": 0.3,
-      "hits": 2.4,
+      "hits": 2.1,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Gas Can",
-      "offense": 1.1319999999999357,
+      "offense": 0.8769444444443947,
       "rarity": "Common",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.018091535401040915,
-      "uses": 8,
-      "value": 1.1500915354009766
+      "statGain": 0.013973845478062685,
+      "uses": 7,
+      "value": 0.8909182899224574
     },
     "Hair Dryer": {
       "block": 0,
       "cooldown": 18,
       "duration": 1,
       "effect": "windBlast",
-      "hitCost": 0.4879166666666389,
+      "hitCost": 0.4171296296296059,
       "hitRate": 0.6,
-      "hits": 3.5999999999999996,
+      "hits": 3,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Hair Dryer",
-      "offense": 1.7564999999998998,
+      "offense": 1.2513888888888178,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.7893599021861464,
-      "uses": 6,
-      "value": 3.545859902186046
+      "statGain": 1.6477195964633056,
+      "uses": 5,
+      "value": 2.8991084853521234
     },
     "Kettle": {
       "block": 0,
@@ -409,97 +409,97 @@
       "drop": true,
       "duration": 3.9000000000000004,
       "effect": "steamCloud",
-      "hitCost": 0.39316239316237084,
+      "hitCost": 0.3518518518518319,
       "hitRate": 0.3,
-      "hits": 2.4,
+      "hits": 2.1,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Kettle",
-      "offense": 0.9435897435896899,
+      "offense": 0.738888888888847,
       "rarity": "Epic",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 3.801552630122129,
-      "uses": 8,
-      "value": 4.745142373711819
+      "statGain": 3.529597694535301,
+      "uses": 7,
+      "value": 4.268486583424148
     },
     "Kite": {
-      "block": 0.18972777410055988,
+      "block": 0.155984335780441,
       "cooldown": 14,
       "duration": 4,
       "effect": "kiteGlide",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.29504741833510234,
+      "liftUptime": 0.27538726333908214,
       "name": "Kite",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.8749999999998934,
+      "selfGain": 2.7083333333331794,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 1.4990393566547164,
-      "uses": 7,
-      "value": 3.5637671307551697
+      "statGain": 1.2800484789208215,
+      "uses": 6,
+      "value": 4.144366148034442
     },
     "Lantern": {
-      "block": 0.12196785477893135,
+      "block": 0.11698825183533075,
       "cooldown": 15,
       "duration": 3,
       "effect": "rise",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.18967334035828007,
+      "liftUptime": 0.2065404475043116,
       "name": "Lantern",
       "offense": 0,
       "rarity": "Common",
-      "selfGain": 1.6916666666665705,
+      "selfGain": 1.7333333333332348,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.04522883850260939,
+      "statGain": 0.03493461369515671,
       "uses": 6,
-      "value": 1.8588633599481112
+      "value": 1.8852561988637222
     },
     "Life Preserver": {
-      "block": 0.12196785477893135,
+      "block": 0.11698825183533075,
       "cooldown": 15,
       "duration": 3,
       "effect": "lifeFloat",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.18967334035828007,
+      "liftUptime": 0.2065404475043116,
       "name": "Life Preserver",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.9499999999998892,
+      "selfGain": 2.2999999999998693,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 0.11761034490269988,
+      "statGain": -0.017237538182036143,
       "uses": 6,
-      "value": 2.1895781996815202
+      "value": 2.399750713653164
     },
     "Log": {
       "block": 0,
-      "cooldown": 9,
+      "cooldown": 7,
       "drop": true,
       "effect": "logObstacle",
-      "hitCost": 0.6406504065040286,
+      "hitCost": 0.6049549549549206,
       "hitRate": 0.3,
-      "hits": 3.3,
+      "hits": 3.5999999999999996,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Log",
-      "offense": 2.1141463414632944,
+      "offense": 2.1778378378377137,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": -0.841828268139417,
-      "uses": 11,
-      "value": 1.2723180733238775
+      "statGain": -0.853717996705773,
+      "uses": 12,
+      "value": 1.3241198411319406
     },
     "Magic Wand": {
       "block": 0,
@@ -513,32 +513,32 @@
       "name": "Magic Wand",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.9249999999998906,
+      "selfGain": 2.3583333333331993,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.4387197334753665,
+      "statGain": 0.3388657528431054,
       "uses": 5,
-      "value": 2.363719733475257
+      "value": 2.6971990861763047
     },
     "Magnet": {
       "block": 0,
       "cooldown": 14,
       "duration": 2.5,
       "effect": "magnetPull",
-      "hitCost": 0.5137499999999708,
+      "hitCost": 0.47916666666663943,
       "hitRate": 0.75,
-      "hits": 5.25,
+      "hits": 4.5,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Magnet",
-      "offense": 2.697187499999847,
+      "offense": 2.1562499999998774,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.2216213086628187,
-      "uses": 7,
-      "value": 2.9188088086626656
+      "statGain": 0.17117960710631053,
+      "uses": 6,
+      "value": 2.327429607106188
     },
     "Magnifying Glass": {
       "block": 0,
@@ -546,40 +546,40 @@
       "drop": true,
       "duration": 2,
       "effect": "waterPuddle",
-      "hitCost": 0.7817829457363896,
+      "hitCost": 0.8598290598290109,
       "hitRate": 0.3,
-      "hits": 2.1,
+      "hits": 1.7999999999999998,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Magnifying Glass",
-      "offense": 1.6417441860464184,
+      "offense": 1.5476923076922195,
       "rarity": "Uncommon",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.0510048592104673,
-      "uses": 7,
-      "value": 2.6927490452568854
+      "statGain": 0.9615048271407554,
+      "uses": 6,
+      "value": 2.509197134832975
     },
     "Microwave": {
       "block": 0,
-      "cooldown": 16,
-      "duration": 1.3,
+      "cooldown": 14.4,
+      "duration": 1.8199999999999998,
       "effect": "microFreeze",
-      "hitCost": 1.1187943262410711,
+      "hitCost": 1.3692592592591815,
       "hitRate": 0.6,
       "hits": 3.5999999999999996,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Microwave",
-      "offense": 4.027659574467855,
+      "offense": 4.9293333333330525,
       "rarity": "Epic",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": -1.3623811485331212,
+      "statGain": -1.4492166038694403,
       "uses": 6,
-      "value": 2.6652784259347344
+      "value": 3.480116729463612
     },
     "Pizza": {
       "block": 0,
@@ -587,39 +587,39 @@
       "drop": true,
       "duration": 2,
       "effect": "slipperyPuddle",
-      "hitCost": 0.47166666666663987,
+      "hitCost": 0.41759259259256887,
       "hitRate": 0.3,
-      "hits": 2.1,
+      "hits": 1.7999999999999998,
       "kind": "drop",
       "liftUptime": 0,
       "name": "Pizza",
-      "offense": 0.9904999999999438,
+      "offense": 0.7516666666666239,
       "rarity": "Common",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
       "statGain": 0,
-      "uses": 7,
-      "value": 0.9904999999999438
+      "uses": 6,
+      "value": 0.7516666666666239
     },
     "Propeller Hat": {
-      "block": 0.10841587091460565,
+      "block": 0.09099086253859058,
       "cooldown": 12,
       "duration": 2,
       "effect": "hover",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.16859852476291562,
+      "liftUptime": 0.16064257028113124,
       "name": "Propeller Hat",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.3499999999999233,
+      "selfGain": 1.6416666666665733,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.2829576907094467,
-      "uses": 8,
-      "value": 2.7413735616239756
+      "statGain": 1.1771236426802005,
+      "uses": 7,
+      "value": 2.9097811718853643
     },
     "Racing Flag": {
       "block": 0,
@@ -633,32 +633,32 @@
       "name": "Racing Flag",
       "offense": 0,
       "rarity": "Uncommon",
-      "selfGain": 1.6749999999999048,
+      "selfGain": 1.774999999999899,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.2216213086628187,
-      "uses": 5,
-      "value": 1.8966213086627235
+      "statGain": 0.17117960710631053,
+      "uses": 4.5,
+      "value": 1.9461796071062096
     },
     "Red Sofa": {
-      "block": 0.5928114939853542,
+      "block": 0.5298405234205109,
       "cooldown": 15,
       "duration": 3,
       "effect": "sofaFortress",
-      "hitCost": 0.6065040650406159,
-      "hitRate": 0.4,
-      "hits": 2.8000000000000003,
+      "hitCost": 0.5612612612612293,
+      "hitRate": 0.6,
+      "hits": 3.5999999999999996,
       "kind": "offense+shield",
       "liftUptime": 0,
       "name": "Red Sofa",
-      "offense": 1.6982113821137248,
+      "offense": 2.0205405405404253,
       "rarity": "Rare",
       "selfGain": 0,
-      "shieldUptime": 0.22128556375132674,
+      "shieldUptime": 0.2065404475043116,
       "slot": "BODY",
-      "statGain": -0.7646092579033853,
-      "uses": 7,
-      "value": 1.5264136181956935
+      "statGain": -0.8994031962992963,
+      "uses": 6,
+      "value": 1.65097786766164
     },
     "Rocket": {
       "block": 0,
@@ -672,51 +672,51 @@
       "name": "Rocket",
       "offense": 0,
       "rarity": "Epic",
-      "selfGain": 2.2249999999998735,
+      "selfGain": 3.1749999999998195,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 2.890825053359354,
-      "uses": 7,
-      "value": 5.115825053359227
+      "statGain": 2.691510138506292,
+      "uses": 6,
+      "value": 5.866510138506111
     },
     "Rubber Duck": {
-      "block": 0.2032797579648856,
+      "block": 0.17873205141508863,
       "cooldown": 15,
       "duration": 5,
       "effect": "softLanding",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+lift",
-      "liftUptime": 0.3161222339304668,
+      "liftUptime": 0.31554790590936493,
       "name": "Rubber Duck",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 3.3583333333331424,
+      "selfGain": 3.2499999999998153,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.49751722352877437,
-      "uses": 6,
-      "value": 4.0591303148268025
+      "statGain": 0.3842807506468233,
+      "uses": 5.5,
+      "value": 3.8130128020617273
     },
     "Shopping Cart": {
       "block": 0,
       "cooldown": 10,
       "duration": 1,
       "effect": "cartRam",
-      "hitCost": 0.119819819819813,
+      "hitCost": 0.05833333333333002,
       "hitRate": 0.32,
-      "hits": 2.88,
+      "hits": 2.56,
       "kind": "self+offense",
       "liftUptime": 0,
       "name": "Shopping Cart",
-      "offense": 0.34508108108106145,
+      "offense": 0.14933333333332485,
       "rarity": "Uncommon",
-      "selfGain": 1.6916666666665705,
+      "selfGain": 2.841666666666505,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 0.22890956351739433,
-      "uses": 9,
-      "value": 2.2656573112650262
+      "statGain": 0.12728030548844296,
+      "uses": 8,
+      "value": 3.118280305488273
     },
     "Skateboard": {
       "block": 0,
@@ -730,12 +730,12 @@
       "name": "Skateboard",
       "offense": 0,
       "rarity": "Uncommon",
-      "selfGain": 1.5249999999999133,
+      "selfGain": 1.9166666666665577,
       "shieldUptime": 0,
       "slot": "BODY",
-      "statGain": 1.0921310172525598,
-      "uses": 8,
-      "value": 2.617131017252473
+      "statGain": 0.9572565168325528,
+      "uses": 7,
+      "value": 2.8739231834991106
     },
     "Soda Bottle": {
       "block": 0,
@@ -749,15 +749,15 @@
       "name": "Soda Bottle",
       "offense": 0,
       "rarity": "Epic",
-      "selfGain": 2.791666666666508,
+      "selfGain": 3.849999999999781,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 1.266407478073243,
-      "uses": 6.5,
-      "value": 4.058074144739751
+      "statGain": 0.9781691834646438,
+      "uses": 6,
+      "value": 4.828169183464425
     },
     "Suitcase": {
-      "block": 0.5928114939853542,
+      "block": 0.5298405234205109,
       "cooldown": 14,
       "duration": 3,
       "effect": "lockdown",
@@ -768,32 +768,32 @@
       "name": "Suitcase",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.6499999999999062,
-      "shieldUptime": 0.22128556375132674,
+      "selfGain": 2.624999999999851,
+      "shieldUptime": 0.2065404475043116,
       "slot": "BODY",
-      "statGain": -0.4450604543320023,
-      "uses": 7,
-      "value": 1.797751039653258
+      "statGain": -0.5260324401321554,
+      "uses": 6,
+      "value": 2.6288080832882064
     },
     "Toilet Paper": {
       "block": 0,
       "cooldown": 12,
       "duration": 2,
       "effect": "steerDisable",
-      "hitCost": 0.5203252032520029,
+      "hitCost": 0.4355855855855608,
       "hitRate": 0.75,
-      "hits": 6,
+      "hits": 5.25,
       "kind": "offense",
       "liftUptime": 0,
       "name": "Toilet Paper",
-      "offense": 3.1219512195120176,
+      "offense": 2.2868243243241944,
       "rarity": "Common",
       "selfGain": 0,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.090457677005233,
-      "uses": 8,
-      "value": 3.2124088965172506
+      "statGain": 0.06986922739032764,
+      "uses": 7,
+      "value": 2.356693551714522
     },
     "Treadmill": {
       "block": 0,
@@ -807,12 +807,12 @@
       "name": "Treadmill",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 2.483333333333192,
+      "selfGain": 2.8833333333331694,
       "shieldUptime": 0,
       "slot": "ENGINE",
-      "statGain": 1.9872808209825576,
+      "statGain": 1.8338708068777978,
       "uses": 4,
-      "value": 4.47061415431575
+      "value": 4.717204140210967
     },
     "Trophy": {
       "block": 0,
@@ -826,194 +826,194 @@
       "name": "Trophy",
       "offense": 0,
       "rarity": "Epic",
-      "selfGain": 3.141666666666488,
+      "selfGain": 4.258333333333091,
       "shieldUptime": 0,
       "slot": "SPECIAL",
-      "statGain": 0.8593479315497063,
+      "statGain": 0.6637576602081481,
       "uses": 5,
-      "value": 4.001014598216194
+      "value": 4.922090993541239
     },
     "Umbrella": {
-      "block": 0.671541657778202,
+      "block": 0.6888680146215322,
       "cooldown": 18,
       "duration": 4,
       "effect": "parachute",
       "hitCost": 0,
       "hits": 0,
       "kind": "self+shield+lift",
-      "liftUptime": 0.21074815595364452,
+      "liftUptime": 0.22948938611590178,
       "name": "Umbrella",
       "offense": 0,
       "rarity": "Rare",
-      "selfGain": 1.4499999999999176,
-      "shieldUptime": 0.21074815595364452,
+      "selfGain": 2.683333333333181,
+      "shieldUptime": 0.22948938611590178,
       "slot": "SPECIAL",
-      "statGain": 0.4387197334753665,
+      "statGain": 0.3388657528431054,
       "uses": 5,
-      "value": 2.560261391253486
+      "value": 3.7110671007978184
     }
   },
   "matches": {
-    "distinctCores": 1178,
+    "distinctCores": 1197,
     "lift": {
-      "Alarm Clock": 0.8099068194301242,
-      "Backpack": 1.5868477421624376,
-      "Balloon Bunch": 2.1289803175669104,
-      "Bamboo Raft": 0.9274518829105954,
-      "Barrel": 0.8870301543630335,
-      "Bathtub": 0.308230536483184,
-      "Cactus": 0.5405486690766665,
-      "Camera": 0.6361136192863873,
-      "Cardboard Box": 0.9131473945999945,
-      "Compass": 1.7849768381414235,
-      "Cup Noodle": 1.8590760030652416,
-      "Drill": 1.9454346249040806,
-      "Fan": 0.30260178307772045,
-      "Flower": 0.4442962688045895,
-      "Gas Can": 0.5828037155342961,
-      "Hair Dryer": 0.9080739631348063,
-      "Kettle": 1.7385089252001167,
-      "Kite": 1.7266534321338871,
-      "Lantern": 1.1905131217641276,
-      "Life Preserver": 1.0482024272601895,
-      "Log": 0.24746824434492193,
-      "Magic Wand": 1.5925244384964505,
-      "Magnet": 0.7017550312587638,
-      "Magnifying Glass": 0.5405486690766665,
-      "Microwave": 0.27840177488803713,
-      "Pizza": 0.659085316401607,
-      "Propeller Hat": 1.0889433181526713,
-      "Racing Flag": 1.1210249653276834,
-      "Red Sofa": 0.22563281102036994,
-      "Rocket": 2.568587804026533,
-      "Rubber Duck": 2.094044545951614,
-      "Shopping Cart": 0.8440732143083692,
-      "Skateboard": 1.2677504551398753,
-      "Soda Bottle": 2.212937185007475,
-      "Suitcase": 0.7040314926141924,
-      "Toilet Paper": 0.6377183513445186,
-      "Treadmill": 2.191607669971258,
-      "Trophy": 1.9928797442637147,
-      "Umbrella": 1.045048295123938
+      "Alarm Clock": 0.8927696466818101,
+      "Backpack": 1.3168573628700848,
+      "Balloon Bunch": 2.021608190322753,
+      "Bamboo Raft": 0.9968031204804263,
+      "Barrel": 0.9050396441597387,
+      "Bathtub": 0.24263227551492708,
+      "Cactus": 0.4828244007564892,
+      "Camera": 0.6693050531426127,
+      "Cardboard Box": 0.7377777789413168,
+      "Compass": 1.335716407548004,
+      "Cup Noodle": 1.5946101627973692,
+      "Drill": 2.3381093037302567,
+      "Fan": 0.32595987219228834,
+      "Flower": 0.4666270789419366,
+      "Gas Can": 0.5425099154889115,
+      "Hair Dryer": 0.8157839157389501,
+      "Kettle": 1.4379018275379412,
+      "Kite": 1.7000861690039075,
+      "Lantern": 1.1076856224179785,
+      "Life Preserver": 1.0320578609223454,
+      "Log": 0.29527812409015236,
+      "Magic Wand": 1.4155085330094932,
+      "Magnet": 0.6074269015427598,
+      "Magnifying Glass": 0.4980075580129826,
+      "Microwave": 0.23470825248191596,
+      "Pizza": 0.6553483133347615,
+      "Propeller Hat": 1.0706374576833668,
+      "Racing Flag": 1.0860875213723964,
+      "Red Sofa": 0.18234306467718575,
+      "Rocket": 2.937817822451009,
+      "Rubber Duck": 1.820596547505273,
+      "Shopping Cart": 1.128494745382478,
+      "Skateboard": 1.21007048508925,
+      "Soda Bottle": 2.5931697404763088,
+      "Suitcase": 0.8986725515787246,
+      "Toilet Paper": 0.5699370475226854,
+      "Treadmill": 2.1660485222725954,
+      "Trophy": 2.466722770402474,
+      "Umbrella": 1.6165189743976147
     },
-    "topCore": "Skateboard + Alarm Clock + Toilet Paper",
-    "topCoreShare": 0.006333333333333333,
+    "topCore": "Barrel + Drill + Toilet Paper",
+    "topCoreShare": 0.005666666666666667,
     "topItemShare": {
       "BODY": {
-        "item": "Skateboard",
-        "share": 0.18633333333333332
+        "item": "Shopping Cart",
+        "share": 0.182
       },
       "ENGINE": {
         "item": "Alarm Clock",
-        "share": 0.14733333333333334
+        "share": 0.16333333333333333
       },
       "SPECIAL": {
         "item": "Toilet Paper",
-        "share": 0.165
+        "share": 0.13166666666666665
       }
     },
-    "upsetRate": 0.511,
+    "upsetRate": 0.5056666666666667,
     "wins": {
-      "Alarm Clock": 442,
-      "Backpack": 302,
-      "Balloon Bunch": 158,
-      "Bamboo Raft": 540,
-      "Barrel": 331,
-      "Bathtub": 24,
-      "Cactus": 59,
-      "Camera": 289,
-      "Cardboard Box": 226,
-      "Compass": 291,
-      "Cup Noodle": 137,
-      "Drill": 353,
-      "Fan": 72,
-      "Flower": 160,
-      "Gas Can": 94,
-      "Hair Dryer": 363,
-      "Kettle": 126,
-      "Kite": 307,
-      "Lantern": 389,
-      "Life Preserver": 137,
-      "Log": 20,
-      "Magic Wand": 124,
-      "Magnet": 186,
-      "Magnifying Glass": 177,
-      "Microwave": 18,
+      "Alarm Clock": 490,
+      "Backpack": 180,
+      "Balloon Bunch": 147,
+      "Bamboo Raft": 376,
+      "Barrel": 498,
+      "Bathtub": 19,
+      "Cactus": 53,
+      "Camera": 325,
+      "Cardboard Box": 171,
+      "Compass": 219,
+      "Cup Noodle": 114,
+      "Drill": 461,
+      "Fan": 78,
+      "Flower": 169,
+      "Gas Can": 88,
+      "Hair Dryer": 310,
+      "Kettle": 94,
+      "Kite": 304,
+      "Lantern": 364,
+      "Life Preserver": 127,
+      "Log": 24,
+      "Magic Wand": 192,
+      "Magnet": 141,
+      "Magnifying Glass": 164,
+      "Microwave": 16,
       "Pizza": 74,
-      "Propeller Hat": 141,
-      "Racing Flag": 234,
-      "Red Sofa": 6,
-      "Rocket": 175,
-      "Rubber Duck": 420,
-      "Shopping Cart": 327,
-      "Skateboard": 559,
-      "Soda Bottle": 155,
-      "Suitcase": 58,
-      "Toilet Paper": 495,
-      "Treadmill": 411,
-      "Trophy": 124,
-      "Umbrella": 89
+      "Propeller Hat": 163,
+      "Racing Flag": 228,
+      "Red Sofa": 8,
+      "Rocket": 209,
+      "Rubber Duck": 302,
+      "Shopping Cart": 546,
+      "Skateboard": 485,
+      "Soda Bottle": 194,
+      "Suitcase": 112,
+      "Toilet Paper": 395,
+      "Treadmill": 393,
+      "Trophy": 166,
+      "Umbrella": 243
     },
     "winsBySlot": {
       "BODY": {
-        "(empty)": 145,
-        "Backpack": 302,
-        "Bamboo Raft": 540,
-        "Barrel": 331,
-        "Bathtub": 24,
-        "Cardboard Box": 226,
-        "Kite": 307,
-        "Life Preserver": 137,
-        "Log": 20,
-        "Microwave": 18,
-        "Red Sofa": 6,
-        "Shopping Cart": 327,
-        "Skateboard": 559,
-        "Suitcase": 58
+        "(empty)": 134,
+        "Backpack": 180,
+        "Bamboo Raft": 376,
+        "Barrel": 498,
+        "Bathtub": 19,
+        "Cardboard Box": 171,
+        "Kite": 304,
+        "Life Preserver": 127,
+        "Log": 24,
+        "Microwave": 16,
+        "Red Sofa": 8,
+        "Shopping Cart": 546,
+        "Skateboard": 485,
+        "Suitcase": 112
       },
       "ENGINE": {
-        "(empty)": 152,
-        "Alarm Clock": 442,
-        "Compass": 291,
-        "Cup Noodle": 137,
-        "Drill": 353,
-        "Fan": 72,
-        "Flower": 160,
-        "Hair Dryer": 363,
-        "Kettle": 126,
-        "Magnifying Glass": 177,
-        "Propeller Hat": 141,
-        "Rocket": 175,
-        "Treadmill": 411
+        "(empty)": 136,
+        "Alarm Clock": 490,
+        "Compass": 219,
+        "Cup Noodle": 114,
+        "Drill": 461,
+        "Fan": 78,
+        "Flower": 169,
+        "Hair Dryer": 310,
+        "Kettle": 94,
+        "Magnifying Glass": 164,
+        "Propeller Hat": 163,
+        "Rocket": 209,
+        "Treadmill": 393
       },
       "SPECIAL": {
-        "(empty)": 110,
-        "Balloon Bunch": 158,
-        "Cactus": 59,
-        "Camera": 289,
-        "Gas Can": 94,
-        "Lantern": 389,
-        "Magic Wand": 124,
-        "Magnet": 186,
+        "(empty)": 88,
+        "Balloon Bunch": 147,
+        "Cactus": 53,
+        "Camera": 325,
+        "Gas Can": 88,
+        "Lantern": 364,
+        "Magic Wand": 192,
+        "Magnet": 141,
         "Pizza": 74,
-        "Racing Flag": 234,
-        "Rubber Duck": 420,
-        "Soda Bottle": 155,
-        "Toilet Paper": 495,
-        "Trophy": 124,
-        "Umbrella": 89
+        "Racing Flag": 228,
+        "Rubber Duck": 302,
+        "Soda Bottle": 194,
+        "Toilet Paper": 395,
+        "Trophy": 166,
+        "Umbrella": 243
       }
     }
   },
   "pace": {
     "coef": [
-      180.0847264238421,
-      -0.5098627109208977,
-      -23.36064237047463,
-      -0.061927934799172656,
-      -0.9045767700523265
+      180.18899519211323,
+      -0.7469399256490846,
+      -16.16421611376143,
+      -0.04673239707299568,
+      -0.6986922739033239
     ],
-    "r2": 0.9851421540313949,
+    "r2": 0.9817955823215436,
     "samples": [
       {
         "build": "Microwave + Alarm Clock + Rubber Duck",
@@ -1025,7 +1025,7 @@
           "torque": 52.337779109845634,
           "turnSpeed": 1.3441983686925991
         },
-        "time": 100.18333333332893
+        "time": 90.56666666666281
       },
       {
         "build": "Microwave + Magnifying Glass + Umbrella + Alarm Clock",
@@ -1037,7 +1037,7 @@
           "torque": 55.04876330329661,
           "turnSpeed": 1.3861539765533535
         },
-        "time": 98.89166666666233
+        "time": 90.19999999999617
       },
       {
         "build": "Bathtub + Magnifying Glass + Toilet Paper + Kite",
@@ -1049,7 +1049,7 @@
           "torque": 59.26857507885175,
           "turnSpeed": 1.4804590227515129
         },
-        "time": 96.1666666666625
+        "time": 87.8749999999963
       },
       {
         "build": "Backpack + Hair Dryer + Balloon Bunch",
@@ -1061,7 +1061,7 @@
           "torque": 68.94107383038278,
           "turnSpeed": 1.3424609088973478
         },
-        "time": 98.3499999999957
+        "time": 89.56666666666287
       },
       {
         "build": "Shopping Cart + Fan + Rubber Duck",
@@ -1073,7 +1073,7 @@
           "torque": 55.2297165200391,
           "turnSpeed": 1.3484289903644742
         },
-        "time": 99.30833333332899
+        "time": 90.10833333332951
       },
       {
         "build": "Shopping Cart + Flower + Umbrella + Kite",
@@ -1085,7 +1085,7 @@
           "torque": 58.027079303675045,
           "turnSpeed": 1.4950262503453993
         },
-        "time": 95.34999999999587
+        "time": 87.75833333332963
       },
       {
         "build": "Suitcase + Magnifying Glass + Magic Wand + Kite",
@@ -1097,7 +1097,7 @@
           "torque": 65.12657955683332,
           "turnSpeed": 1.4782004263344453
         },
-        "time": 95.8916666666625
+        "time": 87.15833333332967
       },
       {
         "build": "Cardboard Box + Flower + Soda Bottle",
@@ -1109,7 +1109,7 @@
           "torque": 64.5,
           "turnSpeed": 1.354857142857143
         },
-        "time": 97.5916666666624
+        "time": 88.62499999999625
       },
       {
         "build": "Life Preserver + Magnifying Glass + Soda Bottle + Alarm Clock",
@@ -1121,7 +1121,7 @@
           "torque": 71.66465675108311,
           "turnSpeed": 1.3843807226763143
         },
-        "time": 96.48333333332914
+        "time": 87.79166666666296
       },
       {
         "build": "Suitcase + Hair Dryer + Rubber Duck",
@@ -1133,7 +1133,7 @@
           "torque": 75.67979654671008,
           "turnSpeed": 1.3362714022483138
         },
-        "time": 98.01666666666239
+        "time": 88.67499999999626
       },
       {
         "build": "Life Preserver + Drill + Trophy + Alarm Clock",
@@ -1145,7 +1145,7 @@
           "torque": 80.87539771261498,
           "turnSpeed": 1.3790929081237793
         },
-        "time": 96.19999999999582
+        "time": 87.48333333332965
       },
       {
         "build": "Barrel + Alarm Clock + Trophy + Alarm Clock",
@@ -1157,7 +1157,7 @@
           "torque": 76.55131461749083,
           "turnSpeed": 1.3922508494705241
         },
-        "time": 95.94999999999584
+        "time": 87.01666666666301
       },
       {
         "build": "Log + Rocket + Toilet Paper + Alarm Clock",
@@ -1169,7 +1169,7 @@
           "torque": 86.49532354953998,
           "turnSpeed": 1.3647381513627426
         },
-        "time": 96.98333333332911
+        "time": 87.83333333332963
       },
       {
         "build": "Red Sofa + Kettle + Cactus",
@@ -1181,7 +1181,7 @@
           "torque": 100.03654302941715,
           "turnSpeed": 1.3284591892667903
         },
-        "time": 96.5249999999958
+        "time": 87.35833333332965
       },
       {
         "build": "Skateboard + Propeller Hat + Soda Bottle",
@@ -1193,7 +1193,7 @@
           "torque": 84.83530142945929,
           "turnSpeed": 1.344096879862802
         },
-        "time": 95.77499999999586
+        "time": 86.88333333332969
       },
       {
         "build": "Barrel + Hair Dryer + Gas Can + Kite",
@@ -1205,7 +1205,7 @@
           "torque": 91.01834478266939,
           "turnSpeed": 1.4802161675996712
         },
-        "time": 93.85833333332928
+        "time": 85.62499999999642
       },
       {
         "build": "Barrel + Treadmill + Soda Bottle + Kite",
@@ -1217,7 +1217,7 @@
           "torque": 94.00107123727906,
           "turnSpeed": 1.4770995704119891
         },
-        "time": 92.5416666666627
+        "time": 84.38333333332983
       },
       {
         "build": "Shopping Cart + Cup Noodle + Magic Wand + Alarm Clock",
@@ -1229,7 +1229,7 @@
           "torque": 105.99487280615264,
           "turnSpeed": 1.3645575682452038
         },
-        "time": 95.14999999999588
+        "time": 86.14166666666307
       },
       {
         "build": "Skateboard + Rocket + Racing Flag",
@@ -1241,7 +1241,7 @@
           "torque": 109.19876959132857,
           "turnSpeed": 1.3335265437653017
         },
-        "time": 95.18333333332922
+        "time": 86.30833333332973
       },
       {
         "build": "Barrel + Kettle + Trophy + Alarm Clock",
@@ -1253,25 +1253,25 @@
           "torque": 121.33834990593927,
           "turnSpeed": 1.3645602180673397
         },
-        "time": 93.47499999999599
+        "time": 85.04999999999646
       }
     ]
   },
   "victimCost": {
-    "0.3|nil|1.3|nil|false": 1.1187943262410711,
-    "0.5|nil|1.9500000000000002|nil|false": 0.9876811594202337,
-    "0.5|nil|1|-30|nil": 0.6406504065040286,
-    "0.6|nil|1.2|40|false": 0.6065040650406159,
-    "0.6|nil|2|nil|nil": 0.7817829457363896,
-    "0.7|nil|1.2|55|false": 0.4879166666666389,
-    "0.7|nil|1.5|45|false": 0.5626016260162282,
-    "0.7|nil|1.5|nil|nil": 0.47166666666663987,
-    "0.85|nil|2.6|nil|false": 0.3491452991452793,
-    "0.8|nil|1.9500000000000002|nil|nil": 0.39316239316237084,
-    "0.8|nil|2.5|35|true": 0.5137499999999708,
-    "nil|0.15|1|nil|false": 0.7189922480619746,
-    "nil|0.3|1.3|nil|false": 0.5203252032520029,
-    "nil|nil|1.5|45|false": 0.13114035087718554,
-    "nil|nil|1|40|false": 0.119819819819813
+    "0.3|nil|1.8199999999999998|nil|false": 1.3692592592591815,
+    "0.5|nil|1|-30|nil": 0.6049549549549206,
+    "0.5|nil|2.8600000000000003|nil|false": 1.3848148148147361,
+    "0.6|nil|1.2|40|false": 0.5612612612612293,
+    "0.6|nil|2|nil|nil": 0.8598290598290109,
+    "0.7|nil|1.2|55|false": 0.4171296296296059,
+    "0.7|nil|1.5|45|false": 0.5238738738738441,
+    "0.7|nil|1.5|nil|nil": 0.41759259259256887,
+    "0.85|nil|2.6|nil|false": 0.3328571428571239,
+    "0.8|nil|1.9500000000000002|nil|nil": 0.3518518518518319,
+    "0.8|nil|2.5|35|true": 0.47916666666663943,
+    "nil|0.15|1|nil|false": 0.8570833333332846,
+    "nil|0.3|1.3|nil|false": 0.4355855855855608,
+    "nil|nil|1.5|45|false": 0.06715686274509422,
+    "nil|nil|1|40|false": 0.05833333333333002
   }
 }

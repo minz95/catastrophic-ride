@@ -35,7 +35,7 @@ function PlaytestReport.trackInfo(biome)
 		local name = TRACKS[biome]
 		if not name then return nil end
 		local track = require(ReplicatedStorage.Shared.Tracks[name])
-		local geo = TrackGeometry.new(track.nodes, track.width)
+		local geo = TrackGeometry.new(track.nodes, track.width, track.trackTop)
 		_geo[biome] = { track = track, geo = geo, sections = RaceMetrics.sections(track, geo) }
 	end
 	return _geo[biome]

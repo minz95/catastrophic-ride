@@ -29,12 +29,10 @@ ForestTrack.wallGapHalfWidth = 0
 ForestTrack.slowZoneWidth  = 40
 ForestTrack.slowZoneHeight = 4
 
--- ─── Centerline (spec §2.1, figure-3 + U-bend) ────────────────────────────────
--- S1 (Starting Straight)         : N1  → N2
--- S2 (Outcrop Hairpin, right 90°): N2  → N8
--- S3 (River Sweeper, left 120°)  : N8  → N15, bridge at N10
--- S4 (Farm U-Bend, 180° around)  : N15 → N23
--- S5 (Mud U-turn hook + finish)  : N23 → N36
+-- ─── Centerline ───────────────────────────────────────────────────────────────
+-- S1 start straight, S2 outcrop hairpin, S3 trestle climb (river bridge at
+-- N10), S4 giant tree spiral (down 1½ turns), S4b run-out, S5 mud hook,
+-- S6 pine switchbacks, S7 ridge chicane + final straight. Sections below.
 ForestTrack.nodes = {
 	-- S1
 	{   0,   600 }, -- N1  start grid line
@@ -48,101 +46,127 @@ ForestTrack.nodes = {
 	{ 300,    20 }, -- N7  departure straight
 	{ 450,     0 }, -- N8  end of S2
 
-	-- S3 long left 120° sweeper, bridge at N10
-	{ 550,  -120 }, -- N9
-	{ 580,  -300 }, -- N10 bridge crosses centerline here
-	{ 550,  -480 }, -- N11
-	{ 460,  -640 }, -- N12
-	{ 310,  -750 }, -- N13
-	{ 130,  -820 }, -- N14 CP1 zone
-	{ -50,  -830 }, -- N15 end of S3
+	-- S3 long left 120° sweeper, climbing on a wooden trestle from the
+	-- ground (Y 1) to the treetops (Y 44, ~3.7% grade); bridge over the
+	-- river at N10. A third number on a node is the road surface Y there.
+	{ 550,  -120,  6.31 }, -- N9
+	{ 580,  -300, 12.52 }, -- N10 river bridge
+	{ 550,  -480, 18.73 }, -- N11
+	{ 460,  -640, 24.97 }, -- N12
+	{ 310,  -750, 31.3 }, -- N13
+	{ 130,  -820, 37.87 }, -- N14 CP1 zone
+	{ -50,  -830, 44 },    -- N15 end of S3, top of the climb
+	{ -150, -830, 44 },    -- N16 flat crest, over the spiral's lower turn
 
-	-- S4 U-bend around farm island (peak at N19)
-	{ -220, -870  }, -- N16
-	{ -360, -970  }, -- N17
-	{ -450, -1130 }, -- N18
-	{ -470, -1310 }, -- N19 U peak (CP2 zone)
-	{ -420, -1450 }, -- N20
-	{ -280, -1530 }, -- N21
-	{ -100, -1530 }, -- N22
-	{   50, -1500 }, -- N23 end of S4
+	-- S4 Giant Tree Spiral (2026-10-22, replaces the flat farm U-bend): 1½
+	-- turns (540°, left) around the giant tree, centre (-150, -920), R = 90,
+	-- going down 43 studs (5.1% grade). Each turn passes 28.7 studs above the
+	-- one below it. Nodes every 30°.
+	{ -195,   -842.1, 41.61 }, -- N17
+	{ -227.9, -875,   39.22 }, -- N18
+	{ -240,   -920,   36.83 },  -- N19 west
+	{ -227.9, -965,   34.44 }, -- N20
+	{ -195,   -997.9, 32.06 }, -- N21
+	{ -150,  -1010,   29.67 },    -- N22 south (over the exit)
+	{ -105,   -997.9, 27.28 }, -- N23
+	{ -72.1,  -965,   24.89 }, -- N24
+	{ -60,    -920,   22.5 },  -- N25 east (drift corner)
+	{ -72.1,  -875,   20.11 }, -- N26
+	{ -105,   -842.1, 17.72 }, -- N27
+	{ -150,   -830,   15.33 },    -- N28 north (under the crest)
+	{ -195,   -842.1, 12.94 }, -- N29
+	{ -227.9, -875,    10.56 }, -- N30
+	{ -240,   -920,    8.17 },  -- N31
+	{ -227.9, -965,    5.78 }, -- N32
+	{ -195,   -997.9,  3.39 }, -- N33
+	{ -150,  -1010,    1 },    -- N34 bottom, heading east (ground again)
+	-- S4b back to S5: right turn (R=70), a straight south, left turn (R=80)
+	{  -30,  -1010 }, -- N35
+	{    5,  -1019.4 }, -- N36
+	{ 30.6,  -1045 }, -- N37
+	{   40,  -1080 }, -- N38 heading south
+	{   40,  -1440 }, -- N39
+	{ 50.7,  -1480 }, -- N40
+	{   80,  -1509.3 }, -- N41
+	{  120,  -1520 }, -- N42 heading east
 
 	-- S5 (redesigned): left U-turn (R=55, 30° steps) then a right-hander
 	-- (R=60) onto the finish straight. The old N24 (−105°) and N27 (+118°)
 	-- single-node kinks let walls cut across the lane and trapped cars.
-	{  150, -1520 }, -- N24  S5 entry, heading east
-	{ 177.5, -1527.4 }, -- N25
-	{ 197.6, -1547.5 }, -- N26
-	{ 205, -1575 }, -- N27  U-turn apex (drift corner)
-	{ 197.6, -1602.5 }, -- N28
-	{ 177.5, -1622.6 }, -- N29
-	{ 150, -1630 }, -- N30  heading west
-	{   60, -1630 }, -- N31  start of the right-hander onto the finish straight
-	{ 30, -1638 }, -- N32
-	{ 8, -1660 }, -- N33
-	{ 0, -1690 }, -- N34  onto the finish straight (X=0 from here)
+	{  150, -1520 }, -- N43  S5 entry, heading east
+	{ 177.5, -1527.4 }, -- N44
+	{ 197.6, -1547.5 }, -- N45
+	{ 205, -1575 }, -- N46  U-turn apex (drift corner)
+	{ 197.6, -1602.5 }, -- N47
+	{ 177.5, -1622.6 }, -- N48
+	{ 150, -1630 }, -- N49  heading west
+	{   60, -1630 }, -- N50  start of the right-hander onto the finish straight
+	{ 30, -1638 }, -- N51
+	{ 8, -1660 }, -- N52
+	{ 0, -1690 }, -- N53  onto the finish straight (X=0 from here)
 	-- S6 (2026-10-20, races were ~47 s vs the 60-120 s target): pine
 	-- switchbacks joined by long straights. 2026-10-22: each hairpin is two
 	-- tight 90° corners (R=25) with a short straight between them (the old
 	-- R=70 half circles were taken at full speed). With grip a car must
 	-- brake to ~50 studs/s there; a drift carries ~66 (Constants.DRIVE).
-	{ 0, -1960 }, -- N35  end of the finish-straight mud + ramp; S6 begins
-	{ -10.7, -2000 }, -- N36
-	{ -40, -2029.3 }, -- N37
-	{ -80, -2040 }, -- N38  heading west
-	{ -340, -2040 }, -- N39  hairpin 1 entry
-	{ -385, -2040 }, -- N40  corner 1 (R=25)
-	{ -397.5, -2043.35 }, -- N41
-	{ -406.65, -2052.5 }, -- N42
-	{ -410, -2065 }, -- N43  heading south
-	{ -410, -2110 }, -- N44  hairpin 1 apex (drift corner)
-	{ -410, -2155 }, -- N45  corner 2 (R=25)
-	{ -406.65, -2167.5 }, -- N46
-	{ -397.5, -2176.65 }, -- N47
-	{ -385, -2180 }, -- N48  heading east
-	{ 220, -2180 }, -- N49  hairpin 2 entry
-	{ 265, -2180 }, -- N50  corner 3 (R=25)
-	{ 277.5, -2183.35 }, -- N51
-	{ 286.65, -2192.5 }, -- N52
-	{ 290, -2205 }, -- N53  heading south
-	{ 290, -2250 }, -- N54  hairpin 2 apex (drift corner)
-	{ 290, -2295 }, -- N55  corner 4 (R=25)
-	{ 286.65, -2307.5 }, -- N56
-	{ 277.5, -2316.65 }, -- N57
-	{ 265, -2320 }, -- N58  heading west
-	{ -200, -2320 }, -- N59
-	{ -245, -2332.1 }, -- N60
-	{ -277.9, -2365 }, -- N61
-	{ -290, -2410 }, -- N62  S6 end, heading -Z again
+	{ 0, -1960 }, -- N54  end of the finish-straight mud + ramp; S6 begins
+	{ -10.7, -2000 }, -- N55
+	{ -40, -2029.3 }, -- N56
+	{ -80, -2040 }, -- N57  heading west
+	{ -340, -2040 }, -- N58  hairpin 1 entry
+	{ -385, -2040 }, -- N59  corner 1 (R=25)
+	{ -397.5, -2043.35 }, -- N60
+	{ -406.65, -2052.5 }, -- N61
+	{ -410, -2065 }, -- N62  heading south
+	{ -410, -2110 }, -- N63  hairpin 1 apex (drift corner)
+	{ -410, -2155 }, -- N64  corner 2 (R=25)
+	{ -406.65, -2167.5 }, -- N65
+	{ -397.5, -2176.65 }, -- N66
+	{ -385, -2180 }, -- N67  heading east
+	{ 220, -2180 }, -- N68  hairpin 2 entry
+	{ 265, -2180 }, -- N69  corner 3 (R=25)
+	{ 277.5, -2183.35 }, -- N70
+	{ 286.65, -2192.5 }, -- N71
+	{ 290, -2205 }, -- N72  heading south
+	{ 290, -2250 }, -- N73  hairpin 2 apex (drift corner)
+	{ 290, -2295 }, -- N74  corner 4 (R=25)
+	{ 286.65, -2307.5 }, -- N75
+	{ 277.5, -2316.65 }, -- N76
+	{ 265, -2320 }, -- N77  heading west
+	{ -200, -2320 }, -- N78
+	{ -245, -2332.1 }, -- N79
+	{ -277.9, -2365 }, -- N80
+	{ -290, -2410 }, -- N81  S6 end, heading -Z again
 	-- S7: ridge chicane and the final straight
-	{ -290, -2610 }, -- N63
-	{ -273.9, -2670 }, -- N64
-	{ -230, -2713.9 }, -- N65
-	{ -170, -2730 }, -- N66  heading east
-	{ 50, -2730 }, -- N67  ridge chicane
-	{ 73, -2734.6 }, -- N68
-	{ 92.4, -2747.6 }, -- N69
-	{ 119.3, -2763.1 }, -- N70
-	{ 150.4, -2763.1 }, -- N71
-	{ 177.3, -2747.6 }, -- N72
-	{ 196.7, -2734.6 }, -- N73
-	{ 219.7, -2730 }, -- N74  chicane exit
-	{ 339.7, -2730 }, -- N75
-	{ 394.7, -2744.7 }, -- N76
-	{ 435, -2785 }, -- N77
-	{ 449.7, -2840 }, -- N78  onto the final straight
-	{ 449.7, -3200 }, -- N79  runoff past the finish (150 studs, end wall; was 50)
+	{ -290, -2610 }, -- N82
+	{ -273.9, -2670 }, -- N83
+	{ -230, -2713.9 }, -- N84
+	{ -170, -2730 }, -- N85  heading east
+	{ 50, -2730 }, -- N86  ridge chicane
+	{ 73, -2734.6 }, -- N87
+	{ 92.4, -2747.6 }, -- N88
+	{ 119.3, -2763.1 }, -- N89
+	{ 150.4, -2763.1 }, -- N90
+	{ 177.3, -2747.6 }, -- N91
+	{ 196.7, -2734.6 }, -- N92
+	{ 219.7, -2730 }, -- N93  chicane exit
+	{ 339.7, -2730 }, -- N94
+	{ 394.7, -2744.7 }, -- N95
+	{ 435, -2785 }, -- N96
+	{ 449.7, -2840 }, -- N97  onto the final straight
+	{ 449.7, -3200 }, -- N98  runoff past the finish (150 studs, end wall; was 50)
 }
 
 -- Named sections for reports (inclusive node index ranges).
 ForestTrack.sections = {
-	{ name = "S1 start straight",  from = 1,  to = 2 },
-	{ name = "S2 outcrop hairpin", from = 2,  to = 8 },
-	{ name = "S3 river sweeper",   from = 8,  to = 15 },
-	{ name = "S4 farm U-bend",     from = 15, to = 23 },
-	{ name = "S5 mud hook",        from = 23, to = 35 },
-	{ name = "S6 pine switchbacks", from = 35, to = 62 },
-	{ name = "S7 ridge chicane",   from = 62, to = 79 },
+	{ name = "S1 start straight",   from = 1,  to = 2 },
+	{ name = "S2 outcrop hairpin",  from = 2,  to = 8 },
+	{ name = "S3 trestle climb",    from = 8,  to = 16 },
+	{ name = "S4 giant tree spiral", from = 16, to = 34 },
+	{ name = "S4b tree run-out",    from = 34, to = 42 },
+	{ name = "S5 mud hook",         from = 42, to = 54 },
+	{ name = "S6 pine switchbacks", from = 54, to = 81 },
+	{ name = "S7 ridge chicane",    from = 81, to = 98 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.FOREST.zFinish.
@@ -180,7 +204,7 @@ ForestTrack.rockPiles = {
 -- Jump ramps: { x, z, yaw (radians) }. Floor-only wedges, centred on the
 -- lane; yaw uses TrackGeometry:yawAt so the slope faces the direction of travel.
 ForestTrack.jumpRamps = {
-	{  505, -560, math.atan2(90, 160) },  -- mid-S3: middle of the N11 → N12 straight
+	{   40, -1260, 0 },                   -- S4b straight after the spiral (was mid-S3, now a raised trestle)
 	{    0, -1850, 0 },                   -- old finish straight (now mid-race)
 	{ -100, -2180, -math.pi / 2 },        -- S6 east straight, between the hairpins
 	{ 449.7, -2950, 0 },                  -- S7 final straight
@@ -190,7 +214,7 @@ ForestTrack.jumpRampSize = { ForestTrack.width - 4, 4, 14 }
 ForestTrack.boostPads = {
 	{   0,  400 },    -- S1 launch
 	{ 560, -380 },    -- S3 mid-sweep (rewards apex)
-	{ -368, -1480 },  -- S4 U exit (on the N20 → N21 centerline; was 24 studs off, behind the wall)
+	{   40, -1180 },  -- S4b straight out of the spiral
 	{   0, -1920 },   -- S5 end of the old finish straight
 	{  100, -2180 },  -- S6 east straight, after the ramp
 	{  449.7, -2880 }, -- S7 final straight
@@ -201,7 +225,7 @@ ForestTrack.boostPadSize = { 10, 0.3, 8 }
 ForestTrack.driftCorners = {
 	{  60,   30 },   -- S2 outcrop apex
 	{ 580, -300 },   -- S3 river bridge entry
-	{ -470, -1310 }, -- S4 U peak
+	{ -60, -920, 22.5 }, -- S4 spiral, east side (one layer only here; the third number picks it)
 	{ 205, -1575 },  -- S5 U-turn apex
 	{ -410, -2110 }, -- S6 hairpin 1 apex
 	{ 290, -2250 },  -- S6 hairpin 2 apex
@@ -212,13 +236,21 @@ ForestTrack.jumpZoneSize = { ForestTrack.width, 10, 14 }
 -- Checkpoints, in order. Trigger boxes are axis-aligned: { x, z }.
 ForestTrack.checkpoints = {
 	{ 130, -820 },   -- CP1 at N14, inside S3 sweeper apex
-	{ -470, -1310 }, -- CP2 at N19, inside U-bend peak
+	{   40, -1340 }, -- CP2 on the S4b straight, after the spiral
 }
 ForestTrack.checkpointSize = { ForestTrack.width + 4, 12, 10 }  -- { across, height, depth }
 ForestTrack.finishSize = { ForestTrack.width, 10, 6 }
 
 -- River crossing S3 (decorative water under the corridor).
 ForestTrack.river = { z = -300, bridgeX = 580 }
+
+-- The giant tree the S4 spiral winds around (decoration, inside the inner
+-- wall: R 90 - 20 lane - 2 wall leaves room for a trunk of radius 38).
+ForestTrack.giantTree = { x = -150, z = -920, r = 38, height = 120 }
+
+-- Trestle posts under a raised road: every `spacing` studs along both wall
+-- lines, from the ground to the road. Never inside a lane below.
+ForestTrack.trestle = { spacing = 24, size = 2.4, minRise = 3 }
 
 -- Tree scatter zones { xMin, xMax, zMin, zMax, count }. Trees closer than
 -- width / 2 + 10 to the centerline are rejected, so zones may overlap the track.

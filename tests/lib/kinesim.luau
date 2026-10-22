@@ -88,6 +88,7 @@ function KineSim.run(world, opts)
 	local col = ((slot - 1) % #cols) + 1
 	local row = math.ceil(slot / #cols)
 	local x, z = cols[col], rows[row] or rows[1]
+	local roadY = geo:heightAt(0)
 	local _, _, sdx, sdz = geo:pointAt(0)
 	local yaw = yawFromDir(sdx, sdz)
 	local vx, vz = 0, 0
@@ -173,7 +174,7 @@ function KineSim.run(world, opts)
 	local function respawn(t, reason, s)
 		local entry = { t = t, reason = reason, s = s, from = { x = x, z = z } }
 		-- "legacy" = whatever RaceProgress.respawnPoint (the live game) returns
-		local lx, _, lz, lyaw = RaceProgress.respawnPoint(world.biome, x, z, raceStartY, ap.segHint)
+		local lx, _, lz, lyaw = RaceProgress.respawnPoint(world.biome, x, z, raceStartY, ap.segHint, roadY + 2)
 		local ok, p = onTrack(lx, lz)
 		entry.legacy = { x = lx, z = lz, onTrack = ok, lateral = p.lateral }
 		if respawnMode == "legacy" then
@@ -186,6 +187,7 @@ function KineSim.run(world, opts)
 		end
 		vx, vz = 0, 0
 		prevX, prevZ = x, z
+		roadY = geo:heightAt(math.max(s - RaceProgress.RESPAWN_STEP_BACK, 0))
 		VehicleController.reset(driveState)
 		entry.to = { x = x, z = z }
 		table.insert(res.respawns, entry)
@@ -200,6 +202,10 @@ function KineSim.run(world, opts)
 
 	local t = 0
 	local steps = math.floor(timeout / dt)
+	-- Road height under the car (a raised road / a spiral): obstacles and
+	-- triggers on another layer of the road are not touched.
+	local layered = geo.hasHeights
+	local band = world.band or { 0.6, 3.0 }
 	for _ = 1, steps do
 		t += dt
 		local speed = math.sqrt(vx * vx + vz * vz)
@@ -219,13 +225,15 @@ function KineSim.run(world, opts)
 			if opts.avoid ~= false then
 				seen = {}
 				for _, lg in ipairs(logs) do
-					if t < lg.goneAt then table.insert(seen, { x = lg.spot.x, z = lg.spot.z, half = lg.half }) end
+					if t < lg.goneAt and (not layered or math.abs((lg.spot.y or roadY) - roadY) < 10) then
+						table.insert(seen, { x = lg.spot.x, z = lg.spot.z, half = lg.half })
+					end
 				end
 			end
 		end
 		local keys, info = ap:update({
 			hazards = seen,
-			x = x, z = z, yaw = yaw, speed = speed,
+			x = x, z = z, y = roadY + 2, yaw = yaw, speed = speed,
 			forward = vx * -math.sin(yaw) + vz * -math.cos(yaw),
 			maxSpeed = mods:value(t), turnSpeed = effTurn * turnK, t = t,
 			isSky = isSky, biome = world.biome, travelYaw = driveState.travelYaw,
@@ -233,6 +241,7 @@ function KineSim.run(world, opts)
 		if opts.noDrift then keys.Shift = nil end
 		local s = info.s
 		if s > maxS then maxS = s end
+		roadY = geo:heightAt(s)
 		if opts.onStep then
 			opts.onStep({
 				t = t, s = s, speed = speed, maxSpeed = mods:value(t), err = info.err, keys = keys,
@@ -288,7 +297,9 @@ function KineSim.run(world, opts)
 		local nowMud, nowSlow = false, false
 		for _, tr in ipairs(world.triggers) do
 			local inside
-			if tr.isGate then
+			if layered and not (tr.yMax > roadY and tr.yMin < roadY + 8) then
+				inside = false
+			elseif tr.isGate then
 				inside = MapQuery.crosses(tr, prevX, prevZ, x, z)
 			else
 				inside = MapQuery.contains(tr, x, z)
@@ -389,6 +400,7 @@ function KineSim.run(world, opts)
 		for _ = 1, 3 do
 			local pushed = false
 			for _, ob in ipairs(world.obstacleGrid.near(x, z, r + 2)) do
+				if layered and not MapQuery.inBand(ob, roadY, band) then continue end
 				local cx, cz, inside = MapQuery.closest(ob, x, z)
 				local nx, nz = x - cx, z - cz
 				local d = math.sqrt(nx * nx + nz * nz)
@@ -430,7 +442,7 @@ function KineSim.run(world, opts)
 		-- is the RacingManager obstacle hit (× OBSTACLE_BOUNCE_SPEED_MULT and a
 		-- knock away), then the car slides along it.
 		for _, lg in ipairs(logs) do
-			if t >= lg.landAt and t < lg.goneAt then
+			if t >= lg.landAt and t < lg.goneAt and (not layered or math.abs((lg.spot.y or roadY) - roadY) < 10) then
 				local sp = lg.spot
 				local ux, uz = math.cos(sp.yaw), -math.sin(sp.yaw)     -- CFrame X axis (long)
 				local wx, wz = -uz, ux

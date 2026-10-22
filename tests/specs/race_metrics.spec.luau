@@ -103,7 +103,7 @@ R.describe("live playtest loop (real RacingManager + PlaytestReporter)", functio
 	local TrackGeometry = senv.requirePath("ReplicatedStorage.Shared.TrackGeometry")
 	local PlaytestReport = senv.requirePath("ServerScriptService.Modules.PlaytestReport")
 	local RemoteEvents = senv.requirePath("ReplicatedStorage.RemoteEvents")
-	local geo = TrackGeometry.new(Track.nodes, Track.width)
+	local geo = TrackGeometry.new(Track.nodes, Track.width, Track.trackTop)
 
 	local cars = {}
 	for i, player in ipairs(srv.players) do
@@ -134,7 +134,7 @@ R.describe("live playtest loop (real RacingManager + PlaytestReporter)", functio
 			if not done[i] then
 				s[i] = math.min(geo.length - 1, s[i] + speeds[i] * 0.25)
 				local x, z = geo:pointAt(s[i])
-				model:PivotTo(CFrame.new(x, 2, z))
+				model:PivotTo(CFrame.new(x, geo:heightAt(s[i]) + 1, z))   -- on the road (raised in S3 / S4)
 				for k = 1, 2 do
 					if not passed[i][k] and s[i] >= cpS[k] then
 						passed[i][k] = true

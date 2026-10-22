@@ -121,7 +121,7 @@ local function _progressFor(player, vehicle)
 	if not vehicle or not vehicle.PrimaryPart or not _biome then return 0 end
 	local ps = _physState[player.UserId]
 	local pos = vehicle.PrimaryPart.Position
-	local s, seg = RaceProgress.progress(_biome, pos.X, pos.Z, ps and ps.progressSeg)
+	local s, seg = RaceProgress.progress(_biome, pos.X, pos.Z, ps and ps.progressSeg, pos.Y)
 	if ps then ps.progressSeg = seg end
 	return s
 end
@@ -143,7 +143,7 @@ local function _respawnVehicle(player, reason)
 	local primary = vehicle.PrimaryPart
 	local ps = _physState[player.UserId]
 	local x, y, z, yaw = RaceProgress.respawnPoint(_biome, primary.Position.X, primary.Position.Z,
-		_spawnY(), ps and ps.progressSeg)
+		_spawnY(), ps and ps.progressSeg, primary.Position.Y)
 
 	Telemetry.record("respawn", {
 		userId = player.UserId,
@@ -282,11 +282,20 @@ RunService.Heartbeat:Connect(function()
 		local pdata = SessionManager.getData(player)
 		local vehicle = pdata and pdata.vehicleModel
 		if not vehicle or not vehicle.PrimaryPart then continue end
-		if vehicle.PrimaryPart.Position.Y < killY then
+		local pos = vehicle.PrimaryPart.Position
+		local reason = pos.Y < killY and "kill_plane" or nil
+		if not reason then
+			-- fell off a raised stretch of road onto the ground below it
+			local ps = _physState[player.UserId]
+			local s = ps and ps.progressSeg and RaceProgress.progress(_biome, pos.X, pos.Z, ps.progressSeg)
+			local roadY = s and RaceProgress.roadY(_biome, s)
+			if roadY and pos.Y < roadY - RaceProgress.FALL_BELOW then reason = "fell" end
+		end
+		if reason then
 			local now = tick()
 			if (_respawnCooldown[player.UserId] or 0) > now then continue end
 			_respawnCooldown[player.UserId] = now + 3
-			task.spawn(_respawnVehicle, player, "kill_plane")
+			task.spawn(_respawnVehicle, player, reason)
 		end
 	end
 end)

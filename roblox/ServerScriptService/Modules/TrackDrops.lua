@@ -50,6 +50,7 @@ local function groundY(pos, ignore)
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
 	params.FilterDescendantsInstances = ignore
+	params.RespectCanCollide = true   -- land on the road, not on a trigger or haze
 	local hit = workspace:Raycast(pos + Vector3.new(0, 6, 0), Vector3.new(0, -40, 0), params)
 	return hit and hit.Position.Y or nil
 end

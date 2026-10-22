@@ -5,6 +5,13 @@
 --   local geo = TrackGeometry.new(ForestTrack.nodes, ForestTrack.width)
 --   local p = geo:project(x, z, hintSeg)  -- { s, lateral, seg, cx, cz, dist }
 --   local x, z, dx, dz = geo:pointAt(s)
+--   local y = geo:heightAt(s)              -- road surface Y
+--
+-- Height: a node may carry a third number, the Y of the road surface there
+-- ({ x, z, y }); nodes without one sit at `baseY` (the track's trackTop).
+-- Where the road passes over itself (a spiral, an overpass) two stretches
+-- share XZ; pass the car's Y to project / progressAt and only the stretch
+-- within LAYER_GAP of it counts.
 --
 -- Conventions
 --   s        arc length from node 1 along the centerline (studs)
@@ -15,22 +22,31 @@
 local TrackGeometry = {}
 TrackGeometry.__index = TrackGeometry
 
-function TrackGeometry.new(nodes, width)
+-- Two stretches of road more than this far apart in Y are different layers.
+TrackGeometry.LAYER_GAP = 10
+
+function TrackGeometry.new(nodes, width, baseY)
 	assert(#nodes >= 2, "TrackGeometry.new: need at least 2 nodes")
 	local self = setmetatable({}, TrackGeometry)
 	self.nodes = nodes
 	self.width = width or 40
 	self.halfWidth = self.width / 2
+	self.baseY = baseY or 0
 	self.segments = {}
+	self.hasHeights = false
+	for _, n in ipairs(nodes) do
+		if n[3] ~= nil then self.hasHeights = true end
+	end
 	local s = 0
 	for i = 1, #nodes - 1 do
 		local ax, az = nodes[i][1], nodes[i][2]
 		local bx, bz = nodes[i + 1][1], nodes[i + 1][2]
+		local ay, by = nodes[i][3] or self.baseY, nodes[i + 1][3] or self.baseY
 		local dx, dz = bx - ax, bz - az
 		local len = math.sqrt(dx * dx + dz * dz)
 		local seg = {
 			index = i,
-			ax = ax, az = az, bx = bx, bz = bz,
+			ax = ax, az = az, bx = bx, bz = bz, ay = ay, by = by,
 			len = len,
 			s0 = s,
 			dx = len > 0 and dx / len or 0,
@@ -79,20 +95,28 @@ end
 -- @param hintSeg optional segment index from the previous query. When given,
 --   only segments within `window` of it are searched, so a car never "jumps"
 --   to a different part of the track that happens to pass nearby.
-function TrackGeometry:project(x, z, hintSeg, window)
+function TrackGeometry:project(x, z, hintSeg, window, y)
 	local lo, hi = 1, #self.segments
 	if hintSeg then
 		window = window or 3
 		lo = math.max(1, hintSeg - window)
 		hi = math.min(#self.segments, hintSeg + window)
 	end
+	local layered = y ~= nil and self.hasHeights
 	local best
-	for i = lo, hi do
-		local seg = self.segments[i]
-		local t, cx, cz, dist = projectOnSegment(seg, x, z)
-		if not best or dist < best.dist - 1e-9 then
-			best = { seg = i, t = t, cx = cx, cz = cz, dist = dist }
+	for pass = 1, layered and 2 or 1 do
+		for i = lo, hi do
+			local seg = self.segments[i]
+			local t, cx, cz, dist = projectOnSegment(seg, x, z)
+			-- first pass: only the layer the car is on
+			if pass == 1 and layered and math.abs(self:segHeight(i, t) - y) > TrackGeometry.LAYER_GAP then
+				continue
+			end
+			if not best or dist < best.dist - 1e-9 then
+				best = { seg = i, t = t, cx = cx, cz = cz, dist = dist }
+			end
 		end
+		if best then break end
 	end
 	local seg = self.segments[best.seg]
 	-- Right of travel = (-dz, dx)
@@ -110,16 +134,21 @@ end
 -- u is 0 on the start line and 1 on the end line, so neighbouring segments
 -- agree at every bisector and a car driving forward never loses progress.
 -- Returns s (clamped to [0, length]), segment index.
-function TrackGeometry:progressAt(x, z, hintSeg, window)
+function TrackGeometry:progressAt(x, z, hintSeg, window, y)
 	local lo, hi = 1, #self.segments
 	if hintSeg then
 		window = window or 3
 		lo = math.max(1, hintSeg - window)
 		hi = math.min(#self.segments, hintSeg + window)
 	end
+	local layered = y ~= nil and self.hasHeights
 	local best, bestDist, bestS
 	for k = lo, hi do
 		local seg = self.segments[k]
+		if layered and (y < math.min(seg.ay, seg.by) - TrackGeometry.LAYER_GAP
+			or y > math.max(seg.ay, seg.by) + TrackGeometry.LAYER_GAP) then
+			continue   -- another layer of the road
+		end
 		local b0, b1 = self.bisectors[k], self.bisectors[k + 1]
 		local d0 = (x - seg.ax) * b0[1] + (z - seg.az) * b0[2]
 		local d1 = (seg.bx - x) * b1[1] + (seg.bz - z) * b1[2]
@@ -143,7 +172,7 @@ function TrackGeometry:progressAt(x, z, hintSeg, window)
 	end
 	if not best then
 		-- Outside every region in the window (far off the track): nearest point
-		local p = self:project(x, z, hintSeg, window)
+		local p = self:project(x, z, hintSeg, window, y)
 		return p.s, p.seg
 	end
 	return math.clamp(bestS, 0, self.length), best
@@ -166,6 +195,43 @@ function TrackGeometry:pointAt(s)
 	local seg = segs[lo]
 	local t = s - seg.s0
 	return seg.ax + seg.dx * t, seg.az + seg.dz * t, seg.dx, seg.dz, lo
+end
+
+--- Road surface Y on segment i, t studs from its start node.
+function TrackGeometry:segHeight(i, t)
+	local seg = self.segments[i]
+	if seg.len <= 0 then return seg.ay end
+	return seg.ay + (seg.by - seg.ay) * math.clamp(t / seg.len, 0, 1)
+end
+
+--- Road surface Y at arc length s.
+function TrackGeometry:heightAt(s)
+	if not self.hasHeights then return self.baseY end
+	s = math.clamp(s, 0, self.length)
+	local _, _, _, _, i = self:pointAt(s)
+	return self:segHeight(i, s - self.segments[i].s0)
+end
+
+--- Grade (rise / run) of segment i.
+function TrackGeometry:grade(i)
+	local seg = self.segments[i]
+	return seg.len > 0 and (seg.by - seg.ay) / seg.len or 0
+end
+
+--- Is the point (x, z) at road height y under another layer of the road?
+-- (a stretch more than LAYER_GAP higher whose lane covers it)
+function TrackGeometry:coveredAt(x, z, y, margin)
+	if not self.hasHeights then return false end
+	local reach = self.halfWidth + (margin or 0)
+	for i, seg in ipairs(self.segments) do
+		if math.max(seg.ay, seg.by) > y + TrackGeometry.LAYER_GAP then
+			local t, _, _, dist = projectOnSegment(seg, x, z)
+			if dist < reach and self:segHeight(i, t) > y + TrackGeometry.LAYER_GAP then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 --- Offset a point sideways (positive = right of travel).
@@ -242,7 +308,9 @@ function TrackGeometry:boundaryRuns(i, lat, offset, reach, step)
 		local t = t0 + (t1 - t0) * k / n
 		local px = seg.ax + seg.dx * t + rx * offset
 		local pz = seg.az + seg.dz * t + rz * offset
-		if self:project(px, pz).dist >= half then
+		-- only this layer of the road counts (a deck above or below is not "inside")
+		local y = self.hasHeights and self:segHeight(i, t) or nil
+		if self:project(px, pz, nil, nil, y).dist >= half then
 			if cur then
 				cur[2] = t
 			else
