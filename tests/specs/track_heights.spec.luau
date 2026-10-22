@@ -207,3 +207,59 @@ R.describe("OCEAN lighthouse spiral and water slide", function()
 		R.expect(jumps).toBeEmpty("progress jumps")
 	end)
 end)
+
+R.describe("SKY cloud corkscrew", function()
+	local geo = RaceProgress.geometry("SKY")
+	local Sky = env.requirePath("ReplicatedStorage.Shared.Tracks.SkyTrack")
+
+	R.it("climbs one full turn and dives, no grade over 8%", function()
+		local top, bad = 0, {}
+		for _, n in ipairs(Sky.nodes) do top = math.max(top, n[3] or Sky.trackTop) end
+		R.expect(top - Sky.trackTop).toBeGreaterThan(40)
+		for i = 1, #geo.segments do
+			if math.abs(geo:grade(i)) > 0.08 then table.insert(bad, string.format("segment %d: %.1f%%", i, geo:grade(i) * 100)) end
+		end
+		R.expect(bad).toBeEmpty("too steep")
+	end)
+
+	R.it("where it passes over itself, the lower layer's fence and lid stay under the upper road", function()
+		-- lower layer: pillars to +34 (wallYHi), lid at ceilingY - trackTop
+		-- (+40, 2 thick); upper layer: body band from +2
+		local lid = Sky.ceilingY - Sky.trackTop + 2
+		local half, worst, passes = Sky.width / 2, math.huge, 0
+		for s = 0, geo.length, 5 do
+			local x, z = geo:pointAt(s)
+			for s2 = s + 4 * Sky.width, geo.length, 5 do
+				local x2, z2 = geo:pointAt(s2)
+				if math.abs(x - x2) < half * 2 and math.abs(z - z2) < half * 2
+					and math.sqrt((x - x2) ^ 2 + (z - z2) ^ 2) < half * 2 - 6 then
+					passes += 1
+					worst = math.min(worst, math.abs(geo:heightAt(s2) - geo:heightAt(s)))
+				end
+			end
+		end
+		R.expect(passes).toBeGreaterThan(0)
+		-- the upper body band (+2) clears the lower lid (+42), and the upper
+		-- fence (from 2 under its road) clears the lower fence (+34)
+		R.expect(worst).toBeGreaterThan(math.max(lid - Sky.obstacleBand[1], Sky.wallYHi - Sky.trackTop + 2))
+	end)
+
+	R.it("a simulated flyer goes round the corkscrew without jumping a layer", function()
+		local w = World.build("SKY", { visibility = "shipped" })
+		local Autopilot = w.env.requirePath("ReplicatedStorage.Shared.Autopilot")
+		local Constants = w.env.requirePath("ReplicatedStorage.Shared.Constants")
+		local reps = Builds.representative(Builds.enumerate(w.env, "SKY"))
+		local r = KineSim.run(w, {
+			car = KineSim.carFromStats(reps[2].build.stats, Constants, "SKY"),
+			profile = Autopilot.PROFILES.average, profileName = "average", seed = 2, respawn = "track",
+		})
+		R.expect(r.finished).toBe(true)
+		R.expect(#r.respawns).toBe(0)
+		local jumps = {}
+		for i = 2, #r.samples do
+			local d = r.samples[i].s - r.samples[i - 1].s
+			if d > 70 or d < -20 then table.insert(jumps, string.format("t=%.1f", r.samples[i].t)) end
+		end
+		R.expect(jumps).toBeEmpty("progress jumps")
+	end)
+end)

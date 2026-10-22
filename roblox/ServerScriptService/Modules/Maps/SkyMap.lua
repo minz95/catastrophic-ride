@@ -139,9 +139,10 @@ local function _buildEdgePuffs(root)
 	local rng = Random.new(91)
 	local geo = KIT.geo
 	local idx = 0
-	for _, seg in ipairs(geo.segments) do
+	for i, seg in ipairs(geo.segments) do
 		local nx, nz = -seg.dz, seg.dx
 		for t = PUFF_EVERY / 2, seg.len, PUFF_EVERY do
+			local roadY = geo:segHeight(i, t)
 			for _, side in ipairs({ -1, 1 }) do
 				local off = CORRIDOR_W / 2 + rng:NextNumber(7, 14)
 				local px = seg.ax + seg.dx * t + nx * side * off
@@ -151,7 +152,7 @@ local function _buildEdgePuffs(root)
 					idx += 1
 					_ellipsoid(root, {
 						Name = "EdgePuff_" .. idx, Size = Vector3.new(r * 1.6, r * 0.8, r * 1.3),
-						Position = Vector3.new(px, SKY_BASE_Y + rng:NextNumber(-2, 2), pz),
+						Position = Vector3.new(px, roadY + rng:NextNumber(-2, 2), pz),
 						Color = (idx % 3 == 0) and C.CLOUD_SHADOW or C.CLOUD_FLAT,
 					})
 				end
@@ -195,12 +196,9 @@ local function _buildCorridor(root)
 			y = Track.wallRailY, height = Track.wallRailHeight },
 	})
 	_buildEdgePuffs(root)
-	local x0, x1, z0, z1 = _bbox(200)
-	_part(root, {
-		Name = "InvisibleCeiling", Size = Vector3.new(x1 - x0, 2, z1 - z0),
-		Position = Vector3.new((x0 + x1) / 2, Track.ceilingY, (z0 + z1) / 2),
-		CanCollide = true, Transparency = 1, CastShadow = false,
-	})
+	-- invisible lid ceilingY - trackTop above the road, per layer (the
+	-- corkscrew passes over itself)
+	KIT:buildCeiling(root, Track.ceilingY - Track.trackTop, { name = "InvisibleCeiling" })
 end
 
 -- ─── Wayfinding arrows ───────────────────────────────────────────────────────
@@ -210,8 +208,8 @@ end
 
 local ARROW_EVERY = 300
 
-local function _floorArrow(root, idx, x, z, yaw)
-	local cf = CFrame.new(x, SKY_BASE_Y + 0.3, z) * CFrame.Angles(0, yaw, 0)
+local function _floorArrow(root, idx, x, z, yaw, y)
+	local cf = CFrame.new(x, (y or SKY_BASE_Y) + 0.3, z) * CFrame.Angles(0, yaw, 0)
 	_part(root, {
 		Name = "WayArrowShaft_" .. idx, Size = Vector3.new(2.4, 0.6, 14), CFrame = cf,
 		Color = C.ARROW, Material = MAT.NEON, CanCollide = false, CastShadow = false, Transparency = 0.15,
@@ -230,14 +228,15 @@ local function _buildWayfindingArrows(root)
 		if math.abs(d.angle) >= 12 then
 			idx += 1
 			local seg = geo.segments[d.node]
-			_floorArrow(root, idx, seg.ax, seg.az, math.atan2(-seg.dx, -seg.dz))
+			_floorArrow(root, idx, seg.ax, seg.az, math.atan2(-seg.dx, -seg.dz), seg.ay + 0.3)
 		end
 	end
 	for _, seg in ipairs(geo.segments) do
 		if seg.len > ARROW_EVERY * 0.8 then
 			for t = ARROW_EVERY / 2, seg.len - 60, ARROW_EVERY do
 				idx += 1
-				_floorArrow(root, idx, seg.ax + seg.dx * t, seg.az + seg.dz * t, math.atan2(-seg.dx, -seg.dz))
+				_floorArrow(root, idx, seg.ax + seg.dx * t, seg.az + seg.dz * t, math.atan2(-seg.dx, -seg.dz),
+					geo:segHeight(seg.index, t) + 0.3)
 			end
 		end
 	end
@@ -333,7 +332,7 @@ end
 
 local function _buildUpdraftZones(root)
 	for i, uz in ipairs(Track.updraftZones) do
-		local baseY = SKY_BASE_Y - 18
+		local baseY = SKY_BASE_Y - 18 + KIT:riseAt(uz[1], uz[2])   -- on the dive too
 		_part(root, {
 			Name = "UpdraftVisual_" .. i, Size = Vector3.new(14, 55, 14),
 			Position = Vector3.new(uz[1], baseY, uz[2]),
@@ -347,6 +346,33 @@ local function _buildUpdraftZones(root)
 		})
 		_tag(trigger, "UpdraftZone")
 	end
+end
+
+-- ─── Sky tower inside the S6 corkscrew ──────────────────────────────────────
+
+-- A white tower on a floating island, rising through the corkscrew, with a
+-- golden beacon above the top turn. Decoration only (inside the inner wall).
+local function _buildSkyTower(root)
+	local st = Track.skyTower
+	if not st then return end
+	local base = SKY_BASE_Y - 30
+	_island(root, "Tower", st.x, base, st.z, st.r, Random.new(5))
+	local h = 150
+	for k = 0, 4 do
+		local r = st.r * (0.42 - k * 0.04)
+		_part(root, {
+			Name = "SkyTowerTier", Shape = Enum.PartType.Cylinder,
+			Size = Vector3.new(h / 5, r * 2, r * 2),
+			CFrame = CFrame.new(st.x, base + h / 10 + k * h / 5, st.z) * CFrame.Angles(0, 0, math.pi / 2),
+			Color = k % 2 == 0 and C.CLOUD_PUFF or C.CLOUD_SHADOW, Material = MAT.CLOUD,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	_part(root, {
+		Name = "SkyTowerBeacon", Shape = Enum.PartType.Ball, Size = Vector3.new(16, 16, 16),
+		Position = Vector3.new(st.x, base + h + 8, st.z),
+		Color = C.ARCH, Material = MAT.NEON, CanCollide = false, CastShadow = false,
+	})
 end
 
 -- ─── Triggers (TrackKit) ─────────────────────────────────────────────────────
@@ -454,6 +480,7 @@ local function buildSky()
 
 	_buildClouds(root)
 	_buildUpdraftZones(root)
+	_buildSkyTower(root)
 	_buildFarmPlatform(farmSub)
 
 	_buildCorridor(trackSub)

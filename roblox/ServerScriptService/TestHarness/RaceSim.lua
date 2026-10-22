@@ -232,6 +232,10 @@ function RaceSim.runOne(opts)
 	addBallast(model, opts.driverMass)
 	model.Parent = workspace
 	local primary = model.PrimaryPart
+	-- spawned part-way up a raised road (escape cases): the held height
+	-- already includes the road's rise there (else the first frame adds it
+	-- again and the car shoots up to the lid)
+	VehicleController.resetRide(primary, geo:heightAt(opts.spawn and opts.spawn.s or 0) - (track.trackTop or 0))
 	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
 	local parts = vehicleParts(model)
 	if not opts.contact then ghostCars(parts) end

@@ -145,7 +145,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   do not: OCEAN's water is not solid). Boats (OCEAN) and flyers (SKY)
   hold a height: pass `roadRise = RaceProgress.roadRise(...)` to
   `VehicleController.apply` and call `VehicleController.resetRide` after
-  moving a car.
+  moving a car. A raised stretch's walls / fence stand on the road
+  (`TrackKit.RAISED_WALL_DROP`); SKY's lid is per segment
+  (`TrackKit:buildCeiling`).
 - Phase timers: `GameManager.shortenPhase` (crafting hurry, finish grace).
   A finished car is parked (MaxSpeed 0) and may not respawn; each road has a
   run-off and an end wall (`TrackKit:buildEndWall`).

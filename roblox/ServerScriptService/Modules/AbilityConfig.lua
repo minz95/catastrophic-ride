@@ -511,10 +511,10 @@ AbilityConfig["Suitcase"] = {
 	targetType  = "self",
 	effectKey   = "lockdown",      -- locks shut: absorbs the next hit, rolls on its wheels
 	selfSpeed = 1.15,
-	
 	animKey     = "suitcaseLock",
 	sfxKey      = "suitcase_latch",
 	uiHint      = "🧳 Lock!",
+	biomeEffect = { SKY = { selfSpeed = 1.2 } },   -- see Life Preserver
 }
 
 AbilityConfig["Skateboard"] = {
@@ -537,6 +537,9 @@ AbilityConfig["Life Preserver"] = {
 	animKey     = "lifeRingThrow",
 	sfxKey      = "splash_ring",
 	uiHint      = "🛟 Float!",
+	-- balance: the longer SKY race (corkscrew) gave the Uncommons more uses;
+	-- a Rare must stay ahead
+	biomeEffect = { SKY = { selfSpeed = 1.2 } },
 }
 
 AbilityConfig["Kite"] = {

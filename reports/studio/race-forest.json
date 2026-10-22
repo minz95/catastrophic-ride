@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "9bae2bd",
+ "commit": "c90f06d",
  "dirty": true,
  "kind": "race",
  "logErrors": [
-  "2026-10-22T13:27:40.685Z,0.685393,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-22T13:27:41.403Z,1.403121,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-22T13:27:42.220Z,2.220694,6dacb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"825a1894-c199-4337-9199-c332cff96527\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-22T15:18:22.413Z,1.413052,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-22T15:18:23.569Z,2.569356,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-22T15:18:25.136Z,4.136173,6de9f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f5b4c7bb-856b-4fc2-8ef3-7d8863ee99ca\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "03InvalidPermission adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-22T13:27:51.076Z,11.076073,6dacb000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-22T13:27:51.310Z,11.310590,6de13000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-22T15:18:34.954Z,13.954167,6e0ab000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-22T15:18:35.242Z,14.242967,6f453000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "03InvalidPermission adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-22T13:28:41.406Z,61.406723,6dacb000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-22T13:29:41.407Z,121.407494,6d8bf000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-22T13:29:58.565Z,138.565125,6d8bf000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"825a1894-c199-4337-9199-c332cff96527\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-22T15:19:23.570Z,62.570206,6e0ab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-22T15:20:23.570Z,122.570793,6e0ab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-22T15:20:43.066Z,142.066055,6de9f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f5b4c7bb-856b-4fc2-8ef3-7d8863ee99ca\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "biome": "FOREST",
@@ -25,7 +25,7 @@
    "novice"
   ]
  },
- "ranAt": "2026-10-22T22:29:59+0900",
+ "ranAt": "2026-10-23T00:20:44+0900",
  "report": {
   "biome": "FOREST",
   "results": [
@@ -36,22 +36,22 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 35.12
+      "t": 31.27
      },
      {
       "index": 2,
-      "t": 57.77
+      "t": 53.88
      }
     ],
-    "drifts": 18,
+    "drifts": 19,
     "effects": [],
-    "endT": 118.06,
+    "endT": 113.76,
     "engine": "studio-heartbeat",
     "finished": true,
     "mass": 7.88,
     "maxProgress": 7865,
     "maxSpeed": 68.75724792480469,
-    "maxTilt": 3,
+    "maxTilt": 5.2,
     "profile": "expert",
     "respawnMode": "legacy",
     "respawns": [],
@@ -60,10 +60,10 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 118.06,
-    "topSpeed": 120.1,
+    "time": 113.76,
+    "topSpeed": 120.8,
     "trackLength": 8020,
-    "turbos": 12,
+    "turbos": 10,
     "turnSpeed": 2.156014919281006,
     "visibility": "shipped"
    },
@@ -74,22 +74,22 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 32.5
+      "t": 31.36
      },
      {
       "index": 2,
-      "t": 56.41
+      "t": 54.86
      }
     ],
     "drifts": 33,
     "effects": [],
-    "endT": 121.16,
+    "endT": 120.65,
     "engine": "studio-heartbeat",
     "finished": true,
     "mass": 7.88,
-    "maxProgress": 7864,
+    "maxProgress": 7865,
     "maxSpeed": 68.75724792480469,
-    "maxTilt": 3.1,
+    "maxTilt": 3.7,
     "profile": "average",
     "respawnMode": "legacy",
     "respawns": [],
@@ -98,10 +98,10 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 121.16,
-    "topSpeed": 111.6,
+    "time": 120.65,
+    "topSpeed": 109.8,
     "trackLength": 8020,
-    "turbos": 8,
+    "turbos": 9,
     "turnSpeed": 2.156014919281006,
     "visibility": "shipped"
    },
@@ -112,21 +112,21 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 32.29
+      "t": 31.97
      },
      {
       "index": 2,
-      "t": 58.6
+      "t": 56.7
      }
     ],
     "effects": [],
-    "endT": 126.35,
+    "endT": 126.68,
     "engine": "studio-heartbeat",
     "finished": true,
     "mass": 7.88,
-    "maxProgress": 7865,
+    "maxProgress": 7864,
     "maxSpeed": 68.75724792480469,
-    "maxTilt": 6.8,
+    "maxTilt": 6.9,
     "profile": "novice",
     "respawnMode": "legacy",
     "respawns": [],
@@ -135,19 +135,19 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 126.35,
-    "topSpeed": 137.5,
+    "time": 126.68,
+    "topSpeed": 131,
     "trackLength": 8020,
     "turnSpeed": 2.156014919281006,
     "visibility": "shipped"
    }
   ],
-  "summary": "RaceSim FOREST (shipped) \u2014 125.5s wall time\n  expert   car=p50 max=69 mass=7.88 \u2192 118.06s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=69 mass=7.88 \u2192 121.16s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=69 mass=7.88 \u2192 126.35s | CPs 2 | respawns 0 | blocked 0",
+  "summary": "RaceSim FOREST (shipped) \u2014 125.3s wall time\n  expert   car=p50 max=69 mass=7.88 \u2192 113.76s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=69 mass=7.88 \u2192 120.65s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=69 mass=7.88 \u2192 126.68s | CPs 2 | respawns 0 | blocked 0",
   "visibility": "shipped",
-  "wallSeconds": 125.5
+  "wallSeconds": 125.3
  },
  "scenario": "race-forest",
  "studioExit": 0,
- "summary": "RaceSim FOREST (shipped) \u2014 125.5s wall time\n  expert   car=p50 max=69 mass=7.88 \u2192 118.06s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=69 mass=7.88 \u2192 121.16s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=69 mass=7.88 \u2192 126.35s | CPs 2 | respawns 0 | blocked 0\ndrifts: expert 18/12, average 33/8, novice 0/0",
- "wallSeconds": 139.4
+ "summary": "RaceSim FOREST (shipped) \u2014 125.3s wall time\n  expert   car=p50 max=69 mass=7.88 \u2192 113.76s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=69 mass=7.88 \u2192 120.65s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=69 mass=7.88 \u2192 126.68s | CPs 2 | respawns 0 | blocked 0\ndrifts: expert 19/10, average 33/9, novice 0/0",
+ "wallSeconds": 143.5
 }
