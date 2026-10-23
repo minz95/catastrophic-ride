@@ -8,7 +8,8 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
-| [bots-forest](bots-forest.json) | PASS | 4f74f56+ | 2026-10-24T00:30 |
+| [bots-abilities](bots-abilities.json) | PASS | e58978d+ | 2026-10-24T02:41 |
+| [bots-forest](bots-forest.json) | PASS | e58978d+ | 2026-10-24T02:39 |
 | [bots-ocean](bots-ocean.json) | PASS | 4f74f56+ | 2026-10-24T00:33 |
 | [bots-sky](bots-sky.json) | PASS | 4f74f56+ | 2026-10-24T00:36 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
@@ -184,18 +185,40 @@ abilities: 12 items fired ok, 17 effect keys measured
 probeApi: 12 members, 0 missing
 ```
 
+## bots-abilities — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (FOREST): 0 finished of 1
+    steal attempts: none
+    -100003: picked 4, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 6, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
+  events: ability=22 ability_probe=42 ability_target=1 bot_blocked=1 bot_craft=1 bot_farm=18 bot_fx=28 bot_hud=6 bot_joined=1 bot_ready=1 bot_respawn=1 bot_screen=2 checkpoint=2 craft=1 drift_turbo=7 drop_placed=9 farm_bot=3 harness_crafting=1 harness_round=1 hazard=31 hit=3 item_pickup=19 item_wave=3 phase=4 race_bot=3 race_go=1 race_launch=1 race_progress=363 race_sample=185 race_start=1 race_timeout=1 respawn=1 reward=1 server_perf=56 speed_effect=91 vehicle_spawn=
+driving: 0 hits, 7 drift turbos, drops: Log
+farm bots: 3 on the farm, 18 pickups, 0 punches thrown, 0 punches/steals on bots
+ability targets: 1, on bots 1
+bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: 
+server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 67 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 10 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 23 kbps; memory max 2269 MB
+```
+
 ## bots-forest — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 1 finished of 1
     steal attempts: none
-    -1: picked 4, contests 0/0, stole 0, robbed 0, defences 0, items 4 | craft submitted, rejected 0
-    #1 Player1 122.6s
-  events: ability=13 ability_probe=46 bot_blocked=2 bot_craft=1 bot_fx=21 bot_hud=11 bot_joined=1 bot_ready=1 bot_respawn=2 bot_screen=3 checkpoint=2 craft=1 drift_turbo=9 drop_placed=11 finish=4 harness_crafting=1 harness_round=1 hazard=45 hit=1 item_pickup=4 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=507 race_sample=270 race_start=1 respawn=1 reward=1 server_perf=82 speed_effect=125 vehicle_spawn=1
-driving: 0 hits, 9 drift turbos, drops: Gas Can
-bots: 3 raced (average, novice, expert), 3 finished: 116.2s, 121.3s, 133.5s
-server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 27 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 30 kbps; memory max 2251 MB
+    -100003: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player1 122.4s
+  events: ability=21 ability_probe=69 bot_blocked=1 bot_craft=1 bot_farm=24 bot_fx=37 bot_hud=23 bot_joined=1 bot_ready=1 bot_screen=3 checkpoint=2 craft=1 drift_turbo=14 drop_placed=10 farm_bot=3 finish=4 harness_crafting=1 harness_round=1 hazard=42 hit=4 item_pickup=32 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=492 race_sample=257 race_start=1 reward=1 server_perf=92 speed_effect=131 vehicle_spawn=1
+driving: 0 hits, 14 drift turbos, drops: Kettle
+farm bots: 3 on the farm, 24 pickups, 0 punches thrown, 0 punches/steals on bots
+bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 116.7s, 119.5s, 127.0s
+server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 51 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 42 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 52 kbps; memory max 2299 MB
 ```
 
 ## bots-ocean — PASS

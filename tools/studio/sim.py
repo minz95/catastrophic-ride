@@ -670,9 +670,21 @@ def run_one(sc, place, args):
             summary += "\n" + d
         bots = [e for e in evs if e.get("kind") == "finish" and e.get("bot")]
         spawned = [e for e in evs if e.get("kind") == "race_bot"]
+        farmBots = [e for e in evs if e.get("kind") == "farm_bot"]
+        if farmBots:
+            picks = [e for e in evs if e.get("kind") == "item_pickup" and (e.get("userId") or 0) <= -100000]
+            acts = [e for e in evs if e.get("kind") == "bot_farm"]
+            punches = [e for e in acts if e.get("act") == "punch"]
+            onBots = [e for e in evs if e.get("kind") in ("punch", "steal_attempt") and
+                      ((e.get("victim") or 0) <= -100000)]
+            summary += "\nfarm bots: %d on the farm, %d pickups, %d punches thrown, %d punches/steals on bots" % (
+                len(farmBots), len(picks), len(punches), len(onBots))
+        targets = [e for e in evs if e.get("kind") == "ability_target"]
+        if targets:
+            summary += "\nability targets: %d, on bots %d" % (len(targets), len([e for e in targets if e.get("bot")]))
         if spawned:
-            summary += "\nbots: %d raced (%s), %d finished: %s" % (len(spawned), ", ".join(e.get("profile", "?") for e in spawned),
-                len(bots), ", ".join("%.1fs" % e.get("time", 0) for e in bots))
+            summary += "\nbots: %d raced (%s), %d farmed their car, %d finished: %s" % (len(spawned), ", ".join(e.get("profile", "?") for e in spawned),
+                len([e for e in spawned if e.get("farmed")]), len(bots), ", ".join("%.1fs" % e.get("time", 0) for e in bots))
         pf = perf_summary(evs)
         if pf:
             summary += "\n" + pf

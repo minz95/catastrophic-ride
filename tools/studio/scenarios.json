@@ -1230,14 +1230,14 @@
         "bots",
         "full"
       ],
-      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "_why": "a lone player on a live-style server: bots (Modules/FarmBots, RaceBots) farm with the player as NPCs, then race the car their bag makes; abilities can hit them",
       "opts": {
         "biome": "FOREST",
         "players": 1,
         "rounds": 1,
         "fillBots": 4,
         "durations": {
-          "FARMING": 20,
+          "FARMING": 45,
           "CRAFTING": 8,
           "RACING": 240,
           "RESULTS": 3
@@ -1259,14 +1259,14 @@
         "bots",
         "full"
       ],
-      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "_why": "a lone player on a live-style server: bots (Modules/FarmBots, RaceBots) farm with the player as NPCs, then race the car their bag makes; abilities can hit them",
       "opts": {
         "biome": "OCEAN",
         "players": 1,
         "rounds": 1,
         "fillBots": 4,
         "durations": {
-          "FARMING": 20,
+          "FARMING": 45,
           "CRAFTING": 8,
           "RACING": 240,
           "RESULTS": 3
@@ -1288,14 +1288,14 @@
         "bots",
         "full"
       ],
-      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "_why": "a lone player on a live-style server: bots (Modules/FarmBots, RaceBots) farm with the player as NPCs, then race the car their bag makes; abilities can hit them",
       "opts": {
         "biome": "SKY",
         "players": 1,
         "rounds": 1,
         "fillBots": 4,
         "durations": {
-          "FARMING": 20,
+          "FARMING": 45,
           "CRAFTING": 8,
           "RACING": 240,
           "RESULTS": 3
@@ -1335,6 +1335,46 @@
         ]
       },
       "checks": {}
+    },
+    {
+      "name": "bots-abilities",
+      "kind": "match",
+      "tags": [
+        "bots",
+        "abilities",
+        "full"
+      ],
+      "_why": "one player whose car carries targeted abilities (Magnet, Camera, Toilet Paper) races three server bots: the abilities must pick bots as targets and land on their cars",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 4,
+        "durations": {
+          "FARMING": 10,
+          "CRAFTING": 4,
+          "RACING": 90,
+          "RESULTS": 3
+        },
+        "maxSeconds": 400,
+        "loadouts": [
+          [
+            {
+              "SPECIAL": "Magnet",
+              "ENGINE": "Hair Dryer",
+              "BODY": "Log",
+              "HEAD": "Camera",
+              "TAIL": "Toilet Paper"
+            }
+          ]
+        ]
+      },
+      "checks": {
+        "bots": {
+          "spawned": 3,
+          "finished": 0
+        }
+      }
     }
   ]
 }

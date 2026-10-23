@@ -5,6 +5,7 @@
 
 print("[FarmingClient] LocalScript started")
 
+local CollectionService = game:GetService("CollectionService")
 local Players           = game:GetService("Players")
 local UserInputService  = game:GetService("UserInputService")
 local RunService        = game:GetService("RunService")
@@ -118,6 +119,18 @@ local function _scanNearby()
 		if d <= Constants.STEAL_RANGE and d < nearestPlayerDist then
 			nearestPlayerDist = d
 			nearestPlayer = player
+		end
+	end
+
+	-- Server farm bots (Modules/FarmBots) can be robbed too
+	for _, m in ipairs(CollectionService:GetTagged("FarmBot")) do
+		local botRoot = m:FindFirstChild("HumanoidRootPart")
+		if botRoot then
+			local d = (botRoot.Position - root.Position).Magnitude
+			if d <= Constants.STEAL_RANGE and d < nearestPlayerDist then
+				nearestPlayerDist = d
+				nearestPlayer = { UserId = m:GetAttribute("BotUserId"), Name = m:GetAttribute("BotName"), Character = m }
+			end
 		end
 	end
 

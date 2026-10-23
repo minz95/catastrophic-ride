@@ -23,6 +23,7 @@ local EffectFx       = require(ServerScriptService.Modules.EffectFx)
 local VehicleLift    = require(ServerScriptService.Modules.VehicleLift)
 local AbilitySlots   = require(ReplicatedStorage.Shared.AbilitySlots)
 local TrackDrops     = require(ServerScriptService.Modules.TrackDrops)
+local RaceBots       = require(ServerScriptService.Modules.RaceBots)
 local CollectionService = game:GetService("CollectionService")
 
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
@@ -38,6 +39,13 @@ local LIFT = Constants.ABILITY_LIFT
 -- Speed / turn changes go through VehicleTuning (named multipliers, never
 -- save-and-restore). Harmful effects on another player ask _hurts(target)
 -- first, which honours shields (Umbrella, Suitcase, Red Sofa, Rubber Duck).
+
+-- Race bots (Modules/RaceBots) are SessionManager bot proxies: targets like
+-- anyone, but they have no client (no screen effects; shoves go to
+-- RaceBots.knock).
+local function _screen(who, ...)
+	if who and not SessionManager.isBot(who) then RemoteEvents.ScreenEffect:FireClient(who, ...) end
+end
 
 local function _getVehicle(player)
 	local pdata = SessionManager.getData(player)
@@ -65,7 +73,7 @@ local function _hurts(target)
 	if not target then return false end
 	if RaceEffects.blocksHit(target) then
 		EffectFx.play("blocked", target, nil)
-		RemoteEvents.ScreenEffect:FireClient(target, "bubblePop", {})
+		_screen(target, "bubblePop", {})
 		Telemetry.record("hit_blocked", { userId = target.UserId, by = "ability" })
 		return false
 	end
@@ -89,10 +97,14 @@ local function _impulse(vehicle, direction, magnitude)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary or direction.Magnitude < 1e-3 or not magnitude or magnitude <= 0 then return end
 	local d = direction.Unit * magnitude
-	for _, p in ipairs(Players:GetPlayers()) do
+	for _, p in ipairs(SessionManager.actors()) do
 		local pd = SessionManager.getData(p)
 		if pd and pd.vehicleModel == vehicle then
-			RemoteEvents.CarImpact:FireClient(p, d.X, d.Z, 0, magnitude)
+			if SessionManager.isBot(p) then
+				RaceBots.knock(p.UserId, d.X, d.Z, 0)
+			else
+				RemoteEvents.CarImpact:FireClient(p, d.X, d.Z, 0, magnitude)
+			end
 			return
 		end
 	end
@@ -131,7 +143,7 @@ local function _nearestEnemy(player, radius)
 	local pos     = vehicle.PrimaryPart.Position
 
 	local best, bestDist = nil, radius or math.huge
-	for _, other in ipairs(Players:GetPlayers()) do
+	for _, other in ipairs(SessionManager.actors()) do
 		if other == player or not _targetable(other) then continue end
 		local od = SessionManager.getData(other)
 		local ov = od and od.vehicleModel
@@ -150,7 +162,7 @@ local function _allInRadius(player, radius)
 	local pos = vehicle.PrimaryPart.Position
 
 	local result = {}
-	for _, other in ipairs(Players:GetPlayers()) do
+	for _, other in ipairs(SessionManager.actors()) do
 		if other == player or not _targetable(other) then continue end
 		local od = SessionManager.getData(other)
 		local ov = od and od.vehicleModel
@@ -169,7 +181,7 @@ local function _onDropTouched(part, except, fn)
 	part.Touched:Connect(function(hit)
 		local v = hit:FindFirstAncestorWhichIsA("Model")
 		if not v then return end
-		for _, p in ipairs(Players:GetPlayers()) do
+		for _, p in ipairs(SessionManager.actors()) do
 			if p ~= except and not seen[p] then
 				local pd = SessionManager.getData(p)
 				if pd and pd.vehicleModel == v then
@@ -209,7 +221,7 @@ EFFECTS.steerDisable = function(activator, target, cfg)
 	if not _hurts(target) then return end
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
 	_applyTurnMult(_getVehicle(target), cfg.victimTurn or 0, cfg.victimFor or cfg.duration, "steerDisable")
-	RemoteEvents.ScreenEffect:FireClient(target, "steerDisable", { duration = cfg.duration })
+	_screen(target, "steerDisable", { duration = cfg.duration })
 end
 
 EFFECTS.slipperyPuddle = function(activator, _, cfg, itemName)
@@ -240,7 +252,7 @@ EFFECTS.slipperyPuddle = function(activator, _, cfg, itemName)
 		if not _hurts(p) then return end
 		EffectFx.play("slipped", p, cfg.hitFor, activator)
 		_applySpeedMult(v, cfg.hitSpeed, cfg.hitFor, "slippery")
-		RemoteEvents.ScreenEffect:FireClient(p, "slippery", {})
+		_screen(p, "slippery", {})
 	end)
 end
 
@@ -265,7 +277,7 @@ EFFECTS.flagAura = function(activator, _, cfg)
 	if ally then
 		EffectFx.play(cfg.effectKey, ally, cfg.duration, activator)
 		_applySpeedMult(_getVehicle(ally), cfg.allySpeed, cfg.duration, "flagAura")
-		RemoteEvents.ScreenEffect:FireClient(ally, "flagBuff", { duration = cfg.duration })
+		_screen(ally, "flagBuff", { duration = cfg.duration })
 	end
 end
 
@@ -313,7 +325,7 @@ EFFECTS.magnetPull = function(activator, target, cfg)
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
 	_impulse(them, _flat(me.PrimaryPart.Position - them.PrimaryPart.Position), cfg.victimPush)
 	_applySpeedMult(them, cfg.victimSpeed, cfg.victimFor or cfg.duration, "magnetPull")
-	RemoteEvents.ScreenEffect:FireClient(target, "magnetPull", { duration = cfg.duration })
+	_screen(target, "magnetPull", { duration = cfg.duration })
 end
 
 -- ── ENGINE ────────────────────────────────────────────────────────────────────
@@ -358,7 +370,7 @@ EFFECTS.redline = function(activator, _, cfg)
 	EffectFx.play(cfg.effectKey, activator, cfg.duration)
 	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "redline")
 	_applyTurnMult(vehicle, cfg.selfTurn or 0, cfg.duration, "redline")
-	RemoteEvents.ScreenEffect:FireClient(activator, "redlineActive", { duration = cfg.duration })
+	_screen(activator, "redlineActive", { duration = cfg.duration })
 end
 
 EFFECTS.steamCloud = function(activator, _, cfg, itemName)
@@ -383,7 +395,7 @@ EFFECTS.steamCloud = function(activator, _, cfg, itemName)
 	_onDropTouched(drop.hazard, activator, function(p)
 		if not _hurts(p) then return end
 		EffectFx.play("steamed", p, math.min(3, cfg.duration), activator)
-		RemoteEvents.ScreenEffect:FireClient(p, "steamBlind", { duration = math.min(3, cfg.duration) })
+		_screen(p, "steamBlind", { duration = math.min(3, cfg.duration) })
 		if cfg.hitSpeed then _applySpeedMult(_getVehicle(p), cfg.hitSpeed, cfg.hitFor, "steamed") end
 	end)
 end
@@ -392,7 +404,7 @@ EFFECTS.noodleSnare = function(activator, target, cfg)
 	if not _hurts(target) then return end
 	EffectFx.play(cfg.effectKey, target, cfg.duration, activator)
 	_applySpeedMult(_getVehicle(target), cfg.victimSpeed, cfg.victimFor or cfg.duration, "noodleSnare")
-	RemoteEvents.ScreenEffect:FireClient(target, "noodleSnare", { duration = cfg.duration })
+	_screen(target, "noodleSnare", { duration = cfg.duration })
 end
 
 EFFECTS.rocketBurst = function(activator, _, cfg)
@@ -413,7 +425,7 @@ EFFECTS.windBlast = function(activator, _, cfg)
 			EffectFx.play("blown", target, nil, activator)
 			_impulse(tv, _flat(tv.PrimaryPart.Position - origin), cfg.victimPush)
 			if cfg.victimSpeed then _applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "windBlast") end
-			RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
+			_screen(target, "windBlast", {})
 		end
 	end
 end
@@ -437,7 +449,7 @@ EFFECTS.gustBlast = function(activator, _, cfg)
 				EffectFx.play("blown", target, cfg.duration, activator)
 				_impulse(tv, side, cfg.victimPush)
 				_applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "gustBlast")
-				RemoteEvents.ScreenEffect:FireClient(target, "windBlast", {})
+				_screen(target, "windBlast", {})
 			end
 		end
 	end
@@ -510,7 +522,7 @@ EFFECTS.sofaFortress = function(activator, _, cfg)
 			EffectFx.play("rammed", target, nil, activator)
 			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), cfg.victimPush)
 			if cfg.victimSpeed then _applySpeedMult(tv, cfg.victimSpeed, cfg.victimFor or cfg.duration, "sofaBounce") end
-			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
+			_screen(target, "collision", {})
 		end
 	end
 end
@@ -527,7 +539,7 @@ EFFECTS.cartRam = function(activator, _, cfg)
 		if tv and tv.PrimaryPart and _hurts(target) then
 			EffectFx.play("rammed", target, nil, activator)
 			_impulse(tv, _flat(tv.PrimaryPart.Position - primary.Position), cfg.victimPush)
-			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
+			_screen(target, "collision", {})
 		end
 	end
 end
@@ -547,7 +559,7 @@ EFFECTS.barrelRoll = function(activator, _, cfg)
 			local dir = (right:Dot(to) >= 0) and right or -right
 			EffectFx.play("rammed", target, nil, activator)
 			_impulse(tv, dir, cfg.victimPush)
-			RemoteEvents.ScreenEffect:FireClient(target, "collision", {})
+			_screen(target, "collision", {})
 		end
 	end
 end
@@ -565,7 +577,7 @@ EFFECTS.microFreeze = function(activator, _, cfg)
 		if _hurts(target) then
 			EffectFx.play("frozen", target, cfg.duration, activator)
 			_applySpeedMult(_getVehicle(target), cfg.victimSpeed, cfg.victimFor or cfg.duration, "microFreeze")
-			RemoteEvents.ScreenEffect:FireClient(target, "microFreeze", { duration = cfg.duration })
+			_screen(target, "microFreeze", { duration = cfg.duration })
 		end
 	end
 end
@@ -575,7 +587,7 @@ EFFECTS.bathSplash = function(activator, target, cfg)
 	for _, t in ipairs(_allInRadius(activator, cfg.radius or 8)) do
 		if _hurts(t) then
 			EffectFx.play("splashed", t, cfg.victimFor, activator)
-			RemoteEvents.ScreenEffect:FireClient(t, "bathSplash", { duration = cfg.duration })
+			_screen(t, "bathSplash", { duration = cfg.duration })
 			_applySpeedMult(_getVehicle(t), cfg.victimSpeed, cfg.victimFor, "bathSplash")
 		end
 	end
@@ -584,7 +596,7 @@ end
 EFFECTS.backpackBoost = function(activator, _, cfg)
 	-- Backpack: the client refills its boost gauge
 	EffectFx.play(cfg.effectKey, activator, nil)
-	RemoteEvents.ScreenEffect:FireClient(activator, "boostRecharge", {})
+	_screen(activator, "boostRecharge", {})
 	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "backpack") end
 end
 
@@ -658,6 +670,11 @@ local function _handleAbilityRequest(player, itemName)
 	elseif abilCfg.targetType == "random_enemy" then
 		local enemies = _allInRadius(player, 9999)  -- all players
 		if #enemies > 0 then target = enemies[math.random(#enemies)] end
+	end
+
+	if target then
+		Telemetry.record("ability_target", { userId = userId, item = itemName, target = target.UserId,
+			bot = SessionManager.isBot(target) or nil })
 	end
 
 	-- Set cooldown before dispatching (prevents double-fire)

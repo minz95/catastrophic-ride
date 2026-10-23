@@ -92,8 +92,8 @@ where most players leave before adding content or ads.
 
 ## Known gaps
 
-- Race bots fill the grid to 4 racers, but not FARMING: a lone player
-  farms alone. Bots are not targets for abilities yet.
+- Bots (fill to 4) farm, race and take ability hits, but do not use
+  abilities, steal or guard themselves.
 - Gamepad and touch buttons are tested offline only (key mapping); try
   them on a device before going public.
 - The finish grace (45 s after the winner) sometimes cuts off the slowest
