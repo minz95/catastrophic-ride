@@ -107,3 +107,42 @@ R.describe("FarmingRules.stealOutcome", function()
 		R.expect(Rules.stealOutcome(nil, need)).toBe("stolen")
 	end)
 end)
+
+R.describe("ItemScan.itemPrimary (pickup prompt, issue #167)", function()
+	local Scan = env.requirePath("ReplicatedStorage.Shared.ItemScan")
+	local I = env.mock.Instance
+
+	local function item(nested)
+		local map = I.new("Model"); map.Name = "Map"
+		map.PrimaryPart = I.new("Part"); map.PrimaryPart.Parent = map
+		local model = I.new("Model"); model.Name = "Umbrella"; model.Parent = map
+		local primary = I.new("Part"); primary.Parent = model
+		local tag = I.new("StringValue"); tag.Name = "ItemName"; tag.Value = "Umbrella"; tag.Parent = primary
+		model.PrimaryPart = primary
+		local holder = model
+		for _ = 1, nested do
+			local inner = I.new("Model"); inner.Parent = holder
+			local innerPrimary = I.new("Part"); innerPrimary.Parent = inner
+			inner.PrimaryPart = innerPrimary
+			holder = inner
+		end
+		local canopy = I.new("Part"); canopy.Parent = holder
+		return primary, canopy, map
+	end
+
+	R.it("finds the item from a part of a flat model", function()
+		local primary, canopy = item(0)
+		R.expect(Scan.itemPrimary(canopy)).toBe(primary)
+		R.expect(Scan.itemPrimary(primary)).toBe(primary)
+	end)
+
+	R.it("finds the item from a part inside nested models (FBX import)", function()
+		local primary, canopy = item(2)
+		R.expect(Scan.itemPrimary(canopy)).toBe(primary)
+	end)
+
+	R.it("ignores parts that are not items", function()
+		local _, _, map = item(1)
+		R.expect(Scan.itemPrimary(map.PrimaryPart)).toBe(nil)
+	end)
+end)

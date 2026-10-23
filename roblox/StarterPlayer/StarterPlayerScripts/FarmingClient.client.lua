@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService      = game:GetService("TweenService")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local ItemScan     = require(ReplicatedStorage.Shared.ItemScan)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 
 local LocalPlayer = Players.LocalPlayer
@@ -93,13 +94,9 @@ local function _scanNearby()
 	local seenPrimary = {}
 	local parts = workspace:GetPartBoundsInRadius(root.Position, Constants.PICKUP_RANGE)
 	for _, part in ipairs(parts) do
-		local node = part
-		while node and node.Parent and not node:IsA("Model") do
-			node = node.Parent
-		end
-		if node and node:IsA("Model") and node.PrimaryPart then
-			local primary = node.PrimaryPart
-			if primary:FindFirstChild("ItemName") and not seenPrimary[primary] then
+		local primary = ItemScan.itemPrimary(part)
+		if primary then
+			if not seenPrimary[primary] then
 				seenPrimary[primary] = true
 				local d = (primary.Position - root.Position).Magnitude
 				if d < nearestItemDist then

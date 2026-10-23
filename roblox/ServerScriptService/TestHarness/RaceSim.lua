@@ -264,6 +264,7 @@ function RaceSim.runOne(opts)
 		finished = false, checkpoints = {}, respawns = {}, blocked = {}, samples = {},
 		effects = {}, airborne = 0, trackLength = round(geo.length, 0),
 		maxTilt = 0, topSpeed = 0, slots = slots,
+		maxNoseOff = 0,   -- worst angle between the nose and the travel direction (throttle on, not drifting)
 	}
 
 	local cp = { false, false }
@@ -274,6 +275,7 @@ function RaceSim.runOne(opts)
 	local maxS = 0
 	local riseSeg = nil   -- segment hint for the road height (OCEAN / SKY ride height)
 	local t = 0
+	local s0 = nil        -- progress at the first step (opts.holdW measures from here)
 	local steps = math.floor(seconds / dt)
 
 	local function respawn(reason, s)
@@ -317,6 +319,16 @@ function RaceSim.runOne(opts)
 			isSky = isSky, biome = biome, travelYaw = driveState.travelYaw,
 		})
 		if info.s > maxS then maxS = info.s end
+		-- opts.holdW: hold only the throttle for the first seconds (issue #165:
+		-- Up alone must drive the car forward, no steering needed)
+		s0 = s0 or info.s
+		if opts.holdW then
+			if t <= opts.holdW then
+				keys = { W = true }
+			elseif not res.holdGain then
+				res.holdGain = math.floor(info.s - s0)
+			end
+		end
 		if opts.stopAt and not res.reached and info.s >= opts.stopAt then
 			res.reached = round(t, 2)
 		end
@@ -416,6 +428,21 @@ function RaceSim.runOne(opts)
 		local tilt = math.deg(math.acos(math.clamp(primary.CFrame.UpVector.Y, -1, 1)))
 		if tilt > res.maxTilt then res.maxTilt = round(tilt, 1) end
 		if speed > res.topSpeed then res.topSpeed = round(speed, 1) end
+		-- only while driving forward (braking / reversing turns the nose on purpose)
+		if speed > 15 and not driveState.drifting and keys.W and not keys.S and cmd.forwardSpeed > 0 then
+			local look = primary.CFrame.LookVector
+			local lh = Vector3.new(look.X, 0, look.Z)
+			if lh.Magnitude > 0.1 then
+				local c = lh.Unit:Dot(Vector3.new(vel.X, 0, vel.Z).Unit)
+				local off = math.deg(math.acos(math.clamp(c, -1, 1)))
+				if off > res.maxNoseOff then
+					res.maxNoseOff = round(off, 1)
+					res.noseOffAt = { t = round(t, 2), s = math.floor(info.s), speed = round(speed),
+						cmd = round(cmd.forwardSpeed), keys = (keys.W and "W" or "") .. (keys.S and "S" or "") .. (keys.A and "A" or "") .. (keys.D and "D" or ""),
+						vy = round(vel.Y), tilt = round(math.deg(math.acos(math.clamp(primary.CFrame.UpVector.Y, -1, 1)))) }
+				end
+			end
+		end
 
 		local ground = workspace:Raycast(pos, Vector3.new(0, -8, 0), rayParams)
 		if not ground then res.airborne += dt end
@@ -499,6 +526,7 @@ end
 -- `extra` fully random builds. Deterministic for a given seed.
 RaceSim.VEHICLE_DISTANCE = 700
 RaceSim.VEHICLE_SECONDS = 45
+RaceSim.VEHICLE_HOLD_W = 2.5   -- throttle only from the grid for this long
 
 function RaceSim.vehicleCases(biome, extra, seed)
 	local ItemTypes = require(Shared.ItemTypes)
@@ -524,6 +552,7 @@ function RaceSim.vehicleCases(biome, extra, seed)
 		c.stopAt = RaceSim.VEHICLE_DISTANCE
 		c.seconds = RaceSim.VEHICLE_SECONDS
 		c.slot = (i - 1) % 10 + 1
+		c.holdW = RaceSim.VEHICLE_HOLD_W
 	end
 	return cases
 end
