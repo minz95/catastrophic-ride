@@ -16,6 +16,8 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
+| [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
+| [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | WARN | 5dca8ee+ | 2026-10-23T22:25 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | FAIL | c90f06d+ | 2026-10-23T00:18 |
@@ -265,6 +267,31 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
     -3: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
   events: ability=2 bot_craft=4 bot_farmfx=64 bot_guard=23 bot_hud=183 bot_joined=4 bot_punch=168 bot_ready=4 bot_screen=8 contest_result=9 craft=4 harness_crafting=1 harness_round=1 item_drop=15 item_pickup=30 item_wave=3 phase=3 punch=166 race_sample=8 race_start=1 vehicle_spawn=4
 ```
+
+## load-10p — FAIL
+
+```
+ERROR number of players should be integer between 0 and 8
+```
+- **fail** no report (session returned nothing)
+
+## load-8p — WARN
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (FOREST): 5 finished of 7
+    steal attempts: defended=7, denied: too far=4, denied: too late=1, denied: victim has nothing=6, denied: victim under attack=1, stolen=1
+    -3: picked 11, contests 1/1, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 7, contests 3/7, stole 0, robbed 1, defences 0, items 6 | craft submitted, rejected 0
+    -1: picked 1, contests 0/2, stole 0, robbed 0, defences 2, items 1 | craft submitted, rejected 0
+    -4: picked 11, contests 0/0, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    -5: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -6: picked 4, contests 0/1, stole 0, robbed 0, defences 3, items 4 | craft submitted, rejected 0
+    -7: picked 7, contests 4/5, stole 0, robbed 0, defences 1, items 7 | craft subm
+driving: 12 hits (closing speed max 50, push max 39 studs/s), 60 drift turbos
+server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 17 kbps; RACING heartbeat 55-60 Hz, physics 59-60 fps, send max 31 kbps; memory max 2262 MB
+```
+- **warn** round 1: 7 of 8 players joined (Studio did not start every client)
 
 ## match-forest — WARN
 

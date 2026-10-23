@@ -1122,6 +1122,48 @@
         ]
       },
       "checks": {}
+    },
+    {
+      "name": "load-8p",
+      "kind": "match",
+      "tags": [
+        "load",
+        "full"
+      ],
+      "_why": "the fullest server Studio can run (ExecuteMultiplayerTestAsync takes at most 8 players; MAX_PLAYERS is 10): the server keeps 20+ Hz heartbeat and physics while 8 bots farm and race, no pickup is given twice (issues #53, #42). Heavy: run alone.",
+      "opts": {
+        "biome": "FOREST",
+        "players": 8,
+        "rounds": 1,
+        "durations": {
+          "FARMING": 60,
+          "CRAFTING": 20,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "sweaty",
+          "casual",
+          "thief",
+          "guard",
+          "brawler",
+          "sweaty",
+          "casual",
+          "thief"
+        ],
+        "maxSeconds": 900,
+        "joinTimeout": 150
+      },
+      "checks": {
+        "allJoined": true,
+        "finishRate": 0.7,
+        "ledger": true,
+        "rewards": true,
+        "perf": {
+          "minHeartbeatHz": 20,
+          "minPhysicsFps": 20
+        }
+      }
     }
   ]
 }

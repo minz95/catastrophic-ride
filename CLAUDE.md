@@ -180,6 +180,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   packs (`Shared/Products`, ids from the Creator Dashboard; 0 = not sold)
   once per PurchaseId and only after the save succeeded.
   `VehicleBuilder.build(…, look)` takes `Cosmetics.look(rec.equipped)`.
+- Who races: everyone present when RACING starts except players with the
+  `Spectating` attribute (joined during RACING / RESULTS); whoever still has
+  no car at GO becomes a spectator. Never count cars at the RACING
+  transition: CraftingManager builds them just after it. A running pickup
+  contest locks its item for its two players.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

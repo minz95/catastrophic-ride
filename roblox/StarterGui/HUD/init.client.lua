@@ -396,3 +396,33 @@ RemoteEvents.PlayerPositionSync.OnClientEvent:Connect(function(data)
 	if not screenGui.Enabled then return end
 	_updatePositionTracker(data)
 end)
+
+-- ── Spectator banner: joined during a race (server sets the "Spectating"
+-- attribute, SessionManager / RacingManager); cleared when FARMING starts ──
+for _, old in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+	if old.Name == "SpectatorBanner" and old:IsA("ScreenGui") then old:Destroy() end
+end
+local specGui = Instance.new("ScreenGui")
+specGui.Name         = "SpectatorBanner"
+specGui.ResetOnSpawn = false
+specGui.DisplayOrder = 15
+specGui.Parent       = LocalPlayer.PlayerGui
+local specLbl = Instance.new("TextLabel")
+specLbl.Size                   = UDim2.new(0, 420, 0, 40)
+specLbl.Position               = UDim2.new(0.5, -210, 0, 110)
+specLbl.BackgroundColor3       = Color3.fromRGB(20, 20, 35)
+specLbl.BackgroundTransparency = 0.25
+specLbl.TextColor3             = Color3.fromRGB(255, 230, 120)
+specLbl.TextScaled             = true
+specLbl.Font                   = Enum.Font.GothamBold
+specLbl.Text                   = "Race in progress: you join the next round!"
+specLbl.Visible                = false
+specLbl.Parent                 = specGui
+local specCorner = Instance.new("UICorner")
+specCorner.CornerRadius = UDim.new(0, 8)
+specCorner.Parent = specLbl
+local function _updateSpectating()
+	specLbl.Visible = LocalPlayer:GetAttribute("Spectating") == true
+end
+LocalPlayer:GetAttributeChangedSignal("Spectating"):Connect(_updateSpectating)
+_updateSpectating()

@@ -41,6 +41,7 @@ local _active      = false
 local _biome       = nil
 local _startTick   = 0
 local _finishOrder = {}   -- { { userId, time } }
+local _racers = {}        -- userId → true for the players racing this round (they had a car)
 local _totalRacers = 0
 local _raceSeed    = 0    -- broadcast to clients for per-race variation
 local _activePads  = {}   -- [BoostPad part] = true for this race
@@ -865,7 +866,32 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_startTick   = tick() + Constants.RACE_COUNTDOWN
 		_finishOrder = {}
 		_physState   = {}
-		_totalRacers = #Players:GetPlayers()
+		-- Racers: everyone here when RACING starts except those who joined
+		-- during a race (Spectating). CraftingManager builds the cars just
+		-- after this, so whoever still has no car at GO watches instead and
+		-- is not waited for (Studio load-8p: counting cars right here found
+		-- one car and ended the race at the first finish).
+		_racers = {}
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player:GetAttribute("Spectating") ~= true then
+				_racers[player.UserId] = true
+			end
+		end
+		_totalRacers = 0
+		for _ in pairs(_racers) do _totalRacers += 1 end
+		local raceRacers = _racers
+		task.delay(Constants.RACE_COUNTDOWN, function()
+			if not _active or _racers ~= raceRacers then return end
+			for uid in pairs(table.clone(_racers)) do
+				local p = Players:GetPlayerByUserId(uid)
+				local d = p and SessionManager.getData(p)
+				if p and not (d and d.vehicleModel) then
+					_racers[uid] = nil
+					_totalRacers = math.max(1, _totalRacers - 1)
+					p:SetAttribute("Spectating", true)
+				end
+			end
+		end)
 		_contactCooldown = {}
 		_impactCooldown  = {}
 		_cornerCooldowns = {}
@@ -900,7 +926,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end
 
 		local racerIds = {}
-		for _, player in ipairs(Players:GetPlayers()) do table.insert(racerIds, player.UserId) end
+		for uid in pairs(_racers) do table.insert(racerIds, uid) end
+		table.sort(racerIds)
 		Telemetry.record("race_start", {
 			biome = biome, racers = racerIds, round = GameManager.getRound(),
 			length = RaceProgress.trackLength(biome), timeout = Constants.RACING_TIMEOUT,
@@ -929,6 +956,8 @@ end)
 Players.PlayerRemoving:Connect(function(player)
 	if not _active then return end
 	_physState[player.UserId] = nil
+	if not _racers[player.UserId] then return end   -- a spectator leaving changes nothing
+	_racers[player.UserId] = nil
 	_totalRacers = math.max(1, _totalRacers - 1)
 	if #_finishOrder >= _totalRacers then
 		_active = false

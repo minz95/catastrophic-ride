@@ -217,6 +217,24 @@ gained; Up alone must drive) and `maxNoseOff` caps the angle between the
 nose and the travel direction while accelerating (a vehicle drawn or driven
 sideways, issue #165; braking turns are not counted).
 
+### Unusual sessions and load
+
+`tests/specs/edge_cases.spec.luau` (issues #42, #54): ten players on one
+item, a contest's item locked even after its players walk away, a contest
+winner who left, a hundred items for ten players (no item twice,
+inventories add up), solo play, empty and partly placed crafts, a racer
+leaving, everyone leaving, someone joining mid-race (Spectating, not waited
+for, plays the next round), cars that arrive just after RACING starts.
+
+`python3 tools/studio/sim.py run load-8p` (run it alone): the fullest
+server Studio can start (ExecuteMultiplayerTestAsync takes at most 8
+players; MAX_PLAYERS is 10, so 10 needs a live server). Every match now
+samples `server_perf` every 2 s (Heartbeat Hz, physics fps, send / receive
+kbps, memory) and the summary prints the range per phase; the `perf` check
+fails when the 5th percentile drops under the floor. 2026-10-23: FARMING
+50–60 Hz, RACING 55–60 Hz, send ≤ 134 kbps (target 20+ Hz). Memory is the
+whole Studio process, not the game.
+
 ### Saved progress
 
 `tests/specs/progression.spec.luau`: the level / coin / daily-streak rules,
