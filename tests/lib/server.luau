@@ -33,8 +33,11 @@ function Server.boot(opts)
 	local Mock = env.mock
 	Mock.swallowErrors = opts.swallowErrors
 
-	local harness = opts.harness or { harness = "lune", autoStart = false }
-	env.game.ServerScriptService:SetAttribute("HarnessArgs", serde.encode("json", harness))
+	-- opts.live: no harness at all, as on a live server
+	if not opts.live then
+		local harness = opts.harness or { harness = "lune", autoStart = false }
+		env.game.ServerScriptService:SetAttribute("HarnessArgs", serde.encode("json", harness))
+	end
 
 	local srv = { env = env, mock = Mock, players = {} }
 

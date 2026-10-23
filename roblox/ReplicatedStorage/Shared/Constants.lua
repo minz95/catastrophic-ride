@@ -52,8 +52,11 @@ Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driv
 -- ─── Player / Session ─────────────────────────────────────────────────────────
 Constants.MAX_PLAYERS    = 10
 Constants.SKIN_COUNT     = 10   -- must match ServerStorage/CharacterSkins count
-Constants.MIN_TO_START   = 1    -- minimum players before LOBBY ends (1 = solo test OK)
-Constants.SOLO_TEST_MODE = true  -- set false in production; skips lobby wait
+Constants.MIN_TO_START   = 2    -- with this many players the lobby counts down LOBBY.FILL_SECONDS
+Constants.SOLO_TEST_MODE = false -- true: start 5 s after the first player, print the balance audit (local testing only)
+-- Live lobby: a lone player starts after MAX_WAIT s; once MIN_TO_START are
+-- in, the countdown drops to FILL_SECONDS (time for friends to load in).
+Constants.LOBBY = { MAX_WAIT = 25, FILL_SECONDS = 8 }
 
 -- ─── Inventory ────────────────────────────────────────────────────────────────
 Constants.INVENTORY_SIZE       = 8

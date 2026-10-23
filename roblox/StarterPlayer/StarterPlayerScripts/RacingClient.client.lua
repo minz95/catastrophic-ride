@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)   -- keyboard + touch buttons
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
@@ -77,7 +78,7 @@ local KEY_MAP = {
 	[Enum.KeyCode.F]           = "F",
 }
 
-UserInputService.InputBegan:Connect(function(input, processed)
+KeyInput.began(function(input, processed)
 	local k = KEY_MAP[input.KeyCode]
 	if k then _keys[k] = true end
 
@@ -98,7 +99,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
 	end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
+KeyInput.ended(function(input)
 	local k = KEY_MAP[input.KeyCode]
 	if k then _keys[k] = false end
 
@@ -586,6 +587,21 @@ local function _driveLoop(dt)
 
 	-- Keyboard state, or a harness bot's synthetic keys (InputSource override).
 	local rawKeys = InputSource.read(_keys)
+	-- Touch thumbstick / gamepad: Roblox's control module writes the seat's
+	-- ThrottleFloat / SteerFloat; drive from them when no drive key is down.
+	if not InputSource.isOverridden() and _seat then
+		local k = rawKeys
+		if not (k.W or k.A or k.S or k.D or k.Up or k.Down or k.Left or k.Right) then
+			local th, st = _seat.ThrottleFloat, _seat.SteerFloat
+			if math.abs(th) > 0.3 or math.abs(st) > 0.3 then
+				rawKeys = table.clone(_keys)
+				rawKeys.W = th > 0.3
+				rawKeys.S = th < -0.3
+				rawKeys.A = st < -0.3   -- SteerFloat −1 is left
+				rawKeys.D = st > 0.3
+			end
+		end
+	end
 	local input = VehicleController.readKeys(rawKeys)
 	-- A bot presses E through the same path as the keyboard's InputBegan.
 	if InputSource.isOverridden() then

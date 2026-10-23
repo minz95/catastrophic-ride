@@ -185,6 +185,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   no car at GO becomes a spectator. Never count cars at the RACING
   transition: CraftingManager builds them just after it. A running pickup
   contest locks its item for its two players.
+- Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
+  (keyboard, gamepad map, on-screen `TouchControls` buttons), never
+  `UserInputService.InputBegan` directly. Touch / gamepad driving comes from
+  the seat's ThrottleFloat / SteerFloat (RacingClient). Live-server
+  switches and the store page: `docs/launch.md`.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

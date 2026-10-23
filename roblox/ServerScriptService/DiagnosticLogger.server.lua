@@ -3,6 +3,8 @@
 -- Remove or disable this script once bugs are confirmed fixed.
 
 local Players             = game:GetService("Players")
+local RunService          = game:GetService("RunService")
+if not RunService:IsStudio() then return end   -- Studio only: live servers stay quiet
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 

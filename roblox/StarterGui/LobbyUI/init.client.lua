@@ -7,6 +7,7 @@ local TweenService     = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local LocalPlayer  = Players.LocalPlayer
 
@@ -124,6 +125,16 @@ statusLabel.Parent          = bg
 
 -- ─── Player row builder ───────────────────────────────────────────────────────
 
+-- "Players: 2 / 10  ·  Starting in 0:08" (PhaseEndsAt, GameManager's lobby clock)
+local function _updateStatus()
+	local left = PhaseClock.remaining(nil)
+	local players = string.format("Players: %d / %d", #Players:GetPlayers(), Constants.MAX_PLAYERS)
+	statusLabel.Text = left and (players .. "   ·   Starting in " .. PhaseClock.format(left)) or (players .. "   ·   Waiting for players")
+end
+game:GetService("RunService").Heartbeat:Connect(function()
+	if screen.Enabled then _updateStatus() end
+end)
+
 local function _buildPlayerList()
 	for _, child in ipairs(scrollFrame:GetChildren()) do
 		if child:IsA("Frame") then child:Destroy() end
@@ -158,7 +169,7 @@ local function _buildPlayerList()
 		pad.PaddingLeft = UDim.new(0, 8)
 		pad.Parent      = nameLbl
 	end
-	statusLabel.Text = string.format("Players: %d / %d", #Players:GetPlayers(), Constants.MAX_PLAYERS)
+	_updateStatus()
 end
 
 Players.PlayerAdded:Connect(_buildPlayerList)

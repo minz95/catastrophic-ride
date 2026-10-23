@@ -1,5 +1,5 @@
 -- ResultsUI/init.client.lua
--- Post-race podium, time display, Play Again vote.
+-- Post-race podium, times, your reward and the next-round clock.
 -- Resolves: Issue #44
 
 local Players          = game:GetService("Players")
@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build GUI ────────────────────────────────────────────────────────────────
@@ -132,32 +133,18 @@ lbPad.PaddingRight        = UDim.new(0, 8)
 lbPad.Parent              = lbFrame
 
 -- ── Play Again button ────────────────────────────────────────────────────────
-local playAgainBtn = Instance.new("TextButton")
-playAgainBtn.Name           = "PlayAgain"
-playAgainBtn.Size           = UDim2.new(0, 200, 0, 50)
-playAgainBtn.Position       = UDim2.new(0.5, -100, 0.9, 0)
-playAgainBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 80)
-playAgainBtn.BorderSizePixel = 0
-playAgainBtn.Text           = "PLAY AGAIN"
-playAgainBtn.TextColor3     = Color3.new(1, 1, 1)
-playAgainBtn.TextScaled     = true
-playAgainBtn.Font           = Enum.Font.GothamBold
-playAgainBtn.Parent         = bg
-
-local playAgainCorner = Instance.new("UICorner")
-playAgainCorner.CornerRadius = UDim.new(0, 10)
-playAgainCorner.Parent       = playAgainBtn
-
-local voteLabel = Instance.new("TextLabel")
-voteLabel.Name              = "VoteLabel"
-voteLabel.Size              = UDim2.new(0, 200, 0, 20)
-voteLabel.Position          = UDim2.new(0.5, -100, 0.95, 0)
-voteLabel.BackgroundTransparency = 1
-voteLabel.Text              = "Votes: 0 / 0"
-voteLabel.TextColor3        = Color3.fromRGB(180, 180, 180)
-voteLabel.TextScaled        = true
-voteLabel.Font              = Enum.Font.Gotham
-voteLabel.Parent            = bg
+-- "Next round in 0:12" (PhaseEndsAt). There is no vote: the next round
+-- starts on its own (the old PLAY AGAIN button did nothing).
+local nextLbl = Instance.new("TextLabel")
+nextLbl.Name                   = "NextRound"
+nextLbl.Size                   = UDim2.new(0, 320, 0, 36)
+nextLbl.Position               = UDim2.new(0.5, -160, 0.9, 0)
+nextLbl.BackgroundTransparency = 1
+nextLbl.Text                   = ""
+nextLbl.TextColor3             = Color3.fromRGB(220, 220, 235)
+nextLbl.TextScaled             = true
+nextLbl.Font                   = Enum.Font.GothamBold
+nextLbl.Parent                 = bg
 
 -- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
 local rewardFrame = Instance.new("Frame")
@@ -290,27 +277,17 @@ local function _animateIn()
 	}):Play()
 end
 
--- ─── Vote state ───────────────────────────────────────────────────────────────
+-- ─── Next-round clock ───────────────────────────────────────────────────────
 
-local _myVote = false
-local _voteCount = 0
-local _totalPlayers = 0
-
-playAgainBtn.Activated:Connect(function()
-	if _myVote then return end
-	_myVote = true
-	_voteCount = _voteCount + 1
-	playAgainBtn.BackgroundColor3 = Color3.fromRGB(50, 120, 50)
-	playAgainBtn.Text = "✓ VOTED"
-	voteLabel.Text = string.format("Votes: %d / %d", _voteCount, _totalPlayers)
-	-- Fire to server (RemoteEvent not defined yet; placeholder)
-	-- RemoteEvents.VotePlayAgain:FireServer()
+game:GetService("RunService").Heartbeat:Connect(function()
+	if not screen.Enabled then return end
+	local left = PhaseClock.remaining(nil)
+	nextLbl.Text = left and ("Next round in " .. PhaseClock.format(left) .. "   ·   SHOP is open") or ""
 end)
 
 -- ─── Remote listeners ────────────────────────────────────────────────────────
 
 RemoteEvents.RaceFinished.OnClientEvent:Connect(function(finishOrder)
-	_totalPlayers = #finishOrder
 	_populateResults(finishOrder)
 end)
 
@@ -322,7 +299,5 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	elseif phase == Constants.PHASES.LOBBY then
 		screen.Enabled = false
 		rewardFrame.Visible = false
-		_myVote = false
-		_voteCount = 0
 	end
 end)
