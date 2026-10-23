@@ -18,7 +18,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | WARN | 5dca8ee+ | 2026-10-23T22:25 |
+| [match-forest](match-forest.json) | FAIL | b3dbb6d+ | 2026-10-23T23:00 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | FAIL | c90f06d+ | 2026-10-23T00:18 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
@@ -293,24 +293,24 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ```
 - **warn** round 1: 7 of 8 players joined (Studio did not start every client)
 
-## match-forest — WARN
+## match-forest — FAIL
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
-  round 1 (FOREST): 4 finished of 4
-    steal attempts: defended=1, denied: victim has nothing=3, stolen=2
-    -4: picked 11, contests 2/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 11, contests 3/5, stole 0, robbed 2, defences 1, items 8 | craft submitted, rejected 0
-    -1: picked 5, contests 0/2, stole 2, robbed 0, defences 0, items 7 | craft submitted, rejected 0
-    -3: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    #1 Player4 112.1s
-    #2 Player2 117.0s
-    #3 Player3 135.5s
-    #4 Player1 151.8s
-  events: ability=106 ability_probe=289 bot_craft=4 bot_defend=3 bot_farmfx=84 bot_fx=368 bot_guard=2 bot_hud=123 bot_joined=4 bot_pickup_denied=1 bot_punch=8 bot_ready=4 bot_respawn=11 bot_screen=47 bot_steal=6 checkpoint=8 contact=21 contest_result=5 craft=4 drift
-driving: 10 hits (closing speed max 44, push max 32 studs/s), 35 drift turbos, drops: Kettle
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (FOREST): 3 finished of 4
+    steal attempts: defended=4, denied: too far=4, denied: victim has nothing=7
+    -4: picked 11, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 13, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 5, contests 3/5, stole 0, robbed 0, defences 3, items 5 | craft submitted, rejected 0
+    -3: picked 4, contests 1/3, stole 0, robbed 0, defences 1, items 4 | craft submitted, rejected 0
+    #1 Player4 92.4s
+    #2 Player1 110.8s
+    #3 Player2 115.9s
+  events: ability=87 ability_probe=239 bot_craft=4 bot_defend=4 bot_farmfx=104 bot_fx=288 bot_guard=1 bot_hud=123 bot_joined=4 bot_punch=14 bot_ready=4 bot_respawn=11 bot_screen=26 bot_steal=15 checkpoint=8 contact=14 contest_result=5 craft=4 drift_turbo=39 finish=3 harness_crafti
+driving: 4 hits (closing speed max 38, push max 28 studs/s), 39 drift turbos
+server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 3378 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 13 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 42 kbps; memory max 2266 MB
 ```
-- **warn** 1 bot client errors, first: {"userId": -2, "error": {"message": "Players.Player2.PlayerScripts.BotDriver:341: attempt to index nil with 'resetTracking'", "trace": "Players.Player2.PlayerScripts.BotDriver, line 341\n", "script": 
+- **fail** round 1: 3 of 4 finished
 
 ## match-ocean — PASS
 

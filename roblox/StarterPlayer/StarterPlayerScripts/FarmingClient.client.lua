@@ -14,6 +14,7 @@ local TweenService      = game:GetService("TweenService")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local ItemScan     = require(ReplicatedStorage.Shared.ItemScan)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)   -- keyboard + touch buttons
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -168,14 +169,10 @@ end
 
 -- ─── E handler ────────────────────────────────────────────────────────────
 
-UserInputService.InputBegan:Connect(function(input, processed)
-	if input.KeyCode == Enum.KeyCode.E then
-		print("[FarmingClient] E pressed | processed=", processed, "| _enabled=", _enabled, "| _nearestItem=", _nearestItem)
-	end
+KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
 
 	if input.KeyCode == Enum.KeyCode.E then
-		print("[FarmingClient] E pressed | enabled=", _enabled, " nearestItem=", tostring(_nearestItem), " nearestPlayer=", tostring(_nearestPlayer))
 		if _contestItemId then
 			-- We're in a contest — count presses
 			_contestPresses = _contestPresses + 1
@@ -212,7 +209,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
 end)
 
 -- Q key: manually drop the item in the first inventory slot
-UserInputService.InputBegan:Connect(function(input, processed)
+KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
 	if input.KeyCode == Enum.KeyCode.Q then
 		if #_inventory == 0 then return end
@@ -228,14 +225,14 @@ end)
 
 -- Long-press E for steal (hold ~0.9s near another player)
 local _eHoldStart = nil
-UserInputService.InputBegan:Connect(function(input, processed)
+KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
 	if input.KeyCode == Enum.KeyCode.E and _nearestPlayer and not _nearestItem then
 		_eHoldStart = tick()
 	end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
+KeyInput.ended(function(input)
 	if input.KeyCode == Enum.KeyCode.E then
 		if _eHoldStart and (tick() - _eHoldStart) >= 0.9 and _nearestPlayer then
 			RemoteEvents.RequestSteal:InvokeServer(_nearestPlayer.UserId)
@@ -246,7 +243,7 @@ end)
 
 -- ─── Fight: F punches the player you face, hold G to guard ───────────────────
 -- (server: FarmingManager RequestPunch / SetGuard; looks: FarmFx)
-UserInputService.InputBegan:Connect(function(input, processed)
+KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
 	if input.KeyCode == Enum.KeyCode.F then
 		task.spawn(function() RemoteEvents.RequestPunch:InvokeServer() end)
@@ -255,7 +252,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
 	end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
+KeyInput.ended(function(input)
 	if input.KeyCode == Enum.KeyCode.G and _enabled then
 		RemoteEvents.SetGuard:FireServer(false)
 	end
@@ -291,7 +288,7 @@ RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
 	local defendPresses = 0
 	local defended = false
 	local conn
-	conn = UserInputService.InputBegan:Connect(function(input, processed)
+	conn = KeyInput.began(function(input, processed)
 		if processed then return end
 		if input.KeyCode == Enum.KeyCode.E then
 			-- The server counts the taps (one call each) inside its window.

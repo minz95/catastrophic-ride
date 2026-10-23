@@ -148,7 +148,7 @@ local function _startLobby()
 		return
 	end
 
-	if Constants.SOLO_TEST_MODE then
+	if Constants.SOLO_TEST_MODE or RunService:IsStudio() then
 		-- In test mode: start immediately once at least 1 player is in.
 		-- Wait 5s (up from 2s) so the client's character has time to load and
 		-- StarterGui scripts can connect their PhaseChanged listeners before we fire.
@@ -158,12 +158,27 @@ local function _startLobby()
 		return
 	end
 
-	-- Production: wait for MIN_TO_START or 30s timeout
-	local waited = 0
-	repeat
-		task.wait(1)
-		waited = waited + 1
-	until #Players:GetPlayers() >= Constants.MIN_TO_START or waited >= 30
+	-- Live: count down LOBBY.MAX_WAIT (PhaseEndsAt, shown in the lobby);
+	-- once MIN_TO_START players are in, at most LOBBY.FILL_SECONDS remain.
+	-- Nobody here: wait without a clock.
+	local L = Constants.LOBBY
+	local endsAt = nil
+	while true do
+		local n = #Players:GetPlayers()
+		local now = workspace:GetServerTimeNow()
+		if n == 0 then
+			endsAt = nil
+			ReplicatedStorage:SetAttribute("PhaseEndsAt", nil)
+		else
+			local target = now + (n >= Constants.MIN_TO_START and L.FILL_SECONDS or L.MAX_WAIT)
+			if not endsAt or target < endsAt then
+				endsAt = target
+				ReplicatedStorage:SetAttribute("PhaseEndsAt", endsAt)
+			end
+			if now >= endsAt then break end
+		end
+		task.wait(0.5)
+	end
 	_startFarming()
 end
 
@@ -204,11 +219,11 @@ function _startResults(finishOrder)
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
 	_phaseEnd = nil
 	_lastResults = finishOrder or {}
-	_transition(Constants.PHASES.RESULTS)
+	local resultsFor = _duration("RESULTS", Constants.PHASE_DURATION.RESULTS)
+	_transition(Constants.PHASES.RESULTS, resultsFor)   -- PhaseEndsAt: "next round in" on the results screen
 	RemoteEvents.RaceFinished:FireAllClients(finishOrder)
 
-	-- Wait for Play Again votes or 30s, then restart
-	task.delay(_duration("RESULTS", Constants.PHASE_DURATION.RESULTS), function()
+	task.delay(resultsFor, function()
 		_startLobby()
 	end)
 end
