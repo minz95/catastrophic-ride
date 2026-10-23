@@ -7,7 +7,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-forest](abilities-forest.json) | WARN | fd36242+ | 2026-10-22T02:09 |
 | [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
-| [craft-afk-3p](craft-afk-3p.json) | PASS | 356ae4f+ | 2026-10-23T12:49 |
+| [craft-afk-3p](craft-afk-3p.json) | PASS | bf62c28+ | 2026-10-23T21:26 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
 | [escape-ocean](escape-ocean.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
 | [escape-sky](escape-sky.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
@@ -15,7 +15,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
-| [match-forest](match-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
+| [match-forest](match-forest.json) | PASS | bf62c28+ | 2026-10-23T21:30 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | FAIL | c90f06d+ | 2026-10-23T00:18 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
@@ -24,6 +24,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
+| [sounds](sounds.json) | PASS | 9fbb280+ | 2026-10-23T21:23 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
@@ -174,12 +175,12 @@ abilities: 12 items fired ok, 17 effect keys measured
 ```
 Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
   round 1 (FOREST): 0 finished of 4
-    steal attempts: defended=1
-    -4: picked 12, contests 1/3, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0
-    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0
-    -1: picked 11, contests 2/4, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -3: picked 12, contests 2/3, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0
-  events: ability=3 bot_craft=3 bot_defend=1 bot_farmfx=44 bot_hud=220 bot_joined=4 bot_punch=6 bot_ready=4 bot_screen=8 bot_steal=1 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=11 item_pickup=35 item_wave=3 phase=3 punch=6 race_sample=8 race_start=1 steal_attempt=1 vehicle_spawn=4
+    steal attempts: denied: victim has nothing=1
+    -4: picked 12, contests 4/4, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0
+    -2: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0
+    -1: picked 13, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -3: picked 9, contests 0/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+  events: ability=3 bot_craft=3 bot_farmfx=8 bot_hud=219 bot_joined=4 bot_punch=2 bot_ready=4 bot_screen=8 bot_steal=1 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=34 item_wave=3 phase=3 punch=2 race_sample=8 race_start=1 steal_attempt=1 vehicle_spawn=4
 ```
 
 ## escape-forest — PASS
@@ -261,19 +262,19 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 ## match-forest — PASS
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
   round 1 (FOREST): 4 finished of 4
-    steal attempts: defended=4, denied: too far=2, denied: too late=1, denied: victim has nothing=7, stolen=3
-    -4: picked 16, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 13, contests 2/2, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 1, contests 0/2, stole 1, robbed 2, defences 0, items 0 | craft submitted, rejected 0
-    -3: picked 7, contests 1/1, stole 2, robbed 1, defences 4, items 8 | craft submitted, rejected 0
-    #1 Player4 103.7s
-    #2 Player3 124.7s
-    #3 Player1 130.6s
-    #4 Player2 131.2s
-  events: ability=70 ability_probe=212 bot_craft=4 bot_defend=7 bot_farmfx=152 bot_fx=316 bot_guard=5 bot_hud=123 bot_joined=4 bot_punch=12 bot_ready=4 bot_respawn=4 bot_screen=17 bot_steal=17 checkpoint=8 contact=8 contest_resu
-driving: 3 hits (closing speed max 67, push max 45 studs/s), 35 drift turbos
+    steal attempts: defended=7, denied: too far=1, denied: too late=1, stolen=1
+    -4: picked 9, contests 1/1, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    -2: picked 9, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 7, contests 3/5, stole 0, robbed 0, defences 1, items 7 | craft submitted, rejected 0
+    -3: picked 10, contests 1/4, stole 0, robbed 0, defences 5, items 8 | craft submitted, rejected 0
+    #1 Player4 125.8s
+    #2 Player1 134.2s
+    #3 Player3 136.5s
+    #4 Player2 144.0s
+  events: ability=93 ability_probe=265 bot_craft=4 bot_defend=8 bot_farmfx=128 bot_fx=280 bot_hud=124 bot_joined=4 bot_punch=13 bot_ready=4 bot_respawn=3 bot_screen=23 bot_steal=10 checkpoint=8 contact=24 contest_result=5 craft=4 drift_turbo=35 drop_placed=23
+driving: 12 hits (closing speed max 39, push max 27 studs/s), 35 drift turbos, drops: Cactus
 ```
 
 ## match-ocean — PASS
@@ -366,6 +367,12 @@ RaceSim SKY (shipped) — 133.4s wall time
   expert   car=p50 max=87 mass=2.9 → 106.01s | CPs 2 | respawns 0 | blocked 0
   average  car=p50 max=87 mass=2.9 → 102.58s | CPs 2 | respawns 0 | blocked 0
   novice   car=p50 max=87 mass=2.9 → 134.95s | CPs 2 | respawns 0 | blocked 0
+```
+
+## sounds — PASS
+
+```
+SoundCheck: 50 sounds load, 0 missing
 ```
 
 ## start-6p — FAIL

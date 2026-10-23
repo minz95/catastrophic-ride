@@ -1,0 +1,330 @@
+{
+ "checks": [],
+ "commit": "9fbb280",
+ "dirty": true,
+ "kind": "sounds",
+ "logErrors": [
+  "2026-10-23T12:23:18.529Z,0.529465,3a460c0,6,Error [FLog::Error] Redundant Flag ID: SolidModelingOnMeshes",
+  "2026-10-23T12:23:18.529Z,0.529468,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIGradients",
+  "2026-10-23T12:23:18.529Z,0.529471,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIShadows",
+  "2026-10-23T12:23:18.529Z,0.529474,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-23T12:23:18.662Z,0.662433,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T12:23:18.746Z,0.746770,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-23T12:23:19.661Z,1.661435,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T12:23:20.490Z,2.490825,6c0b7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c7f6586d-3bd1-4918-ae5b-aaafc2dcb8e7\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-23T12:23:43.078Z,25.078104,6beab000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c7f6586d-3bd1-4918-ae5b-aaafc2dcb8e7\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {},
+ "ranAt": "2026-10-23T21:23:45+0900",
+ "report": {
+  "configured": {
+   "AMBIENCE.FOREST.1": {
+    "id": "139767023947424",
+    "length": 131,
+    "ok": true,
+    "status": "Success"
+   },
+   "AMBIENCE.OCEAN.1": {
+    "id": "137826155053556",
+    "length": 183,
+    "ok": true,
+    "status": "Success"
+   },
+   "AMBIENCE.OCEAN.2": {
+    "id": "9118858279",
+    "length": 5.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "AMBIENCE.SKY.1": {
+    "id": "9125515918",
+    "length": 49.6,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.CRAFTING": {
+    "id": "85643586571329",
+    "length": 153.6,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.FARMING.FOREST": {
+    "id": "106729070236769",
+    "length": 168.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.FARMING.OCEAN": {
+    "id": "90091763838597",
+    "length": 159.6,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.FARMING.SKY": {
+    "id": "132915893124028",
+    "length": 238.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.LOBBY": {
+    "id": "71612604315412",
+    "length": 137.1,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.RACING.FOREST": {
+    "id": "140563561636307",
+    "length": 199,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.RACING.OCEAN": {
+    "id": "127764396558082",
+    "length": 156.3,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.RACING.SKY": {
+    "id": "1837808539",
+    "length": 108.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.RESULTS_LOSE": {
+    "id": "1841391669",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "BGM.RESULTS_WIN": {
+    "id": "1836473422",
+    "length": 9.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_FLOAT": {
+    "id": "9114320437",
+    "length": 2.9,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_GENERIC": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_HACK": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_OBSTACLE": {
+    "id": "9120873997",
+    "length": 2.1,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_SHIELD": {
+    "id": "9114343910",
+    "length": 1.7,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ABILITY_SPEED": {
+    "id": "9114328260",
+    "length": 1.8,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.BOOST_ACTIVATE": {
+    "id": "9114329395",
+    "length": 2.3,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.BOOST_PAD": {
+    "id": "9116411685",
+    "length": 2.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.BUBBLE_POP": {
+    "id": "9112872239",
+    "length": 0.7,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.COLLISION": {
+    "id": "9113437833",
+    "length": 2.1,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.CONTEST_LOSE": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.CONTEST_START": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.CONTEST_WIN": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.COUNTDOWN_BEEP": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.COUNTDOWN_GO": {
+    "id": "9113071178",
+    "length": 2.8,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.CRAFT_COMPLETE": {
+    "id": "1841209857",
+    "length": 3.3,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.DRIFT_SLINGSHOT": {
+    "id": "9121000116",
+    "length": 1.3,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.DRIFT_START": {
+    "id": "9116399935",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.FINISH_1ST": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.FINISH_OTHER": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.GRAB_WARN": {
+    "id": "9113251685",
+    "length": 1.1,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ITEM_DEFENDED": {
+    "id": "9114343910",
+    "length": 1.7,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ITEM_PICKUP": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ITEM_PICKUP_EPIC": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ITEM_PICKUP_RARE": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.ITEM_STOLEN": {
+    "id": "9113722807",
+    "length": 0.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.KNOCKOUT": {
+    "id": "9113470178",
+    "length": 2.2,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.MUD_ENTER": {
+    "id": "9120352855",
+    "length": 2,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.PHASE_TRANSITION": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.PLAYER_JOIN": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.PUNCH_BLOCKED": {
+    "id": "9119075972",
+    "length": 2.1,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.PUNCH_HIT": {
+    "id": "9118616398",
+    "length": 0.7,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.RESPAWN": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.SLOT_ASSIGN": {
+    "id": "258057783",
+    "length": 4.4,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.TIMER_LOW": {
+    "id": "6026984224",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
+   "SFX.UPDRAFT_ENTER": {
+    "id": "9125806782",
+    "length": 2.2,
+    "ok": true,
+    "status": "Success"
+   }
+  },
+  "kind": "sounds",
+  "searches": []
+ },
+ "scenario": "sounds",
+ "studioExit": 0,
+ "summary": "SoundCheck: 50 sounds load, 0 missing",
+ "wallSeconds": 26.9
+}

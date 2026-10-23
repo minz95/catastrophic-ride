@@ -1083,6 +1083,19 @@
         "abilities": true,
         "allJoined": true
       }
+    },
+    {
+      "name": "sounds",
+      "kind": "sounds",
+      "tags": [
+        "sounds",
+        "full"
+      ],
+      "_why": "every BGM / ambience / SFX id in Shared/SoundConfig loads in Studio (exists, this place may play it, has a length)",
+      "opts": {},
+      "checks": {
+        "allLoad": true
+      }
     }
   ]
 }

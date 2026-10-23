@@ -226,7 +226,7 @@ R.describe("biomes", function()
 end)
 
 R.describe("audio", function()
-	R.known("every sound has an asset id", "BGM and ambience ids in SoundConfig are still empty placeholders", function()
+	R.it("every sound has an asset id (Studio: sim.py run sounds checks they load)", function()
 		local empty = {}
 		local function scan(prefix, t)
 			for k, v in pairs(t) do
@@ -242,5 +242,27 @@ R.describe("audio", function()
 		scan("", SoundConfig)
 		table.sort(empty)
 		R.expect(empty).toBeEmpty("sounds without an id")
+	end)
+
+	R.it("every sound the clients play is in SoundConfig.SFX", function()
+		local files = {
+			"roblox/StarterPlayer/StarterPlayerScripts/SoundClient.client.lua",
+			"roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua",
+			"roblox/StarterGui/CraftingUI/init.client.lua",
+		}
+		local missing = {}
+		for _, f in ipairs(files) do
+			local src = fs.readFile(f)
+			for key in src:gmatch('_playSFX%("([%u_]+)"%)') do
+				if not SoundConfig.SFX[key] then table.insert(missing, f .. ": " .. key) end
+			end
+			for key in src:gmatch('SoundFx%.play%("([%u_]+)"%)') do
+				if not SoundConfig.SFX[key] then table.insert(missing, f .. ": " .. key) end
+			end
+		end
+		for effect, key in pairs(SoundConfig.ABILITY_SFX) do
+			if not SoundConfig.SFX[key] then table.insert(missing, "ABILITY_SFX." .. effect .. ": " .. key) end
+		end
+		R.expect(missing).toBeEmpty("sound keys without a SoundConfig.SFX entry")
 	end)
 end)

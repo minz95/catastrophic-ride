@@ -106,6 +106,14 @@ function Runner.runEscape(opts)
 	return Runner.runRace(o)
 end
 
+--- Audio check (edit mode): every SoundConfig id loads as a real Sound;
+-- opts.search looks up Creator Store audio. See TestHarness/SoundCheck.
+function Runner.runSounds(opts)
+	local SoundCheck = require(ServerScriptService.TestHarness.SoundCheck)
+	local report = SoundCheck.run(opts)
+	return SoundCheck.summarize(report), encode(report)
+end
+
 --- Full multiplayer match with bot clients.
 -- opts: { players = 4, rounds = 1, biome = "FOREST",
 --         durations = { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },

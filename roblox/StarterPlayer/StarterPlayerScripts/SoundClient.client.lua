@@ -10,57 +10,17 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local SoundConfig  = require(ReplicatedStorage.Shared.SoundConfig)
+local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local LocalPlayer  = Players.LocalPlayer
 
--- ─── Sound cache ─────────────────────────────────────────────────────────────
-
-local _sfxCache     = {}   -- key → Sound instance (one-shot pool)
 local _bgmInstance  = nil  -- current BGM Sound
 local _ambiSounds   = {}   -- current ambience Sound list
 local _currentBiome = nil
+local _phase        = nil
 
--- ─── Sound builder ───────────────────────────────────────────────────────────
-
-local function _makeSound(cfg, parent)
-	if not cfg or not cfg.id or cfg.id == "" then return nil end
-	local s = Instance.new("Sound")
-	s.SoundId    = cfg.id
-	s.Volume     = cfg.volume or 0.5
-	s.Looped     = cfg.looped or false
-	s.RollOffMaxDistance = 0   -- 2D sound (no rolloff)
-	if cfg.pitch then
-		local pitch = Instance.new("PitchShiftSoundEffect")
-		pitch.Octave = cfg.pitch
-		pitch.Parent = s
-	end
-	s.Parent = parent or SoundService
-	return s
-end
-
--- ─── One-shot SFX ─────────────────────────────────────────────────────────────
-
-local function _playSFX(key)
-	local cfg = SoundConfig.SFX[key]
-	if not cfg then return end
-
-	-- Reuse cached sound if not playing
-	local s = _sfxCache[key]
-	if not s or not s.Parent then
-		s = _makeSound(cfg, SoundService)
-		_sfxCache[key] = s
-	end
-	if not s then return end  -- empty id, skip
-
-	-- Clone for overlapping hits
-	if s.IsPlaying then
-		local clone = s:Clone()
-		clone.Parent = SoundService
-		clone:Play()
-		game:GetService("Debris"):AddItem(clone, 5)
-	else
-		s:Play()
-	end
-end
+local _makeSound = SoundFx.make
+local _playSFX = SoundFx.play
 
 -- ─── BGM management ──────────────────────────────────────────────────────────
 
@@ -124,6 +84,9 @@ end
 -- ─── Phase → BGM routing ──────────────────────────────────────────────────────
 
 local function _onPhaseChanged(phase)
+	_phase = phase
+	-- a client that joins late missed BiomeSelected (ReplicatedStorage "Biome")
+	_currentBiome = _currentBiome or ReplicatedStorage:GetAttribute("Biome")
 	_playSFX("PHASE_TRANSITION")
 
 	if phase == Constants.PHASES.LOBBY then
@@ -164,12 +127,10 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(effectName, params)
 	if effectName == "collision"       then _playSFX("COLLISION")
 	elseif effectName == "mudWarning"  then _playSFX("MUD_ENTER")
 	elseif effectName == "updraftWarning" then _playSFX("UPDRAFT_ENTER")
-	elseif effectName == "boostStart"  then _playSFX("BOOST_ACTIVATE")
 	elseif effectName == "boostPad"    then _playSFX("BOOST_PAD")
 	elseif effectName == "respawn"     then _playSFX("RESPAWN")
 	elseif effectName == "bubblePop"   then _playSFX("BUBBLE_POP")
-	elseif effectName == "driftStart"  then _playSFX("DRIFT_START")
-	elseif effectName == "driftSlingshot" then _playSFX("DRIFT_SLINGSHOT")
+	-- boost and drift sounds: RacingClient (client-side actions)
 	end
 end)
 
@@ -228,6 +189,23 @@ RemoteEvents.ItemStolen.OnClientEvent:Connect(function(_thiefName, victimName)
 	end
 end)
 
+-- Fights and grabs (FarmAction, broadcast): only the two players involved hear them.
+RemoteEvents.FarmAction.OnClientEvent:Connect(function(what, actorId, targetId, info)
+	local me = LocalPlayer.UserId
+	if actorId ~= me and targetId ~= me then return end
+	info = info or {}
+	if what == "punch" then
+		if info.result == "knockout" then _playSFX("KNOCKOUT")
+		elseif info.result == "hit" then _playSFX("PUNCH_HIT")
+		elseif info.result == "blocked" then _playSFX("PUNCH_BLOCKED")
+		end
+	elseif what == "grab" and targetId == me then
+		_playSFX("GRAB_WARN")
+	elseif what == "grabEnd" and info.result == "defended" then
+		_playSFX("ITEM_DEFENDED")
+	end
+end)
+
 -- ─── Race finish SFX ─────────────────────────────────────────────────────────
 
 RemoteEvents.RaceFinished.OnClientEvent:Connect(function(finishOrder)
@@ -278,21 +256,26 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 end)
 
 -- ─── Timer low warning ────────────────────────────────────────────────────────
--- When phase timer drops below 10s (client tracks via PhaseChanged timestamp)
+-- Once per FARMING / CRAFTING phase, at 10 s left on the PhaseEndsAt clock.
 
-local _phaseStartTick = 0
-local _timerWarned   = false
+local TIMER_LOW_AT = 10
+local _timerWarned = false
+local _phaseSince  = 0
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
-	_phaseStartTick = tick()
-	_timerWarned    = false
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(function()
+	_timerWarned = false
+	_phaseSince  = os.clock()
 end)
 
 game:GetService("RunService").Heartbeat:Connect(function()
 	if _timerWarned then return end
-	local phase = nil  -- would need to track current phase
-	-- Simplified: warn at 10s remaining for farming/crafting
-	-- (full implementation needs phase duration awareness)
+	if _phase ~= Constants.PHASES.FARMING and _phase ~= Constants.PHASES.CRAFTING then return end
+	if os.clock() - _phaseSince < 1 then return end   -- PhaseEndsAt may still be the last phase's
+	local left = PhaseClock.remaining(nil)
+	if left and left > 0 and left <= TIMER_LOW_AT then
+		_timerWarned = true
+		_playSFX("TIMER_LOW")
+	end
 end)
 
 -- ─── Player join SFX ─────────────────────────────────────────────────────────
@@ -302,20 +285,3 @@ Players.PlayerAdded:Connect(function(player)
 		_playSFX("PLAYER_JOIN")
 	end
 end)
-
--- ─── Craft slot assign SFX ───────────────────────────────────────────────────
--- CraftingClient fires a BindableEvent when a slot is assigned
--- For now hook into a simple approach: expose a function
-
-local SoundClient = {}
-
-function SoundClient.playSFX(key)
-	_playSFX(key)
-end
-
-function SoundClient.playBGM(cfg)
-	_playBGM(cfg)
-end
-
--- Make accessible to other scripts via a BindableFunction or shared module if needed
-return SoundClient
