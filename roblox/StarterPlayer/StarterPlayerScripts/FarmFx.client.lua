@@ -50,6 +50,7 @@ local JOINTS = {
 	right = { "RightShoulder", "Right Shoulder" },
 	left  = { "LeftShoulder", "Left Shoulder" },
 	waist = { "Waist", "RootJoint" },
+	rightLeg = { "RightHip", "Right Hip" },
 }
 
 -- A joint handle is the object and CFrame property that place the limb in
@@ -119,6 +120,9 @@ local POSE = {
 	swatR     = A(R(60), R(-40), 0),
 	twistL    = A(0, R(-18), 0),
 	flinch    = A(R(-14), 0, 0),
+	kickWind  = A(R(-30), 0, 0),
+	kickR     = A(R(95), 0, 0),
+	leanBack  = A(R(-12), 0, 0),
 }
 
 local function charOf(userId)
@@ -310,19 +314,38 @@ local function swing(character)
 	return true
 end
 
+-- Flying Kick (shop move "kick"): the right leg instead of the right arm.
+local function kick(character)
+	local leg, waist = joint(character, "rightLeg"), joint(character, "waist")
+	if not leg then return false end
+	tweenTo(leg, POSE.kickWind, 0.07)
+	task.delay(0.07, function()
+		tweenTo(leg, POSE.kickR, 0.09, Enum.EasingStyle.Back)
+		tweenTo(waist, POSE.leanBack, 0.09)
+		task.delay(0.2, function()
+			release(leg, 0.2)
+			release(waist, 0.2)
+		end)
+	end)
+	return true
+end
+
 local function onPunch(attackerId, victimId, info)
 	local aChar = charOf(attackerId)
 	local vChar, victim = charOf(victimId)
 	local result = info and info.result
-	local swung = aChar ~= nil and swing(aChar)
+	local isKick = info and info.style == "kick"
+	local swung = aChar ~= nil and (isKick and kick(aChar) or (not isKick and swing(aChar)))
 	if LocalPlayer:GetAttribute("HarnessBot") then
 		-- Studio harness: drawn = the attacker's arm really turned against the
 		-- torso during the swing (largest angle over 0.4 s), not just "a
 		-- character exists" (that passed while every pose did nothing)
-		local arm = aChar and (aChar:FindFirstChild("RightUpperArm") or aChar:FindFirstChild("Right Arm"))
-		local torso = aChar and (aChar:FindFirstChild("UpperTorso") or aChar:FindFirstChild("Torso"))
+		local arm = aChar and (isKick and (aChar:FindFirstChild("RightUpperLeg") or aChar:FindFirstChild("Right Leg"))
+			or (aChar:FindFirstChild("RightUpperArm") or aChar:FindFirstChild("Right Arm")))
+		local torso = aChar and (isKick and (aChar:FindFirstChild("LowerTorso") or aChar:FindFirstChild("Torso"))
+			or (aChar:FindFirstChild("UpperTorso") or aChar:FindFirstChild("Torso")))
 		local rest = arm and torso and torso.CFrame:ToObjectSpace(arm.CFrame)
-		local h = aChar and joint(aChar, "right")
+		local h = aChar and joint(aChar, isKick and "rightLeg" or "right")
 		local function angle(a, b)
 			return math.deg(math.acos(math.clamp(a.UpVector:Dot(b.UpVector), -1, 1)))
 		end
@@ -337,7 +360,7 @@ local function onPunch(attackerId, victimId, info)
 				-- the joint reached the punch pose and the arm moved on screen
 				-- (turned is measured from wherever the arm was, so it is
 				-- smaller when punches overlap)
-				report("farmfx", { what = "punch", result = result, drawn = swung and posedMax > 60 and turned > 10,
+				report("farmfx", { what = isKick and "kick" or "punch", result = result, drawn = swung and posedMax > 60 and turned > 10,
 					joint = h and h.prop, posed = math.floor(posedMax), turned = math.floor(turned),
 					attacker = attackerId })
 			end
@@ -347,7 +370,8 @@ local function onPunch(attackerId, victimId, info)
 	task.delay(0.12, function()
 		if result == "hit" or result == "knockout" then
 			flash(vChar, Color3.fromRGB(255, 70, 60), 0.3)
-			burst(vChar, Color3.fromRGB(255, 230, 90), result == "knockout" and 30 or 14)
+			burst(vChar, Color3.fromRGB(255, 230, 90), (result == "knockout" and 30 or 14) * (isKick and 2 or 1))
+			if isKick then label(vChar, "🦶 KICK!", Color3.fromRGB(255, 200, 80), 0.9, "kick") end
 			local waist = joint(vChar, "waist")
 			tweenTo(waist, POSE.flinch, 0.06)
 			task.delay(0.14, function() release(waist, 0.2) end)
@@ -423,6 +447,8 @@ local function onGrabEnd(thiefId, victimId, info)
 	if result == "stolen" then
 		if tChar then label(tChar, "😈 STOLEN!", Color3.fromRGB(255, 150, 60), 1.6) end
 		if vChar then label(vChar, "😱 ROBBED!", Color3.fromRGB(255, 110, 110), 1.6); flash(vChar, Color3.fromRGB(255, 120, 60), 0.4) end
+	elseif result == "escaped" then
+		if vChar then label(vChar, "💨 ESCAPED!", Color3.fromRGB(220, 220, 230), 1.4) end
 	elseif result == "defended" then
 		if vChar then label(vChar, "🛡️ DEFENDED!", Color3.fromRGB(120, 230, 140), 1.4); flash(vChar, Color3.fromRGB(120, 230, 140), 0.3) end
 		if tChar then flash(tChar, Color3.fromRGB(200, 200, 200), 0.2) end
@@ -434,10 +460,53 @@ local function onGrabEnd(thiefId, victimId, info)
 			end
 		end
 	end
-	if victim == LocalPlayer and result ~= "defended" then
+	if victim == LocalPlayer and result ~= "defended" and result ~= "escaped" then
 		prompt(result == "stolen" and "😱 An item was stolen!" or "", Color3.fromRGB(255, 120, 120), result == "stolen" and 1.5 or 0.01)
 	end
 	report("farmfx", { what = "grabEnd", result = result, drawn = tChar ~= nil })
+end
+
+-- Smoke Bomb (shop gadget): a grey cloud where it was thrown, and the
+-- thrower fades out while hidden (FarmingManager: no punch or steal lands).
+local function onSmoke(actorId, info)
+	local c = charOf(actorId)
+	local root = c and c:FindFirstChild("HumanoidRootPart")
+	local at = (info and info.at) or (root and root.Position)
+	if at then
+		local cloud = Instance.new("Part")
+		cloud.Name = "SmokeCloud"
+		cloud.Anchored, cloud.CanCollide, cloud.CanQuery, cloud.CanTouch = true, false, false, false
+		cloud.Transparency = 1
+		cloud.Size = Vector3.new(1, 1, 1)
+		cloud.CFrame = CFrame.new(at)
+		cloud.Parent = workspace
+		local e = Instance.new("ParticleEmitter")
+		e.Texture = "rbxasset://textures/particles/smoke_main.dds"
+		e.Color = ColorSequence.new(Color3.fromRGB(200, 200, 205), Color3.fromRGB(120, 120, 130))
+		e.Size = NumberSequence.new(4, 9)
+		e.Transparency = NumberSequence.new(0.15, 1)
+		e.Lifetime = NumberRange.new(1.5, 2.5)
+		e.Speed = NumberRange.new(3, 7)
+		e.SpreadAngle = Vector2.new(180, 180)
+		e.Rate = 60
+		e.Parent = cloud
+		e:Emit(40)
+		task.delay((info and info.cloud) or 6, function() e.Enabled = false end)
+		game:GetService("Debris"):AddItem(cloud, ((info and info.cloud) or 6) + 3)
+	end
+	if c then
+		local fade = Players:GetPlayerByUserId(actorId) == LocalPlayer and 0.5 or 0.9
+		for _, d in ipairs(c:GetDescendants()) do
+			if d:IsA("BasePart") then d.LocalTransparencyModifier = fade end
+		end
+		task.delay((info and info.hide) or 3.5, function()
+			for _, d in ipairs(c:GetDescendants()) do
+				if d:IsA("BasePart") then d.LocalTransparencyModifier = 0 end
+			end
+		end)
+		label(c, "💨", Color3.fromRGB(230, 230, 235), 1.2, "smoke")
+	end
+	report("farmfx", { what = "smoke", drawn = at ~= nil })
 end
 
 RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, info)
@@ -454,6 +523,8 @@ RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, 
 			onSwat(actorId, targetId, info)
 		elseif kind == "grabEnd" then
 			onGrabEnd(actorId, targetId, info)
+		elseif kind == "smoke" then
+			onSmoke(actorId, info)
 		end
 	end)
 	if not ok then report("farmfx", { what = kind, error = tostring(err) }) end

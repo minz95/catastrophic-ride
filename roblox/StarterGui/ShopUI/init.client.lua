@@ -109,14 +109,22 @@ hint.TextXAlignment = Enum.TextXAlignment.Left
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
 
 -- tabs
-local TABS = { "paint", "trail", "coins" }
-local TAB_TITLES = { paint = "Paint", trail = "Trail", coins = "Coins" }
+local TABS = { "ride", "paint", "trail", "move", "gadget", "coins" }
+local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets", coins = "Coins" }
+local TAB_HINTS = {
+	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
+	paint  = "Looks only: your car drives the same. Shows on your next car.",
+	trail  = "Looks only: a trail behind your car. Shows on your next car.",
+	move   = "Farming: how your punch looks. Same reach and power.",
+	gadget = "Farming: one trick per round. Press T (or the SMOKE button).",
+	coins  = "Coins buy looks and tricks. Win races and come back daily for more.",
+}
 local tabBtns = {}
 for i, key in ipairs(TABS) do
 	local b = Instance.new("TextButton")
 	b.Name             = "Tab_" .. key
-	b.Size             = UDim2.new(0, 110, 0, 32)
-	b.Position         = UDim2.new(0, 14 + (i - 1) * 118, 0, 74)
+	b.Size             = UDim2.new(0, 78, 0, 32)
+	b.Position         = UDim2.new(0, 14 + (i - 1) * 83, 0, 74)
 	b.BackgroundColor3 = CARD
 	b.Text             = TAB_TITLES[key]
 	b.TextColor3       = Color3.new(1, 1, 1)
@@ -145,7 +153,7 @@ layout.Parent      = grid
 
 -- ── State ─────────────────────────────────────────────────────────────────────
 local _state = nil      -- Modules/Shop.state
-local _tab = "paint"
+local _tab = "ride"
 local _busy = false
 
 local function owns(id)
@@ -165,7 +173,30 @@ local function swatch(card, it)
 	s.Parent           = card
 	corner(s, 6)
 	local g = Instance.new("UIGradient")
-	if it.category == "paint" then
+	if it.category == "move" or it.category == "gadget" then
+		s.BackgroundColor3 = Color3.fromRGB(70, 70, 90)
+		local icon = (it.style == "kick" and "🦶") or (it.gadget == "smoke" and "💨")
+			or (it.category == "move" and "👊") or "—"
+		label(s, icon, UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBold, Color3.new(1, 1, 1))
+		return
+	end
+	if it.category == "ride" and not it.body then
+		s.BackgroundColor3 = Color3.fromRGB(70, 70, 90)
+		label(s, "your build", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBold, Color3.new(1, 1, 1))
+		return
+	end
+	if it.category == "ride" and it.hue then
+		g.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 60, 60)),
+			ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 200, 40)),
+			ColorSequenceKeypoint.new(0.66, Color3.fromRGB(60, 200, 255)),
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 80, 255)),
+		})
+		g.Parent = s
+		label(s, "★", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
+		return
+	end
+	if it.category == "paint" or it.category == "ride" then
 		local body = it.body or Color3.fromRGB(196, 72, 52)
 		local accent = it.accent or Color3.fromRGB(235, 190, 70)
 		g.Color = ColorSequence.new({
@@ -185,6 +216,9 @@ local function swatch(card, it)
 		s.BackgroundColor3 = Color3.fromRGB(70, 70, 85)
 	end
 	g.Parent = s
+	if it.category == "ride" then
+		label(s, "★", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
+	end
 	if it.category == "paint" and not it.body then
 		label(s, "biome", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBold, Color3.new(1, 1, 1))
 	end
@@ -290,6 +324,7 @@ _redraw = function()
 	for key, b in pairs(tabBtns) do
 		b.BackgroundColor3 = key == _tab and Color3.fromRGB(230, 160, 30) or CARD
 	end
+	hint.Text = TAB_HINTS[_tab] or ""
 	coinsLbl.Text = _state and string.format("Level %d   ·   %d Coins", _state.level or 1, _state.coins or 0) or "..."
 	if _tab == "coins" then
 		local packs = (_state and _state.packs) or {}

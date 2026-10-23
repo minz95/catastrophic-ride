@@ -27,6 +27,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
+| [shop-4p](shop-4p.json) | PASS | 1bde8b9+ | 2026-10-24T00:10 |
 | [sounds](sounds.json) | PASS | 9fbb280+ | 2026-10-23T21:23 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
@@ -400,6 +401,25 @@ RaceSim SKY (shipped) — 133.4s wall time
   expert   car=p50 max=87 mass=2.9 → 106.01s | CPs 2 | respawns 0 | blocked 0
   average  car=p50 max=87 mass=2.9 → 102.58s | CPs 2 | respawns 0 | blocked 0
   novice   car=p50 max=87 mass=2.9 → 134.95s | CPs 2 | respawns 0 | blocked 0
+```
+
+## shop-4p — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+  round 1 (FOREST): 4 finished of 4
+    steal attempts: denied: too late=1, denied: victim has nothing=22, escaped=1
+    -4: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -2: picked 0, contests 0/3, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -1: picked 4, contests 0/0, stole 0, robbed 0, defences 0, items 4 | craft submitted, rejected 0
+    -3: picked 10, contests 3/3, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
+    #1 Player1 97.0s
+    #2 Player4 111.2s
+    #3 Player2 123.8s
+    #4 Player3 127.9s
+  events: ability=54 ability_probe=198 bot_craft=4 bot_defend=1 bot_farmfx=76 bot_fx=284 bot_gadget=1 bot_guard=8 bot_hud=123 bot_joined=4 bot_pickup_denied=1 bot_punch=106 bot_ready=4 bot_respawn=6 bot_ride_fx=261 bot_screen=20 bot_shop=10 bot_steal=24 check
+driving: 2 hits (closing speed max 20, push max 19 studs/s), 36 drift turbos, drops: Kettle
+server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 28496 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 26 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 40 kbps; memory max 2284 MB
 ```
 
 ## sounds — PASS

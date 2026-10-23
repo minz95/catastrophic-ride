@@ -58,6 +58,7 @@ function FarmingRules.canSteal(s)
 	if s.thiefItems >= s.inventorySize then return false, "thief is full" end
 	if s.distance > s.range then return false, "too far" end
 	if s.now < (s.victimInvincibleEnd or 0) then return false, "victim protected" end
+	if s.now < (s.victimHiddenEnd or 0) then return false, "victim hidden" end
 	return true
 end
 

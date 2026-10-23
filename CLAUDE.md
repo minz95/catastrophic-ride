@@ -180,6 +180,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   packs (`Shared/Products`, ids from the Creator Dashboard; 0 = not sold)
   once per PurchaseId and only after the save succeeded.
   `VehicleBuilder.build(…, look)` takes `Cosmetics.look(rec.equipped)`.
+  Special rides (`ride`) add material, glow and particles whose Rate the
+  client sets from forward speed (`CosmeticFx`, attribute BaseRate). Moves
+  only change the punch's look (`style`); gadgets (Smoke Bomb) are one use
+  per round (`Constants.GADGETS`, `RemoteEvents.UseGadget`, key T).
+  Prices vs earnings: `lune run tools/economy.luau` (reports/economy.md).
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING

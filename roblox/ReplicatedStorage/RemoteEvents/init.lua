@@ -52,6 +52,7 @@
 --   SubmitCraft         → slotAssignments: table  → "ok" | "denied: <reason>"
 --   RequestBoost        → (none)                  → "ok" | "denied: <reason>"
 --   RequestAbility      → itemName: string        → "ok" | "denied: <reason>"
+--   UseGadget           → (none) → "ok" | "denied: <reason>"  (FARMING, equipped shop gadget)
 --   ShopAction          → action: "state" | "buy" | "equip", id: string?  → { result, state }  (Modules/Shop)
 --   RequestPunch        → (none)                  → "hit" | "blocked" | "immune" | "knockout" | "miss" | "denied: <reason>"
 
@@ -100,6 +101,7 @@ local FUNCTIONS = {
 	"RequestDrop",
 	"RequestPunch",
 	"ShopAction",
+	"UseGadget",
 }
 
 local RemoteEvents = {}

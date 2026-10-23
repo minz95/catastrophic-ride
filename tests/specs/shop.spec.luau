@@ -12,6 +12,7 @@ local CFrame = roblox.CFrame
 local env = Loader.boot()
 local Cosmetics = env.requirePath("ReplicatedStorage.Shared.Cosmetics")
 local Progression = env.requirePath("ReplicatedStorage.Shared.Progression")
+local C = env.requirePath("ReplicatedStorage.Shared.Constants")
 
 local function rich(coins, level)
 	local rec = Progression.newRecord()
@@ -32,6 +33,9 @@ R.describe("Cosmetics rules", function()
 					if it.price <= 0 then table.insert(bad, it.id .. ": no price") end
 					if cat == "paint" and not (it.body and it.accent) then table.insert(bad, it.id .. ": no colours") end
 					if cat == "trail" and not (it.colors or it.rainbow) then table.insert(bad, it.id .. ": no colours") end
+					if cat == "ride" and not (it.body and it.accent and it.fx and it.trail) then table.insert(bad, it.id .. ": incomplete ride") end
+					if cat == "move" and not it.style then table.insert(bad, it.id .. ": no style") end
+					if cat == "gadget" and not (it.gadget and C.GADGETS[it.gadget]) then table.insert(bad, it.id .. ": unknown gadget") end
 				end
 			end
 		end

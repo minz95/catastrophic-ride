@@ -29,7 +29,9 @@ hidden and cannot be bought):
 | coins_medium | Bag of Coins | 1000 | 129 R$ |
 | coins_large | Chest of Coins | 2500 | 279 R$ |
 
-Coins buy looks only (paints, trails); nothing sold changes speed.
+Coins buy looks (special rides, paints, trails), the Flying Kick (a look)
+and the Smoke Bomb (one escape per round); nothing sold changes speed.
+`reports/economy.md` shows how long each item takes to earn.
 
 ## 3. Store page
 
@@ -49,7 +51,8 @@ Coins buy looks only (paints, trails); nothing sold changes speed.
 > - 39 items, each with its own ability
 > - Steal, punch and guard while you farm
 > - Drift for mini-turbos, hit boost pads, dodge falling logs
-> - Level up, keep your daily streak, unlock paints and trails
+> - Level up, keep your daily streak, unlock paints, trails and special rides
+>   like the Rainbow Comet and the Golden Legend
 >
 > PC: WASD drive · Shift drift · F boost · E item / grab · F punch · G guard
 > Phone: thumbstick to drive, buttons on the right

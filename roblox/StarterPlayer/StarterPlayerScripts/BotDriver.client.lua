@@ -130,6 +130,36 @@ local function trySteal(victim)
 	end)
 end
 
+-- Shop experiments (MatchHarness args.shop): buy the listed items through
+-- the same ShopAction the shop screen uses.
+task.spawn(function()
+	local list = LocalPlayer:GetAttribute("BotShop")
+	if type(list) ~= "string" or list == "" then return end
+	local t0 = os.clock()
+	while not LocalPlayer:GetAttribute("BotShopReady") and os.clock() - t0 < 15 do task.wait(0.2) end
+	for id in string.gmatch(list, "[^,]+") do
+		local res
+		for _ = 1, 20 do
+			local ok, r = pcall(function() return RemoteEvents.ShopAction:InvokeServer("buy", id) end)
+			res = ok and type(r) == "table" and r.result or tostring(r)
+			if res ~= "denied: loading" then break end
+			task.wait(0.5)
+		end
+		report("shop", { id = id, result = res })
+	end
+end)
+
+-- A grabbed bot with a Smoke Bomb throws it (once per round).
+local _gadgetUsed = false
+RemoteEvents.StealAttempt.OnClientEvent:Connect(function()
+	if phase ~= Constants.PHASES.FARMING or _gadgetUsed or not LocalPlayer:GetAttribute("Gadget") then return end
+	_gadgetUsed = true
+	task.spawn(function()
+		local ok, r = pcall(function() return RemoteEvents.UseGadget:InvokeServer() end)
+		report("gadget", { result = ok and r or tostring(r) })
+	end)
+end)
+
 RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
 	if phase ~= Constants.PHASES.FARMING then return end
 	local defend = BotBrain.defends(farmProfile)
@@ -362,6 +392,7 @@ local function onPhase(newPhase)
 	if newPhase == phase then return end
 	phase = newPhase
 	if newPhase == Constants.PHASES.FARMING then
+		_gadgetUsed = false
 		task.spawn(farmLoop)
 	elseif newPhase == Constants.PHASES.CRAFTING then
 		task.spawn(craft)

@@ -4,7 +4,7 @@
 -- RacingClient need nothing extra. Steering comes from Roblox's own thumbstick
 -- (the seat's ThrottleFloat / SteerFloat, read by RacingClient).
 --   FARMING: GRAB (E; hold near a player to steal, tap fast in a contest),
---            PUNCH (F), GUARD (hold G), DROP (Q)
+--            PUNCH (F), GUARD (hold G), DROP (Q), SMOKE (T, with a gadget)
 --   RACING:  DRIFT (hold Shift), BOOST (F), ITEM (E), RESET (R)
 
 local Players           = game:GetService("Players")
@@ -36,6 +36,7 @@ local LAYOUT = {
 		{ text = "PUNCH", key = Enum.KeyCode.F, col = 2, row = 1, color = Color3.fromRGB(210, 80, 60) },
 		{ text = "GUARD", key = Enum.KeyCode.G, col = 2, row = 2, color = Color3.fromRGB(70, 110, 200) },
 		{ text = "DROP",  key = Enum.KeyCode.Q, col = 1, row = 2, color = Color3.fromRGB(110, 110, 125) },
+		{ text = "SMOKE", key = Enum.KeyCode.T, col = 1, row = 0, color = Color3.fromRGB(90, 90, 100), gadget = true },
 	},
 	RACING = {
 		{ text = "DRIFT", key = Enum.KeyCode.LeftShift, col = 2, row = 1, color = Color3.fromRGB(230, 160, 35) },
@@ -68,6 +69,12 @@ for phase, list in pairs(LAYOUT) do
 		btn.Font                   = Enum.Font.GothamBlack
 		btn.AutoButtonColor        = true
 		btn.Parent                 = frame
+		if b.gadget then
+			-- only with a gadget equipped (FarmingManager sets the attribute)
+			local function show() btn.Visible = LocalPlayer:GetAttribute("Gadget") ~= nil end
+			LocalPlayer:GetAttributeChangedSignal("Gadget"):Connect(show)
+			show()
+		end
 		local c = Instance.new("UICorner")
 		c.CornerRadius = UDim.new(1, 0)
 		c.Parent = btn
