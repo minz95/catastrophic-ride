@@ -964,6 +964,39 @@ function M.reset()
 			if inst and inst.Parent then inst:Destroy() end
 		end)
 	end)
+	-- DataStoreService: stores in M.dataStores[name][key] (JSON round trip, as
+	-- Roblox serialises). M.dataStoreFail = "get" | "set" | "all" makes calls error.
+	M.dataStores = {}
+	M.dataStoreFail = nil
+	M.closeHandlers = {}
+	rawset(game, "BindToClose", function(_, fn) table.insert(M.closeHandlers, fn) end)
+	local dss = makeInstance("DataStoreService", "DataStoreService")
+	dss.Parent = game
+	M.services.DataStoreService = dss
+	local dsSerde = require("@lune/serde")
+	local function copy(v)
+		if v == nil then return nil end
+		return dsSerde.decode("json", dsSerde.encode("json", v))
+	end
+	rawset(dss, "GetDataStore", function(_, name)
+		M.dataStores[name] = M.dataStores[name] or {}
+		local data = M.dataStores[name]
+		local function fail(kind)
+			if M.dataStoreFail == "all" or M.dataStoreFail == kind then
+				error("mock DataStore " .. kind .. " failure", 0)
+			end
+		end
+		return {
+			GetAsync = function(_, key) fail("get"); return copy(data[key]) end,
+			SetAsync = function(_, key, v) fail("set"); data[key] = copy(v) end,
+			UpdateAsync = function(_, key, fn)
+				fail("set")
+				local nv = fn(copy(data[key]))
+				if nv ~= nil then data[key] = copy(nv) end
+				return copy(nv)
+			end,
+		}
+	end)
 	local http = M.services.HttpService
 	local serde = require("@lune/serde")
 	rawset(http, "JSONEncode", function(_, v)
@@ -1069,6 +1102,15 @@ function M.addPlayer(name, userId, position)
 	table.insert(M.playerList, player)
 	M.services.Players.PlayerAdded:Fire(player)
 	return player
+end
+
+--- The player leaves: PlayerRemoving fires, then it is removed.
+function M.removePlayer(player)
+	M.services.Players.PlayerRemoving:Fire(player)
+	for i, p in ipairs(M.playerList) do
+		if p == player then table.remove(M.playerList, i) break end
+	end
+	player.Parent = nil
 end
 
 --- Calls a RemoteFunction's server handler as `player` would, inside a

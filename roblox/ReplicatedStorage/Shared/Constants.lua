@@ -417,6 +417,20 @@ Constants.RACE_BOOST_PAD_ACTIVE_RATIO      = 0.6  -- fraction of placed BoostPad
 Constants.SKY_GRAVITY_MULT                 = 1.2  -- outside updraft zones
 Constants.UPDRAFT_BASE_FORCE               = 200  -- studs/s² upward (scaled by flyability)
 
+-- ─── Progression (saved: Modules/PlayerStore, rules: Shared/Progression) ──────
+-- A 5-player round: the winner gets ~110 XP / 40 coins, a finisher ~55 / 15,
+-- a DNF 25 / 5. Level L needs XP_BASE + XP_STEP × (L − 1) XP, so level 2
+-- takes about two rounds and level 10 (2700 XP) about 35 rounds in total.
+Constants.PROGRESSION = {
+	XP_BASE = 100, XP_STEP = 50,
+	PLAY_XP = 25,  FINISH_XP = 30, PLACE_XP = { 55, 35, 20 },   -- 1st, 2nd, 3rd
+	PLAY_COINS = 5, FINISH_COINS = 10, PLACE_COINS = { 25, 15, 8 },
+	-- first round of a UTC day: DAILY_COINS + DAILY_STREAK_COINS per extra
+	-- day in a row, the streak counting up to DAILY_STREAK_MAX days
+	DAILY_COINS = 40, DAILY_STREAK_COINS = 10, DAILY_STREAK_MAX = 7,
+	AUTOSAVE_SECONDS = 120,
+}
+
 -- ─── Emotes ───────────────────────────────────────────────────────────────────
 Constants.EMOTE_IDS = { "Wave", "Dance", "Laugh" }
 

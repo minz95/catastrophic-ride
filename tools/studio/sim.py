@@ -231,6 +231,13 @@ def check(sc, report):
             out += check_hud_timer(c, events)
         if c.get("abilities"):
             out += check_abilities(sc, events)
+        if c.get("rewards"):
+            rewarded = {e.get("userId") for e in events if e.get("kind") == "reward"}
+            for r in report.get("rounds", []):
+                raced = {p.get("userId") for p in r.get("players", []) if p.get("speed")}
+                missing = raced - rewarded
+                if missing:
+                    out.append(("fail", "round %s: %d racers got no reward at RESULTS" % (r.get("round"), len(missing))))
         out += check_driving(c, events)
         out += check_after_finish(c, events)
     return out

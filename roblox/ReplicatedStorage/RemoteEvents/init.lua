@@ -40,6 +40,8 @@
 --                          a released drift earned Constants.DRIVE.DRIFT_TURBO[level]
 --   CraftDraft          → client→server (slotAssignments: table)  -- CRAFTING: the slots
 --                          as arranged so far; kept if the timer runs out first
+--   RewardGranted       → server→client (reward: table) -- RESULTS: Progression.applyRound
+--                          result + { saved: bool } (ProgressionManager)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -80,6 +82,7 @@ local EVENTS = {
 	"SetGuard",
 	"FarmAction",
 	"CraftDraft",
+	"RewardGranted",
 }
 
 local FUNCTIONS = {

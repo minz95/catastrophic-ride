@@ -217,6 +217,17 @@ gained; Up alone must drive) and `maxNoseOff` caps the angle between the
 nose and the travel direction while accelerating (a vehicle drawn or driven
 sideways, issue #165; braking turns are not counted).
 
+### Saved progress
+
+`tests/specs/progression.spec.luau`: the level / coin / daily-streak rules,
+PlayerStore over the mock DataStore (`Mock.dataStores`, `Mock.dataStoreFail
+= "get" | "set" | "all"`, `Mock.removePlayer`, `Mock.closeHandlers`: a failed
+load is never saved over the real record, bots stay in memory, saves on leave
+and shutdown) and a real race paying finishers by place and DNFs at RESULTS.
+In Studio the `rewards` check (match-forest) wants a `reward` event for every
+racer. Real DataStore writes need a published place with API access; bot
+matches stay in memory.
+
 ### Sound
 
 All audio ids live in `Shared/SoundConfig` and are played on the client by

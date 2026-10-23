@@ -468,15 +468,17 @@ end)
 
 -- ─── Timer ────────────────────────────────────────────────────────────────────
 
-local _startTick = 0
 local _runConn   = nil
-local _totalTime = Constants.PHASE_DURATION.CRAFTING
 
 local function _startTimer()
-	_startTick = tick()
 	if _runConn then _runConn:Disconnect() end
 	local function update()
-		local remaining = PhaseClock.remaining(math.max(0, _totalTime - (tick() - _startTick)))
+		-- no time until the server's PhaseEndsAt has arrived (no guessed duration)
+		local remaining = PhaseClock.remaining(nil)
+		if not remaining then
+			timerLabel.Text = "..."
+			return
+		end
 		timerLabel.Text = PhaseClock.format(remaining)
 		timerLabel.TextColor3 = remaining <= 15
 			and Color3.fromRGB(255, 60, 60)

@@ -348,7 +348,8 @@
         "fairStart": 1.0,
         "hudTimer": true,
         "hits": 1,
-        "turbos": 1
+        "turbos": 1,
+        "rewards": true
       }
     },
     {

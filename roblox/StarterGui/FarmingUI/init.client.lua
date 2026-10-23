@@ -150,17 +150,19 @@ RemoteEvents.InventoryUpdated.OnClientEvent:Connect(_updateSlots)
 
 -- ─── Timer countdown ─────────────────────────────────────────────────────────
 
-local _startTick   = 0
 local _runConn     = nil
-local _totalTime   = Constants.PHASE_DURATION.FARMING
 
 local function _startTimer()
-	_startTick = tick()
 	if _runConn then _runConn:Disconnect() end
 	_runConn = RunService.Heartbeat:Connect(function()
 		if not screen.Enabled then return end
-		-- Server end time (PhaseClock); local count only as a fallback.
-		local remaining = PhaseClock.remaining(math.max(0, _totalTime - (tick() - _startTick)))
+		-- Server end time (PhaseClock). Until PhaseEndsAt has arrived show no
+		-- time (a guessed Constants duration showed 1:30 in a 60 s round).
+		local remaining = PhaseClock.remaining(nil)
+		if not remaining then
+			timerLabel.Text = "FARMING"
+			return
+		end
 		timerLabel.Text = "FARMING  " .. PhaseClock.format(remaining)
 
 		-- Pulse red in last 15 seconds
