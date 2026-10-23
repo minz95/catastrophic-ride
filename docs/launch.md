@@ -91,9 +91,8 @@ where most players leave before adding content or ads.
 
 ## Known gaps
 
-- No AI racers in live servers: a player alone races alone (the harness bots
-  are Studio-only clients). Filling empty grid slots with server-driven
-  racers is the biggest next step for small player counts.
+- Race bots fill the grid to 4 racers, but not FARMING: a lone player
+  farms alone. Bots are not targets for abilities yet.
 - Gamepad and touch buttons are tested offline only (key mapping); try
   them on a device before going public.
 - The finish grace (45 s after the winner) sometimes cuts off the slowest

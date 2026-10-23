@@ -199,6 +199,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   for cars far behind the leader, never the leader; finish grace
   `CatchUp.graceFor(winner)`). The offline match sim uses the same rules
   (second pass + grace cut); compare with `lune run tools/catchup_compare.luau`.
+- Race bots (`Modules/RaceBots`): live servers fill the grid to
+  `Constants.BOTS.FILL_TO` with server-driven cars (Autopilot +
+  VehicleController, hazards via `Shared/RoadHazards`, same catch-up).
+  RacingManager counts them as racers; finishOrder entries have `bot = true`
+  and a negative id (ProgressionManager pays only players, but bots take
+  places). Harness sessions get bots only with `fillBots`. Grid slots:
+  `Modules/RaceGrid`.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

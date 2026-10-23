@@ -25,33 +25,9 @@ local RemoteEvents  = require(ReplicatedStorage.RemoteEvents)
 local BotBrain      = require(ReplicatedStorage.Shared.BotBrain)
 local Autopilot     = require(ReplicatedStorage.Shared.Autopilot)
 
--- What a driver sees on the road ahead: falling-log markers and logs
--- (workspace.Hazards) and obstacle drops (workspace.TrackDrops), as
--- { x, z, half } for Autopilot (it steers to the open side).
-local SEE_RANGE = 260
-local function _visibleHazards(pos)
-	local out = {}
-	local function add(part)
-		if (part.Position - pos).Magnitude > SEE_RANGE then return end
-		if math.abs(part.Position.Y - pos.Y) > 12 then return end   -- another layer of the road
-		local half = math.max(part.Size.X, part.Size.Z) / 2
-		if part.Name == "LogWarning" then half = Constants.HAZARDS.LOG_SIZE[1] / 2 end
-		table.insert(out, { x = part.Position.X, z = part.Position.Z, half = half })
-	end
-	local hz = workspace:FindFirstChild("Hazards")
-	if hz then
-		for _, d in ipairs(hz:GetDescendants()) do
-			if d:IsA("BasePart") and (d.Name == "FallingLog" or d.Name == "LogWarning") then add(d) end
-		end
-	end
-	local drops = workspace:FindFirstChild("TrackDrops")
-	if drops then
-		for _, d in ipairs(drops:GetDescendants()) do
-			if d:IsA("BasePart") and d.Name == "DropHazard" and d.CanCollide then add(d) end
-		end
-	end
-	return out
-end
+-- What a driver sees on the road ahead (Shared/RoadHazards).
+local RoadHazards = require(ReplicatedStorage.Shared.RoadHazards)
+local function _visibleHazards(pos) return RoadHazards.visible(pos) end
 local TrackGeometry = require(ReplicatedStorage.Shared.TrackGeometry)
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local InputSource   = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))

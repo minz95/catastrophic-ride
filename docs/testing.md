@@ -235,6 +235,18 @@ fails when the 5th percentile drops under the floor. 2026-10-23: FARMING
 50–60 Hz, RACING 55–60 Hz, send ≤ 134 kbps (target 20+ Hz). Memory is the
 whole Studio process, not the game.
 
+### Race bots
+
+`tests/specs/race_bots.spec.luau`: how many bots fill the grid (live,
+harness `fillBots`, never past MAX_PLAYERS), random builds, bots spawned on
+the next grid slots with name tags and held until GO, a winning bot pushing
+the player to 2nd (paid for 2nd), unfinished bots listed as DNF and removed
+with the next round. In Studio `python3 tools/studio/sim.py run bots`
+(`bots-forest`, `bots-ocean`, `bots-sky`): one player and three server bots
+race with real physics; the `bots` check wants them spawned and finishing
+(2026-10-24: 9 / 9 finished, no respawns). Bots log `race_progress` and
+`bot_blocked` (what is in front when they cannot move).
+
 ### Saved progress
 
 `tests/specs/progression.spec.luau`: the level / coin / daily-streak rules,

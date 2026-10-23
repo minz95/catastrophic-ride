@@ -268,6 +268,17 @@ def check(sc, report):
                 out.append(("warn", "no Smoke Bomb was thrown (no bot with one was grabbed)"))
             elif not escaped:
                 out.append(("warn", "%d Smoke Bombs, no grab escaped" % len(gadgets)))
+        if c.get("bots"):
+            bc = c["bots"]
+            spawned = [e for e in events if e.get("kind") == "race_bot"]
+            fin = [e for e in events if e.get("kind") == "finish" and e.get("bot")]
+            resp = [e for e in events if e.get("kind") == "respawn" and e.get("reason") == "bot"]
+            if len(spawned) < bc.get("spawned", 0):
+                out.append(("fail", "%d race bots spawned, want %d" % (len(spawned), bc["spawned"])))
+            if len(fin) < bc.get("finished", 0):
+                out.append(("fail", "%d of %d bots finished (bot respawns: %d)" % (len(fin), len(spawned), len(resp))))
+            if len(resp) > 3 * max(1, len(spawned)):
+                out.append(("warn", "bots respawned %d times" % len(resp)))
         if c.get("rewards"):
             rewarded = {e.get("userId") for e in events if e.get("kind") == "reward"}
             for r in report.get("rounds", []):
@@ -624,6 +635,11 @@ def run_one(sc, place, args):
         d = driving_summary(evs)
         if d:
             summary += "\n" + d
+        bots = [e for e in evs if e.get("kind") == "finish" and e.get("bot")]
+        spawned = [e for e in evs if e.get("kind") == "race_bot"]
+        if spawned:
+            summary += "\nbots: %d raced (%s), %d finished: %s" % (len(spawned), ", ".join(e.get("profile", "?") for e in spawned),
+                len(bots), ", ".join("%.1fs" % e.get("time", 0) for e in bots))
         pf = perf_summary(evs)
         if pf:
             summary += "\n" + pf

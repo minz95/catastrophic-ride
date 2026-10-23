@@ -22,6 +22,8 @@ local RemoteEvents      = require(ReplicatedStorage.RemoteEvents)
 local GameManager       = require(ServerScriptService.GameManager)
 local SessionManager    = require(ServerScriptService.SessionManager)
 local CatchUp           = require(ReplicatedStorage.Shared.CatchUp)
+local RaceBots          = require(ServerScriptService.Modules.RaceBots)
+local RaceGrid          = require(ServerScriptService.Modules.RaceGrid)
 local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
@@ -581,6 +583,8 @@ end
 local function _updatePassives(ranked)
 	local now = tick()
 	local leadS = ranked[1] and ranked[1].progress
+	local botS = RaceBots.bestProgress()
+	if botS and (not leadS or botS > leadS) then leadS = botS end
 	for rank, entry in ipairs(ranked) do
 		local player = entry.player
 		local ps = _ensureRacer(player)
@@ -589,7 +593,7 @@ local function _updatePassives(ranked)
 		if not seat then continue end
 
 		-- Catch-up (Shared/CatchUp): far behind the leader → a bit faster.
-		local cu = (rank > 1 and leadS) and CatchUp.mult(leadS - entry.progress) or 1
+		local cu = leadS and CatchUp.mult(leadS - entry.progress) or 1
 		if cu > 1 then
 			VehicleTuning.set(seat, "MaxSpeed", "catchUp", cu)
 		else
@@ -783,6 +787,8 @@ end
 
 -- ─── Finish line ──────────────────────────────────────────────────────────────
 
+local _afterFinish   -- below
+
 local function _onFinishTouched(hit)
 	if not _active then return end
 	local player = _ownerOf(hit)
@@ -799,7 +805,7 @@ local function _onFinishTouched(hit)
 	end
 
 	local elapsed = tick() - _startTick
-	table.insert(_finishOrder, { userId = player.UserId, time = elapsed })
+	table.insert(_finishOrder, { userId = player.UserId, name = player.Name, time = elapsed })
 	SessionManager.setFinished(player, elapsed)
 	-- Park the car: it brakes to a stop in the run-off past the line. (Studio
 	-- 2026-10-22: finished cars kept driving, ran off the end of the road and
@@ -811,10 +817,14 @@ local function _onFinishTouched(hit)
 		VehicleTuning.set(seat, "TurnSpeed", "finished", 0.5)
 	end
 	Telemetry.record("finish", { userId = player.UserId, time = elapsed, place = #_finishOrder })
-
-	RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
 	print(string.format("[RacingManager] %s finished #%d (%.1fs)", player.Name, #_finishOrder, elapsed))
+	_afterFinish(elapsed)
+end
 
+-- After any finish (player or bot): tell everyone, end the race when all
+-- racers are in, start the grace after the winner.
+_afterFinish = function(elapsed)
+	RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
 	if #_finishOrder >= math.max(1, _totalRacers) then
 		_active = false
 		GameManager.raceComplete(_finishOrder)
@@ -826,6 +836,23 @@ local function _onFinishTouched(hit)
 		end
 	end
 end
+
+RaceBots.onFinish(function(bot)
+	if not _active then return end
+	local elapsed = tick() - _startTick
+	table.insert(_finishOrder, { userId = bot.id, name = bot.name, bot = true, time = elapsed })
+	Telemetry.record("finish", { userId = bot.id, time = elapsed, place = #_finishOrder, bot = true })
+	_afterFinish(elapsed)
+end)
+
+RaceBots.setLeaderProgress(function()
+	local best = nil
+	for _, player in ipairs(Players:GetPlayers()) do
+		local d = SessionManager.getData(player)
+		if d and d.vehicleModel and d.raceProgress and (not best or d.raceProgress > best) then best = d.raceProgress end
+	end
+	return best
+end)
 
 -- Standings when the race ends on its timer: finishers in order, then the
 -- rest by how far they got (time = nil → "DNF" on the results screen).
@@ -840,6 +867,11 @@ GameManager.setRaceStandings(function()
 		local d = SessionManager.getData(player)
 		if d and d.vehicleModel and not done[player.UserId] then
 			table.insert(rest, { userId = player.UserId, dnf = true, progress = math.floor(d.raceProgress or 0) })
+		end
+	end
+	for _, bot in ipairs(RaceBots.list) do
+		if not done[bot.id] then
+			table.insert(rest, { userId = bot.id, name = bot.name, bot = true, dnf = true, progress = math.floor(bot.s or 0) })
 		end
 	end
 	table.sort(rest, function(a, b) return a.progress > b.progress end)
@@ -889,6 +921,13 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end
 		_totalRacers = 0
 		for _ in pairs(_racers) do _totalRacers += 1 end
+		-- Empty grid slots → bots (Modules/RaceBots; live servers, or harness fillBots)
+		local nBots = RaceBots.wanted(_totalRacers, GameManager.getHarness())
+		if nBots > 0 then
+			local bots = RaceBots.spawn(biome, nBots, RaceGrid.cframes(biome), #Players:GetPlayers() + 1)
+			_totalRacers += #bots
+			RaceBots.run(biome)
+		end
 		local raceRacers = _racers
 		task.delay(Constants.RACE_COUNTDOWN, function()
 			if not _active or _racers ~= raceRacers then return end
@@ -959,6 +998,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 			VehicleTuning.clear(_seatOf(pdata.vehicleModel))
 		end
 		_physState = {}
+	elseif phase == Constants.PHASES.LOBBY or phase == Constants.PHASES.FARMING then
+		RaceBots.clear()   -- bot cars stay parked through RESULTS
 	end
 end)
 

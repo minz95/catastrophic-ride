@@ -19,6 +19,7 @@ local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 local PlayerStore    = require(ServerScriptService.Modules.PlayerStore)
 local Cosmetics      = require(ReplicatedStorage.Shared.Cosmetics)
+local RaceGrid       = require(ServerScriptService.Modules.RaceGrid)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -262,19 +263,5 @@ end)
 -- ─── Build race start grid ────────────────────────────────────────────────────
 
 function _buildSpawnGrid(biome)
-	local cfg  = biome and BiomeConfig[biome]
-	local startZ = (cfg and cfg.raceStartZ) or 195
-	local startY = (cfg and cfg.raceStartY) or 2
-
-	-- 2 rows of 5, staggered 8 studs apart, pointing down-Z (race direction)
-	local grid = {}
-	for i = 1, Constants.MAX_PLAYERS do
-		local row = math.ceil(i / 5)
-		local col = ((i - 1) % 5) + 1
-		local x   = (col - 3) * 7
-		local z   = startZ + (row - 1) * 8  -- row 1 at startZ, row 2 slightly behind
-		table.insert(grid, CFrame.new(x, startY, z))
-	end
-	print(string.format("[CraftingManager] Race spawn grid: biome=%s startZ=%d startY=%d", tostring(biome), startZ, startY))
-	return grid
+	return RaceGrid.cframes(biome)
 end

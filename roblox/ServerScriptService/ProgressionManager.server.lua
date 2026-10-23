@@ -42,14 +42,15 @@ local function payRound(order, day)
 	local paid = {}
 	local place = 0
 	for _, entry in ipairs(order or {}) do
-		local player = Players:GetPlayerByUserId(entry.userId)
+		-- every finisher takes a place, bots included (losing to a bot counts)
+		local myPlace = nil
+		if not entry.dnf then
+			place += 1
+			myPlace = place
+		end
+		local player = not entry.bot and Players:GetPlayerByUserId(entry.userId)
 		local rec = player and PlayerStore.get(player)
 		if rec and not paid[entry.userId] then
-			local myPlace = nil
-			if not entry.dnf then
-				place += 1
-				myPlace = place
-			end
 			local reward = Progression.applyRound(rec, myPlace, day)
 			reward.saved = PlayerStore.isSaved(player)
 			paid[entry.userId] = reward
