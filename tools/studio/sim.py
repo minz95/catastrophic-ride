@@ -157,6 +157,16 @@ def check(sc, report):
             if slow:
                 out.append(("fail", "never reached %d%% of MaxSpeed: %s" % (c["minTopSpeedRatio"] * 100, ", ".join(
                     "%s %.0f/%.0f" % (r.get("label"), r.get("topSpeed") or 0, r["maxSpeed"]) for r in slow[:8]))))
+        if "minHoldGain" in c:
+            weak = [r for r in res if r.get("holdGain") is not None and r["holdGain"] < c["minHoldGain"]]
+            if weak:
+                out.append(("fail", "throttle alone moved under %d studs: %s" % (c["minHoldGain"], ", ".join(
+                    "%s %d" % (r.get("label"), r["holdGain"]) for r in weak[:8]))))
+        if "maxNoseOff" in c:
+            skew = [r for r in res if (r.get("maxNoseOff") or 0) > c["maxNoseOff"]]
+            if skew:
+                out.append(("fail", "nose off the travel direction over %d°: %s" % (c["maxNoseOff"], ", ".join(
+                    "%s %.0f°" % (r.get("label"), r["maxNoseOff"]) for r in skew[:8]))))
         if not res:
             return [("fail", "no cars in report")]
         if sc["kind"] in ("escape", "vehicles"):

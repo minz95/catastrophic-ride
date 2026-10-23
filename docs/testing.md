@@ -212,6 +212,10 @@ the front and TAIL at the back, nothing under the road or the hull, mirrored
 left / right parts, and every item inside its slot box. In Studio,
 `python3 tools/studio/sim.py run vehicles` drives every BODY item and random
 full builds 700 studs on each biome (`maxTilt`, `minTopSpeedRatio`, stuck).
+Each car holds only the throttle for the first 2.5 s (`minHoldGain`: studs
+gained; Up alone must drive) and `maxNoseOff` caps the angle between the
+nose and the travel direction while accelerating (a vehicle drawn or driven
+sideways, issue #165; braking turns are not counted).
 
 ### Map and item look (3D preview without Studio)
 

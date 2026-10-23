@@ -28,9 +28,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
 | [steal-defended-2p](steal-defended-2p.json) | PASS | aa48bae+ | 2026-10-22T02:21 |
-| [vehicles-forest](vehicles-forest.json) | PASS | aeab89c | 2026-10-22T01:00 |
-| [vehicles-ocean](vehicles-ocean.json) | PASS | aeab89c | 2026-10-22T01:01 |
-| [vehicles-sky](vehicles-sky.json) | PASS | aeab89c | 2026-10-22T01:02 |
+| [vehicles-forest](vehicles-forest.json) | PASS | 2927812+ | 2026-10-23T21:10 |
+| [vehicles-ocean](vehicles-ocean.json) | PASS | 2927812+ | 2026-10-23T21:11 |
+| [vehicles-sky](vehicles-sky.json) | PASS | 2927812+ | 2026-10-23T21:09 |
 
 ## abilities-forest — WARN
 
@@ -432,20 +432,20 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 ## vehicles-forest — PASS
 
 ```
-RaceSim FOREST (shipped) — 13s wall time
+RaceSim FOREST (shipped) — 9.6s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
 
 ## vehicles-ocean — PASS
 
 ```
-RaceSim OCEAN (shipped) — 13.3s wall time
+RaceSim OCEAN (shipped) — 11.2s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
 
 ## vehicles-sky — PASS
 
 ```
-RaceSim SKY (shipped) — 10.4s wall time
+RaceSim SKY (shipped) — 15.6s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```

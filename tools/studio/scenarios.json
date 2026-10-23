@@ -768,7 +768,9 @@
       "checks": {
         "stuck": 0,
         "maxTilt": 20,
-        "minTopSpeedRatio": 0.8
+        "minTopSpeedRatio": 0.8,
+        "minHoldGain": 30,
+        "maxNoseOff": 40
       }
     },
     {
@@ -791,7 +793,9 @@
       "checks": {
         "stuck": 0,
         "maxTilt": 20,
-        "minTopSpeedRatio": 0.8
+        "minTopSpeedRatio": 0.8,
+        "minHoldGain": 30,
+        "maxNoseOff": 40
       }
     },
     {
@@ -814,7 +818,9 @@
       "checks": {
         "stuck": 0,
         "maxTilt": 20,
-        "minTopSpeedRatio": 0.8
+        "minTopSpeedRatio": 0.8,
+        "minHoldGain": 30,
+        "maxNoseOff": 40
       }
     },
     {
