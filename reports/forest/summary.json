@@ -2,16 +2,16 @@
   "biome": "FOREST",
   "fun": {
     "aggregate": {
-      "closeShare": 0.39719913131442874,
+      "closeShare": 0.41128039665587446,
       "fastestWinRate": 0.25,
       "finishRate": 1,
-      "finishSpread": 20.474999999999316,
-      "gap12": 2.374999999999865,
-      "lastTime": 127.77222222221673,
-      "leadChanges": 2.3333333333333335,
-      "overtakes": 10.25,
+      "finishSpread": 18.470833333332283,
+      "gap12": 1.2263888888888193,
+      "lastTime": 125.69305555554969,
+      "leadChanges": 2.4166666666666665,
+      "overtakes": 13.083333333333334,
       "races": 12,
-      "racingShare": 0.3474221664979736,
+      "racingShare": 0.34371190167830956,
       "sections": [
         {
           "deciding": 0,
@@ -20,10 +20,10 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 6.364384397342282,
+          "meanTime": 6.344773338369333,
           "name": "S1 start straight",
           "respawns": 0,
-          "spread": 1.350744162324102
+          "spread": 1.3201439115987155
         },
         {
           "deciding": 0,
@@ -32,93 +32,93 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 8.503760257187421,
+          "meanTime": 8.473417754390203,
           "name": "S2 outcrop hairpin",
           "respawns": 0,
-          "spread": 0.724122771884523
+          "spread": 0.681423388423707
         },
         {
           "deciding": 0,
-          "hits": 47,
+          "hits": 64,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 19.405990054419895,
+          "meanTime": 19.24673884767861,
           "name": "S3 trestle climb",
           "respawns": 0,
-          "spread": 2.7475853309411558
+          "spread": 2.286862654700189
         },
         {
           "deciding": 0,
-          "hits": 24,
+          "hits": 81,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 12.573305367965133,
+          "meanTime": 12.542865217695462,
           "name": "S4 giant tree spiral",
           "respawns": 0,
-          "spread": 1.9000072618211876
+          "spread": 1.966789073400338
         },
         {
           "deciding": 0,
-          "hits": 8,
+          "hits": 62,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.830453305459692,
+          "meanTime": 9.733129294738232,
           "name": "S4b tree run-out",
           "respawns": 0,
-          "spread": 2.325337618272817
+          "spread": 2.347851367008101
         },
         {
           "deciding": 0,
-          "hits": 92,
+          "hits": 99,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.469649960051926,
+          "meanTime": 9.306025184460935,
           "name": "S5 mud hook",
           "respawns": 0,
-          "spread": 3.2926319957449053
+          "spread": 2.9418466174451505
         },
         {
           "deciding": 12,
-          "hits": 224,
+          "hits": 309,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 31.00311490020093,
+          "meanTime": 30.41126738673491,
           "name": "S6 pine switchbacks",
           "respawns": 0,
-          "spread": 7.452706414539666
+          "spread": 7.2263256192123135
         },
         {
           "deciding": 0,
-          "hits": 22,
+          "hits": 94,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 18.983138053663787,
+          "meanTime": 18.15312556851971,
           "name": "S7 ridge chicane",
           "respawns": 0,
-          "spread": 3.2821199114929946
+          "spread": 2.9189945968648714
         }
       ],
-      "speedPlaceCorr": -0.1468583188629493,
-      "winnerTime": 107.2972222222174
+      "speedPlaceCorr": -0.10897806932921728,
+      "winnerTime": 107.22222222221741
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
         "ok": true,
-        "value": 0.39719913131442874,
+        "value": 0.41128039665587446,
         "why": "the top two race each other a quarter of the time"
       },
       {
@@ -139,21 +139,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 20.474999999999316,
+        "value": 18.470833333332283,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 2.3333333333333335,
+        "value": 2.4166666666666665,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.3474221664979736,
+        "value": 0.34371190167830956,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -161,7 +161,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.1468583188629493,
+        "value": -0.10897806932921728,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -169,7 +169,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 107.2972222222174,
+        "value": 107.22222222221741,
         "why": "a race should take about 90 s"
       }
     ]
@@ -194,11 +194,11 @@
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.611111111111111,
-      "sweaty": 3.388888888888889
+      "casual": 3.6666666666666665,
+      "sweaty": 3.3333333333333335
     },
-    "spearmanRarityVsPlace": -0.29278410187150294,
-    "spearmanTopSpeedVsPlace": -0.1468583188629493
+    "spearmanRarityVsPlace": -0.23114026625506456,
+    "spearmanTopSpeedVsPlace": -0.10897806932921728
   },
   "raceRuns": [
     {

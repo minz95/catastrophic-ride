@@ -21,6 +21,7 @@ local Constants         = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents      = require(ReplicatedStorage.RemoteEvents)
 local GameManager       = require(ServerScriptService.GameManager)
 local SessionManager    = require(ServerScriptService.SessionManager)
+local CatchUp           = require(ReplicatedStorage.Shared.CatchUp)
 local BiomeConfig       = require(ServerScriptService.Modules.BiomeConfig)
 local CheckpointService = require(ServerScriptService.Modules.CheckpointService)
 local RaceProgress      = require(ReplicatedStorage.Shared.RaceProgress)
@@ -579,12 +580,21 @@ end
 -- Lead bonus (Racing Flag), momentum (Flower) and slipstream (Toilet Paper).
 local function _updatePassives(ranked)
 	local now = tick()
+	local leadS = ranked[1] and ranked[1].progress
 	for rank, entry in ipairs(ranked) do
 		local player = entry.player
 		local ps = _ensureRacer(player)
 		local vehicle = ps and ps.vehicle
 		local seat = _seatOf(vehicle)
 		if not seat then continue end
+
+		-- Catch-up (Shared/CatchUp): far behind the leader → a bit faster.
+		local cu = (rank > 1 and leadS) and CatchUp.mult(leadS - entry.progress) or 1
+		if cu > 1 then
+			VehicleTuning.set(seat, "MaxSpeed", "catchUp", cu)
+		else
+			VehicleTuning.remove(seat, "MaxSpeed", "catchUp")
+		end
 
 		local lead = ps.head and ps.head.leadSpeedBonus
 		if lead then
@@ -809,9 +819,9 @@ local function _onFinishTouched(hit)
 		_active = false
 		GameManager.raceComplete(_finishOrder)
 	elseif #_finishOrder == 1 then
-		-- the winner is in: everyone else gets FINISH_GRACE s, not the full
-		-- timeout (finished players used to wait up to a minute)
-		if GameManager.shortenPhase(Constants.PHASES.RACING, Constants.FINISH_GRACE) then
+		-- the winner is in: everyone else gets CatchUp.graceFor(winner) s
+		-- (FINISH_GRACE at least), not the full timeout
+		if GameManager.shortenPhase(Constants.PHASES.RACING, CatchUp.graceFor(elapsed)) then
 			RemoteEvents.ScreenEffect:FireAllClients("finishGrace", { duration = 3 })
 		end
 	end

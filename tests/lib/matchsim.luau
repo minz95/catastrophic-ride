@@ -206,16 +206,65 @@ function MatchSim.run(opts)
 	-- RACE: each car on the kinematic simulator (all start together, so the
 	-- runs line up on one clock: a "ghost race" without car-to-car contact)
 	local RaceMetrics = env.requirePath("ReplicatedStorage.Shared.RaceMetrics")
+	local CatchUp = env.requirePath("ReplicatedStorage.Shared.CatchUp")
 	local funRacers = {}
 	local results = {}
+	local function runAll(onStepFor)
+		local out = {}
+		for i, b in ipairs(bots) do
+			local data = srv.SessionManager.getData(b.player)
+			local car = KineSim.carFromStats(data.vehicleStats, Constants, biome)
+			out[i] = KineSim.run(world, {
+				car = car, profile = Autopilot.PROFILES[b.drive], profileName = b.drive,
+				respawn = opts.respawn or "track", seed = seed * 31 + i, slot = i,
+				onStep = onStepFor and onStepFor(i) or nil,
+			})
+			out[i].car = car
+		end
+		return out
+	end
+	-- Pass 1: every car alone. With catch-up (as RacingManager does it) a
+	-- second pass gives each car the bonus for its gap to the pass-1 leader.
+	local races = runAll(nil)
+	if opts.catchUp ~= false then
+		local length = world.geo.length
+		local function sAt(race, t)
+			local prev = nil
+			for _, smp in ipairs(race.samples) do
+				if smp.t >= t then
+					if not prev then return smp.s end
+					local f = (t - prev.t) / math.max(1e-6, smp.t - prev.t)
+					return prev.s + (smp.s - prev.s) * f
+				end
+				prev = smp
+			end
+			if race.finished then return length end
+			return prev and prev.s or 0
+		end
+		local first = races
+		races = runAll(function(i)
+			return function(ctx)
+				local lead = -math.huge
+				for j, r in ipairs(first) do
+					if j ~= i then lead = math.max(lead, sAt(r, ctx.t)) end
+				end
+				local m = CatchUp.mult(lead - ctx.s)
+				if m > 1 then ctx.mods:set("catchUp", m) else ctx.mods:remove("catchUp") end
+			end
+		end)
+	end
+	-- The others get CatchUp.graceFor(winner) s after the winner, as live.
+	local winner = math.huge
+	for _, r in ipairs(races) do if r.finished then winner = math.min(winner, r.time) end end
+	if winner < math.huge then
+		local cut = winner + CatchUp.graceFor(winner)
+		for _, r in ipairs(races) do
+			if r.finished and r.time > cut + 1e-6 then r.finished, r.cutByGrace = false, true end
+		end
+	end
 	for i, b in ipairs(bots) do
-		local data = srv.SessionManager.getData(b.player)
-		local stats = data.vehicleStats
-		local car = KineSim.carFromStats(stats, Constants, biome)
-		local race = KineSim.run(world, {
-			car = car, profile = Autopilot.PROFILES[b.drive], profileName = b.drive,
-			respawn = opts.respawn or "track", seed = seed * 31 + i, slot = i,
-		})
+		local race = races[i]
+		local car = race.car
 		local fr = { id = i, progress = {}, finish = race.finished and race.time or nil, respawns = {}, hits = {} }
 		local nextT = 0
 		for _, smp in ipairs(race.samples) do

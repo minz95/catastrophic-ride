@@ -2,16 +2,16 @@
   "biome": "OCEAN",
   "fun": {
     "aggregate": {
-      "closeShare": 0.5441231232899644,
-      "fastestWinRate": 0.4166666666666667,
+      "closeShare": 0.5563641667275961,
+      "fastestWinRate": 0.3333333333333333,
       "finishRate": 1,
-      "finishSpread": 13.781944444443662,
-      "gap12": 1.3263888888888136,
-      "lastTime": 110.18472222221726,
-      "leadChanges": 1.9166666666666667,
-      "overtakes": 9.583333333333334,
+      "finishSpread": 10.486111111110516,
+      "gap12": 0.8708333333332838,
+      "lastTime": 106.83749999999522,
+      "leadChanges": 2.1666666666666665,
+      "overtakes": 11,
       "races": 12,
-      "racingShare": 0.3146474281430735,
+      "racingShare": 0.3080333008973848,
       "sections": [
         {
           "deciding": 0,
@@ -20,22 +20,58 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 6.1848843358283325,
+          "meanTime": 6.177894043912558,
           "name": "S1 harbor launch",
           "respawns": 0,
-          "spread": 1.2826480983860638
+          "spread": 1.239230091364904
         },
         {
-          "deciding": 1,
-          "hits": 1,
+          "deciding": 2,
+          "hits": 2,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 10.22118163049518,
+          "meanTime": 10.253718913030223,
           "name": "S2 island arc",
           "respawns": 0,
-          "spread": 1.9381335894404532
+          "spread": 2.0114281506634133
+        },
+        {
+          "deciding": 0,
+          "hits": 3,
+          "markers": {
+            "bad": 0,
+            "fun": 0
+          },
+          "meanTime": 9.064916336205787,
+          "name": "S3 open channel",
+          "respawns": 0,
+          "spread": 2.0037644957823066
+        },
+        {
+          "deciding": 0,
+          "hits": 0,
+          "markers": {
+            "bad": 0,
+            "fun": 0
+          },
+          "meanTime": 1.5905379972101257,
+          "name": "S3b to the lighthouse",
+          "respawns": 0,
+          "spread": 0.1139260872781982
+        },
+        {
+          "deciding": 4,
+          "hits": 18,
+          "markers": {
+            "bad": 0,
+            "fun": 0
+          },
+          "meanTime": 13.002491478624526,
+          "name": "S4 lighthouse spiral",
+          "respawns": 0,
+          "spread": 2.902481354568831
         },
         {
           "deciding": 0,
@@ -44,88 +80,52 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.163604367434642,
-          "name": "S3 open channel",
-          "respawns": 0,
-          "spread": 2.249964914900634
-        },
-        {
-          "deciding": 0,
-          "hits": 0,
-          "markers": {
-            "bad": 0,
-            "fun": 0
-          },
-          "meanTime": 1.6254287484881962,
-          "name": "S3b to the lighthouse",
-          "respawns": 0,
-          "spread": 0.183628840992748
-        },
-        {
-          "deciding": 5,
-          "hits": 6,
-          "markers": {
-            "bad": 0,
-            "fun": 0
-          },
-          "meanTime": 13.197769029001982,
-          "name": "S4 lighthouse spiral",
-          "respawns": 0,
-          "spread": 3.382166948548457
-        },
-        {
-          "deciding": 0,
-          "hits": 0,
-          "markers": {
-            "bad": 0,
-            "fun": 0
-          },
-          "meanTime": 20.450653074011978,
+          "meanTime": 20.010239037964194,
           "name": "S5 water slide",
           "respawns": 0,
-          "spread": 1.924071719479521
+          "spread": 1.0417502304475998
         },
         {
           "deciding": 6,
-          "hits": 5,
+          "hits": 23,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 19.254924744783185,
+          "meanTime": 19.051993849601942,
           "name": "S6 reef hairpin",
           "respawns": 0,
-          "spread": 2.9858559823036157
+          "spread": 3.0689134420130397
         },
         {
           "deciding": 0,
-          "hits": 0,
+          "hits": 1,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 21.548544810692764,
+          "meanTime": 21.086171306409202,
           "name": "S7 kelp channel",
           "respawns": 0,
-          "spread": 1.6518293992516355
+          "spread": 1.3772636539359457
         }
       ],
-      "speedPlaceCorr": -0.287510450832851,
-      "winnerTime": 96.40277777777361
+      "speedPlaceCorr": -0.2682487619782623,
+      "winnerTime": 96.3513888888847
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
         "ok": true,
-        "value": 0.5441231232899644,
+        "value": 0.5563641667275961,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.4166666666666667,
+        "value": 0.3333333333333333,
         "why": "the fastest build should not always win"
       },
       {
@@ -139,21 +139,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 13.781944444443662,
+        "value": 10.486111111110516,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 1.9166666666666667,
+        "value": 2.1666666666666665,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.3146474281430735,
+        "value": 0.3080333008973848,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -161,7 +161,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.287510450832851,
+        "value": -0.2682487619782623,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -169,7 +169,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 96.40277777777361,
+        "value": 96.3513888888847,
         "why": "a race should take about 90 s"
       }
     ]
@@ -185,20 +185,20 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 5,
+    "fastestCarWins": 4,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
-      "average": 3.2083333333333335,
-      "expert": 1.7916666666666667,
+      "average": 3.2916666666666665,
+      "expert": 1.7083333333333333,
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.8333333333333335,
-      "sweaty": 3.1666666666666665
+      "casual": 3.861111111111111,
+      "sweaty": 3.138888888888889
     },
-    "spearmanRarityVsPlace": -0.3851051514566852,
-    "spearmanTopSpeedVsPlace": -0.287510450832851
+    "spearmanRarityVsPlace": -0.24313460672712073,
+    "spearmanTopSpeedVsPlace": -0.2682487619782623
   },
   "raceRuns": [
     {
