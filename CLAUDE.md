@@ -158,6 +158,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Phase timers: `GameManager.shortenPhase` (crafting hurry, finish grace).
   A finished car is parked (MaxSpeed 0) and may not respawn; each road has a
   run-off and an end wall (`TrackKit:buildEndWall`).
+- Sounds: ids in `Shared/SoundConfig` (only APM / ProSoundEffects /
+  DistroKid catalogue ids, which Roblox licenses for every experience),
+  played through `Shared/SoundFx.play(key)`; check new ids with
+  `python3 tools/studio/sim.py run sounds`.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

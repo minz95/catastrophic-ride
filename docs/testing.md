@@ -217,6 +217,19 @@ gained; Up alone must drive) and `maxNoseOff` caps the angle between the
 nose and the travel direction while accelerating (a vehicle drawn or driven
 sideways, issue #165; braking turns are not counted).
 
+### Sound
+
+All audio ids live in `Shared/SoundConfig` and are played on the client by
+`Shared/SoundFx` (SoundClient for phases, ambience and events; RacingClient
+for boost and drift; the crafting screen for slots and submit).
+`python3 tools/studio/sim.py run sounds` loads every id as a real Sound in
+Studio (exists, this place may play it, has a length). New ids: pass
+`--set 'search=[{"key":"x","keyword":"whoosh","music":false,"maxDur":3,
+"creators":["ProSoundEffects","APMOfficial","DistrokidOfficial"],"pages":4}]'`
+and read `report.searches` in `reports/studio/sounds.json` (Creator Store
+search, each hit load-checked). Use only those licensed catalogues. Whether a
+track fits the mood needs ears: listen in a playtest.
+
 ### Map and item look (3D preview without Studio)
 
 `lune run tools/scene_dump.luau <BIOME> <node> [out.json] [radius] [cars|drops]`

@@ -14,6 +14,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
 local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
+local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local LocalPlayer  = Players.LocalPlayer
 
 -- This script runs again after every respawn, but its ScreenGui
@@ -403,6 +404,7 @@ _changed = function()
 	_refreshDisplay()
 	if screen.Enabled and not _submitted then
 		RemoteEvents.CraftDraft:FireServer(_assignments)
+		SoundFx.play("SLOT_ASSIGN")
 	end
 end
 
@@ -449,6 +451,7 @@ submitBtn.MouseButton1Click:Connect(function()
 	end)
 	if ok and (result == "ok" or (type(result) == "string" and result:sub(1, 2) == "ok")) then
 		_submitted                 = true
+		SoundFx.play("CRAFT_COMPLETE")
 		submitBtn.Text             = "✓ Submitted"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
 	end

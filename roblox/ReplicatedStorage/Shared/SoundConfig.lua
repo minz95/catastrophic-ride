@@ -1,114 +1,101 @@
 -- SoundConfig.lua
 -- All audio AssetIds, volumes, and categories.
--- Uses Roblox free audio library IDs.
--- TODO: Verify all IDs in Roblox Studio (File → Manage Assets → Audio).
---       IDs marked with [PLACEHOLDER] need to be swapped for final release.
 -- Resolves: Issue #73, #95
 
 local SoundConfig = {}
 
+-- Every id comes from a catalogue Roblox licenses for all experiences
+-- (APMOfficial, ProSoundEffects, DistrokidOfficial on the Creator Store),
+-- found and load-checked with `python3 tools/studio/sim.py run sounds`
+-- (TestHarness/SoundCheck). Picked by title, not by ear: listen in a
+-- playtest and swap any that do not fit. Never use uploads of game or film
+-- audio (copyright).
+
 -- ─── BGM ─────────────────────────────────────────────────────────────────────
--- Distinct IDs per phase/biome so each context has its own feel.
--- [PLACEHOLDER] — swap these for licensed/purchased music before release.
 
 SoundConfig.BGM = {
-	LOBBY = {
-		id     = "",   -- [TODO] replace with valid audio asset id
-		volume = 0.4,
-		looped = true,
-	},
+	LOBBY = { id = "rbxassetid://71612604315412", volume = 0.4, looped = true },    -- Blissful Leap Fiesta (DistroKid)
 	FARMING = {
-		FOREST = { id = "", volume = 0.45, looped = true },  -- [TODO] peaceful nature
-		OCEAN  = { id = "", volume = 0.45, looped = true },  -- [TODO] breezy coastal
-		SKY    = { id = "", volume = 0.45, looped = true },  -- [TODO] airy ambient
+		FOREST = { id = "rbxassetid://106729070236769", volume = 0.45, looped = true }, -- The forest adventure
+		OCEAN  = { id = "rbxassetid://90091763838597",  volume = 0.45, looped = true }, -- Tropical House
+		SKY    = { id = "rbxassetid://132915893124028", volume = 0.45, looped = true }, -- Floating On A Cloud
 	},
-	CRAFTING = {
-		id     = "",   -- [TODO] focused workshop feel
-		volume = 0.35,
-		looped = true,
-	},
+	CRAFTING = { id = "rbxassetid://85643586571329", volume = 0.35, looped = true }, -- Warm Breeze
 	RACING = {
-		FOREST = { id = "", volume = 0.55, looped = true },  -- [TODO] fast forest chase
-		OCEAN  = { id = "", volume = 0.55, looped = true },  -- [TODO] high-energy surf
-		SKY    = { id = "", volume = 0.55, looped = true },  -- [TODO] epic sky battle
+		FOREST = { id = "rbxassetid://140563561636307", volume = 0.55, looped = true }, -- Energetic and Upbeat Rock
+		OCEAN  = { id = "rbxassetid://127764396558082", volume = 0.55, looped = true }, -- Blue Lagoon Ride
+		SKY    = { id = "rbxassetid://1837808539",      volume = 0.55, looped = true }, -- OMG Run (a) (APM)
 	},
-	RESULTS_WIN  = { id = "", volume = 0.6, looped = false }, -- [TODO] victory fanfare
-	RESULTS_LOSE = { id = "", volume = 0.5, looped = false }, -- [TODO] consolation jingle
+	RESULTS_WIN  = { id = "rbxassetid://1836473422", volume = 0.6, looped = false }, -- Victory Fanfare Sting (APM)
+	RESULTS_LOSE = { id = "rbxassetid://1841391669", volume = 0.5, looped = false }, -- Wipsy La La Sting 3 (APM)
 }
 
--- ─── Biome Ambience ───────────────────────────────────────────────────────────
+-- ─── Biome ambience (FARMING and RACING) ──────────────────────────────────────
 
 SoundConfig.AMBIENCE = {
 	FOREST = {
-		{ id = "",  volume = 0.3,  looped = true },  -- [TODO] birds chirping
-		{ id = "",  volume = 0.2,  looped = true },  -- [TODO] wind through leaves
+		{ id = "rbxassetid://139767023947424", volume = 0.25, looped = true }, -- Young Birds in Morning Mist
 	},
 	OCEAN = {
-		{ id = "",  volume = 0.4,  looped = true },  -- [TODO] ocean waves loop
-		{ id = "",  volume = 0.15, looped = true },  -- [TODO] distant seagulls
+		{ id = "rbxassetid://137826155053556", volume = 0.35, looped = true }, -- Ocean waves on the beach
+		{ id = "rbxassetid://9118858279",      volume = 0.08, looped = true }, -- Seagull Squawks 1 (PSE)
 	},
 	SKY = {
-		{ id = "",  volume = 0.3,  looped = true },  -- [TODO] high-altitude wind
+		{ id = "rbxassetid://9125515918", volume = 0.25, looped = true },      -- Eastern Wind ambience (PSE)
 	},
 }
 
 -- ─── SFX ─────────────────────────────────────────────────────────────────────
--- IDs are grouped by acoustic character so similar actions share a sonic family.
--- [PLACEHOLDER] IDs need to be replaced with verified Roblox free audio IDs.
---
--- ID families used:
---   PICKUP   : 258057783  — bright collect chime
---   SPEED    : 3714463173 — laser/whoosh swoosh
---   COLLISION: 5800013125 — low thud / crash
---   OBSTACLE : 5801167317 — heavy drop
---   SHIELD   : 4947766283 — shield pop / bubble
---   UI_CHIME : 6026984224 — clean UI beep
---   WHOOSH   : 6895079555 — air movement
+-- 258057783 and 6026984224 are older ids that load (pickup chime, UI beep).
 
 SoundConfig.SFX = {
 	-- Farming
-	ITEM_PICKUP         = { id = "rbxassetid://258057783",  volume = 0.7, pitch = 1.2  }, -- bright chime
-	ITEM_PICKUP_RARE    = { id = "rbxassetid://258057783",  volume = 0.8, pitch = 1.5  }, -- higher pitch = rarer
-	ITEM_PICKUP_EPIC    = { id = "rbxassetid://258057783",  volume = 1.0, pitch = 1.8  }, -- highest pitch = epic
-	CONTEST_START       = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 1.0  }, -- announcement chime
-	CONTEST_WIN         = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.3  },
-	CONTEST_LOSE        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.7  },
-	ITEM_STOLEN         = { id = "",                        volume = 0.8, pitch = 0.8  }, -- sharp hit
-	ITEM_DEFENDED       = { id = "rbxassetid://4947766283", volume = 0.8, pitch = 1.4  }, -- shield pop
+	ITEM_PICKUP         = { id = "rbxassetid://258057783",  volume = 0.7, pitch = 1.2 },
+	ITEM_PICKUP_RARE    = { id = "rbxassetid://258057783",  volume = 0.8, pitch = 1.4 },
+	ITEM_PICKUP_EPIC    = { id = "rbxassetid://258057783",  volume = 1.0, pitch = 1.6 },
+	CONTEST_START       = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 1.0 },
+	CONTEST_WIN         = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.3 },
+	CONTEST_LOSE        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.7 },
+	GRAB_WARN           = { id = "rbxassetid://9113251685", volume = 0.9, pitch = 1.0 }, -- Bag Grab Quick (someone grabs you)
+	ITEM_STOLEN         = { id = "rbxassetid://9113722807", volume = 0.9, pitch = 0.9 }, -- Card Swipe
+	ITEM_DEFENDED       = { id = "rbxassetid://9114343910", volume = 0.8, pitch = 1.2 }, -- Energy Presence
+	PUNCH_HIT           = { id = "rbxassetid://9118616398", volume = 0.9, pitch = 1.1 }, -- muted thud
+	PUNCH_BLOCKED       = { id = "rbxassetid://9119075972", volume = 0.7, pitch = 1.2 }, -- Shield Impacts
+	KNOCKOUT            = { id = "rbxassetid://9113470178", volume = 1.0, pitch = 1.0 }, -- Body Fall Heavy
 
 	-- Crafting
-	SLOT_ASSIGN         = { id = "rbxassetid://258057783",  volume = 0.5, pitch = 1.1  }, -- soft click
-	CRAFT_COMPLETE      = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.0  }, -- satisfying chime
+	SLOT_ASSIGN         = { id = "rbxassetid://258057783",  volume = 0.4, pitch = 1.1 },
+	CRAFT_COMPLETE      = { id = "rbxassetid://1841209857", volume = 0.8, pitch = 1.0 }, -- Simple Chimes (APM)
 
 	-- Racing
-	BOOST_ACTIVATE      = { id = "", volume = 0.8, pitch = 1.0  }, -- speed whoosh
-	BOOST_PAD           = { id = "", volume = 0.7, pitch = 1.3  },
-	DRIFT_START         = { id = "rbxassetid://6895079555", volume = 0.6, pitch = 0.9  }, -- air scrub
-	DRIFT_SLINGSHOT     = { id = "", volume = 0.8, pitch = 1.4  }, -- fast sling
-	COLLISION           = { id = "",                        volume = 0.9, pitch = 0.8  }, -- heavy thud
-	MUD_ENTER           = { id = "",                        volume = 0.6, pitch = 0.7  }, -- wet slap
-	UPDRAFT_ENTER       = { id = "rbxassetid://6895079555", volume = 0.5, pitch = 1.2  }, -- rising air
-	RESPAWN             = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.0  }, -- respawn chime
-	BUBBLE_POP          = { id = "rbxassetid://4947766283", volume = 0.8, pitch = 1.5  }, -- pop
-	FINISH_1ST          = { id = "rbxassetid://6026984224", volume = 1.0, pitch = 1.0  }, -- fanfare
-	FINISH_OTHER        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.9  },
+	BOOST_ACTIVATE      = { id = "rbxassetid://9114329395", volume = 0.8, pitch = 1.0 }, -- Energy Cloud Whooshing By Very Fast
+	BOOST_PAD           = { id = "rbxassetid://9116411685", volume = 0.7, pitch = 1.1 }, -- Magic Swoosh Fast Zooming
+	DRIFT_START         = { id = "rbxassetid://9116399935", volume = 0.5, pitch = 0.9 }, -- Airy Whips Swooshes
+	DRIFT_SLINGSHOT     = { id = "rbxassetid://9121000116", volume = 0.8, pitch = 1.1 }, -- Zip Bys Airy Rips
+	COLLISION           = { id = "rbxassetid://9113437833", volume = 0.8, pitch = 1.0 }, -- Big Thuds Wall Impact
+	MUD_ENTER           = { id = "rbxassetid://9120352855", volume = 0.6, pitch = 0.8 }, -- Underwater Splash
+	UPDRAFT_ENTER       = { id = "rbxassetid://9125806782", volume = 0.5, pitch = 1.0 }, -- Rising Whoosh
+	RESPAWN             = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.0 },
+	BUBBLE_POP          = { id = "rbxassetid://9112872239", volume = 0.8, pitch = 1.0 }, -- Small Bubbles Pop
+	FINISH_1ST          = { id = "rbxassetid://6026984224", volume = 1.0, pitch = 1.0 },
+	FINISH_OTHER        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.9 },
 
 	-- Countdown
-	COUNTDOWN_BEEP      = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.0  },
-	COUNTDOWN_GO        = { id = "", volume = 1.0, pitch = 1.3  }, -- GO! punch
+	COUNTDOWN_BEEP      = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.0 },
+	COUNTDOWN_GO        = { id = "rbxassetid://9113071178", volume = 0.8, pitch = 1.0 }, -- Air Horn Bursts
 
 	-- Abilities (category-based; SoundClient picks these by ABILITY_SFX key)
-	ABILITY_SPEED       = { id = "", volume = 0.7, pitch = 1.2  }, -- fast laser
-	ABILITY_SHIELD      = { id = "rbxassetid://4947766283", volume = 0.7, pitch = 0.9  }, -- shield bubble
-	ABILITY_OBSTACLE    = { id = "",                        volume = 0.8, pitch = 0.8  }, -- drop/thud
-	ABILITY_HACK        = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 0.6  }, -- low tech beep
-	ABILITY_FLOAT       = { id = "rbxassetid://6895079555", volume = 0.7, pitch = 1.1  }, -- airy whoosh
-	ABILITY_GENERIC     = { id = "rbxassetid://258057783",  volume = 0.6, pitch = 1.0  }, -- neutral chime
+	ABILITY_SPEED       = { id = "rbxassetid://9114328260", volume = 0.7, pitch = 1.1 }, -- Energy Cloud Whooshing By 2
+	ABILITY_SHIELD      = { id = "rbxassetid://9114343910", volume = 0.7, pitch = 0.9 }, -- Energy Presence
+	ABILITY_OBSTACLE    = { id = "rbxassetid://9120873997", volume = 0.7, pitch = 1.0 }, -- Wooden Gate Crash
+	ABILITY_HACK        = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 0.6 },
+	ABILITY_FLOAT       = { id = "rbxassetid://9114320437", volume = 0.7, pitch = 1.1 }, -- Energy Cloud Whooshing Medium
+	ABILITY_GENERIC     = { id = "rbxassetid://258057783",  volume = 0.6, pitch = 1.0 },
 
 	-- UI
-	PLAYER_JOIN         = { id = "rbxassetid://258057783",  volume = 0.5, pitch = 1.0  },
-	PHASE_TRANSITION    = { id = "rbxassetid://6026984224", volume = 0.6, pitch = 1.0  },
-	TIMER_LOW           = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.5  },
+	PLAYER_JOIN         = { id = "rbxassetid://258057783",  volume = 0.5, pitch = 1.0 },
+	PHASE_TRANSITION    = { id = "rbxassetid://6026984224", volume = 0.6, pitch = 1.0 },
+	TIMER_LOW           = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.5 },
 }
 
 -- ─── Ability → SFX category mapping ─────────────────────────────────────────

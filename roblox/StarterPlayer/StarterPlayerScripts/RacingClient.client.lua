@@ -15,6 +15,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
+local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local LocalPlayer = Players.LocalPlayer
@@ -152,6 +153,7 @@ function _triggerBoost()
 	_boostActive = true
 	_boostGauge  = 0
 	_updateBoostHUD()
+	SoundFx.play("BOOST_ACTIVATE")
 
 	local boostColor
 	if _biome == "OCEAN" then
@@ -273,6 +275,7 @@ local function _enterDrift()
 	end
 	_applyScreenTint(driftColor, 0.22, 0.12)
 	_showDriftLabel(driftText, driftColor)
+	SoundFx.play("DRIFT_START")
 end
 
 function _exitDrift(level, slid)
@@ -283,6 +286,7 @@ function _exitDrift(level, slid)
 	if level then
 		local tb = Constants.DRIVE.DRIFT_TURBO[level]
 		RemoteEvents.DriftTurbo:FireServer(level, slid)
+		SoundFx.play("DRIFT_SLINGSHOT")
 		_showDriftLabel(tb.label, level >= 2 and Color3.fromRGB(255, 120, 40) or Color3.fromRGB(80, 190, 255))
 		task.delay(0.6, _hideDriftLabel)
 	end

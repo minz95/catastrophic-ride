@@ -41,7 +41,7 @@ STUDIO = os.environ.get("ROBLOX_STUDIO", "/Applications/RobloxStudio.app/Content
 LOG_DIR = os.path.expanduser("~/Library/Logs/Roblox")
 CHUNK = 800
 
-TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800}
+TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600}
 
 LUAU = r"""
 local HttpService = game:GetService("HttpService")
@@ -65,7 +65,7 @@ end
 print("SIM_DONE")
 """
 
-FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch"}
+FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch", "sounds": "runSounds"}
 
 
 def load_scenarios():
@@ -145,6 +145,14 @@ def check(sc, report):
     out = []
     if not isinstance(report, dict) or not report:
         return [("fail", "no report (session returned nothing)")]
+    if sc["kind"] == "sounds":
+        conf = report.get("configured") or {}
+        if not conf:
+            return [("fail", "no sounds checked")]
+        bad = sorted(k for k, v in conf.items() if not v.get("ok"))
+        if bad and c.get("allLoad", True):
+            out.append(("fail", "%d sounds do not load: %s" % (len(bad), ", ".join(bad[:12]))))
+        return out
     if sc["kind"] in ("race", "escape", "vehicles"):
         res = [r for r in report.get("results", []) if isinstance(r, dict)]
         if "maxTilt" in c:
