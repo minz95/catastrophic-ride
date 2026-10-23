@@ -41,7 +41,8 @@ STUDIO = os.environ.get("ROBLOX_STUDIO", "/Applications/RobloxStudio.app/Content
 LOG_DIR = os.path.expanduser("~/Library/Logs/Roblox")
 CHUNK = 800
 
-TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600, "probe": 300}
+TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600, "probe": 300, "gallery": 600}
+GALLERY_DIR = os.path.join(ROOT, "reports", "vehicles", "studio")
 
 LUAU = r"""
 local HttpService = game:GetService("HttpService")
@@ -65,7 +66,35 @@ end
 print("SIM_DONE")
 """
 
-FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch", "sounds": "runSounds", "probe": "probeApi"}
+FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch", "sounds": "runSounds", "probe": "probeApi",
+      "gallery": "runGallery"}
+
+
+def run_gallery_studio(cmd, token, t0, timeout):
+    """Runs Studio and takes a screenshot (screencapture, the whole screen,
+    scaled to 1600 px) at every GALLERY_SHOT line the gallery prints.
+    Needs screen-recording permission for the terminal."""
+    os.makedirs(GALLERY_DIR, exist_ok=True)
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    taken = set()
+    while proc.poll() is None and time.time() - t0 < timeout:
+        time.sleep(0.5)
+        log = find_log(token, t0)
+        if not log:
+            continue
+        with open(log, errors="replace") as f:
+            for name in re.findall(r"GALLERY_SHOT " + token + r" \d+ (\w+)", f.read()):
+                if name in taken:
+                    continue
+                taken.add(name)
+                out = os.path.join(GALLERY_DIR, name + ".png")
+                subprocess.run(["screencapture", "-x", out])
+                subprocess.run(["sips", "-Z", "1600", out], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print("  shot %s → %s" % (name, os.path.relpath(out, ROOT)), flush=True)
+    if proc.poll() is None:
+        proc.terminate()
+        return "timeout"
+    return proc.returncode
 
 
 def load_scenarios():
@@ -608,6 +637,8 @@ def run_one(sc, place, args):
     if sc["kind"] == "vehicles":
         opts["cases"] = "vehicles"
     token = uuid.uuid4().hex
+    if sc["kind"] == "gallery":
+        opts["token"] = token
     src = (LUAU.replace("__TOKEN__", token).replace("__OPTS__", json.dumps(opts)).replace("__FN__", FN[sc["kind"]])
            .replace("__SAMPLES__", "true" if args.samples else "false").replace("__CHUNK__", str(CHUNK)))
     work = tempfile.mkdtemp(prefix="studio-sim-")
@@ -617,13 +648,15 @@ def run_one(sc, place, args):
     t0 = time.time()
     print("▶ %s (%s) ..." % (sc["name"], sc["kind"]), flush=True)
     timeout = args.timeout or TIMEOUT[sc["kind"]]
-    try:
-        proc = subprocess.run([STUDIO, "-task", "RunScript", "-localPlaceFile", place, "-runScriptFile", script,
-                               "-quitAfterExecution"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                              timeout=timeout)
-        code = proc.returncode
-    except subprocess.TimeoutExpired:
-        code = "timeout"
+    cmd = [STUDIO, "-task", "RunScript", "-localPlaceFile", place, "-runScriptFile", script, "-quitAfterExecution"]
+    if sc["kind"] == "gallery":
+        code = run_gallery_studio(cmd, token, t0, timeout)
+    else:
+        try:
+            proc = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=timeout)
+            code = proc.returncode
+        except subprocess.TimeoutExpired:
+            code = "timeout"
     wall = time.time() - t0
     log = find_log(token, t0)
     ok, summary, report, errors = read_log(log) if log else (None, "", None, ["no Studio log written"])

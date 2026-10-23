@@ -1,0 +1,506 @@
+{
+ "checks": [],
+ "commit": "24b066b",
+ "dirty": true,
+ "kind": "gallery",
+ "logErrors": [
+  "2026-10-23T17:22:29.058Z,1.058590,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-23T17:22:29.178Z,1.178469,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T17:22:29.266Z,1.266754,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-23T17:22:30.000Z,2.000133,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T17:22:30.787Z,2.787951,6f927000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cd180c7c-0c8f-48be-877e-2a8638a2e398\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-23T17:22:39.742Z,11.742874,703ab000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-23T17:22:39.979Z,11.979931,6fc6f000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-23T17:23:18.395Z,50.395878,6f71b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cd180c7c-0c8f-48be-877e-2a8638a2e398\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "extra": [
+   {
+    "BODY": "Pizza"
+   },
+   {
+    "BODY": "Bathtub",
+    "ENGINE": "Rocket",
+    "HEAD": "Rubber Duck",
+    "MOBILITY": "Kite",
+    "SPECIAL": "Pizza",
+    "TAIL": "Racing Flag"
+   }
+  ],
+  "hold": 3,
+  "token": "80b6aa614821426287546c9f95aaa2be"
+ },
+ "ranAt": "2026-10-24T02:23:24+0900",
+ "report": {
+  "items": [
+   {
+    "biome": "FOREST",
+    "body": "Backpack",
+    "riding": "Backpack",
+    "size": [
+     4.5,
+     3.3,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bamboo Raft",
+    "riding": "Bamboo Raft",
+    "size": [
+     4.3,
+     1.8,
+     2.7
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Barrel",
+    "riding": "Barrel",
+    "size": [
+     4,
+     3.2,
+     2.7
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     4.5,
+     3.3,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Cardboard Box",
+    "riding": "Cardboard Box",
+    "size": [
+     4,
+     3.2,
+     2.6
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Kite",
+    "riding": "Kite",
+    "size": [
+     4.2,
+     3.2,
+     2.6
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Life Preserver",
+    "riding": "Life Preserver",
+    "size": [
+     4.1,
+     1.8,
+     2.7
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Log",
+    "riding": "Log",
+    "size": [
+     4.6,
+     3.3,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Microwave",
+    "riding": "Microwave",
+    "size": [
+     4.6,
+     3.3,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Red Sofa",
+    "riding": "Red Sofa",
+    "size": [
+     4.5,
+     3.3,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Shopping Cart",
+    "riding": "Shopping Cart",
+    "size": [
+     4.1,
+     3.2,
+     2.7
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Skateboard",
+    "riding": "Skateboard",
+    "size": [
+     4.3,
+     2.2,
+     2.6
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Suitcase",
+    "riding": "Suitcase",
+    "size": [
+     4.5,
+     2.6,
+     2.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Pizza",
+    "riding": "Pizza",
+    "size": [
+     4.1,
+     1.7,
+     2.7
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     5.2,
+     3.7,
+     3.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Backpack",
+    "riding": "Backpack",
+    "size": [
+     5.8,
+     2.5,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Bamboo Raft",
+    "riding": "Bamboo Raft",
+    "size": [
+     5.7,
+     1.6,
+     2.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Barrel",
+    "riding": "Barrel",
+    "size": [
+     5.1,
+     2.5,
+     2.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     6.2,
+     2.5,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Cardboard Box",
+    "riding": "Cardboard Box",
+    "size": [
+     5.1,
+     2.5,
+     2.3
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Kite",
+    "riding": "Kite",
+    "size": [
+     5.9,
+     2.5,
+     2.2
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Life Preserver",
+    "riding": "Life Preserver",
+    "size": [
+     5.3,
+     1.6,
+     2.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Log",
+    "riding": "Log",
+    "size": [
+     6.3,
+     2.5,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Microwave",
+    "riding": "Microwave",
+    "size": [
+     5.4,
+     2.5,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Red Sofa",
+    "riding": "Red Sofa",
+    "size": [
+     6,
+     2.5,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Shopping Cart",
+    "riding": "Shopping Cart",
+    "size": [
+     5.1,
+     2.5,
+     2.2
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Skateboard",
+    "riding": "Skateboard",
+    "size": [
+     6.3,
+     2.2,
+     2.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Suitcase",
+    "riding": "Suitcase",
+    "size": [
+     6.1,
+     2,
+     2.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Pizza",
+    "riding": "Pizza",
+    "size": [
+     5.2,
+     1.6,
+     2.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     6.5,
+     6.3,
+     2.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Backpack",
+    "riding": "Backpack",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bamboo Raft",
+    "riding": "Bamboo Raft",
+    "size": [
+     5.9,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Barrel",
+    "riding": "Barrel",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     5.9,
+     2.6,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Cardboard Box",
+    "riding": "Cardboard Box",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Kite",
+    "riding": "Kite",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Life Preserver",
+    "riding": "Life Preserver",
+    "size": [
+     6,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Log",
+    "riding": "Log",
+    "size": [
+     5.9,
+     2.6,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Microwave",
+    "riding": "Microwave",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Red Sofa",
+    "riding": "Red Sofa",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Shopping Cart",
+    "riding": "Shopping Cart",
+    "size": [
+     6,
+     2.7,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Skateboard",
+    "riding": "Skateboard",
+    "size": [
+     5.9,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Suitcase",
+    "riding": "Suitcase",
+    "size": [
+     5.9,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Pizza",
+    "riding": "Pizza",
+    "size": [
+     5.9,
+     2.2,
+     5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bathtub",
+    "riding": "Bathtub",
+    "size": [
+     6.3,
+     3.5,
+     5.5
+    ]
+   }
+  ],
+  "shots": [
+   "forest_1",
+   "forest_2",
+   "forest_3",
+   "ocean_1",
+   "ocean_2",
+   "ocean_3",
+   "sky_1",
+   "sky_2",
+   "sky_3"
+  ],
+  "summary": "gallery: 45 vehicles, 9 shots, 45 riding their BODY item"
+ },
+ "scenario": "gallery",
+ "studioExit": 0,
+ "summary": "gallery: 45 vehicles, 9 shots, 45 riding their BODY item",
+ "wallSeconds": 56.6
+}

@@ -79,52 +79,109 @@ local function bounds(model)
 end
 VehicleBuilder.bounds = bounds
 
---- Places a copy of the item's model so it fits `box` (studs, in the
--- vehicle's axes) centred on `mountCF`, keeping its proportions. Falls back
--- to a rarity-coloured block when the item has no model.
-local function placeItem(itemName, mountCF, box, model, chassis, slot)
+--- Places a copy of the item's model in a mount (`mount.box`, studs in the
+-- vehicle's axes, centred on `mountCF`), keeping its proportions; falls back
+-- to a rarity-coloured block when the item has no model. Mount options:
+--   align = "bottom"  sit on the box floor instead of its centre
+--   stretch = k       an axis may grow up to k× past the proportional fit
+--   orient = true     turn the item so its longer side runs along the vehicle
+-- `minTop` (mount space): raise the item until its top reaches it.
+-- Returns the holder Model and the item's top in mount space.
+local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 	local cfg = ItemConfig[itemName]
 	if not cfg then return nil end
+	local box = mount.box
 	local templates = ServerStorage:FindFirstChild("ItemModels")
 	local tmpl = templates and templates:FindFirstChild(itemName)
 	local holder = Instance.new("Model")
 	holder.Name = "Item_" .. slot .. "_" .. itemName
 	holder:SetAttribute("Slot", slot)
 	holder:SetAttribute("Item", itemName)
+	local placed = {}   -- { part, cf in mount space }
 	if tmpl then
 		local clone = tmpl:Clone()
 		local centre, size = bounds(clone)
-		local factor = math.huge
-		for _, axis in ipairs({ "X", "Y", "Z" }) do
-			if size[axis] > 1e-3 then factor = math.min(factor, box[axis] / size[axis]) end
+		local function fitOf(sz)
+			local b = math.huge
+			for _, axis in ipairs({ "X", "Y", "Z" }) do
+				if sz[axis] > 1e-3 then b = math.min(b, box[axis] / sz[axis]) end
+			end
+			return b == math.huge and 1 or b
 		end
-		if factor == math.huge then factor = 1 end
+		-- orient: the way round that comes out biggest (upright unless lying
+		-- down or turning gains a quarter): a kite becomes a flying carpet
+		local turn = CFrame.new()
+		local base = fitOf(size)
+		if mount.orient then
+			local options = {
+				{ CFrame.Angles(0, math.pi / 2, 0), Vector3.new(size.Z, size.Y, size.X), 1.0 },
+				{ CFrame.Angles(math.pi / 2, 0, 0), Vector3.new(size.X, size.Z, size.Y), 1.25 },
+				{ CFrame.Angles(0, math.pi / 2, 0) * CFrame.Angles(math.pi / 2, 0, 0), Vector3.new(size.Y, size.Z, size.X), 1.25 },
+			}
+			local best = base
+			for i, o in ipairs(options) do
+				local b = fitOf(o[2])
+				-- a quarter turn wins when it fits at least as well and lays
+				-- the long side along the vehicle
+				local better = i == 1 and (b > best * 1.001 or (b >= best * 0.999 and o[2].Z > size.Z))
+					or (i > 1 and b > best * o[3])
+				if better then best, turn, size = b, o[1], o[2] end
+			end
+			base = best
+		end
+		local f = {}
+		for _, axis in ipairs({ "X", "Y", "Z" }) do
+			local fit = size[axis] > 1e-3 and box[axis] / size[axis] or base
+			f[axis] = mount.stretch and math.min(fit, base * mount.stretch) or base
+		end
 		for _, p in ipairs(clone:GetDescendants()) do
 			if p:IsA("BasePart") then
-				local rel = CFrame.new(centre):ToObjectSpace(p.CFrame)
-				p.Size = p.Size * factor
-				p.CFrame = mountCF * CFrame.new(rel.Position * factor) * (rel - rel.Position)
-				decoration(p)
-				p.Parent = holder
-				weld(chassis, p)
+				local rel = turn * CFrame.new(centre):ToObjectSpace(p.CFrame)
+				local rot = rel - rel.Position
+				local function len(v) return Vector3.new(v.X * f.X, v.Y * f.Y, v.Z * f.Z).Magnitude end
+				p.Size = Vector3.new(p.Size.X * len(rot.RightVector), p.Size.Y * len(rot.UpVector), p.Size.Z * len(rot.LookVector))
+				local pos = rel.Position
+				table.insert(placed, { part = p, cf = CFrame.new(pos.X * f.X, pos.Y * f.Y, pos.Z * f.Z) * rot })
 			elseif p:IsA("WeldConstraint") or p:IsA("Weld") or p:IsA("Motor6D") then
 				p:Destroy()
 			end
 		end
+		for _, it in ipairs(placed) do it.part.Parent = holder end
 		clone:Destroy()
 	else
 		local p = Instance.new("Part")
 		p.Name = "ItemBlock"
 		p.Size = box * 0.8
-		p.CFrame = mountCF
 		p.Color = RARITY_COLOURS[cfg.rarity] or RARITY_COLOURS.Common
 		p.Material = Enum.Material.SmoothPlastic
-		decoration(p)
 		p.Parent = holder
-		weld(chassis, p)
+		table.insert(placed, { part = p, cf = CFrame.new() })
+	end
+	-- where the item ended up in mount space: centre it, or stand it on the floor
+	local lo, hi
+	for _, it in ipairs(placed) do
+		local h = it.part.Size * 0.5
+		for _, sx in ipairs({ -1, 1 }) do for _, sy in ipairs({ -1, 1 }) do for _, sz in ipairs({ -1, 1 }) do
+			local v = it.cf * Vector3.new(sx * h.X, sy * h.Y, sz * h.Z)
+			lo = lo and Vector3.new(math.min(lo.X, v.X), math.min(lo.Y, v.Y), math.min(lo.Z, v.Z)) or v
+			hi = hi and Vector3.new(math.max(hi.X, v.X), math.max(hi.Y, v.Y), math.max(hi.Z, v.Z)) or v
+		end end end
+	end
+	local mid = (lo + hi) * 0.5
+	local shift = -mid
+	if mount.align == "bottom" then shift = Vector3.new(-mid.X, -box.Y / 2 - lo.Y, -mid.Z) end
+	local top = hi.Y + shift.Y
+	if minTop and top < minTop then
+		shift += Vector3.new(0, minTop - top, 0)
+		top = minTop
+	end
+	for _, it in ipairs(placed) do
+		it.part.CFrame = mountCF * CFrame.new(shift) * it.cf
+		decoration(it.part)
+		weld(chassis, it.part)
 	end
 	holder.Parent = model
-	return holder
+	return holder, top
 end
 
 local function _applyStatVisuals(model, stats)
@@ -269,7 +326,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	-- with streaming on, a car must arrive whole (not part by part)
 	pcall(function() model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic end)
 
-	local design = VehicleDesign.layout(biome, stats)
+	local design = VehicleDesign.layout(biome, stats, slots)
 	if look.paint and look.paint.body then
 		design.palette = { body = look.paint.body, accent = look.paint.accent or design.palette.accent }
 	end
@@ -286,11 +343,26 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	model.PrimaryPart = chassis
 	local primaryPart = chassis
 
+	-- Riding the BODY item: it goes first, the rest sits on its real top
+	local rideTop = nil
+	if design.riding then
+		chassis.Transparency = 1
+		local mount = design.mounts.BODY[1]
+		local chassisTop = design.chassis.size.Y / 2
+		local _, top = placeItem(slots.BODY, spawnCFrame * mount.cf, mount, model, chassis, "BODY",
+			chassisTop - mount.cf.Position.Y)
+		rideTop = mount.cf.Position.Y + (top or 0)
+		model:SetAttribute("Riding", slots.BODY)
+	end
+	local ride = design.ride
+
 	for _, spec in ipairs(VehicleDesign.partsFor(design, slots)) do
 		local p = SHAPES[spec.shape]()
 		p.Name = spec.name
 		p.Size = spec.size
-		p.CFrame = spawnCFrame * spec.cf
+		local cf = spec.cf
+		if spec.lift and rideTop then cf = CFrame.new(0, rideTop - ride.liftFrom, 0) * cf end
+		p.CFrame = spawnCFrame * cf
 		p.Color = VehicleDesign.color(design, spec.color)
 		p.Material = spec.material or Enum.Material.SmoothPlastic
 		p.Transparency = spec.transparency or 0
@@ -304,6 +376,11 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	seat.Name = "VehicleSeat"
 	seat.Size = seatSpec.size
 	seat.CFrame = spawnCFrame * seatSpec.cf
+	if rideTop then
+		-- on the item, no higher than its box allows
+		local y = math.min(rideTop, design.mounts.BODY[1].cf.Position.Y + ride.box.Y / 2) + seatSpec.size.Y / 2
+		seat.CFrame = spawnCFrame * CFrame.new(0, y, ride.seatZ)
+	end
 	seat.Color = Color3.fromRGB(50, 50, 50)
 	seat.Transparency = 1
 	seat.MaxSpeed  = Constants.maxSpeedFor(biome, stats)
@@ -313,12 +390,14 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	seat.Parent = model
 	weld(chassis, seat)
 
-	-- Crafted items in their slot boxes
+	-- Crafted items in their slot boxes (the ridden BODY item is already in)
 	for _, slot in ipairs(VehicleBuilder.SLOTS) do
 		local itemName = slots[slot]
-		if itemName then
+		if itemName and not (slot == "BODY" and design.riding) then
 			for _, mount in ipairs(design.mounts[slot] or {}) do
-				placeItem(itemName, spawnCFrame * mount.cf, mount.box, model, chassis, slot)
+				local cf = mount.cf
+				if mount.onRide and rideTop then cf = CFrame.new(0, rideTop, 0) * cf end
+				placeItem(itemName, spawnCFrame * cf, mount, model, chassis, slot)
 			end
 		end
 	end

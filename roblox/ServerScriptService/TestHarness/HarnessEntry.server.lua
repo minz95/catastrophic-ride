@@ -32,6 +32,10 @@ if args.harness == "race" then
 		endTest({ error = tostring(report) })
 	end
 
+elseif args.harness == "gallery" then
+	local ok, report = pcall(require(ServerScriptService.TestHarness.Gallery).run, args.gallery or {})
+	endTest(ok and report or { error = tostring(report) })
+
 elseif args.harness == "match" then
 	require(ServerScriptService.TestHarness.MatchHarness).start(args, endTest)
 end

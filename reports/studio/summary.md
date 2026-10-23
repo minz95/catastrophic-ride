@@ -19,6 +19,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
+| [gallery](gallery.json) | PASS | 24b066b+ | 2026-10-24T02:23 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
@@ -36,9 +37,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
 | [steal-defended-2p](steal-defended-2p.json) | PASS | aa48bae+ | 2026-10-22T02:21 |
-| [vehicles-forest](vehicles-forest.json) | PASS | 2927812+ | 2026-10-23T21:10 |
-| [vehicles-ocean](vehicles-ocean.json) | PASS | 2927812+ | 2026-10-23T21:11 |
-| [vehicles-sky](vehicles-sky.json) | PASS | 2927812+ | 2026-10-23T21:09 |
+| [vehicles-forest](vehicles-forest.json) | PASS | f7b6b60+ | 2026-10-24T02:27 |
+| [vehicles-ocean](vehicles-ocean.json) | PASS | f7b6b60+ | 2026-10-24T02:28 |
+| [vehicles-sky](vehicles-sky.json) | PASS | f7b6b60+ | 2026-10-24T02:28 |
 
 ## abilities-forest — WARN
 
@@ -315,6 +316,12 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING heartbeat 59-59 Hz, physics 60-60 fps, send max 235 kbps; memory max 2287 MB
 ```
 
+## gallery — PASS
+
+```
+gallery: 45 vehicles, 9 shots, 45 riding their BODY item
+```
+
 ## load-10p — FAIL
 
 ```
@@ -538,20 +545,20 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 ## vehicles-forest — PASS
 
 ```
-RaceSim FOREST (shipped) — 9.6s wall time
+RaceSim FOREST (shipped) — 9.7s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
 
 ## vehicles-ocean — PASS
 
 ```
-RaceSim OCEAN (shipped) — 11.2s wall time
+RaceSim OCEAN (shipped) — 11.3s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
 
 ## vehicles-sky — PASS
 
 ```
-RaceSim SKY (shipped) — 15.6s wall time
+RaceSim SKY (shipped) — 10.9s wall time
   cases 20: drove out 20, needed a respawn 0, stuck 0
 ```
