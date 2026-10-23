@@ -266,6 +266,8 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 
 	local model = Instance.new("Model")
 	model.Name  = "Vehicle_" .. biome
+	-- with streaming on, a car must arrive whole (not part by part)
+	pcall(function() model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic end)
 
 	local design = VehicleDesign.layout(biome, stats)
 	if look.paint and look.paint.body then

@@ -74,6 +74,7 @@ Constants.STEAL_DISABLE_BEFORE = 5   -- seconds before CRAFTING that stealing lo
 -- ─── Item World ───────────────────────────────────────────────────────────────
 Constants.ITEM_SPAWN_COUNT = 100
 Constants.PICKUP_RANGE     = 10  -- studs
+Constants.DROP_TOSS        = 5   -- studs ahead of the dropper a dropped item lands (FarmFx animates the throw)
 Constants.STEAL_RANGE      = 5   -- studs
 
 -- ─── Crafting Slots ───────────────────────────────────────────────────────────

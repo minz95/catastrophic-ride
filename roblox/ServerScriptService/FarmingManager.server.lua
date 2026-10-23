@@ -27,6 +27,12 @@ print("[FarmingManager] All requires succeeded")
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
+-- Farm bots (Modules/FarmBots) stand in for players: a table with UserId,
+-- Name, Character and isBot. They have no client, so nothing is sent to them.
+local function _fireClient(remote, who, ...)
+	if who and not (type(who) == "table" and who.isBot) then remote:FireClient(who, ...) end
+end
+
 local _resolveContest    -- defined below (contest resolution)
 local _items      = {}   -- { [itemId] = { part, itemName, rarity, taken=false } }
 local _contests   = {}   -- { [itemId] = { players={}, presses={}, endTick } }
@@ -322,13 +328,15 @@ local function _dropItem(player, slotIndex, reason)
 	-- Anchor spawn Y to the biome's farm ground. The previous version used
 	-- root.Position.Y, but HumanoidRootPart sits ~2.5 studs above the floor,
 	-- so dropped items reappeared floating in mid-air.
+	-- Tossed a few studs ahead of the dropper (FarmFx animates the throw), a
+	-- little to the side so two drops do not stack.
 	local spawnPos
 	if root then
-		spawnPos = Vector3.new(
-			root.Position.X + math.random(-3, 3),
-			biomeZone.baseY,
-			root.Position.Z + math.random(-3, 3)
-		)
+		local look = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z)
+		look = look.Magnitude > 1e-3 and look.Unit or Vector3.new(0, 0, -1)
+		local side = Vector3.new(-look.Z, 0, look.X)
+		local at = root.Position + look * Constants.DROP_TOSS + side * (math.random() * 2 - 1) * 1.5
+		spawnPos = Vector3.new(at.X, biomeZone.baseY, at.Z)
 	else
 		spawnPos = Vector3.new(0, biomeZone.baseY, 0)
 	end
@@ -446,7 +454,12 @@ local function _dropItem(player, slotIndex, reason)
 		taken    = false,
 	}
 
-	RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
+	RemoteEvents.FarmAction:FireAllClients("drop", player.UserId, nil, {
+		model = model, to = spawnPos, from = root and root.Position or nil, item = itemName, reason = reason or "manual",
+	})
+	Telemetry.record("item_dropped_world", { userId = player.UserId, item = itemName, itemId = itemId,
+		x = math.floor(spawnPos.X), z = math.floor(spawnPos.Z), parts = #model:GetDescendants() })
+	_fireClient(RemoteEvents.InventoryUpdated, player, data.inventory)
 	return itemName
 end
 
