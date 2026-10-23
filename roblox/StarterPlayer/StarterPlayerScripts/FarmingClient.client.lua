@@ -241,6 +241,20 @@ KeyInput.ended(function(input)
 	end
 end)
 
+-- ─── Gadget: T (shop "gadget", e.g. Smoke Bomb; server: UseGadget) ───────────
+KeyInput.began(function(input, processed)
+	if processed or not _enabled then return end
+	if input.KeyCode == Enum.KeyCode.T and LocalPlayer:GetAttribute("Gadget") then
+		task.spawn(function()
+			local r = RemoteEvents.UseGadget:InvokeServer()
+			if r == "denied: used" then
+				local ui = _getUIManager()
+				if ui then ui.showNotification("Already used this round", 1.5, Color3.fromRGB(200, 200, 200)) end
+			end
+		end)
+	end
+end)
+
 -- ─── Fight: F punches the player you face, hold G to guard ───────────────────
 -- (server: FarmingManager RequestPunch / SetGuard; looks: FarmFx)
 KeyInput.began(function(input, processed)

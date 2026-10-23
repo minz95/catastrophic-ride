@@ -20,6 +20,8 @@ local ItemModelBuilder  = require(ServerScriptService.Modules.ItemModelBuilder)
 local ItemVisualUpgrader = require(ServerScriptService.Modules.ItemVisualUpgrader)
 local Telemetry          = require(ServerScriptService.Modules.Telemetry)
 local FarmingRules       = require(ReplicatedStorage.Shared.FarmingRules)
+local Cosmetics          = require(ReplicatedStorage.Shared.Cosmetics)
+local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
 
 print("[FarmingManager] All requires succeeded")
 
@@ -663,6 +665,7 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 		inventorySize = Constants.INVENTORY_SIZE,
 		distance = (thiefRoot.Position - victimRoot.Position).Magnitude, range = Constants.STEAL_RANGE,
 		victimInvincibleEnd = victimData.stealInvincibleEnd,
+		victimHiddenEnd = victimData._hiddenUntil,
 	})
 	if not ok then return attempt("denied: " .. why) end
 
@@ -674,9 +677,16 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	thiefData._stealing = window
 	RemoteEvents.StealAttempt:FireClient(victim, thief.Name)
 	RemoteEvents.FarmAction:FireAllClients("grab", thief.UserId, victim.UserId, { window = Constants.STEAL_DEFEND_WINDOW })
+	local grabbedAt = tick()
 	task.wait(Constants.STEAL_DEFEND_WINDOW)
 	victimData._stealWindow = nil
 	thiefData._stealing = nil
+
+	-- the victim threw a Smoke Bomb during the grab: gone, nothing taken
+	if (victimData._smokedAt or 0) >= grabbedAt then
+		thiefData.stealCooldownEnd = tick() + Constants.STEAL_DEFENDED_COOLDOWN
+		return attempt("escaped")
+	end
 
 	if FarmingRules.stealOutcome(window.presses, Constants.STEAL_DEFEND_PRESSES) == "defended" then
 		thiefData.stealCooldownEnd = tick() + Constants.STEAL_DEFENDED_COOLDOWN
@@ -736,11 +746,47 @@ local function _flatUnit(v)
 end
 
 -- The player the attacker is facing within reach (nearest), or nil.
+-- How the player's punch looks (shop "move", e.g. "kick"); nil = a punch.
+local function _moveStyle(player)
+	local rec = PlayerStore.get(player)
+	local mv = rec and Cosmetics.equipped(rec.equipped, "move")
+	return mv and mv.style or nil
+end
+
+-- ─── Gadgets (shop "gadget"): RemoteEvents.UseGadget ──────────────────────────
+
+RemoteEvents.UseGadget.OnServerInvoke = function(player)
+	if not _active then return "denied: not farming" end
+	local data = SessionManager.getData(player)
+	local rec = PlayerStore.get(player)
+	local g = rec and Cosmetics.equipped(rec.equipped, "gadget")
+	if not data or not g then return "denied: no gadget" end
+	local cfg = Constants.GADGETS[g.gadget]
+	if not cfg then return "denied: no gadget" end
+	data._gadgetUses = data._gadgetUses or {}
+	local used = data._gadgetUses[g.gadget] or 0
+	if used >= cfg.USES then return "denied: used" end
+	data._gadgetUses[g.gadget] = used + 1
+	local now = tick()
+	if g.gadget == "smoke" then
+		data._hiddenUntil = now + cfg.HIDE
+		data._smokedAt = now
+		local root = _root(player)
+		RemoteEvents.FarmAction:FireAllClients("smoke", player.UserId, nil, {
+			hide = cfg.HIDE, cloud = cfg.CLOUD, at = root and root.Position or nil,
+		})
+	end
+	Telemetry.record("gadget", { userId = player.UserId, gadget = g.gadget, escaping = data._stealWindow ~= nil })
+	return "ok"
+end
+
 local function _punchTarget(attacker, aRoot)
 	local look = _flatUnit(aRoot.CFrame.LookVector)
 	local best, bestD
 	for _, other in ipairs(Players:GetPlayers()) do
-		local r = other ~= attacker and _root(other)
+		local od = other ~= attacker and SessionManager.getData(other)
+		local hidden = od and (od._hiddenUntil or 0) > tick()   -- in a Smoke Bomb
+		local r = other ~= attacker and not hidden and _root(other)
 		if r then
 			local to = Vector3.new(r.Position.X - aRoot.Position.X, 0, r.Position.Z - aRoot.Position.Z)
 			local d = to.Magnitude
@@ -787,7 +833,7 @@ RemoteEvents.RequestPunch.OnServerInvoke = function(attacker)
 
 	local victim = _punchTarget(attacker, aRoot)
 	if not victim then
-		RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, nil, { result = "miss" })
+		RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, nil, { result = "miss", style = _moveStyle(attacker) })
 		Telemetry.record("punch", { attacker = attacker.UserId, result = "miss" })
 		return "miss"
 	end
@@ -808,6 +854,7 @@ RemoteEvents.RequestPunch.OnServerInvoke = function(attacker)
 	local vRoot = _root(victim)
 	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK or Vector3.zero
 	RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, victim.UserId, {
+		style = _moveStyle(attacker),
 		result = result, hits = (result == "knockout") and F.HITS_TO_DROP or hits, needed = F.HITS_TO_DROP,
 		item = dropped, push = (result == "hit" or result == "knockout") and push or nil,
 	})
@@ -828,6 +875,14 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_active = true
 		_farmingStartTick = tick()
 		_farmRound += 1
+		for _, p in ipairs(Players:GetPlayers()) do
+			local d = SessionManager.getData(p)
+			if d then d._gadgetUses, d._hiddenUntil, d._smokedAt = nil, nil, nil end
+			-- which gadget button to show (TouchControls / FarmingClient)
+			local rec = PlayerStore.get(p)
+			local g = rec and Cosmetics.equipped(rec.equipped, "gadget")
+			p:SetAttribute("Gadget", g and g.gadget or nil)
+		end
 		local round = _farmRound
 		print("[FarmingManager] Starting FARMING phase, biome =", biome)
 		-- Item supply follows the player count, and waves of rarer items land

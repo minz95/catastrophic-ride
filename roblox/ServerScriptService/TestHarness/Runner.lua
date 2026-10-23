@@ -159,6 +159,8 @@ function Runner.runMatch(opts)
 		-- loadouts[round][botIndex] = slots: crafted as given (CraftingManager),
 		-- whatever the bot farmed. For ability experiments.
 		loadouts = opts.loadouts,
+		-- shop[botIndex] = { item ids } bought via ShopAction with shopCoins / shopLevel
+		shop = opts.shop, shopCoins = opts.shopCoins, shopLevel = opts.shopLevel,
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

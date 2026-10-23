@@ -443,6 +443,14 @@ Constants.PROGRESSION = {
 	AUTOSAVE_SECONDS = 120,
 }
 
+-- ─── Gadgets (shop, FARMING; Shared/Cosmetics "gadget") ───────────────────────
+-- Smoke Bomb: USES per round; you vanish in smoke for HIDE s (no punches or
+-- steals reach you, and a grab on you ends with nothing taken); the cloud
+-- itself lasts CLOUD s. A trick to escape once, not a weapon.
+Constants.GADGETS = {
+	smoke = { USES = 1, HIDE = 3.5, CLOUD = 6 },
+}
+
 -- ─── Emotes ───────────────────────────────────────────────────────────────────
 Constants.EMOTE_IDS = { "Wave", "Dance", "Laugh" }
 

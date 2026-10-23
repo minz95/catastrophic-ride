@@ -1,19 +1,39 @@
 -- Cosmetics.lua
--- What the shop sells: looks only. A paint recolours the vehicle's body /
--- accent roles (VehicleDesign palette); a trail streams behind the chassis.
--- Neither has mass or collision, so handling never changes (the build must
--- not decide the race). Bought with coins (Shared/Progression), kept in the
+-- What the shop sells. Vehicle looks (special rides, paints, trails) have no
+-- mass or collision, so handling never changes (the build must not decide
+-- the race). Farming extras: a move changes how your punch looks only; a
+-- gadget is one small trick per round (Constants.GADGETS). Bought with coins (Shared/Progression), kept in the
 -- saved record (owned / equipped), applied by VehicleBuilder.build(…, look).
 -- Each category's first entry is the free default.
 
 local Cosmetics = {}
 
-Cosmetics.CATEGORIES = { "paint", "trail" }
-Cosmetics.TITLES = { paint = "Paint", trail = "Trail" }
+Cosmetics.CATEGORIES = { "ride", "paint", "trail", "move", "gadget" }
+Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets" }
 
 local C3 = Color3.fromRGB
 
 Cosmetics.ITEMS = {
+	-- Special rides: the whole vehicle (car, boat or plane) turns into a show.
+	-- They replace the paint and the trail while equipped. `material` goes on
+	-- the body-coloured parts; `light` is a glow on the chassis; `fx` are
+	-- particles that pour out while the vehicle drives forward (client:
+	-- CosmeticFx, rate grows with speed); `hue` cycles the body colour.
+	ride = {
+		{ id = "ride_none", name = "My Build", price = 0 },
+		{ id = "ride_flame",   name = "Flame Rider",  price = 1000, minLevel = 4,
+			body = C3(25, 20, 20), accent = C3(255, 90, 20), material = "SmoothPlastic", light = C3(255, 120, 40),
+			fx = "flame", trail = { colors = { C3(255, 220, 60), C3(255, 60, 20) }, light = 0.7 } },
+		{ id = "ride_neon",    name = "Neon Phantom", price = 1300, minLevel = 5,
+			body = C3(20, 255, 220), accent = C3(255, 40, 200), material = "Neon", light = C3(40, 255, 230),
+			fx = "sparks", trail = { colors = { C3(40, 255, 230), C3(255, 40, 200) }, light = 1 } },
+		{ id = "ride_rainbow", name = "Rainbow Comet", price = 1800, minLevel = 6,
+			body = C3(255, 255, 255), accent = C3(255, 200, 40), material = "Glass", light = C3(255, 255, 255),
+			fx = "rainbow", hue = true, trail = { rainbow = true, light = 0.8 } },
+		{ id = "ride_gold",    name = "Golden Legend", price = 3000, minLevel = 10,
+			body = C3(255, 200, 40), accent = C3(255, 245, 200), material = "Foil", light = C3(255, 210, 90),
+			fx = "gold", trail = { colors = { C3(255, 230, 120), C3(255, 170, 20) }, light = 0.9 } },
+	},
 	paint = {
 		{ id = "paint_default", name = "Biome Colors", price = 0 },
 		{ id = "paint_midnight", name = "Midnight", price = 150, body = C3(30, 40, 90),   accent = C3(190, 200, 215) },
@@ -30,6 +50,17 @@ Cosmetics.ITEMS = {
 		{ id = "trail_bubbles", name = "Bubbles",    price = 300, colors = { C3(120, 210, 255), C3(220, 245, 255) } },
 		{ id = "trail_fire",    name = "Fire",       price = 450, colors = { C3(255, 220, 60), C3(255, 70, 20) }, light = 0.6, minLevel = 4 },
 		{ id = "trail_rainbow", name = "Rainbow",    price = 900, rainbow = true, light = 0.4, minLevel = 7 },
+	},
+	-- Moves (FARMING): how your punch looks. Same reach, cooldown and hits
+	-- (FarmingRules): a show, not an advantage.
+	move = {
+		{ id = "move_punch", name = "Punch", price = 0 },
+		{ id = "move_kick",  name = "Flying Kick", price = 700, minLevel = 2, style = "kick" },
+	},
+	-- Gadgets (FARMING): one use per round (Constants.GADGETS).
+	gadget = {
+		{ id = "gadget_none",  name = "No Gadget", price = 0 },
+		{ id = "gadget_smoke", name = "Smoke Bomb", price = 900, minLevel = 3, gadget = "smoke" },
 	},
 }
 
@@ -92,14 +123,27 @@ function Cosmetics.equip(rec, id)
 	return "ok"
 end
 
---- What VehicleBuilder needs from the equipped items: { paint = item?, trail = item? }
--- (nil for defaults and for ids no longer sold).
+--- The equipped, non-default item of a category (nil for defaults and
+-- for ids no longer sold).
+function Cosmetics.equipped(equipped, category)
+	local id = equipped and equipped[category]
+	local it = id and _byId[id]
+	if it and it.category == category and not Cosmetics.isDefault(id) then return it end
+	return nil
+end
+
+--- What VehicleBuilder needs: { paint = item?, trail = item?, ride = item? }.
+-- A special ride brings its own paint and trail.
 function Cosmetics.look(equipped)
-	local look = {}
-	for _, cat in ipairs(Cosmetics.CATEGORIES) do
-		local id = equipped and equipped[cat]
-		local it = id and _byId[id]
-		if it and not Cosmetics.isDefault(id) then look[cat] = it end
+	local look = {
+		paint = Cosmetics.equipped(equipped, "paint"),
+		trail = Cosmetics.equipped(equipped, "trail"),
+	}
+	local ride = Cosmetics.equipped(equipped, "ride")
+	if ride then
+		look.ride = ride
+		look.paint = { body = ride.body, accent = ride.accent }
+		look.trail = ride.trail
 	end
 	return look
 end

@@ -186,7 +186,78 @@ function VehicleBuilder.addTrail(chassis, trail)
 	return t
 end
 
---- look (optional, cosmetics from Shared/Cosmetics.look): { paint = { body, accent }, trail = {...} }.
+local RIDE_FX = {
+	-- texture, colours, size start→end, lifetime, speed, spread, BaseRate (at full speed)
+	flame   = { tex = "rbxasset://textures/particles/fire_main.dds", colors = { Color3.fromRGB(255, 230, 90), Color3.fromRGB(255, 60, 10) },
+		size = { 1.6, 0.2 }, life = { 0.25, 0.5 }, speed = { 8, 14 }, spread = 14, rate = 90, light = 1 },
+	sparks  = { tex = "rbxasset://textures/particles/sparkles_main.dds", colors = { Color3.fromRGB(40, 255, 230), Color3.fromRGB(255, 40, 200) },
+		size = { 0.6, 0.1 }, life = { 0.3, 0.6 }, speed = { 12, 20 }, spread = 45, rate = 70, light = 1 },
+	rainbow = { tex = "rbxasset://textures/particles/sparkles_main.dds", rainbow = true,
+		size = { 1.1, 0.3 }, life = { 0.8, 1.3 }, speed = { 4, 9 }, spread = 30, rate = 140, light = 0.8 },
+	gold    = { tex = "rbxasset://textures/particles/sparkles_main.dds", colors = { Color3.fromRGB(255, 240, 160), Color3.fromRGB(255, 180, 20) },
+		size = { 0.9, 0.2 }, life = { 0.6, 1.0 }, speed = { 3, 7 }, spread = 60, rate = 80, light = 0.9 },
+}
+VehicleBuilder.RIDE_FX = RIDE_FX
+
+local function rainbowSequence()
+	return ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 60, 60)),
+		ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 200, 40)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(60, 220, 90)),
+		ColorSequenceKeypoint.new(0.75, Color3.fromRGB(60, 150, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 80, 255)),
+	})
+end
+
+--- A special ride (Shared/Cosmetics "ride"): body material, a glow and
+-- particles at the back. The particles' Rate follows the forward speed on
+-- every client (CosmeticFx, attribute BaseRate); tagged "RideFx".
+function VehicleBuilder.applyRide(model, chassis, ride)
+	model:SetAttribute("Ride", ride.id)
+	if ride.hue then model:SetAttribute("RideHue", true) end
+	local ok, mat = pcall(function() return Enum.Material[ride.material or "SmoothPlastic"] end)
+	for _, p in ipairs(model:GetDescendants()) do
+		if p:IsA("BasePart") and not p:IsA("VehicleSeat") and p.Transparency < 1 then
+			if p.Color == ride.body or p.Color == ride.accent then
+				if ok and mat then p.Material = mat end
+				if ride.material == "Foil" then p.Reflectance = 0.3 end
+				if p.Color == ride.body then p:SetAttribute("RideBody", true) end
+			end
+		end
+	end
+	if ride.light then
+		local light = Instance.new("PointLight")
+		light.Name = "RideGlow"
+		light.Color = ride.light
+		light.Brightness = 2
+		light.Range = 16
+		light.Parent = chassis
+	end
+	local fx = ride.fx and RIDE_FX[ride.fx]
+	if fx then
+		local at = Instance.new("Attachment")
+		at.Name = "RideFxAt"
+		at.Position = Vector3.new(0, 0, chassis.Size.Z * 0.5)
+		at.Parent = chassis
+		local e = Instance.new("ParticleEmitter")
+		e.Name = "RideFx"
+		e.Texture = fx.tex
+		e.Color = fx.rainbow and rainbowSequence() or ColorSequence.new(fx.colors[1], fx.colors[2])
+		e.Size = NumberSequence.new(fx.size[1], fx.size[2])
+		e.Lifetime = NumberRange.new(fx.life[1], fx.life[2])
+		e.Speed = NumberRange.new(fx.speed[1], fx.speed[2])
+		e.SpreadAngle = Vector2.new(fx.spread, fx.spread)
+		e.EmissionDirection = Enum.NormalId.Back
+		e.LightEmission = fx.light or 0
+		e.Transparency = NumberSequence.new(0, 1)
+		e.Rate = 0   -- CosmeticFx sets it from the speed
+		e:SetAttribute("BaseRate", fx.rate)
+		e.Parent = at
+	end
+	pcall(function() game:GetService("CollectionService"):AddTag(model, "RideFx") end)
+end
+
+--- look (optional, cosmetics from Shared/Cosmetics.look): { paint = { body, accent }, trail = {...}, ride = item }.
 function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	slots = slots or {}
 	look = look or {}
@@ -252,6 +323,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 
 	_applyStatVisuals(model, stats)
 	if look.trail then VehicleBuilder.addTrail(chassis, look.trail) end
+	if look.ride then VehicleBuilder.applyRide(model, chassis, look.ride) end
 
 	-- ── Physics drive constraints ─────────────────────────────────────────────
 	-- VehicleSeat's built-in Torque/TurnSpeed require Motor6D wheel joints to

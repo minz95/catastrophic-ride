@@ -247,6 +247,27 @@ def check(sc, report):
                     p5 = vals[max(0, int(len(vals) * 0.05) - 1)]
                     if p5 < floor:
                         out.append(("fail", "server %s p5 %.1f under %d (min %.1f)" % (key, p5, floor, vals[0])))
+        if c.get("shop"):
+            sc_ = c["shop"]
+            bought = [e for e in events if e.get("kind") == "bot_shop" and (e.get("data") or {}).get("result") == "ok"]
+            notok = [e for e in events if e.get("kind") == "bot_shop" and (e.get("data") or {}).get("result") != "ok"]
+            if len(bought) < sc_.get("bought", 0):
+                out.append(("fail", "bought %d of %d shop items (%s)" % (len(bought), sc_["bought"], ", ".join(
+                    "%s: %s" % ((e.get("data") or {}).get("id"), (e.get("data") or {}).get("result")) for e in notok[:6]))))
+            fx = {e.get("userId") for e in events if e.get("kind") == "bot_ride_fx"
+                  and ((e.get("data") or {}).get("rate") or 0) > 0 and ((e.get("data") or {}).get("forward") or 0) > 10}
+            if len(fx) < sc_.get("rideFx", 0):
+                out.append(("fail", "special-ride particles seen while driving on %d cars, want %d" % (len(fx), sc_["rideFx"])))
+            kicks = [e for e in events if e.get("kind") == "bot_farmfx" and (e.get("data") or {}).get("what") == "kick"
+                     and (e.get("data") or {}).get("drawn")]
+            if len(kicks) < sc_.get("kicks", 0):
+                out.append(("fail", "no Flying Kick was drawn"))
+            gadgets = [e for e in events if e.get("kind") == "gadget"]
+            escaped = [e for e in events if e.get("kind") == "steal_attempt" and e.get("result") == "escaped"]
+            if not gadgets:
+                out.append(("warn", "no Smoke Bomb was thrown (no bot with one was grabbed)"))
+            elif not escaped:
+                out.append(("warn", "%d Smoke Bombs, no grab escaped" % len(gadgets)))
         if c.get("rewards"):
             rewarded = {e.get("userId") for e in events if e.get("kind") == "reward"}
             for r in report.get("rounds", []):

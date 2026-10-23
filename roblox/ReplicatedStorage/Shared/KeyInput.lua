@@ -19,6 +19,7 @@ KeyInput.GAMEPAD = {   -- by KeyCode name
 	ButtonL1 = Enum.KeyCode.LeftShift,  -- drift
 	ButtonY  = Enum.KeyCode.R,          -- reset car
 	DPadDown = Enum.KeyCode.Q,          -- drop item
+	DPadUp   = Enum.KeyCode.T,          -- gadget
 }
 
 local _began, _ended = {}, {}

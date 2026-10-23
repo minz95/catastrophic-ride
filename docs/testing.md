@@ -256,6 +256,16 @@ for a record that failed to load) and the car CraftingManager builds wearing
 the equipped look. A real purchase needs the published place and a product
 id in `Shared/Products`.
 
+`tests/specs/shop_extras.spec.luau`: every special ride on every vehicle
+(material, glow, speed particles at rate 0 until driving, its trail, chassis
+and seat unchanged), the Flying Kick (same result, `style = kick`), the
+Smoke Bomb (one per round, no punch or steal while hidden, a grab ends
+"escaped"). `lune run tools/economy.luau` writes `reports/economy.md`: on
+which day three kinds of player can buy each item. In Studio `python3
+tools/studio/sim.py run shop-4p`: bots buy through ShopAction, then the
+`shop` check wants the buys, ride particles while driving forward, a drawn
+kick (and warns when no Smoke Bomb escape happened).
+
 ### Analytics (live only)
 
 Retention (D1 / D7 / D30), sessions and playtime are on the Creator

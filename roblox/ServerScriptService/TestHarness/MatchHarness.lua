@@ -176,6 +176,22 @@ function MatchHarness.start(args, endTest)
 		player:SetAttribute("BotDriverProfile", driverProfiles[((joined - 1) % #driverProfiles) + 1])
 		player:SetAttribute("BotIndex", joined)   -- loadouts[round][BotIndex]
 		player:SetAttribute("HarnessBot", true)
+		-- shop experiments: coins and a level for the bot, and what it buys
+		-- through ShopAction (BotDriver)
+		if args.shop and args.shop[joined] then
+			player:SetAttribute("BotShop", table.concat(args.shop[joined], ","))
+			task.spawn(function()
+				local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
+				local t0 = os.clock()
+				while not PlayerStore.get(player) and os.clock() - t0 < 10 do task.wait(0.2) end
+				local rec = PlayerStore.get(player)
+				if rec then
+					rec.coins = args.shopCoins or 10000
+					rec.level = args.shopLevel or 20
+				end
+				player:SetAttribute("BotShopReady", true)
+			end)
+		end
 		Telemetry.record("bot_joined", {
 			userId = player.UserId, name = player.Name,
 			farm = player:GetAttribute("BotFarmProfile"), driver = player:GetAttribute("BotDriverProfile"),

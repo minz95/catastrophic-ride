@@ -241,6 +241,14 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-24 — Show-off items.** Special rides (Flame Rider, Neon Phantom,
+  Rainbow Comet, Golden Legend, 1000–3000 coins, level 4–10) turn the whole
+  car / boat / plane into a show that pours particles while driving; still
+  no mass, same seat values. Farming extras stay fair: the Flying Kick is a
+  punch with a kick's look, the Smoke Bomb one 3.5 s escape per round.
+  Coins can also come from Robux packs, so a gadget must never be a weapon
+  (it would be pay-to-win). Simulated: a daily player saves for a ride in
+  5–12 days, a casual one in 2–4 weeks.
 - **2026-10-23 — Catch-up and a longer grace after a slow winner.** A fast
   winner (92 s) left the novice 170 studs short of the line when the flat
   45 s grace ran out. Cars 60+ studs behind the leader now get up to +12 %
