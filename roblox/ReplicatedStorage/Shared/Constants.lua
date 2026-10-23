@@ -450,6 +450,19 @@ Constants.BOTS = {
 	NAMES = { "Rusty", "Duckie", "Turbo Tom", "Bubbles", "Sparky", "Noodle", "Zippy", "Biscuit" },
 	-- mostly average drivers so a new player can beat them; one expert to chase
 	PROFILES = { "average", "novice", "expert", "average", "novice", "average", "average", "novice" },
+	-- FARMING (Modules/FarmBots): the same bots walk the farm first. Slower than
+	-- a player (16), they mash slower in contests, tap to defend a steal now and
+	-- then, and throw the odd punch at a player in reach. Their items become
+	-- their race car (CraftingRules.autoSlots).
+	FARM = {
+		WALK = 13,          -- studs/s
+		THINK = 0.25,       -- s between decisions
+		MASH = 5,           -- contest presses per second
+		DEFEND = 0.45,      -- chance per think to tap DefendSteal while grabbed
+		PUNCH_EVERY = 7,    -- s, average, at a player in reach
+		PUNCH_CHANCE = 0.5, -- of taking a swing when one is due
+		WANDER = 18,        -- studs: how far a bot with a full bag strolls
+	},
 }
 
 -- ─── Gadgets (shop, FARMING; Shared/Cosmetics "gadget") ───────────────────────

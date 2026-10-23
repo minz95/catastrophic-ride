@@ -22,6 +22,7 @@ local Telemetry          = require(ServerScriptService.Modules.Telemetry)
 local FarmingRules       = require(ReplicatedStorage.Shared.FarmingRules)
 local Cosmetics          = require(ReplicatedStorage.Shared.Cosmetics)
 local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
+local FarmBots           = require(ServerScriptService.Modules.FarmBots)
 
 print("[FarmingManager] All requires succeeded")
 
@@ -362,7 +363,7 @@ local function _dropItem(player, slotIndex, reason)
 	end)
 	if not ok or not model or not model.PrimaryPart then
 		if model then model:Destroy() end
-		RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
+		_fireClient(RemoteEvents.InventoryUpdated, player, data.inventory)
 		return itemName
 	end
 
@@ -498,13 +499,13 @@ local function _giveItem(player, itemId)
 		rarity = item.rarity,
 		userId = player.UserId,
 	})
-	RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
+	_fireClient(RemoteEvents.InventoryUpdated, player, data.inventory)
 	return true
 end
 
 -- ─── RequestPickup handler ────────────────────────────────────────────────────
 
-RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
+local function _requestPickup(player, itemId)
 	if not _active then return "denied: phase not active" end
 
 	local item = _items[itemId]
@@ -548,8 +549,8 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 		return "denied: too far (" .. math.floor(closestDist) .. " studs)"
 	end
 
-	-- Check if another player is also in range → start contest
-	for _, otherPlayer in ipairs(Players:GetPlayers()) do
+	-- Check if another player (or bot) is also in range → start contest
+	for _, otherPlayer in ipairs(SessionManager.actors()) do
 		if otherPlayer == player then continue end
 		local otherChar = otherPlayer.Character
 		local otherRoot = otherChar and otherChar:FindFirstChild("HumanoidRootPart")
@@ -569,12 +570,12 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 					_resolveContest(itemId, contest)
 				end)
 				-- Notify both clients to start button-mash UI
-				RemoteEvents.ContestUpdate:FireClient(player,
+				_fireClient(RemoteEvents.ContestUpdate, player,
 					itemId,
 					{ userId = player.UserId,      count = 0 },
 					{ userId = otherPlayer.UserId, count = 0 }
 				)
-				RemoteEvents.ContestUpdate:FireClient(otherPlayer,
+				_fireClient(RemoteEvents.ContestUpdate, otherPlayer,
 					itemId,
 					{ userId = player.UserId,      count = 0 },
 					{ userId = otherPlayer.UserId, count = 0 }
@@ -590,6 +591,7 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 	end
 	return "denied: give failed"
 end
+RemoteEvents.RequestPickup.OnServerInvoke = _requestPickup
 
 -- ─── RequestDrop handler (Q key — manual drop) ───────────────────────────────
 
@@ -623,9 +625,10 @@ end
 
 -- ─── RequestContest handler (press count updates) ─────────────────────────────
 
-RemoteEvents.RequestContest.OnServerInvoke = function(player, itemId, presses)
+local function _contestPress(player, itemId, presses)
 	local contest = _contests[itemId]
-	if not contest then return end
+	if not contest or type(presses) ~= "number" then return end
+	if contest.players[1] ~= player and contest.players[2] ~= player then return end
 
 	contest.presses[player.UserId] = math.min(presses, 999)  -- sanity cap
 
@@ -635,13 +638,14 @@ RemoteEvents.RequestContest.OnServerInvoke = function(player, itemId, presses)
 		{ userId = p1.UserId, count = contest.presses[p1.UserId] or 0 },
 		{ userId = p2.UserId, count = contest.presses[p2.UserId] or 0 },
 	}
-	RemoteEvents.ContestUpdate:FireClient(p1, itemId, update[1], update[2])
-	RemoteEvents.ContestUpdate:FireClient(p2, itemId, update[1], update[2])
+	_fireClient(RemoteEvents.ContestUpdate, p1, itemId, update[1], update[2])
+	_fireClient(RemoteEvents.ContestUpdate, p2, itemId, update[1], update[2])
 
 	if tick() >= contest.endTick then
 		_resolveContest(itemId, contest)
 	end
 end
+RemoteEvents.RequestContest.OnServerInvoke = _contestPress
 
 -- ─── RequestSteal handler ─────────────────────────────────────────────────────
 
@@ -649,7 +653,7 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	if not _active then return "denied: not farming" end
 
 	local thiefData = SessionManager.getData(thief)
-	local victim = type(targetUserId) == "number" and Players:GetPlayerByUserId(targetUserId)
+	local victim = SessionManager.actorById(targetUserId)
 	local victimData = victim and SessionManager.getData(victim)
 	if not thiefData or not victimData then return "denied: no such player" end
 	local thiefRoot  = thief.Character  and thief.Character:FindFirstChild("HumanoidRootPart")
@@ -688,7 +692,7 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	opened = true
 	victimData._stealWindow = window
 	thiefData._stealing = window
-	RemoteEvents.StealAttempt:FireClient(victim, thief.Name)
+	_fireClient(RemoteEvents.StealAttempt, victim, thief.Name)
 	RemoteEvents.FarmAction:FireAllClients("grab", thief.UserId, victim.UserId, { window = Constants.STEAL_DEFEND_WINDOW })
 	local grabbedAt = tick()
 	task.wait(Constants.STEAL_DEFEND_WINDOW)
@@ -718,8 +722,8 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	thiefData.stealCooldownEnd   = tick() + Constants.STEAL_COOLDOWN
 	victimData.stealInvincibleEnd = tick() + Constants.STEAL_INVINCIBLE
 
-	RemoteEvents.InventoryUpdated:FireClient(thief,  thiefData.inventory)
-	RemoteEvents.InventoryUpdated:FireClient(victim, victimData.inventory)
+	_fireClient(RemoteEvents.InventoryUpdated, thief,  thiefData.inventory)
+	_fireClient(RemoteEvents.InventoryUpdated, victim, victimData.inventory)
 	Telemetry.record("steal", {
 		thief = thief.UserId, victim = victim.UserId, item = stolenItem,
 		thiefInventory = #thiefData.inventory,
@@ -730,7 +734,7 @@ end
 
 -- One call per defence tap. Taps outside an open window do nothing (a tap
 -- sent "just in case" used to block the next steal whenever it came).
-RemoteEvents.DefendSteal.OnServerInvoke = function(player)
+local function _defend(player)
 	local data = SessionManager.getData(player)
 	local window = data and data._stealWindow
 	if window then
@@ -740,6 +744,7 @@ RemoteEvents.DefendSteal.OnServerInvoke = function(player)
 	end
 	return 0
 end
+RemoteEvents.DefendSteal.OnServerInvoke = _defend
 
 -- ─── Fights: punch (F) and guard (G) ─────────────────────────────────────────
 -- Constants.FIGHT, FarmingRules.canPunch / punch. Every punch, guard, and
@@ -761,6 +766,7 @@ end
 -- The player the attacker is facing within reach (nearest), or nil.
 -- How the player's punch looks (shop "move", e.g. "kick"); nil = a punch.
 local function _moveStyle(player)
+	if SessionManager.isBot(player) then return nil end
 	local rec = PlayerStore.get(player)
 	local mv = rec and Cosmetics.equipped(rec.equipped, "move")
 	return mv and mv.style or nil
@@ -796,7 +802,7 @@ end
 local function _punchTarget(attacker, aRoot)
 	local look = _flatUnit(aRoot.CFrame.LookVector)
 	local best, bestD
-	for _, other in ipairs(Players:GetPlayers()) do
+	for _, other in ipairs(SessionManager.actors()) do
 		local od = other ~= attacker and SessionManager.getData(other)
 		local hidden = od and (od._hiddenUntil or 0) > tick()   -- in a Smoke Bomb
 		local r = other ~= attacker and not hidden and _root(other)
@@ -834,7 +840,7 @@ RemoteEvents.SetGuard.OnServerEvent:Connect(function(player, on)
 	end
 end)
 
-RemoteEvents.RequestPunch.OnServerInvoke = function(attacker)
+local function _punch(attacker)
 	if not _active then return "denied: not farming" end
 	local aData = SessionManager.getData(attacker)
 	local aRoot = _root(attacker)
@@ -876,6 +882,7 @@ RemoteEvents.RequestPunch.OnServerInvoke = function(attacker)
 	})
 	return result
 end
+RemoteEvents.RequestPunch.OnServerInvoke = _punch
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
 
@@ -901,14 +908,21 @@ GameManager.onPhaseChanged(function(phase, biome)
 		-- Item supply follows the player count, and waves of rarer items land
 		-- later in the phase (Constants.FARM_SUPPLY): with 100 items for 4
 		-- players every inventory was full 15–50 s into a 90 s phase.
-		local n = #Players:GetPlayers()
+		local humans = #Players:GetPlayers()
+		local n = humans + FarmBots.wanted(humans, GameManager.getHarness())
 		local first = _spawnItems(biome, Constants.farmSupply(n))
+		-- Bots fill an empty farm (live servers; harness `fillBots`)
+		FarmBots.start(biome, {
+			items = function() return _items, _contests end,
+			pickup = _requestPickup, contestPress = _contestPress, punch = _punch, defend = _defend,
+		})
+
 		Telemetry.record("item_wave", { wave = 0, count = first, players = n })
 		local length = GameManager.phaseDuration(Constants.PHASES.FARMING) or Constants.PHASE_DURATION.FARMING
 		for w, wave in ipairs(Constants.FARM_SUPPLY.WAVES) do
 			task.delay(length * wave.at, function()
 				if not _active or _farmRound ~= round then return end
-				local players = #Players:GetPlayers()
+				local players = #SessionManager.actors()
 				local count = _spawnItems(biome, math.max(1, math.ceil(players * wave.perPlayer)), wave.dist, true)
 				Telemetry.record("item_wave", { wave = w, count = count, players = players })
 				RemoteEvents.ScreenEffect:FireAllClients("itemWave", { count = count, rare = wave.label })
@@ -918,11 +932,14 @@ GameManager.onPhaseChanged(function(phase, biome)
 			local n = 0; for _ in pairs(_items) do n = n + 1 end; return n
 		end)())
 
+	elseif phase == Constants.PHASES.LOBBY then
+		FarmBots.clear()
 	elseif phase == Constants.PHASES.CRAFTING then
 		_active = false
 		_contests = {}
+		FarmBots.stop()
 		-- fights end with the phase: drop guards and hit counts
-		for _, p in ipairs(Players:GetPlayers()) do
+		for _, p in ipairs(SessionManager.actors()) do
 			local d = SessionManager.getData(p)
 			if d then
 				d._hits, d._lastHitAt, d._knockImmuneEnd, d._punchCooldownEnd = nil, nil, nil, nil

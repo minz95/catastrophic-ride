@@ -212,6 +212,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   and a negative id (ProgressionManager pays only players, but bots take
   places). Harness sessions get bots only with `fillBots`. Grid slots:
   `Modules/RaceGrid`.
+- Bots are SessionManager proxies (`SessionManager.addBot`, `bots()`,
+  `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
+  Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
+  `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /
+  punch / defend functions, then race the auto craft of their bag. Loop over
+  `SessionManager.actors()` where bots take part (targets, contests), and
+  never FireClient to a bot (FarmingManager `_fireClient`, AbilityManager
+  `_screen`; shoves go to `RaceBots.knock`). Clients find a bot's NPC by the
+  tag "FarmBot" and attribute BotUserId.
 - Item models: the FBX items are imported in Studio into the published
   place's ServerStorage; `python3 tools/studio/item_meshes.py` copies them
   into `Modules/ItemMeshData` (mesh / texture ids), from which

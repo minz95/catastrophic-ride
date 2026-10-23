@@ -60,6 +60,57 @@ function SessionManager.getAllData()
 	return PlayerData
 end
 
+-- ─── Bots ─────────────────────────────────────────────────────────────────────
+-- Server bots (Modules/FarmBots, Modules/RaceBots) stand in for players: a
+-- proxy table { UserId (negative), Name, DisplayName, isBot = true,
+-- Character = their NPC model or nil, profile }. Their data lives here like
+-- a player's, so farming, abilities and race effects treat them the same.
+-- They have no client: never FireClient to one (SessionManager.isBot).
+
+local _bots = {}   -- [userId] = proxy
+
+function SessionManager.isBot(who)
+	return type(who) == "table" and who.isBot == true
+end
+
+function SessionManager.addBot(proxy)
+	_bots[proxy.UserId] = proxy
+	PlayerData[proxy.UserId] = PlayerData[proxy.UserId] or {
+		skinIndex = 1, inventory = {}, vehicleStats = nil, vehicleModel = nil,
+		raceProgress = 0, raceRank = 0, finishTime = nil, stealCooldownEnd = 0, stealInvincibleEnd = 0,
+		bot = true,
+	}
+	return PlayerData[proxy.UserId]
+end
+
+function SessionManager.removeBot(userId)
+	local d = PlayerData[userId]
+	if d and d.vehicleModel and d.vehicleModel.Parent then d.vehicleModel:Destroy() end
+	PlayerData[userId] = nil
+	_bots[userId] = nil
+end
+
+--- Bot proxies, in id order (-100001 first).
+function SessionManager.bots()
+	local out = {}
+	for _, b in pairs(_bots) do table.insert(out, b) end
+	table.sort(out, function(a, b) return a.UserId > b.UserId end)
+	return out
+end
+
+--- Players and bots.
+function SessionManager.actors()
+	local out = Players:GetPlayers()
+	for _, b in ipairs(SessionManager.bots()) do table.insert(out, b) end
+	return out
+end
+
+--- A player or a bot by id.
+function SessionManager.actorById(userId)
+	if type(userId) ~= "number" then return nil end
+	return _bots[userId] or Players:GetPlayerByUserId(userId)
+end
+
 function SessionManager.setVehicle(player, model, stats)
 	local d = PlayerData[player.UserId]
 	if d then

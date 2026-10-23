@@ -4,7 +4,11 @@
 -- grid slots and race with the same driver (Shared/Autopilot) and drive rule
 -- (Shared/VehicleController) as everyone else; the server owns their cars.
 -- RacingManager starts them, counts their finishes and lists them in the
--- results (name, bot = true); they earn nothing and abilities ignore them.
+-- results (name, bot = true); they earn nothing. They are the farm bots
+-- (Modules/FarmBots: same ids and names, SessionManager bot proxies): a bot
+-- that farmed races the auto craft of its bag, others a random build. Their
+-- car is the proxy's vehicleModel, so abilities and race effects hit them
+-- like anyone (shoves arrive through RaceBots.knock).
 -- Off in harness sessions unless HarnessConfig `fillBots` asks for them.
 
 local CollectionService = game:GetService("CollectionService")
@@ -29,10 +33,12 @@ local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
 local VehicleTuning = require(ServerScriptService.Modules.VehicleTuning)
 local RaceStart = require(ServerScriptService.Modules.RaceStart)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
+local SessionManager = require(ServerScriptService.SessionManager)
+local FarmBots = require(ServerScriptService.Modules.FarmBots)
 
 local RaceBots = {}
 
-RaceBots.ID_BASE = -100000   -- bot ids: ID_BASE - n (never a real UserId)
+RaceBots.ID_BASE = FarmBots.ID_BASE   -- bot ids: ID_BASE - n (never a real UserId)
 RaceBots.list = {}           -- bots of the current race
 
 local _conn = nil
@@ -105,13 +111,17 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 	for k = 1, count do
 		local cf = gridCFrames[firstSlot + k - 1]
 		if not cf then break end
-		local slots = RaceBots.randomSlots(_rng)
+		local proxy = FarmBots.proxy(k)
+		local data = SessionManager.getData(proxy)
+		local farmed = data and #data.inventory > 0
+		local slots = farmed and CraftingRules.autoSlots(data.inventory, ItemConfig) or RaceBots.randomSlots(_rng)
 		local stats = statsFor(slots, biome)
 		local paints = Cosmetics.ITEMS.paint
 		local paint = paints[_rng:NextInteger(1, #paints)]
 		local model = VehicleBuilder.build(stats, biome, cf, slots, { paint = paint.body and paint or nil })
-		local name = B.NAMES[((k - 1) % #B.NAMES) + 1]
-		local id = RaceBots.ID_BASE - k
+		local name = proxy.Name
+		local id = proxy.UserId
+		if data then data.vehicleModel, data.vehicleStats = model, stats end
 		model.Name = "Bot_" .. name
 		model:SetAttribute("BotRacer", true)
 		model:SetAttribute("BotName", name)
@@ -127,16 +137,16 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 		rayParams.FilterType = Enum.RaycastFilterType.Exclude
 		rayParams.FilterDescendantsInstances = { model }
 		rayParams.RespectCanCollide = true
-		local profileName = B.PROFILES[((k - 1) % #B.PROFILES) + 1]
+		local profileName = proxy.profile or B.PROFILES[((k - 1) % #B.PROFILES) + 1]
 		local bot = {
 			id = id, name = name, model = model, primary = primary,
 			seat = model:FindFirstChildWhichIsA("VehicleSeat", true),
 			ap = geo and Autopilot.new(geo, Autopilot.PROFILES[profileName] or Autopilot.PROFILES.average, k * 977),
-			profile = profileName, drive = VehicleController.newState(), rayParams = rayParams,
+			profile = profileName, drive = VehicleController.newState(), rayParams = rayParams, proxy = proxy, farmed = farmed,
 			cp = { false, false }, s = 0, finished = false, riseSeg = nil, t = 0, owned = false,
 		}
 		table.insert(RaceBots.list, bot)
-		Telemetry.record("race_bot", { id = id, name = name, profile = profileName, slots = table.clone(slots),
+		Telemetry.record("race_bot", { id = id, name = name, profile = profileName, slots = table.clone(slots), farmed = farmed,
 			maxSpeed = bot.seat and bot.seat.MaxSpeed })
 	end
 	return RaceBots.list
@@ -285,10 +295,24 @@ function RaceBots.bestProgress()
 	return best
 end
 
+--- A shove for bot `id` (what a player's client gets as RemoteEvents.CarImpact).
+function RaceBots.knock(id, dvx, dvz, spin)
+	for _, b in ipairs(RaceBots.list) do
+		if b.id == id and b.primary and b.primary.Parent then
+			local look = b.primary.CFrame.LookVector
+			VehicleController.knock(b.drive, dvx or 0, dvz or 0, spin or 0, look.X, look.Z, b.seat and b.seat.MaxSpeed or 60)
+			return true
+		end
+	end
+	return false
+end
+
 function RaceBots.clear()
 	if _conn then _conn:Disconnect(); _conn = nil end
 	for _, b in ipairs(RaceBots.list) do
 		if b.model and b.model.Parent then b.model:Destroy() end
+		local d = b.proxy and SessionManager.getData(b.proxy)
+		if d and d.vehicleModel == b.model then d.vehicleModel = nil end
 	end
 	RaceBots.list = {}
 end
