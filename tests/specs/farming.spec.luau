@@ -562,3 +562,55 @@ R.describe("idle time", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)
+
+R.describe("dropping an item (Q, swap, knock-out)", function()
+	local function farmActions(srv, kind)
+		local out = {}
+		for _, c in ipairs(rawget(srv.RemoteEvents.FarmAction, "_calls") or {}) do
+			if c.method == "FireAllClients" and c.args[1] == kind then table.insert(out, c.args) end
+		end
+		return out
+	end
+
+	R.it("puts the item back on the map, ahead of the player, where anyone can pick it up", function()
+		local srv = farmServer(2)
+		local a, b = srv.players[1], srv.players[2]
+		local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")
+		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(10, 3, 300)   -- faces -Z
+		srv.SessionManager.getData(a).inventory = { "Kettle", "Pizza" }
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestDrop, a, 2)).toBe("ok")
+		R.expect(table.concat(srv.SessionManager.getData(a).inventory, ",")).toBe("Kettle")
+		local placed = srv.Telemetry.events("item_dropped_world")
+		R.expect(#placed).toBe(1)
+		R.expect(placed[1].item).toBe("Pizza")
+		R.expect(placed[1].parts).toBeGreaterThan(0)
+		-- landed ahead (-Z) of the dropper, about DROP_TOSS studs away
+		R.expect(placed[1].z).toBeLessThan(300 - C.DROP_TOSS + 2)
+		R.expect(placed[1].z).toBeGreaterThan(300 - C.DROP_TOSS - 3)
+		-- the dropped Pizza is a pickable item again, for the other player
+		local tag
+		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
+			if d.Name == "ItemId" and d.Value == tostring(placed[1].itemId) then tag = d end
+		end
+		R.expect(tag ~= nil).toBe(true)
+		b.Character.HumanoidRootPart.Position = tag.Parent.Position + Vector3.new(1, 2, 0)
+		a.Character.HumanoidRootPart.Position = Vector3.new(200, 3, 900)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPickup, b, tag.Value)).toBe("ok")
+		R.expect(table.concat(srv.SessionManager.getData(b).inventory, ",")).toBe("Pizza")
+	end)
+
+	R.it("tells every client to draw the throw, from the dropper to the landing spot", function()
+		local srv = farmServer(2)
+		local a = srv.players[1]
+		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 300)
+		srv.SessionManager.getData(a).inventory = { "Log" }
+		srv.mock.invoke(srv.RemoteEvents.RequestDrop, a, 1)
+		local drops = farmActions(srv, "drop")
+		R.expect(#drops).toBe(1)
+		local _, who, _, info = table.unpack(drops[1], 1, 4)
+		R.expect(who).toBe(a.UserId)
+		R.expect(info.item).toBe("Log")
+		R.expect(info.model ~= nil and info.model.Parent ~= nil).toBe(true)
+		R.expect(info.to ~= nil and info.from ~= nil).toBe(true)
+	end)
+end)

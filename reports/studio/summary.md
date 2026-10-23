@@ -18,7 +18,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-forest-4p](farm-forest-4p.json) | FAIL | aeab89c+ | 2026-10-22T01:29 |
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
-| [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
+| [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
@@ -308,10 +308,11 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
   round 1 (FOREST): 0 finished of 4
     steal attempts: none
     -4: picked 14, contests 3/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 16, contests 6/6, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
-    -1: picked 0, contests 0/7, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -2: picked 17, contests 2/2, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
+    -1: picked 0, contests 0/3, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
     -3: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-  events: ability=2 bot_craft=4 bot_farmfx=64 bot_guard=23 bot_hud=183 bot_joined=4 bot_punch=168 bot_ready=4 bot_screen=8 contest_result=9 craft=4 harness_crafting=1 harness_round=1 item_drop=15 item_pickup=30 item_wave=3 phase=3 punch=166 race_sample=8 race_start=1 vehicle_spawn=4
+  events: ability=2 bot_craft=4 bot_farmfx=96 bot_guard=21 bot_hud=183 bot_joined=4 bot_punch=130 bot_ready=4 bot_screen=8 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=16 item_dropped_world=16 item_pickup=31 item_wave=3 phase=3 punch=130 race_sample=8 race_start=1 server_perf=52 vehicle_spawn=4
+server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING heartbeat 59-59 Hz, physics 60-60 fps, send max 235 kbps; memory max 2287 MB
 ```
 
 ## load-10p — FAIL

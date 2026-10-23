@@ -10,6 +10,8 @@
 --            wriggles, and the victim gets a big "press E" prompt.
 --   swat     a defence tap: the victim slaps at the thief.
 --   grabEnd  stolen → labels on both; defended → the thief is pushed back.
+--   drop     an item leaves an inventory: it flies from the dropper's hands
+--            to where it lands, with a dust puff.
 -- Poses rotate the shoulder / waist joints in the parent part's space: a
 -- Motor6D's C0 (R6, classic R15) or, on avatars with Roblox's newer joints
 -- (AnimationConstraint, no Motor6D), the joint's parent-side attachment. With
@@ -22,6 +24,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService        = game:GetService("RunService")
 local TweenService      = game:GetService("TweenService")
 local Debris            = game:GetService("Debris")
+local CollectionService = game:GetService("CollectionService")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
@@ -125,9 +128,17 @@ local POSE = {
 	leanBack  = A(R(-12), 0, 0),
 }
 
+-- A player's character, or a farm bot's (Modules/FarmBots: tagged "FarmBot",
+-- attribute BotUserId).
 local function charOf(userId)
 	local p = userId and Players:GetPlayerByUserId(userId)
-	return p and p.Character, p
+	if p then return p.Character, p end
+	if type(userId) == "number" and userId <= -100000 then
+		for _, m in ipairs(CollectionService:GetTagged("FarmBot")) do
+			if m:GetAttribute("BotUserId") == userId then return m, nil end
+		end
+	end
+	return nil, nil
 end
 
 -- ─── Small looks ─────────────────────────────────────────────────────────────
@@ -509,6 +520,69 @@ local function onSmoke(actorId, info)
 	report("farmfx", { what = "smoke", drawn = at ~= nil })
 end
 
+-- Drop (Q, a full-inventory swap, a knock-out): the item flies out of the
+-- dropper's hands in an arc, spinning, and lands where the server put it
+-- with a puff of dust. Only this client's copy moves (the parts are anchored
+-- at the landing spot on the server).
+local DROP_TIME = 0.55
+local function onDrop(actorId, info)
+	local model = info and info.model
+	local to = info and info.to
+	if not model or not model.Parent or not to then
+		report("farmfx", { what = "drop", drawn = false })
+		return
+	end
+	local c = charOf(actorId)
+	local root = c and c:FindFirstChild("HumanoidRootPart")
+	local from = (root and root.Position + Vector3.new(0, 1.5, 0)) or info.from or to
+	local parts, finals = {}, {}
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") then
+			table.insert(parts, d)
+			finals[d] = d.CFrame
+		end
+	end
+	local pivot = model.PrimaryPart and model.PrimaryPart.Position or to
+	local height = 3 + (from - to).Magnitude * 0.25
+	local spin = (math.random() < 0.5 and -1 or 1) * math.pi * 2
+	local t0 = os.clock()
+	local conn
+	conn = RunService.RenderStepped:Connect(function()
+		local k = math.clamp((os.clock() - t0) / DROP_TIME, 0, 1)
+		if not model.Parent then conn:Disconnect() return end
+		-- position along the arc relative to the landing spot
+		local offset = (from - pivot) * (1 - k) + Vector3.new(0, 4 * height * k * (1 - k), 0)
+		local turn = CFrame.new(pivot) * CFrame.Angles(spin * (1 - k) * 0.4, spin * (1 - k), 0) * CFrame.new(-pivot)
+		for _, p in ipairs(parts) do
+			if p.Parent then p.CFrame = CFrame.new(offset) * turn * finals[p] end
+		end
+		if k >= 1 then
+			conn:Disconnect()
+			for _, p in ipairs(parts) do if p.Parent then p.CFrame = finals[p] end end
+			local puff = Instance.new("Part")
+			puff.Anchored, puff.CanCollide, puff.CanQuery, puff.CanTouch = true, false, false, false
+			puff.Transparency = 1
+			puff.Size = Vector3.new(1, 1, 1)
+			puff.CFrame = CFrame.new(to + Vector3.new(0, 0.3, 0))
+			puff.Parent = workspace
+			local e = Instance.new("ParticleEmitter")
+			e.Texture = "rbxasset://textures/particles/smoke_main.dds"
+			e.Color = ColorSequence.new(Color3.fromRGB(210, 190, 160))
+			e.Size = NumberSequence.new(1.2, 2.6)
+			e.Transparency = NumberSequence.new(0.3, 1)
+			e.Lifetime = NumberRange.new(0.4, 0.7)
+			e.Speed = NumberRange.new(4, 7)
+			e.SpreadAngle = Vector2.new(80, 10)
+			e.Rate = 0
+			e.Parent = puff
+			e:Emit(14)
+			Debris:AddItem(puff, 1.2)
+		end
+	end)
+	if c then label(c, "📦 " .. tostring(info.item or "item"), Color3.fromRGB(255, 220, 140), 1.0, "drop") end
+	report("farmfx", { what = "drop", drawn = true, arc = math.floor((from - to).Magnitude * 10) / 10 })
+end
+
 RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, info)
 	local ok, err = pcall(function()
 		if kind == "punch" then
@@ -525,6 +599,8 @@ RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, 
 			onGrabEnd(actorId, targetId, info)
 		elseif kind == "smoke" then
 			onSmoke(actorId, info)
+		elseif kind == "drop" then
+			onDrop(actorId, info)
 		end
 	end)
 	if not ok then report("farmfx", { what = kind, error = tostring(err) }) end

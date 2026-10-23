@@ -206,6 +206,18 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   and a negative id (ProgressionManager pays only players, but bots take
   places). Harness sessions get bots only with `fillBots`. Grid slots:
   `Modules/RaceGrid`.
+- Item models: the FBX items are imported in Studio into the published
+  place's ServerStorage; `python3 tools/studio/item_meshes.py` copies them
+  into `Modules/ItemMeshData` (mesh / texture ids), from which
+  `ItemModelPreloader` builds them in any place without an import
+  (`AssetService:CreateMeshPartAsync`). Item and car models are
+  `ModelStreamingMode.Atomic`.
+- Streaming is off (`Workspace.StreamingEnabled = false` in the Rojo
+  project): with it on, multi-part item models arrived part by part (looked
+  broken) and clients stalled after teleports. Rojo test places never had it.
+- Drops (`FarmingManager._dropItem`) land `Constants.DROP_TOSS` studs ahead of
+  the dropper and are broadcast as FarmAction "drop" (FarmFx throws the item
+  in an arc).
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

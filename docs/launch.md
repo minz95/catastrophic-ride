@@ -9,6 +9,7 @@ and playtest markers Studio-only); `tests/specs/lobby.spec.luau` keeps them so.
 
 | Setting | Value | Why |
 |---|---|---|
+| Workspace → StreamingEnabled | **Off** | Rojo sets it too; with it on, item models looked broken and players froze after teleports |
 | Max players per server | **10** | `Constants.MAX_PLAYERS` and the 10 character skins |
 | Genre | Racing (or Party & Casual) | |
 | Devices | Computer, Phone, Tablet, Console | touch buttons: `TouchControls`; gamepad: `KeyInput.GAMEPAD` |
