@@ -219,10 +219,28 @@ spot with its track section; the RESULTS report lists them per section.
 - **2026-10-22 — Less waiting.** FARMING starts with 12 + 6 × players items
   and drops two waves of rarer items at 35% and 65% of the phase (100 items
   for 4 players filled every inventory in 15–50 s of 90). CRAFTING: once half
-  the players have submitted, the rest get 25 s. RACING: the winner's finish
+  the players have submitted, the rest get 25 s (40 s since 2026-10-23, below). RACING: the winner's finish
   leaves the others 45 s (a HUD countdown; was 30 s, raised with the longer
   climbing / spiral tracks), then non-finishers are listed as
   DNF (a timed-out race used to show nobody).
+- **2026-10-23 — Time to think in CRAFTING.** Bots cannot measure how long
+  a person deliberates, so it was estimated with a keystroke model: read 8
+  cards, ~4 s per slot (decide, click item, click slot), weigh the core
+  slots, submit — an experienced player ~35–50 s, a first-timer 60–90 s
+  (cards showed only icon and name). The 25 s hurry cut first-timers off
+  around 65 s and the timeout auto craft threw their picks away. Now: the
+  hurry gives 40 s; the crafting screen sends the arrangement on every change
+  (`CraftDraft`) and the timeout craft keeps it, filling only empty slots
+  (`CraftingRules.autoSlots`, also behind the Auto fill button, which used
+  to put items in inventory order and lose core slots); each card shows its
+  slot type, and pointing at or picking an item shows what its E ability
+  does (`Shared/ItemBlurbs`). Studio `craft-afk-3p` has a "slow" bot that
+  places items and never submits (`draftKept`).
+- **2026-10-23 — Fight animations were invisible.** FarmFx posed arms by
+  rotating Motor6D C0, but Roblox avatars now use AnimationConstraint joints
+  (no Motor6D), so every punch, guard, grab and swat pose did nothing while
+  the harness check ("a character exists") passed. Poses now rotate the
+  joint's parent-side attachment on those rigs; the check measures the arm.
 - **2026-10-22 — Nobody falls off after the finish.** A finished car is parked
   (MaxSpeed 0, no respawns); the road runs 150 studs (Sky 220) past the line
   to an end wall. In Studio the winner ran off the 50-stud run-off and fell

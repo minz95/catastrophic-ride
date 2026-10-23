@@ -20,6 +20,8 @@ BotBrain.RARITY_VALUE = RARITY_VALUE
 -- stealChance   probability per second of trying to steal when in range
 -- defendChance  probability of tapping fast enough to block a steal
 -- crafter       "optimal" (search best top speed) | "casual" (first fit)
+--               | "slow" (places items like casual, never presses Submit)
+--               | "none"
 -- punchChance   probability per second of punching a player in reach
 --               (>= 1: also walks up to players within huntRange to fight)
 -- guardChance   probability of holding G after being punched
@@ -29,6 +31,7 @@ BotBrain.PROFILES = {
 	sweaty  = { mashRate = 11, greed = 40, stealChance = 0.6, defendChance = 0.8, punchChance = 0.5, guardChance = 0.6, crafter = "optimal", huntRange = 40 },
 	casual  = { mashRate = 7,  greed = 15, stealChance = 0.1, defendChance = 0.4, punchChance = 0.1, guardChance = 0.3, crafter = "casual",  huntRange = 0 },
 	afk     = { mashRate = 0,  greed = 0,  stealChance = 0,   defendChance = 0,   punchChance = 0,   guardChance = 0,   crafter = "none",    huntRange = 0 },
+	slow    = { mashRate = 7,  greed = 15, stealChance = 0,   defendChance = 0.4, punchChance = 0,   guardChance = 0.3, crafter = "slow",    huntRange = 0 },
 	-- harness profiles: every encounter turns into a steal attempt / a fight
 	thief   = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, punchChance = 0,   guardChance = 0.2, crafter = "casual",  huntRange = 120 },
 	guard   = { mashRate = 9,  greed = 20, stealChance = 0,   defendChance = 1,   punchChance = 0,   guardChance = 1,   crafter = "optimal", huntRange = 0 },
@@ -165,6 +168,17 @@ function BotBrain.chooseSlots(profile, inventory, biome)
 		if cfg and byType[cfg.slotType] then
 			table.insert(byType[cfg.slotType], i)
 		end
+	end
+
+	if mode == "slow" then
+		-- the LAST item of each type (the auto craft takes the first), so a
+		-- kept draft is told apart from a fresh auto craft
+		local slots = {}
+		for _, slot in ipairs(CORE) do
+			local list = byType[slot]
+			if #list > 0 then slots[slot] = inventory[list[#list]] end
+		end
+		return slots
 	end
 
 	if mode == "casual" then

@@ -38,7 +38,10 @@ function Constants.farmSupply(players)
 	local F = Constants.FARM_SUPPLY
 	return math.min(Constants.ITEM_SPAWN_COUNT, F.BASE + F.PER_PLAYER * math.max(players or 1, 1))
 end
-Constants.CRAFT_HURRY  = { SHARE = 0.5, SECONDS = 25 }  -- half the players submitted → the rest get 25 s
+-- Half the players submitted → the rest get 40 s. Estimated (keystroke model,
+-- 2026-10-23): an experienced player crafts in 35–50 s, a first-timer in
+-- 60–90 s; with 25 s a first-timer was cut off around 65 s.
+Constants.CRAFT_HURRY  = { SHARE = 0.5, SECONDS = 40 }
 -- s the others get after the winner crosses the line. 45 = FUN_TARGETS
 -- finishSpread: a novice is ~1.35× the winner's time, 30-40 s on the
 -- 2026-10-22 tracks (30 s cut the Studio SKY novice short)

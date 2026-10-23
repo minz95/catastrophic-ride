@@ -51,4 +51,44 @@ function CraftingRules.validate(slots, inventory, itemConfig)
 	return clean, rejected
 end
 
+--- Fills the empty slots of `keep` (already valid slots, e.g. a player's
+-- arrangement when the timer ran out) from the unused inventory: the first
+-- item of each type goes to BODY / ENGINE / SPECIAL, leftovers to MOBILITY,
+-- HEAD, TAIL. Used by the Auto fill button and the timeout auto craft, so
+-- both put items where they count.
+function CraftingRules.autoSlots(inventory, itemConfig, keep)
+	local slots, used = {}, {}
+	for slot, item in pairs(keep or {}) do
+		for i, held in ipairs(inventory) do
+			if held == item and not used[i] then
+				used[i] = true
+				slots[slot] = item
+				break
+			end
+		end
+	end
+	for _, slot in ipairs(CraftingRules.ORDER) do
+		if slots[slot] == nil and CraftingRules.CORE_SLOTS[slot] then
+			for i, name in ipairs(inventory) do
+				local cfg = itemConfig[name]
+				if not used[i] and cfg and cfg.slotType == slot then
+					slots[slot], used[i] = name, true
+					break
+				end
+			end
+		end
+	end
+	for _, slot in ipairs(CraftingRules.ORDER) do
+		if slots[slot] == nil and CraftingRules.FREE_SLOTS[slot] then
+			for i, name in ipairs(inventory) do
+				if not used[i] then
+					slots[slot], used[i] = name, true
+					break
+				end
+			end
+		end
+	end
+	return slots
+end
+
 return CraftingRules

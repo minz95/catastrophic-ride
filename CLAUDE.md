@@ -124,7 +124,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - The current phase and biome are also `ReplicatedStorage` attributes
   (`Phase`, `Biome`) for client scripts that start after the event went out.
 - Craft submissions go through `Shared/CraftingRules.validate` (core slots
-  only take their own item type; the rest is dropped and logged).
+  only take their own item type; the rest is dropped and logged). The
+  crafting screen (`StarterGui/CraftingUI`; `CraftingClient` is not shown)
+  sends `CraftDraft` on every change; at the timeout the auto craft keeps the
+  draft and fills the rest with `CraftingRules.autoSlots`. A new item needs
+  a line in `Shared/ItemBlurbs`.
+- Character poses (FarmFx): avatars may have AnimationConstraint joints and
+  no Motor6D; pose through FarmFx's `joint()` handle, never `Motor6D.C0`
+  alone.
 - Fights (FARMING): `FarmingManager` RequestPunch / SetGuard with the
   pure rules in `FarmingRules.canPunch` / `punch`; knock-outs drop through
   `_dropItem` (reason "knocked_out"). Every fight or steal step is

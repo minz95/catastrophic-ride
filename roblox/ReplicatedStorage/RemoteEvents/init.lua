@@ -38,6 +38,8 @@
 --                          "grabEnd" (info.result = stolen | defended | denied ...)
 --   DriftTurbo          → client→server (level: number, slideSeconds: number)
 --                          a released drift earned Constants.DRIVE.DRIFT_TURBO[level]
+--   CraftDraft          → client→server (slotAssignments: table)  -- CRAFTING: the slots
+--                          as arranged so far; kept if the timer runs out first
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -77,6 +79,7 @@ local EVENTS = {
 	"DriftTurbo",
 	"SetGuard",
 	"FarmAction",
+	"CraftDraft",
 }
 
 local FUNCTIONS = {

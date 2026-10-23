@@ -113,6 +113,22 @@ R.describe("abilities", function()
 		R.expect(#sortedKeys(handlers)).toBeGreaterThan(20)
 	end)
 
+	R.it("every item has a crafting-screen line (ItemBlurbs) and no line names a missing item", function()
+		local ItemBlurbs = env.requirePath("ReplicatedStorage.Shared.ItemBlurbs")
+		local missing, extra = {}, {}
+		for name, cfg in pairs(ItemConfig) do
+			if type(cfg) == "table" and cfg.slotType
+				and not (ItemBlurbs.ABILITY[name] and ItemBlurbs.SLOT_HINT[cfg.slotType]) then
+				table.insert(missing, name)
+			end
+		end
+		for name in pairs(ItemBlurbs.ABILITY) do
+			if not ItemConfig[name] then table.insert(extra, name) end
+		end
+		R.expect(missing).toBeEmpty("items with no crafting line")
+		R.expect(extra).toBeEmpty("ItemBlurbs lines for items that do not exist")
+	end)
+
 	R.it("every item has an AbilityConfig entry", function()
 		local missing = {}
 		for _, name in ipairs(sortedKeys(items)) do

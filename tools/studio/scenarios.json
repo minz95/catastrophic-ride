@@ -1,5 +1,5 @@
 {
-  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). abilities (match): every loadout item fires ok at least once, no 'not equipped' denials, each landing measured by ability_probe does what it should (lift raises the car, speed effects change MaxSpeed, steer locks set TurnSpeed 0), every effect key sent is drawn by the bot clients (bot_fx). Tags: abilities (~25 min), vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], draftKept [farm profiles: what they placed survived the timeout auto craft], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). abilities (match): every loadout item fires ok at least once, no 'not equipped' denials, each landing measured by ability_probe does what it should (lift raises the car, speed effects change MaxSpeed, steer locks set TurnSpeed 0), every effect key sent is drawn by the bot clients (bot_fx). Tags: abilities (~25 min), vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
   "scenarios": [
     {
       "name": "race-forest",
@@ -713,10 +713,10 @@
         "core",
         "full"
       ],
-      "_why": "an AFK player gets an automatic craft; bots' submissions are all valid",
+      "_why": "an AFK player gets an automatic craft; a slow player who placed items but never pressed Submit keeps them; bots' submissions are all valid",
       "opts": {
         "biome": "FOREST",
-        "players": 3,
+        "players": 4,
         "stopAfter": "CRAFTING",
         "durations": {
           "FARMING": 90,
@@ -727,7 +727,8 @@
         "farmProfiles": [
           "sweaty",
           "afk",
-          "casual"
+          "casual",
+          "slow"
         ],
         "maxSeconds": 400
       },
@@ -738,9 +739,13 @@
         "everyoneCrafted": true,
         "noRejected": true,
         "autoFor": [
-          "afk"
+          "afk",
+          "slow"
         ],
-        "hudTimer": true
+        "hudTimer": true,
+        "draftKept": [
+          "slow"
+        ]
       }
     },
     {

@@ -21,12 +21,13 @@ local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 -- ─── State ────────────────────────────────────────────────────────────────────
 
 local _submitted    = {}   -- { [userId] = true }
+local _drafts       = {}   -- { [userId] = slots } the arrangement so far (CraftDraft)
 local _totalPlayers = 0
 local _active       = false
 
 -- ─── Validate and apply a craft submission ────────────────────────────────────
 
-local function _processCraft(player, submitted, auto)
+local function _processCraft(player, submitted, auto, draft)
 	local data = SessionManager.getData(player)
 	if not data then return end
 
@@ -68,6 +69,7 @@ local function _processCraft(player, submitted, auto)
 	Telemetry.record("craft", {
 		userId = player.UserId,
 		auto = auto == true,
+		draft = draft and next(draft) ~= nil and table.clone(draft) or nil,   -- auto craft built on the player's picks
 		loadout = fixed or nil,
 		rejected = rejected,
 		slots = table.clone(slots),
@@ -111,40 +113,30 @@ RemoteEvents.SubmitCraft.OnServerInvoke = function(player, slots)
 	return "ok"
 end
 
--- ─── Auto-submit on timer expiry ─────────────────────────────────────────────
+-- ─── Draft: the arrangement so far ──────────────────────────────────────────
+-- The client sends its slots on every change. If the timer runs out before
+-- Submit, those picks are kept and only the empty slots are filled (a slow
+-- player used to lose every pick to the automatic craft).
 
--- Best-effort slots for a player who did not submit: the first item of each
--- category goes to BODY / ENGINE / SPECIAL, leftovers to MOBILITY, HEAD, TAIL.
-function _autoSlots(inventory)
-	local slots, used = {}, {}
-	for _, slotName in ipairs({ "BODY", "ENGINE", "SPECIAL" }) do
-		for i, name in ipairs(inventory) do
-			local cfg = ItemConfig[name]
-			if not used[i] and cfg and cfg.slotType == slotName then
-				slots[slotName] = name
-				used[i] = true
-				break
-			end
-		end
-	end
-	for _, slotName in ipairs({ "MOBILITY", "HEAD", "TAIL" }) do
-		for i, name in ipairs(inventory) do
-			if not used[i] then
-				slots[slotName] = name
-				used[i] = true
-				break
-			end
-		end
-	end
-	return slots
-end
+RemoteEvents.CraftDraft.OnServerEvent:Connect(function(player, slots)
+	if not _active or _submitted[player.UserId] or type(slots) ~= "table" then return end
+	local data = SessionManager.getData(player)
+	if not data then return end
+	local clean = CraftingRules.validate(slots, data.inventory, ItemConfig)
+	_drafts[player.UserId] = clean
+end)
+
+-- ─── Auto-submit on timer expiry ─────────────────────────────────────────────
 
 local function _autoSubmitAll()
 	for _, player in ipairs(Players:GetPlayers()) do
 		if not _submitted[player.UserId] then
 			local data = SessionManager.getData(player)
 			if data then
-				_processCraft(player, _autoSlots(data.inventory), true)
+				-- the draft is checked again: the inventory may have changed
+				local keep = _drafts[player.UserId]
+					and CraftingRules.validate(_drafts[player.UserId], data.inventory, ItemConfig)
+				_processCraft(player, CraftingRules.autoSlots(data.inventory, ItemConfig, keep), true, keep)
 				_submitted[player.UserId] = true
 			end
 		end
@@ -156,6 +148,7 @@ end
 GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.CRAFTING then
 		_submitted    = {}
+		_drafts       = {}
 		_active       = true
 		_totalPlayers = #Players:GetPlayers()
 

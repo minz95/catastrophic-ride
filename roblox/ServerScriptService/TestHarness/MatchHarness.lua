@@ -82,7 +82,7 @@ function MatchHarness.craftStats(t0)
 	local out = {}
 	for _, e in ipairs(Telemetry.events("craft")) do
 		if e.t >= t0 then
-			out[tostring(e.userId)] = { auto = e.auto, slots = e.slots, rejected = e.rejected, stats = e.stats }
+			out[tostring(e.userId)] = { auto = e.auto, draft = e.draft, slots = e.slots, rejected = e.rejected, stats = e.stats }
 		end
 	end
 	return out
