@@ -335,10 +335,11 @@ InputSource.setOverride(function()
 		travelYaw = primary:GetAttribute("TravelYaw"),
 	})
 	if info.respawn then
+		local ap = autopilot   -- the race may end (autopilot = nil) before the reply
 		task.spawn(function()
 			local r = RemoteEvents.RequestRespawn:InvokeServer()
 			report("respawn", { result = r, s = math.floor(info.s) })
-			autopilot:resetTracking()
+			if ap then ap:resetTracking() end
 		end)
 	end
 	if os.clock() - lastBoostTry > 1 and math.abs(info.err) < 0.1 then

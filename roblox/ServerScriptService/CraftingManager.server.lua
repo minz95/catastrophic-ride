@@ -17,6 +17,8 @@ local SessionManager = require(ServerScriptService.SessionManager)
 local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 local RaceStart      = require(ServerScriptService.Modules.RaceStart)
+local PlayerStore    = require(ServerScriptService.Modules.PlayerStore)
+local Cosmetics      = require(ReplicatedStorage.Shared.Cosmetics)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -167,11 +169,13 @@ GameManager.onPhaseChanged(function(phase, biome)
 				if not data then continue end
 
 				local stats = data.vehicleStats or VehicleStats.calculate(nil, nil, nil, biome)
+				local rec = PlayerStore.get(player)
 				local model = VehicleBuilder.build(
 					stats,
 					biome,
 					spawnGrid[i] or CFrame.new(i * 6, 2, 0),
-					stats.slotAssignments
+					stats.slotAssignments,
+					Cosmetics.look(rec and rec.equipped)
 				)
 
 				if model then

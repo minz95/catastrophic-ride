@@ -24,6 +24,7 @@ function Progression.newRecord()
 		daysPlayed = 0,  -- distinct days with a round
 		owned = {},      -- cosmetics: { [id] = true }
 		equipped = {},   -- cosmetics: { [category] = id }
+		receipts = {},   -- last Robux PurchaseIds granted (Modules/Shop)
 	}
 end
 
