@@ -46,6 +46,15 @@ Constants.CRAFT_HURRY  = { SHARE = 0.5, SECONDS = 40 }
 -- finishSpread: a novice is ~1.35× the winner's time, 30-40 s on the
 -- 2026-10-22 tracks (30 s cut the Studio SKY novice short)
 Constants.FINISH_GRACE = 45
+-- …at least; after a slow winner it grows to FINISH_GRACE_SHARE of the
+-- winner's time (capped): a fast winner (92 s, Studio 2026-10-23) left the
+-- novice 170 studs short with a flat 45 s. Shared/CatchUp.graceFor.
+Constants.FINISH_GRACE_SHARE = 0.5
+Constants.FINISH_GRACE_MAX   = 75
+-- Catch-up: a car GAP_START studs or more behind the leader gets up to
+-- +MAX top speed, full at GAP_FULL studs (Shared/CatchUp, RacingManager).
+-- The leader never gets it, so a build or a driver still wins on merit.
+Constants.CATCH_UP = { GAP_START = 60, GAP_FULL = 400, MAX = 0.12 }
 Constants.RACE_COUNTDOWN = 4 -- s from RACING to GO (cars spawn and seat, then 3-2-1); Modules/RaceStart
 Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 

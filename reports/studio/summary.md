@@ -18,9 +18,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | FAIL | b3dbb6d+ | 2026-10-23T23:00 |
+| [match-forest](match-forest.json) | PASS | a81a12d+ | 2026-10-23T23:49 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
-| [match-sky](match-sky.json) | FAIL | c90f06d+ | 2026-10-23T00:18 |
+| [match-sky](match-sky.json) | PASS | a81a12d+ | 2026-10-23T23:53 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
 | [race-forest](race-forest.json) | PASS | c90f06d+ | 2026-10-23T00:20 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
@@ -293,24 +293,24 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ```
 - **warn** round 1: 7 of 8 players joined (Studio did not start every client)
 
-## match-forest — FAIL
+## match-forest — PASS
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (FOREST): 3 finished of 4
-    steal attempts: defended=4, denied: too far=4, denied: victim has nothing=7
-    -4: picked 11, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 13, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 5, contests 3/5, stole 0, robbed 0, defences 3, items 5 | craft submitted, rejected 0
-    -3: picked 4, contests 1/3, stole 0, robbed 0, defences 1, items 4 | craft submitted, rejected 0
-    #1 Player4 92.4s
-    #2 Player1 110.8s
-    #3 Player2 115.9s
-  events: ability=87 ability_probe=239 bot_craft=4 bot_defend=4 bot_farmfx=104 bot_fx=288 bot_guard=1 bot_hud=123 bot_joined=4 bot_punch=14 bot_ready=4 bot_respawn=11 bot_screen=26 bot_steal=15 checkpoint=8 contact=14 contest_result=5 craft=4 drift_turbo=39 finish=3 harness_crafti
-driving: 4 hits (closing speed max 38, push max 28 studs/s), 39 drift turbos
-server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 3378 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 13 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 42 kbps; memory max 2266 MB
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+  round 1 (FOREST): 4 finished of 4
+    steal attempts: defended=5, denied: too far=2, denied: victim has nothing=5, stolen=1
+    -4: picked 13, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 10, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 10, contests 0/0, stole 0, robbed 1, defences 3, items 8 | craft submitted, rejected 0
+    -3: picked 9, contests 0/1, stole 1, robbed 0, defences 2, items 8 | craft submitted, rejected 0
+    #1 Player1 97.6s
+    #2 Player4 105.7s
+    #3 Player2 127.7s
+    #4 Player3 132.1s
+  events: ability=96 ability_probe=227 bot_craft=4 bot_defend=6 bot_farmfx=144 bot_fx=308 bot_guard=5 bot_hud=124 bot_joined=4 bot_pickup_denied=1 bot_punch=12 bot_ready=4 bot_respawn=7 bot_screen=23 bot_steal=13 checkpoint=8 contact=10 contest_res
+driving: 6 hits (closing speed max 78, push max 45 studs/s), 38 drift turbos
+server: FARMING heartbeat 53-60 Hz, physics 57-60 fps, send max 15453 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 10 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 19 kbps; memory max 2263 MB
 ```
-- **fail** round 1: 3 of 4 finished
 
 ## match-ocean — PASS
 
@@ -330,26 +330,24 @@ Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
 driving: 4 hits (closing speed max 53, push max 37 studs/s), 10 drift turbos, drops: Cactus, Gas Can, Kettle, Log
 ```
 
-## match-sky — FAIL
+## match-sky — PASS
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (SKY): 4 finished of 4
-    steal attempts: denied: too far=1, denied: victim has nothing=1, stolen=1
-    -4: picked 9, contests 2/2, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 9, contests 0/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 11, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -3: picked 10, contests 2/2, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    #1 Player1 82.5s
-    #2 Player2 86.4s
-    #3 Player4 88.6s
-    #4 Player3 119.3s
-  events: ability=92 ability_probe=168 bot_craft=4 bot_defend=1 bot_farmfx=32 bot_fx=248 bot_guard=1 bot_hud=121 bot_joined=4 bot_pickup_denied=1 bot_punch=4 bot_ready=4 bot_respawn=12 bot_screen=15 bot_steal=3 checkpoint=8 contact=3 contest_result=4 craft=4 drop_pl
-driving: 1 hits (closing speed max 78, push max 45 studs/s), 0 drift turbos, drops: Cactus, Gas Can
+    steal attempts: defended=4, denied: too far=4, denied: victim has nothing=5, stolen=1
+    -4: picked 11, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 12, contests 0/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 7, contests 4/6, stole 0, robbed 1, defences 3, items 6 | craft submitted, rejected 0
+    -3: picked 8, contests 2/5, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    #1 Player2 83.6s
+    #2 Player4 85.7s
+    #3 Player1 88.2s
+    #4 Player3 122.9s
+  events: ability=92 ability_probe=189 bot_craft=4 bot_defend=5 bot_farmfx=128 bot_fx=304 bot_guard=3 bot_hud=124 bot_joined=4 bot_punch=13 bot_ready=4 bot_respawn=14 bot_screen=29 bot_steal=14 checkpoint=8 contact=13 contest_result=6 craft=4 drop_placed
+driving: 5 hits (closing speed max 60, push max 44 studs/s), 0 drift turbos, drops: Cactus
+server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 76 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 6 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 13 kbps; memory max 2242 MB
 ```
-- **fail** cars left the grid 1.0 s apart (limit 1.0 s): 1.2, 1.2, 1.7, 2.2
-- **fail** -1 FARMING: timer is 32 s off the server's
-- **fail** -3 FARMING: timer is 20 s off the server's
 
 ## race-forest-builds — PASS
 

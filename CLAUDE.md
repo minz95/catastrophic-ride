@@ -190,6 +190,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `UserInputService.InputBegan` directly. Touch / gamepad driving comes from
   the seat's ThrottleFloat / SteerFloat (RacingClient). Live-server
   switches and the store page: `docs/launch.md`.
+- Catch-up: `Shared/CatchUp` (RacingManager "catchUp" MaxSpeed multiplier
+  for cars far behind the leader, never the leader; finish grace
+  `CatchUp.graceFor(winner)`). The offline match sim uses the same rules
+  (second pass + grace cut); compare with `lune run tools/catchup_compare.luau`.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

@@ -35,13 +35,13 @@ Cars by top speed: slowest = Microwave + Magnifying Glass + Trophy (top speed 68
 
 - Finish rate within 240 s: 100%
 - Fastest car won 3 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.15 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.29
+- Rank correlation, top speed vs place: -0.11 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.23
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.39 |
-| farming: casual | 3.61 |
+| farming: sweaty | 3.33 |
+| farming: casual | 3.67 |
 | driving: expert | 1.50 |
 | driving: average | 3.50 |
 | driving: novice | 5.50 |
@@ -52,27 +52,27 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.40 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | closeShare | 0.41 | 0.25 ..  | the top two race each other a quarter of the time |
 | ✓ | fastestWinRate | 0.25 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 20.47 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 2.33 | 1.00 ..  | the lead changes at least once |
-| ✗ | racingShare | 0.35 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.15 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 107.30 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | finishSpread | 18.47 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 2.42 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.34 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.11 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 107.22 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 10.2. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 13.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 start straight | 6.4 | 1.4 | 0 | 0 | 0 |
+| S1 start straight | 6.3 | 1.3 | 0 | 0 | 0 |
 | S2 outcrop hairpin | 8.5 | 0.7 | 0 | 0 | 2 |
-| S3 trestle climb | 19.4 | 2.7 | 0 | 0 | 47 |
-| S4 giant tree spiral | 12.6 | 1.9 | 0 | 0 | 24 |
-| S4b tree run-out | 9.8 | 2.3 | 0 | 0 | 8 |
-| S5 mud hook | 9.5 | 3.3 | 0 | 0 | 92 |
-| S6 pine switchbacks | 31.0 | 7.5 | 12 | 0 | 224 |
-| S7 ridge chicane | 19.0 | 3.3 | 0 | 0 | 22 |
+| S3 trestle climb | 19.2 | 2.3 | 0 | 0 | 64 |
+| S4 giant tree spiral | 12.5 | 2.0 | 0 | 0 | 81 |
+| S4b tree run-out | 9.7 | 2.3 | 0 | 0 | 62 |
+| S5 mud hook | 9.3 | 2.9 | 0 | 0 | 99 |
+| S6 pine switchbacks | 30.4 | 7.2 | 12 | 0 | 309 |
+| S7 ridge chicane | 18.2 | 2.9 | 0 | 0 | 94 |
 
 ## Geometry findings
 
@@ -81,9 +81,8 @@ Overtakes per match: 10.2. Per section (mean over matches; "decided" = matches w
 - 10 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 161 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (1)
+## Known bugs from the test suite (0)
 
-- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 

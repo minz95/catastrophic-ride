@@ -35,13 +35,13 @@ Cars by top speed: slowest = Microwave + Hair Dryer + Pizza (top speed 85.7, tur
 
 - Finish rate within 240 s: 100%
 - Fastest car won 3 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.03 (−1 = faster always places better)
+- Rank correlation, top speed vs place: -0.05 (−1 = faster always places better)
 - Rank correlation, rarity points collected vs place: -0.17
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.50 |
-| farming: casual | 3.50 |
+| farming: sweaty | 3.47 |
+| farming: casual | 3.53 |
 | driving: expert | 1.50 |
 | driving: average | 3.50 |
 | driving: novice | 5.50 |
@@ -52,26 +52,26 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.49 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | closeShare | 0.50 | 0.25 ..  | the top two race each other a quarter of the time |
 | ✓ | fastestWinRate | 0.25 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 37.47 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | finishSpread | 33.46 |  .. 45.00 | nobody waits long for the last car |
 | ✓ | leadChanges | 2.42 | 1.00 ..  | the lead changes at least once |
-| ✓ | racingShare | 0.35 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.03 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✗ | racingShare | 0.35 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.05 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
 | ✓ | winnerTime | 93.86 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 11.3. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 12.2. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 launch tunnel | 9.0 | 3.4 | 0 | 0 | 57 |
-| S2 cloud bend A | 16.9 | 5.4 | 0 | 0 | 61 |
-| S3 crossover | 7.8 | 4.2 | 0 | 0 | 35 |
-| S4 cloud bend B | 21.3 | 8.7 | 2 | 0 | 108 |
-| S5 crystal canyon | 28.6 | 11.7 | 10 | 0 | 358 |
-| S6 cloud corkscrew | 17.5 | 5.2 | 0 | 0 | 96 |
-| S7 dive | 6.3 | 1.8 | 0 | 0 | 5 |
+| S1 launch tunnel | 8.9 | 3.3 | 0 | 0 | 57 |
+| S2 cloud bend A | 16.9 | 5.4 | 0 | 0 | 107 |
+| S3 crossover | 7.6 | 3.9 | 0 | 0 | 61 |
+| S4 cloud bend B | 20.9 | 8.0 | 0 | 0 | 146 |
+| S5 crystal canyon | 28.4 | 11.6 | 12 | 0 | 387 |
+| S6 cloud corkscrew | 16.3 | 4.4 | 0 | 0 | 101 |
+| S7 dive | 5.9 | 1.7 | 0 | 0 | 38 |
 
 ## Geometry findings
 
@@ -80,9 +80,8 @@ Overtakes per match: 11.3. Per section (mean over matches; "decided" = matches w
 - 0 spots where a wall cuts more than 6 studs into the lane (pink rings).
 - 0 of 164 sampled positions respawn off the track (pink ×).
 
-## Known bugs from the test suite (1)
+## Known bugs from the test suite (0)
 
-- **audio › every sound has an asset id** — BGM and ambience ids in SoundConfig are still empty placeholders
 
 ## What this does not cover
 

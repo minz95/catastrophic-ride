@@ -241,6 +241,14 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-23 — Catch-up and a longer grace after a slow winner.** A fast
+  winner (92 s) left the novice 170 studs short of the line when the flat
+  45 s grace ran out. Cars 60+ studs behind the leader now get up to +12 %
+  top speed (full at 400 studs); the leader never does. The grace is half
+  the winner's time, 45–75 s. Simulated spread: Forest 20 → 18 s, Ocean
+  14 → 10 s, Sky 37 → 33 s; winner times unchanged. Studio: Forest and Sky
+  4 / 4 finished. The offline sim now also applies the grace cut (it let
+  every car finish before).
 - **2026-10-23 — Late joiners watch.** Someone joining during a race is
   marked Spectating (banner: "you join the next round"), is not in the
   results and is not waited for; everyone plays from the next FARMING. A
@@ -319,8 +327,8 @@ Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):
 
 - With the narrow speed band the remaining spread is driving: the novice
   bot is 20–40 s slower than the expert in the same car. If playtests want
-  the field closer still, the next step is a catch-up for cars far behind
-  the leader (not built).
+  the field closer still, the next step was a catch-up for cars far behind
+  the leader: built 2026-10-23 (Shared/CatchUp).
 - Close racing is low everywhere, but the simulation has no car-to-car
   contact or abilities; check with playtests (M / N markers) before acting.
 - Drift turbos are tuned on the offline driver; how often players drift,
