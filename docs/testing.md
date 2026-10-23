@@ -137,6 +137,7 @@ Farming and crafting scenarios (`match` with `stopAfter = "CRAFTING"`, tag
 | `everyonePicks` | every non-AFK bot picked something up |
 | `everyoneCrafted`, `noRejected` | every player has a craft and the server dropped no slot from a bot's submission |
 | `autoFor` | players with these farm profiles got an automatic craft |
+| `draftKept` | players with these farm profiles (`slow`: places items, never submits) kept what they placed when the timer ran out |
 | `minAttempts` / `maxAttempts` | steal attempts by result (`stolen`, `defended`, `denied: …`) |
 
 Ability scenarios (`abilities-forest` / `-ocean` / `-sky`, tag `abilities`)
@@ -244,7 +245,14 @@ In Studio, `python3 tools/studio/sim.py run fight-4p` puts two "brawler" bots
 (walk up to players and punch) with a casual and a "guard" bot; checks:
 landed hits, at least one knock-out and one block (`minPunches`), the
 inventory ledger, and that every client drew the punch and guard animations
-(`fightFx`; the steal scenarios check the grab / swat animations).
+(`fightFx`; the steal scenarios check the grab / swat animations). "Drawn"
+means the joint really moved: for a punch the bot client measures the
+shoulder reaching the pose and the arm turning against the torso. (Until
+2026-10-23 it only meant "the character exists", and it passed while every
+pose did nothing: Roblox avatars now use AnimationConstraint joints with no
+Motor6D, see FarmFx.) Brawlers leave a foe the server keeps one hit short of
+a knock-out (empty hands) for a while; two empty-handed brawlers used to
+punch each other all phase.
 
 ### Crafting balance
 

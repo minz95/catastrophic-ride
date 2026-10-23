@@ -479,6 +479,17 @@ def check_farm(c, r, report):
         for uid, pr in profile.items():
             if pr == prof and not (craft.get(uid) or {}).get("auto"):
                 out.append(("fail", tag + "%s (%s) did not get an auto craft" % (uid, prof)))
+    for prof in c.get("draftKept", []):
+        for uid, pr in profile.items():
+            if pr != prof:
+                continue
+            x = craft.get(uid) or {}
+            draft, slots = x.get("draft") or {}, x.get("slots") or {}
+            lost = ["%s=%s→%s" % (k, v, slots.get(k)) for k, v in draft.items() if slots.get(k) != v]
+            if not draft:
+                out.append(("fail", tag + "%s (%s): no draft reached the auto craft" % (uid, prof)))
+            elif lost:
+                out.append(("fail", tag + "%s (%s): placed items lost at the timeout: %s" % (uid, prof, ", ".join(lost))))
     attempts = farm.get("attempts") or {}
     for res, n in (c.get("minAttempts") or {}).items():
         if attempts.get(res, 0) < n:

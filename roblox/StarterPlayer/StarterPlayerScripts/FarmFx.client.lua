@@ -10,9 +10,12 @@
 --            wriggles, and the victim gets a big "press E" prompt.
 --   swat     a defence tap: the victim slaps at the thief.
 --   grabEnd  stolen → labels on both; defended → the thief is pushed back.
--- Poses rotate the shoulder / waist joints' C0 in the parent part's space,
--- so R6 and R15 avatars both work; nothing here moves anything the server
--- checks except the local player's own character (knockback, walk speed).
+-- Poses rotate the shoulder / waist joints in the parent part's space: a
+-- Motor6D's C0 (R6, classic R15) or, on avatars with Roblox's newer joints
+-- (AnimationConstraint, no Motor6D), the joint's parent-side attachment. With
+-- only the Motor6D path every pose silently did nothing on those avatars.
+-- Nothing here moves anything the server checks except the local player's
+-- own character (knockback, walk speed).
 
 local Players           = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -49,36 +52,57 @@ local JOINTS = {
 	waist = { "Waist", "RootJoint" },
 }
 
-local _base = setmetatable({}, { __mode = "k" })   -- [Motor6D] = original C0
+-- A joint handle is the object and CFrame property that place the limb in
+-- its parent part's space: { obj = Motor6D, prop = "C0" } or
+-- { obj = AnimationConstraint.Attachment0, prop = "CFrame" }.
+local _handles = setmetatable({}, { __mode = "k" })   -- [obj] = handle
+local _base = setmetatable({}, { __mode = "k" })      -- [obj] = original CFrame
+
+local function handleOf(j)
+	local obj, prop
+	if j:IsA("Motor6D") then
+		obj, prop = j, "C0"
+	elseif j:IsA("AnimationConstraint") and j.Attachment0 then
+		obj, prop = j.Attachment0, "CFrame"
+	else
+		return nil
+	end
+	local h = _handles[obj]
+	if not h then
+		h = { obj = obj, prop = prop }
+		_handles[obj] = h
+		_base[obj] = obj[prop]
+	end
+	return h
+end
 
 local function joint(character, which)
 	for _, name in ipairs(JOINTS[which]) do
-		local m = character:FindFirstChild(name, true)
-		if m and m:IsA("Motor6D") then
-			if not _base[m] then _base[m] = m.C0 end
-			return m
-		end
+		local j = character:FindFirstChild(name, true)
+		local h = j and handleOf(j)
+		if h then return h end
 	end
 	return nil
 end
 
--- C0 of `m` rotated by `rot` around the joint, in the parent part's axes
--- (parent space: -Z forward, Y up, X right).
-local function posed(m, rot)
-	local c0 = _base[m]
+-- The joint's rest CFrame rotated by `rot` around the joint, in the parent
+-- part's axes (parent space: -Z forward, Y up, X right).
+local function posed(h, rot)
+	local c0 = _base[h.obj]
 	local p = c0.Position
 	return CFrame.new(p) * rot * (c0 - p)
 end
 
-local function tweenTo(m, rot, seconds, style)
-	if not m then return end
-	TweenService:Create(m, TweenInfo.new(seconds, style or Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-		{ C0 = posed(m, rot) }):Play()
+local function tweenTo(h, rot, seconds, style)
+	if not h then return false end
+	TweenService:Create(h.obj, TweenInfo.new(seconds, style or Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		{ [h.prop] = posed(h, rot) }):Play()
+	return true
 end
 
-local function release(m, seconds)
-	if m and _base[m] then
-		TweenService:Create(m, TweenInfo.new(seconds or 0.2), { C0 = _base[m] }):Play()
+local function release(h, seconds)
+	if h and _base[h.obj] then
+		TweenService:Create(h.obj, TweenInfo.new(seconds or 0.2), { [h.prop] = _base[h.obj] }):Play()
 	end
 end
 
@@ -237,13 +261,14 @@ RunService.RenderStepped:Connect(function()
 			_wriggle[character] = nil
 			release(waist, 0.15)
 		else
-			waist.C0 = posed(waist, A(0, R(14) * math.sin(now * 40), 0))
+			waist.obj[waist.prop] = posed(waist, A(0, R(14) * math.sin(now * 40), 0))
 		end
 	end
 end)
 
 local function setGuard(character, player, on)
 	local r, l = joint(character, "right"), joint(character, "left")
+	local posedOk = r ~= nil and l ~= nil
 	if on then
 		_guarding[character] = true
 		tweenTo(r, POSE.guardR, 0.12)
@@ -265,12 +290,14 @@ local function setGuard(character, player, on)
 			end
 		end
 	end
+	return posedOk
 end
 
 -- ─── Actions ─────────────────────────────────────────────────────────────────
 
 local function swing(character)
 	local r, waist = joint(character, "right"), joint(character, "waist")
+	if not r then return false end
 	tweenTo(r, POSE.windup, 0.07)
 	tweenTo(waist, POSE.twistL, 0.07)
 	task.delay(0.07, function()
@@ -280,14 +307,42 @@ local function swing(character)
 			release(waist, 0.18)
 		end)
 	end)
+	return true
 end
 
 local function onPunch(attackerId, victimId, info)
 	local aChar = charOf(attackerId)
 	local vChar, victim = charOf(victimId)
-	if aChar then swing(aChar) end
 	local result = info and info.result
-	report("farmfx", { what = "punch", result = result, drawn = aChar ~= nil })
+	local swung = aChar ~= nil and swing(aChar)
+	if LocalPlayer:GetAttribute("HarnessBot") then
+		-- Studio harness: drawn = the attacker's arm really turned against the
+		-- torso during the swing (largest angle over 0.4 s), not just "a
+		-- character exists" (that passed while every pose did nothing)
+		local arm = aChar and (aChar:FindFirstChild("RightUpperArm") or aChar:FindFirstChild("Right Arm"))
+		local torso = aChar and (aChar:FindFirstChild("UpperTorso") or aChar:FindFirstChild("Torso"))
+		local rest = arm and torso and torso.CFrame:ToObjectSpace(arm.CFrame)
+		local h = aChar and joint(aChar, "right")
+		local function angle(a, b)
+			return math.deg(math.acos(math.clamp(a.UpVector:Dot(b.UpVector), -1, 1)))
+		end
+		local turned, posedMax, t0, conn = 0, 0, os.clock(), nil
+		conn = RunService.Heartbeat:Connect(function()
+			if rest and arm.Parent and torso.Parent then
+				turned = math.max(turned, angle(torso.CFrame:ToObjectSpace(arm.CFrame), rest))
+			end
+			if h then posedMax = math.max(posedMax, angle(h.obj[h.prop], _base[h.obj])) end
+			if os.clock() - t0 > 0.4 then
+				conn:Disconnect()
+				-- the joint reached the punch pose and the arm moved on screen
+				-- (turned is measured from wherever the arm was, so it is
+				-- smaller when punches overlap)
+				report("farmfx", { what = "punch", result = result, drawn = swung and posedMax > 60 and turned > 10,
+					joint = h and h.prop, posed = math.floor(posedMax), turned = math.floor(turned),
+					attacker = attackerId })
+			end
+		end)
+	end
 	if not vChar then return end
 	task.delay(0.12, function()
 		if result == "hit" or result == "knockout" then
@@ -319,9 +374,10 @@ local function onGrab(thiefId, victimId, info)
 	local tChar = charOf(thiefId)
 	local vChar, victim = charOf(victimId)
 	local window = (info and info.window) or Constants.STEAL_DEFEND_WINDOW
+	local reached = false
 	if tChar then
-		tweenTo(joint(tChar, "right"), POSE.reachR, 0.15)
-		tweenTo(joint(tChar, "left"), POSE.reachL, 0.15)
+		reached = tweenTo(joint(tChar, "right"), POSE.reachR, 0.15)
+		reached = tweenTo(joint(tChar, "left"), POSE.reachL, 0.15) and reached
 		label(tChar, "🖐️ STEALING…", Color3.fromRGB(255, 200, 90), window)
 	end
 	if vChar then
@@ -333,14 +389,15 @@ local function onGrab(thiefId, victimId, info)
 			Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
 		shake(0.02, 0.3)
 	end
-	report("farmfx", { what = "grab", drawn = tChar ~= nil and vChar ~= nil })
+	report("farmfx", { what = "grab", drawn = reached and vChar ~= nil })
 end
 
 local function onSwat(victimId, thiefId, info)
 	local vChar, victim = charOf(victimId)
+	local swatted = false
 	if vChar then
 		local r = joint(vChar, "right")
-		tweenTo(r, POSE.swatR, 0.06)
+		swatted = tweenTo(r, POSE.swatR, 0.06)
 		task.delay(0.1, function() release(r, 0.12) end)
 	end
 	if victim == LocalPlayer then
@@ -351,7 +408,7 @@ local function onSwat(victimId, thiefId, info)
 			thief and thief.DisplayName or "?", n, Constants.STEAL_DEFEND_PRESSES),
 			done and Color3.fromRGB(120, 230, 140) or Color3.fromRGB(255, 210, 80), done and 1 or 0.8)
 	end
-	report("farmfx", { what = "swat", drawn = vChar ~= nil })
+	report("farmfx", { what = "swat", drawn = swatted })
 end
 
 local function onGrabEnd(thiefId, victimId, info)
@@ -389,8 +446,8 @@ RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, 
 			onPunch(actorId, targetId, info)
 		elseif kind == "guard" then
 			local c, p = charOf(actorId)
-			if c then setGuard(c, p, info and info.on) end
-			report("farmfx", { what = "guard", drawn = c ~= nil })
+			local posedOk = c ~= nil and setGuard(c, p, info and info.on)
+			report("farmfx", { what = "guard", drawn = posedOk })
 		elseif kind == "grab" then
 			onGrab(actorId, targetId, info)
 		elseif kind == "swat" then

@@ -156,8 +156,23 @@ local function punchAt(root, foe)
 	end)
 end
 
-RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, _, targetId, info)
-	if phase ~= Constants.PHASES.FARMING or kind ~= "punch" or targetId ~= LocalPlayer.UserId then return end
+-- A foe the server keeps one hit short of a knock-out has nothing to drop
+-- (FarmingRules.punch): leave them alone for a while. Without this two
+-- brawlers with empty hands punched each other for the whole phase.
+local EMPTY_FOE_REST = 12
+local _shortHits, _emptyUntil = {}, {}
+
+RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, info)
+	if phase ~= Constants.PHASES.FARMING or kind ~= "punch" then return end
+	if actorId == LocalPlayer.UserId and targetId and info and info.result == "hit" then
+		local short = info.hits == (info.needed or Constants.FIGHT.HITS_TO_DROP) - 1
+		_shortHits[targetId] = short and (_shortHits[targetId] or 0) + 1 or 0
+		if _shortHits[targetId] >= 2 then
+			_emptyUntil[targetId] = os.clock() + EMPTY_FOE_REST
+			_shortHits[targetId] = 0
+		end
+	end
+	if targetId ~= LocalPlayer.UserId then return end
 	if info and (info.result == "hit") and BotBrain.guards(farmProfile) then
 		RemoteEvents.SetGuard:FireServer(true)
 		report("guard", { after = info.hits })
@@ -177,7 +192,11 @@ local function farmLoop()
 		-- fight first: a player in reach (or, for brawlers, in sight)
 		local foe, foeDist = nil, math.huge
 		if me and not contestId and not stealing then
-			foe, foeDist = BotBrain.pickFoe(farmProfile, me, otherPlayers())
+			local foes = {}
+			for _, o in ipairs(otherPlayers()) do
+				if os.clock() >= (_emptyUntil[o.userId] or 0) then table.insert(foes, o) end
+			end
+			foe, foeDist = BotBrain.pickFoe(farmProfile, me, foes)
 		end
 		if foe and root and hum then
 			if foeDist <= Constants.FIGHT.RANGE * 0.8 then
@@ -262,6 +281,12 @@ local function craft()
 	task.wait(1 + math.random())
 	local slots = BotBrain.chooseSlots(farmProfile, inventory, biome or "FOREST")
 	if farmProfile.crafter == "none" then return end
+	if farmProfile.crafter == "slow" then
+		-- places items (as the crafting screen sends them) but never submits
+		RemoteEvents.CraftDraft:FireServer(slots)
+		report("craft", { result = "draft only", slots = slots, inventory = inventory })
+		return
+	end
 	local result = RemoteEvents.SubmitCraft:InvokeServer(slots)
 	report("craft", { result = result, slots = slots, inventory = inventory })
 end

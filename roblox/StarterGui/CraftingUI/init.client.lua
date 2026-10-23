@@ -12,6 +12,8 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
+local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
+local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
 local LocalPlayer  = Players.LocalPlayer
 
 -- This script runs again after every respawn, but its ScreenGui
@@ -34,8 +36,8 @@ screen.Parent         = LocalPlayer.PlayerGui
 
 local panel = Instance.new("Frame")
 panel.Name                  = "Panel"
-panel.Size                  = UDim2.new(0, 500, 0, 450)
-panel.Position              = UDim2.new(0.5, -250, 0.5, -225)
+panel.Size                  = UDim2.new(0, 500, 0, 476)
+panel.Position              = UDim2.new(0.5, -250, 0.5, -238)
 panel.BackgroundColor3      = Color3.fromRGB(10, 10, 22)
 panel.BackgroundTransparency = 0.12
 panel.BorderSizePixel       = 0
@@ -102,13 +104,41 @@ _il.VerticalAlignment        = Enum.VerticalAlignment.Center
 _il.Padding                  = UDim.new(0, 4)
 _il.Parent                   = invFrame
 
+-- What the hovered / picked item does (cards show only icon and name).
+local infoLbl = Instance.new("TextLabel")
+infoLbl.Name              = "ItemInfo"
+infoLbl.Size              = UDim2.new(1, -20, 0, 26)
+infoLbl.Position          = UDim2.new(0, 10, 0, 180)
+infoLbl.BackgroundTransparency = 1
+infoLbl.Font              = Enum.Font.Gotham
+infoLbl.TextScaled        = false
+infoLbl.TextSize          = 11
+infoLbl.TextWrapped       = true
+infoLbl.TextXAlignment    = Enum.TextXAlignment.Left
+infoLbl.TextYAlignment    = Enum.TextYAlignment.Top
+infoLbl.TextColor3        = Color3.fromRGB(220, 220, 235)
+infoLbl.Parent            = panel
+
+local INFO_DEFAULT = "Point at an item to see what it does"
+local function _showInfo(itemName)
+	local cfg = itemName and ItemConfig[itemName]
+	if not cfg then
+		infoLbl.Text = INFO_DEFAULT
+		infoLbl.TextColor3 = Color3.fromRGB(130, 130, 150)
+		return
+	end
+	infoLbl.Text = string.format("%s %s (%s)  ·  %s", cfg.icon or "", itemName, cfg.rarity or "", ItemBlurbs.line(itemName, cfg))
+	infoLbl.TextColor3 = Color3.fromRGB(220, 220, 235)
+end
+_showInfo(nil)
+
 -- ─── Slot section header + auto-assign button ─────────────────────────────────
 
-_sectionLabel("Vehicle slots", 186)
+_sectionLabel("Vehicle slots", 212)
 
 local autoBtn = Instance.new("TextButton")
 autoBtn.Size              = UDim2.new(0, 90, 0, 20)
-autoBtn.Position          = UDim2.new(1, -100, 0, 186)
+autoBtn.Position          = UDim2.new(1, -100, 0, 212)
 autoBtn.BackgroundColor3  = Color3.fromRGB(50, 80, 140)
 autoBtn.BorderSizePixel   = 0
 autoBtn.Text              = "Auto fill"
@@ -122,7 +152,7 @@ local _abc = Instance.new("UICorner"); _abc.CornerRadius = UDim.new(0, 6); _abc.
 -- hint below slots
 local hintLbl = Instance.new("TextLabel")
 hintLbl.Size              = UDim2.new(1, -20, 0, 16)
-hintLbl.Position          = UDim2.new(0, 10, 0, 322)
+hintLbl.Position          = UDim2.new(0, 10, 0, 348)
 hintLbl.BackgroundTransparency = 1
 hintLbl.Text              = "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
 hintLbl.Font              = Enum.Font.Gotham
@@ -136,7 +166,7 @@ hintLbl.Parent            = panel
 local slotsFrame = Instance.new("Frame")
 slotsFrame.Name              = "Slots"
 slotsFrame.Size              = UDim2.new(1, -20, 0, 94)
-slotsFrame.Position          = UDim2.new(0, 10, 0, 210)
+slotsFrame.Position          = UDim2.new(0, 10, 0, 236)
 slotsFrame.BackgroundTransparency = 1
 slotsFrame.ClipsDescendants  = true
 slotsFrame.Parent            = panel
@@ -274,6 +304,8 @@ local function _refreshSlots()
 	end
 end
 
+local _changed   -- defined after _refreshDisplay (its click handlers call it)
+
 local function _refreshDisplay()
 	emptyNote.Visible = (#_currentInventory == 0)
 	-- Rebuild inventory row
@@ -326,6 +358,22 @@ local function _refreshDisplay()
 			or RARITY_COLOUR[(cfg and cfg.rarity) or "Common"]
 		lbl.Parent           = btn
 
+		-- which slot it fits (core slots take only their own type)
+		local tag = Instance.new("TextLabel")
+		tag.Size             = UDim2.new(1, -4, 0, 10)
+		tag.Position         = UDim2.new(0, 2, 0, 1)
+		tag.BackgroundTransparency = 1
+		tag.Text             = cfg and cfg.slotType or ""
+		tag.TextSize         = 8
+		tag.Font             = Enum.Font.GothamBold
+		tag.TextXAlignment   = Enum.TextXAlignment.Left
+		tag.TextColor3       = Color3.fromRGB(150, 150, 175)
+		tag.ZIndex           = 2
+		tag.Parent           = btn
+
+		btn.MouseEnter:Connect(function() _showInfo(itemName) end)
+		btn.MouseLeave:Connect(function() _showInfo(_selectedItem) end)
+
 		-- Click handler
 		local capturedName = itemName
 		btn.MouseButton1Click:Connect(function()
@@ -340,11 +388,22 @@ local function _refreshDisplay()
 			else
 				_selectedItem = capturedName
 			end
-			_refreshDisplay()
+			_showInfo(_selectedItem or capturedName)
+			_changed()
 		end)
 	end
 
 	_refreshSlots()
+end
+
+-- After the player changes a slot: redraw, and tell the server the
+-- arrangement so far (CraftingManager keeps it if the timer runs out before
+-- Submit). Only on real changes, so a redraw never sends an empty draft.
+_changed = function()
+	_refreshDisplay()
+	if screen.Enabled and not _submitted then
+		RemoteEvents.CraftDraft:FireServer(_assignments)
+	end
 end
 
 -- ─── Slot click handlers ──────────────────────────────────────────────────────
@@ -366,7 +425,7 @@ for _, slotName in ipairs(SLOT_ORDER) do
 			-- Nothing selected — clicking a filled slot clears it
 			_assignments[capturedSlot] = nil
 		end
-		_refreshDisplay()
+		_changed()
 	end)
 end
 
@@ -374,15 +433,11 @@ end
 
 autoBtn.MouseButton1Click:Connect(function()
 	if _submitted then return end
-	_assignments  = {}
+	-- each core slot gets an item of its own type (filling in inventory
+	-- order put e.g. an ENGINE in BODY, and the server dropped it)
+	_assignments  = CraftingRules.autoSlots(_currentInventory, ItemConfig)
 	_selectedItem = nil
-	local remaining = { table.unpack(_currentInventory) }
-	for _, slotName in ipairs(SLOT_ORDER) do
-		if #remaining > 0 then
-			_assignments[slotName] = table.remove(remaining, 1)
-		end
-	end
-	_refreshDisplay()
+	_changed()
 end)
 
 -- ─── Submit ───────────────────────────────────────────────────────────────────
@@ -508,6 +563,7 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 		_selectedItem           = nil
 		submitBtn.Text          = "Submit"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 200, 80)
+		_showInfo(nil)
 		_refreshDisplay()
 		screen.Enabled = true
 		_startTimer()

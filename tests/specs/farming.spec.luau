@@ -287,6 +287,73 @@ R.describe("crafting input from clients", function()
 		R.expect(byUser[b.UserId].auto).toBe(true)
 		R.expect(byUser[b.UserId].slots.ENGINE).toBe("Kettle")
 	end)
+
+	-- Estimated 2026-10-23: a first-timer needs 60–90 s, the hurry rule cut
+	-- them off around 65 s and the auto craft threw away what they had placed.
+	R.it("when the timer runs out, a player's placed items stay where they put them", function()
+		local srv = craftServer()
+		local a = srv.players[1]
+		local data = srv.SessionManager.getData(a)
+		-- two BODY items: the auto craft alone would take the first (Log)
+		data.inventory = { "Log", "Barrel", "Kettle", "Trophy", "Pizza" }
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Barrel", HEAD = "Pizza" })
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Barrel", HEAD = "Trophy", ENGINE = "Log" })
+		srv.advance(6) -- CRAFTING timer → RACING → auto submit
+		local craft
+		for _, e in ipairs(srv.Telemetry.events("craft")) do if e.userId == a.UserId then craft = e end end
+		R.expect(craft.auto).toBe(true)
+		R.expect(craft.slots.BODY).toBe("Barrel")      -- the player's pick, not the first BODY
+		R.expect(craft.slots.HEAD).toBe("Trophy")      -- the latest draft wins
+		R.expect(craft.slots.ENGINE).toBe("Kettle")    -- a wrong-type pick is dropped and the slot filled
+		R.expect(craft.slots.SPECIAL).toBe("Pizza")    -- empty slots are filled from what is left
+		R.expect(craft.draft.BODY).toBe("Barrel")
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a draft naming items the player does not hold is ignored", function()
+		local srv = craftServer()
+		local a = srv.players[1]
+		srv.SessionManager.getData(a).inventory = { "Log" }
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Microwave", HEAD = "Log", TAIL = "Log" })
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, "junk")
+		srv.advance(6)
+		local slots = srv.SessionManager.getData(a).vehicleStats.slotAssignments
+		R.expect(slots.BODY).toBe(nil)
+		R.expect(slots.HEAD).toBe("Log")
+		R.expect(slots.TAIL).toBe(nil)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)
+
+R.describe("CraftingRules.autoSlots (Auto fill button and timeout craft)", function()
+	local CraftingRules, ItemConfig
+	local function load()
+		local env = require("../lib/loader").boot()
+		CraftingRules = env.requirePath("ReplicatedStorage.Shared.CraftingRules")
+		ItemConfig = env.requirePath("ReplicatedStorage.Shared.ItemConfig")
+	end
+
+	R.it("puts every core slot's own type there, whatever the inventory order", function()
+		load()
+		local slots = CraftingRules.autoSlots({ "Pizza", "Kettle", "Trophy", "Log", "Fan", "Barrel" }, ItemConfig)
+		R.expect(slots.BODY).toBe("Log")
+		R.expect(slots.ENGINE).toBe("Kettle")
+		R.expect(slots.SPECIAL).toBe("Pizza")
+		local clean, rejected = CraftingRules.validate(slots, { "Pizza", "Kettle", "Trophy", "Log", "Fan", "Barrel" }, ItemConfig)
+		R.expect(#rejected).toBe(0)
+		local n = 0
+		for _ in pairs(clean) do n += 1 end
+		R.expect(n).toBe(6)
+	end)
+
+	R.it("keeps the given slots and uses each held item once", function()
+		load()
+		local slots = CraftingRules.autoSlots({ "Log", "Log", "Kettle" }, ItemConfig, { TAIL = "Log" })
+		R.expect(slots.TAIL).toBe("Log")
+		R.expect(slots.BODY).toBe("Log")
+		R.expect(slots.ENGINE).toBe("Kettle")
+		R.expect(slots.MOBILITY).toBe(nil)
+	end)
 end)
 
 -- Studio steal-crowd-6p (2026-10-20): a player's inventory shrank with no
