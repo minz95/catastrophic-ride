@@ -7,6 +7,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-forest](abilities-forest.json) | WARN | fd36242+ | 2026-10-22T02:09 |
 | [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
+| [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
 | [escape-ocean](escape-ocean.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
@@ -168,6 +169,12 @@ abilities: 12 items fired ok, 17 effect keys measured
   slipstream      x1   rise 0.0  MaxSpeed 122.9→110.6  drawn 4
   softLanding     x4   rise 3.0  MaxSpeed 131.2→131.2 131.2→131.2  drawn 16
   windRide        x4   rise 0.0  MaxSpeed 127.5→204.1 127.5→204.1  drawn 16
+```
+
+## api-analytics — PASS
+
+```
+probeApi: 12 members, 0 missing
 ```
 
 ## craft-afk-3p — PASS

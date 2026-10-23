@@ -20,6 +20,8 @@ function Progression.newRecord()
 		rounds = 0, wins = 0,
 		lastDay = nil,   -- UTC day number of the last daily bonus
 		streak = 0,      -- days in a row with a round
+		firstDay = nil,  -- UTC day of the first round
+		daysPlayed = 0,  -- distinct days with a round
 		owned = {},      -- cosmetics: { [id] = true }
 		equipped = {},   -- cosmetics: { [category] = id }
 	}
@@ -71,6 +73,8 @@ end
 -- today) and the streak. Updates rec.lastDay / rec.streak.
 function Progression.daily(rec, day)
 	if rec.lastDay == day then return 0, rec.streak end
+	rec.firstDay = rec.firstDay or day
+	rec.daysPlayed += 1
 	if rec.lastDay == day - 1 then
 		rec.streak = math.min(rec.streak + 1, P.DAILY_STREAK_MAX)
 	else
@@ -91,6 +95,8 @@ function Progression.applyRound(rec, place, day)
 	local gained = Progression.addXp(rec, xp)
 	return {
 		xp = xp, coins = coins, daily = daily, streak = streak, place = place,
+		-- first round of a day: days since the first ever round (0 = that day)
+		returnDay = daily > 0 and (day - rec.firstDay) or nil,
 		levelsGained = gained, level = rec.level, xpInLevel = rec.xp,
 		xpToNext = Progression.xpToNext(rec.level), totalCoins = rec.coins,
 	}

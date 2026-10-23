@@ -26,6 +26,7 @@
 --   checkpoint       CheckpointService      { userId, index }
 --   finish           RacingManager          { userId, time, place }
 --   ability          AbilityManager         { userId, item, result }
+--   reward           ProgressionManager     { userId, place, xp, coins, daily, level, levelsGained, saved }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
 --                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)
 
@@ -60,6 +61,14 @@ function Telemetry.setDetailed(on)
 	Telemetry.detailed = on and true or false
 end
 
+local _listeners = {}
+
+--- Calls fn(kind, event) for every recorded event (AnalyticsManager).
+-- A listener's error never reaches the system that recorded the event.
+function Telemetry.onRecord(fn)
+	table.insert(_listeners, fn)
+end
+
 function Telemetry.record(kind, fields)
 	local e = fields or {}
 	e.kind = kind
@@ -71,6 +80,10 @@ function Telemetry.record(kind, fields)
 		_count += 1
 	end
 	_events[_head] = e
+	for _, fn in ipairs(_listeners) do
+		local ok, err = pcall(fn, kind, e)
+		if not ok then warn("[Telemetry] listener error: " .. tostring(err)) end
+	end
 	return e
 end
 

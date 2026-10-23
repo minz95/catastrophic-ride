@@ -228,6 +228,20 @@ In Studio the `rewards` check (match-forest) wants a `reward` event for every
 racer. Real DataStore writes need a published place with API access; bot
 matches stay in memory.
 
+### Analytics (live only)
+
+Retention (D1 / D7 / D30), sessions and playtime are on the Creator
+Dashboard (Analytics) once the place is public; nothing to build. On top,
+`AnalyticsManager` sends: the onboarding funnel (first round ever: Joined →
+First pickup → Car built → Raced → Finished a race → Got a reward), the
+"Round" funnel every round (Farming → Crafting → Car built → Racing →
+Finished → Results), coins earned (Gameplay / TimedReward), levels reached
+and custom `ReturnDay` (days since the first round, on the first round of a
+day) and `RoundPlace`. Studio and harness sessions send nothing;
+`progression.spec.luau` records the calls through `Analytics.sink`, and
+`sim.py run api-analytics` checks the AnalyticsService methods and enums
+exist (a wrong name logs nothing).
+
 ### Sound
 
 All audio ids live in `Shared/SoundConfig` and are played on the client by

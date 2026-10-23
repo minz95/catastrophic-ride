@@ -114,6 +114,29 @@ function Runner.runSounds(opts)
 	return SoundCheck.summarize(report), encode(report)
 end
 
+--- Which engine members exist (edit mode): opts.members = { "AnalyticsService.LogEconomyEvent",
+-- "Enum.AnalyticsEconomyFlowType.Source", ... } → { [name] = true | "missing: <error>" }.
+function Runner.probeApi(opts)
+	local out = {}
+	for _, name in ipairs((opts or {}).members or {}) do
+		local ok, err = pcall(function()
+			local parts = string.split(name, ".")
+			local v
+			if parts[1] == "Enum" then
+				v = Enum
+			else
+				v = game:GetService(parts[1])
+			end
+			for i = 2, #parts do v = v[parts[i]] end
+			assert(v ~= nil, "nil")
+		end)
+		out[name] = ok or ("missing: " .. tostring(err))
+	end
+	local missing = 0
+	for _, v in pairs(out) do if v ~= true then missing += 1 end end
+	return string.format("probeApi: %d members, %d missing", #((opts or {}).members or {}), missing), encode({ kind = "probe", members = out })
+end
+
 --- Full multiplayer match with bot clients.
 -- opts: { players = 4, rounds = 1, biome = "FOREST",
 --         durations = { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },

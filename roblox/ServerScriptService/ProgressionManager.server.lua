@@ -58,6 +58,7 @@ local function payRound(order, day)
 			Telemetry.record("reward", {
 				userId = entry.userId, place = myPlace, xp = reward.xp, coins = reward.coins,
 				daily = reward.daily, level = reward.level, levelsGained = reward.levelsGained, saved = reward.saved,
+				totalCoins = reward.totalCoins, returnDay = reward.returnDay,
 			})
 			task.spawn(PlayerStore.save, player)
 		end
