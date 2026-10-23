@@ -9,3 +9,4 @@ tests/scratch/
 __pycache__/
 reports/*/topview.json
 reports/*/topview.png
+reports/vehicles/studio/

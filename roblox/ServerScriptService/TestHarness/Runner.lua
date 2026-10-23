@@ -97,6 +97,17 @@ function Runner.runRace(opts)
 	return RaceSim.summarize(report), encode(report)
 end
 
+--- Vehicle gallery (run mode): every BODY item as car / boat / plane with the
+-- real item meshes, the camera stopping on each row (TestHarness/Gallery).
+-- opts: { token, hold = 3, extra = { slots, ... } }. sim.py takes the pictures.
+function Runner.runGallery(opts)
+	local args = { harness = "gallery", autoStart = false, gallery = opts or {} }
+	local sts = studioTestService()
+	local report = startSession(args, function() return sts:ExecuteRunModeAsync(args) end)
+	if type(report) ~= "table" then return "gallery session returned nothing", "{}" end
+	return report.summary or "gallery", encode(report)
+end
+
 --- Escape test: a car dropped at every spot where drivers get stuck (nose in
 -- the wall, facing backwards, on ramps / mud / drift corners) must drive
 -- RaceSim.ESCAPE_GAIN studs on. opts as runRace plus { biome, profiles = { "average" } }.

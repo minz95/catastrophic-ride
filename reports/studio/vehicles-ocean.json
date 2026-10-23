@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "2927812",
+ "commit": "f7b6b60",
  "dirty": true,
  "kind": "vehicles",
  "logErrors": [
-  "2026-10-23T12:10:37.275Z,2.275232,6d82b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"a4b839ed-13f4-4a8f-bf74-fbe64fea704a\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-23T17:27:48.481Z,0.481719,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-23T17:27:48.601Z,0.601448,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T17:27:48.695Z,0.695141,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-23T17:27:49.477Z,1.477548,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T17:27:50.341Z,2.341038,705df000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"382b342f-a854-4110-939f-e8dcf6c98a13\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-23T12:10:46.023Z,11.023897,6e4bb000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-23T12:10:46.279Z,11.279034,6de97000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-23T17:27:59.138Z,11.138178,707eb000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-23T17:27:59.371Z,11.371481,70347000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-23T12:10:59.091Z,24.091311,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-23T12:10:59.091Z,24.091320,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-23T12:10:59.091Z,24.091347,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-23T12:10:59.091Z,24.091352,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-23T12:10:59.201Z,24.201246,6d82b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"a4b839ed-13f4-4a8f-bf74-fbe64fea704a\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-23T17:28:12.278Z,24.278614,6fc4f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"382b342f-a854-4110-939f-e8dcf6c98a13\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "biome": "OCEAN",
@@ -25,18 +25,18 @@
   ],
   "seed": 3
  },
- "ranAt": "2026-10-23T21:11:05+0900",
+ "ranAt": "2026-10-24T02:28:19+0900",
  "report": {
   "biome": "OCEAN",
   "kind": "escape",
   "results": [
    {
-    "airborne": 11.98,
+    "airborne": 12.03,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": -14,
       "z": 590
      }
@@ -45,18 +45,18 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.27
+      "t": 11.32
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.98,
+    "endT": 12.03,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 71,
+    "holdGain": 68,
     "label": "no items",
     "mass": 6.56,
-    "maxNoseOff": 25.4,
+    "maxNoseOff": 27.4,
     "maxProgress": 700,
     "maxSpeed": 62.20106506347656,
     "maxTilt": 0,
@@ -65,12 +65,12 @@
      "keys": "WD",
      "s": 359,
      "speed": 62.1,
-     "t": 6.45,
+     "t": 6.52,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.98,
+    "reached": 12.03,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": [],
@@ -81,12 +81,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.43,
+    "airborne": 11.5,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": -7,
       "z": 590
      }
@@ -102,19 +102,19 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.73
+      "t": 10.79
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.43,
+    "endT": 11.5,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 79,
+    "holdGain": 76,
     "label": "Backpack",
     "mass": 8.03,
-    "maxNoseOff": 27.4,
-    "maxProgress": 700,
+    "maxNoseOff": 25.7,
+    "maxProgress": 702,
     "maxSpeed": 63.38042449951172,
     "maxTilt": 0,
     "noseOffAt": {
@@ -122,12 +122,12 @@
      "keys": "WD",
      "s": 361,
      "speed": 63.3,
-     "t": 6.05,
+     "t": 6.07,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.43,
+    "reached": 11.5,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -145,12 +145,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.45,
+    "airborne": 11.5,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 0,
       "z": 590
      }
@@ -166,32 +166,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.75
+      "t": 10.82
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.45,
+    "endT": 11.5,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 77,
+    "holdGain": 74,
     "label": "Bamboo Raft",
     "mass": 7.84,
-    "maxNoseOff": 26.6,
+    "maxNoseOff": 23.7,
     "maxProgress": 700,
     "maxSpeed": 62.998416900634766,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 63,
      "keys": "WD",
-     "s": 363,
-     "speed": 62.9,
+     "s": 362,
+     "speed": 63,
      "t": 6.1,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.45,
+    "reached": 11.5,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -209,12 +209,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.17,
+    "airborne": 11.29,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 7,
       "z": 590
      }
@@ -230,18 +230,18 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.45
+      "t": 10.57
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.17,
+    "endT": 11.29,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 78,
+    "holdGain": 75,
     "label": "Barrel",
     "mass": 7.19,
-    "maxNoseOff": 26.2,
+    "maxNoseOff": 26.9,
     "maxProgress": 701,
     "maxSpeed": 62.76278305053711,
     "maxTilt": 0,
@@ -250,12 +250,12 @@
      "keys": "WD",
      "s": 362,
      "speed": 62.7,
-     "t": 5.77,
+     "t": 5.85,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.17,
+    "reached": 11.29,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -273,12 +273,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.93,
+    "airborne": 12,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 14,
       "z": 590
      }
@@ -294,18 +294,18 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.22
+      "t": 11.29
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.93,
+    "endT": 12,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 68,
+    "holdGain": 65,
     "label": "Bathtub",
     "mass": 6.99,
-    "maxNoseOff": 27.1,
+    "maxNoseOff": 29.1,
     "maxProgress": 700,
     "maxSpeed": 62.05500030517578,
     "maxTilt": 0,
@@ -314,12 +314,12 @@
      "keys": "WD",
      "s": 359,
      "speed": 62,
-     "t": 6.38,
+     "t": 6.44,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.93,
+    "reached": 12,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -337,12 +337,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.55,
+    "airborne": 11.64,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": -14,
       "z": 598
      }
@@ -358,32 +358,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.87
+      "t": 10.97
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.55,
+    "endT": 11.64,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 83,
+    "holdGain": 79,
     "label": "Cardboard Box",
     "mass": 6.73,
-    "maxNoseOff": 25,
+    "maxNoseOff": 25.5,
     "maxProgress": 700,
     "maxSpeed": 62.95737838745117,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 63,
      "keys": "WD",
-     "s": 362,
+     "s": 360,
      "speed": 62.9,
-     "t": 6.15,
+     "t": 6.2,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.55,
+    "reached": 11.64,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -401,12 +401,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.48,
+    "airborne": 11.6,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": -7,
       "z": 598
      }
@@ -422,32 +422,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.8
+      "t": 10.9
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.48,
+    "endT": 11.6,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 78,
+    "holdGain": 75,
     "label": "Kite",
     "mass": 7.9,
-    "maxNoseOff": 24.8,
+    "maxNoseOff": 29,
     "maxProgress": 700,
     "maxSpeed": 63.1648063659668,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 63.2,
      "keys": "WD",
-     "s": 362,
+     "s": 363,
      "speed": 63.1,
-     "t": 6.15,
+     "t": 6.25,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.48,
+    "reached": 11.6,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -465,12 +465,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.73,
+    "airborne": 11.82,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 0,
       "z": 598
      }
@@ -486,32 +486,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.03
+      "t": 11.12
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.73,
+    "endT": 11.82,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 96,
+    "holdGain": 92,
     "label": "Life Preserver",
     "mass": 7.69,
-    "maxNoseOff": 26.5,
+    "maxNoseOff": 28.8,
     "maxProgress": 700,
     "maxSpeed": 63.28445816040039,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 63.3,
      "keys": "WD",
-     "s": 359,
+     "s": 358,
      "speed": 63.2,
-     "t": 6.33,
+     "t": 6.39,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.73,
+    "reached": 11.82,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -529,12 +529,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.82,
+    "airborne": 11.92,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 7,
       "z": 598
      }
@@ -550,32 +550,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.12
+      "t": 11.2
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.82,
+    "endT": 11.92,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 74,
+    "holdGain": 72,
     "label": "Log",
     "mass": 7.1,
-    "maxNoseOff": 27,
+    "maxNoseOff": 27.2,
     "maxProgress": 700,
     "maxSpeed": 62.433082580566406,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.4,
      "keys": "WD",
-     "s": 359,
+     "s": 358,
      "speed": 62.4,
-     "t": 6.32,
+     "t": 6.35,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.82,
+    "reached": 11.92,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -593,12 +593,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.88,
+    "airborne": 11.95,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 14,
       "z": 598
      }
@@ -614,32 +614,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.2
+      "t": 11.22
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.88,
+    "endT": 11.95,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 67,
+    "holdGain": 64,
     "label": "Microwave",
     "mass": 7.43,
-    "maxNoseOff": 27.5,
-    "maxProgress": 700,
+    "maxNoseOff": 25.7,
+    "maxProgress": 701,
     "maxSpeed": 62.05500030517578,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.1,
      "keys": "WD",
-     "s": 361,
+     "s": 364,
      "speed": 62,
-     "t": 6.42,
+     "t": 6.48,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.88,
+    "reached": 11.95,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -657,12 +657,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.83,
+    "airborne": 11.85,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": -14,
       "z": 590
      }
@@ -678,32 +678,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.13
+      "t": 11.14
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.83,
+    "endT": 11.85,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 71,
+    "holdGain": 69,
     "label": "Red Sofa",
     "mass": 7.43,
-    "maxNoseOff": 26.5,
+    "maxNoseOff": 29.1,
     "maxProgress": 700,
     "maxSpeed": 62.2847900390625,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.3,
      "keys": "WD",
-     "s": 361,
+     "s": 363,
      "speed": 62.2,
-     "t": 6.38,
+     "t": 6.45,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.83,
+    "reached": 11.85,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -721,12 +721,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.15,
+    "airborne": 11.32,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": -7,
       "z": 590
      }
@@ -742,32 +742,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.45
+      "t": 10.62
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.15,
+    "endT": 11.32,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 77,
+    "holdGain": 74,
     "label": "Shopping Cart",
     "mass": 7.16,
-    "maxNoseOff": 10.2,
+    "maxNoseOff": 11,
     "maxProgress": 700,
     "maxSpeed": 62.6124153137207,
     "maxTilt": 0,
     "noseOffAt": {
-     "cmd": 78.8,
+     "cmd": 62.6,
      "keys": "W",
-     "s": 126,
-     "speed": 76.2,
-     "t": 3.13,
+     "s": 451,
+     "speed": 62.6,
+     "t": 7.29,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.15,
+    "reached": 11.32,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -785,12 +785,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.65,
+    "airborne": 11.72,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 0,
       "z": 590
      }
@@ -806,18 +806,18 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.95
+      "t": 11
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.65,
+    "endT": 11.72,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 86,
+    "holdGain": 82,
     "label": "Skateboard",
     "mass": 7.51,
-    "maxNoseOff": 27.3,
+    "maxNoseOff": 26,
     "maxProgress": 700,
     "maxSpeed": 62.90522003173828,
     "maxTilt": 0,
@@ -826,12 +826,12 @@
      "keys": "WD",
      "s": 360,
      "speed": 62.8,
-     "t": 6.2,
+     "t": 6.25,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.65,
+    "reached": 11.72,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -849,12 +849,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.43,
+    "airborne": 11.53,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 7,
       "z": 590
      }
@@ -870,32 +870,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.75
+      "t": 10.82
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.43,
+    "endT": 11.53,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 76,
+    "holdGain": 73,
     "label": "Suitcase",
     "mass": 7.36,
-    "maxNoseOff": 25.8,
+    "maxNoseOff": 22.4,
     "maxProgress": 700,
     "maxSpeed": 62.62757110595703,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.6,
      "keys": "WD",
-     "s": 362,
+     "s": 361,
      "speed": 62.6,
-     "t": 6.02,
+     "t": 6.05,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.43,
+    "reached": 11.53,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -913,12 +913,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.55,
+    "airborne": 11.67,
     "blocked": [
      {
       "part": "?",
       "s": 10,
-      "t": 1.11,
+      "t": 1.09,
       "x": 14,
       "z": 590
      }
@@ -934,32 +934,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.85
+      "t": 10.97
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.55,
+    "endT": 11.67,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 77,
+    "holdGain": 74,
     "label": "random1",
     "mass": 7.16,
-    "maxNoseOff": 27.3,
-    "maxProgress": 700,
+    "maxNoseOff": 26.6,
+    "maxProgress": 701,
     "maxSpeed": 62.578399658203125,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.6,
      "keys": "WD",
-     "s": 362,
+     "s": 361,
      "speed": 62.5,
-     "t": 6.15,
+     "t": 6.19,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.55,
+    "reached": 11.67,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -977,12 +977,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.98,
+    "airborne": 12.12,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": -14,
       "z": 598
      }
@@ -998,32 +998,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.28
+      "t": 11.37
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.98,
+    "endT": 12.12,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 74,
+    "holdGain": 71,
     "label": "random2",
     "mass": 7.06,
-    "maxNoseOff": 26.4,
-    "maxProgress": 700,
+    "maxNoseOff": 28.5,
+    "maxProgress": 701,
     "maxSpeed": 62.32298278808594,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.3,
      "keys": "WD",
-     "s": 360,
+     "s": 358,
      "speed": 62.3,
-     "t": 6.48,
+     "t": 6.55,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.98,
+    "reached": 12.12,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -1041,12 +1041,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.8,
+    "airborne": 11.89,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": -7,
       "z": 598
      }
@@ -1062,18 +1062,18 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.1
+      "t": 11.2
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.8,
+    "endT": 11.89,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 73,
+    "holdGain": 70,
     "label": "random3",
     "mass": 7.38,
-    "maxNoseOff": 26.7,
+    "maxNoseOff": 27.9,
     "maxProgress": 700,
     "maxSpeed": 62.39033508300781,
     "maxTilt": 0,
@@ -1082,12 +1082,12 @@
      "keys": "WD",
      "s": 361,
      "speed": 62.3,
-     "t": 6.33,
+     "t": 6.39,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.8,
+    "reached": 11.89,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -1110,7 +1110,7 @@
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 0,
       "z": 598
      }
@@ -1126,7 +1126,7 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 10.77
+      "t": 10.79
      }
     ],
     "drifts": 1,
@@ -1134,19 +1134,19 @@
     "endT": 11.45,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 83,
+    "holdGain": 79,
     "label": "random4",
     "mass": 7,
-    "maxNoseOff": 23.2,
+    "maxNoseOff": 21.1,
     "maxProgress": 700,
     "maxSpeed": 63.11984634399414,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 63.1,
      "keys": "WD",
-     "s": 361,
+     "s": 362,
      "speed": 63.1,
-     "t": 6.07,
+     "t": 6.1,
      "tilt": 0,
      "vy": 0
     },
@@ -1169,12 +1169,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.97,
+    "airborne": 12.05,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 7,
       "z": 598
      }
@@ -1190,32 +1190,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.27
+      "t": 11.32
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.97,
+    "endT": 12.05,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 69,
+    "holdGain": 67,
     "label": "random5",
     "mass": 7.91,
-    "maxNoseOff": 26.7,
-    "maxProgress": 700,
+    "maxNoseOff": 24.4,
+    "maxProgress": 701,
     "maxSpeed": 62.48019027709961,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.5,
      "keys": "WD",
-     "s": 361,
+     "s": 360,
      "speed": 62.4,
-     "t": 6.53,
+     "t": 6.57,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.97,
+    "reached": 12.05,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -1233,12 +1233,12 @@
     "visibility": "shipped"
    },
    {
-    "airborne": 11.88,
+    "airborne": 11.93,
     "blocked": [
      {
       "part": "Workspace.HarnessCar_average.Chassis",
       "s": 2,
-      "t": 1.11,
+      "t": 1.09,
       "x": 14,
       "z": 598
      }
@@ -1254,32 +1254,32 @@
     "checkpoints": [
      {
       "index": 1,
-      "t": 11.17
+      "t": 11.22
      }
     ],
     "drifts": 1,
     "effects": [],
-    "endT": 11.88,
+    "endT": 11.93,
     "engine": "studio-heartbeat",
     "finished": false,
-    "holdGain": 73,
+    "holdGain": 70,
     "label": "random6",
     "mass": 7.8,
-    "maxNoseOff": 28.9,
-    "maxProgress": 701,
+    "maxNoseOff": 29.7,
+    "maxProgress": 700,
     "maxSpeed": 62.4099006652832,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.4,
      "keys": "W",
-     "s": 360,
+     "s": 361,
      "speed": 62.3,
-     "t": 6.38,
+     "t": 6.44,
      "tilt": 0,
      "vy": 0
     },
     "profile": "average",
-    "reached": 11.88,
+    "reached": 11.93,
     "respawnMode": "legacy",
     "respawns": [],
     "slots": {
@@ -1297,12 +1297,12 @@
     "visibility": "shipped"
    }
   ],
-  "summary": "RaceSim OCEAN (shipped) \u2014 11.2s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
+  "summary": "RaceSim OCEAN (shipped) \u2014 11.3s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
   "visibility": "shipped",
-  "wallSeconds": 11.2
+  "wallSeconds": 11.3
  },
  "scenario": "vehicles-ocean",
  "studioExit": 0,
- "summary": "RaceSim OCEAN (shipped) \u2014 11.2s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
- "wallSeconds": 29.8
+ "summary": "RaceSim OCEAN (shipped) \u2014 11.3s wall time\n  cases 20: drove out 20, needed a respawn 0, stuck 0",
+ "wallSeconds": 30.5
 }

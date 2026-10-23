@@ -17,6 +17,14 @@
 --     An item is scaled to fit its box, keeping its proportions.
 --   * Parts listed in `replacedBy[slot]` are left out when that slot has an
 --     item (the cabin when a BODY item takes its place, for example).
+--   * You ride your BODY item: with one, `ride` takes over. The chassis turns
+--     invisible, the body parts in `ride.hide` go, and the item is stretched
+--     over the whole footprint (`ride.box`, bottom at `ride.bottom`, raised
+--     so its top is at least the chassis top) — a pizza on wheels, a bathtub
+--     boat, a flying sofa. What says car / boat / plane stays: wheels,
+--     outboard motor and mast, wings / propeller / tail. Mounts and parts
+--     marked `onRide` / listed in `ride.lift` sit on the item's real top,
+--     which VehicleBuilder measures once the item is placed.
 --
 -- part = { name, shape = "block" | "wedge" | "cylinder" | "ball",
 --          size = Vector3, cf = CFrame, color = role or Color3,
@@ -145,6 +153,19 @@ local function car(stats)
 	M.HEAD = { { cf = CF(0, top + 0.3, -L / 2 + 0.25), box = V3(0.6, 0.6, 0.5) } }
 	M.TAIL = { { cf = CF(0, -H / 2 + 0.4, L / 2 + 0.55), box = V3(0.8, 0.8, 0.6) } }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, cabZ) }
+	-- Riding the BODY item: it sits on the axles, wheels stay
+	d.ride = {
+		hide = { "FenderFrontL", "FenderFrontR", "FenderRearL", "FenderRearR", "BumperFront", "BumperRear", "Grille",
+			"HeadlightL", "HeadlightR", "TaillightL", "TaillightR", "Windshield", "Cabin", "RearWindow",
+			"SideWindowL", "SideWindowR", "Roof", "SpoilerStrutL", "SpoilerStrutR", "Spoiler" },
+		box = V3(W + 0.3, 2.2, L + 0.5), bottom = wheelY + r * 0.4, centreZ = 0,
+		mounts = {
+			ENGINE = { { cf = CF(0, 0.35, L * 0.32), box = V3(W * 0.5, 0.7, L * 0.25), onRide = true } },
+			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.22), onRide = true } },
+			HEAD = { { cf = CF(0, 0.3, -L / 2 + 0.25), box = V3(0.6, 0.6, 0.5), onRide = true } },
+		},
+		seatZ = cabZ,
+	}
 	return d
 end
 
@@ -206,6 +227,20 @@ local function boat(stats)
 	add(P, "FlagPole", "cylinder", V3(1.3, 0.07, 0.07), CF(W / 2 - 0.3, top + 0.65, L / 2 - 0.2) * ANG(0, 0, HALF_PI), "mast")
 	d.withSlot.TAIL = { "FlagPole" }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, L * 0.28) }
+	-- Riding the BODY item: it floats on the water, motor and mast stay
+	d.ride = {
+		hide = { "ProwL", "ProwR", "StripeL", "StripeR", "GunwaleL", "GunwaleR", "BowRailL", "BowRailR", "Deck", "Transom",
+			"NavLightL", "NavLightR", "Cabin", "Windscreen" },
+		box = V3(W + 0.3, 1.9, L + prow * 0.6), bottom = -H / 2 + 0.05, centreZ = -prow * 0.3,
+		lift = { "Mast", "Sail", "Boom", "FlagPole" }, liftFrom = top,
+		mounts = {
+			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.2), onRide = true } },
+			MOBILITY = { { cf = CF(0, mastH + 0.4, mastZ), box = V3(0.9, 0.9, 0.9), onRide = true } },
+			HEAD = { { cf = CF(0, 0.3, -L / 2 - prow * 0.4), box = V3(0.6, 0.6, 0.6), onRide = true } },
+			TAIL = { { cf = CF(W / 2 - 0.3, 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6), onRide = true } },
+		},
+		seatZ = L * 0.15,
+	}
 	return d
 end
 
@@ -257,11 +292,23 @@ local function plane(stats)
 	M.HEAD = { { cf = CF(0, R + 0.3, -L / 2 + 0.3), box = V3(0.6, 0.6, 0.5) } }
 	M.TAIL = { { cf = CF(0, R + R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6) } }
 	d.seat = { size = V3(1.2, 0.3, 1.2), cf = CF(0, R + 0.15, -L * 0.05) }
+	-- Riding the BODY item: it is the fuselage, wings / prop / tail stay
+	d.ride = {
+		hide = { "Cowl", "TailCone", "Canopy", "CanopyBack" },
+		box = V3(R * 3.2, R * 3.0, L + 1.0), bottom = -R * 1.2, centreZ = 0,
+		lift = { "Fin", "Stabilizer" }, liftFrom = R,
+		mounts = {
+			HEAD = { { cf = CF(0, 0.3, -L / 2 + 0.3), box = V3(0.6, 0.6, 0.5), onRide = true } },
+			TAIL = { { cf = CF(0, R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6), onRide = true } },
+		},
+		seatZ = -L * 0.05,
+	}
 	return d
 end
 
---- Layout for a biome's vehicle sized by `stats`.
-function VehicleDesign.layout(biome, stats)
+--- Layout for a biome's vehicle sized by `stats`. With a BODY item in
+-- `slots` the vehicle is that item (`d.riding`, see the header).
+function VehicleDesign.layout(biome, stats, slots)
 	stats = stats or {}
 	local d
 	if biome == "OCEAN" then d = boat(stats)
@@ -270,8 +317,32 @@ function VehicleDesign.layout(biome, stats)
 	d.biome = biome
 	d.palette = VehicleDesign.PALETTE[biome] or VehicleDesign.PALETTE.FOREST
 	d.withSlot = d.withSlot or {}
+	if slots and slots.BODY and d.ride then
+		local ride = d.ride
+		d.riding = true
+		local hide = {}
+		for _, n in ipairs(ride.hide) do hide[n] = true end
+		local keep = {}
+		for _, p in ipairs(d.parts) do
+			if not hide[p.name] then table.insert(keep, p) end
+		end
+		d.parts = keep
+		d.replacedBy.BODY = nil
+		local lift = {}
+		for _, n in ipairs(ride.lift or {}) do lift[n] = true end
+		for _, p in ipairs(d.parts) do
+			if lift[p.name] then p.lift = true end
+		end
+		d.mounts.BODY = { { cf = CF(0, ride.bottom + ride.box.Y / 2, ride.centreZ), box = ride.box, align = "bottom",
+			stretch = VehicleDesign.RIDE_STRETCH, orient = true } }
+		for slot, list in pairs(ride.mounts) do d.mounts[slot] = list end
+	end
 	return d
 end
+
+-- How far a ridden item may be stretched beyond its own proportions along
+-- one axis to fill the vehicle's footprint.
+VehicleDesign.RIDE_STRETCH = 1.4
 
 --- Colour for a part's role.
 function VehicleDesign.color(d, role)

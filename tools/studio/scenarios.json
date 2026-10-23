@@ -1309,6 +1309,32 @@
           "finished": 2
         }
       }
+    },
+    {
+      "name": "gallery",
+      "kind": "gallery",
+      "tags": [
+        "vehicles",
+        "full"
+      ],
+      "_why": "every BODY item as the car, the boat and the plane with the real item meshes; screenshots of each row go to reports/vehicles/studio/ (whole screen, git-ignored; needs screen-recording permission)",
+      "opts": {
+        "hold": 3,
+        "extra": [
+          {
+            "BODY": "Pizza"
+          },
+          {
+            "BODY": "Bathtub",
+            "ENGINE": "Rocket",
+            "SPECIAL": "Pizza",
+            "MOBILITY": "Kite",
+            "HEAD": "Rubber Duck",
+            "TAIL": "Racing Flag"
+          }
+        ]
+      },
+      "checks": {}
     }
   ]
 }

@@ -76,6 +76,12 @@ local ENDS = {
 	OCEAN  = { front = { "ProwL", "ProwR" }, back = { "Transom" } },
 	SKY    = { front = { "Spinner", "PropBlade1" }, back = { "Fin", "Stabilizer" } },
 }
+-- Riding a BODY item: what is left of the car / boat / plane
+local RIDE_ENDS = {
+	FOREST = { front = { "WheelFrontL", "WheelFrontR" }, back = { "WheelRearL", "WheelRearR", "ExhaustL" } },
+	OCEAN  = { front = {}, back = { "MotorLeg" } },
+	SKY    = { front = { "Spinner", "PropBlade1" }, back = { "Fin", "Stabilizer" } },
+}
 
 local function box(part)
 	local lo, hi
@@ -91,7 +97,7 @@ end
 for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 	R.describe(biome .. " vehicle look (" .. #BUILDS .. " builds)", function()
 		local problems = {
-			physics = {}, welds = {}, size = {}, ends = {}, ground = {}, symmetry = {}, fit = {}, seat = {}, headtail = {},
+			physics = {}, welds = {}, size = {}, ends = {}, ground = {}, symmetry = {}, fit = {}, seat = {}, headtail = {}, ride = {},
 		}
 		local function bad(kind, slots, msg)
 			if #problems[kind] < 6 then table.insert(problems[kind], label(slots) .. ": " .. msg) end
@@ -101,7 +107,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 			local stats = statsFor(slots, biome)
 			local model = VehicleBuilder.build(stats, biome, CFrame.new(), slots)
 			local chassis = model.PrimaryPart
-			local design = VehicleDesign.layout(biome, stats)
+			local design = VehicleDesign.layout(biome, stats, slots)
 			local byName = {}
 			local lo, hi
 			local welded = {}
@@ -135,12 +141,13 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 			end
 
 			-- Front and back
-			for _, n in ipairs(ENDS[biome].front) do
+			local ends = design.riding and RIDE_ENDS[biome] or ENDS[biome]
+			for _, n in ipairs(ends.front) do
 				local p = byName[n]
 				if not p then bad("ends", slots, "missing " .. n)
 				elseif p.Position.Z > -chassis.Size.Z * 0.3 then bad("ends", slots, n .. " is not at the front") end
 			end
-			for _, n in ipairs(ENDS[biome].back) do
+			for _, n in ipairs(ends.back) do
 				local p = byName[n]
 				if not p then bad("ends", slots, "missing " .. n)
 				elseif p.Position.Z < chassis.Size.Z * 0.3 then bad("ends", slots, n .. " is not at the back") end
@@ -191,8 +198,14 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 						if over.X > 0.02 or over.Y > 0.02 or over.Z > 0.02 then
 							bad("fit", slots, string.format("%s %s is %s, box %s", slot, slots[slot], tostring(ext), tostring(m.box)))
 						end
-						if (centre - m.cf.Position).Magnitude > 0.02 then
+						-- floor-standing and on-the-ride items: centred across, height set by the build
+						local off = centre - m.cf.Position
+						if m.align == "bottom" or m.onRide then off = Vector3.new(off.X, 0, off.Z) end
+						if off.Magnitude > 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " off its mount centre")
+						end
+						if m.align == "bottom" and centre.Y - ext.Y / 2 < m.cf.Position.Y - m.box.Y / 2 - 0.02 then
+							bad("fit", slots, slot .. " " .. slots[slot] .. " below its mount floor")
 						end
 					end
 				end
@@ -202,6 +215,24 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 			end
 			if slots.TAIL and holders.TAIL and VehicleBuilder.bounds(holders.TAIL[1]).Z < 0 then
 				bad("headtail", slots, "TAIL item in front of the centre")
+			end
+
+			-- Riding: the chassis is hidden and the item covers the footprint
+			if design.riding then
+				local h = holders.BODY and holders.BODY[1]
+				local seat = model:FindFirstChildWhichIsA("VehicleSeat")
+				if chassis.Transparency < 1 then bad("ride", slots, "chassis still shows") end
+				if not h then bad("ride", slots, "no ridden item")
+				else
+					local c, e = VehicleBuilder.bounds(h)
+					if e.Z < chassis.Size.Z * 0.6 and e.X < chassis.Size.X * 0.6 then
+						bad("ride", slots, string.format("ridden item only %.1f x %.1f on a %.1f x %.1f chassis", e.X, e.Z, chassis.Size.X, chassis.Size.Z))
+					end
+					if c.Y + e.Y / 2 < chassis.Size.Y / 2 - 0.02 then bad("ride", slots, "ridden item below the chassis top") end
+					if seat and math.abs(seat.Position.Y - seat.Size.Y / 2 - math.min(c.Y + e.Y / 2, design.mounts.BODY[1].cf.Position.Y + design.mounts.BODY[1].box.Y / 2)) > 0.05 then
+						bad("ride", slots, "seat not on the ridden item")
+					end
+				end
 			end
 
 			-- Seat on top of the chassis
@@ -233,6 +264,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		end)
 		R.it("items fit their slot boxes, centred, one per mount", function()
 			R.expect(problems.fit).toBeEmpty("items outside their slot")
+		end)
+		R.it("with a BODY item you ride it: it covers the hidden chassis and carries the seat", function()
+			R.expect(problems.ride).toBeEmpty("ride problems")
 		end)
 		R.it("has a seat on top of the chassis", function()
 			R.expect(problems.seat).toBeEmpty("seat problems")

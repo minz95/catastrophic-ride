@@ -55,6 +55,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the look never changes handling. Check a change with
   `lune run tools/vehicle_gallery.luau` (`reports/vehicles/*.svg`, front on
   the left) and `python3 tools/studio/sim.py run vehicles`.
+  You ride your BODY item: with one, `VehicleDesign.layout(biome, stats,
+  slots)` hides the chassis and body parts (`ride.hide`) and the item is
+  stretched over the footprint (wheels / motor and mast / wings, prop and
+  tail stay); seat and `onRide` mounts sit on the item's real top. See it
+  with real meshes: `python3 tools/studio/sim.py run gallery` (screenshots
+  in `reports/vehicles/studio/`).
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.
