@@ -42,6 +42,7 @@
 --                          as arranged so far; kept if the timer runs out first
 --   RewardGranted       → server→client (reward: table) -- RESULTS: Progression.applyRound
 --                          result + { saved: bool } (ProgressionManager)
+--   ShopUpdated         → server→client (state: table) -- coins changed outside the shop screen (Robux pack)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -51,6 +52,7 @@
 --   SubmitCraft         → slotAssignments: table  → "ok" | "denied: <reason>"
 --   RequestBoost        → (none)                  → "ok" | "denied: <reason>"
 --   RequestAbility      → itemName: string        → "ok" | "denied: <reason>"
+--   ShopAction          → action: "state" | "buy" | "equip", id: string?  → { result, state }  (Modules/Shop)
 --   RequestPunch        → (none)                  → "hit" | "blocked" | "immune" | "knockout" | "miss" | "denied: <reason>"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -83,6 +85,7 @@ local EVENTS = {
 	"FarmAction",
 	"CraftDraft",
 	"RewardGranted",
+	"ShopUpdated",
 }
 
 local FUNCTIONS = {
@@ -96,6 +99,7 @@ local FUNCTIONS = {
 	"RequestRespawn",
 	"RequestDrop",
 	"RequestPunch",
+	"ShopAction",
 }
 
 local RemoteEvents = {}

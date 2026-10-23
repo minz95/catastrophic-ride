@@ -44,7 +44,7 @@ timerLabel.Name            = "TimerLabel"
 timerLabel.Size            = UDim2.new(1, 0, 0.5, 0)
 timerLabel.Position        = UDim2.new(0, 0, 0, 0)
 timerLabel.BackgroundTransparency = 1
-timerLabel.Text            = "FARMING  1:30"
+timerLabel.Text            = "FARMING"   -- the time comes from PhaseEndsAt (_startTimer)
 timerLabel.Font            = Enum.Font.GothamBold
 timerLabel.TextScaled      = true
 timerLabel.TextColor3      = Color3.fromRGB(80, 220, 80)
@@ -154,8 +154,7 @@ local _runConn     = nil
 
 local function _startTimer()
 	if _runConn then _runConn:Disconnect() end
-	_runConn = RunService.Heartbeat:Connect(function()
-		if not screen.Enabled then return end
+	local function update()
 		-- Server end time (PhaseClock). Until PhaseEndsAt has arrived show no
 		-- time (a guessed Constants duration showed 1:30 in a 60 s round).
 		local remaining = PhaseClock.remaining(nil)
@@ -174,6 +173,10 @@ local function _startTimer()
 		else
 			timerLabel.TextColor3 = Color3.fromRGB(80, 220, 80)
 		end
+	end
+	update()   -- right away, before the first frame shows the old text
+	_runConn = RunService.Heartbeat:Connect(function()
+		if screen.Enabled then update() end
 	end)
 end
 

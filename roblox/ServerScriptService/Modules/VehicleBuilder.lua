@@ -148,8 +148,48 @@ end
 -- @param spawnCFrame CFrame of the chassis centre; -Z is the front
 -- @param slots       table { BODY, ENGINE, SPECIAL, MOBILITY, HEAD, TAIL } (item names)
 -- @returns Model
-function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
+--- A trail behind the chassis (cosmetic): a flat ribbon between two rear
+-- attachments. Trails and attachments have no mass or collision.
+function VehicleBuilder.addTrail(chassis, trail)
+	local half = chassis.Size.X * 0.4
+	local rear = chassis.Size.Z * 0.5
+	local y = -chassis.Size.Y * 0.3
+	local a0 = Instance.new("Attachment")
+	a0.Name = "TrailLeft"
+	a0.Position = Vector3.new(-half, y, rear)
+	a0.Parent = chassis
+	local a1 = Instance.new("Attachment")
+	a1.Name = "TrailRight"
+	a1.Position = Vector3.new(half, y, rear)
+	a1.Parent = chassis
+	local t = Instance.new("Trail")
+	t.Name = "CosmeticTrail"
+	t.Attachment0, t.Attachment1 = a0, a1
+	t.Lifetime = 0.7
+	t.MinLength = 0.1
+	t.LightEmission = trail.light or 0
+	t.Transparency = NumberSequence.new(0.15, 1)
+	t.WidthScale = NumberSequence.new(1, 0.3)
+	if trail.rainbow then
+		t.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 60, 60)),
+			ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 200, 40)),
+			ColorSequenceKeypoint.new(0.5, Color3.fromRGB(60, 220, 90)),
+			ColorSequenceKeypoint.new(0.75, Color3.fromRGB(60, 150, 255)),
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 80, 255)),
+		})
+	else
+		local c = trail.colors or { Color3.new(1, 1, 1) }
+		t.Color = ColorSequence.new(c[1], c[2] or c[1])
+	end
+	t.Parent = chassis
+	return t
+end
+
+--- look (optional, cosmetics from Shared/Cosmetics.look): { paint = { body, accent }, trail = {...} }.
+function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	slots = slots or {}
+	look = look or {}
 	biome = VehicleBuilder.SEAT[biome] and biome or "FOREST"
 	spawnCFrame = spawnCFrame or CFrame.new()
 
@@ -157,6 +197,9 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	model.Name  = "Vehicle_" .. biome
 
 	local design = VehicleDesign.layout(biome, stats)
+	if look.paint and look.paint.body then
+		design.palette = { body = look.paint.body, accent = look.paint.accent or design.palette.accent }
+	end
 
 	local chassis = Instance.new("Part")
 	chassis.Name = "Chassis"
@@ -208,6 +251,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots)
 	end
 
 	_applyStatVisuals(model, stats)
+	if look.trail then VehicleBuilder.addTrail(chassis, look.trail) end
 
 	-- ── Physics drive constraints ─────────────────────────────────────────────
 	-- VehicleSeat's built-in Torque/TurnSpeed require Motor6D wheel joints to

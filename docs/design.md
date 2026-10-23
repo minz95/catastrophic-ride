@@ -241,6 +241,10 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-23 — A shop for looks.** Coins buy paints and trails (some need
+  a level, so levels mean something); Robux coin packs are ready but sold
+  only once their product ids are set. Nothing in the shop changes speed,
+  turning or abilities.
 - **2026-10-23 — Where players drop off.** Retention numbers come from the
   Creator Dashboard; the game adds funnels (first session and every round),
   coins, levels and the day a player came back on, so a low D1 can be

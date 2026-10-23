@@ -1,0 +1,337 @@
+-- ShopUI/init.client.lua
+-- The cosmetics shop: paints and trails bought with coins (Shared/Cosmetics,
+-- server: Modules/Shop through RemoteEvents.ShopAction) and Robux coin packs
+-- (Shared/Products). Opened with the SHOP button in LOBBY and RESULTS; the
+-- look shows on the next car you build.
+
+local MarketplaceService = game:GetService("MarketplaceService")
+local Players            = game:GetService("Players")
+local ReplicatedStorage  = game:GetService("ReplicatedStorage")
+
+local Constants    = require(ReplicatedStorage.Shared.Constants)
+local Cosmetics    = require(ReplicatedStorage.Shared.Cosmetics)
+local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
+local LocalPlayer  = Players.LocalPlayer
+
+-- This script runs again after every respawn, but its ScreenGui
+-- (ResetOnSpawn = false) survives: drop the old copy so it is not shown twice.
+for _, old in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+	if old.Name == "ShopUI" and old:IsA("ScreenGui") then old:Destroy() end
+end
+
+local screen = Instance.new("ScreenGui")
+screen.Name           = "ShopUI"
+screen.ResetOnSpawn   = false
+screen.DisplayOrder   = 20
+screen.Enabled        = true
+screen.Parent         = LocalPlayer.PlayerGui
+
+local GOLD  = Color3.fromRGB(255, 210, 60)
+local PANEL = Color3.fromRGB(28, 24, 46)
+local CARD  = Color3.fromRGB(44, 40, 66)
+
+local function corner(inst, r)
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0, r or 8)
+	c.Parent = inst
+end
+
+local function label(parent, text, size, pos, font, color)
+	local l = Instance.new("TextLabel")
+	l.Size = size
+	l.Position = pos
+	l.BackgroundTransparency = 1
+	l.Text = text
+	l.TextScaled = true
+	l.Font = font or Enum.Font.GothamBold
+	l.TextColor3 = color or Color3.new(1, 1, 1)
+	l.Parent = parent
+	return l
+end
+
+-- ── Open button ───────────────────────────────────────────────────────────────
+local openBtn = Instance.new("TextButton")
+openBtn.Name             = "OpenShop"
+openBtn.Size             = UDim2.new(0, 140, 0, 46)
+openBtn.Position         = UDim2.new(0, 16, 1, -62)
+openBtn.BackgroundColor3 = Color3.fromRGB(230, 160, 30)
+openBtn.Text             = "SHOP"
+openBtn.TextColor3       = Color3.new(1, 1, 1)
+openBtn.TextScaled       = true
+openBtn.Font             = Enum.Font.GothamBlack
+openBtn.Visible          = false
+openBtn.Parent           = screen
+corner(openBtn)
+
+-- ── Panel ─────────────────────────────────────────────────────────────────────
+local panel = Instance.new("Frame")
+panel.Name             = "Panel"
+panel.Size             = UDim2.new(0, 520, 0, 430)
+panel.Position         = UDim2.new(0.5, -260, 0.5, -215)
+panel.BackgroundColor3 = PANEL
+panel.Visible          = false
+panel.Parent           = screen
+corner(panel, 10)
+-- narrow (phone) screens: scale the whole panel down
+local scale = Instance.new("UIScale")
+scale.Parent = panel
+local function rescale()
+	local cam = workspace.CurrentCamera
+	local w = cam and cam.ViewportSize.X or 1000
+	local h = cam and cam.ViewportSize.Y or 800
+	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 430)
+end
+rescale()
+if workspace.CurrentCamera then
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
+end
+
+label(panel, "SHOP", UDim2.new(0, 160, 0, 36), UDim2.new(0, 14, 0, 8), Enum.Font.GothamBlack, GOLD)
+local coinsLbl = label(panel, "", UDim2.new(0, 220, 0, 26), UDim2.new(1, -290, 0, 14), Enum.Font.GothamBold, GOLD)
+coinsLbl.TextXAlignment = Enum.TextXAlignment.Right
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size             = UDim2.new(0, 40, 0, 40)
+closeBtn.Position         = UDim2.new(1, -50, 0, 6)
+closeBtn.BackgroundColor3 = Color3.fromRGB(80, 50, 60)
+closeBtn.Text             = "X"
+closeBtn.TextColor3       = Color3.new(1, 1, 1)
+closeBtn.TextScaled       = true
+closeBtn.Font             = Enum.Font.GothamBlack
+closeBtn.Parent           = panel
+corner(closeBtn)
+
+local hint = label(panel, "Looks only: your car drives the same. Shows on your next car.",
+	UDim2.new(1, -28, 0, 18), UDim2.new(0, 14, 0, 50), Enum.Font.Gotham, Color3.fromRGB(190, 190, 210))
+hint.TextXAlignment = Enum.TextXAlignment.Left
+
+local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
+
+-- tabs
+local TABS = { "paint", "trail", "coins" }
+local TAB_TITLES = { paint = "Paint", trail = "Trail", coins = "Coins" }
+local tabBtns = {}
+for i, key in ipairs(TABS) do
+	local b = Instance.new("TextButton")
+	b.Name             = "Tab_" .. key
+	b.Size             = UDim2.new(0, 110, 0, 32)
+	b.Position         = UDim2.new(0, 14 + (i - 1) * 118, 0, 74)
+	b.BackgroundColor3 = CARD
+	b.Text             = TAB_TITLES[key]
+	b.TextColor3       = Color3.new(1, 1, 1)
+	b.TextScaled       = true
+	b.Font             = Enum.Font.GothamBold
+	b.Parent           = panel
+	corner(b, 6)
+	tabBtns[key] = b
+end
+
+local grid = Instance.new("ScrollingFrame")
+grid.Name                 = "Items"
+grid.Size                 = UDim2.new(1, -28, 1, -150)
+grid.Position             = UDim2.new(0, 14, 0, 116)
+grid.BackgroundTransparency = 1
+grid.BorderSizePixel      = 0
+grid.ScrollBarThickness   = 6
+grid.AutomaticCanvasSize  = Enum.AutomaticSize.Y
+grid.CanvasSize           = UDim2.new()
+grid.Parent               = panel
+local layout = Instance.new("UIGridLayout")
+layout.CellSize    = UDim2.new(0, 116, 0, 128)
+layout.CellPadding = UDim2.new(0, 8, 0, 8)
+layout.SortOrder   = Enum.SortOrder.LayoutOrder
+layout.Parent      = grid
+
+-- ── State ─────────────────────────────────────────────────────────────────────
+local _state = nil      -- Modules/Shop.state
+local _tab = "paint"
+local _busy = false
+
+local function owns(id)
+	if Cosmetics.isDefault(id) then return true end
+	for _, o in ipairs((_state and _state.owned) or {}) do
+		if o == id then return true end
+	end
+	return false
+end
+
+local function swatch(card, it)
+	local s = Instance.new("Frame")
+	s.Size             = UDim2.new(1, -16, 0, 46)
+	s.Position         = UDim2.new(0, 8, 0, 8)
+	s.BorderSizePixel  = 0
+	s.BackgroundColor3 = Color3.new(1, 1, 1)
+	s.Parent           = card
+	corner(s, 6)
+	local g = Instance.new("UIGradient")
+	if it.category == "paint" then
+		local body = it.body or Color3.fromRGB(196, 72, 52)
+		local accent = it.accent or Color3.fromRGB(235, 190, 70)
+		g.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, body), ColorSequenceKeypoint.new(0.7, body),
+			ColorSequenceKeypoint.new(0.71, accent), ColorSequenceKeypoint.new(1, accent),
+		})
+	elseif it.rainbow then
+		g.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 60, 60)),
+			ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 200, 40)),
+			ColorSequenceKeypoint.new(0.66, Color3.fromRGB(60, 200, 255)),
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 80, 255)),
+		})
+	elseif it.colors then
+		g.Color = ColorSequence.new(it.colors[1], it.colors[2] or it.colors[1])
+	else
+		s.BackgroundColor3 = Color3.fromRGB(70, 70, 85)
+	end
+	g.Parent = s
+	if it.category == "paint" and not it.body then
+		label(s, "biome", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBold, Color3.new(1, 1, 1))
+	end
+end
+
+local _redraw
+
+local function act(action, id)
+	if _busy then return end
+	_busy = true
+	local ok, res = pcall(function() return RemoteEvents.ShopAction:InvokeServer(action, id) end)
+	_busy = false
+	if not ok or type(res) ~= "table" then
+		msgLbl.Text = "The shop is not available right now"
+		return
+	end
+	if res.state then _state = res.state end
+	local r = res.result or "?"
+	if r == "ok" then
+		msgLbl.Text = ""
+		if action == "buy" then SoundFx.play("CRAFT_COMPLETE") else SoundFx.play("SLOT_ASSIGN") end
+	elseif r == "denied: coins" then
+		msgLbl.Text = "Not enough coins: win races and come back daily for more"
+	elseif r:sub(1, 14) == "denied: level " then
+		msgLbl.Text = "Reach level " .. r:sub(15) .. " to buy this"
+	elseif r == "denied: loading" then
+		msgLbl.Text = "Loading your coins..."
+	else
+		msgLbl.Text = "Could not do that (" .. r .. ")"
+	end
+	_redraw()
+end
+
+local function itemCard(it, order)
+	local card = Instance.new("Frame")
+	card.Name             = it.id
+	card.BackgroundColor3 = CARD
+	card.LayoutOrder      = order
+	card.Parent           = grid
+	corner(card)
+	swatch(card, it)
+	label(card, it.name, UDim2.new(1, -12, 0, 22), UDim2.new(0, 6, 0, 58), Enum.Font.GothamBold)
+
+	local equipped = _state and _state.equipped and _state.equipped[it.category]
+	local isOn = equipped == it.id or (equipped == nil and Cosmetics.isDefault(it.id))
+	local btn = Instance.new("TextButton")
+	btn.Size       = UDim2.new(1, -16, 0, 34)
+	btn.Position   = UDim2.new(0, 8, 1, -42)
+	btn.TextScaled = true
+	btn.Font       = Enum.Font.GothamBold
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Parent     = card
+	corner(btn, 6)
+	local level = (_state and _state.level) or 1
+	if isOn then
+		btn.Text = "Equipped"
+		btn.BackgroundColor3 = Color3.fromRGB(60, 140, 80)
+		btn.AutoButtonColor = false
+	elseif owns(it.id) then
+		btn.Text = "Equip"
+		btn.BackgroundColor3 = Color3.fromRGB(70, 110, 200)
+		btn.Activated:Connect(function() act("equip", it.id) end)
+	elseif level < (it.minLevel or 1) then
+		btn.Text = "Level " .. it.minLevel
+		btn.BackgroundColor3 = Color3.fromRGB(80, 80, 95)
+		btn.AutoButtonColor = false
+	else
+		btn.Text = "Buy  " .. it.price
+		local enough = ((_state and _state.coins) or 0) >= it.price
+		btn.BackgroundColor3 = enough and Color3.fromRGB(220, 150, 30) or Color3.fromRGB(120, 95, 60)
+		btn.Activated:Connect(function() act("buy", it.id) end)
+	end
+end
+
+local function packCard(p, order)
+	local card = Instance.new("Frame")
+	card.Name             = "Pack" .. p.id
+	card.BackgroundColor3 = CARD
+	card.LayoutOrder      = order
+	card.Parent           = grid
+	corner(card)
+	label(card, tostring(p.coins), UDim2.new(1, -12, 0, 40), UDim2.new(0, 6, 0, 8), Enum.Font.GothamBlack, GOLD)
+	label(card, p.name, UDim2.new(1, -12, 0, 22), UDim2.new(0, 6, 0, 54), Enum.Font.GothamBold)
+	local btn = Instance.new("TextButton")
+	btn.Size             = UDim2.new(1, -16, 0, 34)
+	btn.Position         = UDim2.new(0, 8, 1, -42)
+	btn.Text             = "R$ " .. tostring(p.robux)
+	btn.TextScaled       = true
+	btn.Font             = Enum.Font.GothamBold
+	btn.TextColor3       = Color3.new(1, 1, 1)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 160, 90)
+	btn.Parent           = card
+	corner(btn, 6)
+	btn.Activated:Connect(function()
+		pcall(function() MarketplaceService:PromptProductPurchase(LocalPlayer, p.id) end)
+	end)
+end
+
+_redraw = function()
+	for _, c in ipairs(grid:GetChildren()) do
+		if c:IsA("GuiObject") then c:Destroy() end
+	end
+	for key, b in pairs(tabBtns) do
+		b.BackgroundColor3 = key == _tab and Color3.fromRGB(230, 160, 30) or CARD
+	end
+	coinsLbl.Text = _state and string.format("Level %d   ·   %d Coins", _state.level or 1, _state.coins or 0) or "..."
+	if _tab == "coins" then
+		local packs = (_state and _state.packs) or {}
+		for i, p in ipairs(packs) do packCard(p, i) end
+		if #packs == 0 then
+			local l = label(grid, "Coin packs are coming soon. Earn coins by racing!", UDim2.new(1, 0, 0, 30), UDim2.new(), Enum.Font.GothamBold)
+			l.LayoutOrder = 1
+		end
+	else
+		for i, it in ipairs(Cosmetics.ITEMS[_tab]) do itemCard(it, i) end
+	end
+end
+
+local function open()
+	panel.Visible = true
+	msgLbl.Text = ""
+	_redraw()
+	task.spawn(act, "state")
+end
+
+openBtn.Activated:Connect(function()
+	if panel.Visible then panel.Visible = false else open() end
+end)
+closeBtn.Activated:Connect(function() panel.Visible = false end)
+for key, b in pairs(tabBtns) do
+	b.Activated:Connect(function()
+		_tab = key
+		msgLbl.Text = ""
+		_redraw()
+	end)
+end
+
+RemoteEvents.ShopUpdated.OnClientEvent:Connect(function(state)
+	_state = state
+	if panel.Visible then _redraw() end
+end)
+
+-- The shop is open between races only.
+local function onPhase(phase)
+	local between = phase == Constants.PHASES.LOBBY or phase == Constants.PHASES.RESULTS
+	openBtn.Visible = between
+	if not between then panel.Visible = false end
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
+onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)

@@ -228,6 +228,16 @@ In Studio the `rewards` check (match-forest) wants a `reward` event for every
 racer. Real DataStore writes need a published place with API access; bot
 matches stay in memory.
 
+### Shop
+
+`tests/specs/shop.spec.luau`: the catalogue, buy / equip rules (coins,
+level, owned), paint and trail on a real VehicleBuilder car in every biome
+with the chassis and seat unchanged, the server handler, Robux coin packs
+(granted once per PurchaseId, undone and retried when the save fails, never
+for a record that failed to load) and the car CraftingManager builds wearing
+the equipped look. A real purchase needs the published place and a product
+id in `Shared/Products`.
+
 ### Analytics (live only)
 
 Retention (D1 / D7 / D30), sessions and playtime are on the Creator
