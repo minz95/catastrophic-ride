@@ -241,6 +241,12 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-23 — Saved levels and coins, a daily streak.** Before launch
+  there was no reason to come back: nothing was saved. Every round now pays
+  XP and coins by place (a DNF still earns the play reward, so a last place
+  is not wasted), the first round of a day pays a bonus that grows with a
+  streak of days (up to 7), and Level / Coins show on the player list.
+  Coins are for cosmetics only (the build must not decide the race).
 - **2026-10-22 — Nobody falls off after the finish.** A finished car is parked
   (MaxSpeed 0, no respawns); the road runs 150 studs (Sky 220) past the line
   to an end wall. In Studio the winner ran off the 50-stud run-off and fell

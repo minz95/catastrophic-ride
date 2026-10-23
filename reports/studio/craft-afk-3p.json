@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "bf62c28",
+ "commit": "15012db",
  "dirty": true,
  "kind": "match",
  "logErrors": [
-  "2026-10-23T12:26:11.499Z,121.499756,6c13b000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-23T12:26:32.753Z,142.753479,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.753Z,142.753693,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.765Z,142.765213,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.765Z,142.765320,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.765Z,142.765381,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.765Z,142.765427,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.770Z,142.770340,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:32.770Z,142.770538,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
-  "2026-10-23T12:26:33.096Z,143.096405,6bf2f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c2e5603d-1551-4733-b87e-d33359f9a47d\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-23T12:53:24.501Z,121.501083,6d7c7000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T12:53:42.327Z,139.327438,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.327Z,139.327591,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.339Z,139.339935,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.340Z,139.340042,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.342Z,139.342392,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.342Z,139.342422,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.342Z,139.342743,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.342Z,139.342758,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T12:53:42.456Z,139.456696,6d5bb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f0df4031-e6d8-41da-a6f7-a266226163af\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "biome": "FOREST",
@@ -33,7 +33,7 @@
   "players": 4,
   "stopAfter": "CRAFTING"
  },
- "ranAt": "2026-10-23T21:26:34+0900",
+ "ranAt": "2026-10-23T21:53:44+0900",
  "report": {
   "args": {
    "biome": "FOREST",
@@ -65,7 +65,16 @@
    "stopAfter": "CRAFTING"
   },
   "botNotes": [],
-  "clientErrors": [],
+  "clientErrors": [
+   {
+    "error": {
+     "message": "Players.Player2.PlayerScripts.ChatScript:116: Error calling SetCore CoreGuiChatConnections: SetCore: CoreGuiChatConnections has not been registered by the CoreScripts",
+     "script": "Players.Player2.PlayerScripts.ChatScript",
+     "trace": "Players.Player2.PlayerScripts.ChatScript, line 116 - function SetCoreGuiChatConnections\nPlayers.Player2.PlayerScripts.ChatScript, line 104 - function DoEverything\nPlayers.Player2.PlayerScripts.ChatScript, line 133\n"
+    },
+    "userId": -2
+   }
+  ],
   "endReason": "stopAfter CRAFTING",
   "errors": [],
   "harness": "match",
@@ -77,19 +86,17 @@
       "auto": false,
       "rejected": [],
       "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Drill",
-       "HEAD": "Suitcase",
-       "SPECIAL": "Soda Bottle",
-       "TAIL": "Racing Flag"
+       "HEAD": "Bathtub",
+       "SPECIAL": "Umbrella",
+       "TAIL": "Magic Wand"
       },
       "stats": {
-       "acceleration": 21.6125,
-       "boostDuration": 3.1,
-       "floatability": 1.15,
-       "flyability": 5.633333333333333,
-       "speed": 30.725,
-       "stability": 24.202499999999997
+       "acceleration": 11.1,
+       "boostDuration": 2.185,
+       "floatability": 2,
+       "flyability": 5.25,
+       "speed": 23,
+       "stability": 31.779999999999998
       }
      },
      "-2": {
@@ -109,71 +116,73 @@
       "auto": false,
       "rejected": [],
       "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Magnifying Glass",
-       "MOBILITY": "Red Sofa",
-       "SPECIAL": "Magnet"
+       "BODY": "Life Preserver",
+       "ENGINE": "Kettle",
+       "MOBILITY": "Magnifying Glass",
+       "SPECIAL": "Soda Bottle"
       },
       "stats": {
-       "acceleration": 17.81605,
-       "boostDuration": 1.945,
-       "floatability": 1.15,
-       "flyability": 5.633333333333333,
-       "speed": 26.21,
-       "stability": 46.903999999999996
+       "acceleration": 26.266025641025635,
+       "boostDuration": 3.1,
+       "floatability": 3.9473684210526314,
+       "flyability": 6.056005398110661,
+       "speed": 32.051282051282044,
+       "stability": 37.73195006747638
       }
      },
      "-4": {
       "auto": true,
       "draft": {
-       "BODY": "Backpack",
-       "ENGINE": "Rocket",
-       "SPECIAL": "Magnet"
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "SPECIAL": "Balloon Bunch"
       },
       "rejected": [],
       "slots": {
-       "BODY": "Backpack",
-       "ENGINE": "Rocket",
-       "HEAD": "Cactus",
-       "MOBILITY": "Hair Dryer",
-       "SPECIAL": "Magnet",
-       "TAIL": "Racing Flag"
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "HEAD": "Suitcase",
+       "MOBILITY": "Life Preserver",
+       "SPECIAL": "Balloon Bunch",
+       "TAIL": "Treadmill"
       },
       "stats": {
-       "acceleration": 19.366641192204813,
-       "boostDuration": 1.945,
-       "floatability": 3.9740160489109666,
-       "flyability": 9.476499808941536,
-       "speed": 25.601834161253343,
-       "stability": 48.77722583110431
+       "acceleration": 14.295139600361237,
+       "boostDuration": 2.5,
+       "floatability": 3.6960514233241506,
+       "flyability": 7.668723296071154,
+       "speed": 24.522080307204273,
+       "stability": 66.29783940076953
       }
      }
     },
-    "craftT0": 104.721,
-    "durationSeconds": 111.16239904164104,
+    "craftT0": 102.056,
+    "durationSeconds": 111.07853729161434,
     "farm": {
      "attempts": {
+      "denied: too far": 2,
       "denied: victim has nothing": 1
      },
      "ledgerMismatches": [],
      "players": {
       "-1": {
        "attempts": {
+        "denied: too far": 2,
         "denied: victim has nothing": 1
        },
-       "contestsLost": 0,
-       "contestsWon": 1,
+       "contestsLost": 1,
+       "contestsWon": 2,
        "defencesTried": 0,
-       "drops": 5,
+       "drops": 4,
        "inventory": 8,
        "ledger": 8,
-       "pickups": 13,
+       "pickups": 12,
        "robbed": 0,
        "stolen": 0
       },
       "-2": {
        "attempts": [],
-       "contestsLost": 2,
+       "contestsLost": 0,
        "contestsWon": 0,
        "defencesTried": 0,
        "inventory": 0,
@@ -184,81 +193,81 @@
       },
       "-3": {
        "attempts": [],
-       "contestsLost": 3,
-       "contestsWon": 0,
+       "contestsLost": 0,
+       "contestsWon": 1,
        "defencesTried": 0,
-       "drops": 1,
+       "drops": 7,
        "inventory": 8,
        "ledger": 8,
-       "pickups": 9,
+       "pickups": 15,
        "robbed": 0,
        "stolen": 0
       },
       "-4": {
        "attempts": [],
-       "contestsLost": 0,
-       "contestsWon": 4,
+       "contestsLost": 3,
+       "contestsWon": 1,
        "defencesTried": 0,
-       "drops": 4,
+       "drops": 7,
        "inventory": 8,
        "ledger": 8,
-       "pickups": 12,
+       "pickups": 15,
        "robbed": 0,
        "stolen": 0
       }
      },
      "punches": {
-      "hit": 2
+      "blocked": 1,
+      "hit": 5,
+      "miss": 1
      }
     },
     "finishOrder": [],
     "inventories": {
      "-1": [
-      "Soda Bottle",
-      "Suitcase",
+      "Bathtub",
+      "Umbrella",
+      "Magic Wand",
+      "Flower",
+      "Magnet",
+      "Shopping Cart",
       "Skateboard",
-      "Racing Flag",
-      "Racing Flag",
-      "Hair Dryer",
-      "Microwave",
-      "Drill"
+      "Cactus"
      ],
      "-2": [],
      "-3": [
-      "Skateboard",
-      "Red Sofa",
-      "Magnet",
+      "Soda Bottle",
+      "Kettle",
+      "Life Preserver",
       "Magnifying Glass",
-      "Camera",
-      "Cardboard Box",
-      "Fan",
-      "Red Sofa"
+      "Drill",
+      "Balloon Bunch",
+      "Red Sofa",
+      "Rubber Duck"
      ],
      "-4": [
-      "Magnet",
-      "Hair Dryer",
-      "Cactus",
-      "Racing Flag",
-      "Magnifying Glass",
-      "Rocket",
-      "Backpack",
-      "Magnet"
+      "Life Preserver",
+      "Suitcase",
+      "Treadmill",
+      "Log",
+      "Kettle",
+      "Umbrella",
+      "Propeller Hat",
+      "Balloon Bunch"
      ]
     },
     "players": [
      {
-      "boostDuration": 3.1,
+      "boostDuration": 2.185,
       "driver": "expert",
       "farm": "sweaty",
       "name": "Player1",
       "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Drill",
-       "HEAD": "Suitcase",
-       "SPECIAL": "Soda Bottle",
-       "TAIL": "Racing Flag"
+       "HEAD": "Bathtub",
+       "SPECIAL": "Umbrella",
+       "TAIL": "Magic Wand"
       },
-      "speed": 30.725,
+      "speed": 23,
       "userId": -1
      },
      {
@@ -271,43 +280,43 @@
       "userId": -2
      },
      {
-      "boostDuration": 1.945,
+      "boostDuration": 3.1,
       "driver": "novice",
       "farm": "casual",
       "name": "Player3",
       "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Magnifying Glass",
-       "MOBILITY": "Red Sofa",
-       "SPECIAL": "Magnet"
+       "BODY": "Life Preserver",
+       "ENGINE": "Kettle",
+       "MOBILITY": "Magnifying Glass",
+       "SPECIAL": "Soda Bottle"
       },
-      "speed": 26.21,
+      "speed": 32.051282051282044,
       "userId": -3
      },
      {
-      "boostDuration": 1.945,
+      "boostDuration": 2.5,
       "driver": "expert",
       "farm": "slow",
       "name": "Player4",
       "slots": {
-       "BODY": "Backpack",
-       "ENGINE": "Rocket",
-       "HEAD": "Cactus",
-       "MOBILITY": "Hair Dryer",
-       "SPECIAL": "Magnet",
-       "TAIL": "Racing Flag"
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "HEAD": "Suitcase",
+       "MOBILITY": "Life Preserver",
+       "SPECIAL": "Balloon Bunch",
+       "TAIL": "Treadmill"
       },
-      "speed": 25.601834161253343,
+      "speed": 24.522080307204273,
       "userId": -4
      }
     ],
-    "raceStartedAt": 127.65828604163835,
+    "raceStartedAt": 125.09385274996748,
     "round": 1,
-    "startedAt": 17.504923708329443,
-    "t0": 14.623
+    "startedAt": 15.025579916662537,
+    "t0": 12.039
    }
   ],
-  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: denied: victim has nothing=1\n    -4: picked 12, contests 4/4, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n    -2: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 13, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -3: picked 9, contests 0/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: ability=3 bot_craft=3 bot_farmfx=8 bot_hud=219 bot_joined=4 bot_punch=2 bot_ready=4 bot_screen=8 bot_steal=1 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=34 item_wave=3 phase=3 punch=2 race_sample=8 race_start=1 steal_attempt=1 vehicle_spawn=4",
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: denied: too far=2, denied: victim has nothing=1\n    -4: picked 15, contests 1/4, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 12, contests 2/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -3: picked 15, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: ability=3 bot_craft=3 bot_farmfx=52 bot_guard=3 bot_hud=218 bot_joined=4 bot_pickup_denied=1 bot_punch=7 bot_ready=4 bot_screen=8 bot_steal=3 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=18 item_pickup=42 item_wave=3 phase=3 punch=7 race_sample=8 race_start=1 steal_attempt=3 vehicle_spawn=4",
   "telemetry": {
    "dropped": 0,
    "events": [
@@ -316,7 +325,7 @@
      "farm": "sweaty",
      "kind": "bot_joined",
      "name": "Player1",
-     "t": 4.056,
+     "t": 3.851,
      "userId": -1
     },
     {
@@ -325,7 +334,7 @@
       "farm": "sweaty"
      },
      "kind": "bot_ready",
-     "t": 4.508,
+     "t": 4.306,
      "userId": -1
     },
     {
@@ -333,7 +342,7 @@
      "farm": "afk",
      "kind": "bot_joined",
      "name": "Player2",
-     "t": 6.512,
+     "t": 6.095,
      "userId": -2
     },
     {
@@ -342,7 +351,7 @@
       "farm": "afk"
      },
      "kind": "bot_ready",
-     "t": 7.157,
+     "t": 7.372,
      "userId": -2
     },
     {
@@ -350,7 +359,7 @@
      "farm": "casual",
      "kind": "bot_joined",
      "name": "Player3",
-     "t": 9.873,
+     "t": 7.528,
      "userId": -3
     },
     {
@@ -359,7 +368,7 @@
       "farm": "casual"
      },
      "kind": "bot_ready",
-     "t": 10.426,
+     "t": 7.905,
      "userId": -3
     },
     {
@@ -367,7 +376,7 @@
      "farm": "slow",
      "kind": "bot_joined",
      "name": "Player4",
-     "t": 11.4,
+     "t": 8.615,
      "userId": -4
     },
     {
@@ -376,7 +385,7 @@
       "farm": "slow"
      },
      "kind": "bot_ready",
-     "t": 11.874,
+     "t": 9.159,
      "userId": -4
     },
     {
@@ -384,33 +393,33 @@
      "kind": "phase",
      "phase": "FARMING",
      "round": 1,
-     "t": 14.623
-    },
-    {
-     "kind": "harness_round",
-     "round": 1,
-     "t": 14.623
+     "t": 11.972
     },
     {
      "count": 36,
      "kind": "item_wave",
      "players": 4,
-     "t": 14.65,
+     "t": 11.987,
      "wave": 0
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 12.039
     },
     {
      "data": {
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  1:30"
+        "text": "FARMING  1:29"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 89.58329105377197
+      "serverLeft": 89.52199721336365
      },
      "kind": "bot_hud",
-     "t": 15.008,
+     "t": 12.473,
      "userId": -1
     },
     {
@@ -422,10 +431,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 88.84487795829773
+      "serverLeft": 88.70879006385803
      },
      "kind": "bot_hud",
-     "t": 15.839,
+     "t": 13.172,
      "userId": -4
     },
     {
@@ -437,10 +446,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 88.80851697921753
+      "serverLeft": 88.32227301597595
      },
      "kind": "bot_hud",
-     "t": 15.857,
+     "t": 13.655,
      "userId": -2
     },
     {
@@ -452,10 +461,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 88.17127108573914
+      "serverLeft": 88.0690290927887
      },
      "kind": "bot_hud",
-     "t": 16.473,
+     "t": 13.906,
      "userId": -3
     },
     {
@@ -467,10 +476,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 87.63156795501709
+      "serverLeft": 87.5129120349884
      },
      "kind": "bot_hud",
-     "t": 16.989,
+     "t": 14.472,
      "userId": -1
     },
     {
@@ -482,10 +491,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 86.78892302513123
+      "serverLeft": 86.75080418586731
      },
      "kind": "bot_hud",
-     "t": 17.839,
+     "t": 15.188,
      "userId": -4
     },
     {
@@ -497,10 +506,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 86.76142597198486
+      "serverLeft": 86.30626702308655
      },
      "kind": "bot_hud",
-     "t": 17.874,
+     "t": 15.672,
      "userId": -2
     },
     {
@@ -512,26 +521,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 86.15494704246521
+      "serverLeft": 86.0524070262909
      },
      "kind": "bot_hud",
-     "t": 18.473,
+     "t": 15.921,
      "userId": -3
     },
     {
-     "kind": "steal_attempt",
-     "result": "denied: victim has nothing",
-     "t": 18.689,
-     "thief": -1,
-     "victim": -4
-    },
-    {
-     "data": {
-      "result": "denied: victim has nothing",
-      "victim": -4
-     },
-     "kind": "bot_steal",
-     "t": 18.723,
+     "inventory": 1,
+     "item": "Bathtub",
+     "itemId": "35",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 16.105,
      "userId": -1
     },
     {
@@ -543,25 +545,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 85.62332797050476
+      "serverLeft": 85.49408602714539
      },
      "kind": "bot_hud",
-     "t": 19.006,
+     "t": 16.489,
      "userId": -1
     },
     {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:24"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 84.77235102653503
-     },
-     "kind": "bot_hud",
-     "t": 19.857,
+     "inventory": 1,
+     "item": "Life Preserver",
+     "itemId": "9",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 17.022,
      "userId": -4
     },
     {
@@ -573,10 +569,25 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 84.74548196792603
+      "serverLeft": 84.76809215545654
      },
      "kind": "bot_hud",
-     "t": 19.89,
+     "t": 17.205,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 84.29024720191956
+     },
+     "kind": "bot_hud",
+     "t": 17.688,
      "userId": -2
     },
     {
@@ -588,10 +599,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 84.14763903617859
+      "serverLeft": 84.03465914726257
      },
      "kind": "bot_hud",
-     "t": 20.489,
+     "t": 17.939,
      "userId": -3
     },
     {
@@ -603,19 +614,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 83.61695408821106
+      "serverLeft": 83.47759008407593
      },
      "kind": "bot_hud",
-     "t": 21.007,
-     "userId": -1
-    },
-    {
-     "inventory": 1,
-     "item": "Soda Bottle",
-     "itemId": "14",
-     "kind": "item_pickup",
-     "rarity": "Epic",
-     "t": 21.157,
+     "t": 18.504,
      "userId": -1
     },
     {
@@ -627,10 +629,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 82.7531909942627
+      "serverLeft": 82.75119209289551
      },
      "kind": "bot_hud",
-     "t": 21.873,
+     "t": 19.221,
+     "userId": -4
+    },
+    {
+     "inventory": 2,
+     "item": "Suitcase",
+     "itemId": "3",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 19.688,
      "userId": -4
     },
     {
@@ -642,10 +653,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 82.74613308906555
+      "serverLeft": 82.28981614112854
      },
      "kind": "bot_hud",
-     "t": 21.89,
+     "t": 19.688,
      "userId": -2
     },
     {
@@ -657,10 +668,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 82.14646697044373
+      "serverLeft": 82.0300030708313
      },
      "kind": "bot_hud",
-     "t": 22.489,
+     "t": 19.954,
      "userId": -3
     },
     {
@@ -672,19 +683,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 81.61649894714355
+      "serverLeft": 81.47646117210388
      },
      "kind": "bot_hud",
-     "t": 23.007,
+     "t": 20.504,
      "userId": -1
     },
     {
-     "inventory": 1,
-     "item": "Magnet",
-     "itemId": "15",
+     "inventory": 3,
+     "item": "Cactus",
+     "itemId": "13",
      "kind": "item_pickup",
      "rarity": "Uncommon",
-     "t": 23.756,
+     "t": 21.005,
      "userId": -4
     },
     {
@@ -696,10 +707,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 80.73631691932678
+      "serverLeft": 80.73539805412292
      },
      "kind": "bot_hud",
-     "t": 23.889,
+     "t": 21.238,
+     "userId": -4
+    },
+    {
+     "inventory": 4,
+     "item": "Cardboard Box",
+     "itemId": "12",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 21.706,
      "userId": -4
     },
     {
@@ -711,22 +731,13 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 80.73011589050293
+      "serverLeft": 80.27507615089417
      },
      "kind": "bot_hud",
-     "t": 23.906,
+     "t": 21.706,
      "userId": -2
     },
     {
-     "inventory": 1,
-     "item": "Skateboard",
-     "itemId": "22",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 24.307,
-     "userId": -3
-    },
-    {
      "data": {
       "guis": [
        {
@@ -735,10 +746,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 80.1322329044342
+      "serverLeft": 80.01610803604126
      },
      "kind": "bot_hud",
-     "t": 24.49,
+     "t": 21.954,
      "userId": -3
     },
     {
@@ -750,11 +761,20 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 79.59839391708374
+      "serverLeft": 79.47633504867554
      },
      "kind": "bot_hud",
-     "t": 25.039,
+     "t": 22.504,
      "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Soda Bottle",
+     "itemId": "26",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 22.739,
+     "userId": -3
     },
     {
      "data": {
@@ -765,10 +785,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 78.71968793869019
+      "serverLeft": 78.7205901145935
      },
      "kind": "bot_hud",
-     "t": 25.906,
+     "t": 23.255,
      "userId": -4
     },
     {
@@ -780,10 +800,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 78.73004198074341
+      "serverLeft": 78.27325701713562
      },
      "kind": "bot_hud",
-     "t": 25.906,
+     "t": 23.705,
      "userId": -2
     },
     {
@@ -795,28 +815,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 78.13202691078186
+      "serverLeft": 78.00304222106934
      },
      "kind": "bot_hud",
-     "t": 26.506,
-     "userId": -3
-    },
-    {
-     "inventory": 2,
-     "item": "Suitcase",
-     "itemId": "6",
-     "kind": "item_pickup",
-     "rarity": "Rare",
-     "t": 26.803,
-     "userId": -1
-    },
-    {
-     "inventory": 2,
-     "item": "Red Sofa",
-     "itemId": "7",
-     "kind": "item_pickup",
-     "rarity": "Rare",
-     "t": 26.923,
+     "t": 23.971,
      "userId": -3
     },
     {
@@ -828,20 +830,11 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 77.5819149017334
+      "serverLeft": 77.45883321762085
      },
      "kind": "bot_hud",
-     "t": 27.039,
+     "t": 24.522,
      "userId": -1
-    },
-    {
-     "inventory": 3,
-     "item": "Magnet",
-     "itemId": "20",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 27.889,
-     "userId": -3
     },
     {
      "data": {
@@ -852,10 +845,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 76.7170820236206
+      "serverLeft": 76.70464706420898
      },
      "kind": "bot_hud",
-     "t": 27.905,
+     "t": 25.271,
      "userId": -4
     },
     {
@@ -867,10 +860,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 76.73046898841858
+      "serverLeft": 76.25797915458679
      },
      "kind": "bot_hud",
-     "t": 27.905,
+     "t": 25.72,
      "userId": -2
     },
     {
@@ -882,31 +875,38 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 76.1156370639801
+      "serverLeft": 75.98609614372253
      },
      "kind": "bot_hud",
-     "t": 28.522,
+     "t": 25.988,
      "userId": -3
     },
     {
-     "itemId": "36",
-     "kind": "contest_result",
-     "loser": -2,
-     "presses": {
-      "-2": 0,
-      "-4": 18
-     },
-     "t": 28.84,
-     "winner": -4
+     "inventory": 5,
+     "item": "Treadmill",
+     "itemId": "23",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 26.088,
+     "userId": -4
     },
     {
      "inventory": 2,
-     "item": "Bamboo Raft",
-     "itemId": "36",
+     "item": "Kettle",
+     "itemId": "8",
      "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 28.84,
-     "userId": -4
+     "rarity": "Epic",
+     "t": 26.272,
+     "userId": -3
+    },
+    {
+     "inventory": 3,
+     "item": "Life Preserver",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 26.422,
+     "userId": -3
     },
     {
      "data": {
@@ -917,29 +917,20 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 75.56452703475952
+      "serverLeft": 75.44278907775879
      },
      "kind": "bot_hud",
-     "t": 29.072,
+     "t": 26.539,
      "userId": -1
     },
     {
-     "inventory": 3,
-     "item": "Magnet",
-     "itemId": "35",
+     "inventory": 2,
+     "item": "Umbrella",
+     "itemId": "16",
      "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 29.656,
+     "rarity": "Rare",
+     "t": 26.768,
      "userId": -1
-    },
-    {
-     "inventory": 4,
-     "item": "Magnifying Glass",
-     "itemId": "8",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 29.772,
-     "userId": -3
     },
     {
      "data": {
@@ -950,50 +941,35 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 74.70098304748535
+      "serverLeft": 74.70411014556885
      },
      "kind": "bot_hud",
-     "t": 29.922,
+     "t": 27.27,
      "userId": -4
     },
     {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:14"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 74.71468687057495
-     },
-     "kind": "bot_hud",
-     "t": 29.923,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:14"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 74.11321806907654
-     },
-     "kind": "bot_hud",
-     "t": 30.524,
-     "userId": -3
-    },
-    {
-     "inventory": 5,
-     "item": "Flower",
-     "itemId": "17",
+     "inventory": 4,
+     "item": "Pizza",
+     "itemId": "25",
      "kind": "item_pickup",
      "rarity": "Common",
-     "t": 30.973,
+     "t": 27.722,
      "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 74.25381517410278
+     },
+     "kind": "bot_hud",
+     "t": 27.722,
+     "userId": -2
     },
     {
      "data": {
@@ -1004,82 +980,115 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 73.56384301185608
+      "serverLeft": 73.97203016281128
      },
      "kind": "bot_hud",
-     "t": 31.072,
-     "userId": -1
-    },
-    {
-     "inventory": 4,
-     "item": "Skateboard",
-     "itemId": "4",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 31.906,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:12"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 72.70078086853027
-     },
-     "kind": "bot_hud",
-     "t": 31.922,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:12"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 72.71074199676514
-     },
-     "kind": "bot_hud",
-     "t": 31.922,
-     "userId": -2
-    },
-    {
-     "inventory": 3,
-     "item": "Hair Dryer",
-     "itemId": "11",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 32.49,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:12"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 72.09688186645508
-     },
-     "kind": "bot_hud",
-     "t": 32.538,
+     "t": 28.004,
      "userId": -3
     },
     {
-     "inventory": 4,
-     "item": "Cardboard Box",
-     "itemId": "28",
+     "inventory": 6,
+     "item": "Magnet",
+     "itemId": "17",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 28.105,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "31",
      "kind": "item_pickup",
      "rarity": "Common",
-     "t": 32.74,
+     "t": 28.238,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 73.42678999900818
+     },
+     "kind": "bot_hud",
+     "t": 28.554,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Shopping Cart",
+     "itemId": "32",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 28.805,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 72.68734407424927
+     },
+     "kind": "bot_hud",
+     "t": 29.287,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 72.23864912986755
+     },
+     "kind": "bot_hud",
+     "t": 29.738,
+     "userId": -2
+    },
+    {
+     "inventory": 6,
+     "item": "Cardboard Box",
+     "itemId": "27",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 29.771,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 71.96810603141785
+     },
+     "kind": "bot_hud",
+     "t": 30.022,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Barrel",
+     "itemId": "24",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 30.354,
      "userId": -4
     },
     {
@@ -1091,28 +1100,25 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 71.54933094978333
+      "serverLeft": 71.40765905380249
      },
      "kind": "bot_hud",
-     "t": 33.072,
+     "t": 30.572,
      "userId": -1
     },
     {
-     "inventory": 6,
-     "item": "Camera",
-     "itemId": "25",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 33.472,
-     "userId": -3
-    },
-    {
-     "inventory": 5,
-     "item": "Alarm Clock",
-     "itemId": "24",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 33.706,
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 70.66887307167053
+     },
+     "kind": "bot_hud",
+     "t": 31.305,
      "userId": -4
     },
     {
@@ -1124,58 +1130,34 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 70.6848680973053
+      "serverLeft": 70.2217960357666
      },
      "kind": "bot_hud",
-     "t": 33.94,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:10"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 70.69329404830933
-     },
-     "kind": "bot_hud",
-     "t": 33.94,
+     "t": 31.754,
      "userId": -2
     },
     {
-     "inventory": 5,
-     "item": "Pizza",
-     "itemId": "2",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 34.189,
-     "userId": -1
-    },
-    {
-     "inventory": 7,
-     "item": "Cardboard Box",
-     "itemId": "34",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 34.422,
-     "userId": -3
-    },
-    {
      "data": {
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  1:10"
+        "text": "FARMING  1:09"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 70.08074808120728
+      "serverLeft": 69.95450711250305
      },
      "kind": "bot_hud",
-     "t": 34.54,
+     "t": 32.022,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "18",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 32.355,
      "userId": -3
     },
     {
@@ -1187,19 +1169,19 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 69.53089809417725
+      "serverLeft": 69.3925142288208
      },
      "kind": "bot_hud",
-     "t": 35.106,
+     "t": 32.587,
      "userId": -1
     },
     {
      "inventory": 8,
-     "item": "Fan",
-     "itemId": "31",
+     "item": "Gas Can",
+     "itemId": "21",
      "kind": "item_pickup",
      "rarity": "Common",
-     "t": 35.74,
+     "t": 32.955,
      "userId": -3
     },
     {
@@ -1211,10 +1193,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 68.66740298271179
+      "serverLeft": 68.66460919380188
      },
      "kind": "bot_hud",
-     "t": 35.955,
+     "t": 33.303,
      "userId": -4
     },
     {
@@ -1226,35 +1208,11 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 68.67826700210571
+      "serverLeft": 68.20545220375061
      },
      "kind": "bot_hud",
-     "t": 35.955,
+     "t": 33.77,
      "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:08"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 68.08150696754456
-     },
-     "kind": "bot_hud",
-     "t": 36.556,
-     "userId": -3
-    },
-    {
-     "inventory": 6,
-     "item": "Toilet Paper",
-     "itemId": "16",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 36.556,
-     "userId": -1
     },
     {
      "data": {
@@ -1265,83 +1223,56 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 67.5154869556427
+      "serverLeft": 67.93735909461975
      },
      "kind": "bot_hud",
-     "t": 37.105,
-     "userId": -1
-    },
-    {
-     "inventory": 6,
-     "item": "Cactus",
-     "itemId": "9",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 37.59,
-     "userId": -4
-    },
-    {
-     "inventory": 7,
-     "item": "Lantern",
-     "itemId": "18",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 37.855,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:06"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 66.6710250377655
-     },
-     "kind": "bot_hud",
-     "t": 37.955,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:06"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 66.67417287826538
-     },
-     "kind": "bot_hud",
-     "t": 37.955,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:06"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 66.06508994102478
-     },
-     "kind": "bot_hud",
-     "t": 38.588,
+     "t": 34.039,
      "userId": -3
     },
     {
-     "inventory": 7,
-     "item": "Alarm Clock",
-     "itemId": "12",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 38.789,
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:07"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 67.38989806175232
+     },
+     "kind": "bot_hud",
+     "t": 34.587,
      "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 66.65535807609558
+     },
+     "kind": "bot_hud",
+     "t": 35.32,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 66.19008803367615
+     },
+     "kind": "bot_hud",
+     "t": 35.787,
+     "userId": -2
     },
     {
      "data": {
@@ -1352,49 +1283,59 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 65.51506900787354
+      "serverLeft": 65.92080807685852
      },
      "kind": "bot_hud",
-     "t": 39.105,
+     "t": 36.054,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:05"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 65.38914823532104
+     },
+     "kind": "bot_hud",
+     "t": 36.587,
      "userId": -1
     },
     {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:04"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 64.65624403953552
-     },
-     "kind": "bot_hud",
-     "t": 39.972,
+     "inventory": 7,
+     "item": "Cardboard Box",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 36.804,
      "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  1:04"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 64.65920805931091
-     },
-     "kind": "bot_hud",
-     "t": 39.972,
-     "userId": -2
     },
     {
      "inventory": 8,
-     "item": "Racing Flag",
-     "itemId": "32",
+     "item": "Magnifying Glass",
+     "itemId": "36",
      "kind": "item_pickup",
      "rarity": "Uncommon",
-     "t": 40.222,
+     "t": 36.805,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 37.188,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Shopping Cart",
+     "itemId": "22",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 37.19,
      "userId": -4
     },
     {
@@ -1406,11 +1347,26 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 64.04670691490173
+      "serverLeft": 64.65465211868286
      },
      "kind": "bot_hud",
-     "t": 40.588,
-     "userId": -3
+     "t": 37.322,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 64.18989419937134
+     },
+     "kind": "bot_hud",
+     "t": 37.788,
+     "userId": -2
     },
     {
      "data": {
@@ -1421,10 +1377,42 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 63.49972486495972
+      "serverLeft": 63.90287804603577
      },
      "kind": "bot_hud",
-     "t": 41.122,
+     "t": 38.071,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 38.254,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Log",
+     "itemId": "1",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 38.255,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  1:03"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 63.373799085617065
+     },
+     "kind": "bot_hud",
+     "t": 38.605,
      "userId": -1
     },
     {
@@ -1436,10 +1424,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 62.652841091156006
+      "serverLeft": 62.639610052108765
      },
      "kind": "bot_hud",
-     "t": 41.973,
+     "t": 39.337,
      "userId": -4
     },
     {
@@ -1451,34 +1439,25 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 62.6476628780365
+      "serverLeft": 62.17224621772766
      },
      "kind": "bot_hud",
-     "t": 41.989,
+     "t": 39.804,
      "userId": -2
-    },
-    {
-     "inventory": 8,
-     "item": "Bamboo Raft",
-     "itemId": "5",
-     "kind": "item_pickup",
-     "rarity": "Common",
-     "t": 42.34,
-     "userId": -1
     },
     {
      "data": {
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  1:02"
+        "text": "FARMING  1:01"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 62.03207206726074
+      "serverLeft": 61.90271306037903
      },
      "kind": "bot_hud",
-     "t": 42.605,
+     "t": 40.07,
      "userId": -3
     },
     {
@@ -1490,10 +1469,30 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 61.497750997543335
+      "serverLeft": 61.35968208312988
      },
      "kind": "bot_hud",
-     "t": 43.138,
+     "t": 40.62,
+     "userId": -1
+    },
+    {
+     "itemId": "39",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-1": 18,
+      "-4": 0
+     },
+     "t": 40.837,
+     "winner": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Barrel",
+     "itemId": "39",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 40.837,
      "userId": -1
     },
     {
@@ -1505,10 +1504,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 60.63873291015625
+      "serverLeft": 60.62996506690979
      },
      "kind": "bot_hud",
-     "t": 43.989,
+     "t": 41.353,
      "userId": -4
     },
     {
@@ -1520,10 +1519,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 60.646703004837036
+      "serverLeft": 60.17401719093323
      },
      "kind": "bot_hud",
-     "t": 43.989,
+     "t": 41.803,
      "userId": -2
     },
     {
@@ -1531,14 +1530,14 @@
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  1:00"
+        "text": "FARMING  0:59"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 60.03193998336792
+      "serverLeft": 59.88677906990051
      },
      "kind": "bot_hud",
-     "t": 44.589,
+     "t": 42.087,
      "userId": -3
     },
     {
@@ -1550,10 +1549,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 59.486464977264404
+      "serverLeft": 59.341928005218506
      },
      "kind": "bot_hud",
-     "t": 45.155,
+     "t": 42.638,
      "userId": -1
     },
     {
@@ -1565,32 +1564,17 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 58.62617588043213
+      "serverLeft": 58.6292781829834
      },
      "kind": "bot_hud",
-     "t": 46.004,
+     "t": 43.353,
      "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:58"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 58.630680084228516
-     },
-     "kind": "bot_hud",
-     "t": 46.005,
-     "userId": -2
     },
     {
      "count": 6,
      "kind": "item_wave",
      "players": 4,
-     "t": 46.159,
+     "t": 43.507,
      "wave": 1
     },
     {
@@ -1599,7 +1583,7 @@
       "seconds": 2.5
      },
      "kind": "bot_screen",
-     "t": 46.206,
+     "t": 43.536,
      "userId": -4
     },
     {
@@ -1608,7 +1592,7 @@
       "seconds": 2.5
      },
      "kind": "bot_screen",
-     "t": 46.206,
+     "t": 43.536,
      "userId": -3
     },
     {
@@ -1617,7 +1601,7 @@
       "seconds": 2.5
      },
      "kind": "bot_screen",
-     "t": 46.206,
+     "t": 43.536,
      "userId": -2
     },
     {
@@ -1626,7 +1610,7 @@
       "seconds": 2.5
      },
      "kind": "bot_screen",
-     "t": 46.206,
+     "t": 43.536,
      "userId": -1
     },
     {
@@ -1638,11 +1622,37 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 58.03225588798523
+      "serverLeft": 58.15954303741455
      },
      "kind": "bot_hud",
-     "t": 46.605,
-     "userId": -3
+     "t": 43.82,
+     "userId": -2
+    },
+    {
+     "inventory": 4,
+     "item": "Barrel",
+     "itemId": "38",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 43.854,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Cactus",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 43.887,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Kettle",
+     "itemId": "44",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 43.888,
+     "userId": -4
     },
     {
      "data": {
@@ -1653,10 +1663,51 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 57.48579692840576
+      "serverLeft": 57.86746311187744
      },
      "kind": "bot_hud",
-     "t": 47.138,
+     "t": 44.104,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Magnet",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 44.271,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Umbrella",
+     "itemId": "41",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 44.272,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:57"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 57.32506012916565
+     },
+     "kind": "bot_hud",
+     "t": 44.653,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Magic Wand",
+     "itemId": "40",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 45.038,
      "userId": -1
     },
     {
@@ -1668,10 +1719,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 56.608469009399414
+      "serverLeft": 56.61887001991272
      },
      "kind": "bot_hud",
-     "t": 48.022,
+     "t": 45.353,
      "userId": -4
     },
     {
@@ -1683,53 +1734,27 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 56.61165690422058
+      "serverLeft": 56.14241909980774
      },
      "kind": "bot_hud",
-     "t": 48.022,
+     "t": 45.837,
      "userId": -2
     },
     {
-     "itemId": "30",
-     "kind": "contest_result",
-     "loser": -3,
-     "presses": {
-      "-3": 16,
-      "-4": 17
-     },
-     "t": 48.089,
-     "winner": -4
-    },
-    {
      "inventory": 7,
-     "item": "Bamboo Raft",
+     "item": "Pizza",
      "kind": "item_drop",
      "reason": "swap",
-     "t": 48.09,
-     "userId": -4
+     "t": 45.921,
+     "userId": -3
     },
     {
      "inventory": 8,
-     "item": "Magnifying Glass",
-     "itemId": "30",
+     "item": "Cactus",
+     "itemId": "46",
      "kind": "item_pickup",
      "rarity": "Uncommon",
-     "t": 48.091,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:56"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 56.03126001358032
-     },
-     "kind": "bot_hud",
-     "t": 48.605,
+     "t": 45.922,
      "userId": -3
     },
     {
@@ -1741,10 +1766,42 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 55.48536205291748
+      "serverLeft": 55.851540088653564
      },
      "kind": "bot_hud",
-     "t": 49.14,
+     "t": 46.12,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Cardboard Box",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 46.188,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Magnet",
+     "itemId": "47",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 46.188,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:55"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 55.32491207122803
+     },
+     "kind": "bot_hud",
+     "t": 46.654,
      "userId": -1
     },
     {
@@ -1756,11 +1813,27 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 54.6060528755188
+      "serverLeft": 54.60248422622681
      },
      "kind": "bot_hud",
-     "t": 50.021,
+     "t": 47.37,
      "userId": -4
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: victim has nothing",
+     "t": 47.604,
+     "thief": -1,
+     "victim": -2
+    },
+    {
+     "data": {
+      "result": "denied: victim has nothing",
+      "victim": -2
+     },
+     "kind": "bot_steal",
+     "t": 47.62,
+     "userId": -1
     },
     {
      "data": {
@@ -1771,10 +1844,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 54.59497809410095
+      "serverLeft": 54.13886618614197
      },
      "kind": "bot_hud",
-     "t": 50.038,
+     "t": 47.836,
      "userId": -2
     },
     {
@@ -1782,14 +1855,14 @@
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  0:54"
+        "text": "FARMING  0:53"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 54.01377201080322
+      "serverLeft": 53.852219104766846
      },
      "kind": "bot_hud",
-     "t": 50.622,
+     "t": 48.12,
      "userId": -3
     },
     {
@@ -1801,10 +1874,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 53.46758699417114
+      "serverLeft": 53.30936312675476
      },
      "kind": "bot_hud",
-     "t": 51.155,
+     "t": 48.67,
      "userId": -1
     },
     {
@@ -1816,10 +1889,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 52.59774994850159
+      "serverLeft": 52.603655099868774
      },
      "kind": "bot_hud",
-     "t": 52.038,
+     "t": 49.371,
      "userId": -4
     },
     {
@@ -1831,25 +1904,42 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 52.57768893241882
+      "serverLeft": 52.12148404121399
      },
      "kind": "bot_hud",
-     "t": 52.054,
+     "t": 49.853,
      "userId": -2
+    },
+    {
+     "inventory": 7,
+     "item": "Magnifying Glass",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 50.12,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Propeller Hat",
+     "itemId": "43",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 50.121,
+     "userId": -4
     },
     {
      "data": {
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  0:52"
+        "text": "FARMING  0:51"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 51.996803998947144
+      "serverLeft": 51.83691620826721
      },
      "kind": "bot_hud",
-     "t": 52.638,
+     "t": 50.136,
      "userId": -3
     },
     {
@@ -1861,10 +1951,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 51.451289892196655
+      "serverLeft": 51.3100061416626
      },
      "kind": "bot_hud",
-     "t": 53.171,
+     "t": 50.669,
      "userId": -1
     },
     {
@@ -1876,10 +1966,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 50.58799695968628
+      "serverLeft": 50.587886095047
      },
      "kind": "bot_hud",
-     "t": 54.055,
+     "t": 51.386,
      "userId": -4
     },
     {
@@ -1891,10 +1981,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 50.57686901092529
+      "serverLeft": 50.1051070690155
      },
      "kind": "bot_hud",
-     "t": 54.055,
+     "t": 51.869,
      "userId": -2
     },
     {
@@ -1906,11 +1996,27 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 49.98119497299194
+      "serverLeft": 49.836090087890625
      },
      "kind": "bot_hud",
-     "t": 54.638,
+     "t": 52.137,
      "userId": -3
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 52.437,
+     "thief": -1,
+     "victim": -3
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -3
+     },
+     "kind": "bot_steal",
+     "t": 52.453,
+     "userId": -1
     },
     {
      "data": {
@@ -1921,28 +2027,54 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 49.45315194129944
+      "serverLeft": 49.3087100982666
      },
      "kind": "bot_hud",
-     "t": 55.172,
+     "t": 52.669,
      "userId": -1
     },
     {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:48"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 48.56376910209656
+     },
+     "kind": "bot_hud",
+     "t": 53.42,
+     "userId": -4
+    },
+    {
+     "itemId": "50",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-3": 18,
+      "-4": 0
+     },
+     "t": 53.853,
+     "winner": -3
+    },
+    {
      "inventory": 7,
-     "item": "Cardboard Box",
+     "item": "Barrel",
      "kind": "item_drop",
      "reason": "swap",
-     "t": 55.888,
-     "userId": -4
+     "t": 53.854,
+     "userId": -3
     },
     {
      "inventory": 8,
-     "item": "Rocket",
-     "itemId": "39",
+     "item": "Magnifying Glass",
+     "itemId": "50",
      "kind": "item_pickup",
-     "rarity": "Epic",
-     "t": 55.889,
-     "userId": -4
+     "rarity": "Uncommon",
+     "t": 53.855,
+     "userId": -3
     },
     {
      "data": {
@@ -1953,25 +2085,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 48.576700925827026
+      "serverLeft": 48.10490703582764
      },
      "kind": "bot_hud",
-     "t": 56.054,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:48"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 48.56130290031433
-     },
-     "kind": "bot_hud",
-     "t": 56.071,
+     "t": 53.869,
      "userId": -2
     },
     {
@@ -1983,27 +2100,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 47.98246097564697
+      "serverLeft": 47.817992210388184
      },
      "kind": "bot_hud",
-     "t": 56.655,
-     "userId": -3
-    },
-    {
-     "inventory": 7,
-     "item": "Flower",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 56.739,
-     "userId": -3
-    },
-    {
-     "inventory": 8,
-     "item": "Red Sofa",
-     "itemId": "38",
-     "kind": "item_pickup",
-     "rarity": "Rare",
-     "t": 56.74,
+     "t": 54.153,
      "userId": -3
     },
     {
@@ -2015,10 +2115,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 47.43761587142944
+      "serverLeft": 47.296791076660156
      },
      "kind": "bot_hud",
-     "t": 57.205,
+     "t": 54.686,
      "userId": -1
     },
     {
@@ -2030,10 +2130,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 46.57258987426758
+      "serverLeft": 46.552778005599976
      },
      "kind": "bot_hud",
-     "t": 58.055,
+     "t": 55.42,
      "userId": -4
     },
     {
@@ -2045,30 +2145,13 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 46.5650200843811
+      "serverLeft": 46.1039981842041
      },
      "kind": "bot_hud",
-     "t": 58.072,
+     "t": 55.869,
      "userId": -2
     },
     {
-     "inventory": 7,
-     "item": "Pizza",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 58.488,
-     "userId": -1
-    },
-    {
-     "inventory": 8,
-     "item": "Racing Flag",
-     "itemId": "41",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 58.489,
-     "userId": -1
-    },
-    {
      "data": {
       "guis": [
        {
@@ -2077,30 +2160,13 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 45.96631193161011
+      "serverLeft": 45.801778078079224
      },
      "kind": "bot_hud",
-     "t": 58.671,
+     "t": 56.187,
      "userId": -3
     },
     {
-     "inventory": 7,
-     "item": "Toilet Paper",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 59.122,
-     "userId": -1
-    },
-    {
-     "inventory": 8,
-     "item": "Racing Flag",
-     "itemId": "40",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 59.123,
-     "userId": -1
-    },
-    {
      "data": {
       "guis": [
        {
@@ -2109,10 +2175,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 45.436107873916626
+      "serverLeft": 45.29668617248535
      },
      "kind": "bot_hud",
-     "t": 59.204,
+     "t": 56.686,
      "userId": -1
     },
     {
@@ -2124,10 +2190,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 44.55598592758179
+      "serverLeft": 44.5376660823822
      },
      "kind": "bot_hud",
-     "t": 60.073,
+     "t": 57.437,
      "userId": -4
     },
     {
@@ -2139,10 +2205,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 44.54989504814148
+      "serverLeft": 44.08940410614014
      },
      "kind": "bot_hud",
-     "t": 60.088,
+     "t": 57.887,
      "userId": -2
     },
     {
@@ -2154,10 +2220,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 43.96511101722717
+      "serverLeft": 43.7889461517334
      },
      "kind": "bot_hud",
-     "t": 60.672,
+     "t": 58.186,
      "userId": -3
     },
     {
@@ -2169,28 +2235,31 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 43.41964507102966
+      "serverLeft": 43.2796790599823
      },
      "kind": "bot_hud",
-     "t": 61.204,
+     "t": 58.702,
      "userId": -1
     },
     {
-     "attacker": -3,
-     "hits": 1,
-     "kind": "punch",
-     "result": "hit",
-     "t": 61.804,
-     "victim": -4
+     "itemId": "51",
+     "kind": "contest_result",
+     "loser": -4,
+     "presses": {
+      "-1": 18,
+      "-4": 0
+     },
+     "t": 59.253,
+     "winner": -1
     },
     {
-     "data": {
-      "result": "hit",
-      "victim": -4
-     },
-     "kind": "bot_punch",
-     "t": 61.854,
-     "userId": -3
+     "inventory": 6,
+     "item": "Barrel",
+     "itemId": "51",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 59.253,
+     "userId": -1
     },
     {
      "data": {
@@ -2201,10 +2270,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 42.52202606201172
+      "serverLeft": 42.5195791721344
      },
      "kind": "bot_hud",
-     "t": 62.105,
+     "t": 59.453,
      "userId": -4
     },
     {
@@ -2216,83 +2285,25 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 42.52830100059509
+      "serverLeft": 42.07233023643494
      },
      "kind": "bot_hud",
-     "t": 62.106,
+     "t": 59.903,
      "userId": -2
     },
     {
      "data": {
-      "attacker": -3,
-      "drawn": true,
-      "joint": "CFrame",
-      "posed": 97,
-      "result": "hit",
-      "turned": 97,
-      "what": "punch"
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:41"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 41.7733690738678
      },
-     "kind": "bot_farmfx",
-     "t": 62.237,
-     "userId": -2
-    },
-    {
-     "data": {
-      "attacker": -3,
-      "drawn": true,
-      "joint": "CFrame",
-      "posed": 99,
-      "result": "hit",
-      "turned": 95,
-      "what": "punch"
-     },
-     "kind": "bot_farmfx",
-     "t": 62.237,
-     "userId": -1
-    },
-    {
-     "data": {
-      "attacker": -3,
-      "drawn": true,
-      "joint": "CFrame",
-      "posed": 105,
-      "result": "hit",
-      "turned": 93,
-      "what": "punch"
-     },
-     "kind": "bot_farmfx",
-     "t": 62.254,
-     "userId": -4
-    },
-    {
-     "data": {
-      "attacker": -3,
-      "drawn": true,
-      "joint": "CFrame",
-      "posed": 99,
-      "result": "hit",
-      "turned": 80,
-      "what": "punch"
-     },
-     "kind": "bot_farmfx",
-     "t": 62.254,
-     "userId": -3
-    },
-    {
-     "attacker": -3,
-     "hits": 2,
-     "kind": "punch",
-     "result": "hit",
-     "t": 62.505,
-     "victim": -4
-    },
-    {
-     "data": {
-      "result": "hit",
-      "victim": -4
-     },
-     "kind": "bot_punch",
-     "t": 62.556,
+     "kind": "bot_hud",
+     "t": 60.203,
      "userId": -3
     },
     {
@@ -2304,10 +2315,1651 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 41.948697090148926
+      "serverLeft": 41.26442813873291
      },
      "kind": "bot_hud",
-     "t": 62.687,
+     "t": 60.72,
+     "userId": -1
+    },
+    {
+     "data": {
+      "item": "Flower",
+      "result": "denied: too far (10 studs)"
+     },
+     "kind": "bot_pickup_denied",
+     "t": 61.403,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.51566004753113
+     },
+     "kind": "bot_hud",
+     "t": 61.453,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Flower",
+     "itemId": "15",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 61.52,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.05667209625244
+     },
+     "kind": "bot_hud",
+     "t": 61.92,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:39"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 39.7570321559906
+     },
+     "kind": "bot_hud",
+     "t": 62.221,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:39"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 39.24809408187866
+     },
+     "kind": "bot_hud",
+     "t": 62.737,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too far",
+     "t": 62.737,
+     "thief": -1,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "denied: too far",
+      "victim": -4
+     },
+     "kind": "bot_steal",
+     "t": 62.77,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.50369310379028
+     },
+     "kind": "bot_hud",
+     "t": 63.469,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Flower",
+     "itemId": "29",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 63.886,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.0409791469574
+     },
+     "kind": "bot_hud",
+     "t": 63.936,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:37"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 37.748640060424805
+     },
+     "kind": "bot_hud",
+     "t": 64.236,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:37"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 37.22958421707153
+     },
+     "kind": "bot_hud",
+     "t": 64.753,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.503050088882446
+     },
+     "kind": "bot_hud",
+     "t": 65.469,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.04031705856323
+     },
+     "kind": "bot_hud",
+     "t": 65.936,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:35"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 35.7384831905365
+     },
+     "kind": "bot_hud",
+     "t": 66.237,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:35"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 35.21129322052002
+     },
+     "kind": "bot_hud",
+     "t": 66.77,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.48629021644592
+     },
+     "kind": "bot_hud",
+     "t": 67.487,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.02367305755615
+     },
+     "kind": "bot_hud",
+     "t": 67.954,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:33"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 33.72272706031799
+     },
+     "kind": "bot_hud",
+     "t": 68.252,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:33"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 33.210777044296265
+     },
+     "kind": "bot_hud",
+     "t": 68.769,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.47218704223633
+     },
+     "kind": "bot_hud",
+     "t": 69.502,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.00587511062622
+     },
+     "kind": "bot_hud",
+     "t": 69.969,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:31"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 31.72194218635559
+     },
+     "kind": "bot_hud",
+     "t": 70.252,
+     "userId": -3
+    },
+    {
+     "count": 6,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 70.506,
+     "wave": 2
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 70.535,
+     "userId": -3
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 70.535,
+     "userId": -2
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 70.535,
+     "userId": -1
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 70.553,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:31"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 31.194541215896606
+     },
+     "kind": "bot_hud",
+     "t": 70.785,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.471988201141357
+     },
+     "kind": "bot_hud",
+     "t": 71.503,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 29.99242901802063
+     },
+     "kind": "bot_hud",
+     "t": 71.987,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 29.70518708229065
+     },
+     "kind": "bot_hud",
+     "t": 72.27,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 72.503,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Drill",
+     "itemId": "56",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 72.503,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:29"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 29.177239179611206
+     },
+     "kind": "bot_hud",
+     "t": 72.803,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.45516300201416
+     },
+     "kind": "bot_hud",
+     "t": 73.519,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 27.991506099700928
+     },
+     "kind": "bot_hud",
+     "t": 73.986,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 27.685566186904907
+     },
+     "kind": "bot_hud",
+     "t": 74.287,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:27"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 27.157761096954346
+     },
+     "kind": "bot_hud",
+     "t": 74.819,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.436628103256226
+     },
+     "kind": "bot_hud",
+     "t": 75.536,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 25.975268125534058
+     },
+     "kind": "bot_hud",
+     "t": 76.003,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 25.66862201690674
+     },
+     "kind": "bot_hud",
+     "t": 76.303,
+     "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Shopping Cart",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 76.72,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Balloon Bunch",
+     "itemId": "53",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 76.72,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:25"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 25.142749071121216
+     },
+     "kind": "bot_hud",
+     "t": 76.836,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.42016100883484
+     },
+     "kind": "bot_hud",
+     "t": 77.552,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 23.95636010169983
+     },
+     "kind": "bot_hud",
+     "t": 78.019,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 23.65460205078125
+     },
+     "kind": "bot_hud",
+     "t": 78.319,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:23"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 23.14155101776123
+     },
+     "kind": "bot_hud",
+     "t": 78.836,
+     "userId": -1
+    },
+    {
+     "itemId": "57",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 8,
+      "-4": 19
+     },
+     "t": 79.119,
+     "winner": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Shopping Cart",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 79.119,
+     "userId": -4
+    },
+    {
+     "inventory": 8,
+     "item": "Balloon Bunch",
+     "itemId": "57",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 79.12,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.4069561958313
+     },
+     "kind": "bot_hud",
+     "t": 79.568,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 21.95621609687805
+     },
+     "kind": "bot_hud",
+     "t": 80.018,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 21.65412402153015
+     },
+     "kind": "bot_hud",
+     "t": 80.318,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:21"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 21.12904715538025
+     },
+     "kind": "bot_hud",
+     "t": 80.852,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Cactus",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 81.419,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Red Sofa",
+     "itemId": "55",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 81.42,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.393977165222168
+     },
+     "kind": "bot_hud",
+     "t": 81.585,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.944468021392822
+     },
+     "kind": "bot_hud",
+     "t": 82.035,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.638734102249146
+     },
+     "kind": "bot_hud",
+     "t": 82.335,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 19.12860417366028
+     },
+     "kind": "bot_hud",
+     "t": 82.852,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 82.919
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 82.952,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 56,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.335,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 97,
+      "result": "miss",
+      "turned": 52,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.352,
+     "userId": -3
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "miss",
+      "turned": 52,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.352,
+     "userId": -2
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "miss",
+      "turned": 57,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.352,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.390292167663574
+     },
+     "kind": "bot_hud",
+     "t": 83.585,
+     "userId": -4
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 83.853,
+     "victim": -4
+    },
+    {
+     "data": {
+      "after": 1
+     },
+     "kind": "bot_guard",
+     "t": 83.887,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 83.887,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.901,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.918,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.918,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 83.918,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.942654132843018
+     },
+     "kind": "bot_hud",
+     "t": 84.035,
+     "userId": -2
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 63,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.269,
+     "userId": -3
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "hit",
+      "turned": 63,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.287,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 98,
+      "result": "hit",
+      "turned": 64,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.287,
+     "userId": -2
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 59,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.302,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.639610052108765
+     },
+     "kind": "bot_hud",
+     "t": 84.335,
+     "userId": -3
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 84.553,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 84.569,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 17.115097045898438
+     },
+     "kind": "bot_hud",
+     "t": 84.87,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "blocked",
+      "turned": 33,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.97,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "blocked",
+      "turned": 27,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.985,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "blocked",
+      "turned": 25,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.985,
+     "userId": -3
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "blocked",
+      "turned": 32,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 84.985,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 85.102,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 85.118,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 85.118,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 85.118,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.37564206123352
+     },
+     "kind": "bot_hud",
+     "t": 85.602,
+     "userId": -4
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.926855087280273
+     },
+     "kind": "bot_hud",
+     "t": 86.052,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.622830152511597
+     },
+     "kind": "bot_hud",
+     "t": 86.368,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:15"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 15.114464044570923
+     },
+     "kind": "bot_hud",
+     "t": 86.868,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Magnet",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 87.052,
+     "userId": -3
+    },
+    {
+     "inventory": 8,
+     "item": "Rubber Duck",
+     "itemId": "54",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 87.053,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.374845027923584
+     },
+     "kind": "bot_hud",
+     "t": 87.603,
+     "userId": -4
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 87.819,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Magnet",
+     "itemId": "62",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 87.82,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.90860915184021
+     },
+     "kind": "bot_hud",
+     "t": 88.069,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.606653213500977
+     },
+     "kind": "bot_hud",
+     "t": 88.368,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 88.719,
+     "victim": -4
+    },
+    {
+     "data": {
+      "after": 1
+     },
+     "kind": "bot_guard",
+     "t": 88.736,
+     "userId": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 88.736,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 88.752,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 88.752,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 88.77,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 88.77,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:13"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 13.09943413734436
+     },
+     "kind": "bot_hud",
+     "t": 88.885,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "hit",
+      "turned": 12,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.151,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 9,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.151,
+     "userId": -3
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 98,
+      "result": "hit",
+      "turned": 9,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.169,
+     "userId": -2
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 9,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.169,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.359076023101807
+     },
+     "kind": "bot_hud",
+     "t": 89.62,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.969,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.969,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.985,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 89.985,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.892534017562866
+     },
+     "kind": "bot_hud",
+     "t": 90.085,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.605652093887329
+     },
+     "kind": "bot_hud",
+     "t": 90.368,
+     "userId": -3
+    },
+    {
+     "attacker": -3,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 90.585,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 90.601,
+     "userId": -3
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 90.619,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 90.634,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 90.651,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 90.651,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 90.651,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 90.886,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Shopping Cart",
+     "itemId": "60",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 90.887,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:11"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 11.09159803390503
+     },
+     "kind": "bot_hud",
+     "t": 90.887,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 7,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.001,
      "userId": -3
     },
     {
@@ -2317,26 +3969,181 @@
       "joint": "CFrame",
       "posed": 107,
       "result": "hit",
-      "turned": 64,
+      "turned": 11,
       "what": "punch"
      },
      "kind": "bot_farmfx",
-     "t": 62.938,
+     "t": 91.018,
      "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 7,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.018,
+     "userId": -2
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 6,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.018,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.342341184616089
+     },
+     "kind": "bot_hud",
+     "t": 91.634,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.836,
+     "userId": -4
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.852,
+     "userId": -3
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.852,
+     "userId": -2
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 91.852,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.877079010009766
+     },
+     "kind": "bot_hud",
+     "t": 92.101,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.589311122894287
+     },
+     "kind": "bot_hud",
+     "t": 92.385,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:09"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 9.073309183120728
+     },
+     "kind": "bot_hud",
+     "t": 92.901,
+     "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 92.918,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 92.952,
+     "userId": -3
     },
     {
      "data": {
       "attacker": -3,
       "drawn": true,
       "joint": "CFrame",
-      "posed": 100,
+      "posed": 107,
       "result": "hit",
-      "turned": 72,
+      "turned": 12,
       "what": "punch"
      },
      "kind": "bot_farmfx",
-     "t": 62.938,
-     "userId": -2
+     "t": 93.352,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 9,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 93.352,
+     "userId": -3
     },
     {
      "data": {
@@ -2345,12 +4152,12 @@
       "joint": "CFrame",
       "posed": 99,
       "result": "hit",
-      "turned": 67,
+      "turned": 10,
       "what": "punch"
      },
      "kind": "bot_farmfx",
-     "t": 62.938,
-     "userId": -1
+     "t": 93.368,
+     "userId": -2
     },
     {
      "data": {
@@ -2359,1119 +4166,11 @@
       "joint": "CFrame",
       "posed": 101,
       "result": "hit",
-      "turned": 58,
+      "turned": 10,
       "what": "punch"
      },
      "kind": "bot_farmfx",
-     "t": 62.972,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:41"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 41.40241003036499
-     },
-     "kind": "bot_hud",
-     "t": 63.237,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:40"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 40.508527994155884
-     },
-     "kind": "bot_hud",
-     "t": 64.121,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:40"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 40.51233887672424
-     },
-     "kind": "bot_hud",
-     "t": 64.121,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:39"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 39.93199586868286
-     },
-     "kind": "bot_hud",
-     "t": 64.704,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:39"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 39.38360095024109
-     },
-     "kind": "bot_hud",
-     "t": 65.238,
-     "userId": -1
-    },
-    {
-     "inventory": 7,
-     "item": "Alarm Clock",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 66.038,
-     "userId": -1
-    },
-    {
-     "inventory": 8,
-     "item": "Hair Dryer",
-     "itemId": "42",
-     "kind": "item_pickup",
-     "rarity": "Uncommon",
-     "t": 66.039,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:38"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 38.49298405647278
-     },
-     "kind": "bot_hud",
-     "t": 66.138,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:38"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 38.496516942977905
-     },
-     "kind": "bot_hud",
-     "t": 66.138,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:37"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 37.91616487503052
-     },
-     "kind": "bot_hud",
-     "t": 66.706,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:37"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 37.381624937057495
-     },
-     "kind": "bot_hud",
-     "t": 67.256,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:36"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 36.49458408355713
-     },
-     "kind": "bot_hud",
-     "t": 68.137,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:36"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 36.49508595466614
-     },
-     "kind": "bot_hud",
-     "t": 68.137,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:35"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 35.89902305603027
-     },
-     "kind": "bot_hud",
-     "t": 68.738,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:35"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 35.36705207824707
-     },
-     "kind": "bot_hud",
-     "t": 69.255,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:34"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 34.489322900772095
-     },
-     "kind": "bot_hud",
-     "t": 70.138,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:34"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 34.479767084121704
-     },
-     "kind": "bot_hud",
-     "t": 70.154,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:33"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 33.881255865097046
-     },
-     "kind": "bot_hud",
-     "t": 70.755,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:33"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 33.34903407096863
-     },
-     "kind": "bot_hud",
-     "t": 71.288,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:32"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 32.475038051605225
-     },
-     "kind": "bot_hud",
-     "t": 72.155,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:32"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 32.46543908119202
-     },
-     "kind": "bot_hud",
-     "t": 72.171,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:31"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 31.86519193649292
-     },
-     "kind": "bot_hud",
-     "t": 72.771,
-     "userId": -3
-    },
-    {
-     "count": 6,
-     "kind": "item_wave",
-     "players": 4,
-     "t": 73.16,
-     "wave": 2
-    },
-    {
-     "data": {
-      "name": "itemWave",
-      "seconds": 2.5
-     },
-     "kind": "bot_screen",
-     "t": 73.204,
-     "userId": -3
-    },
-    {
-     "data": {
-      "name": "itemWave",
-      "seconds": 2.5
-     },
-     "kind": "bot_screen",
-     "t": 73.204,
-     "userId": -2
-    },
-    {
-     "data": {
-      "name": "itemWave",
-      "seconds": 2.5
-     },
-     "kind": "bot_screen",
-     "t": 73.204,
-     "userId": -1
-    },
-    {
-     "data": {
-      "name": "itemWave",
-      "seconds": 2.5
-     },
-     "kind": "bot_screen",
-     "t": 73.221,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:31"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 31.334388971328735
-     },
-     "kind": "bot_hud",
-     "t": 73.305,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:30"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 30.458432912826538
-     },
-     "kind": "bot_hud",
-     "t": 74.17,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:30"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 30.464473009109497
-     },
-     "kind": "bot_hud",
-     "t": 74.17,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:29"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 29.847519874572754
-     },
-     "kind": "bot_hud",
-     "t": 74.787,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:29"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 29.338311910629272
-     },
-     "kind": "bot_hud",
-     "t": 75.287,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:28"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 28.45666790008545
-     },
-     "kind": "bot_hud",
-     "t": 76.17,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:28"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 28.447333097457886
-     },
-     "kind": "bot_hud",
-     "t": 76.188,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:27"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 27.83224892616272
-     },
-     "kind": "bot_hud",
-     "t": 76.788,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:27"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 27.321764945983887
-     },
-     "kind": "bot_hud",
-     "t": 77.303,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:26"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 26.440134048461914
-     },
-     "kind": "bot_hud",
-     "t": 78.188,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:26"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 26.42994999885559
-     },
-     "kind": "bot_hud",
-     "t": 78.203,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:25"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 25.83133101463318
-     },
-     "kind": "bot_hud",
-     "t": 78.803,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:25"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 25.321609020233154
-     },
-     "kind": "bot_hud",
-     "t": 79.303,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:24"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 24.4234139919281
-     },
-     "kind": "bot_hud",
-     "t": 80.204,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:24"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 24.413393020629883
-     },
-     "kind": "bot_hud",
-     "t": 80.22,
-     "userId": -2
-    },
-    {
-     "itemId": "53",
-     "kind": "contest_result",
-     "loser": -2,
-     "presses": {
-      "-1": 18,
-      "-2": 0
-     },
-     "t": 80.703,
-     "winner": -1
-    },
-    {
-     "inventory": 7,
-     "item": "Bamboo Raft",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 80.703,
-     "userId": -1
-    },
-    {
-     "inventory": 8,
-     "item": "Microwave",
-     "itemId": "53",
-     "kind": "item_pickup",
-     "rarity": "Epic",
-     "t": 80.704,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:23"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 23.817681074142456
-     },
-     "kind": "bot_hud",
-     "t": 80.804,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:23"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 23.31635093688965
-     },
-     "kind": "bot_hud",
-     "t": 81.304,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:22"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 22.42397403717041
-     },
-     "kind": "bot_hud",
-     "t": 82.204,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:22"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 22.400207042694092
-     },
-     "kind": "bot_hud",
-     "t": 82.237,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:21"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 21.79919409751892
-     },
-     "kind": "bot_hud",
-     "t": 82.837,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:21"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 21.299257040023804
-     },
-     "kind": "bot_hud",
-     "t": 83.32,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:20"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 20.407917022705078
-     },
-     "kind": "bot_hud",
-     "t": 84.22,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:20"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 20.399738073349
-     },
-     "kind": "bot_hud",
-     "t": 84.237,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:19"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 19.78369903564453
-     },
-     "kind": "bot_hud",
-     "t": 84.853,
-     "userId": -3
-    },
-    {
-     "inventory": 7,
-     "item": "Magnet",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 85.037,
-     "userId": -1
-    },
-    {
-     "inventory": 8,
-     "item": "Drill",
-     "itemId": "49",
-     "kind": "item_pickup",
-     "rarity": "Rare",
-     "t": 85.038,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:19"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 19.28814697265625
-     },
-     "kind": "bot_hud",
-     "t": 85.337,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:18"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 18.407713890075684
-     },
-     "kind": "bot_hud",
-     "t": 86.22,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:18"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 18.39614987373352
-     },
-     "kind": "bot_hud",
-     "t": 86.236,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:17"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 17.76687788963318
-     },
-     "kind": "bot_hud",
-     "t": 86.871,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:17"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 17.287689924240112
-     },
-     "kind": "bot_hud",
-     "t": 87.338,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:16"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 16.408339977264404
-     },
-     "kind": "bot_hud",
-     "t": 88.221,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:16"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 16.38175392150879
-     },
-     "kind": "bot_hud",
-     "t": 88.253,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:15"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 15.766118049621582
-     },
-     "kind": "bot_hud",
-     "t": 88.87,
-     "userId": -3
-    },
-    {
-     "itemId": "52",
-     "kind": "contest_result",
-     "loser": -3,
-     "presses": {
-      "-3": 17,
-      "-4": 19
-     },
-     "t": 89.104,
-     "winner": -4
-    },
-    {
-     "inventory": 7,
-     "item": "Alarm Clock",
-     "kind": "item_drop",
-     "reason": "swap",
-     "t": 89.104,
-     "userId": -4
-    },
-    {
-     "inventory": 8,
-     "item": "Backpack",
-     "itemId": "52",
-     "kind": "item_pickup",
-     "rarity": "Rare",
-     "t": 89.105,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:15"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 15.287555932998657
-     },
-     "kind": "bot_hud",
-     "t": 89.337,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:14"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 14.392335891723633
-     },
-     "kind": "bot_hud",
-     "t": 90.237,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:14"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 14.365287065505981
-     },
-     "kind": "bot_hud",
-     "t": 90.27,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:13"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 13.749435901641846
-     },
-     "kind": "bot_hud",
-     "t": 90.886,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:13"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 13.282691955566406
-     },
-     "kind": "bot_hud",
-     "t": 91.353,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:12"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 12.372979879379272
-     },
-     "kind": "bot_hud",
-     "t": 92.254,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:12"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 12.36670207977295
-     },
-     "kind": "bot_hud",
-     "t": 92.271,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:11"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 11.733536005020142
-     },
-     "kind": "bot_hud",
-     "t": 92.903,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:11"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 11.267220973968506
-     },
-     "kind": "bot_hud",
-     "t": 93.353,
-     "userId": -1
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:10"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 10.356415033340454
-     },
-     "kind": "bot_hud",
-     "t": 94.269,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:10"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 10.350432872772217
-     },
-     "kind": "bot_hud",
-     "t": 94.286,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:09"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 9.716928005218506
-     },
-     "kind": "bot_hud",
-     "t": 94.92,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:09"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 9.252777099609375
-     },
-     "kind": "bot_hud",
-     "t": 95.386,
+     "t": 93.368,
      "userId": -1
     },
     {
@@ -3483,10 +4182,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 8.356117963790894
+      "serverLeft": 8.32576608657837
      },
      "kind": "bot_hud",
-     "t": 96.27,
+     "t": 93.651,
      "userId": -4
     },
     {
@@ -3494,14 +4193,14 @@
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  0:08"
+        "text": "FARMING  0:07"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 8.333600997924805
+      "serverLeft": 7.860037088394165
      },
      "kind": "bot_hud",
-     "t": 96.304,
+     "t": 94.118,
      "userId": -2
     },
     {
@@ -3513,10 +4212,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 7.718175888061523
+      "serverLeft": 7.57268500328064
      },
      "kind": "bot_hud",
-     "t": 96.92,
+     "t": 94.402,
      "userId": -3
     },
     {
@@ -3528,10 +4227,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 7.252302885055542
+      "serverLeft": 7.064601182937622
      },
      "kind": "bot_hud",
-     "t": 97.371,
+     "t": 94.919,
      "userId": -1
     },
     {
@@ -3543,10 +4242,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 6.338517904281616
+      "serverLeft": 6.3075480461120605
      },
      "kind": "bot_hud",
-     "t": 98.287,
+     "t": 95.668,
      "userId": -4
     },
     {
@@ -3554,14 +4253,14 @@
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  0:06"
+        "text": "FARMING  0:05"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 6.317852973937988
+      "serverLeft": 5.843992233276367
      },
      "kind": "bot_hud",
-     "t": 98.32,
+     "t": 96.135,
      "userId": -2
     },
     {
@@ -3573,10 +4272,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 5.701830863952637
+      "serverLeft": 5.556719064712524
      },
      "kind": "bot_hud",
-     "t": 98.938,
+     "t": 96.418,
      "userId": -3
     },
     {
@@ -3588,39 +4287,28 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 5.236311912536621
+      "serverLeft": 5.048943042755127
      },
      "kind": "bot_hud",
-     "t": 99.387,
+     "t": 96.934,
      "userId": -1
-    },
-    {
-     "itemId": "56",
-     "kind": "contest_result",
-     "loser": -3,
-     "presses": {
-      "-3": 16,
-      "-4": 18
-     },
-     "t": 99.62,
-     "winner": -4
     },
     {
      "inventory": 7,
-     "item": "Lantern",
+     "item": "Barrel",
      "kind": "item_drop",
      "reason": "swap",
-     "t": 99.62,
-     "userId": -4
+     "t": 97.218,
+     "userId": -1
     },
     {
      "inventory": 8,
-     "item": "Magnet",
-     "itemId": "56",
+     "item": "Skateboard",
+     "itemId": "52",
      "kind": "item_pickup",
      "rarity": "Uncommon",
-     "t": 99.621,
-     "userId": -4
+     "t": 97.219,
+     "userId": -1
     },
     {
      "data": {
@@ -3631,10 +4319,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 4.323359966278076
+      "serverLeft": 4.291018009185791
      },
      "kind": "bot_hud",
-     "t": 100.304,
+     "t": 97.685,
      "userId": -4
     },
     {
@@ -3642,14 +4330,14 @@
       "guis": [
        {
         "shown": true,
-        "text": "FARMING  0:04"
+        "text": "FARMING  0:03"
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 4.317718029022217
+      "serverLeft": 3.827301025390625
      },
      "kind": "bot_hud",
-     "t": 100.32,
+     "t": 98.151,
      "userId": -2
     },
     {
@@ -3661,11 +4349,28 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 3.6838700771331787
+      "serverLeft": 3.5382511615753174
      },
      "kind": "bot_hud",
-     "t": 100.953,
+     "t": 98.435,
      "userId": -3
+    },
+    {
+     "inventory": 7,
+     "item": "Flower",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 98.768,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Cactus",
+     "itemId": "61",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 98.769,
+     "userId": -1
     },
     {
      "data": {
@@ -3676,10 +4381,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 3.22278094291687
+      "serverLeft": 3.0487470626831055
      },
      "kind": "bot_hud",
-     "t": 101.403,
+     "t": 98.935,
      "userId": -1
     },
     {
@@ -3691,25 +4396,10 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 2.3170418739318848
+      "serverLeft": 2.275052070617676
      },
      "kind": "bot_hud",
-     "t": 102.319,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:02"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 2.287584066390991
-     },
-     "kind": "bot_hud",
-     "t": 102.336,
+     "t": 99.702,
      "userId": -4
     },
     {
@@ -3721,10 +4411,25 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 1.6823220252990723
+      "serverLeft": 1.8108010292053223
      },
      "kind": "bot_hud",
-     "t": 102.953,
+     "t": 100.169,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:01"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 1.5365991592407227
+     },
+     "kind": "bot_hud",
+     "t": 100.436,
      "userId": -3
     },
     {
@@ -3736,11 +4441,28 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 1.2223260402679443
+      "serverLeft": 1.0308201313018799
      },
      "kind": "bot_hud",
-     "t": 103.403,
+     "t": 100.951,
      "userId": -1
+    },
+    {
+     "attacker": -3,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 101.317,
+     "victim": -4
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -4
+     },
+     "kind": "bot_punch",
+     "t": 101.351,
+     "userId": -3
     },
     {
      "data": {
@@ -3751,37 +4473,78 @@
        }
       ],
       "phase": "FARMING",
-      "serverLeft": 0.30187106132507324
+      "serverLeft": 0.2721211910247803
      },
      "kind": "bot_hud",
-     "t": 104.337,
+     "t": 101.702,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "hit",
+      "turned": 11,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 101.752,
+     "userId": -4
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 98,
+      "result": "hit",
+      "turned": 5,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 101.752,
      "userId": -2
     },
     {
      "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "FARMING  0:00"
-       }
-      ],
-      "phase": "FARMING",
-      "serverLeft": 0.27225494384765625
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 99,
+      "result": "hit",
+      "turned": 7,
+      "what": "punch"
      },
-     "kind": "bot_hud",
-     "t": 104.353,
-     "userId": -4
+     "kind": "bot_farmfx",
+     "t": 101.768,
+     "userId": -3
+    },
+    {
+     "data": {
+      "attacker": -3,
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 97,
+      "result": "hit",
+      "turned": 6,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 101.768,
+     "userId": -1
     },
     {
      "biome": "FOREST",
      "kind": "phase",
      "phase": "CRAFTING",
      "round": 1,
-     "t": 104.72
+     "t": 102.053
     },
     {
      "kind": "harness_crafting",
-     "t": 104.721
+     "t": 102.056
     },
     {
      "data": {
@@ -3792,10 +4555,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 19.76263189315796
+      "serverLeft": 19.888542890548706
      },
      "kind": "bot_hud",
-     "t": 104.969,
+     "t": 102.168,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:19"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 19.602139949798584
+     },
+     "kind": "bot_hud",
+     "t": 102.452,
      "userId": -3
     },
     {
@@ -3807,10 +4585,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 19.315824031829834
+      "serverLeft": 19.095253944396973
      },
      "kind": "bot_hud",
-     "t": 105.403,
+     "t": 102.968,
      "userId": -1
     },
     {
@@ -3818,145 +4596,126 @@
      "kind": "craft",
      "rejected": [],
      "slots": {
-      "BODY": "Skateboard",
-      "ENGINE": "Magnifying Glass",
-      "MOBILITY": "Red Sofa",
-      "SPECIAL": "Magnet"
+      "HEAD": "Bathtub",
+      "SPECIAL": "Umbrella",
+      "TAIL": "Magic Wand"
      },
      "stats": {
-      "acceleration": 17.81605,
-      "boostDuration": 1.945,
-      "floatability": 1.15,
-      "flyability": 5.633333333333333,
-      "speed": 26.21,
-      "stability": 46.903999999999996
+      "acceleration": 11.1,
+      "boostDuration": 2.185,
+      "floatability": 2,
+      "flyability": 5.25,
+      "speed": 23,
+      "stability": 31.779999999999998
      },
-     "t": 106.119,
-     "userId": -3
-    },
-    {
-     "data": {
-      "inventory": [
-       "Skateboard",
-       "Red Sofa",
-       "Magnet",
-       "Magnifying Glass",
-       "Camera",
-       "Cardboard Box",
-       "Fan",
-       "Red Sofa"
-      ],
-      "result": "ok",
-      "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Magnifying Glass",
-       "MOBILITY": "Red Sofa",
-       "SPECIAL": "Magnet"
-      }
-     },
-     "kind": "bot_craft",
-     "t": 106.169,
-     "userId": -3
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:18"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 18.368156909942627
-     },
-     "kind": "bot_hud",
-     "t": 106.353,
-     "userId": -4
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:18"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 18.382283926010132
-     },
-     "kind": "bot_hud",
-     "t": 106.353,
-     "userId": -2
-    },
-    {
-     "data": {
-      "inventory": [
-       "Magnet",
-       "Hair Dryer",
-       "Cactus",
-       "Racing Flag",
-       "Magnifying Glass",
-       "Rocket",
-       "Backpack",
-       "Magnet"
-      ],
-      "result": "draft only",
-      "slots": {
-       "BODY": "Backpack",
-       "ENGINE": "Rocket",
-       "SPECIAL": "Magnet"
-      }
-     },
-     "kind": "bot_craft",
-     "t": 106.735,
-     "userId": -4
+     "t": 103.502,
+     "userId": -1
     },
     {
      "auto": false,
      "kind": "craft",
      "rejected": [],
      "slots": {
-      "BODY": "Skateboard",
-      "ENGINE": "Drill",
-      "HEAD": "Suitcase",
-      "SPECIAL": "Soda Bottle",
-      "TAIL": "Racing Flag"
+      "BODY": "Life Preserver",
+      "ENGINE": "Kettle",
+      "MOBILITY": "Magnifying Glass",
+      "SPECIAL": "Soda Bottle"
      },
      "stats": {
-      "acceleration": 21.6125,
+      "acceleration": 26.266025641025635,
       "boostDuration": 3.1,
-      "floatability": 1.15,
-      "flyability": 5.633333333333333,
-      "speed": 30.725,
-      "stability": 24.202499999999997
+      "floatability": 3.9473684210526314,
+      "flyability": 6.056005398110661,
+      "speed": 32.051282051282044,
+      "stability": 37.73195006747638
      },
-     "t": 106.82,
+     "t": 103.517,
+     "userId": -3
+    },
+    {
+     "data": {
+      "inventory": [
+       "Bathtub",
+       "Umbrella",
+       "Magic Wand",
+       "Flower",
+       "Magnet",
+       "Shopping Cart",
+       "Skateboard",
+       "Cactus"
+      ],
+      "result": "ok",
+      "slots": {
+       "HEAD": "Bathtub",
+       "SPECIAL": "Umbrella",
+       "TAIL": "Magic Wand"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 103.535,
      "userId": -1
     },
     {
      "data": {
       "inventory": [
        "Soda Bottle",
-       "Suitcase",
-       "Skateboard",
-       "Racing Flag",
-       "Racing Flag",
-       "Hair Dryer",
-       "Microwave",
-       "Drill"
+       "Kettle",
+       "Life Preserver",
+       "Magnifying Glass",
+       "Drill",
+       "Balloon Bunch",
+       "Red Sofa",
+       "Rubber Duck"
       ],
       "result": "ok",
       "slots": {
-       "BODY": "Skateboard",
-       "ENGINE": "Drill",
-       "HEAD": "Suitcase",
-       "SPECIAL": "Soda Bottle",
-       "TAIL": "Racing Flag"
+       "BODY": "Life Preserver",
+       "ENGINE": "Kettle",
+       "MOBILITY": "Magnifying Glass",
+       "SPECIAL": "Soda Bottle"
       }
      },
      "kind": "bot_craft",
-     "t": 106.854,
-     "userId": -1
+     "t": 103.551,
+     "userId": -3
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:18"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 18.336595058441162
+     },
+     "kind": "bot_hud",
+     "t": 103.719,
+     "userId": -4
+    },
+    {
+     "data": {
+      "inventory": [
+       "Life Preserver",
+       "Suitcase",
+       "Treadmill",
+       "Log",
+       "Kettle",
+       "Umbrella",
+       "Propeller Hat",
+       "Balloon Bunch"
+      ],
+      "result": "draft only",
+      "slots": {
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "SPECIAL": "Balloon Bunch"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 103.934,
+     "userId": -4
     },
     {
      "data": {
@@ -3967,10 +4726,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 17.75014591217041
+      "serverLeft": 17.871378898620605
      },
      "kind": "bot_hud",
-     "t": 106.986,
+     "t": 104.185,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:17"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 17.58944797515869
+     },
+     "kind": "bot_hud",
+     "t": 104.468,
      "userId": -3
     },
     {
@@ -3982,10 +4756,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 17.299691915512085
+      "serverLeft": 17.091697931289673
      },
      "kind": "bot_hud",
-     "t": 107.42,
+     "t": 104.969,
      "userId": -1
     },
     {
@@ -3997,25 +4771,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 16.38118004798889
+      "serverLeft": 16.319679021835327
      },
      "kind": "bot_hud",
-     "t": 108.352,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:16"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 16.3543860912323
-     },
-     "kind": "bot_hud",
-     "t": 108.369,
+     "t": 105.734,
      "userId": -4
     },
     {
@@ -4027,10 +4786,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 15.733349084854126
+      "serverLeft": 15.855725049972534
      },
      "kind": "bot_hud",
-     "t": 109.002,
+     "t": 106.201,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:15"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 15.572831869125366
+     },
+     "kind": "bot_hud",
+     "t": 106.484,
      "userId": -3
     },
     {
@@ -4042,10 +4816,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 15.298685073852539
+      "serverLeft": 15.077197074890137
      },
      "kind": "bot_hud",
-     "t": 109.436,
+     "t": 106.984,
      "userId": -1
     },
     {
@@ -4057,25 +4831,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 14.380666017532349
+      "serverLeft": 14.309136867523193
      },
      "kind": "bot_hud",
-     "t": 110.352,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:14"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 14.353724956512451
-     },
-     "kind": "bot_hud",
-     "t": 110.371,
+     "t": 107.751,
      "userId": -4
     },
     {
@@ -4087,10 +4846,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 13.715275049209595
+      "serverLeft": 13.840515851974487
      },
      "kind": "bot_hud",
-     "t": 111.021,
+     "t": 108.219,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:13"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 13.570941925048828
+     },
+     "kind": "bot_hud",
+     "t": 108.484,
      "userId": -3
     },
     {
@@ -4102,10 +4876,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 13.284070014953613
+      "serverLeft": 13.076815843582153
      },
      "kind": "bot_hud",
-     "t": 111.436,
+     "t": 108.985,
      "userId": -1
     },
     {
@@ -4117,25 +4891,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 12.363845109939575
+      "serverLeft": 12.305120944976807
      },
      "kind": "bot_hud",
-     "t": 112.369,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:12"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 12.339648008346558
-     },
-     "kind": "bot_hud",
-     "t": 112.385,
+     "t": 109.751,
      "userId": -4
     },
     {
@@ -4147,10 +4906,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 11.6978600025177
+      "serverLeft": 11.823584079742432
      },
      "kind": "bot_hud",
-     "t": 113.036,
+     "t": 110.235,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:11"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 11.55551290512085
+     },
+     "kind": "bot_hud",
+     "t": 110.5,
      "userId": -3
     },
     {
@@ -4162,10 +4936,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 11.28375792503357
+      "serverLeft": 11.079192876815796
      },
      "kind": "bot_hud",
-     "t": 113.436,
+     "t": 110.984,
      "userId": -1
     },
     {
@@ -4177,25 +4951,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 10.345393896102905
+      "serverLeft": 10.288570880889893
      },
      "kind": "bot_hud",
-     "t": 114.385,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:10"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 10.3227219581604
-     },
-     "kind": "bot_hud",
-     "t": 114.402,
+     "t": 111.768,
      "userId": -4
     },
     {
@@ -4207,10 +4966,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 9.682315111160278
+      "serverLeft": 9.808387994766235
      },
      "kind": "bot_hud",
-     "t": 115.054,
+     "t": 112.25,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:09"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 9.553184032440186
+     },
+     "kind": "bot_hud",
+     "t": 112.501,
      "userId": -3
     },
     {
@@ -4222,10 +4996,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 9.269134998321533
+      "serverLeft": 9.06346607208252
      },
      "kind": "bot_hud",
-     "t": 115.454,
+     "t": 113.002,
      "userId": -1
     },
     {
@@ -4237,25 +5011,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 8.32980489730835
+      "serverLeft": 8.288307905197144
      },
      "kind": "bot_hud",
-     "t": 116.402,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:08"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 8.306112051010132
-     },
-     "kind": "bot_hud",
-     "t": 116.419,
+     "t": 113.768,
      "userId": -4
     },
     {
@@ -4267,10 +5026,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 7.664139986038208
+      "serverLeft": 7.792945861816406
      },
      "kind": "bot_hud",
-     "t": 117.069,
+     "t": 114.267,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:07"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 7.536071062088013
+     },
+     "kind": "bot_hud",
+     "t": 114.517,
      "userId": -3
     },
     {
@@ -4282,10 +5056,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 7.252326965332031
+      "serverLeft": 7.043238878250122
      },
      "kind": "bot_hud",
-     "t": 117.469,
+     "t": 115.017,
      "userId": -1
     },
     {
@@ -4297,25 +5071,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 6.3120739459991455
+      "serverLeft": 6.27335786819458
      },
      "kind": "bot_hud",
-     "t": 118.419,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:06"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 6.289401054382324
-     },
-     "kind": "bot_hud",
-     "t": 118.436,
+     "t": 115.785,
      "userId": -4
     },
     {
@@ -4327,10 +5086,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 5.647391080856323
+      "serverLeft": 5.7914719581604
      },
      "kind": "bot_hud",
-     "t": 119.085,
+     "t": 116.267,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:05"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 5.519140005111694
+     },
+     "kind": "bot_hud",
+     "t": 116.533,
      "userId": -3
     },
     {
@@ -4342,10 +5116,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 5.235418081283569
+      "serverLeft": 5.0283989906311035
      },
      "kind": "bot_hud",
-     "t": 119.485,
+     "t": 117.034,
      "userId": -1
     },
     {
@@ -4357,25 +5131,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 4.311471939086914
+      "serverLeft": 4.263017892837524
      },
      "kind": "bot_hud",
-     "t": 120.418,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:04"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 4.286952972412109
-     },
-     "kind": "bot_hud",
-     "t": 120.436,
+     "t": 117.802,
      "userId": -4
     },
     {
@@ -4387,10 +5146,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 3.6341209411621094
+      "serverLeft": 3.7752339839935303
      },
      "kind": "bot_hud",
-     "t": 121.102,
+     "t": 118.284,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:03"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 3.5000529289245605
+     },
+     "kind": "bot_hud",
+     "t": 118.551,
      "userId": -3
     },
     {
@@ -4402,10 +5176,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 3.2200589179992676
+      "serverLeft": 3.028324842453003
      },
      "kind": "bot_hud",
-     "t": 121.502,
+     "t": 119.034,
      "userId": -1
     },
     {
@@ -4417,25 +5191,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 2.2997210025787354
+      "serverLeft": 2.2555689811706543
      },
      "kind": "bot_hud",
-     "t": 122.435,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:02"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 2.2727880477905273
-     },
-     "kind": "bot_hud",
-     "t": 122.452,
+     "t": 119.801,
      "userId": -4
     },
     {
@@ -4447,10 +5206,25 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 1.633263111114502
+      "serverLeft": 1.7751529216766357
      },
      "kind": "bot_hud",
-     "t": 123.103,
+     "t": 120.283,
+     "userId": -2
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:01"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 1.4852490425109863
+     },
+     "kind": "bot_hud",
+     "t": 120.567,
      "userId": -3
     },
     {
@@ -4462,10 +5236,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 1.2030799388885498
+      "serverLeft": 1.0122580528259277
      },
      "kind": "bot_hud",
-     "t": 123.519,
+     "t": 121.05,
      "userId": -1
     },
     {
@@ -4477,25 +5251,10 @@
        }
       ],
       "phase": "CRAFTING",
-      "serverLeft": 0.298724889755249
+      "serverLeft": 0.23879098892211914
      },
      "kind": "bot_hud",
-     "t": 124.436,
-     "userId": -2
-    },
-    {
-     "data": {
-      "guis": [
-       {
-        "shown": true,
-        "text": "0:00"
-       }
-      ],
-      "phase": "CRAFTING",
-      "serverLeft": 0.25650906562805176
-     },
-     "kind": "bot_hud",
-     "t": 124.469,
+     "t": 121.817,
      "userId": -4
     },
     {
@@ -4503,7 +5262,7 @@
      "kind": "phase",
      "phase": "RACING",
      "round": 1,
-     "t": 124.736
+     "t": 122.067
     },
     {
      "auto": true,
@@ -4518,35 +5277,35 @@
       "speed": 23,
       "stability": 31.779999999999998
      },
-     "t": 124.736,
+     "t": 122.067,
      "userId": -2
     },
     {
      "auto": true,
      "draft": {
-      "BODY": "Backpack",
-      "ENGINE": "Rocket",
-      "SPECIAL": "Magnet"
+      "BODY": "Log",
+      "ENGINE": "Propeller Hat",
+      "SPECIAL": "Balloon Bunch"
      },
      "kind": "craft",
      "rejected": [],
      "slots": {
-      "BODY": "Backpack",
-      "ENGINE": "Rocket",
-      "HEAD": "Cactus",
-      "MOBILITY": "Hair Dryer",
-      "SPECIAL": "Magnet",
-      "TAIL": "Racing Flag"
+      "BODY": "Log",
+      "ENGINE": "Propeller Hat",
+      "HEAD": "Suitcase",
+      "MOBILITY": "Life Preserver",
+      "SPECIAL": "Balloon Bunch",
+      "TAIL": "Treadmill"
      },
      "stats": {
-      "acceleration": 19.366641192204813,
-      "boostDuration": 1.945,
-      "floatability": 3.9740160489109666,
-      "flyability": 9.476499808941536,
-      "speed": 25.601834161253343,
-      "stability": 48.77722583110431
+      "acceleration": 14.295139600361237,
+      "boostDuration": 2.5,
+      "floatability": 3.6960514233241506,
+      "flyability": 7.668723296071154,
+      "speed": 24.522080307204273,
+      "stability": 66.29783940076953
      },
-     "t": 124.736,
+     "t": 122.067,
      "userId": -4
     },
     {
@@ -4560,15 +5319,15 @@
       -4
      ],
      "round": 1,
-     "t": 124.776,
+     "t": 122.107,
      "timeout": 240
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 69.60688781738281,
+     "maxSpeed": 68.15318298339844,
      "progress": 10,
      "speed": 0,
-     "t": 124.776,
+     "t": 122.107,
      "userId": -1,
      "x": -14,
      "y": 2,
@@ -4579,7 +5338,7 @@
      "maxSpeed": 68.15318298339844,
      "progress": 10,
      "speed": 0,
-     "t": 124.776,
+     "t": 122.107,
      "userId": -2,
      "x": -7,
      "y": 2,
@@ -4587,10 +5346,10 @@
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 68.75724792480469,
+     "maxSpeed": 69.8564682006836,
      "progress": 10,
      "speed": 0,
-     "t": 124.776,
+     "t": 122.107,
      "userId": -3,
      "x": 0,
      "y": 2,
@@ -4598,10 +5357,10 @@
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 68.6427993774414,
+     "maxSpeed": 68.43961334228516,
      "progress": 10,
      "speed": 0,
-     "t": 124.776,
+     "t": 122.107,
      "userId": -4,
      "x": 7,
      "y": 2,
@@ -4619,11 +5378,11 @@
       "t": "numeric",
       "v": "inf"
      },
-     "maxSpeed": 69.60688781738281,
+     "maxSpeed": 68.15318298339844,
      "seated": true,
-     "t": 124.985,
-     "torque": 86.44999694824219,
-     "turnSpeed": 2.063037395477295,
+     "t": 122.283,
+     "torque": 44.400001525878906,
+     "turnSpeed": 2.1767001152038574,
      "userId": -1
     },
     {
@@ -4640,7 +5399,7 @@
      },
      "maxSpeed": 68.15318298339844,
      "seated": true,
-     "t": 124.985,
+     "t": 122.283,
      "torque": 44.400001525878906,
      "turnSpeed": 2.1767001152038574,
      "userId": -2
@@ -4657,11 +5416,11 @@
       "t": "numeric",
       "v": "inf"
      },
-     "maxSpeed": 68.75724792480469,
+     "maxSpeed": 69.8564682006836,
      "seated": true,
-     "t": 124.985,
-     "torque": 71.26419830322266,
-     "turnSpeed": 2.403559923171997,
+     "t": 122.283,
+     "torque": 105.06410217285156,
+     "turnSpeed": 2.265979290008545,
      "userId": -3
     },
     {
@@ -4676,40 +5435,40 @@
       "t": "numeric",
       "v": "inf"
      },
-     "maxSpeed": 68.6427993774414,
+     "maxSpeed": 68.43961334228516,
      "seated": true,
-     "t": 124.985,
-     "torque": 77.46656799316406,
-     "turnSpeed": 2.4316585063934326,
+     "t": 122.283,
+     "torque": 57.18055725097656,
+     "turnSpeed": 2.694467544555664,
      "userId": -4
     },
     {
-     "item": "Magnet",
+     "item": "Balloon Bunch",
      "kind": "ability",
      "result": "denied: countdown",
-     "t": 125.002,
+     "t": 122.317,
      "userId": -4
-    },
-    {
-     "item": "Magnet",
-     "kind": "ability",
-     "result": "denied: countdown",
-     "t": 125.035,
-     "userId": -3
     },
     {
      "item": "Soda Bottle",
      "kind": "ability",
      "result": "denied: countdown",
-     "t": 125.035,
+     "t": 122.317,
+     "userId": -3
+    },
+    {
+     "item": "Umbrella",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 122.317,
      "userId": -1
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 69.60688781738281,
+     "maxSpeed": 68.15318298339844,
      "progress": 10,
      "speed": 0,
-     "t": 125.286,
+     "t": 122.617,
      "userId": -1,
      "x": -14,
      "y": 2,
@@ -4720,7 +5479,7 @@
      "maxSpeed": 68.15318298339844,
      "progress": 10,
      "speed": 0,
-     "t": 125.286,
+     "t": 122.617,
      "userId": -2,
      "x": -7,
      "y": 2,
@@ -4728,10 +5487,10 @@
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 68.75724792480469,
+     "maxSpeed": 69.8564682006836,
      "progress": 10,
      "speed": 0,
-     "t": 125.286,
+     "t": 122.617,
      "userId": -3,
      "x": 0,
      "y": 2,
@@ -4739,10 +5498,10 @@
     },
     {
      "kind": "race_sample",
-     "maxSpeed": 68.6427993774414,
+     "maxSpeed": 68.43961334228516,
      "progress": 10,
      "speed": 0,
-     "t": 125.286,
+     "t": 122.617,
      "userId": -4,
      "x": 7,
      "y": 2,
@@ -4755,6 +5514,6 @@
  },
  "scenario": "craft-afk-3p",
  "studioExit": 0,
- "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: denied: victim has nothing=1\n    -4: picked 12, contests 4/4, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n    -2: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 13, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -3: picked 9, contests 0/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: ability=3 bot_craft=3 bot_farmfx=8 bot_hud=219 bot_joined=4 bot_punch=2 bot_ready=4 bot_screen=8 bot_steal=1 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=34 item_wave=3 phase=3 punch=2 race_sample=8 race_start=1 steal_attempt=1 vehicle_spawn=4",
- "wallSeconds": 144.2
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 1\n  round 1 (FOREST): 0 finished of 4\n    steal attempts: denied: too far=2, denied: victim has nothing=1\n    -4: picked 15, contests 1/4, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n    -2: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0\n    -1: picked 12, contests 2/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n    -3: picked 15, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0\n  events: ability=3 bot_craft=3 bot_farmfx=52 bot_guard=3 bot_hud=218 bot_joined=4 bot_pickup_denied=1 bot_punch=7 bot_ready=4 bot_screen=8 bot_steal=3 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=18 item_pickup=42 item_wave=3 phase=3 punch=7 race_sample=8 race_start=1 steal_attempt=3 vehicle_spawn=4",
+ "wallSeconds": 140.7
 }

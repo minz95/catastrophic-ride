@@ -216,7 +216,8 @@ function MatchHarness.start(args, endTest)
 			table.insert(report.rounds, current)
 			current = nil
 			if #report.rounds >= wantRounds then
-				finish("rounds complete")
+				-- a moment for what happens at RESULTS (rewards) to be logged
+				task.delay(1, function() finish("rounds complete") end)
 			end
 		end
 	end)

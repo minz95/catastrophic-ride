@@ -50,6 +50,14 @@ function GameManager.getRound()
 	return _round
 end
 
+local _lastResults = nil
+
+--- The finish order of the last race (set as RESULTS starts):
+-- { { userId, time } … finishers in order, then { userId, dnf = true, progress } }.
+function GameManager.getLastResults()
+	return _lastResults
+end
+
 -- Phase length, with harness overrides when a test asked for them.
 local function _duration(phase, default)
 	local d = _harness and _harness.durations and _harness.durations[phase]
@@ -195,6 +203,7 @@ end
 function _startResults(finishOrder)
 	if _phaseTimer then pcall(task.cancel, _phaseTimer) end
 	_phaseEnd = nil
+	_lastResults = finishOrder or {}
 	_transition(Constants.PHASES.RESULTS)
 	RemoteEvents.RaceFinished:FireAllClients(finishOrder)
 

@@ -162,6 +162,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   DistroKid catalogue ids, which Roblox licenses for every experience),
   played through `Shared/SoundFx.play(key)`; check new ids with
   `python3 tools/studio/sim.py run sounds`.
+- Saved progress: `Modules/PlayerStore` (DataStore) holds each player's
+  record; `Shared/Progression` the rules (levels, coins, daily streak);
+  `ProgressionManager` pays at RESULTS (`RemoteEvents.RewardGranted`,
+  leaderstats). A failed load is never saved; bots, harness sessions and
+  Studio without API access stay in memory. Add record fields in
+  `Progression.newRecord` (migrate fills them in for old saves).
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

@@ -159,6 +159,71 @@ voteLabel.TextScaled        = true
 voteLabel.Font              = Enum.Font.Gotham
 voteLabel.Parent            = bg
 
+-- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
+local rewardFrame = Instance.new("Frame")
+rewardFrame.Name              = "Reward"
+rewardFrame.Size              = UDim2.new(0, 360, 0, 92)
+rewardFrame.Position          = UDim2.new(0.5, -180, 0.12, 0)
+rewardFrame.BackgroundColor3  = Color3.fromRGB(30, 26, 50)
+rewardFrame.BackgroundTransparency = 0.2
+rewardFrame.BorderSizePixel   = 0
+rewardFrame.Visible           = false
+rewardFrame.Parent            = bg
+local rewardCorner = Instance.new("UICorner")
+rewardCorner.CornerRadius = UDim.new(0, 8)
+rewardCorner.Parent       = rewardFrame
+
+local function _rewardLabel(name, y, h, font, color)
+	local l = Instance.new("TextLabel")
+	l.Name                   = name
+	l.Size                   = UDim2.new(1, -16, 0, h)
+	l.Position               = UDim2.new(0, 8, 0, y)
+	l.BackgroundTransparency = 1
+	l.TextScaled             = true
+	l.Font                   = font
+	l.TextColor3             = color
+	l.Text                   = ""
+	l.Parent                 = rewardFrame
+	return l
+end
+local gainLbl  = _rewardLabel("Gain", 4, 26, Enum.Font.GothamBlack, Color3.fromRGB(255, 220, 60))
+local dailyLbl = _rewardLabel("Daily", 31, 16, Enum.Font.GothamBold, Color3.fromRGB(140, 230, 140))
+local levelLbl = _rewardLabel("Level", 50, 16, Enum.Font.GothamBold, Color3.new(1, 1, 1))
+
+local xpBar = Instance.new("Frame")
+xpBar.Name             = "XpBar"
+xpBar.Size             = UDim2.new(1, -16, 0, 10)
+xpBar.Position         = UDim2.new(0, 8, 0, 72)
+xpBar.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+xpBar.BorderSizePixel  = 0
+xpBar.Parent           = rewardFrame
+local xpFill = Instance.new("Frame")
+xpFill.Name             = "Fill"
+xpFill.Size             = UDim2.fromScale(0, 1)
+xpFill.BackgroundColor3 = Color3.fromRGB(90, 180, 255)
+xpFill.BorderSizePixel  = 0
+xpFill.Parent           = xpBar
+
+local function _showReward(r)
+	if type(r) ~= "table" then return end
+	gainLbl.Text = string.format("+%d XP    +%d Coins", r.xp or 0, (r.coins or 0) + (r.daily or 0))
+	if (r.daily or 0) > 0 then
+		dailyLbl.Text = (r.streak or 1) > 1
+			and string.format("Daily bonus +%d  ·  %d-day streak", r.daily, r.streak)
+			or  string.format("Daily bonus +%d  ·  come back tomorrow for more", r.daily)
+	else
+		dailyLbl.Text = r.saved == false and "Progress is not saved in this session" or ""
+	end
+	levelLbl.Text = string.format("%sLevel %d  ·  %d / %d XP  ·  %d Coins",
+		(r.levelsGained or 0) > 0 and "LEVEL UP!  " or "", r.level or 1, r.xpInLevel or 0, r.xpToNext or 1, r.totalCoins or 0)
+	levelLbl.TextColor3 = (r.levelsGained or 0) > 0 and Color3.fromRGB(255, 200, 80) or Color3.new(1, 1, 1)
+	xpFill.Size = UDim2.fromScale(0, 1)
+	rewardFrame.Visible = true
+	TweenService:Create(xpFill, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {
+		Size = UDim2.fromScale(math.clamp((r.xpInLevel or 0) / math.max(1, r.xpToNext or 1), 0, 1), 1),
+	}):Play()
+end
+
 -- ─── Populate results ─────────────────────────────────────────────────────────
 
 local function _formatTime(seconds)
@@ -249,11 +314,14 @@ RemoteEvents.RaceFinished.OnClientEvent:Connect(function(finishOrder)
 	_populateResults(finishOrder)
 end)
 
+RemoteEvents.RewardGranted.OnClientEvent:Connect(_showReward)
+
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	if phase == Constants.PHASES.RESULTS then
 		_animateIn()
 	elseif phase == Constants.PHASES.LOBBY then
 		screen.Enabled = false
+		rewardFrame.Visible = false
 		_myVote = false
 		_voteCount = 0
 	end
