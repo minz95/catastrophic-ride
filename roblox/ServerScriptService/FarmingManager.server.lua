@@ -495,6 +495,9 @@ RemoteEvents.RequestPickup.OnServerInvoke = function(player, itemId)
 	local item = _items[itemId]
 	if not item            then return "denied: item not found" end
 	if item.taken          then return "denied: already taken" end
+	-- A running contest locks the item for its two players (a third player
+	-- used to take it once they had walked away).
+	if _contests[itemId]   then return "contested" end
 
 	local data = SessionManager.getData(player)
 	if not data then return "denied: no player data" end
@@ -591,6 +594,10 @@ _resolveContest = function(itemId, contest)
 	local c1, c2 = contest.presses[p1.UserId] or 0, contest.presses[p2.UserId] or 0
 	local winner, loser = p1, p2
 	if FarmingRules.contestWinner(c1, c2) == 2 then winner, loser = p2, p1 end
+	-- the winner left the game: the one still here gets it
+	if not SessionManager.getData(winner) and SessionManager.getData(loser) then
+		winner, loser = loser, winner
+	end
 	Telemetry.record("contest_result", {
 		itemId = itemId, winner = winner.UserId, loser = loser.UserId,
 		presses = { [tostring(p1.UserId)] = c1, [tostring(p2.UserId)] = c2 },

@@ -102,6 +102,10 @@ local function _onPlayerAdded(player)
 
 	print(string.format("[SessionManager] %s joined → skin #%d", player.Name, skinIndex))
 
+	-- Joined during a race or its results: watch until the next round
+	local nowPhase = GameManager.getPhase()
+	player:SetAttribute("Spectating", nowPhase == Constants.PHASES.RACING or nowPhase == Constants.PHASES.RESULTS)
+
 	-- If mid-game, send current phase immediately (handles rejoins, but client
 	-- scripts may not be connected yet on first join — handled by CharacterAdded below)
 	local phase = GameManager.getPhase()
@@ -185,6 +189,13 @@ GameManager.onPhaseChanged(function(phase)
 end)
 
 -- ─── Wire up ──────────────────────────────────────────────────────────────────
+
+-- Everyone plays from the next FARMING on.
+GameManager.onPhaseChanged(function(phase)
+	if phase == Constants.PHASES.FARMING then
+		for _, p in ipairs(Players:GetPlayers()) do p:SetAttribute("Spectating", false) end
+	end
+end)
 
 Players.PlayerAdded:Connect(_onPlayerAdded)
 Players.PlayerRemoving:Connect(_onPlayerRemoving)

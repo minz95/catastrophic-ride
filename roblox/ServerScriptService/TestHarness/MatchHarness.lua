@@ -88,6 +88,8 @@ function MatchHarness.craftStats(t0)
 	return out
 end
 
+MatchHarness.PERF_EVERY = 2
+
 function MatchHarness.start(args, endTest)
 	local bots = args.bots or {}
 	local farmProfiles = bots.farmProfiles or { "sweaty", "casual" }
@@ -102,6 +104,29 @@ function MatchHarness.start(args, endTest)
 		botNotes = {}, timedOut = false,
 	}
 	local ended = false
+
+	-- Server load (issue #53): every PERF_EVERY s the physics rate, the
+	-- Heartbeat rate, network kbps and memory, tagged with the phase.
+	task.spawn(function()
+		local Stats = game:GetService("Stats")
+		local RunService = game:GetService("RunService")
+		local frames = 0
+		local conn = RunService.Heartbeat:Connect(function() frames += 1 end)
+		local last = os.clock()
+		while not ended do
+			task.wait(MatchHarness.PERF_EVERY)
+			local now = os.clock()
+			local sample = { players = #Players:GetPlayers(), phase = game.ReplicatedStorage:GetAttribute("Phase") }
+			sample.heartbeatHz = math.floor(frames / (now - last) * 10) / 10
+			frames, last = 0, now
+			pcall(function() sample.physicsFps = math.floor(workspace:GetRealPhysicsFPS() * 10) / 10 end)
+			pcall(function() sample.sendKbps = math.floor(Stats.DataSendKbps * 10) / 10 end)
+			pcall(function() sample.recvKbps = math.floor(Stats.DataReceiveKbps * 10) / 10 end)
+			pcall(function() sample.memMb = math.floor(Stats:GetTotalMemoryUsageMb()) end)
+			Telemetry.record("server_perf", sample)
+		end
+		conn:Disconnect()
+	end)
 	local function finish(reason)
 		if ended then return end
 		ended = true

@@ -236,6 +236,17 @@ def check(sc, report):
             out += check_hud_timer(c, events)
         if c.get("abilities"):
             out += check_abilities(sc, events)
+        perf = [e for e in events if e.get("kind") == "server_perf"]
+        if c.get("perf"):
+            pc = c["perf"]
+            if not perf:
+                out.append(("fail", "no server_perf samples"))
+            for key, floor in (("heartbeatHz", pc.get("minHeartbeatHz")), ("physicsFps", pc.get("minPhysicsFps"))):
+                vals = sorted(e[key] for e in perf if e.get(key) is not None and e.get("phase") in ("FARMING", "RACING"))
+                if floor and vals:
+                    p5 = vals[max(0, int(len(vals) * 0.05) - 1)]
+                    if p5 < floor:
+                        out.append(("fail", "server %s p5 %.1f under %d (min %.1f)" % (key, p5, floor, vals[0])))
         if c.get("rewards"):
             rewarded = {e.get("userId") for e in events if e.get("kind") == "reward"}
             for r in report.get("rounds", []):
@@ -300,6 +311,24 @@ def check_driving(c, events):
             if not e.get("modelParts"):
                 out.append(("fail", "%s drop shows no item model" % e.get("item")))
     return out
+
+
+def perf_summary(events):
+    perf = [e for e in events if e.get("kind") == "server_perf"]
+    if not perf:
+        return ""
+    parts = []
+    for phase in ("FARMING", "CRAFTING", "RACING"):
+        ph = [e for e in perf if e.get("phase") == phase]
+        if not ph:
+            continue
+        hb = sorted(e.get("heartbeatHz") or 0 for e in ph)
+        pf = sorted(e.get("physicsFps") or 0 for e in ph)
+        snd = max(e.get("sendKbps") or 0 for e in ph)
+        parts.append("%s heartbeat %.0f-%.0f Hz, physics %.0f-%.0f fps, send max %.0f kbps" % (
+            phase, hb[0], hb[-1], pf[0], pf[-1], snd))
+    mem = max(e.get("memMb") or 0 for e in perf)
+    return "server: " + "; ".join(parts) + "; memory max %d MB" % mem
 
 
 def driving_summary(events):
@@ -570,9 +599,13 @@ def run_one(sc, place, args):
     if sc.get("checks", {}).get("abilities") and isinstance(report, dict):
         summary += "\n" + ability_summary((report.get("telemetry") or {}).get("events") or [])
     if sc["kind"] == "match" and isinstance(report, dict):
-        d = driving_summary((report.get("telemetry") or {}).get("events") or [])
+        evs = (report.get("telemetry") or {}).get("events") or []
+        d = driving_summary(evs)
         if d:
             summary += "\n" + d
+        pf = perf_summary(evs)
+        if pf:
+            summary += "\n" + pf
     if sc["kind"] == "race" and isinstance(report, dict):
         res = report.get("results") or report.get("cars") or []
         if isinstance(res, list) and any(isinstance(r, dict) and r.get("drifts") for r in res):

@@ -241,6 +241,11 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-23 — Late joiners watch.** Someone joining during a race is
+  marked Spectating (banner: "you join the next round"), is not in the
+  results and is not waited for; everyone plays from the next FARMING. A
+  pickup contest locks its item, and if the winner left, the other player
+  gets it.
 - **2026-10-23 — A shop for looks.** Coins buy paints and trails (some need
   a level, so levels mean something); Robux coin packs are ready but sold
   only once their product ids are set. Nothing in the shop changes speed,
