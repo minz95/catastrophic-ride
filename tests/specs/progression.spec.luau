@@ -136,45 +136,58 @@ R.describe("PlayerStore (mock DataStore)", function()
 	end)
 end)
 
+-- A 3-player race to RESULTS: player 2 wins, player 1 second, player 3 does
+-- not finish. Returns the server and the AnalyticsService calls (Analytics.sink).
+local function threeCarRace()
+	local calls = {}
+	local srv = Server.boot({
+		players = 3,
+		scripts = {
+			"ServerScriptService.MapBuilders.ForestMapBuilder",
+			"ServerScriptService.GameBootstrap",
+			"ServerScriptService.RacingManager",
+			"ServerScriptService.ProgressionManager",
+			"ServerScriptService.AnalyticsManager",
+		},
+		harness = { harness = "lune", biome = "FOREST", players = 3, lobbyDelay = 0,
+			durations = { FARMING = 0.1, CRAFTING = 0.1, RESULTS = 30 } },
+		setup = function(e)
+			e.requirePath("ServerScriptService.Modules.Analytics").sink = function(method, args)
+				table.insert(calls, { method = method, args = args })
+			end
+		end,
+	})
+	local e = srv.env
+	local VehicleBuilder = e.requirePath("ServerScriptService.Modules.VehicleBuilder")
+	local VehicleStats = e.requirePath("ReplicatedStorage.Shared.VehicleStats")
+	local Consts = e.requirePath("ReplicatedStorage.Shared.Constants")
+	local stats = VehicleStats.calculate(nil, nil, nil, "FOREST")
+	local cars = {}
+	for i, p in ipairs(srv.players) do
+		local model = VehicleBuilder.build(stats, "FOREST", CFrame.new(i * 7, 2, 590), {})
+		model.Parent = e.workspace
+		srv.SessionManager.setVehicle(p, model, stats)
+		cars[i] = model
+	end
+	srv.advance(0.5)
+	assert(srv.GameManager.getPhase() == "RACING", "not racing")
+	srv.advance(Consts.RACE_COUNTDOWN + 0.5)
+	local function tagged(tag) return srv.mock.CollectionService:GetTagged(tag)[1] end
+	for _, i in ipairs({ 2, 1 }) do
+		for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine" }) do
+			tagged(tag).Touched:Fire(cars[i].PrimaryPart)
+			srv.advance(0.1)
+		end
+	end
+	srv.advance(Consts.FINISH_GRACE + 1)
+	assert(srv.GameManager.getPhase() == "RESULTS", "no RESULTS")
+	srv.advance(0.5)
+	return srv, calls
+end
+
 R.describe("ProgressionManager pays every racer at RESULTS", function()
 	R.it("finishers by place, DNFs the play reward; leaderstats and RewardGranted follow", function()
-		local srv = Server.boot({
-			players = 3,
-			scripts = {
-				"ServerScriptService.MapBuilders.ForestMapBuilder",
-				"ServerScriptService.GameBootstrap",
-				"ServerScriptService.RacingManager",
-				"ServerScriptService.ProgressionManager",
-			},
-			harness = { harness = "lune", biome = "FOREST", players = 3, lobbyDelay = 0,
-				durations = { FARMING = 0.1, CRAFTING = 0.1, RESULTS = 30 } },
-		})
-		local e = srv.env
-		local VehicleBuilder = e.requirePath("ServerScriptService.Modules.VehicleBuilder")
-		local VehicleStats = e.requirePath("ReplicatedStorage.Shared.VehicleStats")
-		local Consts = e.requirePath("ReplicatedStorage.Shared.Constants")
-		local stats = VehicleStats.calculate(nil, nil, nil, "FOREST")
-		local cars = {}
-		for i, p in ipairs(srv.players) do
-			local model = VehicleBuilder.build(stats, "FOREST", CFrame.new(i * 7, 2, 590), {})
-			model.Parent = e.workspace
-			srv.SessionManager.setVehicle(p, model, stats)
-			cars[i] = model
-		end
-		srv.advance(0.5)
-		R.expect(srv.GameManager.getPhase()).toBe("RACING")
-		srv.advance(Consts.RACE_COUNTDOWN + 0.5)
-		local function tagged(tag) return srv.mock.CollectionService:GetTagged(tag)[1] end
-		for _, i in ipairs({ 2, 1 }) do
-			for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine" }) do
-				tagged(tag).Touched:Fire(cars[i].PrimaryPart)
-				srv.advance(0.1)
-			end
-		end
-		srv.advance(Consts.FINISH_GRACE + 1)
-		R.expect(srv.GameManager.getPhase()).toBe("RESULTS")
-		srv.advance(0.5)
-
+		local srv = threeCarRace()
 		local rewards = srv.Telemetry.events("reward")
 		R.expect(#rewards).toBe(3)
 		local byUser = {}
@@ -185,6 +198,7 @@ R.describe("ProgressionManager pays every racer at RESULTS", function()
 		R.expect(dnf.place).toBe(nil)
 		R.expect(first.xp > second.xp and second.xp > dnf.xp).toBe(true)
 		R.expect(first.daily).toBe(C.DAILY_COINS)   -- first round today
+		R.expect(first.returnDay).toBe(0)
 		R.expect(first.saved).toBe(false)           -- harness: memory only
 
 		local ls = srv.players[2]:FindFirstChild("leaderstats")
@@ -192,5 +206,49 @@ R.describe("ProgressionManager pays every racer at RESULTS", function()
 		local calls = rawget(srv.RemoteEvents.RewardGranted, "_calls")
 		R.expect(#calls).toBe(3)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)
+
+R.describe("AnalyticsManager (Roblox AnalyticsService events)", function()
+	local function steps(calls, method, player, nameAt)
+		local out = {}
+		for _, c in ipairs(calls) do
+			if c.method == method and c.args[1] == player then table.insert(out, c.args[nameAt]) end
+		end
+		return out
+	end
+
+	R.it("new players walk the onboarding funnel in order; a DNF stops before 'Finished a race'", function()
+		local srv, calls = threeCarRace()
+		local winner, dnf = srv.players[2], srv.players[3]
+		R.expect(table.concat(steps(calls, "LogOnboardingFunnelStepEvent", winner, 3), ", "))
+			.toBe("Joined, Raced, Finished a race, Got a reward")   -- cars are given here: no pickup, no craft
+		R.expect(table.concat(steps(calls, "LogOnboardingFunnelStepEvent", dnf, 3), ", "))
+			.toBe("Joined, Raced, Got a reward")
+	end)
+
+	R.it("every round logs the Round funnel, coins earned (gameplay and daily) and the return day", function()
+		local srv, calls = threeCarRace()
+		local winner = srv.players[2]
+		R.expect(table.concat(steps(calls, "LogFunnelStepEvent", winner, 5), ", "))
+			.toBe("Farming, Crafting, Racing, Finished, Results")
+		local earned = {}
+		for _, c in ipairs(calls) do
+			if c.method == "LogEconomyEvent" and c.args[1] == winner then
+				table.insert(earned, string.format("%s %d → %d", c.args[6], c.args[4], c.args[5]))
+			end
+		end
+		local r = srv.Telemetry.events("reward")
+		local w
+		for _, e in ipairs(r) do if e.userId == winner.UserId then w = e end end
+		R.expect(table.concat(earned, "; ")).toBe(string.format("Gameplay %d → %d; TimedReward %d → %d",
+			w.coins, w.coins, w.daily, w.coins + w.daily))
+		local custom = steps(calls, "LogCustomEvent", winner, 2)
+		R.expect(table.concat(custom, ", ")).toBe("ReturnDay, RoundPlace")
+	end)
+
+	R.it("is off in harness and Studio sessions (no sink: nothing is sent)", function()
+		local A = Loader.boot().requirePath("ServerScriptService.Modules.Analytics")
+		R.expect(A.enabled).toBe(false)
 	end)
 end)

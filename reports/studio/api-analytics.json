@@ -1,0 +1,56 @@
+{
+ "checks": [],
+ "commit": "81edf99",
+ "dirty": true,
+ "kind": "probe",
+ "logErrors": [
+  "2026-10-23T12:58:42.953Z,0.953839,3a460c0,6,Error [FLog::Error] Redundant Flag ID: SolidModelingOnMeshes",
+  "2026-10-23T12:58:42.953Z,0.953842,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIGradients",
+  "2026-10-23T12:58:42.953Z,0.953845,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIShadows",
+  "2026-10-23T12:58:42.953Z,0.953848,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-23T12:58:43.088Z,1.088700,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T12:58:43.125Z,1.125426,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-23T12:58:44.122Z,2.122134,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T12:58:44.928Z,2.928891,6d60b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"47382026-d899-431c-b359-8f82ee1d3ec1\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-23T12:58:54.110Z,12.110240,6d60b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"47382026-d899-431c-b359-8f82ee1d3ec1\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "members": [
+   "AnalyticsService.LogOnboardingFunnelStepEvent",
+   "AnalyticsService.LogFunnelStepEvent",
+   "AnalyticsService.LogEconomyEvent",
+   "AnalyticsService.LogProgressionCompleteEvent",
+   "AnalyticsService.LogCustomEvent",
+   "Enum.AnalyticsEconomyFlowType.Source",
+   "Enum.AnalyticsEconomyFlowType.Sink",
+   "Enum.AnalyticsEconomyTransactionType.Gameplay",
+   "Enum.AnalyticsEconomyTransactionType.TimedReward",
+   "Enum.AnalyticsEconomyTransactionType.Shop",
+   "DataStoreService.GetDataStore",
+   "AssetService.SearchAudio"
+  ]
+ },
+ "ranAt": "2026-10-23T21:59:02+0900",
+ "report": {
+  "kind": "probe",
+  "members": {
+   "AnalyticsService.LogCustomEvent": true,
+   "AnalyticsService.LogEconomyEvent": true,
+   "AnalyticsService.LogFunnelStepEvent": true,
+   "AnalyticsService.LogOnboardingFunnelStepEvent": true,
+   "AnalyticsService.LogProgressionCompleteEvent": true,
+   "AssetService.SearchAudio": true,
+   "DataStoreService.GetDataStore": true,
+   "Enum.AnalyticsEconomyFlowType.Sink": true,
+   "Enum.AnalyticsEconomyFlowType.Source": true,
+   "Enum.AnalyticsEconomyTransactionType.Gameplay": true,
+   "Enum.AnalyticsEconomyTransactionType.Shop": true,
+   "Enum.AnalyticsEconomyTransactionType.TimedReward": true
+  }
+ },
+ "scenario": "api-analytics",
+ "studioExit": 0,
+ "summary": "probeApi: 12 members, 0 missing",
+ "wallSeconds": 20.5
+}

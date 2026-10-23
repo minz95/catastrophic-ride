@@ -168,6 +168,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   leaderstats). A failed load is never saved; bots, harness sessions and
   Studio without API access stay in memory. Add record fields in
   `Progression.newRecord` (migrate fills them in for old saves).
+- Analytics (live servers only): `AnalyticsManager` turns Telemetry events
+  (`Telemetry.onRecord`) into Roblox AnalyticsService events through
+  `Modules/Analytics` (onboarding funnel, "Round" funnel, coins, levels,
+  `ReturnDay`). Retention itself is on the Creator Dashboard. A new step:
+  record a Telemetry event, map it there; check engine names with
+  `python3 tools/studio/sim.py run api-analytics`.
 - Player-facing text is English.
 - A ScreenGui with `ResetOnSpawn = false` must destroy its old copy at the
   top of its script (the script runs again on every respawn).

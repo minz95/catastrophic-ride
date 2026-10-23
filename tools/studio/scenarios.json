@@ -1097,6 +1097,31 @@
       "checks": {
         "allLoad": true
       }
+    },
+    {
+      "name": "api-analytics",
+      "kind": "probe",
+      "tags": [
+        "full"
+      ],
+      "_why": "the AnalyticsService methods and enums Modules/Analytics calls exist in this Studio (a wrong name would log nothing, silently)",
+      "opts": {
+        "members": [
+          "AnalyticsService.LogOnboardingFunnelStepEvent",
+          "AnalyticsService.LogFunnelStepEvent",
+          "AnalyticsService.LogEconomyEvent",
+          "AnalyticsService.LogProgressionCompleteEvent",
+          "AnalyticsService.LogCustomEvent",
+          "Enum.AnalyticsEconomyFlowType.Source",
+          "Enum.AnalyticsEconomyFlowType.Sink",
+          "Enum.AnalyticsEconomyTransactionType.Gameplay",
+          "Enum.AnalyticsEconomyTransactionType.TimedReward",
+          "Enum.AnalyticsEconomyTransactionType.Shop",
+          "DataStoreService.GetDataStore",
+          "AssetService.SearchAudio"
+        ]
+      },
+      "checks": {}
     }
   ]
 }

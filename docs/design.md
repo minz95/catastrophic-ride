@@ -241,6 +241,10 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-23 — Where players drop off.** Retention numbers come from the
+  Creator Dashboard; the game adds funnels (first session and every round),
+  coins, levels and the day a player came back on, so a low D1 can be
+  traced to a step (e.g. many join but few finish their first race).
 - **2026-10-23 — Saved levels and coins, a daily streak.** Before launch
   there was no reason to come back: nothing was saved. Every round now pays
   XP and coins by place (a DNF still earns the play reward, so a last place
