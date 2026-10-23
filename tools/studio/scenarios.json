@@ -1222,6 +1222,93 @@
           "kicks": 1
         }
       }
+    },
+    {
+      "name": "bots-forest",
+      "kind": "match",
+      "tags": [
+        "bots",
+        "full"
+      ],
+      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 4,
+        "durations": {
+          "FARMING": 20,
+          "CRAFTING": 8,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500
+      },
+      "checks": {
+        "finishRate": 1.0,
+        "bots": {
+          "spawned": 3,
+          "finished": 2
+        }
+      }
+    },
+    {
+      "name": "bots-ocean",
+      "kind": "match",
+      "tags": [
+        "bots",
+        "full"
+      ],
+      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 4,
+        "durations": {
+          "FARMING": 20,
+          "CRAFTING": 8,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500
+      },
+      "checks": {
+        "finishRate": 1.0,
+        "bots": {
+          "spawned": 3,
+          "finished": 2
+        }
+      }
+    },
+    {
+      "name": "bots-sky",
+      "kind": "match",
+      "tags": [
+        "bots",
+        "full"
+      ],
+      "_why": "a lone player on a live-style server: server bots (Modules/RaceBots) fill the grid to 4 and race the whole track with real physics",
+      "opts": {
+        "biome": "SKY",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 4,
+        "durations": {
+          "FARMING": 20,
+          "CRAFTING": 8,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500
+      },
+      "checks": {
+        "finishRate": 1.0,
+        "bots": {
+          "spawned": 3,
+          "finished": 2
+        }
+      }
     }
   ]
 }

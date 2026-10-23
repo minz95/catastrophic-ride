@@ -241,6 +241,11 @@ spot with its track section; the RESULTS report lists them per section.
   (no Motor6D), so every punch, guard, grab and swat pose did nothing while
   the harness check ("a character exists") passed. Poses now rotate the
   joint's parent-side attachment on those rigs; the check measures the arm.
+- **2026-10-24 — Bots fill the grid.** A lone player used to race alone.
+  With fewer than 4 racers, server-driven bots (mostly average drivers, one
+  expert, random builds) take the empty slots, race with the same driver
+  and rules, and appear in the results; they earn nothing but do take
+  places. They skip FARMING and abilities ignore them for now.
 - **2026-10-24 — Show-off items.** Special rides (Flame Rider, Neon Phantom,
   Rainbow Comet, Golden Legend, 1000–3000 coins, level 4–10) turn the whole
   car / boat / plane into a show that pours particles while driving; still

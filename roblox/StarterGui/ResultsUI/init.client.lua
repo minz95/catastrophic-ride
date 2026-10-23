@@ -226,7 +226,7 @@ local function _populateResults(finishOrder)
 
 	for rank, entry in ipairs(finishOrder) do
 		local player = Players:GetPlayerByUserId(entry.userId)
-		local name   = player and player.Name or ("User" .. entry.userId)
+		local name   = player and player.Name or (entry.bot and ("🤖 " .. tostring(entry.name))) or entry.name or ("User" .. entry.userId)
 		local timeStr = _formatTime(entry.time)
 
 		-- Podium (top 3)

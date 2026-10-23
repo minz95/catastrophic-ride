@@ -443,6 +443,14 @@ Constants.PROGRESSION = {
 	AUTOSAVE_SECONDS = 120,
 }
 
+-- ─── Race bots (Modules/RaceBots): live servers fill the grid to FILL_TO ─────
+Constants.BOTS = {
+	FILL_TO = 4,
+	NAMES = { "Rusty", "Duckie", "Turbo Tom", "Bubbles", "Sparky", "Noodle", "Zippy", "Biscuit" },
+	-- mostly average drivers so a new player can beat them; one expert to chase
+	PROFILES = { "average", "novice", "expert", "average", "novice", "average", "average", "novice" },
+}
+
 -- ─── Gadgets (shop, FARMING; Shared/Cosmetics "gadget") ───────────────────────
 -- Smoke Bomb: USES per round; you vanish in smoke for HIDE s (no punches or
 -- steals reach you, and a grab on you ends with nothing taken); the cloud

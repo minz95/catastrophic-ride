@@ -1,0 +1,9117 @@
+{
+ "checks": [],
+ "commit": "4f74f56",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-23T15:35:09.825Z,121.825668,6d393000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-23T15:36:04.048Z,176.048996,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-23T15:36:04.049Z,176.049011,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-23T15:36:04.049Z,176.049026,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-23T15:36:04.049Z,176.049042,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-23T15:36:04.068Z,176.068375,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T15:36:04.068Z,176.068420,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T15:36:04.143Z,176.143890,6d393000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e7e104d7-5689-40af-9070-0b00b62f70f1\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-23T15:36:04.212Z,176.212570,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-23T15:36:04.212Z,176.212677,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "SKY",
+  "durations": {
+   "CRAFTING": 8,
+   "FARMING": 20,
+   "RACING": 240,
+   "RESULTS": 3
+  },
+  "fillBots": 4,
+  "maxSeconds": 500,
+  "players": 1,
+  "rounds": 1
+ },
+ "ranAt": "2026-10-24T00:36:05+0900",
+ "report": {
+  "args": {
+   "biome": "SKY",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "sweaty",
+     "casual"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 8,
+    "FARMING": 20,
+    "RACING": 240,
+    "RESULTS": 3
+   },
+   "fillBots": 4,
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 500,
+   "players": 1,
+   "rounds": 1
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "rounds complete",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "SKY",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Bathtub",
+       "TAIL": "Barrel"
+      },
+      "stats": {
+       "acceleration": 16.276908267082703,
+       "boostDuration": 1.7000000000000002,
+       "floatability": 1.1452092081459229,
+       "flyability": 14.383163764916764,
+       "speed": 26.100811604786646,
+       "stability": 35.92969411296078
+      }
+     }
+    },
+    "craftT0": 26.43,
+    "durationSeconds": 152.37754579167813,
+    "farm": {
+     "attempts": [],
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 6,
+       "ledger": 6,
+       "pickups": 6,
+       "robbed": 0,
+       "stolen": 0
+      }
+     },
+     "punches": []
+    },
+    "finishOrder": [
+     {
+      "name": "Player1",
+      "place": 1,
+      "time": 86.31995964050293
+     }
+    ],
+    "inventories": {
+     "-1": [
+      "Bathtub",
+      "Barrel",
+      "Magnifying Glass",
+      "Skateboard",
+      "Magnifying Glass",
+      "Shopping Cart"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 1.7000000000000002,
+      "driver": "expert",
+      "farm": "sweaty",
+      "finishTime": 86.31995964050293,
+      "name": "Player1",
+      "progress": 8014.373226407767,
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Bathtub",
+       "TAIL": "Barrel"
+      },
+      "speed": 26.100811604786646,
+      "userId": -1
+     }
+    ],
+    "raceStartedAt": 30.50809966668021,
+    "round": 1,
+    "startedAt": 9.345378750003874,
+    "t0": 6.413
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0\n  round 1 (SKY): 1 finished of 1\n    steal attempts: none\n    -1: picked 6, contests 0/0, stole 0, robbed 0, defences 0, items 6 | craft submitted, rejected 0\n    #1 Player1 86.3s\n  events: ability=20 ability_probe=42 bot_craft=1 bot_fx=18 bot_hud=11 bot_joined=1 bot_ready=1 bot_respawn=5 bot_screen=3 checkpoint=2 craft=1 drop_placed=8 finish=4 harness_crafting=1 harness_round=1 hazard=11 item_pickup=6 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=443 race_sample=258 race_start=1 reward=1 server_perf=79 speed_effect=48 vehicle_spawn=1",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 49.2,
+     "kind": "server_perf",
+     "memMb": 2107,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.011
+    },
+    {
+     "driver": "expert",
+     "farm": "sweaty",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 3.147,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "sweaty"
+     },
+     "kind": "bot_ready",
+     "t": 3.411,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 57.9,
+     "kind": "server_perf",
+     "memMb": 2112,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 284.4,
+     "t": 4.011
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2143,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10.7,
+     "t": 6.011
+    },
+    {
+     "biome": "SKY",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 6.344
+    },
+    {
+     "count": 18,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 6.352,
+     "wave": 0
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 6.413
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:19"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.99985408782959
+     },
+     "kind": "bot_hud",
+     "t": 7.36,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58,
+     "kind": "server_perf",
+     "memMb": 2200,
+     "phase": "FARMING",
+     "physicsFps": 59.5,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.8,
+     "t": 8.027
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:17"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.99146795272827
+     },
+     "kind": "bot_hud",
+     "t": 9.361,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2201,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23,
+     "t": 10.028
+    },
+    {
+     "inventory": 1,
+     "item": "Bathtub",
+     "itemId": "18",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 10.41,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.978818893432617
+     },
+     "kind": "bot_hud",
+     "t": 11.377,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Barrel",
+     "itemId": "12",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 11.479,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2203,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.9,
+     "t": 12.043
+    },
+    {
+     "count": 2,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 13.363,
+     "wave": 1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.973993062973022
+     },
+     "kind": "bot_hud",
+     "t": 13.377,
+     "userId": -1
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 13.41,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.4,
+     "kind": "server_perf",
+     "memMb": 2188,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.6,
+     "t": 14.044
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.964081048965454
+     },
+     "kind": "bot_hud",
+     "t": 15.394,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2189,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23,
+     "t": 16.045
+    },
+    {
+     "inventory": 3,
+     "item": "Magnifying Glass",
+     "itemId": "1",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 16.177,
+     "userId": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Skateboard",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 16.911,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.947649002075195
+     },
+     "kind": "bot_hud",
+     "t": 17.41,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Magnifying Glass",
+     "itemId": "13",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 17.76,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2164,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.1,
+     "t": 18.06
+    },
+    {
+     "count": 2,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 19.362,
+     "wave": 2
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 19.412,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.950028896331787
+     },
+     "kind": "bot_hud",
+     "t": 19.412,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Shopping Cart",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 20.01,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2165,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.3,
+     "t": 20.062
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.9338788986206055
+     },
+     "kind": "bot_hud",
+     "t": 21.427,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2166,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.6,
+     "t": 22.077
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.917647123336792
+     },
+     "kind": "bot_hud",
+     "t": 23.428,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2167,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.6,
+     "t": 24.094
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.9135088920593262
+     },
+     "kind": "bot_hud",
+     "t": 25.443,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2168,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.7,
+     "t": 26.11
+    },
+    {
+     "biome": "SKY",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 26.427
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 26.43
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:06"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 6.981173038482666
+     },
+     "kind": "bot_hud",
+     "t": 27.461,
+     "userId": -1
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Magnifying Glass",
+      "HEAD": "Bathtub",
+      "TAIL": "Barrel"
+     },
+     "stats": {
+      "acceleration": 16.276908267082703,
+      "boostDuration": 1.7000000000000002,
+      "floatability": 1.1452092081459229,
+      "flyability": 14.383163764916764,
+      "speed": 26.100811604786646,
+      "stability": 35.92969411296078
+     },
+     "t": 27.528,
+     "userId": -1
+    },
+    {
+     "biome": "SKY",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 27.528
+    },
+    {
+     "id": -100001,
+     "kind": "race_bot",
+     "maxSpeed": 85.69499969482422,
+     "name": "Rusty",
+     "profile": "average",
+     "slots": {
+      "BODY": "Microwave",
+      "ENGINE": "Flower",
+      "HEAD": "Backpack",
+      "MOBILITY": "Drill",
+      "SPECIAL": "Balloon Bunch",
+      "TAIL": "Alarm Clock"
+     },
+     "t": 27.555
+    },
+    {
+     "id": -100002,
+     "kind": "race_bot",
+     "maxSpeed": 85.69499969482422,
+     "name": "Duckie",
+     "profile": "novice",
+     "slots": {
+      "BODY": "Backpack",
+      "ENGINE": "Propeller Hat",
+      "HEAD": "Gas Can",
+      "MOBILITY": "Magnet",
+      "SPECIAL": "Magnet",
+      "TAIL": "Toilet Paper"
+     },
+     "t": 27.557
+    },
+    {
+     "id": -100003,
+     "kind": "race_bot",
+     "maxSpeed": 86.26595306396484,
+     "name": "Turbo Tom",
+     "profile": "expert",
+     "slots": {
+      "BODY": "Backpack",
+      "ENGINE": "Rocket",
+      "HEAD": "Balloon Bunch",
+      "MOBILITY": "Gas Can",
+      "SPECIAL": "Soda Bottle",
+      "TAIL": "Pizza"
+     },
+     "t": 27.558
+    },
+    {
+     "biome": "SKY",
+     "kind": "race_start",
+     "length": 8161.019222501517,
+     "racers": [
+      -1
+     ],
+     "round": 1,
+     "t": 27.575,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 27.575,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "data": {
+      "inventory": [
+       "Bathtub",
+       "Barrel",
+       "Magnifying Glass",
+       "Skateboard",
+       "Magnifying Glass",
+       "Shopping Cart"
+      ],
+      "result": "ok",
+      "slots": {
+       "BODY": "Skateboard",
+       "ENGINE": "Magnifying Glass",
+       "HEAD": "Bathtub",
+       "TAIL": "Barrel"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 27.744,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 84,
+      "z": 1490
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 87.17423248291016,
+     "seated": true,
+     "t": 27.745,
+     "torque": 81.3845443725586,
+     "turnSpeed": 1.345594048500061,
+     "userId": -1
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 27.778,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 28.077,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "heartbeatHz": 59,
+     "kind": "server_perf",
+     "memMb": 2191,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.9,
+     "t": 28.126
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 28.593,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 29.095,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 29.611,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 30.128,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2188,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 1.9,
+     "t": 30.128
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 30.294,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 30.642,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 31.143,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "kind": "race_go",
+     "released": 4,
+     "t": 31.561
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 10,
+     "t": 31.562,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 10,
+     "t": 31.562,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 10,
+     "t": 31.562,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 11,
+     "t": 31.644,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 11.716260024961374,
+     "speed": 0,
+     "t": 31.644,
+     "userId": -1,
+     "x": -14,
+     "y": 84,
+     "z": 1490
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 32.027,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 32.061,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2189,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 4.9,
+     "t": 32.144
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 12.930487262807386,
+     "speed": 9.5,
+     "t": 32.161,
+     "userId": -1,
+     "x": -13.7,
+     "y": 84,
+     "z": 1488.9
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 19,
+     "t": 32.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 18,
+     "t": 32.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 25,
+     "t": 32.543,
+     "userId": -100003
+    },
+    {
+     "afterGo": 1.1242561340332031,
+     "kind": "race_launch",
+     "t": 32.677,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 23,
+     "t": 32.677,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 23.714848897738975,
+     "speed": 33.4,
+     "t": 32.677,
+     "userId": -1,
+     "x": -7.4,
+     "y": 84,
+     "z": 1479
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 32.795,
+     "userId": -1,
+     "x": -9,
+     "y": 80,
+     "z": 1481
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 32.795,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 32.843,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 44.70069713347478,
+     "speed": 54.2,
+     "t": 33.177,
+     "userId": -1,
+     "x": -2.3,
+     "y": 84,
+     "z": 1459
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 33.228,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 2.4,
+     "vMax": 56.3,
+     "vMin": 2.4,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 130.8,
+     "maxSpeedMid": 130.8,
+     "t": 33.343,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 37.7,
+     "vMax": 61.4,
+     "vMin": 37.7,
+     "window": 0.5,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 60,
+     "t": 33.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 64,
+     "t": 33.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 86,
+     "t": 33.543,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 80,
+     "t": 33.678,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 80.50097368487168,
+     "speed": 77.7,
+     "t": 33.678,
+     "userId": -1,
+     "x": -1.2,
+     "y": 84,
+     "z": 1423.7
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 33.744,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2191,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.5,
+     "t": 34.144
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 123.71620962489105,
+     "speed": 87.3,
+     "t": 34.178,
+     "userId": -1,
+     "x": -1.6,
+     "y": 84,
+     "z": 1378.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 134,
+     "t": 34.545,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 150,
+     "t": 34.545,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 174,
+     "t": 34.545,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 170,
+     "t": 34.693,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 170.65134709816533,
+     "speed": 88.2,
+     "t": 34.693,
+     "userId": -1,
+     "x": -21.1,
+     "y": 84,
+     "z": 1337.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 198.07123866279244,
+     "speed": 49.1,
+     "t": 35.194,
+     "userId": -1,
+     "x": -33.7,
+     "y": 84,
+     "z": 1308.8
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 35.31,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 35.36,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 210,
+     "t": 35.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 197,
+     "t": 35.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 260,
+     "t": 35.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 221,
+     "t": 35.694,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 221.68412873555633,
+     "speed": 71.3,
+     "t": 35.694,
+     "userId": -1,
+     "x": -63.7,
+     "y": 84,
+     "z": 1304.8
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2193,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.8,
+     "t": 36.16
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 264.42805504105064,
+     "speed": 93.8,
+     "t": 36.21,
+     "userId": -1,
+     "x": -101.3,
+     "y": 84,
+     "z": 1286.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 297,
+     "t": 36.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 238,
+     "t": 36.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 348,
+     "t": 36.544,
+     "userId": -100003
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 100.3,
+     "t": 36.61,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 53.2,
+     "vMax": 100.3,
+     "vMin": 53.2,
+     "window": 1.2,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 315,
+     "t": 36.728,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 315.18317286661295,
+     "speed": 100.2,
+     "t": 36.728,
+     "userId": -1,
+     "x": -150.4,
+     "y": 84,
+     "z": 1279.4
+    },
+    {
+     "after": 150.37554931640625,
+     "before": 100.2503662109375,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 37.176,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 37.21,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 150.37554931640625,
+     "progress": 365.3933068025536,
+     "speed": 100.2,
+     "t": 37.244,
+     "userId": -1,
+     "x": -201.2,
+     "y": 84,
+     "z": 1276.9
+    },
+    {
+     "angle": 127,
+     "kind": "hazard",
+     "t": 37.543,
+     "type": "gustZone"
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 382,
+     "t": 37.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 286,
+     "t": 37.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 435,
+     "t": 37.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 418,
+     "t": 37.744,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 418.58290601190777,
+     "speed": 112.7,
+     "t": 37.744,
+     "userId": -1,
+     "x": -254.8,
+     "y": 84,
+     "z": 1275.2
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2196,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.1,
+     "t": 38.161
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 471.68453799638405,
+     "speed": 110.5,
+     "t": 38.261,
+     "userId": -1,
+     "x": -307.1,
+     "y": 84,
+     "z": 1270.8
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 100.3,
+     "maxSpeedMid": 130.8,
+     "t": 38.376,
+     "turn0": 2.2,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 100.3,
+     "vMax": 116.3,
+     "vMin": 91.6,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 468,
+     "t": 38.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 300,
+     "t": 38.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 521,
+     "t": 38.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 534,
+     "t": 38.778,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 534.237233986921,
+     "speed": 130.7,
+     "t": 38.778,
+     "userId": -1,
+     "x": -369.8,
+     "y": 84,
+     "z": 1272.1
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 38.877,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 600.6264500244331,
+     "speed": 110.1,
+     "t": 39.294,
+     "userId": -1,
+     "x": -434.1,
+     "y": 84,
+     "z": 1267.6
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 554,
+     "t": 39.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 326,
+     "t": 39.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 630,
+     "t": 39.543,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 650,
+     "t": 39.794,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 650.1753120878194,
+     "speed": 87.1,
+     "t": 39.794,
+     "userId": -1,
+     "x": -478.4,
+     "y": 84,
+     "z": 1253.7
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2198,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.7,
+     "t": 40.176
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 695.8149698258915,
+     "speed": 87.1,
+     "t": 40.294,
+     "userId": -1,
+     "x": -519.1,
+     "y": 84,
+     "z": 1237.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 641,
+     "t": 40.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 396,
+     "t": 40.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 717,
+     "t": 40.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 741,
+     "t": 40.811,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 741.5721945070136,
+     "speed": 87.1,
+     "t": 40.811,
+     "userId": -1,
+     "x": -560.3,
+     "y": 84,
+     "z": 1219.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 785.2430204664907,
+     "speed": 87.1,
+     "t": 41.311,
+     "userId": -1,
+     "x": -600.2,
+     "y": 84,
+     "z": 1202.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 729,
+     "t": 41.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 485,
+     "t": 41.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 793,
+     "t": 41.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 829,
+     "t": 41.826,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 829.099218485396,
+     "speed": 87.1,
+     "t": 41.826,
+     "userId": -1,
+     "x": -641.4,
+     "y": 84,
+     "z": 1186.1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2200,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.3,
+     "t": 42.177
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 42.226,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 42.259,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 873.0307126706373,
+     "speed": 87.1,
+     "t": 42.343,
+     "userId": -1,
+     "x": -683.4,
+     "y": 84,
+     "z": 1169.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 813,
+     "t": 42.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 570,
+     "t": 42.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 861,
+     "t": 42.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 918,
+     "t": 42.844,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 918.5018153076562,
+     "speed": 106.4,
+     "t": 42.844,
+     "userId": -1,
+     "x": -727.7,
+     "y": 84,
+     "z": 1151.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 979.4057405059275,
+     "speed": 128.2,
+     "t": 43.344,
+     "userId": -1,
+     "x": -769.9,
+     "y": 84,
+     "z": 1111.4
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 43.411,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.7,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 899,
+     "t": 43.545,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 614,
+     "t": 43.545,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 950,
+     "t": 43.545,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 1044,
+     "t": 43.859,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1044.612701536421,
+     "speed": 130.7,
+     "t": 43.859,
+     "userId": -1,
+     "x": -790.6,
+     "y": 84,
+     "z": 1047.4
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 43.926,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2199,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.4,
+     "t": 44.193
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1106.4338463984213,
+     "speed": 106.5,
+     "t": 44.36,
+     "userId": -1,
+     "x": -813.5,
+     "y": 84,
+     "z": 989.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 984,
+     "t": 44.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 625,
+     "t": 44.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1036,
+     "t": 44.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 1153,
+     "t": 44.876,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1153.225426768839,
+     "speed": 87.1,
+     "t": 44.876,
+     "userId": -1,
+     "x": -830.8,
+     "y": 84,
+     "z": 946.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1198.6118233379104,
+     "speed": 87.1,
+     "t": 45.393,
+     "userId": -1,
+     "x": -849.3,
+     "y": 84,
+     "z": 904.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1071,
+     "t": 45.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 677,
+     "t": 45.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1124,
+     "t": 45.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 1242,
+     "t": 45.893,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1242.3655680186503,
+     "speed": 87.1,
+     "t": 45.893,
+     "userId": -1,
+     "x": -865.9,
+     "y": 84,
+     "z": 864.3
+    },
+    {
+     "index": 1,
+     "kind": "checkpoint",
+     "t": 46.11,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2201,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.5,
+     "t": 46.193
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1287.7151394810576,
+     "speed": 87.1,
+     "t": 46.393,
+     "userId": -1,
+     "x": -874.8,
+     "y": 84,
+     "z": 822.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1159,
+     "t": 46.561,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 762,
+     "t": 46.561,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1210,
+     "t": 46.561,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 1333,
+     "t": 46.91,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1333.798886598239,
+     "speed": 87.1,
+     "t": 46.91,
+     "userId": -1,
+     "x": -859.2,
+     "y": 84,
+     "z": 779.8
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 47.377,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 47.41,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1377.2436931058332,
+     "speed": 87.1,
+     "t": 47.411,
+     "userId": -1,
+     "x": -842.3,
+     "y": 84,
+     "z": 739.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1244,
+     "t": 47.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 853,
+     "t": 47.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1298,
+     "t": 47.543,
+     "userId": -100003
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 47.877,
+     "userId": -1,
+     "x": -829,
+     "y": 80,
+     "z": 707
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 47.877,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 47.91,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1425,
+     "t": 47.926,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1425.111093080892,
+     "speed": 102.6,
+     "t": 47.926,
+     "userId": -1,
+     "x": -824,
+     "y": 84,
+     "z": 695.6
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2203,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10.2,
+     "t": 48.209
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1484.8453626322178,
+     "speed": 125.9,
+     "t": 48.444,
+     "userId": -1,
+     "x": -801.2,
+     "y": 84,
+     "z": 640.4
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 130.8,
+     "maxSpeedMid": 130.8,
+     "t": 48.444,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 99.9,
+     "vMax": 126,
+     "vMin": 99.9,
+     "window": 0.5,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1329,
+     "t": 48.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 955,
+     "t": 48.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1384,
+     "t": 48.544,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 48.577,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.8,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 1549,
+     "t": 48.944,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1549.699493500899,
+     "speed": 130.7,
+     "t": 48.944,
+     "userId": -1,
+     "x": -776.4,
+     "y": 84,
+     "z": 580.5
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 49.093,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1616.726346237735,
+     "speed": 113.4,
+     "t": 49.46,
+     "userId": -1,
+     "x": -747.1,
+     "y": 84,
+     "z": 522.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1417,
+     "t": 49.561,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 980,
+     "t": 49.561,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1473,
+     "t": 49.561,
+     "userId": -100003
+    },
+    {
+     "angle": 122,
+     "kind": "hazard",
+     "t": 49.643,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_progress",
+     "s": 1662,
+     "t": 49.961,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1662.7787685031885,
+     "speed": 87.1,
+     "t": 49.961,
+     "userId": -1,
+     "x": -707.6,
+     "y": 84,
+     "z": 498.3
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2204,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8,
+     "t": 50.226
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 50.394,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 50.425,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 1705.9746645899816,
+     "speed": 87.1,
+     "t": 50.476,
+     "userId": -1,
+     "x": -664.7,
+     "y": 84,
+     "z": 483.1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1505,
+     "t": 50.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 991,
+     "t": 50.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1560,
+     "t": 50.543,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 1753,
+     "t": 50.994,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 1753.5692373017996,
+     "speed": 100.2,
+     "t": 50.994,
+     "userId": -1,
+     "x": -619.7,
+     "y": 84,
+     "z": 465
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 1805.486253803023,
+     "speed": 100.2,
+     "t": 51.509,
+     "userId": -1,
+     "x": -572.1,
+     "y": 84,
+     "z": 444.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1596,
+     "t": 51.561,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1031,
+     "t": 51.561,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1652,
+     "t": 51.561,
+     "userId": -100003
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 100.3,
+     "t": 51.71,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 100.3,
+     "vMin": 87.2,
+     "window": 1.2,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 1855,
+     "t": 52.01,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 1855.757301081074,
+     "speed": 100.2,
+     "t": 52.01,
+     "userId": -1,
+     "x": -526,
+     "y": 84,
+     "z": 426.3
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2205,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.5,
+     "t": 52.227
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 1909.4780366525374,
+     "speed": 100.2,
+     "t": 52.527,
+     "userId": -1,
+     "x": -478.3,
+     "y": 83.9,
+     "z": 405.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1684,
+     "t": 52.561,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1099,
+     "t": 52.561,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1741,
+     "t": 52.561,
+     "userId": -100003
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 52.676,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 52.725,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 1959,
+     "t": 53.043,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 1959.7815555333493,
+     "speed": 94,
+     "t": 53.043,
+     "userId": -1,
+     "x": -433.1,
+     "y": 83.9,
+     "z": 392.7
+    },
+    {
+     "kind": "race_progress",
+     "s": 2018,
+     "t": 53.559,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 2018.3507705286547,
+     "speed": 117.9,
+     "t": 53.559,
+     "userId": -1,
+     "x": -377.6,
+     "y": 83.9,
+     "z": 391.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1773,
+     "t": 53.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1187,
+     "t": 53.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1830,
+     "t": 53.559,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 53.844,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 95,
+     "vMax": 130.5,
+     "vMin": 87.4,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 2083.56381726231,
+     "speed": 130.7,
+     "t": 54.059,
+     "userId": -1,
+     "x": -313.9,
+     "y": 83.9,
+     "z": 393
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2203,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.7,
+     "t": 54.242
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 54.377,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1863,
+     "t": 54.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1272,
+     "t": 54.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1918,
+     "t": 54.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2151,
+     "t": 54.577,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2151.247281447713,
+     "speed": 129.7,
+     "t": 54.577,
+     "userId": -1,
+     "x": -246.6,
+     "y": 83.9,
+     "z": 396.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2202.9813016624216,
+     "speed": 87.7,
+     "t": 55.077,
+     "userId": -1,
+     "x": -193.7,
+     "y": 83.9,
+     "z": 396.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1953,
+     "t": 55.543,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1352,
+     "t": 55.543,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2009,
+     "t": 55.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2246,
+     "t": 55.592,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2246.7766326683177,
+     "speed": 87.1,
+     "t": 55.592,
+     "userId": -1,
+     "x": -148.7,
+     "y": 83.9,
+     "z": 398.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2290.4713543705598,
+     "speed": 87.1,
+     "t": 56.11,
+     "userId": -1,
+     "x": -104.4,
+     "y": 83.9,
+     "z": 403.5
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2203,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.4,
+     "t": 56.244
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2046,
+     "t": 56.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1445,
+     "t": 56.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2102,
+     "t": 56.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2334,
+     "t": 56.626,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2334.808546736437,
+     "speed": 87.1,
+     "t": 56.626,
+     "userId": -1,
+     "x": -69.5,
+     "y": 83.9,
+     "z": 431
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2377.8812766236397,
+     "speed": 87.1,
+     "t": 57.142,
+     "userId": -1,
+     "x": -39.3,
+     "y": 83.9,
+     "z": 464.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2136,
+     "t": 57.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1531,
+     "t": 57.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2191,
+     "t": 57.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2421,
+     "t": 57.659,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2421.902834194382,
+     "speed": 87.1,
+     "t": 57.659,
+     "userId": -1,
+     "x": -8.5,
+     "y": 83.9,
+     "z": 497.2
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2465.421728284192,
+     "speed": 87.1,
+     "t": 58.16,
+     "userId": -1,
+     "x": 21.4,
+     "y": 84,
+     "z": 529.1
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 58.259,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2204,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.2,
+     "t": 58.259
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight"
+      ],
+      "key": "boost",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 58.292,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2228,
+     "t": 58.544,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1616,
+     "t": 58.544,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2281,
+     "t": 58.544,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2512,
+     "t": 58.676,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 2512.1939083793272,
+     "speed": 97.1,
+     "t": 58.676,
+     "userId": -1,
+     "x": 53.3,
+     "y": 84,
+     "z": 562.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 2570.6149351251074,
+     "speed": 120.4,
+     "t": 59.193,
+     "userId": -1,
+     "x": 93,
+     "y": 84,
+     "z": 602.8
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 59.46,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.4,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2321,
+     "t": 59.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1692,
+     "t": 59.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2375,
+     "t": 59.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2641,
+     "t": 59.709,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 2641.355902294127,
+     "speed": 130.7,
+     "t": 59.709,
+     "userId": -1,
+     "x": 144,
+     "y": 84,
+     "z": 644.9
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 59.959,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2709.9758049995935,
+     "speed": 123.9,
+     "t": 60.21,
+     "userId": -1,
+     "x": 203.5,
+     "y": 84,
+     "z": 672.2
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2205,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.4,
+     "t": 60.26
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2412,
+     "t": 60.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1775,
+     "t": 60.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2467,
+     "t": 60.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2763,
+     "t": 60.725,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2763.2018264706176,
+     "speed": 87.1,
+     "t": 60.725,
+     "userId": -1,
+     "x": 251.9,
+     "y": 84,
+     "z": 691.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2807.2231475343083,
+     "speed": 87.1,
+     "t": 61.226,
+     "userId": -1,
+     "x": 292.1,
+     "y": 84,
+     "z": 709.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2505,
+     "t": 61.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1855,
+     "t": 61.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2559,
+     "t": 61.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2850,
+     "t": 61.727,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2850.604943074914,
+     "speed": 87.1,
+     "t": 61.727,
+     "userId": -1,
+     "x": 332.7,
+     "y": 84,
+     "z": 726.1
+    },
+    {
+     "angle": 183,
+     "kind": "hazard",
+     "t": 61.742,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2893.6277087768376,
+     "speed": 87.1,
+     "t": 62.242,
+     "userId": -1,
+     "x": 373.6,
+     "y": 84,
+     "z": 742.9
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2247,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10.1,
+     "t": 62.275
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2598,
+     "t": 62.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1937,
+     "t": 62.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2652,
+     "t": 62.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 2935,
+     "t": 62.742,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2935.7978364030923,
+     "speed": 87.1,
+     "t": 62.742,
+     "userId": -1,
+     "x": 414.2,
+     "y": 84,
+     "z": 759.6
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 62.977,
+     "userId": -1,
+     "x": 426,
+     "y": 80,
+     "z": 764
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 62.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 63.009,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 2980.7612410631154,
+     "speed": 87,
+     "t": 63.243,
+     "userId": -1,
+     "x": 457.1,
+     "y": 84,
+     "z": 763.4
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 63.425,
+     "userId": -1
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 87.2,
+     "t": 63.562,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.1,
+     "vMax": 87.2,
+     "vMin": 87.1,
+     "window": 0.5,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2691,
+     "t": 63.562,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 1999,
+     "t": 63.562,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2744,
+     "t": 63.562,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3026,
+     "t": 63.76,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3026.127701580347,
+     "speed": 93.2,
+     "t": 63.76,
+     "userId": -1,
+     "x": 499,
+     "y": 84,
+     "z": 745.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3080.527465447726,
+     "speed": 116,
+     "t": 64.276,
+     "userId": -1,
+     "x": 549.2,
+     "y": 84,
+     "z": 724.5
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2223,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.9,
+     "t": 64.276
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2784,
+     "t": 64.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2052,
+     "t": 64.561,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2836,
+     "t": 64.561,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 64.593,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.6,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 3145,
+     "t": 64.793,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3145.5134390465173,
+     "speed": 130.7,
+     "t": 64.793,
+     "userId": -1,
+     "x": 609.3,
+     "y": 84,
+     "z": 699.8
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 65.126,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3210.8778512227245,
+     "speed": 130.7,
+     "t": 65.293,
+     "userId": -1,
+     "x": 669.9,
+     "y": 84,
+     "z": 675
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 65.476,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 65.493,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2877,
+     "t": 65.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2113,
+     "t": 65.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2928,
+     "t": 65.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3266,
+     "t": 65.793,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 3266.9517039636767,
+     "speed": 100.2,
+     "t": 65.793,
+     "userId": -1,
+     "x": 721.9,
+     "y": 84,
+     "z": 653.7
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2224,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.6,
+     "t": 66.277
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 3321.2472187479875,
+     "speed": 100.2,
+     "t": 66.31,
+     "userId": -1,
+     "x": 759.7,
+     "y": 84,
+     "z": 620.6
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2972,
+     "t": 66.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2186,
+     "t": 66.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3024,
+     "t": 66.558,
+     "userId": -100003
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 100.3,
+     "t": 66.81,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 118.9,
+     "vMax": 118.9,
+     "vMin": 100.1,
+     "window": 1.2,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 3372,
+     "t": 66.825,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 3372.870262431227,
+     "speed": 100.2,
+     "t": 66.825,
+     "userId": -1,
+     "x": 778.8,
+     "y": 84,
+     "z": 572.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 3425.3335456965324,
+     "speed": 100.2,
+     "t": 67.342,
+     "userId": -1,
+     "x": 799.9,
+     "y": 84,
+     "z": 524.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3065,
+     "t": 67.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2266,
+     "t": 67.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3117,
+     "t": 67.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3473,
+     "t": 67.843,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3473.7071889140743,
+     "speed": 87.9,
+     "t": 67.843,
+     "userId": -1,
+     "x": 818.2,
+     "y": 84,
+     "z": 479.6
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2225,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.9,
+     "t": 68.292
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3518.3297115101495,
+     "speed": 87.1,
+     "t": 68.359,
+     "userId": -1,
+     "x": 835.1,
+     "y": 84,
+     "z": 438.3
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 68.492,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3160,
+     "t": 68.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2295,
+     "t": 68.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3211,
+     "t": 68.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3563,
+     "t": 68.86,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3563.3867529997187,
+     "speed": 95.7,
+     "t": 68.86,
+     "userId": -1,
+     "x": 852.1,
+     "y": 84,
+     "z": 396.7
+    },
+    {
+     "index": 2,
+     "kind": "checkpoint",
+     "t": 69.375,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3618.3112495168643,
+     "speed": 117.7,
+     "t": 69.376,
+     "userId": -1,
+     "x": 872.6,
+     "y": 84,
+     "z": 345.9
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3254,
+     "t": 69.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2322,
+     "t": 69.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3307,
+     "t": 69.56,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 69.708,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.6,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 3686,
+     "t": 69.892,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 3686.3270609129327,
+     "speed": 130.6,
+     "t": 69.892,
+     "userId": -1,
+     "x": 870,
+     "y": 84,
+     "z": 282
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 70.192,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2225,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.3,
+     "t": 70.309
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3748.7327115992343,
+     "speed": 130.7,
+     "t": 70.392,
+     "userId": -1,
+     "x": 838,
+     "y": 84,
+     "z": 225.1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3347,
+     "t": 70.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2394,
+     "t": 70.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3401,
+     "t": 70.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3804,
+     "t": 70.908,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3804.320670122774,
+     "speed": 87.5,
+     "t": 70.908,
+     "userId": -1,
+     "x": 815.8,
+     "y": 84,
+     "z": 173.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3848.2524097812657,
+     "speed": 87.1,
+     "t": 71.409,
+     "userId": -1,
+     "x": 797.9,
+     "y": 84,
+     "z": 133.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3441,
+     "t": 71.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2482,
+     "t": 71.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3496,
+     "t": 71.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3893,
+     "t": 71.926,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3893.339493268683,
+     "speed": 87.1,
+     "t": 71.926,
+     "userId": -1,
+     "x": 780.9,
+     "y": 84,
+     "z": 92
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2225,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.6,
+     "t": 72.325
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3938.1290051448564,
+     "speed": 87.1,
+     "t": 72.443,
+     "userId": -1,
+     "x": 764.1,
+     "y": 84,
+     "z": 50.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3537,
+     "t": 72.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2571,
+     "t": 72.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3591,
+     "t": 72.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 3984,
+     "t": 72.959,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 3984.3375707642867,
+     "speed": 87,
+     "t": 72.959,
+     "userId": -1,
+     "x": 738.8,
+     "y": 84,
+     "z": 14.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4026.6592127699037,
+     "speed": 87.1,
+     "t": 73.46,
+     "userId": -1,
+     "x": 699,
+     "y": 84,
+     "z": -2.6
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3632,
+     "t": 73.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2643,
+     "t": 73.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3688,
+     "t": 73.56,
+     "userId": -100003
+    },
+    {
+     "angle": 213,
+     "kind": "hazard",
+     "t": 73.842,
+     "type": "gustZone"
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 73.909,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 4070,
+     "t": 73.975,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4070.739112221991,
+     "speed": 87.1,
+     "t": 73.975,
+     "userId": -1,
+     "x": 657.3,
+     "y": 84,
+     "z": -19.7
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2225,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.5,
+     "t": 74.342
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4117.263956622902,
+     "speed": 103.5,
+     "t": 74.477,
+     "userId": -1,
+     "x": 614.1,
+     "y": 84,
+     "z": -38.3
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3726,
+     "t": 74.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2716,
+     "t": 74.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3782,
+     "t": 74.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4177,
+     "t": 74.991,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4177.515736103266,
+     "speed": 126.8,
+     "t": 74.991,
+     "userId": -1,
+     "x": 558.7,
+     "y": 84,
+     "z": -61.8
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 75.125,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.5,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4243.950404211471,
+     "speed": 130.7,
+     "t": 75.492,
+     "userId": -1,
+     "x": 498,
+     "y": 83.9,
+     "z": -85.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3821,
+     "t": 75.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2797,
+     "t": 75.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3876,
+     "t": 75.558,
+     "userId": -100003
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 75.625,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 4312,
+     "t": 76.008,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4312.84381699625,
+     "speed": 113.4,
+     "t": 76.008,
+     "userId": -1,
+     "x": 435.9,
+     "y": 83.9,
+     "z": -106.5
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2226,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.8,
+     "t": 76.359
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4361.897600826187,
+     "speed": 87.1,
+     "t": 76.508,
+     "userId": -1,
+     "x": 389.2,
+     "y": 83.9,
+     "z": -101.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3917,
+     "t": 76.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2876,
+     "t": 76.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3974,
+     "t": 76.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4407,
+     "t": 77.026,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4407.861372612578,
+     "speed": 87.1,
+     "t": 77.026,
+     "userId": -1,
+     "x": 344.9,
+     "y": 83.9,
+     "z": -95.8
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4452.756512760307,
+     "speed": 87.1,
+     "t": 77.542,
+     "userId": -1,
+     "x": 300.8,
+     "y": 83.9,
+     "z": -88.1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4008,
+     "t": 77.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 2954,
+     "t": 77.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4069,
+     "t": 77.558,
+     "userId": -100003
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 78.041,
+     "userId": -1,
+     "x": 265,
+     "y": 80,
+     "z": -83
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 78.041,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 4497,
+     "t": 78.058,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4497.831227927025,
+     "speed": 87.1,
+     "t": 78.058,
+     "userId": -1,
+     "x": 256.2,
+     "y": 83.9,
+     "z": -81.1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 78.091,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.5,
+     "t": 78.376
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4101,
+     "t": 78.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3006,
+     "t": 78.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4164,
+     "t": 78.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4542,
+     "t": 78.576,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4542.626349171372,
+     "speed": 87.1,
+     "t": 78.576,
+     "userId": -1,
+     "x": 211.7,
+     "y": 83.9,
+     "z": -75
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 87.2,
+     "t": 78.592,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 87.2,
+     "vMin": 87.2,
+     "window": 0.5,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 78.958,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4587.0778898589715,
+     "speed": 87.1,
+     "t": 79.092,
+     "userId": -1,
+     "x": 166.6,
+     "y": 83.9,
+     "z": -67.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4197,
+     "t": 79.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3066,
+     "t": 79.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4260,
+     "t": 79.56,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4636,
+     "t": 79.593,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4636.124884533034,
+     "speed": 107.2,
+     "t": 79.593,
+     "userId": -1,
+     "x": 118.6,
+     "y": 84,
+     "z": -63.7
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 4709.593573905309,
+     "speed": 128.8,
+     "t": 80.093,
+     "userId": -1,
+     "x": 68.7,
+     "y": 84,
+     "z": -91.9
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 80.174,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.7,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.4,
+     "t": 80.393
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 80.541,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4293,
+     "t": 80.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3130,
+     "t": 80.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4357,
+     "t": 80.559,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 80.576,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 4780,
+     "t": 80.61,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 150.37554931640625,
+     "progress": 4780.021177707134,
+     "speed": 124.7,
+     "t": 80.61,
+     "userId": -1,
+     "x": 15.6,
+     "y": 83.9,
+     "z": -132.9
+    },
+    {
+     "after": 100.2503662109375,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 80.675,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 4832.485747876825,
+     "speed": 100.3,
+     "t": 81.125,
+     "userId": -1,
+     "x": -32.6,
+     "y": 83.9,
+     "z": -166.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4390,
+     "t": 81.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3205,
+     "t": 81.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4453,
+     "t": 81.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4874,
+     "t": 81.641,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 4874.371512917249,
+     "speed": 97.8,
+     "t": 81.641,
+     "userId": -1,
+     "x": -72.5,
+     "y": 83.9,
+     "z": -198.5
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 130.8,
+     "maxSpeedMid": 100.3,
+     "t": 81.875,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 127.1,
+     "vMax": 127.1,
+     "vMin": 76.6,
+     "window": 1.2,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 4920.504249623891,
+     "speed": 47.3,
+     "t": 82.142,
+     "userId": -1,
+     "x": -83.2,
+     "y": 83.9,
+     "z": -232.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.9,
+     "t": 82.408
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4486,
+     "t": 82.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3289,
+     "t": 82.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4549,
+     "t": 82.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4936,
+     "t": 82.658,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4936.219173416162,
+     "speed": 40.9,
+     "t": 82.658,
+     "userId": -1,
+     "x": -68,
+     "y": 83.9,
+     "z": -245.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4943.380708438182,
+     "speed": 63,
+     "t": 83.158,
+     "userId": -1,
+     "x": -43,
+     "y": 83.9,
+     "z": -253
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4581,
+     "t": 83.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3300,
+     "t": 83.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4646,
+     "t": 83.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 4973,
+     "t": 83.675,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 4973.984202995854,
+     "speed": 86.7,
+     "t": 83.675,
+     "userId": -1,
+     "x": -12.7,
+     "y": 83.9,
+     "z": -277.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5018.380592489487,
+     "speed": 87.1,
+     "t": 84.191,
+     "userId": -1,
+     "x": 18.8,
+     "y": 83.9,
+     "z": -310.8
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.3,
+     "t": 84.424
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4675,
+     "t": 84.56,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3315,
+     "t": 84.56,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4740,
+     "t": 84.56,
+     "userId": -100003
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 84.574,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 5066,
+     "t": 84.708,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5066.225136653677,
+     "speed": 87.3,
+     "t": 84.708,
+     "userId": -1,
+     "x": 48.2,
+     "y": 83.9,
+     "z": -344.9
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5122.727616811303,
+     "speed": 98.2,
+     "t": 85.208,
+     "userId": -1,
+     "x": 75.8,
+     "y": 83.9,
+     "z": -383.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4768,
+     "t": 85.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3374,
+     "t": 85.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4833,
+     "t": 85.559,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5171,
+     "t": 85.724,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5171.378374997376,
+     "speed": 50.2,
+     "t": 85.724,
+     "userId": -1,
+     "x": 76.4,
+     "y": 83.9,
+     "z": -420.1
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 85.792,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 101.2,
+     "vMin": 46.7,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "angle": 186,
+     "kind": "hazard",
+     "t": 85.958,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5188.372134143546,
+     "speed": 51.1,
+     "t": 86.224,
+     "userId": -1,
+     "x": 58.6,
+     "y": 83.9,
+     "z": -432.8
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 86.276,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.5,
+     "t": 86.425
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4863,
+     "t": 86.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3463,
+     "t": 86.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4900,
+     "t": 86.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5203,
+     "t": 86.725,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5203.88033374802,
+     "speed": 73,
+     "t": 86.725,
+     "userId": -1,
+     "x": 29.4,
+     "y": 83.9,
+     "z": -444.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5242.719286173485,
+     "speed": 87.1,
+     "t": 87.243,
+     "userId": -1,
+     "x": -2.2,
+     "y": 83.9,
+     "z": -473.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4884,
+     "t": 87.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3552,
+     "t": 87.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4926,
+     "t": 87.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5286,
+     "t": 87.758,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5286.758411539913,
+     "speed": 87.1,
+     "t": 87.758,
+     "userId": -1,
+     "x": -32.9,
+     "y": 83.9,
+     "z": -506.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5330.593299519993,
+     "speed": 87.1,
+     "t": 88.259,
+     "userId": -1,
+     "x": -61.3,
+     "y": 84,
+     "z": -539.1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.2,
+     "t": 88.426
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4889,
+     "t": 88.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3646,
+     "t": 88.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4997,
+     "t": 88.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5382,
+     "t": 88.775,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5382.3614630001175,
+     "speed": 66.1,
+     "t": 88.775,
+     "userId": -1,
+     "x": -78,
+     "y": 84,
+     "z": -577.3
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5411.465662479412,
+     "speed": 27,
+     "t": 89.275,
+     "userId": -1,
+     "x": -73,
+     "y": 84,
+     "z": -598.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4923,
+     "t": 89.559,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3656,
+     "t": 89.559,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5092,
+     "t": 89.559,
+     "userId": -100003
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 89.607,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 5420,
+     "t": 89.792,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5420.78123480356,
+     "speed": 31,
+     "t": 89.792,
+     "userId": -1,
+     "x": -62.8,
+     "y": 84,
+     "z": -605.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5429.299222730211,
+     "speed": 53.6,
+     "t": 90.293,
+     "userId": -1,
+     "x": -42.6,
+     "y": 84,
+     "z": -611.8
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.1,
+     "t": 90.441
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4994,
+     "t": 90.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3665,
+     "t": 90.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5156,
+     "t": 90.558,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 90.776,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 21.6,
+     "vMax": 74.3,
+     "vMin": 21.6,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 5457,
+     "t": 90.809,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5457.667075852924,
+     "speed": 76.3,
+     "t": 90.809,
+     "userId": -1,
+     "x": -16.8,
+     "y": 84,
+     "z": -632.9
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 91.308,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5501.754434333782,
+     "speed": 98.6,
+     "t": 91.325,
+     "userId": -1,
+     "x": 14.3,
+     "y": 84,
+     "z": -665.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5089,
+     "t": 91.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3713,
+     "t": 91.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5192,
+     "t": 91.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5551,
+     "t": 91.841,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5551.000248542263,
+     "speed": 87.1,
+     "t": 91.841,
+     "userId": -1,
+     "x": 47.2,
+     "y": 84,
+     "z": -703
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5598.1284587303235,
+     "speed": 84.3,
+     "t": 92.358,
+     "userId": -1,
+     "x": 73.8,
+     "y": 84,
+     "z": -738.8
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.9,
+     "t": 92.459
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5133,
+     "t": 92.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3797,
+     "t": 92.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5273,
+     "t": 92.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5637,
+     "t": 92.876,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5637.840844341015,
+     "speed": 39.2,
+     "t": 92.876,
+     "userId": -1,
+     "x": 76.7,
+     "y": 84,
+     "z": -770.4
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 93.074,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 93.108,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 5648.356347503157,
+     "speed": 6.5,
+     "t": 93.392,
+     "userId": -1,
+     "x": 71.8,
+     "y": 84,
+     "z": -778.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5138,
+     "t": 93.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3890,
+     "t": 93.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5368,
+     "t": 93.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5649,
+     "t": 93.907,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 5649.584568648225,
+     "speed": 23.5,
+     "t": 93.907,
+     "userId": -1,
+     "x": 65.5,
+     "y": 84,
+     "z": -779.2
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 100.3,
+     "t": 94.375,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 23.5,
+     "vMax": 44.4,
+     "vMin": 5.2,
+     "window": 1.2,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 5654.70206938374,
+     "speed": 45.1,
+     "t": 94.409,
+     "userId": -1,
+     "x": 48.5,
+     "y": 84,
+     "z": -782.3
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10,
+     "t": 94.474
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5172,
+     "t": 94.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 3984,
+     "t": 94.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5406,
+     "t": 94.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5677,
+     "t": 94.925,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 5677.539247111918,
+     "speed": 68.1,
+     "t": 94.925,
+     "userId": -1,
+     "x": 23.8,
+     "y": 84,
+     "z": -798.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5717.260116184032,
+     "speed": 87.1,
+     "t": 95.442,
+     "userId": -1,
+     "x": -7.1,
+     "y": 84,
+     "z": -826.8
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5245,
+     "t": 95.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4014,
+     "t": 95.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5456,
+     "t": 95.558,
+     "userId": -100003
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 95.575,
+     "userId": -1
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 95.576,
+     "userId": -1,
+     "x": -10,
+     "y": 80,
+     "z": -830
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 95.576,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 95.624,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 5763,
+     "t": 95.957,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5763.494064381407,
+     "speed": 95.4,
+     "t": 95.957,
+     "userId": -1,
+     "x": -39.1,
+     "y": 84,
+     "z": -858.7
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 130.8,
+     "maxSpeedMid": 130.8,
+     "t": 96.124,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 102.8,
+     "vMin": 87.2,
+     "window": 0.5,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5823.221867157089,
+     "speed": 115.3,
+     "t": 96.457,
+     "userId": -1,
+     "x": -74.1,
+     "y": 84,
+     "z": -899
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.7,
+     "t": 96.475
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5340,
+     "t": 96.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4038,
+     "t": 96.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5546,
+     "t": 96.557,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 96.776,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 115.6,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 84,
+     "yMax": 84,
+     "yMin": 84
+    },
+    {
+     "kind": "race_progress",
+     "s": 5871,
+     "t": 96.958,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 5871.857416447337,
+     "speed": 74,
+     "t": 96.958,
+     "userId": -1,
+     "x": -82.1,
+     "y": 84,
+     "z": -945.3
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 97.291,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5897.478186171324,
+     "speed": 85.1,
+     "t": 97.458,
+     "userId": -1,
+     "x": -53.7,
+     "y": 84,
+     "z": -969.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5400,
+     "t": 97.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4111,
+     "t": 97.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5624,
+     "t": 97.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 5937,
+     "t": 97.976,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5937.1769348843645,
+     "speed": 87.1,
+     "t": 97.976,
+     "userId": -1,
+     "x": -23.2,
+     "y": 84,
+     "z": -1002.6
+    },
+    {
+     "angle": 253,
+     "kind": "hazard",
+     "t": 98.04,
+     "type": "gustZone"
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 9.4,
+     "t": 98.475
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 5988.9103225608615,
+     "speed": 87.1,
+     "t": 98.491,
+     "userId": -1,
+     "x": -3.9,
+     "y": 84,
+     "z": -1043
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5468,
+     "t": 98.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4200,
+     "t": 98.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5646,
+     "t": 98.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6031,
+     "t": 98.991,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6031.959071414222,
+     "speed": 87.1,
+     "t": 98.991,
+     "userId": -1,
+     "x": -0.6,
+     "y": 84,
+     "z": -1086
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6078.038492868139,
+     "speed": 87.1,
+     "t": 99.509,
+     "userId": -1,
+     "x": 0.3,
+     "y": 84,
+     "z": -1131.6
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5564,
+     "t": 99.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4283,
+     "t": 99.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5695,
+     "t": 99.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6123,
+     "t": 100.024,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6123.977089542159,
+     "speed": 87.1,
+     "t": 100.024,
+     "userId": -1,
+     "x": 0.2,
+     "y": 84,
+     "z": -1176.8
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.5,
+     "t": 100.491
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6167.351547905524,
+     "speed": 87.1,
+     "t": 100.524,
+     "userId": -1,
+     "x": -0.6,
+     "y": 84,
+     "z": -1220.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5621,
+     "t": 100.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4356,
+     "t": 100.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5786,
+     "t": 100.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6213,
+     "t": 101.041,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6213.052516911363,
+     "speed": 87.2,
+     "t": 101.041,
+     "userId": -1,
+     "x": 5,
+     "y": 84.6,
+     "z": -1265
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6256.661456665045,
+     "speed": 87.3,
+     "t": 101.541,
+     "userId": -1,
+     "x": 15,
+     "y": 86.7,
+     "z": -1307.3
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5660,
+     "t": 101.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4440,
+     "t": 101.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5870,
+     "t": 101.557,
+     "userId": -100003
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 101.591,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 6302,
+     "t": 102.041,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 6302.380906311074,
+     "speed": 98.1,
+     "t": 102.041,
+     "userId": -1,
+     "x": 38.5,
+     "y": 88.9,
+     "z": -1345.1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.9,
+     "t": 102.508
+    },
+    {
+     "kind": "race_progress",
+     "s": 6359,
+     "t": 102.558,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 6359.717107531873,
+     "speed": 120.8,
+     "t": 102.558,
+     "userId": -1,
+     "x": 79.2,
+     "y": 91.6,
+     "z": -1384.2
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5738,
+     "t": 102.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4523,
+     "t": 102.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5951,
+     "t": 102.558,
+     "userId": -100003
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 102.809,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87,
+     "vMax": 130.7,
+     "vMin": 87,
+     "window": 1,
+     "y0": 87,
+     "yMax": 93.3,
+     "yMin": 87
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 6424.951865678225,
+     "speed": 130.8,
+     "t": 103.058,
+     "userId": -1,
+     "x": 140.1,
+     "y": 94.8,
+     "z": -1404.4
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 103.309,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5829,
+     "t": 103.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4604,
+     "t": 103.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6049,
+     "t": 103.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6493,
+     "t": 103.575,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6493.984680902678,
+     "speed": 124,
+     "t": 103.575,
+     "userId": -1,
+     "x": 206.6,
+     "y": 98.2,
+     "z": -1397.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6548.141873318695,
+     "speed": 87.2,
+     "t": 104.09,
+     "userId": -1,
+     "x": 252.4,
+     "y": 100.8,
+     "z": -1372.6
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.6,
+     "t": 104.509
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5884,
+     "t": 104.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4691,
+     "t": 104.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6146,
+     "t": 104.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6592,
+     "t": 104.59,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6592.201967089258,
+     "speed": 87.2,
+     "t": 104.59,
+     "userId": -1,
+     "x": 284.6,
+     "y": 102.9,
+     "z": -1343.1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 6638.757242267973,
+     "speed": 87.1,
+     "t": 105.108,
+     "userId": -1,
+     "x": 304.5,
+     "y": 105.1,
+     "z": -1303
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5964,
+     "t": 105.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4772,
+     "t": 105.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6242,
+     "t": 105.557,
+     "userId": -100003
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 105.623,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 6683,
+     "t": 105.624,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 6683.6375424057305,
+     "speed": 87.2,
+     "t": 105.624,
+     "userId": -1,
+     "x": 315.5,
+     "y": 107.4,
+     "z": -1260
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "highlight",
+       "label"
+      ],
+      "key": "skateSlide",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 105.657,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 6730.78373885682,
+     "speed": 100.2,
+     "t": 106.124,
+     "userId": -1,
+     "x": 309.7,
+     "y": 109.5,
+     "z": -1214.7
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12,
+     "t": 106.523
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6060,
+     "t": 106.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4855,
+     "t": 106.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6341,
+     "t": 106.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6784,
+     "t": 106.641,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 100.2503662109375,
+     "progress": 6784.338046244556,
+     "speed": 100.3,
+     "t": 106.641,
+     "userId": -1,
+     "x": 290.3,
+     "y": 112.1,
+     "z": -1166.6
+    },
+    {
+     "after": 150.37554931640625,
+     "before": 100.2503662109375,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 106.707,
+     "userId": -1
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 100.3,
+     "t": 106.94,
+     "turn0": 1.3,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 87.1,
+     "vMax": 101.7,
+     "vMin": 87.1,
+     "window": 1.2,
+     "y0": 107.4,
+     "yMax": 113.7,
+     "yMin": 107.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 150.37554931640625,
+     "progress": 6835.825829425388,
+     "speed": 110.1,
+     "t": 107.142,
+     "userId": -1,
+     "x": 256.7,
+     "y": 114.7,
+     "z": -1128.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6156,
+     "t": 107.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4877,
+     "t": 107.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6439,
+     "t": 107.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 6901,
+     "t": 107.657,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 6901.404931592311,
+     "speed": 133.8,
+     "t": 107.657,
+     "userId": -1,
+     "x": 199.4,
+     "y": 117.8,
+     "z": -1101.5
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 100.3,
+     "maxSpeedMid": 150.4,
+     "t": 107.891,
+     "turn0": 2.2,
+     "turnMid": 2.2,
+     "userId": -1,
+     "v0": 100.3,
+     "vMax": 138.4,
+     "vMin": 100.2,
+     "window": 1,
+     "y0": 112.5,
+     "yMax": 119.5,
+     "yMin": 112.5
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 6970.13099045228,
+     "speed": 130.8,
+     "t": 108.158,
+     "userId": -1,
+     "x": 133.5,
+     "y": 121.1,
+     "z": -1098.2
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 108.425,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 13.9,
+     "t": 108.54
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6253,
+     "t": 108.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4877,
+     "t": 108.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6539,
+     "t": 108.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7038,
+     "t": 108.674,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7038.946868860886,
+     "speed": 126.6,
+     "t": 108.674,
+     "userId": -1,
+     "x": 71.7,
+     "y": 124.4,
+     "z": -1123
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7091.303684972312,
+     "speed": 87.2,
+     "t": 109.174,
+     "userId": -1,
+     "x": 34.1,
+     "y": 127,
+     "z": -1158.7
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6350,
+     "t": 109.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4901,
+     "t": 109.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6637,
+     "t": 109.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7135,
+     "t": 109.674,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7135.696461825261,
+     "speed": 87.1,
+     "t": 109.674,
+     "userId": -1,
+     "x": 15.3,
+     "y": 129.2,
+     "z": -1197.5
+    },
+    {
+     "angle": 92,
+     "kind": "hazard",
+     "t": 110.158,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7179.408229365742,
+     "speed": 87.2,
+     "t": 110.175,
+     "userId": -1,
+     "x": 3.5,
+     "y": 131.3,
+     "z": -1239.2
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 15.1,
+     "t": 110.557
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6445,
+     "t": 110.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 4976,
+     "t": 110.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6735,
+     "t": 110.557,
+     "userId": -100003
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 110.641,
+     "userId": -1,
+     "x": 0,
+     "y": 128,
+     "z": -1273
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 110.641,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": [
+       "particles",
+       "label"
+      ],
+      "key": "dropTrap",
+      "on": -1
+     },
+     "kind": "bot_fx",
+     "t": 110.69,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 7224,
+     "t": 110.691,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7224.85067002224,
+     "speed": 87.1,
+     "t": 110.691,
+     "userId": -1,
+     "x": 0.1,
+     "y": 132,
+     "z": -1284.1
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 87.2,
+     "t": 111.208,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 87.2,
+     "vMin": 87.2,
+     "window": 0.5,
+     "y0": 132,
+     "yMax": 132,
+     "yMin": 132
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7270.081442038992,
+     "speed": 87.1,
+     "t": 111.208,
+     "userId": -1,
+     "x": -0.2,
+     "y": 132,
+     "z": -1329.1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6539,
+     "t": 111.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5068,
+     "t": 111.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6833,
+     "t": 111.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7314,
+     "t": 111.725,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7314.919124845267,
+     "speed": 87.1,
+     "t": 111.725,
+     "userId": -1,
+     "x": -0.2,
+     "y": 132,
+     "z": -1373.9
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 112.174,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7360.008236173392,
+     "speed": 87.1,
+     "t": 112.24,
+     "userId": -1,
+     "x": -0.3,
+     "y": 132,
+     "z": -1419
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6635,
+     "t": 112.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5142,
+     "t": 112.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6932,
+     "t": 112.557,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 15.3,
+     "t": 112.575
+    },
+    {
+     "kind": "race_progress",
+     "s": 7406,
+     "t": 112.742,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7406.54668832183,
+     "speed": 103.4,
+     "t": 112.742,
+     "userId": -1,
+     "x": -0.4,
+     "y": 131,
+     "z": -1465.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7466.483822110892,
+     "speed": 126.6,
+     "t": 113.257,
+     "userId": -1,
+     "x": -0.5,
+     "y": 126.4,
+     "z": -1525.5
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 130.8,
+     "t": 113.408,
+     "turn0": 1.3,
+     "turnMid": 1.3,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 130.8,
+     "vMin": 87.2,
+     "window": 1,
+     "y0": 132,
+     "yMax": 132,
+     "yMin": 124.9
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6732,
+     "t": 113.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5140,
+     "t": 113.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7032,
+     "t": 113.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7532,
+     "t": 113.757,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7532.026912931205,
+     "speed": 130.9,
+     "t": 113.757,
+     "userId": -1,
+     "x": -0.6,
+     "y": 121.4,
+     "z": -1591.1
+    },
+    {
+     "after": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 113.875,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7597.407284024955,
+     "speed": 113.1,
+     "t": 114.274,
+     "userId": -1,
+     "x": -0.7,
+     "y": 116.5,
+     "z": -1656.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6830,
+     "t": 114.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5147,
+     "t": 114.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7130,
+     "t": 114.557,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.5,
+     "t": 114.591
+    },
+    {
+     "kind": "race_progress",
+     "s": 7645,
+     "t": 114.79,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7645.52276254058,
+     "speed": 87.3,
+     "t": 114.791,
+     "userId": -1,
+     "x": -0.8,
+     "y": 112.7,
+     "z": -1704.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7689.503841642142,
+     "speed": 87.3,
+     "t": 115.291,
+     "userId": -1,
+     "x": -0.8,
+     "y": 109.5,
+     "z": -1748.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6927,
+     "t": 115.558,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5195,
+     "t": 115.558,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7227,
+     "t": 115.558,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7734,
+     "t": 115.807,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7734.574154142142,
+     "speed": 87.3,
+     "t": 115.807,
+     "userId": -1,
+     "x": -0.9,
+     "y": 106,
+     "z": -1793.6
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7779.44805550933,
+     "speed": 87.3,
+     "t": 116.323,
+     "userId": -1,
+     "x": -1,
+     "y": 102.6,
+     "z": -1838.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7022,
+     "t": 116.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5281,
+     "t": 116.556,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7324,
+     "t": 116.556,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2214,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10.3,
+     "t": 116.606
+    },
+    {
+     "kind": "race_progress",
+     "s": 7824,
+     "t": 116.839,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 87.17423248291016,
+     "progress": 7824.478695157767,
+     "speed": 87.1,
+     "t": 116.839,
+     "userId": -1,
+     "x": -1.1,
+     "y": 99.1,
+     "z": -1883.5
+    },
+    {
+     "after": 130.7613525390625,
+     "before": 87.17423248291016,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 117.206,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7868.421444181205,
+     "speed": 87.2,
+     "t": 117.34,
+     "userId": -1,
+     "x": -1.1,
+     "y": 95.9,
+     "z": -1927.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7117,
+     "t": 117.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5376,
+     "t": 117.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7420,
+     "t": 117.557,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 7918,
+     "t": 117.856,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 130.7613525390625,
+     "progress": 7918.911678556205,
+     "speed": 108.5,
+     "t": 117.856,
+     "userId": -1,
+     "x": -1.2,
+     "y": 94,
+     "z": -1977.9
+    },
+    {
+     "kind": "finish",
+     "place": 1,
+     "t": 117.872,
+     "time": 86.31995964050293,
+     "userId": -1
+    },
+    {
+     "kind": "phase_shortened",
+     "phase": "RACING",
+     "seconds": 45,
+     "t": 117.873
+    },
+    {
+     "data": {
+      "name": "finishGrace",
+      "seconds": 3
+     },
+     "kind": "bot_screen",
+     "t": 117.889,
+     "userId": -1
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 118.172,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 7971.677303556205,
+     "speed": 88.3,
+     "t": 118.357,
+     "userId": -1,
+     "x": -1.3,
+     "y": 94,
+     "z": -2030.7
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 87.2,
+     "maxSpeedMid": 0,
+     "t": 118.423,
+     "turn0": 1.3,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 87.2,
+     "vMax": 114.5,
+     "vMin": 82,
+     "window": 1,
+     "y0": 96.9,
+     "yMax": 96.9,
+     "yMin": 94
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7212,
+     "t": 118.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5367,
+     "t": 118.556,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7517,
+     "t": 118.556,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2217,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12.5,
+     "t": 118.607
+    },
+    {
+     "kind": "race_progress",
+     "s": 8004,
+     "t": 118.857,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8004.307308439017,
+     "speed": 43,
+     "t": 118.857,
+     "userId": -1,
+     "x": -0.8,
+     "y": 93.9,
+     "z": -2063.3
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 118.907,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 119.373,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 119.523,
+     "turn0": 0.7,
+     "turnMid": 1.1,
+     "userId": -1,
+     "v0": 106,
+     "vMax": 106,
+     "vMin": 0,
+     "window": 1.2,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7308,
+     "t": 119.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5376,
+     "t": 119.556,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7614,
+     "t": 119.556,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 119.889,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 119.889,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 120.39,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7404,
+     "t": 120.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5424,
+     "t": 120.556,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7709,
+     "t": 120.556,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12.1,
+     "t": 120.624
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 120.906,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 120.906,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 121.422,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7500,
+     "t": 121.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5510,
+     "t": 121.556,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7801,
+     "t": 121.556,
+     "userId": -100003
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 121.94,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373714689017,
+     "speed": 0,
+     "t": 121.94,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "angle": 212,
+     "kind": "hazard",
+     "t": 122.273,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.389827970267,
+     "speed": 0,
+     "t": 122.44,
+     "userId": -1,
+     "x": -0.5,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7596,
+     "t": 122.557,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5608,
+     "t": 122.557,
+     "userId": -100002
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7891,
+     "t": 122.557,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12,
+     "t": 122.64
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 122.956,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.381527189017,
+     "speed": 0,
+     "t": 122.956,
+     "userId": -1,
+     "x": -0.5,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "finish",
+     "place": 2,
+     "t": 123.073,
+     "time": 91.52044653892517,
+     "userId": -100003
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 123.172,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 123.456,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7691,
+     "t": 123.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5601,
+     "t": 123.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 123.956,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 123.956,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 124.356,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373714689017,
+     "speed": 0,
+     "t": 124.473,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7783,
+     "t": 124.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5602,
+     "t": 124.556,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.9,
+     "t": 124.657
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 124.889,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 124.989,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.390560392142,
+     "speed": 0,
+     "t": 124.989,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.380062345267,
+     "speed": 0,
+     "t": 125.489,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7873,
+     "t": 125.556,
+     "userId": -100001
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5616,
+     "t": 125.556,
+     "userId": -100002
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 125.707,
+     "userId": -1,
+     "x": 0,
+     "y": 90,
+     "z": -2068
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 125.707,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 125.99,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 125.99,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "data": {
+      "result": "denied: finished",
+      "s": 8014
+     },
+     "kind": "bot_respawn",
+     "t": 126.023,
+     "userId": -1
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 126.273,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 0.5,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "bot": true,
+     "kind": "finish",
+     "place": 3,
+     "t": 126.29,
+     "time": 94.73706817626953,
+     "userId": -100001
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 126.506,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5619,
+     "t": 126.556,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 4.4,
+     "t": 126.673
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 127.023,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 127.023,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 127.539,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5633,
+     "t": 127.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 128.039,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 128.039,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 128.54,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5691,
+     "t": 128.556,
+     "userId": -100002
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 128.672,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 2,
+     "t": 128.673
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 129.04,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.374447110892,
+     "speed": 0,
+     "t": 129.04,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 129.556,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.394466642142,
+     "speed": 0,
+     "t": 129.556,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5782,
+     "t": 129.556,
+     "userId": -100002
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 129.905,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.378597501517,
+     "speed": 0,
+     "t": 130.072,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 130.373,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5834,
+     "t": 130.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 130.589,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 130.589,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 3.5,
+     "t": 130.689
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 130.722,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 131.089,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5834,
+     "t": 131.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 131.605,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.379818204642,
+     "speed": 0,
+     "t": 131.605,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 132.039,
+     "turn0": 0.7,
+     "turnMid": 1.1,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1.2,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.431576017142,
+     "speed": 0,
+     "t": 132.106,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.5
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5858,
+     "t": 132.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 132.606,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.385921720267,
+     "speed": 0,
+     "t": 132.606,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 3.5,
+     "t": 132.706
+    },
+    {
+     "data": {
+      "result": "denied: finished",
+      "s": 8014
+     },
+     "kind": "bot_respawn",
+     "t": 133.055,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 133.123,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 5931,
+     "t": 133.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 133.639,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 133.639,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 133.755,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 134.156,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "angle": 64,
+     "kind": "hazard",
+     "t": 134.405,
+     "type": "gustZone"
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6017,
+     "t": 134.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 134.672,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 134.672,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 4,
+     "t": 134.723
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 134.939,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 135.189,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 135.455,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6107,
+     "t": 135.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 135.706,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 135.706,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.378109220267,
+     "speed": 0,
+     "t": 136.222,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6193,
+     "t": 136.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 136.722,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.393001798392,
+     "speed": 0,
+     "t": 136.722,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 4.8,
+     "t": 136.739
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.374691251517,
+     "speed": 0,
+     "t": 137.222,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6266,
+     "t": 137.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 137.723,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 137.723,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 138.238,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6356,
+     "t": 138.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 138.739,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.378353360892,
+     "speed": 0,
+     "t": 138.739,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.9,
+     "t": 138.755
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.393490079642,
+     "speed": 0,
+     "t": 139.255,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6428,
+     "t": 139.555,
+     "userId": -100002
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 139.705,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 139.756,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.374691251517,
+     "speed": 0,
+     "t": 139.756,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "data": {
+      "result": "denied: finished",
+      "s": 8014
+     },
+     "kind": "bot_respawn",
+     "t": 140.105,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 140.272,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6520,
+     "t": 140.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.6,
+     "t": 140.772
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 140.772,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 140.772,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 140.922,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 141.289,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 141.422,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6586,
+     "t": 141.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 141.806,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 141.806,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 142.322,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6676,
+     "t": 142.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.6,
+     "t": 142.788
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 142.838,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 142.838,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "waterPuddle",
+     "item": "Magnifying Glass",
+     "kind": "drop_placed",
+     "modelParts": 3,
+     "onGround": true,
+     "size": 3.9,
+     "t": 143.255,
+     "userId": -1,
+     "x": 0,
+     "y": 90,
+     "z": -2068
+    },
+    {
+     "item": "Magnifying Glass",
+     "kind": "ability",
+     "result": "ok",
+     "t": 143.256,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.380550626517,
+     "speed": 0,
+     "t": 143.339,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6748,
+     "t": 143.556,
+     "userId": -100002
+    },
+    {
+     "effect": "dropTrap",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 143.788,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 0.5,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 143.855,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.391048673392,
+     "speed": 0,
+     "t": 143.855,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373958829642,
+     "speed": 0,
+     "t": 144.355,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6833,
+     "t": 144.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.6,
+     "t": 144.789
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 144.872,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 144.872,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 145.288,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 145.389,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6901,
+     "t": 145.556,
+     "userId": -100002
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 145.755,
+     "userId": -1
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 145.905,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.380306485892,
+     "speed": 0,
+     "t": 145.905,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.390804532767,
+     "speed": 0,
+     "t": 146.422,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "angle": 25,
+     "kind": "hazard",
+     "t": 146.522,
+     "type": "gustZone"
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 146.538,
+     "turn0": 0.7,
+     "turnMid": 1.1,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 6984,
+     "t": 146.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.1,
+     "t": 146.805
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 146.922,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 146.922,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 147.005,
+     "userId": -1
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 147.088,
+     "turn0": 0.7,
+     "turnMid": 1.1,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1.2,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "data": {
+      "result": "denied: finished",
+      "s": 8014
+     },
+     "kind": "bot_respawn",
+     "t": 147.171,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 147.439,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7053,
+     "t": 147.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 147.955,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 147.955,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 148.455,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7131,
+     "t": 148.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2214,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.7,
+     "t": 148.821
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 148.972,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 148.972,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 149.488,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7207,
+     "t": 149.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 150.005,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 150.005,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.381283048392,
+     "speed": 0,
+     "t": 150.505,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7289,
+     "t": 150.555,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 3.5,
+     "t": 150.838
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 151.022,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.387630704642,
+     "speed": 0,
+     "t": 151.022,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 151.339,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 151.538,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7368,
+     "t": 151.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 152.038,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 152.038,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 152.555,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 152.555,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7447,
+     "t": 152.555,
+     "userId": -100002
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 152.572,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "RACING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.6,
+     "t": 152.855
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 153.056,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.383480314017,
+     "speed": 0,
+     "t": 153.056,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7529,
+     "t": 153.556,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 153.572,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.386654142142,
+     "speed": 0,
+     "t": 153.572,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 154.088,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "data": {
+      "result": "denied: finished",
+      "s": 8014
+     },
+     "kind": "bot_respawn",
+     "t": 154.238,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7609,
+     "t": 154.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 154.605,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 154.605,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.1,
+     "t": 154.872
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 155.105,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7689,
+     "t": 155.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 155.621,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 155.621,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 156.122,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7768,
+     "t": 156.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 156.638,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 156.638,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2214,
+     "phase": "RACING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.5,
+     "t": 156.888
+    },
+    {
+     "after": 0,
+     "before": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "enter",
+     "t": 156.904,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 157.138,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7845,
+     "t": 157.555,
+     "userId": -100002
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 157.638,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.384701017142,
+     "speed": 0,
+     "t": 157.638,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "effect": "boost",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 158.121,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.384456876517,
+     "speed": 0,
+     "t": 158.155,
+     "userId": -1,
+     "x": -0.6,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "item": "Skateboard",
+     "kind": "ability",
+     "result": "ok",
+     "t": 158.305,
+     "userId": -1
+    },
+    {
+     "bot": true,
+     "kind": "race_progress",
+     "s": 7919,
+     "t": 158.554,
+     "userId": -100002
+    },
+    {
+     "after": 0,
+     "effect": "boost",
+     "kind": "speed_effect",
+     "phase": "expire",
+     "t": 158.621,
+     "userId": -1
+    },
+    {
+     "angle": 30,
+     "kind": "hazard",
+     "t": 158.638,
+     "type": "gustZone"
+    },
+    {
+     "kind": "race_progress",
+     "s": 8014,
+     "t": 158.671,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 0,
+     "progress": 8014.373226407767,
+     "speed": 0,
+     "t": 158.671,
+     "userId": -1,
+     "x": -0.7,
+     "y": 93.9,
+     "z": -2073.4
+    },
+    {
+     "bot": true,
+     "kind": "finish",
+     "place": 4,
+     "t": 158.788,
+     "time": 127.23513269424438,
+     "userId": -100002
+    },
+    {
+     "biome": "SKY",
+     "kind": "phase",
+     "phase": "RESULTS",
+     "round": 1,
+     "t": 158.788
+    },
+    {
+     "coins": 40,
+     "daily": 40,
+     "kind": "reward",
+     "level": 2,
+     "levelsGained": 1,
+     "place": 1,
+     "returnDay": 0,
+     "saved": false,
+     "t": 158.79,
+     "totalCoins": 80,
+     "userId": -1,
+     "xp": 110
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2215,
+     "phase": "RESULTS",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 5.5,
+     "t": 158.905
+    },
+    {
+     "effect": "skateSlide",
+     "kind": "ability_probe",
+     "lift0": 0,
+     "maxSpeed0": 0,
+     "maxSpeedMid": 0,
+     "t": 159.622,
+     "turn0": 0.7,
+     "turnMid": 0.7,
+     "userId": -1,
+     "v0": 0,
+     "vMax": 0,
+     "vMin": 0,
+     "window": 1.2,
+     "y0": 94,
+     "yMax": 94,
+     "yMin": 94
+    }
+   ],
+   "samplesTotal": 258
+  },
+  "timedOut": false
+ },
+ "scenario": "bots-sky",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0\n  round 1 (SKY): 1 finished of 1\n    steal attempts: none\n    -1: picked 6, contests 0/0, stole 0, robbed 0, defences 0, items 6 | craft submitted, rejected 0\n    #1 Player1 86.3s\n  events: ability=20 ability_probe=42 bot_craft=1 bot_fx=18 bot_hud=11 bot_joined=1 bot_ready=1 bot_respawn=5 bot_screen=3 checkpoint=2 craft=1 drop_placed=8 finish=4 harness_crafting=1 harness_round=1 hazard=11 item_pickup=6 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=443 race_sample=258 race_start=1 reward=1 server_perf=79 speed_effect=48 vehicle_spawn=1\ndriving: 0 hits, 0 drift turbos, drops: Magnifying Glass\nbots: 3 raced (average, novice, expert), 3 finished: 91.5s, 94.7s, 127.2s\nserver: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 24 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 36 kbps; memory max 2247 MB",
+ "wallSeconds": 177.6
+}

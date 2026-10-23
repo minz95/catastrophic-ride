@@ -161,6 +161,7 @@ function Runner.runMatch(opts)
 		loadouts = opts.loadouts,
 		-- shop[botIndex] = { item ids } bought via ShopAction with shopCoins / shopLevel
 		shop = opts.shop, shopCoins = opts.shopCoins, shopLevel = opts.shopLevel,
+		fillBots = opts.fillBots,   -- RaceBots fill the grid to this many racers
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

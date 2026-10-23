@@ -8,6 +8,9 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
+| [bots-forest](bots-forest.json) | PASS | 4f74f56+ | 2026-10-24T00:30 |
+| [bots-ocean](bots-ocean.json) | PASS | 4f74f56+ | 2026-10-24T00:33 |
+| [bots-sky](bots-sky.json) | PASS | 4f74f56+ | 2026-10-24T00:36 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
 | [escape-ocean](escape-ocean.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
@@ -18,7 +21,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [fight-4p](fight-4p.json) | PASS | 356ae4f+ | 2026-10-23T12:40 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | PASS | a81a12d+ | 2026-10-23T23:49 |
+| [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | PASS | a81a12d+ | 2026-10-23T23:53 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
@@ -180,6 +183,48 @@ abilities: 12 items fired ok, 17 effect keys measured
 probeApi: 12 members, 0 missing
 ```
 
+## bots-forest — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (FOREST): 1 finished of 1
+    steal attempts: none
+    -1: picked 4, contests 0/0, stole 0, robbed 0, defences 0, items 4 | craft submitted, rejected 0
+    #1 Player1 122.6s
+  events: ability=13 ability_probe=46 bot_blocked=2 bot_craft=1 bot_fx=21 bot_hud=11 bot_joined=1 bot_ready=1 bot_respawn=2 bot_screen=3 checkpoint=2 craft=1 drift_turbo=9 drop_placed=11 finish=4 harness_crafting=1 harness_round=1 hazard=45 hit=1 item_pickup=4 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=507 race_sample=270 race_start=1 respawn=1 reward=1 server_perf=82 speed_effect=125 vehicle_spawn=1
+driving: 0 hits, 9 drift turbos, drops: Gas Can
+bots: 3 raced (average, novice, expert), 3 finished: 116.2s, 121.3s, 133.5s
+server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 27 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 30 kbps; memory max 2251 MB
+```
+
+## bots-ocean — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (OCEAN): 1 finished of 1
+    steal attempts: none
+    -1: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
+    #1 Player1 91.8s
+  events: ability=16 ability_probe=35 bot_craft=1 bot_fx=20 bot_hud=11 bot_joined=1 bot_pickup_denied=1 bot_ready=1 bot_screen=3 checkpoint=2 craft=1 drift_turbo=8 finish=4 harness_crafting=1 harness_round=1 hazard=6 item_pickup=7 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=401 race_sample=209 race_start=1 reward=1 server_perf=67 speed_effect=82 vehicle_spawn=1
+driving: 0 hits, 8 drift turbos
+bots: 3 raced (average, novice, expert), 3 finished: 96.2s, 97.2s, 102.5s
+server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 24 kbps; RACING heartbeat 60-60 Hz, physics 60-60 fps, send max 30 kbps; memory max 2263 MB
+```
+
+## bots-sky — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (SKY): 1 finished of 1
+    steal attempts: none
+    -1: picked 6, contests 0/0, stole 0, robbed 0, defences 0, items 6 | craft submitted, rejected 0
+    #1 Player1 86.3s
+  events: ability=20 ability_probe=42 bot_craft=1 bot_fx=18 bot_hud=11 bot_joined=1 bot_ready=1 bot_respawn=5 bot_screen=3 checkpoint=2 craft=1 drop_placed=8 finish=4 harness_crafting=1 harness_round=1 hazard=11 item_pickup=6 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=443 race_sample=258 race_start=1 reward=1 server_perf=79 speed_effect=48 vehicle_spawn=1
+driving: 0 hits, 0 drift turbos, drops: Magnifying Glass
+bots: 3 raced (average, novice, expert), 3 finished: 91.5s, 94.7s, 127.2s
+server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 24 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 36 kbps; memory max 2247 MB
+```
+
 ## craft-afk-3p — PASS
 
 ```
@@ -297,20 +342,20 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ## match-forest — PASS
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 4 finished of 4
-    steal attempts: defended=5, denied: too far=2, denied: victim has nothing=5, stolen=1
-    -4: picked 13, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 10, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 10, contests 0/0, stole 0, robbed 1, defences 3, items 8 | craft submitted, rejected 0
-    -3: picked 9, contests 0/1, stole 1, robbed 0, defences 2, items 8 | craft submitted, rejected 0
-    #1 Player1 97.6s
-    #2 Player4 105.7s
-    #3 Player2 127.7s
-    #4 Player3 132.1s
-  events: ability=96 ability_probe=227 bot_craft=4 bot_defend=6 bot_farmfx=144 bot_fx=308 bot_guard=5 bot_hud=124 bot_joined=4 bot_pickup_denied=1 bot_punch=12 bot_ready=4 bot_respawn=7 bot_screen=23 bot_steal=13 checkpoint=8 contact=10 contest_res
-driving: 6 hits (closing speed max 78, push max 45 studs/s), 38 drift turbos
-server: FARMING heartbeat 53-60 Hz, physics 57-60 fps, send max 15453 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 10 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 19 kbps; memory max 2263 MB
+    steal attempts: defended=3, stolen=3
+    -4: picked 9, contests 1/1, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 12, contests 0/0, stole 0, robbed 2, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 9, contests 0/0, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    -3: picked 6, contests 0/1, stole 2, robbed 0, defences 2, items 8 | craft submitted, rejected 0
+    #1 Player4 114.3s
+    #2 Player2 119.0s
+    #3 Player1 121.4s
+    #4 Player3 133.7s
+  events: ability=93 ability_probe=253 bot_craft=4 bot_defend=6 bot_farmfx=120 bot_fx=376 bot_guard=1 bot_hud=124 bot_joined=4 bot_pickup_denied=1 bot_punch=10 bot_ready=4 bot_respawn=6 bot_screen=34 bot_steal=6 checkpoint=8 contact=17 contest_result=1 craft=4 drift_turbo=33 drop_placed=19 finish=
+driving: 6 hits (closing speed max 39, push max 28 studs/s), 33 drift turbos, drops: Cactus, Magnifying Glass
+server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 48 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 3 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 10 kbps; memory max 2234 MB
 ```
 
 ## match-ocean — PASS
