@@ -30,7 +30,7 @@
 --     least RIDE_MIN; `ride.move` puts parts at its edges, and `ride.fit`
 --     (VehicleDesign.fitRide) moves the wheels, paddle wheels and propellers
 --     against the item's real size once it is placed.
---   * A mount with `spin` turns on every client (StarterPlayerScripts/SpinFx):
+--   * A mount or part with `spin` turns on every client (StarterPlayerScripts/SpinFx):
 --     its copies are welded to an invisible hub joined to the chassis by a
 --     Motor6D. `flat` = the axis the item is laid thin along (a wheel's
 --     side, a propeller's face).
@@ -66,6 +66,8 @@ VehicleDesign.RIDE_LOOK = {
 	["Bathtub"]       = { sink = 0.4 },
 	["Shopping Cart"] = { yaw = 180, sink = 0.35 },                -- handle at the back
 	["Toilet Paper"]  = { yaw = 0, tip = true },
+	["Kite"]          = { yaw = 0, tip = true },                   -- flat, a flying carpet (stood on its edge)
+	["Treadmill"]     = { stretch = 2.0 },                         -- narrow: the rider hid it
 }
 
 VehicleDesign.RIDE_MIN = {
@@ -138,6 +140,11 @@ local function car(stats)
 		-- Arch over each wheel
 		pair(P, "Fender" .. tag, "block", V3(0.3, 0.25, r * 2.3),
 			function(s) return CF(s * (W / 2 + 0.05), top - 0.05, fz * wheelZ) end, "body")
+	end
+	-- the plain wheels roll too (SpinFx), each with its hubcap
+	for _, p in ipairs(P) do
+		local side = p.name:match("^Wheel(%a+)$") or p.name:match("^Hub(%a+)$")
+		if side then p.spin = { axis = "X", mode = "wheel", radius = r, group = side } end
 	end
 	-- Bumpers, grille, lights (front is -Z)
 	add(P, "BumperFront", "block", V3(W + 0.1, 0.35, 0.3), CF(0, -H / 2 + 0.3, -L / 2 - 0.12), "trim")
@@ -287,6 +294,13 @@ local function boat(stats)
 		function(s) return CF(s * W / 4, top + 0.09, -L / 2 - prow / 2) * ANG(0, s * yaw, 0) end, "wood", Enum.Material.Wood)
 	add(P, "Deck", "block", V3(W - 0.3, 0.08, L - 0.2), CF(0, top + 0.04, 0), "wood", Enum.Material.WoodPlanks)
 	add(P, "Transom", "block", V3(W, H, 0.12), CF(0, 0, L / 2 + 0.06), "accent")
+	-- Below the chassis down into the water: a boat races with its chassis
+	-- held over the water (WATERLINE), and the hull alone looked to float
+	local skirt = -H / 2 - (VehicleDesign.WATERLINE - VehicleDesign.DRAFT)
+	add(P, "Keel", "block", V3(W, skirt, L), CF(0, -H / 2 - skirt / 2, 0), "body")
+	pair(P, "ProwSkirt", "wedge", V3(skirt, W / 2, prow),
+		function(s) return CF(s * W / 4, -H / 2 - skirt / 2, -L / 2 - prow / 2) * ANG(0, 0, -s * HALF_PI) end, "body")
+	add(P, "TransomSkirt", "block", V3(W, skirt, 0.12), CF(0, -H / 2 - skirt / 2, L / 2 + 0.06), "accent")
 	pair(P, "NavLight", "ball", V3(0.22, 0.22, 0.22),
 		function(s) return CF(s * (W / 2 - 0.05), top + 0.3, -L / 2 + 0.2) end, "trim", Enum.Material.Neon)
 	P[#P - 1].color, P[#P].color = "nav_red", "nav_green"
@@ -298,7 +312,9 @@ local function boat(stats)
 		Enum.Material.Glass, 0.35)
 	d.replacedBy.BODY = { "Cabin", "Windscreen" }
 	-- Outboard motor at the stern (an ENGINE item takes the motor's place)
-	add(P, "MotorLeg", "block", V3(0.18, 1.0, 0.18), CF(0, -0.2, L / 2 + 0.4), "trim")
+	-- the leg reaches into the water (the motor sits on top of it)
+	local legTop, legBottom = top - 0.1, VehicleDesign.WATERLINE - VehicleDesign.DRAFT
+	add(P, "MotorLeg", "block", V3(0.18, legTop - legBottom, 0.18), CF(0, (legTop + legBottom) / 2, L / 2 + 0.4), "trim")
 	add(P, "Motor", "block", V3(0.55, 0.6, 0.6), CF(0, top + 0.2, L / 2 + 0.4), "trim")
 	d.replacedBy.ENGINE = { "Motor" }
 	-- Mast near the bow and a mainsail: its tall edge on the mast, the foot
@@ -325,7 +341,7 @@ local function boat(stats)
 	-- MOBILITY: side paddle wheels, like a river steamer: on each side
 	-- PADDLES copies of the item round a hub, turning (the hubs show only then)
 	local rp = VehicleDesign.PADDLE_RADIUS
-	local wheelY = -H / 2 + rp + 0.05
+	local wheelY = VehicleDesign.WATERLINE - VehicleDesign.DRAFT + rp   -- the paddles dip into the water
 	local function paddles(x, z)
 		local list = {}
 		for _, s in ipairs({ -1, 1 }) do
@@ -373,9 +389,18 @@ local function boat(stats)
 		for _, p in ipairs(dd.parts) do
 			if at[p.name] then p.cf = at[p.name] end
 		end
+		-- a wooden float under the item, down into the water: the item was
+		-- lifted to the chassis top and hovered over the water with its rider
+		local floatTop = lo.Y + 0.05
+		local depth = floatTop - (VehicleDesign.WATERLINE - VehicleDesign.DRAFT)
+		if depth > 0.15 then
+			add(dd.parts, "Float", "block", V3((hi.X - lo.X) * 0.92, depth, (hi.Z - lo.Z) * 0.9),
+				CF((lo.X + hi.X) / 2, floatTop - depth / 2, (lo.Z + hi.Z) / 2), "wood", Enum.Material.WoodPlanks)
+		end
 	end
 	d.ride = {
 		hide = { "ProwL", "ProwR", "StripeL", "StripeR", "GunwaleL", "GunwaleR", "BowRailL", "BowRailR", "Deck", "Transom",
+			"Keel", "ProwSkirtL", "ProwSkirtR", "TransomSkirt",
 			"NavLightL", "NavLightR", "Cabin", "Windscreen" },
 		box = V3(math.max(W + 0.3, VehicleDesign.RIDE_MIN.OCEAN.X), 1.9, rideL),
 		bottom = -H / 2 + 0.05, centreZ = -prow * 0.3,
@@ -408,6 +433,7 @@ local function plane(stats)
 		Enum.Material.Metal)
 	add(P, "PropBlade1", "block", V3(0.18, R * 3.6, 0.06), CF(0, 0, -L / 2 - 0.98) * ANG(0, 0, math.rad(45)), "trim")
 	add(P, "PropBlade2", "block", V3(0.18, R * 3.6, 0.06), CF(0, 0, -L / 2 - 0.98) * ANG(0, 0, math.rad(-45)), "trim")
+	for i = #P - 2, #P do P[i].spin = { axis = "Z", mode = "prop", group = "Prop" } end   -- spinner and blades turn
 	-- Tail cone tapering up to the fin
 	add(P, "TailCone", "wedge", V3(R * 2, R * 2, 1.2), CF(0, 0, L / 2 + 0.6) * ANG(math.pi, 0, 0), "body")
 	-- Canopy
@@ -531,6 +557,12 @@ end
 -- real head when someone sits down. `sink` = how far it comes down over
 -- the head.
 VehicleDesign.HAT = { box = V3(1.7, 1.3, 1.7), headTop = 3.75, sink = 0.25 }
+
+-- A boat races with its chassis centre this far above the water (local Y of
+-- the water: BiomeConfig.OCEAN raceStartY 3, waterPlaneY 2; the hover holds
+-- it). Hulls, floats, paddles and the motor leg reach DRAFT below it.
+VehicleDesign.WATERLINE = -1.0
+VehicleDesign.DRAFT = 0.15
 
 -- MOBILITY looks: a car wheel's width, a boat's paddles per wheel and their
 -- reach, a plane propeller's size, and how far the sail is sheeted out.

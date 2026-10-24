@@ -677,6 +677,55 @@ local function _wearHat(vehicle, rider)
 	end
 end
 
+-- Spinning MOBILITY items (wheels, paddle wheels, propellers) turn in the
+-- showroom as if driving gently: the parts tagged SpinHub by CraftPreview.
+local SHOW_SPEED = 14   -- studs/s the wheels roll at
+local _spins = {}
+local function _collectSpins(copy)
+	_spins = {}
+	local byHub = {}
+	for _, p in ipairs(copy:GetDescendants()) do
+		if p:IsA("BasePart") then
+			if p.Name:sub(1, 8) == "SpinHub_" then
+				byHub[p.Name] = byHub[p.Name] or { members = {} }
+				byHub[p.Name].hub = p
+			elseif p:GetAttribute("SpinHub") then
+				byHub[p:GetAttribute("SpinHub")] = byHub[p:GetAttribute("SpinHub")] or { members = {} }
+				table.insert(byHub[p:GetAttribute("SpinHub")].members, p)
+			end
+		end
+	end
+	for _, g in pairs(byHub) do
+		if g.hub and #g.members > 0 then
+			local base = g.hub.CFrame
+			local rel = {}
+			for _, p in ipairs(g.members) do rel[p] = base:ToObjectSpace(p.CFrame) end
+			local rate
+			if g.hub:GetAttribute("SpinMode") == "prop" then rate = 10 * (g.hub:GetAttribute("SpinDir") or 1)
+			else rate = -SHOW_SPEED / math.max(g.hub:GetAttribute("SpinRadius") or 1, 0.1) end
+			table.insert(_spins, { base = base, rel = rel, rate = rate, angle = 0,
+				axisZ = g.hub:GetAttribute("SpinAxis") == "Z" })
+		end
+	end
+end
+local _spinReport = 0
+local function _turnSpins(dt)
+	-- harness bots report what turns (sim.py showroom check)
+	if LocalPlayer:GetAttribute("HarnessBot") and os.clock() - _spinReport > 2 then
+		_spinReport = os.clock()
+		local ch = ReplicatedStorage:FindFirstChild("HarnessChannel")
+		local turned = 0
+		for _, sp in ipairs(_spins) do turned += sp.turned or 0 end
+		if ch then ch:FireServer("showroom_spin", { groups = #_spins, turned = math.floor(turned) }) end
+	end
+	for _, sp in ipairs(_spins) do
+		sp.turned = (sp.turned or 0) + math.abs(sp.rate * dt)
+		sp.angle = (sp.angle + sp.rate * dt) % (2 * math.pi)
+		local turn = sp.base * (sp.axisZ and CFrame.Angles(0, 0, sp.angle) or CFrame.Angles(sp.angle, 0, 0))
+		for p, rel in pairs(sp.rel) do p.CFrame = turn * rel end
+	end
+end
+
 local _world = nil
 local function _show(model)
 	if _world then _world:Destroy() end
@@ -687,6 +736,7 @@ local function _show(model)
 	world.Parent = view
 	_world = world
 	copy.Parent = world
+	pcall(_collectSpins, copy)
 	local seat = copy:FindFirstChildWhichIsA("VehicleSeat", true)
 	if seat then
 		local ok, rider = pcall(_rider, seat, world)
@@ -751,6 +801,7 @@ end)
 RunService.RenderStepped:Connect(function(dt)
 	if not screen.Enabled or not _shown then return end
 	if not _dragging then _angle += dt * 0.55 end   -- about one turn in 11 s
+	_turnSpins(dt)
 	local eye = _centre + Vector3.new(math.sin(_angle) * _dist, _dist * 0.38, math.cos(_angle) * _dist)
 	viewCam.CFrame = CFrame.lookAt(eye, _centre)
 end)

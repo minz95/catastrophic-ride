@@ -25,6 +25,7 @@ local ItemConfig = require(ReplicatedStorage.Shared.ItemConfig)
 local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
 local VehicleStats = require(ReplicatedStorage.Shared.VehicleStats)
 local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
+local VehicleDesign = require(ServerScriptService.Modules.VehicleDesign)
 
 local Gallery = {}
 
@@ -145,8 +146,37 @@ local function fitOf(model, seat)
 	local overX = math.max(0, math.abs(s.X) - (hi.X - lo.X) / 2)
 	local overZ = math.max(0, s.Z - hi.Z, lo.Z - s.Z)
 	local r = function(x) return math.floor(x * 100 + 0.5) / 100 end
+	-- `gap`: how far the seat's bottom floats above the item's real surface
+	-- right under the rider (rays down onto the item's collision shape at the
+	-- seat and a hand's width around it; the box top is not the surface of a
+	-- duck's back or a treadmill's belt). > 0.1: the rider looks to float.
+	local holder
+	for _, h in ipairs(model:GetChildren()) do
+		if h:IsA("Model") and h:GetAttribute("Slot") == "BODY" then holder = h end
+	end
+	local gap
+	if holder then
+		local parts = {}
+		for _, p in ipairs(holder:GetDescendants()) do
+			if p:IsA("BasePart") then p.CanQuery = true; table.insert(parts, p) end
+		end
+		local params = RaycastParams.new()
+		params.FilterType = Enum.RaycastFilterType.Include
+		params.FilterDescendantsInstances = parts
+		local seatBottom = seat.Position.Y - seat.Size.Y / 2
+		local hits = {}
+		for _, o in ipairs({ Vector3.zero, Vector3.new(0.5, 0, 0), Vector3.new(-0.5, 0, 0), Vector3.new(0, 0, 0.5), Vector3.new(0, 0, -0.5) }) do
+			local from = (seat.CFrame * CFrame.new(o)).Position + Vector3.new(0, 6, 0)
+			local hit = workspace:Raycast(from, Vector3.new(0, -14, 0), params)
+			table.insert(hits, hit and hit.Position.Y or -math.huge)
+		end
+		table.sort(hits)
+		-- the highest surface under the rider holds them up
+		gap = hits[#hits] > -math.huge and r(seatBottom - hits[#hits]) or nil
+		for _, p in ipairs(parts) do p.CanQuery = false end
+	end
 	return { sink = r(hi.Y - seatTop), over = r(math.max(overX, overZ)), itemH = r(hi.Y - lo.Y),
-		itemL = r(hi.Z - lo.Z), itemW = r(hi.X - lo.X) }
+		itemL = r(hi.Z - lo.Z), itemW = r(hi.X - lo.X), gap = gap }
 end
 
 -- Wheels, paddle wheels and propellers that do not touch what carries them
@@ -199,7 +229,7 @@ function Gallery.looseParts(model, biome)
 		end
 	elseif biome == "OCEAN" and holders.MOBILITY then
 		for _, n in ipairs({ "PaddleHubL", "PaddleHubR" }) do
-			if not touch(part(n), base) then table.insert(out, n) end
+			if not (touch(part(n), base) or touch(part(n), part("Float"))) then table.insert(out, n) end
 		end
 		for i, h in ipairs(holders.MOBILITY) do
 			if not (touch(h, part("PaddleHubL")) or touch(h, part("PaddleHubR"))) then table.insert(out, "paddle " .. i) end
@@ -252,6 +282,17 @@ function Gallery.run(args)
 					if p:IsA("BasePart") then p.Anchored = true end
 				end
 				model.Parent = folder
+				if biome == "OCEAN" then
+					-- the water as in a race (VehicleDesign.WATERLINE), to see the boat sit in it
+					local water = Instance.new("Part")
+					water.Anchored, water.CanCollide = true, false
+					water.Size = Vector3.new(9, 0.1, 9)
+					water.CFrame = cf * CFrame.new(0, VehicleDesign.WATERLINE - 0.05, 0)
+					water.Color = Color3.fromRGB(40, 120, 200)
+					water.Transparency = 0.35
+					water.Material = Enum.Material.Glass
+					water.Parent = folder
+				end
 				label(model, (slots.BODY or "-") .. (slots.MOBILITY and (" + " .. slots.MOBILITY .. " "
 					.. ({ FOREST = "wheels", OCEAN = "paddles", SKY = "props" })[biome]) or "")
 					.. (slots.HEAD and (" + " .. slots.HEAD .. " hat") or "") .. " · "

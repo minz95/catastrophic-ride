@@ -29,6 +29,10 @@ local RARITY_COLOURS = {
 -- torqueFor / turnSpeedFor (the simulators use the same functions).
 VehicleBuilder.SEAT = { FOREST = true, OCEAN = true, SKY = true }
 
+-- How far a ridden item's seat may go below the (invisible) chassis top to
+-- sit on the item's real surface (a treadmill's belt).
+VehicleBuilder.SEAT_INTO_CHASSIS = 0.4
+
 VehicleBuilder.SLOTS = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
 
 -- ─── Parts ────────────────────────────────────────────────────────────────────
@@ -246,6 +250,40 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop,
 	end
 	holder.Parent = model
 	return holder, top, bottom
+end
+
+-- ─── Seat on a ridden item ───────────────────────────────────────────────────
+
+-- Highest point of the item's collision shape under the rider (rays down at
+-- the seat and half a stud round it), in mount space; nil when nothing is
+-- hit. The item goes into the workspace for the rays and straight back.
+local function surfaceUnder(holder, spawnCF, seatLocal)
+	if not holder then return nil end
+	local parts, own = {}, {}
+	for _, p in ipairs(holder:GetDescendants()) do
+		if p:IsA("BasePart") then table.insert(parts, p); own[p] = true end
+	end
+	local parent = holder.Parent
+	local best
+	local ok = pcall(function()
+		holder.Parent = workspace
+		for _, p in ipairs(parts) do p.CanQuery = true end
+		local params = RaycastParams.new()
+		params.FilterType = Enum.RaycastFilterType.Include
+		params.FilterDescendantsInstances = parts
+		for _, o in ipairs({ Vector3.zero, Vector3.new(0.5, 0, 0), Vector3.new(-0.5, 0, 0), Vector3.new(0, 0, 0.5),
+			Vector3.new(0, 0, -0.5) }) do
+			local from = spawnCF * (seatLocal * CFrame.new(o) * CFrame.new(0, 6, 0)).Position
+			local hit = workspace:Raycast(from, spawnCF:VectorToWorldSpace(Vector3.new(0, -14, 0)), params)
+			if hit and own[hit.Instance] then
+				local y = spawnCF:PointToObjectSpace(hit.Position).Y
+				best = best and math.max(best, y) or y
+			end
+		end
+	end)
+	for _, p in ipairs(parts) do p.CanQuery = false end
+	holder.Parent = parent
+	return ok and best or nil
 end
 
 -- ─── Spinning MOBILITY items ─────────────────────────────────────────────────
@@ -500,13 +538,14 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	local primaryPart = chassis
 
 	-- Riding the BODY item: it goes first, the rest sits on its real top
-	local rideTop, rideSink = nil, 0
+	local rideTop, rideSink, rideHolder = nil, 0, nil
 	if design.riding then
 		chassis.Transparency = 1
 		local mount = design.mounts.BODY[1]
 		local chassisTop = design.chassis.size.Y / 2
-		local _, top, bottom = placeItem(slots.BODY, spawnCFrame * mount.cf, mount, model, chassis, "BODY",
+		local holder, top, bottom = placeItem(slots.BODY, spawnCFrame * mount.cf, mount, model, chassis, "BODY",
 			chassisTop - mount.cf.Position.Y)
+		rideHolder = holder
 		rideTop = mount.cf.Position.Y + (top or 0)
 		rideSink = (mount.sink and top and bottom) and mount.sink * (top - bottom) or 0
 		model:SetAttribute("Riding", slots.BODY)
@@ -515,6 +554,7 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		if lo then VehicleDesign.fitRide(design, lo, hi) end
 	end
 	local ride = design.ride
+	local hubs = {}   -- spin hubs by group (plain wheels and propeller, MOBILITY copies)
 
 	for _, spec in ipairs(VehicleDesign.partsFor(design, slots)) do
 		local p = SHAPES[spec.shape]()
@@ -528,7 +568,16 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		p.Transparency = spec.transparency or 0
 		decoration(p)
 		p.Parent = model
-		weld(chassis, p)
+		local to = chassis
+		if spec.spin then
+			-- a wheel and its hubcap turn round the wheel's centre
+			local key = spec.spin.group
+			if not hubs[key] then
+				hubs[key] = spinHub(model, chassis, spawnCFrame * CFrame.new(cf.Position), spec.spin, "SpinHub_" .. key)
+			end
+			to = hubs[key]
+		end
+		weld(to, p)
 	end
 
 	local seatSpec = design.seat
@@ -540,6 +589,17 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		-- on the item, no higher than its box allows
 		-- (RIDE_LOOK sink: down into a tub or onto the cushions)
 		local y = math.min(rideTop, design.mounts.BODY[1].cf.Position.Y + ride.box.Y / 2) - rideSink + seatSpec.size.Y / 2
+		-- down onto the item's real surface when its box top is higher than
+		-- what is under the rider (a treadmill's handle, a rocket's fins, a
+		-- duck's head): no rider floating over it. Not for RIDE_LOOK sinks.
+		if not design.mounts.BODY[1].sink then
+			local surf = surfaceUnder(rideHolder, spawnCFrame, CFrame.new(0, y, ride.seatZ))
+			if surf and surf < y - seatSpec.size.Y / 2 - 0.05 then
+				-- (into the invisible chassis a little: the rider is part of the car)
+				y = math.max(surf + seatSpec.size.Y / 2, design.chassis.size.Y / 2 - VehicleBuilder.SEAT_INTO_CHASSIS)
+				model:SetAttribute("SeatDrop", math.floor((rideTop - surf) * 100 + 0.5) / 100)
+			end
+		end
 		seat.CFrame = spawnCFrame * CFrame.new(0, y, ride.seatZ)
 	end
 	seat.Color = Color3.fromRGB(50, 50, 50)
@@ -552,7 +612,6 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	weld(chassis, seat)
 
 	-- Crafted items in their slot boxes (the ridden BODY item is already in)
-	local hubs = {}
 	for _, slot in ipairs(VehicleBuilder.SLOTS) do
 		local itemName = slots[slot]
 		if itemName and not (slot == "BODY" and design.riding) then

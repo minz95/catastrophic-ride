@@ -316,18 +316,28 @@ R.describe("crafting input from clients", function()
 		local gui = srv.mock.Instance.new("Folder")
 		gui.Name = "PlayerGui"
 		gui.Parent = a
-		srv.SessionManager.getData(a).inventory = { "Pizza", "Kettle", "Log" }
+		srv.SessionManager.getData(a).inventory = { "Pizza", "Kettle", "Log", "Rubber Duck" }
 		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Log" })
-		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Pizza", ENGINE = "Kettle" })   -- a burst: the latest wins
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Pizza", ENGINE = "Kettle", MOBILITY = "Rubber Duck" })   -- a burst: the latest wins
 		srv.advance(0.5)
 		local folder = gui:FindFirstChild("CraftPreview")
 		R.expect(folder ~= nil).toBe(true)
 		local models = folder:GetChildren()
 		R.expect(#models).toBe(1)
 		R.expect(models[1]:GetAttribute("Riding")).toBe("Pizza")
+		local hubs, tagged = {}, 0
 		for _, d in ipairs(models[1]:GetDescendants()) do
 			R.expect(d:IsA("BodyMover") or d:IsA("BodyGyro") or d:IsA("BodyPosition")).toBe(false)
+			if d:IsA("BasePart") and d.Name:sub(1, 8) == "SpinHub_" then hubs[d.Name] = true end
 		end
+		-- the duck wheels' parts know their hub, so the showroom can turn them
+		for _, d in ipairs(models[1]:GetDescendants()) do
+			if d:IsA("BasePart") and d:GetAttribute("SpinHub") then
+				R.expect(hubs[d:GetAttribute("SpinHub")]).toBe(true)
+				tagged += 1
+			end
+		end
+		R.expect(tagged >= 4).toBe(true)
 		srv.advance(6)   -- RACING: the showroom closes
 		R.expect(#folder:GetChildren()).toBe(0)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")

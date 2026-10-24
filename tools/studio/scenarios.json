@@ -1423,13 +1423,34 @@
       }
     },
     {
+      "name": "gallery-rides",
+      "kind": "gallery",
+      "tags": [
+        "vehicles"
+      ],
+      "_why": "close-ups of a few ridden items (edit opts.only): does the rider sit on the item, not float over it? The report's fit.gap = seat bottom above the item's real surface (rays), > 0.1 floats",
+      "opts": {
+        "hold": 1.2,
+        "only": [
+          "Kite",
+          "Treadmill",
+          "Rubber Duck",
+          "Rocket"
+        ],
+        "closeUps": true
+      },
+      "checks": {
+        "loose": 0
+      }
+    },
+    {
       "name": "showroom",
       "kind": "match",
       "tags": [
         "vehicles",
         "ui"
       ],
-      "_why": "the crafting screen's showroom (Modules/CraftPreview + CraftingUI): the vehicle the slots build turns in a viewport with the avatar seated; screenshots of the client window during CRAFTING go to reports/vehicles/studio/ (whole screen, git-ignored)",
+      "_why": "the crafting screen's showroom (Modules/CraftPreview + CraftingUI): the vehicle the slots build turns in a viewport with the avatar seated; screenshots of the client window during CRAFTING go to reports/vehicles/studio/ (whole screen, git-ignored); showroomSpin: the wheels / propellers turn in the showroom",
       "opts": {
         "biome": "FOREST",
         "players": 1,
@@ -1452,7 +1473,8 @@
         "gap": 5
       },
       "checks": {
-        "allJoined": true
+        "allJoined": true,
+        "showroomSpin": 1
       }
     },
     {

@@ -1,0 +1,1683 @@
+{
+ "checks": [],
+ "commit": "5b1f6b6",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-24T12:32:09.935Z,0.935195,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIGradients",
+  "2026-10-24T12:32:09.935Z,0.935199,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIShadows",
+  "2026-10-24T12:32:09.935Z,0.935202,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-24T12:32:10.070Z,1.070030,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:32:10.109Z,1.109767,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T12:32:10.870Z,1.870169,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:32:11.658Z,2.658876,6bbbb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"07242f28-8d92-421c-bea0-9a842b118aad\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T12:33:10.872Z,61.872055,6b573000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:33:42.512Z,93.512314,6b573000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"07242f28-8d92-421c-bea0-9a842b118aad\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 30,
+   "FARMING": 40,
+   "RACING": 30,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "slow"
+  ],
+  "maxSeconds": 200,
+  "players": 1,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-24T21:33:47+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "slow"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 30,
+    "FARMING": 40,
+    "RACING": 30,
+    "RESULTS": 3
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 200,
+   "players": 1,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": true,
+      "draft": {
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "SPECIAL": "Racing Flag"
+      },
+      "rejected": [],
+      "slots": {
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "HEAD": "Umbrella",
+       "MOBILITY": "Trophy",
+       "SPECIAL": "Racing Flag",
+       "TAIL": "Drill"
+      },
+      "stats": {
+       "acceleration": 15.082028018729744,
+       "boostDuration": 1.945,
+       "floatability": 3.6960514233241506,
+       "flyability": 7.668723296071154,
+       "speed": 24.522080307204273,
+       "stability": 76.49750700088791
+      }
+     }
+    },
+    "craftT0": 46.442,
+    "durationSeconds": 71.04431066662073,
+    "farm": {
+     "attempts": [],
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "drops": 4,
+       "inventory": 8,
+       "ledger": 8,
+       "pickups": 12,
+       "robbed": 0,
+       "stolen": 0
+      }
+     },
+     "punches": []
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": [
+      "Trophy",
+      "Log",
+      "Umbrella",
+      "Drill",
+      "Magnifying Glass",
+      "Umbrella",
+      "Racing Flag",
+      "Propeller Hat"
+     ]
+    },
+    "players": [
+     {
+      "boostDuration": 1.945,
+      "driver": "expert",
+      "farm": "slow",
+      "name": "Player1",
+      "slots": {
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "HEAD": "Umbrella",
+       "MOBILITY": "Trophy",
+       "SPECIAL": "Racing Flag",
+       "TAIL": "Drill"
+      },
+      "speed": 24.522080307204273,
+      "userId": -1
+     }
+    ],
+    "raceStartedAt": 79.2304563333746,
+    "round": 1,
+    "startedAt": 9.194863750017248,
+    "t0": 6.426
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: none\n    -1: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n  events: ability=1 bot_craft=1 bot_farmfx=4 bot_hud=35 bot_joined=1 bot_ready=1 bot_screen=2 bot_showroom_spin=15 bot_spin_fx=1 craft=1 craft_preview=2 harness_crafting=1 harness_round=1 item_drop=4 item_dropped_world=4 item_pickup=12 item_wave=3 phase=3 race_sample=2 race_start=1 server_perf=38 vehicle_spawn=1",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 44.8,
+     "kind": "server_perf",
+     "memMb": 2131,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.006
+    },
+    {
+     "driver": "expert",
+     "farm": "slow",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 3.345,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "slow"
+     },
+     "kind": "bot_ready",
+     "t": 3.59,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2131,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 179.4,
+     "t": 4.022
+    },
+    {
+     "heartbeatHz": 58.9,
+     "kind": "server_perf",
+     "memMb": 2162,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12,
+     "t": 6.023
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 6.373
+    },
+    {
+     "count": 18,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 6.383,
+     "wave": 0
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 6.426
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.82686901092529
+     },
+     "kind": "bot_hud",
+     "t": 7.556,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 57.5,
+     "kind": "server_perf",
+     "memMb": 2241,
+     "phase": "FARMING",
+     "physicsFps": 59.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.6,
+     "t": 8.039
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.82453918457031
+     },
+     "kind": "bot_hud",
+     "t": 9.557,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2232,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.1,
+     "t": 10.041
+    },
+    {
+     "inventory": 1,
+     "item": "Trophy",
+     "itemId": "1",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 10.589,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.824477195739746
+     },
+     "kind": "bot_hud",
+     "t": 11.555,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2263,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 21.9,
+     "t": 12.041
+    },
+    {
+     "inventory": 2,
+     "item": "Log",
+     "itemId": "15",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 12.108,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.80898904800415
+     },
+     "kind": "bot_hud",
+     "t": 13.574,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.5,
+     "kind": "server_perf",
+     "memMb": 2253,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.1,
+     "t": 14.056
+    },
+    {
+     "inventory": 3,
+     "item": "Umbrella",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 15.507,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.792615175247192
+     },
+     "kind": "bot_hud",
+     "t": 15.589,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2197,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.7,
+     "t": 16.057
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.777197122573853
+     },
+     "kind": "bot_hud",
+     "t": 17.607,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2199,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.4,
+     "t": 18.073
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.761157989501953
+     },
+     "kind": "bot_hud",
+     "t": 19.623,
+     "userId": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Drill",
+     "itemId": "14",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 20.09,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2200,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.5,
+     "t": 20.091
+    },
+    {
+     "count": 2,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 20.391,
+     "wave": 1
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 20.424,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.760748147964478
+     },
+     "kind": "bot_hud",
+     "t": 21.622,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2201,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.8,
+     "t": 22.106
+    },
+    {
+     "inventory": 5,
+     "item": "Pizza",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 22.123,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.75293517112732
+     },
+     "kind": "bot_hud",
+     "t": 23.623,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2203,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.3,
+     "t": 24.107
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.742183208465576
+     },
+     "kind": "bot_hud",
+     "t": 25.639,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Alarm Clock",
+     "itemId": "9",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 25.724,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2204,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.8,
+     "t": 26.123
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "18",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 26.806,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.733911991119385
+     },
+     "kind": "bot_hud",
+     "t": 27.64,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2213,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.9,
+     "t": 28.14
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.7247211933136
+     },
+     "kind": "bot_hud",
+     "t": 29.655,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Lantern",
+     "itemId": "19",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 30.056,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2211,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.2,
+     "t": 30.156
+    },
+    {
+     "inventory": 7,
+     "item": "Pizza",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 31.638,
+     "userId": -1
+    },
+    {
+     "item": "Pizza",
+     "itemId": "21",
+     "kind": "item_dropped_world",
+     "parts": 40,
+     "t": 31.639,
+     "userId": -1,
+     "x": 68,
+     "z": 834
+    },
+    {
+     "inventory": 8,
+     "item": "Magnifying Glass",
+     "itemId": "2",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 31.639,
+     "userId": -1
+    },
+    {
+     "data": {
+      "arc": 5.4,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 31.672,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.706338167190552
+     },
+     "kind": "bot_hud",
+     "t": 31.672,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2212,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.3,
+     "t": 32.173
+    },
+    {
+     "count": 2,
+     "kind": "item_wave",
+     "players": 1,
+     "t": 32.391,
+     "wave": 2
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 32.438,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.699807167053223
+     },
+     "kind": "bot_hud",
+     "t": 33.688,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2205,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.4,
+     "t": 34.19
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.690607070922852
+     },
+     "kind": "bot_hud",
+     "t": 35.689,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2206,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.2,
+     "t": 36.205
+    },
+    {
+     "inventory": 7,
+     "item": "Alarm Clock",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 37.255,
+     "userId": -1
+    },
+    {
+     "item": "Alarm Clock",
+     "itemId": "24",
+     "kind": "item_dropped_world",
+     "parts": 54,
+     "t": 37.257,
+     "userId": -1,
+     "x": 65,
+     "z": 925
+    },
+    {
+     "inventory": 8,
+     "item": "Umbrella",
+     "itemId": "20",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 37.257,
+     "userId": -1
+    },
+    {
+     "data": {
+      "arc": 5.3,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 37.288,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.673485040664673
+     },
+     "kind": "bot_hud",
+     "t": 37.705,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2207,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.1,
+     "t": 38.207
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 39.04,
+     "userId": -1
+    },
+    {
+     "item": "Barrel",
+     "itemId": "25",
+     "kind": "item_dropped_world",
+     "parts": 20,
+     "t": 39.04,
+     "userId": -1,
+     "x": 38,
+     "z": 914
+    },
+    {
+     "inventory": 8,
+     "item": "Racing Flag",
+     "itemId": "5",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 39.04,
+     "userId": -1
+    },
+    {
+     "data": {
+      "arc": 5.2,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 39.071,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.657925128936768
+     },
+     "kind": "bot_hud",
+     "t": 39.722,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2208,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.4,
+     "t": 40.221
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.641184091567993
+     },
+     "kind": "bot_hud",
+     "t": 41.739,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2208,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.3,
+     "t": 42.222
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.626840114593506
+     },
+     "kind": "bot_hud",
+     "t": 43.755,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Lantern",
+     "kind": "item_drop",
+     "reason": "swap",
+     "t": 43.956,
+     "userId": -1
+    },
+    {
+     "item": "Lantern",
+     "itemId": "26",
+     "kind": "item_dropped_world",
+     "parts": 32,
+     "t": 43.956,
+     "userId": -1,
+     "x": -24,
+     "z": 961
+    },
+    {
+     "inventory": 8,
+     "item": "Propeller Hat",
+     "itemId": "10",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 43.957,
+     "userId": -1
+    },
+    {
+     "data": {
+      "arc": 5.2,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 43.989,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2208,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.3,
+     "t": 44.223
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.6102430820465088
+     },
+     "kind": "bot_hud",
+     "t": 45.771,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.1,
+     "t": 46.238
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 46.44
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 46.442
+    },
+    {
+     "kind": "craft_preview",
+     "t": 46.443,
+     "userId": -1
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 0
+     },
+     "kind": "bot_showroom_spin",
+     "t": 46.487,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:28"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 28.66096305847168
+     },
+     "kind": "bot_hud",
+     "t": 47.788,
+     "userId": -1
+    },
+    {
+     "body": "Log",
+     "kind": "craft_preview",
+     "riding": "Log",
+     "t": 48.094,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [
+       "Trophy",
+       "Log",
+       "Umbrella",
+       "Drill",
+       "Magnifying Glass",
+       "Umbrella",
+       "Racing Flag",
+       "Propeller Hat"
+      ],
+      "result": "draft only",
+      "slots": {
+       "BODY": "Log",
+       "ENGINE": "Propeller Hat",
+       "SPECIAL": "Racing Flag"
+      }
+     },
+     "kind": "bot_craft",
+     "t": 48.094,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.7,
+     "t": 48.256
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 34
+     },
+     "kind": "bot_showroom_spin",
+     "t": 48.504,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:26"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 26.65770196914673
+     },
+     "kind": "bot_hud",
+     "t": 49.789,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2209,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 1.6,
+     "t": 50.271
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 231
+     },
+     "kind": "bot_showroom_spin",
+     "t": 50.521,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:24"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 24.641793966293335
+     },
+     "kind": "bot_hud",
+     "t": 51.804,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.5,
+     "t": 52.272
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 427
+     },
+     "kind": "bot_showroom_spin",
+     "t": 52.522,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:22"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 22.643594980239868
+     },
+     "kind": "bot_hud",
+     "t": 53.804,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 54.289
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 623
+     },
+     "kind": "bot_showroom_spin",
+     "t": 54.521,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:20"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 20.626912117004395
+     },
+     "kind": "bot_hud",
+     "t": 55.822,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2210,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 56.305
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 819
+     },
+     "kind": "bot_showroom_spin",
+     "t": 56.521,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:18"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 18.607131958007812
+     },
+     "kind": "bot_hud",
+     "t": 57.838,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2222,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 58.32
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 1017
+     },
+     "kind": "bot_showroom_spin",
+     "t": 58.537,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:16"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 16.593088150024414
+     },
+     "kind": "bot_hud",
+     "t": 59.855,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2231,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 60.337
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 1215
+     },
+     "kind": "bot_showroom_spin",
+     "t": 60.555,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:14"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 14.57729196548462
+     },
+     "kind": "bot_hud",
+     "t": 61.871,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2230,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 62.338
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 1411
+     },
+     "kind": "bot_showroom_spin",
+     "t": 62.555,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:12"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 12.575047969818115
+     },
+     "kind": "bot_hud",
+     "t": 63.872,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2231,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 64.355
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 1608
+     },
+     "kind": "bot_showroom_spin",
+     "t": 64.571,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:10"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 10.562144994735718
+     },
+     "kind": "bot_hud",
+     "t": 65.887,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2231,
+     "phase": "CRAFTING",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 66.371
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 1805
+     },
+     "kind": "bot_showroom_spin",
+     "t": 66.571,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:08"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 8.533918142318726
+     },
+     "kind": "bot_hud",
+     "t": 67.921,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2231,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 68.389
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 2001
+     },
+     "kind": "bot_showroom_spin",
+     "t": 68.571,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:06"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 6.524662971496582
+     },
+     "kind": "bot_hud",
+     "t": 69.922,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2232,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 70.405
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 2199
+     },
+     "kind": "bot_showroom_spin",
+     "t": 70.587,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:04"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 4.507467985153198
+     },
+     "kind": "bot_hud",
+     "t": 71.937,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2232,
+     "phase": "CRAFTING",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 72.421
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 2396
+     },
+     "kind": "bot_showroom_spin",
+     "t": 72.622,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:02"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 2.498087167739868
+     },
+     "kind": "bot_hud",
+     "t": 73.955,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2232,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 74.437
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 2593
+     },
+     "kind": "bot_showroom_spin",
+     "t": 74.621,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:00"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 0.4977390766143799
+     },
+     "kind": "bot_hud",
+     "t": 75.954,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2215,
+     "phase": "CRAFTING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 76.455
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 76.455
+    },
+    {
+     "auto": true,
+     "draft": {
+      "BODY": "Log",
+      "ENGINE": "Propeller Hat",
+      "SPECIAL": "Racing Flag"
+     },
+     "kind": "craft",
+     "rejected": [],
+     "slots": {
+      "BODY": "Log",
+      "ENGINE": "Propeller Hat",
+      "HEAD": "Umbrella",
+      "MOBILITY": "Trophy",
+      "SPECIAL": "Racing Flag",
+      "TAIL": "Drill"
+     },
+     "stats": {
+      "acceleration": 15.082028018729744,
+      "boostDuration": 1.945,
+      "floatability": 3.6960514233241506,
+      "flyability": 7.668723296071154,
+      "speed": 24.522080307204273,
+      "stability": 76.49750700088791
+     },
+     "t": 76.462,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 8019.551979574296,
+     "racers": [
+      -1
+     ],
+     "round": 1,
+     "t": 76.485,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.43961334228516,
+     "progress": 10,
+     "speed": 0,
+     "t": 76.485,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 68.43961334228516,
+     "seated": true,
+     "t": 76.654,
+     "torque": 60.3281135559082,
+     "turnSpeed": 2.8474626541137695,
+     "userId": -1
+    },
+    {
+     "item": "Racing Flag",
+     "kind": "ability",
+     "result": "denied: countdown",
+     "t": 76.686,
+     "userId": -1
+    },
+    {
+     "data": {
+      "hubs": 4,
+      "modes": "wheel",
+      "turns": 0
+     },
+     "kind": "bot_spin_fx",
+     "t": 76.82,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.43961334228516,
+     "progress": 10,
+     "speed": 0,
+     "t": 76.988,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    }
+   ],
+   "samplesTotal": 2
+  },
+  "timedOut": false
+ },
+ "scenario": "showroom",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: none\n    -1: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0\n  events: ability=1 bot_craft=1 bot_farmfx=4 bot_hud=35 bot_joined=1 bot_ready=1 bot_screen=2 bot_showroom_spin=15 bot_spin_fx=1 craft=1 craft_preview=2 harness_crafting=1 harness_round=1 item_drop=4 item_dropped_world=4 item_pickup=12 item_wave=3 phase=3 race_sample=2 race_start=1 server_perf=38 vehicle_spawn=1\nspinning wheels / paddles / propellers: 1 cars (wheel), most turns 0\nserver: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 24 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 19 kbps; memory max 2263 MB",
+ "wallSeconds": 97.4
+}

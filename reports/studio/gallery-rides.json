@@ -1,0 +1,279 @@
+{
+ "checks": [],
+ "commit": "5b1f6b6",
+ "dirty": true,
+ "kind": "gallery",
+ "logErrors": [
+  "2026-10-24T12:25:07.225Z,1.225325,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-24T12:25:07.410Z,1.410919,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T12:25:07.435Z,1.435387,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:25:08.179Z,2.179368,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:25:08.937Z,2.937318,6fa4f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"d4c8d944-e8cb-4567-8ebe-3a4e3b3e252e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T12:25:17.997Z,11.997601,706df000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T12:25:18.257Z,12.257862,700bb000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T12:25:55.794Z,49.794891,6fa4f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"d4c8d944-e8cb-4567-8ebe-3a4e3b3e252e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "closeUps": true,
+  "hold": 1.2,
+  "only": [
+   "Kite",
+   "Treadmill",
+   "Rubber Duck",
+   "Rocket"
+  ],
+  "token": "0d6246fdd74c47c088b7bd25fac6e5db"
+ },
+ "ranAt": "2026-10-24T21:26:01+0900",
+ "report": {
+  "hats": [],
+  "items": [
+   {
+    "biome": "FOREST",
+    "body": "Kite",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 5.2,
+     "itemW": 2.56,
+     "over": 0,
+     "sink": 0.43
+    },
+    "riding": "Kite",
+    "size": [
+     5.1,
+     2.9,
+     3.3
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Kite",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 4.9,
+     "itemW": 2.21,
+     "over": 0,
+     "sink": -0.06
+    },
+    "riding": "Kite",
+    "size": [
+     5.9,
+     5.8,
+     2.2
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Kite",
+    "fit": {
+     "gap": 0,
+     "itemH": 2,
+     "itemL": 5,
+     "itemW": 2.33,
+     "over": 0,
+     "sink": 0.54
+    },
+    "riding": "Kite",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Treadmill",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 4.89,
+     "itemW": 2.67,
+     "over": 0,
+     "sink": 1.54
+    },
+    "riding": "Treadmill",
+    "size": [
+     4.8,
+     2.9,
+     3.4
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Treadmill",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 4.23,
+     "itemW": 2.31,
+     "over": 0,
+     "sink": 1.26
+    },
+    "riding": "Treadmill",
+    "size": [
+     5.6,
+     5.8,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Treadmill",
+    "fit": {
+     "gap": 0.21,
+     "itemH": 2,
+     "itemL": 4.45,
+     "itemW": 2.43,
+     "over": 0,
+     "sink": 1.17
+    },
+    "riding": "Treadmill",
+    "size": [
+     5.9,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Rubber Duck",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 4.02,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.14
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     4,
+     3.1,
+     4.3
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Rubber Duck",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 3.47,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 0.07
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     5.6,
+     5.8,
+     3.4
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Rubber Duck",
+    "fit": {
+     "gap": 0.02,
+     "itemH": 2,
+     "itemL": 3.55,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Rocket",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 5.2,
+     "itemW": 2.35,
+     "over": 0,
+     "sink": 0.26
+    },
+    "riding": "Rocket",
+    "size": [
+     5.1,
+     2.9,
+     3.1
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Rocket",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 5.62,
+     "itemW": 2.3,
+     "over": 0,
+     "sink": 0.19
+    },
+    "riding": "Rocket",
+    "size": [
+     6.3,
+     5.8,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Rocket",
+    "fit": {
+     "gap": 0,
+     "itemH": 2,
+     "itemL": 5,
+     "itemW": 2.26,
+     "over": 0,
+     "sink": 0.21
+    },
+    "riding": "Rocket",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   }
+  ],
+  "loose": [],
+  "shots": [
+   "01_kite_side",
+   "01_kite_rear",
+   "01_kite_car",
+   "01_kite_boat",
+   "01_kite_plane",
+   "02_treadmill_side",
+   "02_treadmill_rear",
+   "02_treadmill_car",
+   "02_treadmill_boat",
+   "02_treadmill_plane",
+   "03_rubberduck_side",
+   "03_rubberduck_rear",
+   "03_rubberduck_car",
+   "03_rubberduck_boat",
+   "03_rubberduck_plane",
+   "04_rocket_side",
+   "04_rocket_rear",
+   "04_rocket_car",
+   "04_rocket_boat",
+   "04_rocket_plane"
+  ],
+  "summary": "gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 seated, 0 hats worn, 0 loose wheels / paddles / propellers"
+ },
+ "scenario": "gallery-rides",
+ "studioExit": 0,
+ "summary": "gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 seated, 0 hats worn, 0 loose wheels / paddles / propellers",
+ "wallSeconds": 55.8
+}

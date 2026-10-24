@@ -387,11 +387,16 @@ def check(sc, report):
                     p5 = vals[max(0, int(len(vals) * 0.05) - 1)]
                     if p5 < floor:
                         out.append(("fail", "server %s p5 %.1f under %d (min %.1f)" % (key, p5, floor, vals[0])))
+        if c.get("showroomSpin"):
+            sr = [e for e in events if e.get("kind") == "bot_showroom_spin"
+                  and ((e.get("data") or {}).get("groups") or 0) > 0 and ((e.get("data") or {}).get("turned") or 0) > 0]
+            if len(sr) < c["showroomSpin"]:
+                out.append(("fail", "nothing turned in the crafting showroom"))
         if c.get("spin"):
             turned = {e.get("userId") for e in events if e.get("kind") == "bot_spin_fx"
                        and ((e.get("data") or {}).get("turns") or 0) >= 3}
             if len(turned) < c["spin"]:
-                out.append(("fail", "MOBILITY items spun on %d cars, want %d" % (len(turned), c["spin"])))
+                out.append(("fail", "wheels or propellers spun on %d cars, want %d" % (len(turned), c["spin"])))
         if c.get("shop"):
             sc_ = c["shop"]
             bought = [e for e in events if e.get("kind") == "bot_shop" and (e.get("data") or {}).get("result") == "ok"]
@@ -808,7 +813,7 @@ def run_one(sc, place, args):
                 dd = e.get("data") or {}
                 spins[e.get("userId")] = (max(spins.get(e.get("userId"), (0, ""))[0], dd.get("turns") or 0), dd.get("modes") or "")
         if spins:
-            summary += "\nspinning MOBILITY items: %d cars (%s), most turns %d" % (
+            summary += "\nspinning wheels / paddles / propellers: %d cars (%s), most turns %d" % (
                 len(spins), ", ".join(sorted(set(m for _, m in spins.values()))), max(t for t, _ in spins.values()))
         botAb = [e for e in evs if e.get("kind") == "bot_ability"]
         if botAb:
