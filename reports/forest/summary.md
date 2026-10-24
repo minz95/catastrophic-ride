@@ -34,14 +34,14 @@ Cars by top speed: slowest = Microwave + Magnifying Glass + Trophy (top speed 68
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 3 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.11 (−1 = faster always places better)
+- Fastest car won 4 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.20 (−1 = faster always places better)
 - Rank correlation, rarity points collected vs place: -0.23
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.33 |
-| farming: casual | 3.67 |
+| farming: sweaty | 3.31 |
+| farming: casual | 3.69 |
 | driving: expert | 1.50 |
 | driving: average | 3.50 |
 | driving: novice | 5.50 |
@@ -52,27 +52,27 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.41 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.25 |  .. 0.70 | the fastest build should not always win |
+| ✓ | closeShare | 0.39 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.33 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 18.47 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 2.42 | 1.00 ..  | the lead changes at least once |
+| ✓ | finishSpread | 18.60 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 2.00 | 1.00 ..  | the lead changes at least once |
 | ✗ | racingShare | 0.34 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.11 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 107.22 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | speedPlaceCorr | -0.20 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 107.13 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 13.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 11.2. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 start straight | 6.3 | 1.3 | 0 | 0 | 0 |
+| S1 start straight | 6.3 | 1.4 | 0 | 0 | 0 |
 | S2 outcrop hairpin | 8.5 | 0.7 | 0 | 0 | 2 |
-| S3 trestle climb | 19.2 | 2.3 | 0 | 0 | 64 |
-| S4 giant tree spiral | 12.5 | 2.0 | 0 | 0 | 81 |
-| S4b tree run-out | 9.7 | 2.3 | 0 | 0 | 62 |
-| S5 mud hook | 9.3 | 2.9 | 0 | 0 | 99 |
-| S6 pine switchbacks | 30.4 | 7.2 | 12 | 0 | 309 |
-| S7 ridge chicane | 18.2 | 2.9 | 0 | 0 | 94 |
+| S3 trestle climb | 19.2 | 2.4 | 0 | 0 | 64 |
+| S4 giant tree spiral | 12.6 | 2.0 | 0 | 0 | 83 |
+| S4b tree run-out | 9.8 | 2.5 | 0 | 0 | 65 |
+| S5 mud hook | 9.2 | 2.7 | 0 | 0 | 107 |
+| S6 pine switchbacks | 30.4 | 7.1 | 12 | 0 | 326 |
+| S7 ridge chicane | 18.2 | 3.3 | 0 | 0 | 102 |
 
 ## Geometry findings
 

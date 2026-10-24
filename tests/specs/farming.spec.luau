@@ -310,6 +310,29 @@ R.describe("crafting input from clients", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 
+	R.it("the showroom: every slot change builds the vehicle into the player's PlayerGui", function()
+		local srv = craftServer()
+		local a = srv.players[1]
+		local gui = srv.mock.Instance.new("Folder")
+		gui.Name = "PlayerGui"
+		gui.Parent = a
+		srv.SessionManager.getData(a).inventory = { "Pizza", "Kettle", "Log" }
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Log" })
+		srv.RemoteEvents.CraftDraft.OnServerEvent:Fire(a, { BODY = "Pizza", ENGINE = "Kettle" })   -- a burst: the latest wins
+		srv.advance(0.5)
+		local folder = gui:FindFirstChild("CraftPreview")
+		R.expect(folder ~= nil).toBe(true)
+		local models = folder:GetChildren()
+		R.expect(#models).toBe(1)
+		R.expect(models[1]:GetAttribute("Riding")).toBe("Pizza")
+		for _, d in ipairs(models[1]:GetDescendants()) do
+			R.expect(d:IsA("BodyMover") or d:IsA("BodyGyro") or d:IsA("BodyPosition")).toBe(false)
+		end
+		srv.advance(6)   -- RACING: the showroom closes
+		R.expect(#folder:GetChildren()).toBe(0)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
 	R.it("a draft naming items the player does not hold is ignored", function()
 		local srv = craftServer()
 		local a = srv.players[1]

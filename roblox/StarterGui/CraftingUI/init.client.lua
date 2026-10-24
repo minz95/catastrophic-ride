@@ -38,7 +38,7 @@ screen.Parent         = LocalPlayer.PlayerGui
 local panel = Instance.new("Frame")
 panel.Name                  = "Panel"
 panel.Size                  = UDim2.new(0, 500, 0, 476)
-panel.Position              = UDim2.new(0.5, -250, 0.5, -238)
+panel.Position              = UDim2.new(0.5, -405, 0.5, -238)   -- the showroom sits on its right
 panel.BackgroundColor3      = Color3.fromRGB(10, 10, 22)
 panel.BackgroundTransparency = 0.12
 panel.BorderSizePixel       = 0
@@ -558,6 +558,186 @@ local function _showGuide()
 		task.delay(0.45, function() guideBg.Visible = false end)
 	end)
 end
+
+-- ─── Showroom: the vehicle these slots build, turning slowly ────────────────
+-- The server (Modules/CraftPreview) puts a still copy of the vehicle in
+-- PlayerGui.CraftPreview on every slot change; it is shown here with the
+-- player's avatar seated, turning like a shop window. Drag to turn it.
+
+local UserInputService = game:GetService("UserInputService")
+
+local showroom = Instance.new("Frame")
+showroom.Name                  = "Showroom"
+showroom.Size                  = UDim2.new(0, 300, 0, 476)
+showroom.Position              = UDim2.new(0.5, 105, 0.5, -238)
+showroom.BackgroundColor3      = Color3.fromRGB(10, 10, 22)
+showroom.BackgroundTransparency = 0.12
+showroom.BorderSizePixel       = 0
+showroom.Parent                = screen
+local _src = Instance.new("UICorner"); _src.CornerRadius = UDim.new(0, 14); _src.Parent = showroom
+
+local showTitle = Instance.new("TextLabel")
+showTitle.Size                  = UDim2.new(1, -20, 0, 30)
+showTitle.Position              = UDim2.new(0, 10, 0, 10)
+showTitle.BackgroundTransparency = 1
+showTitle.Text                  = "Your ride"
+showTitle.Font                  = Enum.Font.GothamBold
+showTitle.TextScaled            = true
+showTitle.TextColor3            = Color3.fromRGB(255, 200, 60)
+showTitle.Parent                = showroom
+
+local view = Instance.new("ViewportFrame")
+view.Name                  = "View"
+view.Size                  = UDim2.new(1, -20, 1, -96)
+view.Position              = UDim2.new(0, 10, 0, 46)
+view.BackgroundColor3      = Color3.fromRGB(40, 46, 70)
+view.BorderSizePixel       = 0
+view.Ambient               = Color3.fromRGB(150, 150, 165)
+view.LightColor            = Color3.fromRGB(255, 250, 240)
+view.LightDirection        = Vector3.new(-0.6, -1, -0.4)
+view.Parent                = showroom
+local _vc = Instance.new("UICorner"); _vc.CornerRadius = UDim.new(0, 10); _vc.Parent = view
+local _vg = Instance.new("UIGradient")
+_vg.Color = ColorSequence.new(Color3.fromRGB(120, 140, 200), Color3.fromRGB(40, 40, 60))
+_vg.Rotation = 90
+_vg.Parent = view
+
+local viewCam = Instance.new("Camera")
+viewCam.FieldOfView = 40
+viewCam.Parent = view
+view.CurrentCamera = viewCam
+
+local showNote = Instance.new("TextLabel")
+showNote.Size                  = UDim2.new(1, -20, 0, 40)
+showNote.Position              = UDim2.new(0, 10, 1, -46)
+showNote.BackgroundTransparency = 1
+showNote.Text                  = ""
+showNote.Font                  = Enum.Font.Gotham
+showNote.TextSize              = 12
+showNote.TextWrapped           = true
+showNote.TextColor3            = Color3.fromRGB(200, 200, 220)
+showNote.Parent                = showroom
+
+local KIND = { FOREST = "car", OCEAN = "boat", SKY = "plane" }
+local _shown, _centre, _dist = nil, Vector3.zero, 12
+local _angle = math.rad(35)
+local _dragging, _dragX = false, 0
+
+-- Bends a joint by `rot` around the joint (Motor6D, or the AnimationConstraint
+-- some avatars use; see FarmFx).
+local function _bend(char, jointName, rot)
+	local j = char:FindFirstChild(jointName, true)
+	local obj, prop
+	if j and j:IsA("Motor6D") then obj, prop = j, "C0"
+	elseif j and j:IsA("AnimationConstraint") and j.Attachment0 then obj, prop = j.Attachment0, "CFrame"
+	else return end
+	local c0 = obj[prop]
+	local pos = c0.Position
+	obj[prop] = CFrame.new(pos) * rot * (c0 - pos)
+end
+
+-- A still copy of the player's avatar, sitting on `seat`.
+local function _rider(seat, parent)
+	local char = LocalPlayer.Character
+	if not char then return end
+	local was = char.Archivable
+	char.Archivable = true
+	local ok, copy = pcall(function() return char:Clone() end)
+	char.Archivable = was
+	if not ok or not copy then return end
+	for _, d in ipairs(copy:GetDescendants()) do
+		if d:IsA("BaseScript") or d:IsA("ForceField") or d:IsA("Sound") then d:Destroy() end
+	end
+	local root = copy:FindFirstChild("HumanoidRootPart")
+	if not root then copy:Destroy() return end
+	root.Anchored = true
+	local hum = copy:FindFirstChildOfClass("Humanoid")
+	if hum then hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
+	local q = math.pi / 2
+	_bend(copy, "LeftHip", CFrame.Angles(q, 0, 0))
+	_bend(copy, "RightHip", CFrame.Angles(q, 0, 0))
+	_bend(copy, "LeftKnee", CFrame.Angles(-q, 0, 0))
+	_bend(copy, "RightKnee", CFrame.Angles(-q, 0, 0))
+	_bend(copy, "LeftShoulder", CFrame.Angles(q * 0.6, 0, 0))
+	_bend(copy, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
+	copy:PivotTo(seat.CFrame * CFrame.new(0, seat.Size.Y / 2 + root.Size.Y / 2, 0))
+	copy.Parent = parent
+end
+
+local _world = nil
+local function _show(model)
+	if _world then _world:Destroy() end
+	local copy = model:Clone()
+	if not copy then return end
+	-- a WorldModel lets the avatar's joints pose the limbs
+	local world = Instance.new("WorldModel")
+	world.Parent = view
+	_world = world
+	copy.Parent = world
+	local seat = copy:FindFirstChildWhichIsA("VehicleSeat", true)
+	if seat then pcall(_rider, seat, world) end
+	local vcf, vsize = copy:GetBoundingBox()   -- the vehicle (the plinth goes under it)
+	local cf, size = world:GetBoundingBox()    -- vehicle and rider (the framing)
+	-- a round plinth under it, like a shop window
+	local plinth = Instance.new("Part")
+	plinth.Shape = Enum.PartType.Cylinder
+	plinth.Anchored = true
+	local r = math.max(vsize.X, vsize.Z) * 0.62 + 1
+	plinth.Size = Vector3.new(0.4, r * 2, r * 2)
+	plinth.CFrame = CFrame.new(vcf.Position.X, vcf.Position.Y - vsize.Y / 2 - 0.25, vcf.Position.Z) * CFrame.Angles(0, 0, math.pi / 2)
+	plinth.Color = Color3.fromRGB(60, 62, 80)
+	plinth.Material = Enum.Material.SmoothPlastic
+	plinth.Parent = world
+	_centre = cf.Position - Vector3.new(0, size.Y * 0.08, 0)
+	local radius = math.max(size.Magnitude / 2, 3)
+	-- the view is taller than wide: fit the width (horizontal half-angle)
+	local aspect = math.max(view.AbsoluteSize.X, 1) / math.max(view.AbsoluteSize.Y, 1)
+	local half = math.atan(math.tan(math.rad(viewCam.FieldOfView / 2)) * math.min(aspect, 1))
+	_dist = radius / math.tan(half) * 1.05
+	_shown = copy
+	local biome = model:GetAttribute("Biome")
+	local riding = model:GetAttribute("Riding")
+	showTitle.Text = "Your " .. (KIND[biome] or "ride")
+	showNote.Text = riding and ("Riding your " .. riding .. "  ·  drag to turn")
+		or "Put an item in Body to ride it  ·  drag to turn"
+end
+
+local function _watch(folder)
+	folder.ChildAdded:Connect(function(m)
+		if m:IsA("Model") then task.defer(_show, m) end
+	end)
+	local m = folder:FindFirstChildWhichIsA("Model")
+	if m then _show(m) end
+end
+local _pf = LocalPlayer.PlayerGui:FindFirstChild("CraftPreview")
+if _pf then _watch(_pf) end
+LocalPlayer.PlayerGui.ChildAdded:Connect(function(c)
+	if c.Name == "CraftPreview" and c:IsA("Folder") then _watch(c) end
+end)
+
+view.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		_dragging, _dragX = true, input.Position.X
+	end
+end)
+UserInputService.InputChanged:Connect(function(input)
+	if _dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		_angle -= (input.Position.X - _dragX) * 0.012
+		_dragX = input.Position.X
+	end
+end)
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		_dragging = false
+	end
+end)
+
+RunService.RenderStepped:Connect(function(dt)
+	if not screen.Enabled or not _shown then return end
+	if not _dragging then _angle += dt * 0.55 end   -- about one turn in 11 s
+	local eye = _centre + Vector3.new(math.sin(_angle) * _dist, _dist * 0.38, math.cos(_angle) * _dist)
+	viewCam.CFrame = CFrame.lookAt(eye, _centre)
+end)
 
 -- ─── Phase gate ───────────────────────────────────────────────────────────────
 

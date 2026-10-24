@@ -46,12 +46,13 @@ R.describe("farm bots (live servers fill the farm)", function()
 			R.expect(b.Character ~= nil and b.Character:FindFirstChild("HumanoidRootPart") ~= nil).toBe(true)
 		end
 		tick(30)
-		for _, b in ipairs(bots) do
-			R.expect(#srv.SessionManager.getData(b).inventory).toBeGreaterThan(0)
-		end
-		local picks = 0
+		-- every bot picked something (bags can change hands: bots rob too)
+		local picks, by = 0, {}
 		for _, ev in ipairs(srv.Telemetry.events("item_pickup")) do
-			if ev.userId < -100000 then picks += 1 end
+			if ev.userId < -100000 then picks += 1; by[ev.userId] = true end
+		end
+		for _, b in ipairs(bots) do
+			R.expect(by[b.UserId]).toBe(true)
 		end
 		R.expect(picks).toBeGreaterThan(2)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
@@ -257,10 +258,11 @@ R.describe("race bots are the farm bots, and abilities hit them", function()
 		local bot = RaceBots.list[1]
 		bot.model:PivotTo(CFrame.new(0, 2, 528))   -- a car in range for aimed ones
 		local Rc = C.BOTS.RACE
-		local old = Rc.ABILITY_CHANCE
-		Rc.ABILITY_CHANCE = 1
+		local old = { Rc.ABILITY_CHANCE, Rc.MIN_SPEED, Rc.STUCK_RESPAWN }
+		-- no physics offline: the car stands still, so no speed gate and no unstick
+		Rc.ABILITY_CHANCE, Rc.MIN_SPEED, Rc.STUCK_RESPAWN = 1, -1, math.huge
 		tick(14)
-		Rc.ABILITY_CHANCE = old
+		Rc.ABILITY_CHANCE, Rc.MIN_SPEED, Rc.STUCK_RESPAWN = old[1], old[2], old[3]
 		local fired, denied = {}, 0
 		for _, ev in ipairs(srv.Telemetry.events("ability")) do
 			if ev.userId == bot.id then

@@ -1248,7 +1248,7 @@
         "finishRate": 1.0,
         "bots": {
           "spawned": 3,
-          "finished": 2
+          "finished": 3
         }
       }
     },
@@ -1332,6 +1332,39 @@
         ]
       },
       "checks": {}
+    },
+    {
+      "name": "showroom",
+      "kind": "match",
+      "tags": [
+        "vehicles",
+        "ui"
+      ],
+      "_why": "the crafting screen's showroom (Modules/CraftPreview + CraftingUI): the vehicle the slots build turns in a viewport with the avatar seated; screenshots of the client window during CRAFTING go to reports/vehicles/studio/ (whole screen, git-ignored)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 30,
+          "RACING": 30,
+          "RESULTS": 3
+        },
+        "maxSeconds": 200,
+        "farmProfiles": [
+          "slow"
+        ]
+      },
+      "shots": {
+        "after": "phase=CRAFTING",
+        "delay": 3,
+        "count": 4,
+        "gap": 5
+      },
+      "checks": {
+        "allJoined": true
+      }
     },
     {
       "name": "bots-abilities",

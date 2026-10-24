@@ -2,118 +2,118 @@
   "biome": "SKY",
   "fun": {
     "aggregate": {
-      "closeShare": 0.5039175558309298,
-      "fastestWinRate": 0.25,
+      "closeShare": 0.5815627355318957,
+      "fastestWinRate": 0.08333333333333333,
       "finishRate": 1,
-      "finishSpread": 33.459722222221124,
-      "gap12": 0.6888888888888497,
-      "lastTime": 127.31527777777262,
-      "leadChanges": 2.4166666666666665,
-      "overtakes": 12.25,
+      "finishSpread": 32.49999999999867,
+      "gap12": 0.8083333333332874,
+      "lastTime": 126.37222222221686,
+      "leadChanges": 2.1666666666666665,
+      "overtakes": 13,
       "races": 12,
-      "racingShare": 0.3466103521422241,
+      "racingShare": 0.3449285031919476,
       "sections": [
         {
           "deciding": 0,
-          "hits": 57,
+          "hits": 56,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 8.949062505545038,
+          "meanTime": 8.942903186361072,
           "name": "S1 launch tunnel",
           "respawns": 0,
-          "spread": 3.2561762812052373
+          "spread": 3.2128724344288826
         },
         {
           "deciding": 0,
-          "hits": 107,
+          "hits": 97,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 16.896706326562526,
+          "meanTime": 16.782851026272006,
           "name": "S2 cloud bend A",
           "respawns": 0,
-          "spread": 5.448136174473361
+          "spread": 5.158366918338541
         },
         {
           "deciding": 0,
-          "hits": 61,
+          "hits": 59,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 7.647422772617598,
+          "meanTime": 7.712836894692821,
           "name": "S3 crossover",
           "respawns": 0,
-          "spread": 3.9096420660025815
+          "spread": 3.9862866100655707
         },
         {
-          "deciding": 0,
-          "hits": 146,
+          "deciding": 2,
+          "hits": 153,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 20.901801032076026,
+          "meanTime": 20.989643517604947,
           "name": "S4 cloud bend B",
           "respawns": 0,
-          "spread": 7.952073873884042
+          "spread": 7.936540051404083
         },
         {
-          "deciding": 12,
-          "hits": 387,
+          "deciding": 10,
+          "hits": 397,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 28.356633444417483,
+          "meanTime": 28.177230814823385,
           "name": "S5 crystal canyon",
           "respawns": 0,
-          "spread": 11.60638843910869
+          "spread": 11.164786123602346
         },
         {
           "deciding": 0,
-          "hits": 101,
+          "hits": 119,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 16.27013113288965,
+          "meanTime": 16.273309387713645,
           "name": "S6 cloud corkscrew",
           "respawns": 0,
-          "spread": 4.374467414369003
+          "spread": 4.58063633369273
         },
         {
           "deciding": 0,
-          "hits": 38,
+          "hits": 44,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 5.93796500810936,
+          "meanTime": 5.9409010984534705,
           "name": "S7 dive",
           "respawns": 0,
-          "spread": 1.6863873205454258
+          "spread": 1.7315911466816718
         }
       ],
-      "speedPlaceCorr": -0.0498102771882436,
-      "winnerTime": 93.8555555555515
+      "speedPlaceCorr": -0.012155122515917327,
+      "winnerTime": 93.87222222221818
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
         "ok": true,
-        "value": 0.5039175558309298,
+        "value": 0.5815627355318957,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.25,
+        "value": 0.08333333333333333,
         "why": "the fastest build should not always win"
       },
       {
@@ -127,21 +127,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 33.459722222221124,
+        "value": 32.49999999999867,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 2.4166666666666665,
+        "value": 2.1666666666666665,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.3466103521422241,
+        "value": 0.3449285031919476,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -149,7 +149,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.0498102771882436,
+        "value": -0.012155122515917327,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -157,7 +157,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 93.8555555555515,
+        "value": 93.87222222221818,
         "why": "a race should take about 90 s"
       }
     ]
@@ -173,7 +173,7 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 3,
+    "fastestCarWins": 1,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
@@ -182,11 +182,11 @@
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.5277777777777777,
-      "sweaty": 3.4722222222222223
+      "casual": 3.4444444444444446,
+      "sweaty": 3.5555555555555554
     },
-    "spearmanRarityVsPlace": -0.1676313589298346,
-    "spearmanTopSpeedVsPlace": -0.0498102771882436
+    "spearmanRarityVsPlace": -0.09042382146761851,
+    "spearmanTopSpeedVsPlace": -0.012155122515917327
   },
   "raceRuns": [
     {

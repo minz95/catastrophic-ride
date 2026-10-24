@@ -209,7 +209,10 @@ ForestTrack.jumpRamps = {
 	{ -100, -2180, -math.pi / 2 },        -- S6 east straight, between the hairpins
 	{ 449.7, -2950, 0 },                  -- S7 final straight
 }
-ForestTrack.jumpRampSize = { ForestTrack.width - 4, 4, 14 }
+-- Full corridor width: a narrower wedge left a 4-stud vertical side face at
+-- each edge that a car driving near the wall snagged on (Studio bots-forest
+-- 2026-10-24: a novice bot stuck twice at the S6 ramp, 20 s lost).
+ForestTrack.jumpRampSize = { ForestTrack.width, 4, 14 }
 
 ForestTrack.boostPads = {
 	{   0,  400 },    -- S1 launch
