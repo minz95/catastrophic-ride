@@ -5,6 +5,8 @@
 -- player's PlayerGui.CraftPreview, which only they receive. CraftingUI shows
 -- it in a ViewportFrame, turning slowly with the player's avatar seated.
 -- Builds are coalesced: a burst of slot changes builds once, the latest wins.
+-- Parts of spinning MOBILITY items carry the attribute SpinHub (their hub's
+-- name) so the showroom can turn wheels, paddles and propellers.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -37,6 +39,13 @@ local function build(player, slots, biome)
 	local rec = PlayerStore.get(player)
 	local model = VehicleBuilder.build(stats, biome, CFrame.new(), slots, Cosmetics.look(rec and rec.equipped))
 	if not model then return end
+	-- spinning MOBILITY copies: say which hub each part turns round, the
+	-- showroom turns them itself (the joints mean nothing once anchored)
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("WeldConstraint") and d.Part0 and d.Part1 and d.Part0.Name:sub(1, 8) == "SpinHub_" then
+			d.Part1:SetAttribute("SpinHub", d.Part0.Name)
+		end
+	end
 	for _, d in ipairs(model:GetDescendants()) do
 		local strip = false
 		for _, cls in ipairs(STRIP) do

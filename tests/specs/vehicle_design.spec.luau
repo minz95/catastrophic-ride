@@ -79,7 +79,7 @@ local ENDS = {
 -- Riding a BODY item: what is left of the car / boat / plane
 local RIDE_ENDS = {
 	FOREST = { front = { "WheelFrontL", "WheelFrontR" }, back = { "WheelRearL", "WheelRearR" } },
-	OCEAN  = { front = {}, back = { "MotorLeg" } },
+	OCEAN  = { front = {}, back = {} },   -- the motor: behind the item (attach check)
 	SKY    = { front = { "Spinner", "PropBlade1" }, back = { "Fin", "Stabilizer" } },
 }
 
@@ -98,7 +98,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 	R.describe(biome .. " vehicle look (" .. #BUILDS .. " builds)", function()
 		local problems = {
 			physics = {}, welds = {}, size = {}, ends = {}, ground = {}, symmetry = {}, fit = {}, seat = {}, headtail = {}, ride = {},
-			attach = {},
+			attach = {}, water = {},
 		}
 		local function bad(kind, slots, msg)
 			if #problems[kind] < 6 then table.insert(problems[kind], label(slots) .. ": " .. msg) end
@@ -171,7 +171,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 			for _, p in ipairs(model:GetDescendants()) do
 				if p:IsA("BasePart") then
 					local a = box(p)
-					local floor = biome == "FOREST" and bottom - 0.2 or (biome == "OCEAN" and bottom or bottom - 1.2)
+					-- a boat's hull, float, paddles and motor leg reach into the water
+					local floor = biome == "FOREST" and bottom - 0.2
+						or (biome == "OCEAN" and VehicleDesign.WATERLINE - VehicleDesign.DRAFT or bottom - 1.2)
 					if p.Name == "MotorLeg" then floor = bottom - 0.8 end
 					if a.Y < floor - 0.02 then bad("ground", slots, string.format("%s reaches y %.2f (floor %.2f)", p.Name, a.Y, floor)) end
 				end
@@ -234,6 +236,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 							off = Vector3.new(0, off.Y, off.Z)
 						end
 						if m.align == "bottom" or m.onRide then off = Vector3.new(off.X, 0, off.Z) end
+						if m.front then off = Vector3.new(off.X, off.Y, 0) end   -- against the front instead
 						if off.Magnitude > 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " off its mount centre")
 						end
@@ -323,14 +326,36 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 					end
 				elseif biome == "OCEAN" and slots.MOBILITY then
 					for _, n in ipairs({ "PaddleHubL", "PaddleHubR" }) do
-						if not touch(byName[n], base) then bad("attach", slots, n .. " off the hull") end
+						if not (touch(byName[n], base) or touch(byName[n], byName.Float)) then bad("attach", slots, n .. " off the hull") end
 					end
 					for _, h in ipairs(holders.MOBILITY or {}) do
 						if not (touch(h, byName.PaddleHubL) or touch(h, byName.PaddleHubR)) then
 							bad("attach", slots, "a paddle off its hub") break
 						end
 					end
-				elseif biome == "SKY" and slots.MOBILITY then
+				end
+				-- the boat's motor (or ENGINE item) and flag hold on to the boat
+				if biome == "OCEAN" then
+					-- the boat's own parts (an item may have a part called "Motor")
+					local function own(n) return model:FindFirstChild(n) end
+					local motor = slots.ENGINE and holders.ENGINE and holders.ENGINE[1] or own("Motor")
+					local leg = own("MotorLeg")
+					local function onHull(x)
+						for _, h in pairs({ base, own("Float"), own("Transom"), own("TransomSkirt"), own("Keel") }) do
+							if h.Parent and touch(x, h) then return true end
+						end
+						return false
+					end
+					if motor and not onHull(motor) then bad("attach", slots, "the motor floats behind the boat") end
+					if leg and motor and not touch(leg, motor) then bad("attach", slots, "the motor leg is off the motor") end
+					if own("FlagPole") and not onHull(own("FlagPole")) then bad("attach", slots, "the flag pole floats") end
+					-- riding: behind the item (the hull's old stern means nothing then)
+					if design.riding and leg and holders.BODY then
+						local c = VehicleBuilder.bounds(holders.BODY[1])
+						if leg.Position.Z <= c.Z then bad("attach", slots, "the motor is not behind the ridden item") end
+					end
+				end
+				if biome == "SKY" and slots.MOBILITY then
 					for _, n in ipairs({ "NacelleL", "NacelleR" }) do
 						if not touch(byName[n], byName.Wing) then bad("attach", slots, n .. " off the wing") end
 					end
@@ -349,9 +374,26 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 				end
 			end
 
+			-- A boat's lowest visible part is in the water (it races held over it)
+			if biome == "OCEAN" then
+				local low = math.huge
+				for _, p in ipairs(model:GetDescendants()) do
+					if p:IsA("BasePart") and p.Transparency < 1 and p.Name ~= "MotorLeg" and not p:FindFirstAncestor("Item_MOBILITY_" .. tostring(slots.MOBILITY)) then
+						local a = box(p)
+						if p.Name == "Keel" or p.Name == "Float" or (p.Parent and p.Parent:GetAttribute("Slot") == "BODY") then
+							low = math.min(low, a.Y)
+						end
+					end
+				end
+				if low > VehicleDesign.WATERLINE + 0.02 then
+					bad("water", slots, string.format("lowest hull part at y %.2f, the water at %.2f", low, VehicleDesign.WATERLINE))
+				end
+			end
+
 			-- Seat on top of the chassis
 			local seat = model:FindFirstChildWhichIsA("VehicleSeat")
-			if not seat or seat.Position.Y < chassis.Size.Y / 2 then bad("seat", slots, "seat missing or inside the chassis") end
+			local into = design.riding and VehicleBuilder.SEAT_INTO_CHASSIS or 0
+			if not seat or seat.Position.Y < chassis.Size.Y / 2 - into - 1e-6 then bad("seat", slots, "seat missing or inside the chassis") end
 			model:Destroy()
 		end
 
@@ -366,6 +408,10 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		end)
 		R.it("front parts at the front (-Z, the driving direction), back parts at the back", function()
 			R.expect(problems.ends).toBeEmpty("vehicle facing the wrong way")
+		end)
+		R.it("the boat waterline matches the race: chassis held over the water", function()
+			local BiomeConfig = env.requirePath("ServerScriptService.Modules.BiomeConfig")
+			R.expect(VehicleDesign.WATERLINE).toBe(BiomeConfig.OCEAN.waterPlaneY - BiomeConfig.OCEAN.raceStartY)
 		end)
 		R.it("HEAD item worn as a hat over the seat, TAIL item at the back", function()
 			R.expect(problems.headtail).toBeEmpty("head / tail swapped")
@@ -384,6 +430,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		end)
 		R.it("wheels, paddle wheels and propellers are attached; the sail is clear of cabin and seat", function()
 			R.expect(problems.attach).toBeEmpty("loose parts")
+		end)
+		R.it("boats reach the water: the hull, or the float under a ridden item", function()
+			R.expect(problems.water).toBeEmpty("boats over the water")
 		end)
 		R.it("has a seat on top of the chassis", function()
 			R.expect(problems.seat).toBeEmpty("seat problems")

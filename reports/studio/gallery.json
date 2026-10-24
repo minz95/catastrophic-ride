@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "9d470b1",
+ "commit": "83fee51",
  "dirty": true,
  "kind": "gallery",
  "logErrors": [
-  "2026-10-24T11:38:57.101Z,1.101916,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T11:38:57.143Z,1.143818,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-24T11:38:57.895Z,1.895322,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T11:38:58.705Z,2.705155,6d6ff000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"42c34456-8ff0-46b4-9eb0-213eba5de58e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-24T12:44:00.104Z,1.104594,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:44:00.142Z,1.142749,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T12:44:00.914Z,1.914595,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:44:01.738Z,2.738559,701cb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f0701cef-17cb-4a67-ae88-17107439291e\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T11:39:07.217Z,11.217964,6d6ff000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-24T11:39:07.468Z,11.468143,6ec27000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-24T12:44:10.408Z,11.408392,70c07000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T12:44:10.636Z,11.636526,71137000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T11:39:57.896Z,61.896530,6e98f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T11:40:37.087Z,101.087685,6d6ff000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"42c34456-8ff0-46b4-9eb0-213eba5de58e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-24T12:45:00.915Z,61.915115,6fb83000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:45:46.993Z,107.993210,6fb83000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f0701cef-17cb-4a67-ae88-17107439291e\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "extra": [
@@ -40,12 +40,21 @@
    },
    {
     "HEAD": "Flower"
+   },
+   {
+    "BODY": "Barrel",
+    "ENGINE": "Hair Dryer",
+    "TAIL": "Racing Flag"
+   },
+   {
+    "ENGINE": "Fan",
+    "TAIL": "Racing Flag"
    }
   ],
   "hold": 1.2,
-  "token": "9971ffcb7d95495686c21a19ab215641"
+  "token": "0f364ccdc7a9483c826b2678faf7a478"
  },
- "ranAt": "2026-10-24T20:40:45+0900",
+ "ranAt": "2026-10-24T21:45:57+0900",
  "report": {
   "hats": [
    {
@@ -204,16 +213,17 @@
     "biome": "FOREST",
     "body": "Backpack",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 3.6,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.05
     },
     "riding": "Backpack",
     "size": [
      5.1,
-     3.3,
+     3,
      4.3
     ]
    },
@@ -221,16 +231,17 @@
     "biome": "OCEAN",
     "body": "Backpack",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 4.87,
      "itemW": 3.4,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.08
     },
     "riding": "Backpack",
     "size": [
-     5.9,
      5.4,
+     5.8,
      3.3
     ]
    },
@@ -238,11 +249,12 @@
     "biome": "SKY",
     "body": "Backpack",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 5,
      "itemW": 3,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.07
     },
     "riding": "Backpack",
     "size": [
@@ -255,6 +267,7 @@
     "biome": "FOREST",
     "body": "Bamboo Raft",
     "fit": {
+     "gap": 0,
      "itemH": 1.08,
      "itemL": 5.2,
      "itemW": 3.6,
@@ -272,6 +285,7 @@
     "biome": "OCEAN",
     "body": "Bamboo Raft",
     "fit": {
+     "gap": 0,
      "itemH": 1.02,
      "itemL": 5.63,
      "itemW": 3.4,
@@ -280,8 +294,8 @@
     },
     "riding": "Bamboo Raft",
     "size": [
-     6.3,
-     4.5,
+     6.1,
+     4.9,
      3.3
     ]
    },
@@ -289,6 +303,7 @@
     "biome": "SKY",
     "body": "Bamboo Raft",
     "fit": {
+     "gap": 0,
      "itemH": 0.9,
      "itemL": 5,
      "itemW": 3,
@@ -306,6 +321,7 @@
     "biome": "FOREST",
     "body": "Barrel",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 3.04,
      "itemW": 3.04,
@@ -323,6 +339,7 @@
     "biome": "OCEAN",
     "body": "Barrel",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 2.63,
      "itemW": 2.63,
@@ -331,8 +348,8 @@
     },
     "riding": "Barrel",
     "size": [
-     5.7,
-     5.4,
+     5,
+     5.8,
      2.6
     ]
    },
@@ -340,6 +357,7 @@
     "biome": "SKY",
     "body": "Barrel",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 2.76,
      "itemW": 2.76,
@@ -357,6 +375,7 @@
     "biome": "FOREST",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.88,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 3.6,
@@ -374,6 +393,7 @@
     "biome": "OCEAN",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.76,
      "itemH": 1.9,
      "itemL": 5.6,
      "itemW": 3.4,
@@ -382,8 +402,8 @@
     },
     "riding": "Bathtub",
     "size": [
-     6.2,
-     5.4,
+     6.1,
+     5.8,
      3.3
     ]
    },
@@ -391,6 +411,7 @@
     "biome": "SKY",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.8,
      "itemH": 2,
      "itemL": 5,
      "itemW": 3,
@@ -408,6 +429,7 @@
     "biome": "FOREST",
     "body": "Cardboard Box",
     "fit": {
+     "gap": 0.02,
      "itemH": 2.2,
      "itemL": 3.49,
      "itemW": 2.67,
@@ -425,6 +447,7 @@
     "biome": "OCEAN",
     "body": "Cardboard Box",
     "fit": {
+     "gap": 0.02,
      "itemH": 1.9,
      "itemL": 3.01,
      "itemW": 2.31,
@@ -433,8 +456,8 @@
     },
     "riding": "Cardboard Box",
     "size": [
-     5.7,
-     5.4,
+     5,
+     5.8,
      2.3
     ]
    },
@@ -442,6 +465,7 @@
     "biome": "SKY",
     "body": "Cardboard Box",
     "fit": {
+     "gap": 0.02,
      "itemH": 2,
      "itemL": 3.17,
      "itemW": 2.43,
@@ -459,16 +483,17 @@
     "biome": "FOREST",
     "body": "Kite",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 2.56,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.43
     },
     "riding": "Kite",
     "size": [
      5.1,
-     3.2,
+     2.9,
      3.3
     ]
    },
@@ -476,16 +501,17 @@
     "biome": "OCEAN",
     "body": "Kite",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 4.9,
      "itemW": 2.21,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.06
     },
     "riding": "Kite",
     "size": [
-     5.9,
      5.4,
+     5.8,
      2.2
     ]
    },
@@ -493,11 +519,12 @@
     "biome": "SKY",
     "body": "Kite",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 5,
      "itemW": 2.33,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.54
     },
     "riding": "Kite",
     "size": [
@@ -527,6 +554,7 @@
     "biome": "OCEAN",
     "body": "Life Preserver",
     "fit": {
+     "gap": 0.04,
      "itemH": 0.98,
      "itemL": 4.76,
      "itemW": 3.4,
@@ -535,8 +563,8 @@
     },
     "riding": "Life Preserver",
     "size": [
-     5.9,
-     4.5,
+     5.3,
+     4.9,
      3.3
     ]
    },
@@ -561,16 +589,17 @@
     "biome": "FOREST",
     "body": "Log",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 2.73,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.12
     },
     "riding": "Log",
     "size": [
      5.1,
-     3.3,
+     3.1,
      3.5
     ]
    },
@@ -578,16 +607,17 @@
     "biome": "OCEAN",
     "body": "Log",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 5.6,
      "itemW": 2.5,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.15
     },
     "riding": "Log",
     "size": [
-     6.3,
-     5.4,
+     6.1,
+     5.8,
      2.5
     ]
    },
@@ -595,11 +625,12 @@
     "biome": "SKY",
     "body": "Log",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 5,
      "itemW": 2.63,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.14
     },
     "riding": "Log",
     "size": [
@@ -612,6 +643,7 @@
     "biome": "FOREST",
     "body": "Microwave",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 4.62,
      "itemW": 3.1,
@@ -629,6 +661,7 @@
     "biome": "OCEAN",
     "body": "Microwave",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 3.99,
      "itemW": 2.67,
@@ -637,8 +670,8 @@
     },
     "riding": "Microwave",
     "size": [
-     5.6,
-     5.3,
+     4.9,
+     5.8,
      2.6
     ]
    },
@@ -646,6 +679,7 @@
     "biome": "SKY",
     "body": "Microwave",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 4.2,
      "itemW": 2.81,
@@ -663,6 +697,7 @@
     "biome": "FOREST",
     "body": "Red Sofa",
     "fit": {
+     "gap": 0.1,
      "itemH": 2.2,
      "itemL": 3.48,
      "itemW": 3.6,
@@ -680,6 +715,7 @@
     "biome": "OCEAN",
     "body": "Red Sofa",
     "fit": {
+     "gap": -0.8,
      "itemH": 1.9,
      "itemL": 3.01,
      "itemW": 3.4,
@@ -688,8 +724,8 @@
     },
     "riding": "Red Sofa",
     "size": [
-     5.6,
-     5.4,
+     4.9,
+     5.8,
      3.3
     ]
    },
@@ -697,6 +733,7 @@
     "biome": "SKY",
     "body": "Red Sofa",
     "fit": {
+     "gap": 0.09,
      "itemH": 2,
      "itemL": 3.17,
      "itemW": 3,
@@ -731,6 +768,7 @@
     "biome": "OCEAN",
     "body": "Shopping Cart",
     "fit": {
+     "gap": -0.64,
      "itemH": 1.9,
      "itemL": 2.6,
      "itemW": 1.61,
@@ -739,8 +777,8 @@
     },
     "riding": "Shopping Cart",
     "size": [
-     5.6,
-     5.4,
+     4.9,
+     5.8,
      2.2
     ]
    },
@@ -765,16 +803,17 @@
     "biome": "FOREST",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.53,
      "itemL": 5.2,
      "itemW": 3.06,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.24
     },
     "riding": "Skateboard",
     "size": [
      5.1,
-     2.6,
+     2.3,
      3.8
     ]
    },
@@ -782,16 +821,17 @@
     "biome": "OCEAN",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.66,
      "itemL": 5.64,
      "itemW": 3.31,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.27
     },
     "riding": "Skateboard",
     "size": [
-     6.3,
-     5.1,
+     6.1,
+     5.6,
      3.3
     ]
    },
@@ -799,11 +839,12 @@
     "biome": "SKY",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.47,
      "itemL": 5,
      "itemW": 2.94,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.22
     },
     "riding": "Skateboard",
     "size": [
@@ -816,6 +857,7 @@
     "biome": "FOREST",
     "body": "Suitcase",
     "fit": {
+     "gap": 0.03,
      "itemH": 1.91,
      "itemL": 5.2,
      "itemW": 3.6,
@@ -833,6 +875,7 @@
     "biome": "OCEAN",
     "body": "Suitcase",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 5.61,
      "itemW": 3.4,
@@ -841,8 +884,8 @@
     },
     "riding": "Suitcase",
     "size": [
-     6.3,
-     5.4,
+     6.1,
+     5.8,
      3.3
     ]
    },
@@ -850,6 +893,7 @@
     "biome": "SKY",
     "body": "Suitcase",
     "fit": {
+     "gap": 0.03,
      "itemH": 1.69,
      "itemL": 5,
      "itemW": 3,
@@ -867,6 +911,7 @@
     "biome": "FOREST",
     "body": "Compass",
     "fit": {
+     "gap": 0,
      "itemH": 1.04,
      "itemL": 5.2,
      "itemW": 3.6,
@@ -884,6 +929,7 @@
     "biome": "OCEAN",
     "body": "Compass",
     "fit": {
+     "gap": 0.01,
      "itemH": 0.98,
      "itemL": 4.92,
      "itemW": 3.4,
@@ -892,8 +938,8 @@
     },
     "riding": "Compass",
     "size": [
-     5.9,
-     4.4,
+     5.4,
+     4.9,
      3.3
     ]
    },
@@ -901,6 +947,7 @@
     "biome": "SKY",
     "body": "Compass",
     "fit": {
+     "gap": 0.01,
      "itemH": 0.86,
      "itemL": 4.34,
      "itemW": 3,
@@ -918,6 +965,7 @@
     "biome": "FOREST",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.28,
      "itemL": 5.04,
      "itemW": 3.6,
@@ -935,6 +983,7 @@
     "biome": "OCEAN",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.26,
      "itemL": 4.76,
      "itemW": 3.4,
@@ -943,8 +992,8 @@
     },
     "riding": "Pizza",
     "size": [
-     5.8,
-     4.3,
+     5.3,
+     4.8,
      3.3
     ]
    },
@@ -952,6 +1001,7 @@
     "biome": "SKY",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.23,
      "itemL": 4.2,
      "itemW": 3,
@@ -969,16 +1019,17 @@
     "biome": "FOREST",
     "body": "Rocket",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 2.35,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.26
     },
     "riding": "Rocket",
     "size": [
      5.1,
-     3.2,
+     2.9,
      3.1
     ]
    },
@@ -986,16 +1037,17 @@
     "biome": "OCEAN",
     "body": "Rocket",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 5.62,
      "itemW": 2.3,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.19
     },
     "riding": "Rocket",
     "size": [
-     6.3,
-     5.4,
+     6.1,
+     5.8,
      2.3
     ]
    },
@@ -1003,11 +1055,12 @@
     "biome": "SKY",
     "body": "Rocket",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 5,
      "itemW": 2.26,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.21
     },
     "riding": "Rocket",
     "size": [
@@ -1020,16 +1073,17 @@
     "biome": "FOREST",
     "body": "Rubber Duck",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 4.02,
      "itemW": 3.6,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.14
     },
     "riding": "Rubber Duck",
     "size": [
      4,
-     3.2,
+     3.1,
      4.3
     ]
    },
@@ -1037,16 +1091,17 @@
     "biome": "OCEAN",
     "body": "Rubber Duck",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 3.47,
      "itemW": 3.4,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.07
     },
     "riding": "Rubber Duck",
     "size": [
-     5.6,
-     5.4,
+     4.9,
+     5.8,
      3.4
     ]
    },
@@ -1054,6 +1109,7 @@
     "biome": "SKY",
     "body": "Rubber Duck",
     "fit": {
+     "gap": 0.02,
      "itemH": 2,
      "itemL": 3.55,
      "itemW": 3,
@@ -1071,6 +1127,7 @@
     "biome": "FOREST",
     "body": "Soda Bottle",
     "fit": {
+     "gap": 0.02,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 2.35,
@@ -1088,16 +1145,17 @@
     "biome": "OCEAN",
     "body": "Soda Bottle",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 5.62,
      "itemW": 2.54,
      "over": 0,
-     "sink": -0.3
+     "sink": -0.05
     },
     "riding": "Soda Bottle",
     "size": [
-     6.3,
-     5.4,
+     6.1,
+     5.8,
      2.5
     ]
    },
@@ -1105,6 +1163,7 @@
     "biome": "SKY",
     "body": "Soda Bottle",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 5,
      "itemW": 2.26,
@@ -1122,6 +1181,7 @@
     "biome": "FOREST",
     "body": "Toilet Paper",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
      "itemL": 3.26,
      "itemW": 3.08,
@@ -1139,6 +1199,7 @@
     "biome": "OCEAN",
     "body": "Toilet Paper",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
      "itemL": 2.82,
      "itemW": 2.66,
@@ -1147,8 +1208,8 @@
     },
     "riding": "Toilet Paper",
     "size": [
-     5.7,
-     5.4,
+     5,
+     5.8,
      2.6
     ]
    },
@@ -1156,6 +1217,7 @@
     "biome": "SKY",
     "body": "Toilet Paper",
     "fit": {
+     "gap": 0,
      "itemH": 2,
      "itemL": 2.97,
      "itemW": 2.8,
@@ -1173,45 +1235,48 @@
     "biome": "FOREST",
     "body": "Treadmill",
     "fit": {
+     "gap": 0,
      "itemH": 2.2,
-     "itemL": 3.42,
-     "itemW": 1.87,
+     "itemL": 4.89,
+     "itemW": 2.67,
      "over": 0,
-     "sink": -0.3
+     "sink": 1.54
     },
     "riding": "Treadmill",
     "size": [
-     3.8,
-     3.2,
-     2.6
+     4.8,
+     2.9,
+     3.4
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Treadmill",
     "fit": {
+     "gap": 0,
      "itemH": 1.9,
-     "itemL": 2.96,
-     "itemW": 1.62,
+     "itemL": 4.23,
+     "itemW": 2.31,
      "over": 0,
-     "sink": -0.3
+     "sink": 1.26
     },
     "riding": "Treadmill",
     "size": [
-     5.6,
-     5.4,
-     2.1
+     4.9,
+     5.8,
+     2.3
     ]
    },
    {
     "biome": "SKY",
     "body": "Treadmill",
     "fit": {
+     "gap": 0.21,
      "itemH": 2,
-     "itemL": 3.11,
-     "itemW": 1.7,
+     "itemL": 4.45,
+     "itemW": 2.43,
      "over": 0,
-     "sink": -0.3
+     "sink": 1.17
     },
     "riding": "Treadmill",
     "size": [
@@ -1224,6 +1289,7 @@
     "biome": "FOREST",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.88,
      "itemH": 2.2,
      "itemL": 5.2,
      "itemW": 3.6,
@@ -1241,6 +1307,7 @@
     "biome": "OCEAN",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.76,
      "itemH": 1.9,
      "itemL": 5.92,
      "itemW": 3.4,
@@ -1249,8 +1316,8 @@
     },
     "riding": "Bathtub",
     "size": [
-     6.5,
-     6.5,
+     6.2,
+     6.9,
      4.6
     ]
    },
@@ -1258,6 +1325,7 @@
     "biome": "SKY",
     "body": "Bathtub",
     "fit": {
+     "gap": -0.8,
      "itemH": 2,
      "itemL": 5.25,
      "itemW": 3,
@@ -1275,6 +1343,7 @@
     "biome": "FOREST",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.28,
      "itemL": 5.04,
      "itemW": 3.6,
@@ -1292,6 +1361,7 @@
     "biome": "OCEAN",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.26,
      "itemL": 4.76,
      "itemW": 3.4,
@@ -1300,8 +1370,8 @@
     },
     "riding": "Pizza",
     "size": [
-     6,
-     5.8,
+     5.3,
+     6.2,
      4.6
     ]
    },
@@ -1309,6 +1379,7 @@
     "biome": "SKY",
     "body": "Pizza",
     "fit": {
+     "gap": 0,
      "itemH": 0.23,
      "itemL": 4.2,
      "itemW": 3,
@@ -1326,6 +1397,7 @@
     "biome": "FOREST",
     "body": "Red Sofa",
     "fit": {
+     "gap": 0.1,
      "itemH": 2.2,
      "itemL": 3.48,
      "itemW": 3.6,
@@ -1343,6 +1415,7 @@
     "biome": "OCEAN",
     "body": "Red Sofa",
     "fit": {
+     "gap": -0.8,
      "itemH": 1.9,
      "itemL": 3.01,
      "itemW": 3.4,
@@ -1351,8 +1424,8 @@
     },
     "riding": "Red Sofa",
     "size": [
-     5.6,
-     6.5,
+     4.9,
+     6.9,
      3.3
     ]
    },
@@ -1360,6 +1433,7 @@
     "biome": "SKY",
     "body": "Red Sofa",
     "fit": {
+     "gap": 0.09,
      "itemH": 2,
      "itemL": 3.17,
      "itemW": 3,
@@ -1377,16 +1451,17 @@
     "biome": "FOREST",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.53,
      "itemL": 5.2,
      "itemW": 3.06,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.24
     },
     "riding": "Skateboard",
     "size": [
      5.1,
-     7.4,
+     6.8,
      3.8
     ]
    },
@@ -1394,16 +1469,17 @@
     "biome": "OCEAN",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.66,
      "itemL": 5.64,
      "itemW": 3.31,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.27
     },
     "riding": "Skateboard",
     "size": [
-     6.3,
-     7,
+     6.1,
+     6.9,
      3.3
     ]
    },
@@ -1411,16 +1487,17 @@
     "biome": "SKY",
     "body": "Skateboard",
     "fit": {
+     "gap": 0,
      "itemH": 1.47,
      "itemL": 5,
      "itemW": 2.94,
      "over": 0,
-     "sink": -0.3
+     "sink": 0.22
     },
     "riding": "Skateboard",
     "size": [
      5.9,
-     6.9,
+     6.3,
      5
     ]
    },
@@ -1436,7 +1513,7 @@
     "biome": "OCEAN",
     "size": [
      7.1,
-     6.2,
+     6.7,
      2.3
     ]
    },
@@ -1445,6 +1522,84 @@
     "size": [
      6,
      6.5,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 3.04,
+     "itemW": 3.04,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     4.2,
+     3.6,
+     3.8
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 2.63,
+     "itemW": 2.63,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     4.9,
+     5.8,
+     2.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 2,
+     "itemL": 2.76,
+     "itemW": 2.76,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     5.9,
+     3.8,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "size": [
+     4.6,
+     2.2,
+     2.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "size": [
+     6.9,
+     4.8,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "size": [
+     6,
+     2.9,
      5
     ]
    }
@@ -1500,12 +1655,16 @@
    "24_skateboardtrophy_side",
    "24_skateboardtrophy_rear",
    "25_noneflower_side",
-   "25_noneflower_rear"
+   "25_noneflower_rear",
+   "26_barrelbuild_side",
+   "26_barrelbuild_rear",
+   "27_nonebuild_side",
+   "27_nonebuild_rear"
   ],
-  "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers"
+  "summary": "gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers"
  },
  "scenario": "gallery",
  "studioExit": 0,
- "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers",
- "wallSeconds": 109.4
+ "summary": "gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers",
+ "wallSeconds": 118.2
 }

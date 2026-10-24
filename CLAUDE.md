@@ -78,15 +78,29 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   The MOBILITY item spins where it moves you: the car's four wheels (flush
   with the wheel's outer side, on axles), a boat's side paddle wheels
   (copies round a hub), a propeller in front of each wing nacelle. Mounts
-  with `spin` hang on an invisible hub jointed to the chassis by a Motor6D
-  "Spin"; `StarterPlayerScripts/SpinFx` turns the joint's C0 on every
-  client (never the server). Riding, `VehicleDesign.fitRide` moves wheels,
+  or parts with `spin` (plain car wheels, the plane's nose propeller too)
+  hang on an invisible hub jointed to the chassis by a Motor6D "Spin";
+  `StarterPlayerScripts/SpinFx` turns the joint's C0 on every client (never
+  the server). The showroom turns them itself (CraftPreview tags each part
+  with its hub, attribute SpinHub). Riding, `VehicleDesign.fitRide` moves wheels,
   paddles and propellers against the item's measured box, with axles and
   posts. The boat's mast stands near the bow and the sail runs back to
   just before the deckhouse, sheeted out `VehicleDesign.SHEET` degrees.
   Check: `sim.py run gallery-mobility` (close-ups, report `loose` = parts
   not touching what carries them; the spec checks the same offline);
   the match checks `spin` count cars whose items turned.
+  Boats race with the chassis 1 stud over the water (`VehicleDesign.
+  WATERLINE`, checked against BiomeConfig): the hull's Keel / ProwSkirt,
+  a ridden item's wooden Float, the paddles and the motor leg reach DRAFT
+  into it, or the boat and its rider look to hover. A ridden item's seat
+  goes down onto its real surface (rays at the collision shape:
+  `surfaceUnder`, not the box top of a treadmill's handle or a duck's
+  head), up to `SEAT_INTO_CHASSIS` into the invisible chassis. The gallery
+  reports `fit.gap` (seat above that surface; > 0.1 floats) and draws the
+  water under each boat; `sim.py run gallery-rides` = close-ups of a few.
+  Riding, the outboard motor / ENGINE item (flush on the stern, standing on
+  the motor leg) and the flag move to the item's back end; the gallery's
+  `loose` and the spec check they touch the hull, item or float.
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.
