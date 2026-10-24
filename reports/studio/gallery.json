@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "5b1f6b6",
+ "commit": "83fee51",
  "dirty": true,
  "kind": "gallery",
  "logErrors": [
+  "2026-10-24T12:44:00.104Z,1.104594,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:44:00.142Z,1.142749,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T12:44:00.914Z,1.914595,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:44:01.738Z,2.738559,701cb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f0701cef-17cb-4a67-ae88-17107439291e\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T12:23:29.492Z,11.492387,6ee3f000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-24T12:23:29.729Z,11.729980,6f607000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-24T12:44:10.408Z,11.408392,70c07000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T12:44:10.636Z,11.636526,71137000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T12:24:19.857Z,61.857445,6f463000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T12:24:59.144Z,101.144516,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-24T12:24:59.144Z,101.144524,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-24T12:24:59.145Z,101.145721,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-24T12:24:59.145Z,101.145729,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
-  "2026-10-24T12:24:59.257Z,101.257820,6dfc7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"a6fb0a3b-0150-4b07-aa82-d36ce76a4d32\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-24T12:45:00.915Z,61.915115,6fb83000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T12:45:46.993Z,107.993210,6fb83000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f0701cef-17cb-4a67-ae88-17107439291e\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "extra": [
@@ -40,12 +40,21 @@
    },
    {
     "HEAD": "Flower"
+   },
+   {
+    "BODY": "Barrel",
+    "ENGINE": "Hair Dryer",
+    "TAIL": "Racing Flag"
+   },
+   {
+    "ENGINE": "Fan",
+    "TAIL": "Racing Flag"
    }
   ],
   "hold": 1.2,
-  "token": "62357b032b75453888117ce8f5c5f2b6"
+  "token": "0f364ccdc7a9483c826b2678faf7a478"
  },
- "ranAt": "2026-10-24T21:25:05+0900",
+ "ranAt": "2026-10-24T21:45:57+0900",
  "report": {
   "hats": [
    {
@@ -231,7 +240,7 @@
     },
     "riding": "Backpack",
     "size": [
-     5.9,
+     5.4,
      5.8,
      3.3
     ]
@@ -285,7 +294,7 @@
     },
     "riding": "Bamboo Raft",
     "size": [
-     6.3,
+     6.1,
      4.9,
      3.3
     ]
@@ -339,7 +348,7 @@
     },
     "riding": "Barrel",
     "size": [
-     5.7,
+     5,
      5.8,
      2.6
     ]
@@ -393,7 +402,7 @@
     },
     "riding": "Bathtub",
     "size": [
-     6.2,
+     6.1,
      5.8,
      3.3
     ]
@@ -447,7 +456,7 @@
     },
     "riding": "Cardboard Box",
     "size": [
-     5.7,
+     5,
      5.8,
      2.3
     ]
@@ -501,7 +510,7 @@
     },
     "riding": "Kite",
     "size": [
-     5.9,
+     5.4,
      5.8,
      2.2
     ]
@@ -554,7 +563,7 @@
     },
     "riding": "Life Preserver",
     "size": [
-     5.9,
+     5.3,
      4.9,
      3.3
     ]
@@ -607,7 +616,7 @@
     },
     "riding": "Log",
     "size": [
-     6.3,
+     6.1,
      5.8,
      2.5
     ]
@@ -661,7 +670,7 @@
     },
     "riding": "Microwave",
     "size": [
-     5.6,
+     4.9,
      5.8,
      2.6
     ]
@@ -715,7 +724,7 @@
     },
     "riding": "Red Sofa",
     "size": [
-     5.6,
+     4.9,
      5.8,
      3.3
     ]
@@ -768,7 +777,7 @@
     },
     "riding": "Shopping Cart",
     "size": [
-     5.6,
+     4.9,
      5.8,
      2.2
     ]
@@ -821,7 +830,7 @@
     },
     "riding": "Skateboard",
     "size": [
-     6.3,
+     6.1,
      5.6,
      3.3
     ]
@@ -875,7 +884,7 @@
     },
     "riding": "Suitcase",
     "size": [
-     6.3,
+     6.1,
      5.8,
      3.3
     ]
@@ -929,7 +938,7 @@
     },
     "riding": "Compass",
     "size": [
-     5.9,
+     5.4,
      4.9,
      3.3
     ]
@@ -983,7 +992,7 @@
     },
     "riding": "Pizza",
     "size": [
-     5.8,
+     5.3,
      4.8,
      3.3
     ]
@@ -1037,7 +1046,7 @@
     },
     "riding": "Rocket",
     "size": [
-     6.3,
+     6.1,
      5.8,
      2.3
     ]
@@ -1091,7 +1100,7 @@
     },
     "riding": "Rubber Duck",
     "size": [
-     5.6,
+     4.9,
      5.8,
      3.4
     ]
@@ -1145,7 +1154,7 @@
     },
     "riding": "Soda Bottle",
     "size": [
-     6.3,
+     6.1,
      5.8,
      2.5
     ]
@@ -1199,7 +1208,7 @@
     },
     "riding": "Toilet Paper",
     "size": [
-     5.7,
+     5,
      5.8,
      2.6
     ]
@@ -1253,7 +1262,7 @@
     },
     "riding": "Treadmill",
     "size": [
-     5.6,
+     4.9,
      5.8,
      2.3
     ]
@@ -1307,7 +1316,7 @@
     },
     "riding": "Bathtub",
     "size": [
-     6.5,
+     6.2,
      6.9,
      4.6
     ]
@@ -1361,7 +1370,7 @@
     },
     "riding": "Pizza",
     "size": [
-     6,
+     5.3,
      6.2,
      4.6
     ]
@@ -1415,7 +1424,7 @@
     },
     "riding": "Red Sofa",
     "size": [
-     5.6,
+     4.9,
      6.9,
      3.3
     ]
@@ -1469,7 +1478,7 @@
     },
     "riding": "Skateboard",
     "size": [
-     6.3,
+     6.1,
      6.9,
      3.3
     ]
@@ -1513,6 +1522,84 @@
     "size": [
      6,
      6.5,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 2.2,
+     "itemL": 3.04,
+     "itemW": 3.04,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     4.2,
+     3.6,
+     3.8
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 1.9,
+     "itemL": 2.63,
+     "itemW": 2.63,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     4.9,
+     5.8,
+     2.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Barrel",
+    "fit": {
+     "gap": 0,
+     "itemH": 2,
+     "itemL": 2.76,
+     "itemW": 2.76,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     5.9,
+     3.8,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "size": [
+     4.6,
+     2.2,
+     2.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "size": [
+     6.9,
+     4.8,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "size": [
+     6,
+     2.9,
      5
     ]
    }
@@ -1568,12 +1655,16 @@
    "24_skateboardtrophy_side",
    "24_skateboardtrophy_rear",
    "25_noneflower_side",
-   "25_noneflower_rear"
+   "25_noneflower_rear",
+   "26_barrelbuild_side",
+   "26_barrelbuild_rear",
+   "27_nonebuild_side",
+   "27_nonebuild_rear"
   ],
-  "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers"
+  "summary": "gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers"
  },
  "scenario": "gallery",
  "studioExit": 0,
- "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers",
- "wallSeconds": 107.5
+ "summary": "gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers",
+ "wallSeconds": 118.2
 }

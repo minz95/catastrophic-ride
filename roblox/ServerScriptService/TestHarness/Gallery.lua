@@ -234,7 +234,21 @@ function Gallery.looseParts(model, biome)
 		for i, h in ipairs(holders.MOBILITY) do
 			if not (touch(h, part("PaddleHubL")) or touch(h, part("PaddleHubR"))) then table.insert(out, "paddle " .. i) end
 		end
-	elseif biome == "SKY" and holders.MOBILITY then
+	end
+	if biome == "OCEAN" then
+		-- the outboard motor (or ENGINE item) and the flag hold on to the boat
+		local function onHull(x)
+			for _, h in pairs({ base, part("Float"), part("Transom"), part("TransomSkirt"), part("Keel") }) do
+				if touch(x, h) then return true end
+			end
+			return false
+		end
+		local motor = holders.ENGINE and holders.ENGINE[1] or part("Motor")
+		if motor and not onHull(motor) then table.insert(out, "motor") end
+		if part("MotorLeg") and motor and not touch(part("MotorLeg"), motor) then table.insert(out, "motor leg") end
+		if part("FlagPole") and not onHull(part("FlagPole")) then table.insert(out, "flag pole") end
+	end
+	if biome == "SKY" and holders.MOBILITY then
 		for _, n in ipairs({ "NacelleL", "NacelleR" }) do
 			if not touch(part(n), part("Wing")) then table.insert(out, n) end
 		end

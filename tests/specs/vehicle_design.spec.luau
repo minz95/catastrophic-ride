@@ -79,7 +79,7 @@ local ENDS = {
 -- Riding a BODY item: what is left of the car / boat / plane
 local RIDE_ENDS = {
 	FOREST = { front = { "WheelFrontL", "WheelFrontR" }, back = { "WheelRearL", "WheelRearR" } },
-	OCEAN  = { front = {}, back = { "MotorLeg" } },
+	OCEAN  = { front = {}, back = {} },   -- the motor: behind the item (attach check)
 	SKY    = { front = { "Spinner", "PropBlade1" }, back = { "Fin", "Stabilizer" } },
 }
 
@@ -236,6 +236,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 							off = Vector3.new(0, off.Y, off.Z)
 						end
 						if m.align == "bottom" or m.onRide then off = Vector3.new(off.X, 0, off.Z) end
+						if m.front then off = Vector3.new(off.X, off.Y, 0) end   -- against the front instead
 						if off.Magnitude > 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " off its mount centre")
 						end
@@ -332,7 +333,29 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 							bad("attach", slots, "a paddle off its hub") break
 						end
 					end
-				elseif biome == "SKY" and slots.MOBILITY then
+				end
+				-- the boat's motor (or ENGINE item) and flag hold on to the boat
+				if biome == "OCEAN" then
+					-- the boat's own parts (an item may have a part called "Motor")
+					local function own(n) return model:FindFirstChild(n) end
+					local motor = slots.ENGINE and holders.ENGINE and holders.ENGINE[1] or own("Motor")
+					local leg = own("MotorLeg")
+					local function onHull(x)
+						for _, h in pairs({ base, own("Float"), own("Transom"), own("TransomSkirt"), own("Keel") }) do
+							if h.Parent and touch(x, h) then return true end
+						end
+						return false
+					end
+					if motor and not onHull(motor) then bad("attach", slots, "the motor floats behind the boat") end
+					if leg and motor and not touch(leg, motor) then bad("attach", slots, "the motor leg is off the motor") end
+					if own("FlagPole") and not onHull(own("FlagPole")) then bad("attach", slots, "the flag pole floats") end
+					-- riding: behind the item (the hull's old stern means nothing then)
+					if design.riding and leg and holders.BODY then
+						local c = VehicleBuilder.bounds(holders.BODY[1])
+						if leg.Position.Z <= c.Z then bad("attach", slots, "the motor is not behind the ridden item") end
+					end
+				end
+				if biome == "SKY" and slots.MOBILITY then
 					for _, n in ipairs({ "NacelleL", "NacelleR" }) do
 						if not touch(byName[n], byName.Wing) then bad("attach", slots, n .. " off the wing") end
 					end

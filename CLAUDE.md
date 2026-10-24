@@ -98,6 +98,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   head), up to `SEAT_INTO_CHASSIS` into the invisible chassis. The gallery
   reports `fit.gap` (seat above that surface; > 0.1 floats) and draws the
   water under each boat; `sim.py run gallery-rides` = close-ups of a few.
+  Riding, the outboard motor / ENGINE item (flush on the stern, standing on
+  the motor leg) and the flag move to the item's back end; the gallery's
+  `loose` and the spec check they touch the hull, item or float.
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.

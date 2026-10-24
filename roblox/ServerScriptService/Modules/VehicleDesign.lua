@@ -314,7 +314,8 @@ local function boat(stats)
 	-- Outboard motor at the stern (an ENGINE item takes the motor's place)
 	-- the leg reaches into the water (the motor sits on top of it)
 	local legTop, legBottom = top - 0.1, VehicleDesign.WATERLINE - VehicleDesign.DRAFT
-	add(P, "MotorLeg", "block", V3(0.18, legTop - legBottom, 0.18), CF(0, (legTop + legBottom) / 2, L / 2 + 0.4), "trim")
+	-- (right behind the transom: it holds the motor or an ENGINE item there)
+	add(P, "MotorLeg", "block", V3(0.18, legTop - legBottom, 0.18), CF(0, (legTop + legBottom) / 2, L / 2 + 0.2), "trim")
 	add(P, "Motor", "block", V3(0.55, 0.6, 0.6), CF(0, top + 0.2, L / 2 + 0.4), "trim")
 	d.replacedBy.ENGINE = { "Motor" }
 	-- Mast near the bow and a mainsail: its tall edge on the mast, the foot
@@ -367,7 +368,8 @@ local function boat(stats)
 
 	local M = d.mounts
 	M.BODY = { { cf = CF(0, top + 0.08 + 0.6, houseZ), box = V3(houseW, 1.2, houseL + 0.4) } }
-	M.ENGINE = { { cf = CF(0, top + 0.3, L / 2 + 0.45), box = V3(0.8, 0.9, 0.8) } }
+	-- on the stern, standing on the motor leg (centred, a thin item floated off it)
+	M.ENGINE = { { cf = CF(0, top + 0.3, L / 2 + 0.45), box = V3(0.8, 0.9, 0.8), align = "bottom", front = true } }
 	M.SPECIAL = { { cf = CF(0, top + 0.4, -L * 0.3), box = V3(W * 0.5, 0.7, L * 0.2) } }
 	M.MOBILITY = paddles(paddleX, paddleZ)
 	M.TAIL = { { cf = CF(W / 2 - 0.3, top + 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6) } }
@@ -389,6 +391,19 @@ local function boat(stats)
 		for _, p in ipairs(dd.parts) do
 			if at[p.name] then p.cf = at[p.name] end
 		end
+		-- the outboard motor (or the ENGINE item in its place) on the item's
+		-- back end and the flag on its back corner: they stood where the hull
+		-- ended and floated behind a shorter item
+		local motorZ = hi.Z + 0.25
+		local fx = math.min(W / 2 - 0.3, halfW - 0.3)
+		local fz = hi.Z - 0.35
+		for _, p in ipairs(dd.parts) do
+			if p.name == "Motor" then p.cf = CF(0, top + 0.2, motorZ)
+			elseif p.name == "MotorLeg" then p.cf = CF(0, (legTop + legBottom) / 2, hi.Z + 0.1)
+			elseif p.name == "FlagPole" then p.cf = CF(fx, top + 0.65, fz) * ANG(0, 0, HALF_PI) end
+		end
+		dd.mounts.ENGINE = { { cf = CF(0, top + 0.3, hi.Z + 0.35), box = V3(0.8, 0.9, 0.8), align = "bottom", front = true } }
+		dd.mounts.TAIL = { { cf = CF(fx, 1.4, fz), box = V3(0.6, 0.6, 0.6), onRide = true } }
 		-- a wooden float under the item, down into the water: the item was
 		-- lifted to the chassis top and hovered over the water with its rider
 		local floatTop = lo.Y + 0.05

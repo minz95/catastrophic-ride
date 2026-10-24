@@ -24,7 +24,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [gallery-hats](gallery-hats.json) | PASS | 51193a6+ | 2026-10-24T19:33 |
 | [gallery-mobility](gallery-mobility.json) | PASS | 5b1f6b6+ | 2026-10-24T21:15 |
 | [gallery-rides](gallery-rides.json) | PASS | 5b1f6b6+ | 2026-10-24T21:26 |
-| [gallery](gallery.json) | PASS | 5b1f6b6+ | 2026-10-24T21:25 |
+| [gallery](gallery.json) | PASS | 83fee51+ | 2026-10-24T21:45 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 9d470b1+ | 2026-10-24T20:38 |
@@ -385,7 +385,7 @@ gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 se
 ## gallery — PASS
 
 ```
-gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers
+gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers
 ```
 
 ## load-10p — FAIL

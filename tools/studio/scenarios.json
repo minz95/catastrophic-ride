@@ -1347,10 +1347,21 @@
           },
           {
             "HEAD": "Flower"
+          },
+          {
+            "BODY": "Barrel",
+            "ENGINE": "Hair Dryer",
+            "TAIL": "Racing Flag"
+          },
+          {
+            "ENGINE": "Fan",
+            "TAIL": "Racing Flag"
           }
         ]
       },
-      "checks": {}
+      "checks": {
+        "loose": 0
+      }
     },
     {
       "name": "gallery-hats",

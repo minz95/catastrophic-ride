@@ -92,6 +92,7 @@ VehicleBuilder.bounds = bounds
 --   yaw = degrees     turn it this way instead (VehicleDesign.RIDE_LOOK)
 --   tip = true        lay it on its side first (its height runs along the vehicle)
 --   side = ±1         push it flush with the box's outer X side
+--   front = true      push it against the box's front (-Z) side
 --   flat = "X" | "Z"  turn it so its thinnest side runs along that axis (a
 --                     wheel seen from the side, a propeller face-on)
 -- `minTop` (mount space): raise the item until its top reaches it.
@@ -237,6 +238,8 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop,
 	if mount.align == "bottom" then shift = Vector3.new(-mid.X, -box.Y / 2 - lo.Y, -mid.Z) end
 	-- side = ±1: flush with the box's outer side (a thin wheel outside the body)
 	if mount.side then shift = Vector3.new(mount.side * box.X / 2 - (mount.side > 0 and hi.X or lo.X), shift.Y, shift.Z) end
+	-- front = true: against the box's front (a boat's ENGINE item on the stern)
+	if mount.front then shift = Vector3.new(shift.X, shift.Y, -box.Z / 2 - lo.Z) end
 	local top = hi.Y + shift.Y
 	if minTop and top < minTop then
 		shift += Vector3.new(0, minTop - top, 0)
