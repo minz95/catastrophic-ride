@@ -41,7 +41,9 @@ STUDIO = os.environ.get("ROBLOX_STUDIO", "/Applications/RobloxStudio.app/Content
 LOG_DIR = os.path.expanduser("~/Library/Logs/Roblox")
 CHUNK = 800
 
-TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600, "probe": 300, "gallery": 600}
+TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600, "probe": 300, "gallery": 600,
+           "promo": 600}
+STORE_DIR = os.path.join(ROOT, "assets", "store")
 GALLERY_DIR = os.path.join(ROOT, "reports", "vehicles", "studio")
 # Cropped to the Studio view (no desktop, no screen-share banner): safe to commit.
 SHEET_DIR = os.path.join(ROOT, "reports", "vehicles", "gallery")
@@ -132,7 +134,7 @@ print("SIM_DONE")
 """
 
 FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": "runMatch", "sounds": "runSounds", "probe": "probeApi",
-      "gallery": "runGallery"}
+      "gallery": "runGallery", "promo": "runPromo"}
 
 
 def run_gallery_studio(cmd, token, t0, timeout, sheet="gallery"):
@@ -164,6 +166,58 @@ def run_gallery_studio(cmd, token, t0, timeout, sheet="gallery"):
         return "timeout"
     shots = [os.path.join(GALLERY_DIR, n + ".png") for n in sorted(taken)]
     contact_sheets(shots, sheet, per_row=2, per_sheet=6)   # 3 items a sheet: side | rear
+    return proc.returncode
+
+
+def store_image(path, name, icon=False):
+    """A store picture from a full-resolution screenshot: the Studio view,
+    cropped to 16:9 (or a centred square for the icon) and resized to
+    1920 x 1080 (512 x 512). Returns the written path or None."""
+    view = crop_view(path)
+    if view is None:
+        return None
+    from PIL import Image
+    w, h = view.size
+    if icon:
+        side = min(w, h)
+        box = ((w - side) // 2, (h - side) // 2, (w - side) // 2 + side, (h - side) // 2 + side)
+        size, out = (512, 512), os.path.join(STORE_DIR, "icon.png")
+    else:
+        if w / h > 16 / 9:
+            cw, ch = int(h * 16 / 9), h
+        else:
+            cw, ch = w, int(w * 9 / 16)
+        box = ((w - cw) // 2, (h - ch) // 2, (w - cw) // 2 + cw, (h - ch) // 2 + ch)
+        size, out = (1920, 1080), os.path.join(STORE_DIR, name + ".png")
+    os.makedirs(STORE_DIR, exist_ok=True)
+    view.crop(box).resize(size, Image.LANCZOS).save(out)
+    return out
+
+
+def run_promo_studio(cmd, token, t0, timeout):
+    """Like run_gallery_studio, but the screenshots stay full resolution and
+    each becomes a store picture in assets/store/ (store_image)."""
+    os.makedirs(GALLERY_DIR, exist_ok=True)
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _stay_awake(proc)
+    taken = set()
+    while proc.poll() is None and time.time() - t0 < timeout:
+        time.sleep(0.5)
+        log = find_log(token, t0)
+        if not log:
+            continue
+        with open(log, errors="replace") as f:
+            for name in re.findall(r"GALLERY_SHOT " + token + r" \d+ (\w+)", f.read()):
+                if name in taken:
+                    continue
+                taken.add(name)
+                raw = os.path.join(GALLERY_DIR, "promo_" + name + ".png")
+                subprocess.run(["screencapture", "-x", raw])
+                out = store_image(raw, name, icon=(name == "icon"))
+                print("  shot %s → %s" % (name, os.path.relpath(out, ROOT) if out else "(no Studio view found: screen asleep or locked?)"), flush=True)
+    if proc.poll() is None:
+        proc.terminate()
+        return "timeout"
     return proc.returncode
 
 
@@ -292,6 +346,10 @@ def check(sc, report):
         bad = sorted(k for k, v in conf.items() if not v.get("ok"))
         if bad and c.get("allLoad", True):
             out.append(("fail", "%d sounds do not load: %s" % (len(bad), ", ".join(bad[:12]))))
+        return out
+    if sc["kind"] == "promo":
+        if report.get("errors"):
+            out.append(("fail", "scenes failed: " + "; ".join(report["errors"])))
         return out
     if sc["kind"] == "gallery":
         loose = report.get("loose") or []
@@ -758,7 +816,7 @@ def run_one(sc, place, args):
     if sc["kind"] == "vehicles":
         opts["cases"] = "vehicles"
     token = uuid.uuid4().hex
-    if sc["kind"] == "gallery":
+    if sc["kind"] in ("gallery", "promo"):
         opts["token"] = token
     src = (LUAU.replace("__TOKEN__", token).replace("__OPTS__", json.dumps(opts)).replace("__FN__", FN[sc["kind"]])
            .replace("__SAMPLES__", "true" if args.samples else "false").replace("__CHUNK__", str(CHUNK)))
@@ -772,6 +830,8 @@ def run_one(sc, place, args):
     cmd = [STUDIO, "-task", "RunScript", "-localPlaceFile", place, "-runScriptFile", script, "-quitAfterExecution"]
     if sc["kind"] == "gallery":
         code = run_gallery_studio(cmd, token, t0, timeout, sc["name"])
+    elif sc["kind"] == "promo":
+        code = run_promo_studio(cmd, token, t0, timeout)
     elif sc.get("shots"):
         code = run_with_shots(cmd, token, t0, timeout, sc["name"], sc["shots"])
     else:

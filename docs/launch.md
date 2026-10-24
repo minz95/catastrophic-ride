@@ -3,7 +3,36 @@
 What is left to publish Catastrophic Day on Roblox and measure how players
 react. Code-side switches are already set for a live server
 (`Constants.SOLO_TEST_MODE = false`, live lobby countdown, DiagnosticLogger
-and playtest markers Studio-only); `tests/specs/lobby.spec.luau` keeps them so.
+and playtest markers Studio-only, a leftover `HarnessArgs` attribute is
+ignored on a published place); `tests/specs/lobby.spec.luau` keeps them so.
+
+## Release day, in order
+
+Who: **you** = the place owner in Studio / Creator Dashboard; **repo** =
+already done in this repository.
+
+1. **repo** `main` is green: `lune run tests/run.luau`, CI, and the Studio
+   batch (`python3 tools/studio/sim.py run core`, plus `bots-forest`,
+   `bots-ocean`, `bots-sky`, `match-sky`) on the commit you publish.
+2. **you** Open the published place in Studio (Universe 9983801557, Place
+   74883519312765). Run `rojo serve roblox` and press **Connect** in the Rojo
+   plugin; wait for the sync, then **Disconnect**.
+3. **you** Studio Test → Start (one player): play one round (farm, craft,
+   race). Then Test → Clients and Servers with 2–4 players for one round.
+4. **you** File → **Publish to Roblox** (Alt+P). Keep the place **Private**.
+5. **you** Creator Dashboard: the settings in section 1 (max players 10,
+   devices, genre), the **Maturity questionnaire**, the store page (section
+   3: title, description, `assets/store/icon.png`, the five
+   `assets/store/*.png` thumbnails).
+6. **you** Optional: the three coin packs (section 2), ids into
+   `Shared/Products.lua`, sync, publish again.
+7. **you** Join the live game from the Roblox app (not Studio) with a
+   friend: a full round, then rejoin: Level / Coins kept (real DataStore).
+   On a phone too.
+8. **you** Privacy → Friends for a day, then **Public**. Watch section 5.
+
+If a live server misbehaves: Creator Dashboard → the place → Version
+History → restore the previous version (publishing is reversible).
 
 ## 1. Publish and settings (Creator Dashboard / Studio Game Settings)
 
@@ -49,9 +78,12 @@ and the Smoke Bomb (one escape per round); nothing sold changes speed.
 > (or ITEM) to use it.
 >
 > - 3 worlds: drive the forest, sail the ocean, fly through the clouds
-> - 39 items, each with its own ability
+> - 39 items, each with its own ability: ride a pizza, roll on rubber-duck
+>   wheels, wear a cactus as a hat
+> - Watch your ride turn on the showroom stand while you build it
 > - Steal, punch and guard while you farm
-> - Drift for mini-turbos, hit boost pads, dodge falling logs
+> - Fly off jump ramps and spring over a broken bridge, drift for
+>   mini-turbos, ride updrafts in the sky, dodge falling logs
 > - Level up, keep your daily streak, unlock paints, trails and special rides
 >   like the Rainbow Comet and the Golden Legend
 >
@@ -59,15 +91,15 @@ and the Smoke Bomb (one escape per round); nothing sold changes speed.
 > Phone: thumbstick to drive, buttons on the right
 > Gamepad: triggers / stick drive · X item / grab · B boost / punch · L1 drift · R1 guard
 
-**Icon** (512 × 512, no text needed): one vehicle built from silly items
-(bathtub body, rocket engine, rubber duck on top) mid-jump, bright sky.
-
-**Thumbnails** (1920 × 1080, 3–5): a race start with 6+ cars on the grid; a
-plane through the Sky cloud corkscrew; a boat on the Ocean water slide; the
-crafting screen with items in slots; a farm brawl with a punch landing.
-Studio screenshots (View → Screenshot) of a bot match work: `python3
-tools/studio/sim.py run match-forest` leaves nothing open, so start a
-Studio Test → Clients and Servers with 4–6 players and take them there.
+**Icon** (512 × 512, no text needed) and **thumbnails** (1920 × 1080):
+`assets/store/` (`icon.png`, `1_grid`, `2_ramp_jump`, `3_gap_jump`,
+`4_ocean`, `5_sky`), taken from the real maps by `python3
+tools/studio/sim.py run promo` (TestHarness/Promo: the race lighting,
+varied builds and riders, cars frozen mid-jump). Re-run it after visual
+changes; the screen must be awake and unlocked, and a bigger Studio view
+(close the Output / Explorer panels) gives sharper pictures. A crafting
+screen or farm brawl picture needs a play client: Studio Test → Clients and
+Servers, then View → Screenshot.
 
 ## 4. Before going public
 
@@ -92,8 +124,8 @@ where most players leave before adding content or ads.
 
 ## Known gaps
 
-- Bots (fill to 4) farm, race and take ability hits, but do not use
-  abilities, steal or guard themselves.
+- Bots fill the grid to 4: they farm, punch, guard, steal, race and fire
+  their abilities; they ride updrafts and jumps like players.
 - Gamepad and touch buttons are tested offline only (key mapping); try
   them on a device before going public.
 - The finish grace (45 s after the winner) sometimes cuts off the slowest

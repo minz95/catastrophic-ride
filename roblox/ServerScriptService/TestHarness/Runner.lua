@@ -108,6 +108,16 @@ function Runner.runGallery(opts)
 	return report.summary or "gallery", encode(report)
 end
 
+--- Store-page pictures (run mode, TestHarness/Promo): scenes on the real
+-- maps; sim.py (kind "promo") takes and crops the screenshots.
+function Runner.runPromo(opts)
+	local args = { harness = "promo", autoStart = false, promo = opts or {} }
+	local sts = studioTestService()
+	local report = startSession(args, function() return sts:ExecuteRunModeAsync(args) end)
+	if type(report) ~= "table" then return "promo session returned nothing", "{}" end
+	return report.summary or "promo", encode(report)
+end
+
 --- Escape test: a car dropped at every spot where drivers get stuck (nose in
 -- the wall, facing backwards, on ramps / mud / drift corners) must drive
 -- RaceSim.ESCAPE_GAIN studs on. opts as runRace plus { biome, profiles = { "average" } }.

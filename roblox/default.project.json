@@ -24,6 +24,12 @@
       "$properties": {
         "StreamingEnabled": false
       }
+    },
+    "TextChatService": {
+      "$className": "TextChatService",
+      "$properties": {
+        "ChatVersion": "TextChatService"
+      }
     }
   }
 }

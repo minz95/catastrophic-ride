@@ -87,15 +87,16 @@ local function bend(char, jointName, rot)
 	return true
 end
 
--- An avatar sitting in the vehicle's seat, legs bent like the sit pose.
-local function seatRider(model, folder)
+-- An avatar sitting in the vehicle's seat, legs bent like the sit pose
+-- (`shirt`: torso colour, optional).
+local function seatRider(model, folder, shirt)
 	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
 	if not seat then return nil end
 	local ok, char = pcall(function()
 		local desc = Instance.new("HumanoidDescription")
 		desc.HeadColor = Color3.fromRGB(255, 220, 180)
 		desc.LeftArmColor, desc.RightArmColor = desc.HeadColor, desc.HeadColor
-		desc.TorsoColor = Color3.fromRGB(60, 140, 230)
+		desc.TorsoColor = shirt or Color3.fromRGB(60, 140, 230)
 		desc.LeftLegColor, desc.RightLegColor = Color3.fromRGB(60, 60, 80), Color3.fromRGB(60, 60, 80)
 		return Players:CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R15)
 	end)
@@ -121,6 +122,8 @@ local function seatRider(model, folder)
 	bend(char, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
 	return char, seat
 end
+
+Gallery.seatRider = seatRider
 
 -- Where the rider sits against the ridden item (mount space = the chassis).
 local function fitOf(model, seat)
