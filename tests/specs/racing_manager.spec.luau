@@ -374,3 +374,54 @@ R.describe("after the finish line", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)
+
+-- Studio (2026-10-24): the SKY updrafts did nothing. Two sat at the loop
+-- centres, 440 studs off the lane, and the third pushed with a BodyForce the
+-- held flying height (HoverPosition) simply cancelled.
+R.describe("SKY updrafts (real script)", function()
+	local function skyServer()
+		local srv = Server.boot({
+			players = 1,
+			scripts = {
+				"ServerScriptService.MapBuilders.SkyMapBuilder",
+				"ServerScriptService.GameBootstrap",
+				"ServerScriptService.RacingManager",
+			},
+			harness = { harness = "lune", biome = "SKY", players = 1, lobbyDelay = 0,
+				durations = { FARMING = 0.1, CRAFTING = 0.1, RACING = 600 } },
+		})
+		local env = srv.env
+		local VehicleBuilder = env.requirePath("ServerScriptService.Modules.VehicleBuilder")
+		local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+		local stats = VehicleStats.calculate(nil, nil, nil, "SKY")
+		local model = VehicleBuilder.build(stats, "SKY", CFrame.new(0, 84, 1450), {})
+		model.Parent = env.workspace
+		srv.SessionManager.setVehicle(srv.players[1], model, stats)
+		srv.advance(0.5)
+		return srv, model
+	end
+
+	R.it("every updraft column stands on the lane", function()
+		local srv = skyServer()
+		local Track = srv.env.requirePath("ReplicatedStorage.Shared.Tracks.SkyTrack")
+		local TrackGeometry = srv.env.requirePath("ReplicatedStorage.Shared.TrackGeometry")
+		local geo = TrackGeometry.new(Track.nodes, Track.width, Track.trackTop)
+		for _, z in ipairs(srv.mock.CollectionService:GetTagged("UpdraftZone")) do
+			R.expect(geo:project(z.Position.X, z.Position.Z).dist < Track.width / 2).toBe(true)
+		end
+	end)
+
+	R.it("flying into one lifts the plane (VehicleLift), once per pass, and it wears off", function()
+		local srv, model = skyServer()
+		local U = srv.env.requirePath("ReplicatedStorage.Shared.Constants").UPDRAFT
+		local zone = srv.mock.CollectionService:GetTagged("UpdraftZone")[1]
+		zone.Touched:Fire(model.PrimaryPart)
+		local lift = model.PrimaryPart:GetAttribute("LiftOffset") or 0
+		R.expect(lift >= U.LIFT * U.MIN_SCALE - 1e-6).toBe(true)
+		R.expect(#srv.Telemetry.events("updraft")).toBe(1)
+		zone.Touched:Fire(model.PrimaryPart)   -- another part of the same plane
+		R.expect(#srv.Telemetry.events("updraft")).toBe(1)
+		srv.advance(U.DURATION + 0.2)
+		R.expect(model.PrimaryPart:GetAttribute("LiftOffset")).toBe(nil)
+	end)
+end)

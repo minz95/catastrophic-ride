@@ -189,7 +189,7 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 			ap = geo and Autopilot.new(geo, Autopilot.PROFILES[profileName] or Autopilot.PROFILES.average, k * 977),
 			profile = profileName, drive = VehicleController.newState(), rayParams = rayParams, proxy = proxy, farmed = farmed,
 			cp = { false, false }, s = 0, finished = false, riseSeg = nil, t = 0, owned = false,
-			slots = slots, nextAbility = B.RACE.ABILITY_FIRST * _rng:NextNumber(0.7, 1.3),
+			slots = slots, stats = stats, nextAbility = B.RACE.ABILITY_FIRST * _rng:NextNumber(0.7, 1.3),
 		}
 		table.insert(RaceBots.list, bot)
 		Telemetry.record("race_bot", { id = id, name = name, profile = profileName, slots = table.clone(slots), farmed = farmed,

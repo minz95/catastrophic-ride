@@ -21,6 +21,7 @@
 --   race_sample      RacingManager          { userId, x, y, z, speed, maxSpeed, progress }  (detailed only)
 --   speed_effect     RacingManager          { userId, effect, phase = "enter"|"exit"|"restore", before, after }
 --   hit              RacingManager          { userId, by, s }   obstacle bump
+--   updraft          RacingManager          { userId?, bot, zone, lift }  (SKY updraft lifted a plane)
 --   respawn          RacingManager          { userId, reason, s, from = {x,y,z}, to = {x,y,z} }
 --   feedback         PlaytestReporter       { userId, note = "bad"|"fun", phase, s, section, x, z }
 --   checkpoint       CheckpointService      { userId, index }

@@ -81,7 +81,7 @@ BiomeConfig["SKY"] = {
 		{
 			tag  = "UpdraftZone",
 			type = "updraft",
-			baseForce = Constants.UPDRAFT_BASE_FORCE,
+			lift = Constants.UPDRAFT.LIFT,   -- studs (RacingManager, VehicleLift)
 		},
 		{
 			type     = "gustZone",               -- random directional wind (Issue #66)

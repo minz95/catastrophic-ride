@@ -149,11 +149,12 @@ Track.jumpZoneSize    = { Track.width - 6, 8, 12 }
 Track.finishSize      = { Track.width, 12, 6 }
 
 -- ─── Scenery (outside the fence; map_sky checks) ─────────────────────────────
--- Updraft hazard zones { x, z }: loop centres (off the lane) and one on the
--- final descent.
+-- Updraft columns { x, z } on the lane (18 wide in a 50-wide lane: ride it
+-- or steer round it). Two used to sit at the loop centres, 440 studs off the
+-- lane, where no plane ever went.
 Track.updraftZones = {
-	{ -440,   830 },   -- inside bend A
-	{  440,   330 },   -- inside bend B
+	{ -270,   395 },   -- S3 crossover between the two bends
+	{ 815.5, 174.5 },  -- bend B, past CP2 (N13 → N14)
 	{    0, -1600 },   -- S7 dive (one layer only)
 }
 
