@@ -22,10 +22,11 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
 | [gallery-hats](gallery-hats.json) | PASS | 51193a6+ | 2026-10-24T19:33 |
-| [gallery](gallery.json) | PASS | 51193a6+ | 2026-10-24T19:36 |
+| [gallery-mobility](gallery-mobility.json) | PASS | 9d470b1+ | 2026-10-24T20:34 |
+| [gallery](gallery.json) | PASS | 9d470b1+ | 2026-10-24T20:40 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
+| [match-forest](match-forest.json) | PASS | 9d470b1+ | 2026-10-24T20:38 |
 | [match-ocean](match-ocean.json) | PASS | 2315090+ | 2026-10-22T23:11 |
 | [match-sky](match-sky.json) | PASS | a81a12d+ | 2026-10-23T23:53 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
@@ -368,10 +369,16 @@ server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING
 gallery: 15 vehicles, 10 shots, 12 riding their BODY item, 15 riders made, 15 seated, 12 hats worn
 ```
 
+## gallery-mobility — PASS
+
+```
+gallery: 15 vehicles, 25 shots, 12 riding their BODY item, 15 riders made, 15 seated, 3 hats worn, 0 loose wheels / paddles / propellers
+```
+
 ## gallery — PASS
 
 ```
-gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn
+gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers
 ```
 
 ## load-10p — FAIL
@@ -404,18 +411,19 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 4 finished of 4
-    steal attempts: defended=3, stolen=3
-    -4: picked 9, contests 1/1, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 12, contests 0/0, stole 0, robbed 2, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 9, contests 0/0, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
-    -3: picked 6, contests 0/1, stole 2, robbed 0, defences 2, items 8 | craft submitted, rejected 0
-    #1 Player4 114.3s
-    #2 Player2 119.0s
-    #3 Player1 121.4s
-    #4 Player3 133.7s
-  events: ability=93 ability_probe=253 bot_craft=4 bot_defend=6 bot_farmfx=120 bot_fx=376 bot_guard=1 bot_hud=124 bot_joined=4 bot_pickup_denied=1 bot_punch=10 bot_ready=4 bot_respawn=6 bot_screen=34 bot_steal=6 checkpoint=8 contact=17 contest_result=1 craft=4 drift_turbo=33 drop_placed=19 finish=
-driving: 6 hits (closing speed max 39, push max 28 studs/s), 33 drift turbos, drops: Cactus, Magnifying Glass
-server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 48 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 3 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 10 kbps; memory max 2234 MB
+    steal attempts: stolen=3
+    -4: picked 10, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 13, contests 1/1, stole 0, robbed 2, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 8, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -3: picked 7, contests 0/1, stole 2, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player2 114.3s
+    #2 Player1 117.0s
+    #3 Player4 120.1s
+    #4 Player3 121.6s
+  events: ability=77 ability_probe=241 bot_craft=4 bot_defend=3 bot_farmfx=112 bot_fx=352 bot_guard=6 bot_hud=123 bot_joined=4 bot_punch=13 bot_ready=4 bot_respawn=1 bot_screen=15 bot_spin_fx=125 bot_steal=3 checkpoint=8 contact=24 contest_result=1 craft=4 craft_preview=8 drift_turbo=40 drop_placed=9 finish=
+driving: 12 hits (closing speed max 69, push max 45 studs/s), 40 drift turbos, drops: Cactus
+spinning MOBILITY items: 2 cars (wheel), most turns 2200
+server: FARMING heartbeat 51-60 Hz, physics 55-60 fps, send max 214 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 9 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 10 kbps; memory max 2312 MB
 ```
 
 ## match-ocean — PASS

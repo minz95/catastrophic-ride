@@ -103,6 +103,7 @@ local SUPER = {
 	GuiBase2d = "Instance",
 	WeldConstraint = "Instance",
 	Weld = "JointInstance",
+	Motor6D = "JointInstance",
 	JointInstance = "Instance",
 	Attachment = "Instance",
 	BodyVelocity = "BodyMover",

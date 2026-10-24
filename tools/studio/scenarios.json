@@ -1,5 +1,5 @@
 {
-  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], draftKept [farm profiles: what they placed survived the timeout auto craft], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). abilities (match): every loadout item fires ok at least once, no 'not equipped' denials, each landing measured by ability_probe does what it should (lift raises the car, speed effects change MaxSpeed, steer locks set TurnSpeed 0), every effect key sent is drawn by the bot clients (bot_fx). Tags: abilities (~25 min), vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
+  "_doc": "Studio experiments for tools/studio/sim.py. kind = race | escape | match; opts go to TestHarness.Runner (runRace / runEscape / runMatch). checks: finishAll, maxRespawns (per car), winnerTime [min, max] (warning only, Constants.FUN_TARGETS; only on the *-builds races, where the fastest build stands in for a race winner), stuck (escape: max stuck cases), finishRate (match), allJoined (match), spin (match: cars whose spinning MOBILITY items (SpinFx) turned at least 3 times). match farming checks (stopAfter CRAFTING): ledger (inventory sizes match pickups/steals), everyonePicks, everyoneCrafted, noRejected, autoFor [farm profiles], draftKept [farm profiles: what they placed survived the timeout auto craft], minAttempts / maxAttempts {result: n} over steal attempts. vehicles checks: stuck, maxTilt (degrees), minTopSpeedRatio (of seat MaxSpeed). abilities (match): every loadout item fires ok at least once, no 'not equipped' denials, each landing measured by ability_probe does what it should (lift raises the car, speed effects change MaxSpeed, steer locks set TurnSpeed 0), every effect key sent is drawn by the bot clients (bot_fx). Tags: abilities (~25 min), vehicles (~10 min), farm (farming + crafting, ~25 min), smoke (3 races, ~10 min), core (smoke + escape + match, ~45 min), full (everything).",
   "scenarios": [
     {
       "name": "race-forest",
@@ -349,7 +349,8 @@
         "hudTimer": true,
         "hits": 1,
         "turbos": 1,
-        "rewards": true
+        "rewards": true,
+        "spin": 1
       }
     },
     {
@@ -392,7 +393,8 @@
         "finishRate": 0.9,
         "allJoined": true,
         "fairStart": 1.0,
-        "hudTimer": true
+        "hudTimer": true,
+        "spin": 1
       }
     },
     {
@@ -410,7 +412,8 @@
         "finishRate": 0.9,
         "allJoined": true,
         "fairStart": 1.0,
-        "hudTimer": true
+        "hudTimer": true,
+        "spin": 1
       }
     },
     {
@@ -1331,7 +1334,8 @@
           },
           {
             "BODY": "Pizza",
-            "HEAD": "Propeller Hat"
+            "HEAD": "Propeller Hat",
+            "MOBILITY": "Pizza"
           },
           {
             "BODY": "Red Sofa",
@@ -1379,6 +1383,44 @@
         ]
       },
       "checks": {}
+    },
+    {
+      "name": "gallery-mobility",
+      "kind": "gallery",
+      "tags": [
+        "vehicles"
+      ],
+      "_why": "MOBILITY items as the car's wheels, the boat's side paddle wheels and the plane's wing propellers (VehicleDesign `spin`), with and without a ridden item; the report's `loose` lists wheels / paddles / propellers that do not touch what carries them, with the real meshes",
+      "opts": {
+        "hold": 1.2,
+        "only": [],
+        "extra": [
+          {
+            "MOBILITY": "Pizza"
+          },
+          {
+            "BODY": "Bathtub",
+            "MOBILITY": "Rubber Duck"
+          },
+          {
+            "BODY": "Toilet Paper",
+            "MOBILITY": "Life Preserver"
+          },
+          {
+            "BODY": "Skateboard",
+            "MOBILITY": "Alarm Clock"
+          },
+          {
+            "BODY": "Red Sofa",
+            "MOBILITY": "Fan",
+            "HEAD": "Propeller Hat"
+          }
+        ],
+        "closeUps": true
+      },
+      "checks": {
+        "loose": 0
+      }
     },
     {
       "name": "showroom",
