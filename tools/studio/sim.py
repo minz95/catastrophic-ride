@@ -43,6 +43,71 @@ CHUNK = 800
 
 TIMEOUT = {"race": 900, "escape": 600, "vehicles": 600, "match": 1800, "sounds": 600, "probe": 300, "gallery": 600}
 GALLERY_DIR = os.path.join(ROOT, "reports", "vehicles", "studio")
+# Cropped to the Studio view (no desktop, no screen-share banner): safe to commit.
+SHEET_DIR = os.path.join(ROOT, "reports", "vehicles", "gallery")
+
+
+def _is_frame(px):
+    """The coloured outline Studio draws round a running view: green (run
+    mode, the server) or blue (a play client)."""
+    r, g, b = px[:3]
+    return (g > 150 and r < 80 and 80 < b < 140) or (b > 230 and r < 90 and 80 < g < 140)
+
+
+def _stay_awake(proc):
+    """Screenshots of a sleeping display are black: keep it awake while
+    Studio runs (a locked screen still cannot be captured)."""
+    try:
+        subprocess.Popen(["caffeinate", "-d", "-w", str(proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except OSError:
+        pass
+
+
+def crop_view(path):
+    """The 3D view inside Studio's coloured outline, as a PIL image (None
+    without PIL or when no outline is found). The whole-screen shot keeps the
+    desktop and the screen-share banner (an e-mail address); this does not."""
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    im = Image.open(path).convert("RGB")
+    w, h = im.size
+    px = im.load()
+    rows = [y for y in range(0, h, 1) if sum(1 for x in range(0, w, 4) if _is_frame(px[x, y])) > w / 4 * 0.3]
+    cols = [x for x in range(0, w, 1) if sum(1 for y in range(0, h, 4) if _is_frame(px[x, y])) > h / 4 * 0.3]
+    if len(rows) < 2 or len(cols) < 2:
+        return None
+    top, bottom, left, right = min(rows), max(rows), min(cols), max(cols)
+    if bottom - top < 100 or right - left < 100:
+        return None
+    return im.crop((left + 4, top + 4, right - 3, bottom - 3))
+
+
+def contact_sheets(paths, name, per_row=2, per_sheet=6, width=560):
+    """Cropped shots tiled into JPG sheets in SHEET_DIR (name_1.jpg, ...)."""
+    tiles = [t for t in (crop_view(p) for p in paths) if t is not None]
+    if not tiles:
+        print("  (no sheets: PIL missing, or no Studio view in the shots: was the screen asleep or locked?)")
+        return []
+    from PIL import Image
+    os.makedirs(SHEET_DIR, exist_ok=True)
+    for old in glob.glob(os.path.join(SHEET_DIR, name + "_*.jpg")):
+        os.remove(old)
+    out = []
+    for k in range(0, len(tiles), per_sheet):
+        group = tiles[k:k + per_sheet]
+        th = max(int(t.size[1] * width / t.size[0]) for t in group)
+        rows = (len(group) + per_row - 1) // per_row
+        sheet = Image.new("RGB", (width * per_row, th * rows), (20, 20, 28))
+        for i, t in enumerate(group):
+            t = t.resize((width, int(t.size[1] * width / t.size[0])))
+            sheet.paste(t, ((i % per_row) * width, (i // per_row) * th))
+        path = os.path.join(SHEET_DIR, "%s_%d.jpg" % (name, k // per_sheet + 1))
+        sheet.save(path, quality=80)
+        out.append(path)
+    print("  sheets → %s" % ", ".join(os.path.relpath(p, ROOT) for p in out))
+    return out
 
 LUAU = r"""
 local HttpService = game:GetService("HttpService")
@@ -76,7 +141,10 @@ def run_gallery_studio(cmd, token, t0, timeout):
     Needs screen-recording permission for the terminal."""
     os.makedirs(GALLERY_DIR, exist_ok=True)
     proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _stay_awake(proc)
     taken = set()
+    for old in glob.glob(os.path.join(GALLERY_DIR, "[0-9][0-9]_*.png")):
+        os.remove(old)
     while proc.poll() is None and time.time() - t0 < timeout:
         time.sleep(0.5)
         log = find_log(token, t0)
@@ -94,6 +162,8 @@ def run_gallery_studio(cmd, token, t0, timeout):
     if proc.poll() is None:
         proc.terminate()
         return "timeout"
+    shots = [os.path.join(GALLERY_DIR, n + ".png") for n in sorted(taken)]
+    contact_sheets(shots, "gallery", per_row=2, per_sheet=6)   # 3 items a sheet: side | rear
     return proc.returncode
 
 
@@ -104,7 +174,8 @@ def run_with_shots(cmd, token, t0, timeout, name, shots):
     the whole screen is in them). For looking at client UI in a match."""
     os.makedirs(GALLERY_DIR, exist_ok=True)
     proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    seen_at, taken = None, 0
+    _stay_awake(proc)
+    seen_at, taken, paths = None, 0, []
     while proc.poll() is None and time.time() - t0 < timeout:
         time.sleep(0.5)
         if seen_at is None:
@@ -121,12 +192,14 @@ def run_with_shots(cmd, token, t0, timeout, name, shots):
         if taken < shots.get("count", 3) and time.time() >= due:
             taken += 1
             out = os.path.join(GALLERY_DIR, "%s_%d.png" % (name, taken))
+            paths.append(out)
             subprocess.run(["screencapture", "-x", out])
             subprocess.run(["sips", "-Z", "1600", out], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("  shot %s → %s" % (name, os.path.relpath(out, ROOT)), flush=True)
     if proc.poll() is None:
         proc.terminate()
         return "timeout"
+    contact_sheets(paths, name, per_row=2, per_sheet=4)
     return proc.returncode
 
 

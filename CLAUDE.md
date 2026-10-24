@@ -65,7 +65,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   items are rideable too (ItemConfig `ride` = weight and grip as a body;
   `CraftingRules.fits`). See every rideable item as car, boat and plane with
   an avatar seated: `python3 tools/studio/sim.py run gallery` (side and rear
-  shots in `reports/vehicles/studio/`, rider fit in the report).
+  shots in `reports/vehicles/studio/`, git-ignored: the whole screen; the
+  view cropped out of them as contact sheets in `reports/vehicles/gallery/`,
+  safe to commit; the screen must be awake and unlocked).
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.
