@@ -21,7 +21,8 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
-| [gallery](gallery.json) | PASS | 45ca943+ | 2026-10-24T11:33 |
+| [gallery-hats](gallery-hats.json) | PASS | 51193a6+ | 2026-10-24T19:33 |
+| [gallery](gallery.json) | PASS | 51193a6+ | 2026-10-24T19:36 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
@@ -361,10 +362,16 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING heartbeat 59-59 Hz, physics 60-60 fps, send max 235 kbps; memory max 2287 MB
 ```
 
+## gallery-hats — PASS
+
+```
+gallery: 15 vehicles, 10 shots, 12 riding their BODY item, 15 riders made, 15 seated, 12 hats worn
+```
+
 ## gallery — PASS
 
 ```
-gallery: 63 vehicles, 42 shots, 63 riding their BODY item, 63 riders made, 63 seated
+gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn
 ```
 
 ## load-10p — FAIL

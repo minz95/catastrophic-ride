@@ -662,6 +662,19 @@ local function _rider(seat, parent)
 	_bend(copy, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
 	copy:PivotTo(seat.CFrame * CFrame.new(0, seat.Size.Y / 2 + root.Size.Y / 2, 0))
 	copy.Parent = parent
+	return copy
+end
+
+-- The HEAD item is worn as a hat (VehicleBuilder.wearHat): onto the copy's head.
+local function _wearHat(vehicle, rider)
+	local head = rider and rider:FindFirstChild("Head")
+	if not head then return end
+	for _, c in ipairs(vehicle:GetChildren()) do
+		if c:IsA("Model") and c:GetAttribute("Hat") and c.PrimaryPart then
+			local base = c.PrimaryPart.Size.Y / 2
+			c:PivotTo(head.CFrame * CFrame.new(0, head.Size.Y / 2 - (c:GetAttribute("HatSink") or 0) + base, 0))
+		end
+	end
 end
 
 local _world = nil
@@ -675,7 +688,10 @@ local function _show(model)
 	_world = world
 	copy.Parent = world
 	local seat = copy:FindFirstChildWhichIsA("VehicleSeat", true)
-	if seat then pcall(_rider, seat, world) end
+	if seat then
+		local ok, rider = pcall(_rider, seat, world)
+		if ok and rider then pcall(_wearHat, copy, rider) end
+	end
 	local vcf, vsize = copy:GetBoundingBox()   -- the vehicle (the plinth goes under it)
 	local cf, size = world:GetBoundingBox()    -- vehicle and rider (the framing)
 	-- a round plinth under it, like a shop window

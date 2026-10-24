@@ -57,7 +57,7 @@ end
 local function label(model, text)
 	local gui = Instance.new("BillboardGui")
 	gui.Size = UDim2.new(0, 160, 0, 26)
-	gui.StudsOffset = Vector3.new(0, 5.5, 0)
+	gui.StudsOffset = Vector3.new(0, 7, 0)   -- over a hat
 	gui.AlwaysOnTop = false
 	gui.MaxDistance = 32   -- only the row in front of the camera
 	local l = Instance.new("TextLabel")
@@ -186,7 +186,8 @@ function Gallery.run(args)
 					if p:IsA("BasePart") then p.Anchored = true end
 				end
 				model.Parent = folder
-				label(model, (slots.BODY or "-") .. " · " .. ({ FOREST = "car", OCEAN = "boat", SKY = "plane" })[biome])
+				label(model, (slots.BODY or "-") .. (slots.HEAD and (" + " .. slots.HEAD .. " hat") or "") .. " · "
+					.. ({ FOREST = "car", OCEAN = "boat", SKY = "plane" })[biome])
 				local char, seat = seatRider(model, folder)
 				if char then riders += 1 end
 				local _, size = VehicleBuilder.bounds(model)
@@ -200,10 +201,15 @@ function Gallery.run(args)
 		end
 	end
 	task.wait(1)   -- let the riders settle into their seats
-	local seated = 0
+	local seated, hats = 0, 0
 	for _, c in ipairs(folder:GetChildren()) do
 		local hum = c:IsA("Model") and c:FindFirstChildOfClass("Humanoid")
-		if hum and hum.SeatPart then seated += 1 end
+		if hum and hum.SeatPart then
+			seated += 1
+			-- the HEAD item onto the rider's head, as in a race
+			local vehicle = hum.SeatPart:FindFirstAncestorWhichIsA("Model")
+			if vehicle and VehicleBuilder.wearHat(vehicle, c) then hats += 1 end
+		end
 	end
 
 	-- camera stops: one item at a time (its car, boat and plane), from the side
@@ -227,7 +233,7 @@ function Gallery.run(args)
 			target = CFrame.lookAt(centre + v[2], centre + v[3])
 			task.wait(0.5)
 			n += 1
-			local item = ((slots.BODY or "none") .. (i > #names and " build" or "")):lower():gsub("%W", "")
+			local item = ((slots.BODY or "none") .. (i > #names and (" " .. (slots.HEAD or "build")) or "")):lower():gsub("%W", "")
 			local name = string.format("%02d_%s_%s", i, item, v[1])
 			print(string.format("GALLERY_SHOT %s %d %s", token, n, name))
 			table.insert(report.shots, name)
@@ -235,11 +241,30 @@ function Gallery.run(args)
 		end
 	end
 	conn:Disconnect()
+	-- where each worn hat ended up against its rider's head (after the shots)
+	report.hats = {}
+	for _, c in ipairs(folder:GetChildren()) do
+		local hum = c:IsA("Model") and c:FindFirstChildOfClass("Humanoid")
+		local head = c:FindFirstChild("Head")
+		local vehicle = hum and hum.SeatPart and hum.SeatPart:FindFirstAncestorWhichIsA("Model")
+		if vehicle and head then
+			for _, h in ipairs(vehicle:GetChildren()) do
+				if h:IsA("Model") and h:GetAttribute("Hat") and h.PrimaryPart then
+					local off = head.CFrame:PointToObjectSpace(h.PrimaryPart.Position)
+					local r = function(x) return math.floor(x * 100 + 0.5) / 100 end
+					local seat = hum.SeatPart
+					table.insert(report.hats, { item = h:GetAttribute("Item"), worn = h:GetAttribute("WornBy") ~= nil,
+						offset = { r(off.X), r(off.Y - head.Size.Y / 2), r(off.Z) },
+						headAboveSeat = r(seat.CFrame:PointToObjectSpace(head.Position).Y + head.Size.Y / 2 - seat.Size.Y / 2) })
+				end
+			end
+		end
+	end
 	folder:Destroy()
 	local riding = 0
 	for _, it in ipairs(report.items) do if it.riding then riding += 1 end end
-	report.summary = string.format("gallery: %d vehicles, %d shots, %d riding their BODY item, %d riders made, %d seated",
-		#report.items, #report.shots, riding, riders, seated)
+	report.summary = string.format("gallery: %d vehicles, %d shots, %d riding their BODY item, %d riders made, %d seated, %d hats worn",
+		#report.items, #report.shots, riding, riders, seated, hats)
 	return report
 end
 

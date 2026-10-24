@@ -1317,7 +1317,7 @@
         "vehicles",
         "full"
       ],
-      "_why": "every item you can ride (BODY items and `ride` items) as the car, the boat and the plane with the real item meshes and an avatar in the seat; screenshots go to reports/vehicles/studio/ (whole screen, git-ignored; needs screen-recording permission); the report has each rider's fit (sink, over)",
+      "_why": "every item you can ride (BODY items and `ride` items) as the car, the boat and the plane with the real item meshes and an avatar in the seat; screenshots go to reports/vehicles/studio/ (whole screen, git-ignored; needs screen-recording permission); the report has each rider's fit (sink, over); the extra builds show HEAD items worn as hats",
       "opts": {
         "hold": 1.2,
         "extra": [
@@ -1328,6 +1328,53 @@
             "MOBILITY": "Kite",
             "HEAD": "Rubber Duck",
             "TAIL": "Racing Flag"
+          },
+          {
+            "BODY": "Pizza",
+            "HEAD": "Propeller Hat"
+          },
+          {
+            "BODY": "Red Sofa",
+            "HEAD": "Cactus"
+          },
+          {
+            "BODY": "Skateboard",
+            "HEAD": "Trophy"
+          },
+          {
+            "HEAD": "Flower"
+          }
+        ]
+      },
+      "checks": {}
+    },
+    {
+      "name": "gallery-hats",
+      "kind": "gallery",
+      "tags": [
+        "vehicles"
+      ],
+      "_why": "quick look at HEAD items worn as hats (VehicleBuilder.wearHat): one ridden item plus the gallery's hat builds; the report's `hats` gives each hat's offset from its rider's head top (about 0, -sink, 0 when it sits right)",
+      "opts": {
+        "hold": 1.2,
+        "only": [
+          "Pizza"
+        ],
+        "extra": [
+          {
+            "BODY": "Pizza",
+            "HEAD": "Propeller Hat"
+          },
+          {
+            "BODY": "Red Sofa",
+            "HEAD": "Cactus"
+          },
+          {
+            "BODY": "Skateboard",
+            "HEAD": "Trophy"
+          },
+          {
+            "HEAD": "Flower"
           }
         ]
       },

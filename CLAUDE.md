@@ -68,6 +68,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   shots in `reports/vehicles/studio/`, git-ignored: the whole screen; the
   view cropped out of them as contact sheets in `reports/vehicles/gallery/`,
   safe to commit; the screen must be awake and unlocked).
+  The HEAD item is the rider's hat (`VehicleDesign.HAT`): built over the
+  seat at a seated avatar's head height, moved onto the real head by
+  `VehicleBuilder.wearHat` when someone sits (seat Occupant), back by
+  `takeOffHat`; the showroom puts it on the avatar copy. A worn hat takes
+  the head's Anchored (an anchored hat stays behind when the head moves).
+  Quick look: `sim.py run gallery-hats` (report `hats`: offset from the
+  head top).
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.

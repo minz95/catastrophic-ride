@@ -135,7 +135,7 @@ FN = {"race": "runRace", "escape": "runEscape", "vehicles": "runRace", "match": 
       "gallery": "runGallery"}
 
 
-def run_gallery_studio(cmd, token, t0, timeout):
+def run_gallery_studio(cmd, token, t0, timeout, sheet="gallery"):
     """Runs Studio and takes a screenshot (screencapture, the whole screen,
     scaled to 1600 px) at every GALLERY_SHOT line the gallery prints.
     Needs screen-recording permission for the terminal."""
@@ -163,7 +163,7 @@ def run_gallery_studio(cmd, token, t0, timeout):
         proc.terminate()
         return "timeout"
     shots = [os.path.join(GALLERY_DIR, n + ".png") for n in sorted(taken)]
-    contact_sheets(shots, "gallery", per_row=2, per_sheet=6)   # 3 items a sheet: side | rear
+    contact_sheets(shots, sheet, per_row=2, per_sheet=6)   # 3 items a sheet: side | rear
     return proc.returncode
 
 
@@ -756,7 +756,7 @@ def run_one(sc, place, args):
     timeout = args.timeout or TIMEOUT[sc["kind"]]
     cmd = [STUDIO, "-task", "RunScript", "-localPlaceFile", place, "-runScriptFile", script, "-quitAfterExecution"]
     if sc["kind"] == "gallery":
-        code = run_gallery_studio(cmd, token, t0, timeout)
+        code = run_gallery_studio(cmd, token, t0, timeout, sc["name"])
     elif sc.get("shots"):
         code = run_with_shots(cmd, token, t0, timeout, sc["name"], sc["shots"])
     else:
