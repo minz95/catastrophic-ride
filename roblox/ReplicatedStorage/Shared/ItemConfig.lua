@@ -9,6 +9,11 @@ local R = Constants.RARITY
 
 local ItemConfig = {}
 
+-- ride: an ENGINE / SPECIAL item you can also ride as your BODY (Pizza,
+-- Rubber Duck, ...): the BODY slot takes it (CraftingRules.fits) and it
+-- counts with this weight and grip there (VehicleStats.calculate). Keep it
+-- below the BODY items of its rarity: riding it is for the look.
+
 -- ─── BODY Items ───────────────────────────────────────────────────────────────
 -- weight : 1–20  (higher = slower accel, better obstacle resistance)
 -- grip   : 0.1–1.0 (higher = better cornering/stability)
@@ -213,6 +218,7 @@ ItemConfig["Compass"] = {
 	power      = 22,
 	icon       = "➡️",
 	shape      = "compass",
+	ride       = { weight = 4, grip = 0.40 },
 }
 
 ItemConfig["Propeller Hat"] = {
@@ -230,6 +236,7 @@ ItemConfig["Treadmill"] = {
 	power      = 25,
 	icon       = "🏃",
 	shape      = "treadmill",
+	ride       = { weight = 7, grip = 0.55 },
 }
 
 ItemConfig["Drill"] = {
@@ -247,6 +254,7 @@ ItemConfig["Rocket"] = {
 	power      = 30,
 	icon       = "🚀",
 	shape      = "rocket",
+	ride       = { weight = 4, grip = 0.40, biomeBonus = { SKY = 1.10 } },
 }
 
 ItemConfig["Cup Noodle"] = {
@@ -290,6 +298,7 @@ ItemConfig["Pizza"] = {
 	boost      = 10,
 	icon       = "🍕",
 	shape      = "pizza",
+	ride       = { weight = 2, grip = 0.35 },
 }
 
 ItemConfig["Toilet Paper"] = {
@@ -298,6 +307,7 @@ ItemConfig["Toilet Paper"] = {
 	boost      = 20,
 	icon       = "📜",
 	shape      = "roll",
+	ride       = { weight = 3, grip = 0.35 },
 }
 
 ItemConfig["Cactus"] = {
@@ -363,6 +373,7 @@ ItemConfig["Rubber Duck"] = {
 	boost      = 50,
 	icon       = "🐤",
 	shape      = "duck",
+	ride       = { weight = 3, grip = 0.45, biomeBonus = { OCEAN = 1.15 } },
 }
 
 ItemConfig["Trophy"] = {
@@ -388,6 +399,7 @@ ItemConfig["Soda Bottle"] = {
 	boost      = 100,
 	icon       = "🥤",
 	shape      = "bottle",
+	ride       = { weight = 3, grip = 0.35 },
 }
 
 -- ─── Rarity spawn pool ────────────────────────────────────────────────────────

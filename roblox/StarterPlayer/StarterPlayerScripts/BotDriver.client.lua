@@ -82,11 +82,17 @@ end
 
 -- Other players' inventories are not replicated, so every other player is
 -- assumed to hold something; the server refuses ("victim has nothing").
+-- Server farm bots (NPCs tagged "FarmBot", attribute BotUserId) count too.
 local function otherPlayers()
 	local out = {}
 	for _, p in ipairs(Players:GetPlayers()) do
 		local r = p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart")
 		if r then table.insert(out, { userId = p.UserId, x = r.Position.X, z = r.Position.Z, items = 1, root = r }) end
+	end
+	for _, m in ipairs(game:GetService("CollectionService"):GetTagged("FarmBot")) do
+		local r = m:FindFirstChild("HumanoidRootPart")
+		local id = m:GetAttribute("BotUserId")
+		if r and id then table.insert(out, { userId = id, x = r.Position.X, z = r.Position.Z, items = 1, root = r }) end
 	end
 	return out
 end

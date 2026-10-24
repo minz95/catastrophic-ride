@@ -78,7 +78,7 @@ local ENDS = {
 }
 -- Riding a BODY item: what is left of the car / boat / plane
 local RIDE_ENDS = {
-	FOREST = { front = { "WheelFrontL", "WheelFrontR" }, back = { "WheelRearL", "WheelRearR", "ExhaustL" } },
+	FOREST = { front = { "WheelFrontL", "WheelFrontR" }, back = { "WheelRearL", "WheelRearR" } },
 	OCEAN  = { front = {}, back = { "MotorLeg" } },
 	SKY    = { front = { "Spinner", "PropBlade1" }, back = { "Fin", "Stabilizer" } },
 }
@@ -229,7 +229,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 						bad("ride", slots, string.format("ridden item only %.1f x %.1f on a %.1f x %.1f chassis", e.X, e.Z, chassis.Size.X, chassis.Size.Z))
 					end
 					if c.Y + e.Y / 2 < chassis.Size.Y / 2 - 0.02 then bad("ride", slots, "ridden item below the chassis top") end
-					if seat and math.abs(seat.Position.Y - seat.Size.Y / 2 - math.min(c.Y + e.Y / 2, design.mounts.BODY[1].cf.Position.Y + design.mounts.BODY[1].box.Y / 2)) > 0.05 then
+					-- on the item's top, or down into it by RIDE_LOOK `sink` (a tub, a sofa)
+					local sink = ((VehicleDesign.RIDE_LOOK[slots.BODY] or {}).sink or 0) * e.Y
+					if seat and math.abs(seat.Position.Y - seat.Size.Y / 2 + sink - math.min(c.Y + e.Y / 2, design.mounts.BODY[1].cf.Position.Y + design.mounts.BODY[1].box.Y / 2)) > 0.05 then
 						bad("ride", slots, "seat not on the ridden item")
 					end
 				end

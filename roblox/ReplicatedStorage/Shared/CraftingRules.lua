@@ -5,9 +5,18 @@
 local CraftingRules = {}
 
 -- Core slots take only items of their own slotType; the others take anything.
+-- BODY also takes an item you can ride (ItemConfig `ride`, e.g. Pizza): it
+-- becomes the vehicle (VehicleDesign `ride`) with the `ride` weight and grip.
 CraftingRules.CORE_SLOTS = { BODY = true, ENGINE = true, SPECIAL = true }
 CraftingRules.FREE_SLOTS = { MOBILITY = true, HEAD = true, TAIL = true }
 CraftingRules.ORDER = { "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }
+
+--- Can `cfg` (an ItemConfig entry) go into `slot`?
+function CraftingRules.fits(slot, cfg)
+	if not cfg then return false end
+	if not CraftingRules.CORE_SLOTS[slot] then return CraftingRules.FREE_SLOTS[slot] == true end
+	return cfg.slotType == slot or (slot == "BODY" and cfg.ride ~= nil)
+end
 
 --- Returns clean slots (every item from the inventory, each inventory entry
 -- used once) and the rejected entries { slot, item, reason }.
@@ -29,7 +38,7 @@ function CraftingRules.validate(slots, inventory, itemConfig)
 			local reason
 			if not cfg then
 				reason = "unknown item"
-			elseif CraftingRules.CORE_SLOTS[slot] and cfg.slotType ~= slot then
+			elseif not CraftingRules.fits(slot, cfg) then
 				reason = "wrong type (" .. tostring(cfg.slotType) .. ")"
 			else
 				reason = "not in inventory"
@@ -53,8 +62,8 @@ end
 
 --- Fills the empty slots of `keep` (already valid slots, e.g. a player's
 -- arrangement when the timer ran out) from the unused inventory: the first
--- item of each type goes to BODY / ENGINE / SPECIAL, leftovers to MOBILITY,
--- HEAD, TAIL. Used by the Auto fill button and the timeout auto craft, so
+-- item of each type goes to BODY / ENGINE / SPECIAL (no BODY item: a
+-- rideable leftover is ridden), leftovers to MOBILITY, HEAD, TAIL. Used by the Auto fill button and the timeout auto craft, so
 -- both put items where they count.
 function CraftingRules.autoSlots(inventory, itemConfig, keep)
 	local slots, used = {}, {}
@@ -75,6 +84,15 @@ function CraftingRules.autoSlots(inventory, itemConfig, keep)
 					slots[slot], used[i] = name, true
 					break
 				end
+			end
+		end
+	end
+	if slots.BODY == nil then
+		for i, name in ipairs(inventory) do
+			local cfg = itemConfig[name]
+			if not used[i] and cfg and cfg.ride then
+				slots.BODY, used[i] = name, true
+				break
 			end
 		end
 	end

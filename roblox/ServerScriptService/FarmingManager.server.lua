@@ -649,7 +649,7 @@ RemoteEvents.RequestContest.OnServerInvoke = _contestPress
 
 -- ─── RequestSteal handler ─────────────────────────────────────────────────────
 
-RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
+local function _steal(thief, targetUserId)
 	if not _active then return "denied: not farming" end
 
 	local thiefData = SessionManager.getData(thief)
@@ -731,6 +731,7 @@ RemoteEvents.RequestSteal.OnServerInvoke = function(thief, targetUserId)
 	RemoteEvents.ItemStolen:FireAllClients(thief.Name, victim.Name, stolenItem)
 	return attempt("stolen")
 end
+RemoteEvents.RequestSteal.OnServerInvoke = _steal
 
 -- One call per defence tap. Taps outside an open window do nothing (a tap
 -- sent "just in case" used to block the next steal whenever it came).
@@ -824,7 +825,7 @@ local function _setGuard(player, data, on)
 	RemoteEvents.FarmAction:FireAllClients("guard", player.UserId, nil, { on = on })
 end
 
-RemoteEvents.SetGuard.OnServerEvent:Connect(function(player, on)
+local function _guard(player, on)
 	if not _active then return end
 	local data = SessionManager.getData(player)
 	if not data then return end
@@ -838,7 +839,8 @@ RemoteEvents.SetGuard.OnServerEvent:Connect(function(player, on)
 			if data._guardUntil == untilT then _setGuard(player, data, false) end
 		end)
 	end
-end)
+end
+RemoteEvents.SetGuard.OnServerEvent:Connect(_guard)
 
 local function _punch(attacker)
 	if not _active then return "denied: not farming" end
@@ -915,6 +917,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		FarmBots.start(biome, {
 			items = function() return _items, _contests end,
 			pickup = _requestPickup, contestPress = _contestPress, punch = _punch, defend = _defend,
+			steal = _steal, guard = _guard,
 		})
 
 		Telemetry.record("item_wave", { wave = 0, count = first, players = n })

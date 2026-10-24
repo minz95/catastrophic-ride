@@ -679,6 +679,14 @@ def run_one(sc, place, args):
                       ((e.get("victim") or 0) <= -100000)]
             summary += "\nfarm bots: %d on the farm, %d pickups, %d punches thrown, %d punches/steals on bots" % (
                 len(farmBots), len(picks), len(punches), len(onBots))
+            botSteals = [e for e in evs if e.get("kind") == "steal_attempt" and (e.get("thief") or 0) <= -100000
+                         and not str(e.get("result", "")).startswith("denied")]
+            guards = [e for e in acts if e.get("act") == "guard"]
+            summary += "\nfarm bots: %d steals tried (%d stolen), %d guards" % (
+                len(botSteals), len([e for e in botSteals if e.get("result") == "stolen"]), len(guards))
+        botAb = [e for e in evs if e.get("kind") == "bot_ability"]
+        if botAb:
+            summary += "\nbot abilities: %d fired (%s)" % (len(botAb), ", ".join(sorted(set(e.get("item", "?") for e in botAb))))
         targets = [e for e in evs if e.get("kind") == "ability_target"]
         if targets:
             summary += "\nability targets: %d, on bots %d" % (len(targets), len([e for e in targets if e.get("bot")]))

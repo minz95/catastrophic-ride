@@ -452,7 +452,7 @@ Constants.BOTS = {
 	PROFILES = { "average", "novice", "expert", "average", "novice", "average", "average", "novice" },
 	-- FARMING (Modules/FarmBots): the same bots walk the farm first. Slower than
 	-- a player (16), they mash slower in contests, tap to defend a steal now and
-	-- then, and throw the odd punch at a player in reach. Their items become
+	-- then, throw the odd punch at a player in reach, guard and rob now and then. Their items become
 	-- their race car (CraftingRules.autoSlots).
 	FARM = {
 		WALK = 13,          -- studs/s
@@ -462,6 +462,29 @@ Constants.BOTS = {
 		PUNCH_EVERY = 7,    -- s, average, at a player in reach
 		PUNCH_CHANCE = 0.5, -- of taking a swing when one is due
 		WANDER = 18,        -- studs: how far a bot with a full bag strolls
+		-- steals: now and then a bot walks up to someone with items near it
+		-- and grabs (the victim defends as usual)
+		STEAL_EVERY = 8,    -- s, average, between two thoughts of stealing
+		STEAL_CHANCE = 0.6, -- of going for it when one is due
+		STEAL_CHASE = 28,   -- studs: only someone this close (a player walks 16/s, a bot 13)
+		CHASE_FOR = 5,      -- s: gives up the chase after this
+		KEEP_FREE = 1,      -- bag slots left free for a steal (a car takes 6 of 8)
+		PROWL = 0.5,        -- with that bag: chance a stroll heads for someone with items
+		PROWL_RANGE = 70,   -- studs
+		-- guard (G): raised when just hit (chance per hit) or when a player in
+		-- reach faces the bot (chance per second); held GUARD_HOLD s, still
+		GUARD_HIT = 0.3,    -- (0.5 blocked 9 of 16 punches in Studio: no knock-out)
+		GUARD_NEAR = 0.25,
+		GUARD_HOLD = 1.2,
+		GUARD_REST = 3,     -- s before the next guard
+	},
+	-- RACING (Modules/RaceBots): bots fire their crafted abilities like a
+	-- player's E, a little less eagerly
+	RACE = {
+		ABILITY_FIRST = 6,  -- s after GO, about, before the first try
+		ABILITY_EVERY = 3,  -- s, average, between two tries
+		ABILITY_CHANCE = 0.6,
+		TARGET_RANGE = 45,  -- studs: aimed abilities wait for a car this close
 	},
 }
 

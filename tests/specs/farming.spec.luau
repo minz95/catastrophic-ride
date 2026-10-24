@@ -354,6 +354,42 @@ R.describe("CraftingRules.autoSlots (Auto fill button and timeout craft)", funct
 		R.expect(slots.ENGINE).toBe("Kettle")
 		R.expect(slots.MOBILITY).toBe(nil)
 	end)
+
+	R.it("BODY takes an item you can ride (Pizza), not any other non-BODY item", function()
+		load()
+		R.expect(CraftingRules.fits("BODY", ItemConfig["Pizza"])).toBe(true)
+		R.expect(CraftingRules.fits("BODY", ItemConfig["Rubber Duck"])).toBe(true)
+		R.expect(CraftingRules.fits("BODY", ItemConfig["Magnet"])).toBe(false)
+		R.expect(CraftingRules.fits("SPECIAL", ItemConfig["Pizza"])).toBe(true)
+		R.expect(CraftingRules.fits("ENGINE", ItemConfig["Pizza"])).toBe(false)
+		local clean, rejected = CraftingRules.validate({ BODY = "Pizza", SPECIAL = "Magnet" }, { "Pizza", "Magnet" }, ItemConfig)
+		R.expect(clean.BODY).toBe("Pizza")
+		R.expect(#rejected).toBe(0)
+		local _, bad = CraftingRules.validate({ BODY = "Magnet" }, { "Magnet" }, ItemConfig)
+		R.expect(#bad).toBe(1)
+	end)
+
+	R.it("no BODY item: the auto craft rides a rideable leftover, a BODY item still wins", function()
+		load()
+		local slots = CraftingRules.autoSlots({ "Magnet", "Pizza", "Kettle", "Rubber Duck" }, ItemConfig)
+		R.expect(slots.SPECIAL).toBe("Magnet")
+		R.expect(slots.BODY).toBe("Pizza")
+		local with = CraftingRules.autoSlots({ "Pizza", "Rubber Duck", "Log" }, ItemConfig)
+		R.expect(with.BODY).toBe("Log")
+		R.expect(with.SPECIAL).toBe("Pizza")
+	end)
+
+	R.it("a ridden item counts with its ride weight and grip, below the BODY items", function()
+		local env = require("../lib/loader").boot()
+		local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+		load()
+		for _, name in ipairs({ "Pizza", "Rubber Duck", "Rocket", "Toilet Paper" }) do
+			local cfg = ItemConfig[name]
+			local ridden = VehicleStats.calculate(cfg, nil, nil, "FOREST")
+			local same = VehicleStats.calculate({ weight = cfg.ride.weight, grip = cfg.ride.grip, rarity = cfg.rarity }, nil, nil, "FOREST")
+			R.expect(math.abs(ridden.stability - same.stability) < 1e-6).toBe(true)
+		end
+	end)
 end)
 
 -- Studio steal-crowd-6p (2026-10-20): a player's inventory shrank with no

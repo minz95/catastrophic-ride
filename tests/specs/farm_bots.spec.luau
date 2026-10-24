@@ -117,6 +117,55 @@ R.describe("farm bots (live servers fill the farm)", function()
 		R.expect(res[1].loser).toBe(bot.UserId)
 	end)
 
+	R.it("a bot walks up to a player with items and tries to rob them", function()
+		local srv, FarmBots, tick, C = farm(2)
+		local F = C.BOTS.FARM
+		local old = { F.STEAL_EVERY, F.STEAL_CHANCE }
+		F.STEAL_EVERY, F.STEAL_CHANCE = 0.5, 1
+		local player = srv.players[1]
+		local bot = srv.SessionManager.bots()[1]
+		srv.SessionManager.getData(player).inventory = { "Kettle", "Log" }
+		srv.SessionManager.getData(bot).inventory = {}
+		for _, b in ipairs(FarmBots.list) do b.nextSteal = 0 end
+		local at = bot.Character.HumanoidRootPart.Position
+		for _ = 1, 40 do
+			player.Character.HumanoidRootPart.Position = at + Vector3.new(8, 0, 0)
+			tick(0.25)
+			if #srv.Telemetry.events("steal_attempt") > 0 then break end
+		end
+		F.STEAL_EVERY, F.STEAL_CHANCE = old[1], old[2]
+		tick(2)
+		local att = srv.Telemetry.events("steal_attempt")
+		R.expect(#att).toBeGreaterThan(0)
+		R.expect(att[1].thief).toBe(bot.UserId)
+		R.expect(att[1].victim).toBe(player.UserId)
+		R.expect(att[1].result == "stolen" or att[1].result == "defended").toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a bot that is hit raises its guard, and the next punch is blocked", function()
+		local srv, FarmBots, tick, C = farm(2)
+		local F = C.BOTS.FARM
+		local old = { F.GUARD_HIT, F.STEAL_CHANCE, F.PUNCH_CHANCE }
+		F.GUARD_HIT, F.STEAL_CHANCE, F.PUNCH_CHANCE = 1, 0, 0
+		local player = srv.players[1]
+		local bot = srv.SessionManager.bots()[1]
+		srv.SessionManager.getData(bot).inventory = { "Kettle", "Log" }
+		local results = {}
+		for _ = 1, 3 do
+			player.Character.HumanoidRootPart.CFrame = CFrame.new(0, 3, 850)
+			bot.Character.HumanoidRootPart.CFrame = CFrame.new(0, 3, 846)
+			table.insert(results, (srv.mock.invoke(srv.RemoteEvents.RequestPunch, player)))
+			tick(C.FIGHT.COOLDOWN + 0.1)
+		end
+		F.GUARD_HIT, F.STEAL_CHANCE, F.PUNCH_CHANCE = old[1], old[2], old[3]
+		R.expect(results[1]).toBe("hit")
+		R.expect(string.find(table.concat(results, ","), "blocked") ~= nil).toBe(true)
+		local guards = 0
+		for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do if ev.act == "guard" then guards += 1 end end
+		R.expect(guards).toBeGreaterThan(0)
+	end)
+
 	R.it("CRAFTING: bots leave the farm with their bag; LOBBY: bots are gone", function()
 		local srv, FarmBots, tick = farm(3)
 		tick(20)
@@ -200,6 +249,28 @@ R.describe("race bots are the farm bots, and abilities hit them", function()
 		local VehicleTuning = srv.env.requirePath("ServerScriptService.Modules.VehicleTuning")
 		R.expect(VehicleTuning.has(bot.seat, "TurnSpeed", "steerDisable")).toBe(true)
 		R.expect(VehicleTuning.has(bot.seat, "MaxSpeed", "magnetPull")).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a race bot fires the abilities of its own car (same checks as a player)", function()
+		local srv, player, _, tick, RaceBots, C = race()
+		local bot = RaceBots.list[1]
+		bot.model:PivotTo(CFrame.new(0, 2, 528))   -- a car in range for aimed ones
+		local Rc = C.BOTS.RACE
+		local old = Rc.ABILITY_CHANCE
+		Rc.ABILITY_CHANCE = 1
+		tick(14)
+		Rc.ABILITY_CHANCE = old
+		local fired, denied = {}, 0
+		for _, ev in ipairs(srv.Telemetry.events("ability")) do
+			if ev.userId == bot.id then
+				if ev.result == "ok" then fired[ev.item] = true else denied += 1 end
+			end
+		end
+		local n = 0
+		for _ in pairs(fired) do n += 1 end
+		R.expect(n).toBeGreaterThan(0)
+		R.expect(#srv.Telemetry.events("bot_ability")).toBeGreaterThan(0)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)

@@ -85,8 +85,10 @@ VehicleBuilder.bounds = bounds
 --   align = "bottom"  sit on the box floor instead of its centre
 --   stretch = k       an axis may grow up to k× past the proportional fit
 --   orient = true     turn the item so its longer side runs along the vehicle
+--   yaw = degrees     turn it this way instead (VehicleDesign.RIDE_LOOK)
+--   tip = true        lay it on its side first (its height runs along the vehicle)
 -- `minTop` (mount space): raise the item until its top reaches it.
--- Returns the holder Model and the item's top in mount space.
+-- Returns the holder Model and the item's top and bottom in mount space.
 local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 	local cfg = ItemConfig[itemName]
 	if not cfg then return nil end
@@ -111,6 +113,14 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 		-- orient: the way round that comes out biggest (upright unless lying
 		-- down or turning gains a quarter): a kite becomes a flying carpet
 		local turn = CFrame.new()
+		if mount.tip then
+			turn = CFrame.Angles(math.pi / 2, 0, 0)
+			size = Vector3.new(size.X, size.Z, size.Y)
+		end
+		if mount.yaw then
+			turn = CFrame.Angles(0, math.rad(mount.yaw), 0) * turn
+			if math.abs(math.sin(math.rad(mount.yaw))) > 0.7 then size = Vector3.new(size.Z, size.Y, size.X) end
+		end
 		local base = fitOf(size)
 		if mount.orient then
 			local options = {
@@ -175,13 +185,14 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 		shift += Vector3.new(0, minTop - top, 0)
 		top = minTop
 	end
+	local bottom = lo.Y + shift.Y
 	for _, it in ipairs(placed) do
 		it.part.CFrame = mountCF * CFrame.new(shift) * it.cf
 		decoration(it.part)
 		weld(chassis, it.part)
 	end
 	holder.Parent = model
-	return holder, top
+	return holder, top, bottom
 end
 
 local function _applyStatVisuals(model, stats)
@@ -344,14 +355,15 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	local primaryPart = chassis
 
 	-- Riding the BODY item: it goes first, the rest sits on its real top
-	local rideTop = nil
+	local rideTop, rideSink = nil, 0
 	if design.riding then
 		chassis.Transparency = 1
 		local mount = design.mounts.BODY[1]
 		local chassisTop = design.chassis.size.Y / 2
-		local _, top = placeItem(slots.BODY, spawnCFrame * mount.cf, mount, model, chassis, "BODY",
+		local _, top, bottom = placeItem(slots.BODY, spawnCFrame * mount.cf, mount, model, chassis, "BODY",
 			chassisTop - mount.cf.Position.Y)
 		rideTop = mount.cf.Position.Y + (top or 0)
+		rideSink = (mount.sink and top and bottom) and mount.sink * (top - bottom) or 0
 		model:SetAttribute("Riding", slots.BODY)
 	end
 	local ride = design.ride
@@ -378,7 +390,8 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	seat.CFrame = spawnCFrame * seatSpec.cf
 	if rideTop then
 		-- on the item, no higher than its box allows
-		local y = math.min(rideTop, design.mounts.BODY[1].cf.Position.Y + ride.box.Y / 2) + seatSpec.size.Y / 2
+		-- (RIDE_LOOK sink: down into a tub or onto the cushions)
+		local y = math.min(rideTop, design.mounts.BODY[1].cf.Position.Y + ride.box.Y / 2) - rideSink + seatSpec.size.Y / 2
 		seat.CFrame = spawnCFrame * CFrame.new(0, y, ride.seatZ)
 	end
 	seat.Color = Color3.fromRGB(50, 50, 50)
