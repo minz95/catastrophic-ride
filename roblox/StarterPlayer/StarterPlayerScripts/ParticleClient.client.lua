@@ -278,6 +278,11 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(effectName, params)
 
 	elseif effectName == "updraftWarning" then
 		_startUpdraftParticles(vehicle)
+		-- the lift lasts Constants.UPDRAFT.DURATION (no exit message comes)
+		local emitter = _updraftEmitter
+		task.delay(require(ReplicatedStorage.Shared.Constants).UPDRAFT.DURATION, function()
+			if _updraftEmitter == emitter then _stopUpdraftParticles() end
+		end)
 
 	elseif effectName == "respawn" then
 		_stopMudSplatter()

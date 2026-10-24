@@ -815,6 +815,11 @@ def run_one(sc, place, args):
         if spins:
             summary += "\nspinning wheels / paddles / propellers: %d cars (%s), most turns %d" % (
                 len(spins), ", ".join(sorted(set(m for _, m in spins.values()))), max(t for t, _ in spins.values()))
+        ups = [e for e in evs if e.get("kind") == "updraft"]
+        if ups:
+            summary += "\nupdrafts: %d lifts (%d bots), zones %s, lift %s studs" % (
+                len(ups), len([e for e in ups if e.get("bot")]), ", ".join(sorted(set(str(e.get("zone")) for e in ups))),
+                "/".join(sorted(set(str(e.get("lift")) for e in ups))))
         botAb = [e for e in evs if e.get("kind") == "bot_ability"]
         if botAb:
             summary += "\nbot abilities: %d fired (%s)" % (len(botAb), ", ".join(sorted(set(e.get("item", "?") for e in botAb))))

@@ -140,6 +140,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Lift abilities set the chassis attribute `LiftOffset` through
   `Modules/VehicleLift`; an upward BodyForce cannot beat the ride-height
   BodyPosition. Never tween or set a race car's CFrame from a client.
+  SKY updrafts (columns on the lane, `SkyTrack.updraftZones`) lift the same
+  way (`Constants.UPDRAFT`, once per pass, players and race bots; telemetry
+  `updraft`). They used to push with a BodyForce, and two stood 440 studs
+  off the lane: they did nothing.
 - Car-to-car hits: `RacingManager` resolves every contact with
   `Shared/CarImpact` and sends each driver `RemoteEvents.CarImpact`;
   `VehicleController.knock` adds it to the drive state. Never push a race

@@ -32,6 +32,7 @@ local Passives          = require(ReplicatedStorage.Shared.Passives)
 local CarImpact         = require(ReplicatedStorage.Shared.CarImpact)
 local EffectFx          = require(ServerScriptService.Modules.EffectFx)
 local Telemetry         = require(ServerScriptService.Modules.Telemetry)
+local VehicleLift       = require(ServerScriptService.Modules.VehicleLift)
 local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
 local RaceStart         = require(ServerScriptService.Modules.RaceStart)
@@ -91,6 +92,8 @@ local function _unspeed(player, seat, id)
 end
 
 -- The racer whose vehicle contains `hit`, plus that vehicle.
+local _updraftUntil = setmetatable({}, { __mode = "k" })   -- [vehicle] = os.clock() a lift ends
+
 local function _ownerOf(hit)
 	local node = hit
 	while node and node ~= workspace do
@@ -253,30 +256,35 @@ end)
 
 -- ─── Updraft zones (SKY) ──────────────────────────────────────────────────────
 
+-- Updrafts (SKY): a column of rising air on the lane lifts a plane by
+-- Constants.UPDRAFT.LIFT studs for DURATION s through Modules/VehicleLift
+-- (the held flying height; an upward BodyForce could not beat it, so the
+-- old updrafts did nothing). Planes with more flyability ride it higher.
 local function _connectUpdraft(part)
-	local function handle(hit, entering)
+	_once(part, "updraftIn", "Touched", function(hit)
 		if not _active then return end
 		local player, vehicle = _ownerOf(hit)
-		if not player or not vehicle.PrimaryPart then return end
-		local wasIn, isIn = _zoneTouch(player, "updraft", part, hit, entering)
-		if wasIn == isIn then return end
-		local bf = vehicle.PrimaryPart:FindFirstChild("UpdraftForce")
-		if isIn then
+		local stats
+		if player then
 			local pdata = SessionManager.getData(player)
-			local flyStat = (pdata.vehicleStats and pdata.vehicleStats.flyability) or 10
-			if not bf then
-				bf = Instance.new("BodyForce")
-				bf.Name   = "UpdraftForce"
-				bf.Parent = vehicle.PrimaryPart
+			stats = pdata and pdata.vehicleStats
+		else
+			for _, bot in ipairs(RaceBots.list) do
+				if bot.model and hit:IsDescendantOf(bot.model) then vehicle, stats = bot.model, bot.stats end
 			end
-			bf.Force = Vector3.new(0, Constants.UPDRAFT_BASE_FORCE * (flyStat / 20), 0)
-			RemoteEvents.ScreenEffect:FireClient(player, "updraftWarning", {})
-		elseif bf then
-			bf:Destroy()
 		end
-	end
-	_once(part, "updraftIn", "Touched", function(hit) handle(hit, true) end)
-	_once(part, "updraftOut", "TouchEnded", function(hit) handle(hit, false) end)
+		if not vehicle or not vehicle.PrimaryPart then return end
+		local U = Constants.UPDRAFT
+		local key = vehicle
+		if (_updraftUntil[key] or 0) > os.clock() then return end   -- one lift per pass
+		_updraftUntil[key] = os.clock() + U.DURATION
+		local fly = (stats and stats.flyability) or U.FLY_REF
+		local studs = U.LIFT * math.clamp(fly / U.FLY_REF, U.MIN_SCALE, U.MAX_SCALE)
+		VehicleLift.set(vehicle, "updraft", studs, U.DURATION)
+		Telemetry.record("updraft", { userId = player and player.UserId or nil, bot = player == nil, zone = part.Name,
+			lift = math.floor(studs * 10) / 10 })
+		if player then RemoteEvents.ScreenEffect:FireClient(player, "updraftWarning", {}) end
+	end)
 end
 
 -- ─── Kill plane (all biomes) ──────────────────────────────────────────────────
