@@ -10,7 +10,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
 | [bots-abilities](bots-abilities.json) | PASS | e58978d+ | 2026-10-24T02:41 |
 | [bots-fight](bots-fight.json) | PASS | 45ca943+ | 2026-10-24T11:39 |
-| [bots-forest](bots-forest.json) | PASS | fce4824+ | 2026-10-24T12:29 |
+| [bots-forest](bots-forest.json) | PASS | e47e961+ | 2026-10-24T23:26 |
 | [bots-ocean](bots-ocean.json) | PASS | 4f74f56+ | 2026-10-24T00:33 |
 | [bots-sky](bots-sky.json) | PASS | 4f74f56+ | 2026-10-24T00:36 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
@@ -30,8 +30,8 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [match-forest](match-forest.json) | WARN | f338428+ | 2026-10-24T22:47 |
 | [match-ocean](match-ocean.json) | PASS | 5b1f6b6+ | 2026-10-24T21:22 |
 | [match-sky](match-sky.json) | PASS | 5b1f6b6+ | 2026-10-24T21:41 |
-| [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
-| [race-forest](race-forest.json) | PASS | f338428+ | 2026-10-24T22:42 |
+| [race-forest-builds](race-forest-builds.json) | PASS | e47e961+ | 2026-10-24T23:23 |
+| [race-forest](race-forest.json) | PASS | e47e961+ | 2026-10-24T23:20 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
 | [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
@@ -230,20 +230,21 @@ server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 231 kbps; CRAFTI
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 1 finished of 1
-    steal attempts: defended=3, denied: too late=1, stolen=1
-    -100003: picked 8, contests 4/4, stole 0, robbed 1, defences 0, items nil
-    -100001: picked 5, contests 0/5, stole 0, robbed 0, defences 0, items nil
-    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -1: picked 7, contests 1/1, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
-    #1 Player1 105.8s
-  events: ability=114 ability_probe=98 ability_target=6 bot_ability=41 bot_craft=1 bot_defend=1 bot_farm=26 bot_farmfx=19 bot_fx=59 bot_guard=1 bot_hud=23 bot_joined=1 bot_ready=1 bot_respawn=2 bot_screen=3 bot_steal=1 checkpoint=2 contest_result=5 craft=1 drift_turbo=10 drop_placed=14 farm_bot=3 finish=4 harness_crafting=1 harness_round=1 hazard=38 hit=1 item_pickup=27 item_wave=3 phase=4 phase_shortened=1 pun
-driving: 0 hits, 10 drift turbos, drops: Gas Can, Pizza
-farm bots: 3 on the farm, 20 pickups, 1 punches thrown, 4 punches/steals on bots
-farm bots: 3 steals tried (0 stolen), 0 guards
-bot abilities: 41 fired (Barrel, Cardboard Box, Gas Can, Hair Dryer, Pizza, Suitcase, Toilet Paper)
-ability targets: 6, on bots 6
-bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 121.0s, 123.9s, 126.8s
-server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 54 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 51 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 54 kbps; memory max 2296 MB
+    steal attempts: defended=5, denied: too far=1, denied: too late=1, stolen=1
+    -100003: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 7, contests 0/0, stole 0, robbed 1, defences 0, items nil
+    -100002: picked 7, contests 0/1, stole 0, robbed 0, defences 0, items nil
+    -1: picked 8, contests 1/1, stole 1, robbed 0, defences 3, items 8 | craft submitted, rejected 0
+    #1 Player1 107.8s
+  events: ability=112 ability_probe=94 ability_target=3 bot_ability=37 bot_blocked=1 bot_craft=1 bot_defend=3 bot_farm=29 bot_farmfx=27 bot_fx=67 bot_hud=23 bot_joined=1 bot_punch=2 bot_ready=1 bot_respawn=2 bot_screen=3 bot_showroom_spin=1 bot_spin_fx=65 bot_steal=3 checkpoint=2 contest_result=1 craft=1 craft_preview=2 drift_turbo=8 drop_placed=8 farm_bot=3 finish=4 harness_crafting=1 harnes
+driving: 0 hits, 8 drift turbos, drops: Gas Can
+farm bots: 3 on the farm, 21 pickups, 0 punches thrown, 5 punches/steals on bots
+farm bots: 4 steals tried (0 stolen), 2 guards
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2244
+bot abilities: 37 fired (Alarm Clock, Bamboo Raft, Cardboard Box, Gas Can, Magnet, Shopping Cart, Toilet Paper)
+ability targets: 3, on bots 3
+bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 111.0s, 113.0s, 124.9s
+server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 216 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 24 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 21 kbps; memory max 2277 MB
 ```
 
 ## bots-ocean — PASS
@@ -477,19 +478,20 @@ server: FARMING heartbeat 57-60 Hz, physics 58-60 fps, send max 43479 kbps; CRAF
 ## race-forest-builds — PASS
 
 ```
-RaceSim FOREST (shipped) — 128.9s wall time
-  novice   [slowest-novice] car=slowest max=65 mass=10.12 → 129.19s | CPs 2 | respawns 0 | blocked 0
-  expert   [fastest-expert] car=fastest max=73 mass=7.41 → 93.44s | CPs 2 | respawns 0 | blocked 0
+RaceSim FOREST (shipped) — 126.7s wall time
+  novice   [slowest-novice] car=slowest max=68 mass=8.64 → 127.35s | CPs 2 | respawns 0 | blocked 0
+  expert   [fastest-expert] car=fastest max=70 mass=7.85 → 106.3s | CPs 2 | respawns 0 | blocked 0
+drifts: slowest-novice 0/0, fastest-expert 19/11
 ```
 
 ## race-forest — PASS
 
 ```
 RaceSim FOREST (shipped) — 122.8s wall time
-  expert   car=p50 max=69 mass=7.88 → 109.59s | CPs 2 | respawns 0 | blocked 0
-  average  car=p50 max=69 mass=7.88 → 115.04s | CPs 2 | respawns 0 | blocked 0
-  novice   car=p50 max=69 mass=7.88 → 123.56s | CPs 2 | respawns 0 | blocked 0
-drifts: expert 19/10, average 34/9, novice 0/0
+  expert   car=p50 max=69 mass=7.88 → 109.56s | CPs 2 | respawns 0 | blocked 0
+  average  car=p50 max=69 mass=7.88 → 116.6s | CPs 2 | respawns 0 | blocked 0
+  novice   car=p50 max=69 mass=7.88 → 123.44s | CPs 2 | respawns 0 | blocked 0
+drifts: expert 19/12, average 33/9, novice 0/0
 ```
 
 ## race-ocean-builds — PASS

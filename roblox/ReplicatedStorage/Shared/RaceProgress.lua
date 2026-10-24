@@ -21,6 +21,10 @@ RaceProgress.RESPAWN_LIFT      = 3    -- studs above raceStartY (plus the road's
 RaceProgress.SEARCH_WINDOW     = 3    -- segments either side of the hint
 -- A car this far below the road under it fell off a raised stretch.
 RaceProgress.FALL_BELOW        = 12
+-- Gap jumps (track gapJumps): a car respawning from GAP_RUNUP studs before
+-- the spring pad to GAP_AFTER past the gap goes back GAP_RUNUP before the pad.
+RaceProgress.GAP_RUNUP         = 40
+RaceProgress.GAP_AFTER         = 6
 
 --- How far the road under a car is above trackTop (0 on a flat track), and
 -- the segment for the next hint. y = the car's Y (picks the layer).
@@ -60,6 +64,7 @@ function RaceProgress.geometry(biome)
 	local data = require(mod)
 	_geo[biome] = TrackGeometry.new(data.nodes, data.width, data.trackTop)
 	_geo[biome].trackTop = data.trackTop
+	_geo[biome].gaps = _geo[biome]:gapIntervals(data.gapJumps)
 	return _geo[biome]
 end
 
@@ -92,6 +97,13 @@ function RaceProgress.respawnPoint(biome, x, z, raceStartY, hintSeg, carY)
 	if geo then
 		local s = RaceProgress.progress(biome, x, z, hintSeg, carY)
 		local ts = math.max(s - RaceProgress.RESPAWN_STEP_BACK, 0)
+		-- never in or just before a gap jump: back before its spring pad,
+		-- with a run-up
+		for _, g in ipairs(geo.gaps or {}) do
+			if s > g.pad0 - RaceProgress.GAP_RUNUP and s < g.s1 + RaceProgress.GAP_AFTER then
+				ts = math.max(g.pad0 - RaceProgress.GAP_RUNUP, 0)
+			end
+		end
 		local px, pz = geo:pointAt(ts)
 		-- raised road: the same height above the road as at the start
 		y += geo:heightAt(ts) - (geo.trackTop or geo.baseY)

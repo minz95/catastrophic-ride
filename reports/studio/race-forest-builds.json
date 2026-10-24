@@ -1,0 +1,259 @@
+{
+ "checks": [],
+ "commit": "e47e961",
+ "dirty": true,
+ "kind": "race",
+ "logErrors": [
+  "2026-10-24T14:20:37.890Z,0.890562,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T14:20:38.631Z,1.631518,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T14:20:39.449Z,2.449500,6da47000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"5cc70d37-59dd-423b-91c0-808cb39479bf\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T14:20:48.643Z,11.643869,6dc53000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T14:20:48.891Z,11.891249,6d7af000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T14:21:38.632Z,61.632061,6d3db000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T14:22:38.632Z,121.632652,6de5f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T14:22:57.316Z,140.316116,6d1cf000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"5cc70d37-59dd-423b-91c0-808cb39479bf\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "cases": [
+   {
+    "car": "slowest",
+    "label": "slowest-novice",
+    "profile": "novice"
+   },
+   {
+    "car": "fastest",
+    "label": "fastest-expert",
+    "profile": "expert"
+   }
+  ],
+  "mode": "run"
+ },
+ "ranAt": "2026-10-24T23:23:01+0900",
+ "report": {
+  "biome": "FOREST",
+  "kind": "cases",
+  "results": [
+   {
+    "airborne": 0.37,
+    "blocked": [],
+    "car": "slowest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 32.17
+     },
+     {
+      "index": 2,
+      "t": 56.52
+     }
+    ],
+    "effects": [],
+    "endT": 127.35,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "jumps": [
+     {
+      "air": 0.56,
+      "approach": 68,
+      "dist": 37.5,
+      "landedOn": "TrackSeg_12_2",
+      "landing": 68,
+      "maxH": 3.2,
+      "s": 1774,
+      "speed": 68,
+      "t": 27.67
+     },
+     {
+      "air": 0.66,
+      "approach": 95.2,
+      "dist": 62.2,
+      "landedOn": "TrackSeg_38",
+      "landing": 95.2,
+      "maxH": 7,
+      "s": 3607,
+      "speed": 95.2,
+      "t": 55.82
+     },
+     {
+      "air": 0.67,
+      "approach": 68,
+      "dist": 44.3,
+      "landedOn": "TrackSeg_53",
+      "landing": 68,
+      "maxH": 7,
+      "s": 4455,
+      "speed": 59.9,
+      "t": 70.18
+     },
+     {
+      "air": 0.67,
+      "approach": 68,
+      "dist": 44.5,
+      "landedOn": "TrackSeg_67",
+      "landing": 68,
+      "maxH": 7.2,
+      "s": 5447,
+      "speed": 68,
+      "t": 86.56
+     },
+     {
+      "air": 0.67,
+      "approach": 68,
+      "dist": 43.7,
+      "landedOn": "TrackSeg_97",
+      "landing": 68,
+      "maxH": 7.2,
+      "s": 7779,
+      "speed": 68,
+      "t": 126.05
+     }
+    ],
+    "label": "slowest-novice",
+    "mass": 8.64,
+    "maxNoseOff": 12.3,
+    "maxProgress": 7864,
+    "maxSpeed": 67.96499633789062,
+    "maxTilt": 0.2,
+    "noseOffAt": {
+     "cmd": 34.9,
+     "keys": "WD",
+     "s": 7279,
+     "speed": 37.6,
+     "t": 117.68,
+     "tilt": 0,
+     "vy": 0
+    },
+    "profile": "novice",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Microwave",
+     "ENGINE": "Fan",
+     "SPECIAL": "Pizza"
+    },
+    "time": 127.35,
+    "topSpeed": 119,
+    "trackLength": 8020,
+    "turnSpeed": 2.282454490661621,
+    "visibility": "shipped"
+   },
+   {
+    "airborne": 0.35,
+    "blocked": [],
+    "car": "fastest",
+    "checkpoints": [
+     {
+      "index": 1,
+      "t": 28.6
+     },
+     {
+      "index": 2,
+      "t": 49.98
+     }
+    ],
+    "drifts": 19,
+    "effects": [],
+    "endT": 106.3,
+    "engine": "studio-heartbeat",
+    "finished": true,
+    "jumps": [
+     {
+      "air": 0.56,
+      "approach": 70,
+      "dist": 39.7,
+      "landedOn": "TrackSeg_12_2",
+      "landing": 70,
+      "maxH": 3.2,
+      "s": 1774,
+      "speed": 70,
+      "t": 24.47
+     },
+     {
+      "air": 0.67,
+      "approach": 98,
+      "dist": 65.4,
+      "landedOn": "TrackSeg_38",
+      "landing": 98,
+      "maxH": 7.1,
+      "s": 3608,
+      "speed": 98,
+      "t": 49.33
+     },
+     {
+      "air": 0.67,
+      "approach": 70,
+      "dist": 46.7,
+      "landedOn": "TrackSeg_53",
+      "landing": 70,
+      "maxH": 7,
+      "s": 4455,
+      "speed": 70,
+      "t": 60.05
+     },
+     {
+      "air": 0.66,
+      "approach": 70,
+      "dist": 46.7,
+      "landedOn": "TrackSeg_67",
+      "landing": 70,
+      "maxH": 7.2,
+      "s": 5447,
+      "speed": 70,
+      "t": 73.02
+     },
+     {
+      "air": 0.67,
+      "approach": 98,
+      "dist": 65.4,
+      "landedOn": "TrackSeg_97",
+      "landing": 98,
+      "maxH": 7.2,
+      "s": 7778,
+      "speed": 98,
+      "t": 105.41
+     }
+    ],
+    "label": "fastest-expert",
+    "mass": 7.85,
+    "maxNoseOff": 37.7,
+    "maxProgress": 7865,
+    "maxSpeed": 70.03500366210938,
+    "maxTilt": 0.3,
+    "noseOffAt": {
+     "cmd": 70.9,
+     "keys": "WD",
+     "s": 5159,
+     "speed": 69.9,
+     "t": 69.1,
+     "tilt": 0,
+     "vy": 0
+    },
+    "profile": "expert",
+    "respawnMode": "legacy",
+    "respawns": [],
+    "slots": {
+     "BODY": "Skateboard",
+     "ENGINE": "Kettle",
+     "MOBILITY": "Alarm Clock",
+     "SPECIAL": "Umbrella"
+    },
+    "time": 106.3,
+    "topSpeed": 131.3,
+    "trackLength": 8020,
+    "turbos": 11,
+    "turnSpeed": 2.1505606174468994,
+    "visibility": "shipped"
+   }
+  ],
+  "summary": "RaceSim FOREST (shipped) \u2014 126.7s wall time\n  novice   [slowest-novice] car=slowest max=68 mass=8.64 \u2192 127.35s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=70 mass=7.85 \u2192 106.3s | CPs 2 | respawns 0 | blocked 0",
+  "visibility": "shipped",
+  "wallSeconds": 126.7
+ },
+ "scenario": "race-forest-builds",
+ "studioExit": 0,
+ "summary": "RaceSim FOREST (shipped) \u2014 126.7s wall time\n  novice   [slowest-novice] car=slowest max=68 mass=8.64 \u2192 127.35s | CPs 2 | respawns 0 | blocked 0\n  expert   [fastest-expert] car=fastest max=70 mass=7.85 \u2192 106.3s | CPs 2 | respawns 0 | blocked 0\ndrifts: slowest-novice 0/0, fastest-expert 19/11",
+ "wallSeconds": 143.5
+}

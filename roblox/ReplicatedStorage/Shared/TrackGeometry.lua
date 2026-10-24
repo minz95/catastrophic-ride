@@ -178,6 +178,19 @@ function TrackGeometry:progressAt(x, z, hintSeg, window, y)
 	return math.clamp(bestS, 0, self.length), best
 end
 
+--- Track data `gapJumps` as arc-length intervals: { s0, s1 (the gap),
+-- pad0 (where the spring pad starts), gap = the data entry }, in order.
+function TrackGeometry:gapIntervals(gaps)
+	local out = {}
+	for _, g in ipairs(gaps or {}) do
+		local s = self:progressAt(g.x, g.z, nil, nil, g.y)
+		local half = g.length / 2
+		table.insert(out, { s0 = s - half, s1 = s + half, pad0 = s - half - (g.padLength or 0), gap = g })
+	end
+	table.sort(out, function(a, b) return a.s0 < b.s0 end)
+	return out
+end
+
 --- Point and unit direction at arc length s (clamped to the track).
 function TrackGeometry:pointAt(s)
 	s = math.clamp(s, 0, self.length)

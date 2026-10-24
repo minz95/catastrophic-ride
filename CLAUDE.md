@@ -199,7 +199,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   RAMP_PROBE_RISE higher and count only on parts named `JumpRamp_*`, plus
   RAMP_CLEARANCE over them: a ray from the centre started inside the ramp,
   the car hit it and lost half its speed. Studio `race-forest` reports
-  `jumps` (approach / launch / landing speed, height, air time).
+  `jumps` (approach / launch / landing speed, height, air time, landedOn).
+  Gap jumps: track data `gapJumps` (FOREST: one on the S3 climb, ~28 up).
+  `TrackKit:buildSurface` cuts the road there, `buildGapJumps` lays the
+  spring pad ("SpringPad_<i>", attributes VY / MinSpeed); a car whose
+  probes saw a pad launches at its VY and keeps MinSpeed in the air.
+  Falling in is a normal "fell" respawn, and `RaceProgress.respawnPoint`
+  puts it GAP_RUNUP before the pad. Logs keep off it (`HazardPlan`).
+  Checked by `tests/specs/gap_jump` (no floor in the gap, pad, the arc
+  clears it with 40 % to spare, respawn before the pad).
 - Falling-log spots come from `Shared/HazardPlan` (always a way past);
   `Autopilot` avoids `state.hazards`. Jump ramps span the whole corridor (a
   narrower wedge's side face snagged cars near the wall). Race bots respawn

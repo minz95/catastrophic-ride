@@ -474,6 +474,7 @@ function RaceSim.runOne(opts)
 			if h > jumpNow.maxH then jumpNow.maxH = h end
 			if not airT then
 				jumpNow.landing = round(speed)
+				jumpNow.landedOn = primary:GetAttribute("LandedOn")
 				jumpNow.air = round(t - jumpNow.t, 2)
 				jumpNow.dist = round((Vector3.new(pos.X, 0, pos.Z) - Vector3.new(jumpNow.from.X, 0, jumpNow.from.Z)).Magnitude)
 				jumpNow.maxH = round(jumpNow.maxH, 1)
