@@ -298,6 +298,12 @@ Constants.DRIVE = {
 	DRIFT_FOLLOW     = 4.0,    -- 1/s: while drifting (slide angle ≈ turn rate / this)
 	DRIFT_DRAG       = 10,     -- studs/s² × sin(slide angle) while drifting
 	DRIFT_EXIT_RATIO = 0.35,   -- drift ends below this share of MaxSpeed
+	-- Jumps (FOREST): leaving a ramp's lip (the ground under the car drops at
+	-- least MIN_DROP studs at once) at MIN_SPEED or more, the car flies an
+	-- arcade arc: up at VY studs/s under a lighter GRAVITY until it meets
+	-- the ground again. (The suspension used to snap the car straight down
+	-- the 4-stud lip: no air at all, it only looked to slow down.)
+	JUMP = { MIN_DROP = 1.5, MIN_SPEED = 25, VY = 20, GRAVITY = 80 },
 	DRIFT_TURBO = {            -- released drift → speed × mult for duration (server)
 		MIN_SLIDE = 0.15,      -- rad: sliding at least this much counts as drifting
 		{ time = 0.6, mult = 1.25, duration = 1.0, label = "MINI TURBO" },

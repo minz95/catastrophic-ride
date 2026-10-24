@@ -263,6 +263,7 @@ function RaceSim.runOne(opts)
 		spawn = opts.spawn, stopAt = opts.stopAt, reached = nil,
 		finished = false, checkpoints = {}, respawns = {}, blocked = {}, samples = {},
 		effects = {}, airborne = 0, trackLength = round(geo.length, 0),
+		jumps = {},   -- ramp jumps (VehicleController JUMP): where, how high, how long
 		maxTilt = 0, topSpeed = 0, slots = slots,
 		maxNoseOff = 0,   -- worst angle between the nose and the travel direction (throttle on, not drifting)
 	}
@@ -272,6 +273,8 @@ function RaceSim.runOne(opts)
 	local padCooldown = {}
 	local gauge, boostCooldownEnd = 1, 0
 	local lastSample, blockedFor = -1, 0
+	local jumpNow = nil   -- the jump in progress (res.jumps)
+	local recent = {}     -- { t, speed } of the last 1.5 s
 	local maxS = 0
 	local riseSeg = nil   -- segment hint for the road height (OCEAN / SKY ride height)
 	local t = 0
@@ -446,6 +449,39 @@ function RaceSim.runOne(opts)
 
 		local ground = workspace:Raycast(pos, Vector3.new(0, -8, 0), rayParams)
 		if not ground then res.airborne += dt end
+		-- jumps: from launch to landing, the highest the chassis bottom got
+		-- above the road and the distance flown
+		local airT = primary:GetAttribute("AirT")
+		local sh = primary:FindFirstChild("SuspensionHover")
+		table.insert(recent, { t, speed, pos.Y, cmd.forwardSpeed, sh and sh.Position.Y or 0, vel.Y })
+		while #recent > 0 and recent[1][1] < t - 1.5 do table.remove(recent, 1) end
+		if airT and not jumpNow then
+			-- `approach`: the fastest in the 1.5 s before take-off (what the ramp cost)
+			local approach = 0
+			for _, r in ipairs(recent) do approach = math.max(approach, r[2]) end
+			local trace, last = {}, -1
+			for _, r in ipairs(recent) do
+				if r[1] - last >= 0.03 then
+					last = r[1]
+					table.insert(trace, { round(r[1] - t, 2), round(r[2]), round(r[3], 1), round(r[4]), round(r[5], 1), round(r[6], 1) })
+				end
+			end
+			jumpNow = { t = round(t, 2), s = math.floor(info.s), speed = round(speed), approach = round(approach), maxH = 0, from = pos,
+				trace = opts.jumpTrace and trace or nil }
+		end
+		if jumpNow then
+			local h = pos.Y - primary.Size.Y / 2 - geo:heightAt(info.s)
+			if h > jumpNow.maxH then jumpNow.maxH = h end
+			if not airT then
+				jumpNow.landing = round(speed)
+				jumpNow.air = round(t - jumpNow.t, 2)
+				jumpNow.dist = round((Vector3.new(pos.X, 0, pos.Z) - Vector3.new(jumpNow.from.X, 0, jumpNow.from.Z)).Magnitude)
+				jumpNow.maxH = round(jumpNow.maxH, 1)
+				jumpNow.from = nil
+				table.insert(res.jumps, jumpNow)
+				jumpNow = nil
+			end
+		end
 
 		if t - lastSample >= (opts.sampleEvery or 0.5) then
 			lastSample = t

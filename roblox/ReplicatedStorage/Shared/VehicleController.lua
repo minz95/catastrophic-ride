@@ -46,8 +46,14 @@ VehicleController.DRIFT_SPEED_RATIO = 0.5    -- must be above 50% of MaxSpeed
 VehicleController.SUSPENSION_REACH  = 5      -- ray length below the chassis
 VehicleController.SUSPENSION_LIFT   = 0.2    -- ride height above the hit
 VehicleController.SUSPENSION_STEP   = 1      -- studs between probes along the chassis
-VehicleController.SUSPENSION_AHEAD  = 0.12   -- s of travel probed ahead of the nose
-VehicleController.SUSPENSION_AHEAD_MAX = 8   -- studs
+-- (0.12 s / 8 studs until 2026-10-24: the hover lagged up a 4-stud ramp, the
+-- nose dug in and a car came off the lip at ~30 of ~70 studs/s)
+VehicleController.SUSPENSION_AHEAD  = 0.2    -- s of travel probed ahead of the nose
+VehicleController.SUSPENSION_AHEAD_MAX = 14  -- studs (a ramp's length)
+VehicleController.RAMP_PROBE_RISE   = 5      -- studs: ahead probes for jump ramps start this high
+-- extra height over a jump ramp: the hover lags a rising target and the
+-- chassis scraped the ramp's top end (Studio: 69 → 36 studs/s at the lip)
+VehicleController.RAMP_CLEARANCE    = 0.8
 
 --- Converts a key-state table into a normalized input.
 -- keys: { W, A, S, D, Up, Down, Left, Right, Shift, Space, Ctrl } booleans.
@@ -282,6 +288,9 @@ function VehicleController.resetRide(primary, rise)
 		if bp then bp.Position = primary.Position end
 	end
 	primary:SetAttribute("RoadRiseApplied", rise or 0)
+	-- a jump in progress ends with the move (no launch from the old spot)
+	primary:SetAttribute("AirT", nil)
+	primary:SetAttribute("SuspTarget", nil)
 end
 
 function VehicleController.apply(primary, cmd, opts)
@@ -348,21 +357,62 @@ function VehicleController.apply(primary, cmd, opts)
 			local ahead = math.clamp((cmd.forwardSpeed or 0) * VehicleController.SUSPENSION_AHEAD,
 				0, VehicleController.SUSPENSION_AHEAD_MAX)
 			local ray
+			local rampLift = 0   -- RAMP_CLEARANCE when the highest hit is a jump ramp
 			local d = -halfL
+			-- A ray from the chassis centre starts inside a ramp that is higher
+			-- than the centre and does not see it: ahead of the centre a
+			-- second ray starts RAMP_PROBE_RISE higher and counts only when it
+			-- lands on a jump ramp (from up there a wall's top would lift the
+			-- car onto the wall). Studio 2026-10-24: the car only rose once it
+			-- had hit the ramp, losing half its speed.
+			local up = Vector3.new(0, VehicleController.RAMP_PROBE_RISE, 0)
 			while true do
 				local hit = opts.raycast(primary.Position + look * d, down)
+				if d > 0 then
+					local high = opts.raycast(primary.Position + look * d + up, down - up)
+					if high and high.Instance and string.sub(high.Instance.Name, 1, 9) == "JumpRamp_"
+						and (not hit or high.Position.Y > hit.Position.Y) then
+						hit = high
+					end
+				end
 				if hit and (not ray or hit.Position.Y > ray.Position.Y) then
 					ray = hit
+					rampLift = (hit.Instance and string.sub(hit.Instance.Name, 1, 9) == "JumpRamp_")
+						and VehicleController.RAMP_CLEARANCE or 0
 				end
 				if d >= halfL + ahead then break end
 				d = math.min(d + step, halfL + ahead)
 			end
+			-- Jump (Constants.DRIVE.JUMP): the ground under the car fell away
+			-- at once (a ramp's lip) at speed → fly an arc ("AirT" = seconds
+			-- in the air, "AirY0" = the held height at the lip) until it
+			-- meets the ground again.
+			local J = Constants.DRIVE.JUMP
+			local air = primary:GetAttribute("AirT")
+			local target
 			if ray then
-				susp.Position = Vector3.new(
-					primary.Position.X,
-					ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT + lifted + liftStep,
-					primary.Position.Z
-				)
+				local ground = ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT + rampLift + lifted + liftStep
+				local prev = primary:GetAttribute("SuspTarget")
+				primary:SetAttribute("SuspTarget", ground)
+				if not air and prev and prev - ground >= J.MIN_DROP and (cmd.forwardSpeed or 0) >= J.MIN_SPEED then
+					air = 0
+					primary:SetAttribute("AirY0", prev)
+					primary:SetAttribute("Jumps", (primary:GetAttribute("Jumps") or 0) + 1)
+				end
+				target = ground
+			end
+			if air then
+				air += dt
+				local y = (primary:GetAttribute("AirY0") or primary.Position.Y) + J.VY * air - 0.5 * J.GRAVITY * air * air
+				if target and y <= target then
+					air = nil   -- landed
+				else
+					target = y
+				end
+			end
+			primary:SetAttribute("AirT", air)
+			if target then
+				susp.Position = Vector3.new(primary.Position.X, target, primary.Position.Z)
 				susp.MaxForce = Vector3.new(0, 4e4, 0)
 			else
 				susp.MaxForce = Vector3.zero
