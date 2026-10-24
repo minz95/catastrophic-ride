@@ -264,12 +264,60 @@ R.describe("VehicleController.apply on a VehicleBuilder car", function()
 
 	R.it("FOREST suspension lifts before the nose reaches a ramp at speed", function()
 		local halfLen = primary.Size.Z / 2
+		VC.resetRide(primary, 0)   -- a fresh approach (the last case left it on a ramp top)
 		-- the ramp starts 3 studs ahead of the nose; at 68 studs/s that is 0.04 s away
 		VC.apply(primary, { forwardSpeed = 68, yawRate = 0, climb = 0 }, { biome = "FOREST", raycast = rampAt(halfLen + 3 + 14) })
 		R.expect(primary.SuspensionHover.Position.Y).toBeGreaterThan(1.5 + primary.Size.Y / 2)
 		-- standing still, nothing ahead is probed
 		VC.apply(primary, { forwardSpeed = 0, yawRate = 0, climb = 0 }, { biome = "FOREST", raycast = rampAt(halfLen + 3 + 14) })
 		R.expect(primary.SuspensionHover.Position.Y).toBeNear(1 + primary.Size.Y / 2 + 0.2, 1e-4)
+	end)
+
+	-- Studio (2026-10-24): over the 4-stud ramps the hover snapped the car
+	-- straight down the lip: no air, it only looked to slow down.
+	R.it("FOREST jump: off a ramp's lip at speed the car flies an arc and lands", function()
+		local m = VehicleBuilder.build(stats, "FOREST", CFrame.new(0, 2, 590), {})
+		local p = m.PrimaryPart
+		local J = env.requirePath("ReplicatedStorage.Shared.Constants").DRIVE.JUMP
+		local function at(groundY, speed)
+			VC.apply(p, { forwardSpeed = speed, yawRate = 0, climb = 0 }, { biome = "FOREST", altitudeDt = 1 / 60,
+				raycast = function(origin) return { Position = Vector3.new(origin.X, groundY, origin.Z) } end })
+			return p.SuspensionHover.Position.Y
+		end
+		local lip = at(5, 60)                       -- on the ramp top
+		local first = at(1, 60)                     -- the ground drops 4 studs: launch
+		R.expect(p:GetAttribute("AirT") ~= nil).toBe(true)
+		R.expect(first > lip).toBe(true)            -- going up, not snapped down to 1
+		local top, frames = first, 1
+		while p:GetAttribute("AirT") and frames < 300 do
+			top = math.max(top, at(1, 60))
+			frames += 1
+		end
+		R.expect(top).toBeNear(lip + J.VY * J.VY / (2 * J.GRAVITY), 0.2)   -- the arc's apex
+		R.expect(frames / 60 > 0.4).toBe(true)      -- a visible flight
+		R.expect(p:GetAttribute("AirT")).toBe(nil)  -- landed
+		R.expect(at(1, 60)).toBeNear(1 + p.Size.Y / 2 + 0.2, 1e-4)
+		m:Destroy()
+	end)
+
+	R.it("FOREST jump: no launch when slow, and a respawn ends a jump", function()
+		local m = VehicleBuilder.build(stats, "FOREST", CFrame.new(0, 2, 590), {})
+		local p = m.PrimaryPart
+		local function at(groundY, speed)
+			VC.apply(p, { forwardSpeed = speed, yawRate = 0, climb = 0 }, { biome = "FOREST", altitudeDt = 1 / 60,
+				raycast = function(origin) return { Position = Vector3.new(origin.X, groundY, origin.Z) } end })
+			return p.SuspensionHover.Position.Y
+		end
+		at(5, 10)
+		R.expect(at(1, 10)).toBeNear(1 + p.Size.Y / 2 + 0.2, 1e-4)   -- rolls off the lip
+		R.expect(p:GetAttribute("AirT")).toBe(nil)
+		at(5, 60)
+		at(1, 60)
+		R.expect(p:GetAttribute("AirT") ~= nil).toBe(true)
+		VC.resetRide(p, 0)
+		R.expect(p:GetAttribute("AirT")).toBe(nil)
+		R.expect(at(1, 60)).toBeNear(1 + p.Size.Y / 2 + 0.2, 1e-4)
+		m:Destroy()
 	end)
 
 	R.it("returns false when the drive movers are missing", function()

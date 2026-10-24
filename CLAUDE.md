@@ -192,6 +192,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   items, stats or abilities run `lune run tools/balance.luau` and keep
   `Constants.BALANCE_TARGETS` green. Speed buffs stack to `SPEED_STACK_MAX`.
 - Shoves (abilities, obstacles) go to the driver as a `CarImpact` knock.
+- Jumps (FOREST): `VehicleController` flies the car an arcade arc
+  (`Constants.DRIVE.JUMP`: up at VY under a lighter GRAVITY, attribute
+  "AirT") when the ground under it drops MIN_DROP at once at speed (a
+  ramp's lip); `resetRide` ends a jump. Probes ahead also start
+  RAMP_PROBE_RISE higher and count only on parts named `JumpRamp_*`, plus
+  RAMP_CLEARANCE over them: a ray from the centre started inside the ramp,
+  the car hit it and lost half its speed. Studio `race-forest` reports
+  `jumps` (approach / launch / landing speed, height, air time).
 - Falling-log spots come from `Shared/HazardPlan` (always a way past);
   `Autopilot` avoids `state.hazards`. Jump ramps span the whole corridor (a
   narrower wedge's side face snagged cars near the wall). Race bots respawn

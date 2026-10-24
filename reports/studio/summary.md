@@ -27,11 +27,11 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [gallery](gallery.json) | PASS | 83fee51+ | 2026-10-24T21:45 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | PASS | 9d470b1+ | 2026-10-24T20:38 |
+| [match-forest](match-forest.json) | WARN | f338428+ | 2026-10-24T22:47 |
 | [match-ocean](match-ocean.json) | PASS | 5b1f6b6+ | 2026-10-24T21:22 |
 | [match-sky](match-sky.json) | PASS | 5b1f6b6+ | 2026-10-24T21:41 |
 | [race-forest-builds](race-forest-builds.json) | PASS | 954581a+ | 2026-10-21T13:22 |
-| [race-forest](race-forest.json) | PASS | c90f06d+ | 2026-10-23T00:20 |
+| [race-forest](race-forest.json) | PASS | f338428+ | 2026-10-24T22:42 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
 | [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
@@ -413,25 +413,24 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ```
 - **warn** round 1: 7 of 8 players joined (Studio did not start every client)
 
-## match-forest — PASS
+## match-forest — WARN
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (FOREST): 4 finished of 4
-    steal attempts: stolen=3
-    -4: picked 10, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-    -2: picked 13, contests 1/1, stole 0, robbed 2, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 8, contests 0/0, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -3: picked 7, contests 0/1, stole 2, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    #1 Player2 114.3s
-    #2 Player1 117.0s
-    #3 Player4 120.1s
-    #4 Player3 121.6s
-  events: ability=77 ability_probe=241 bot_craft=4 bot_defend=3 bot_farmfx=112 bot_fx=352 bot_guard=6 bot_hud=123 bot_joined=4 bot_punch=13 bot_ready=4 bot_respawn=1 bot_screen=15 bot_spin_fx=125 bot_steal=3 checkpoint=8 contact=24 contest_result=1 craft=4 craft_preview=8 drift_turbo=40 drop_placed=9 finish=
-driving: 12 hits (closing speed max 69, push max 45 studs/s), 40 drift turbos, drops: Cactus
-spinning MOBILITY items: 2 cars (wheel), most turns 2200
-server: FARMING heartbeat 51-60 Hz, physics 55-60 fps, send max 214 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 9 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 10 kbps; memory max 2312 MB
+  round 1 (FOREST): 3 finished of 3
+    steal attempts: defended=4, denied: too far=1, denied: victim has nothing=2, stolen=3
+    -3: picked 8, contests 2/3, stole 2, robbed 1, defences 1, items 8 | craft submitted, rejected 0
+    -2: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -1: picked 9, contests 1/3, stole 1, robbed 2, defences 3, items 8 | craft submitted, rejected 0
+    #1 Player1 102.8s
+    #2 Player2 108.9s
+    #3 Player3 114.0s
+  events: ability=69 ability_probe=165 bot_craft=3 bot_defend=7 bot_farmfx=129 bot_fx=228 bot_guard=5 bot_hud=93 bot_joined=3 bot_punch=16 bot_ready=3 bot_respawn=1 bot_screen=15 bot_showroom_spin=3 bot_spin_fx=176 bot_steal=10 checkpoint=6 contact=6 contest_result=3 craft=3 craft_preview=6 drift_turbo=21 drop_placed=16 finish=3 harness_crafting=1 harness_round=1 hazard
+driving: 1 hits (closing speed max 7, push max 5 studs/s), 21 drift turbos, drops: Kettle
+spinning wheels / paddles / propellers: 3 cars (wheel), most turns 2527
+server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 35242 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 16 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 23 kbps; memory max 2274 MB
 ```
+- **warn** round 1: 3 of 4 players joined (Studio did not start every client)
 
 ## match-ocean — PASS
 
@@ -486,11 +485,11 @@ RaceSim FOREST (shipped) — 128.9s wall time
 ## race-forest — PASS
 
 ```
-RaceSim FOREST (shipped) — 125.3s wall time
-  expert   car=p50 max=69 mass=7.88 → 113.76s | CPs 2 | respawns 0 | blocked 0
-  average  car=p50 max=69 mass=7.88 → 120.65s | CPs 2 | respawns 0 | blocked 0
-  novice   car=p50 max=69 mass=7.88 → 126.68s | CPs 2 | respawns 0 | blocked 0
-drifts: expert 19/10, average 33/9, novice 0/0
+RaceSim FOREST (shipped) — 122.8s wall time
+  expert   car=p50 max=69 mass=7.88 → 109.59s | CPs 2 | respawns 0 | blocked 0
+  average  car=p50 max=69 mass=7.88 → 115.04s | CPs 2 | respawns 0 | blocked 0
+  novice   car=p50 max=69 mass=7.88 → 123.56s | CPs 2 | respawns 0 | blocked 0
+drifts: expert 19/10, average 34/9, novice 0/0
 ```
 
 ## race-ocean-builds — PASS
