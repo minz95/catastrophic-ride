@@ -27,6 +27,15 @@ R.describe("live lobby", function()
 		R.expect(srv.GameManager.getHarness()).toBe(nil)
 	end)
 
+	R.it("a published place ignores a leftover HarnessArgs attribute (no test mode live)", function()
+		local Loader = require("../lib/loader")
+		local env = Loader.boot()
+		env.game.ServerScriptService:SetAttribute("HarnessArgs", '{"harness":"match"}')
+		local HarnessConfig = env.requirePath("ServerScriptService.Modules.HarnessConfig")
+		rawset(env.game, "PlaceId", 74883519312765)   -- a live server of the published place
+		R.expect(HarnessConfig.get()).toBe(nil)
+	end)
+
 	R.it("a lone player waits LOBBY.MAX_WAIT s with a visible countdown, then plays solo", function()
 		local srv, C, left = live(1)
 		R.expect(srv.GameManager.getPhase()).toBe("LOBBY")

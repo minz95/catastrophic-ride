@@ -1,0 +1,40 @@
+{
+ "checks": [],
+ "commit": "9608317",
+ "dirty": true,
+ "kind": "promo",
+ "logErrors": [
+  "2026-10-24T15:43:17.908Z,0.908063,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-24T15:43:18.045Z,1.045153,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T15:43:18.087Z,1.087239,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T15:43:18.885Z,1.885275,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T15:43:19.751Z,2.751024,6b9c3000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"24cfbca6-681f-4be7-b9de-e1d8f341149f\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T15:43:28.292Z,11.292973,6b9c3000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T15:43:28.550Z,11.550262,6ce5f000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T15:43:34.854Z,17.854158,6b9c3000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"24cfbca6-681f-4be7-b9de-e1d8f341149f\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "hold": 2,
+  "only": [
+   "icon"
+  ],
+  "token": "579642d6713d425a92aff5805061b01a"
+ },
+ "ranAt": "2026-10-25T00:43:40+0900",
+ "report": {
+  "errors": [],
+  "shots": [
+   {
+    "icon": true,
+    "name": "icon"
+   }
+  ],
+  "summary": "promo: 1 shots, 0 errors"
+ },
+ "scenario": "promo",
+ "studioExit": 0,
+ "summary": "promo: 1 shots, 0 errors",
+ "wallSeconds": 23.3
+}

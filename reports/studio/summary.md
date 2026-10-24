@@ -25,16 +25,14 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [gallery-mobility](gallery-mobility.json) | PASS | 5b1f6b6+ | 2026-10-24T21:15 |
 | [gallery-rides](gallery-rides.json) | PASS | 5b1f6b6+ | 2026-10-24T21:26 |
 | [gallery](gallery.json) | PASS | 83fee51+ | 2026-10-24T21:45 |
-| [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
-| [match-forest](match-forest.json) | WARN | f338428+ | 2026-10-24T22:47 |
+| [match-forest](match-forest.json) | PASS | 9608317+ | 2026-10-25T00:51 |
 | [match-ocean](match-ocean.json) | PASS | 5b1f6b6+ | 2026-10-24T21:22 |
 | [match-sky](match-sky.json) | PASS | 5b1f6b6+ | 2026-10-24T21:41 |
+| [promo](promo.json) | PASS | 9608317+ | 2026-10-25T00:43 |
 | [race-forest-builds](race-forest-builds.json) | PASS | e47e961+ | 2026-10-24T23:23 |
 | [race-forest](race-forest.json) | PASS | e47e961+ | 2026-10-24T23:20 |
-| [race-ocean-builds](race-ocean-builds.json) | PASS | 954581a+ | 2026-10-21T12:53 |
 | [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
-| [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
 | [shop-4p](shop-4p.json) | PASS | 1bde8b9+ | 2026-10-24T00:10 |
 | [showroom](showroom.json) | PASS | 5b1f6b6+ | 2026-10-24T21:33 |
@@ -389,13 +387,6 @@ gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 se
 gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers
 ```
 
-## load-10p — FAIL
-
-```
-ERROR number of players should be integer between 0 and 8
-```
-- **fail** no report (session returned nothing)
-
 ## load-8p — WARN
 
 ```
@@ -414,24 +405,25 @@ server: FARMING heartbeat 50-60 Hz, physics 54-60 fps, send max 134 kbps; CRAFTI
 ```
 - **warn** round 1: 7 of 8 players joined (Studio did not start every client)
 
-## match-forest — WARN
+## match-forest — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (FOREST): 3 finished of 3
-    steal attempts: defended=4, denied: too far=1, denied: victim has nothing=2, stolen=3
-    -3: picked 8, contests 2/3, stole 2, robbed 1, defences 1, items 8 | craft submitted, rejected 0
-    -2: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 9, contests 1/3, stole 1, robbed 2, defences 3, items 8 | craft submitted, rejected 0
-    #1 Player1 102.8s
-    #2 Player2 108.9s
-    #3 Player3 114.0s
-  events: ability=69 ability_probe=165 bot_craft=3 bot_defend=7 bot_farmfx=129 bot_fx=228 bot_guard=5 bot_hud=93 bot_joined=3 bot_punch=16 bot_ready=3 bot_respawn=1 bot_screen=15 bot_showroom_spin=3 bot_spin_fx=176 bot_steal=10 checkpoint=6 contact=6 contest_result=3 craft=3 craft_preview=6 drift_turbo=21 drop_placed=16 finish=3 harness_crafting=1 harness_round=1 hazard
-driving: 1 hits (closing speed max 7, push max 5 studs/s), 21 drift turbos, drops: Kettle
-spinning wheels / paddles / propellers: 3 cars (wheel), most turns 2527
-server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 35242 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 16 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 23 kbps; memory max 2274 MB
+  round 1 (FOREST): 4 finished of 4
+    steal attempts: defended=3, denied: victim has nothing=2, stolen=1
+    -4: picked 9, contests 2/5, stole 0, robbed 1, defences 1, items 8 | craft submitted, rejected 0
+    -2: picked 8, contests 3/5, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    -1: picked 15, contests 0/1, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    -3: picked 10, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player2 95.3s
+    #2 Player4 97.7s
+    #3 Player1 98.9s
+    #4 Player3 112.4s
+  events: ability=88 ability_probe=225 bot_craft=4 bot_defend=4 bot_farmfx=112 bot_fx=312 bot_guard=1 bot_hud=122 bot_joined=4 bot_punch=2 bot_ready=4 bot_respawn=4 bot_screen=18 bot_showroom_spin=8 bot_spin_fx=232 bot_steal=6 checkpoint=8 contact=11 contest_result=6 cr
+driving: 9 hits (closing speed max 71, push max 45 studs/s), 39 drift turbos
+spinning wheels / paddles / propellers: 4 cars (wheel), most turns 2472
+server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 46 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 7 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 8 kbps; memory max 2323 MB
 ```
-- **warn** round 1: 3 of 4 players joined (Studio did not start every client)
 
 ## match-ocean — PASS
 
@@ -475,6 +467,12 @@ ability targets: 4, on bots 0
 server: FARMING heartbeat 57-60 Hz, physics 58-60 fps, send max 43479 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 16 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 110 kbps; memory max 2291 MB
 ```
 
+## promo — PASS
+
+```
+promo: 1 shots, 0 errors
+```
+
 ## race-forest-builds — PASS
 
 ```
@@ -494,14 +492,6 @@ RaceSim FOREST (shipped) — 122.8s wall time
 drifts: expert 19/12, average 33/9, novice 0/0
 ```
 
-## race-ocean-builds — PASS
-
-```
-RaceSim OCEAN (shipped) — 130.2s wall time
-  novice   [slowest-novice] car=slowest max=59 mass=6.28 → 130.59s | CPs 2 | respawns 0 | blocked 0
-  expert   [fastest-expert] car=fastest max=63 mass=6.51 → 91.5s | CPs 2 | respawns 0 | blocked 0
-```
-
 ## race-ocean — PASS
 
 ```
@@ -510,14 +500,6 @@ RaceSim OCEAN (shipped) — 109.3s wall time
   average  car=p50 max=62 mass=6.46 → 104.23s | CPs 2 | respawns 0 | blocked 0
   novice   car=p50 max=62 mass=6.46 → 110.61s | CPs 2 | respawns 0 | blocked 0
 drifts: expert 24/3, average 29/0, novice 0/0
-```
-
-## race-sky-builds — PASS
-
-```
-RaceSim SKY (shipped) — 140.9s wall time
-  novice   [slowest-novice] car=slowest max=82 mass=2.64 → 141.26s | CPs 2 | respawns 1 | blocked 0
-  expert   [fastest-expert] car=fastest max=92 mass=2.83 → 89.3s | CPs 2 | respawns 0 | blocked 0
 ```
 
 ## race-sky — PASS

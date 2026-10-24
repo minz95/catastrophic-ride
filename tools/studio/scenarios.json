@@ -1280,7 +1280,7 @@
         "finishRate": 1.0,
         "bots": {
           "spawned": 3,
-          "finished": 2
+          "finished": 3
         }
       }
     },
@@ -1556,6 +1556,18 @@
       "checks": {
         "allJoined": true
       }
+    },
+    {
+      "name": "promo",
+      "kind": "promo",
+      "tags": [
+        "store"
+      ],
+      "_why": "store-page pictures from the real maps (TestHarness/Promo): start grid, a ramp jump, the gap jump, boats, planes round the sky corkscrew, and the icon; written to assets/store/ (1920 x 1080, icon 512 x 512, the Studio view only). The screen must be awake and unlocked; a bigger Studio view gives sharper pictures",
+      "opts": {
+        "hold": 2
+      },
+      "checks": {}
     }
   ]
 }

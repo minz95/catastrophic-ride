@@ -34,6 +34,14 @@ local _resolved = false
 local _value    = nil
 
 local function fromAttribute()
+	-- Only in Studio or an unpublished place (the offline tests): a published
+	-- place that kept the attribute must never start a live server in a
+	-- harness (fixed round times, no saves).
+	local placeId = 0
+	pcall(function() placeId = game.PlaceId or 0 end)
+	if placeId ~= 0 and not RunService:IsStudio() then
+		return nil
+	end
 	local raw = ServerScriptService:GetAttribute("HarnessArgs")
 	if type(raw) ~= "string" or raw == "" then
 		return nil

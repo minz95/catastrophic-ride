@@ -317,6 +317,16 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - The offline race sim moves a point at 60 Hz; gates are tested along each
   step's move (a fast car can cross a thin trigger between two steps).
 
+## Release
+
+`docs/launch.md` is the release-day runbook (sync with Rojo into the
+published place, publish, Creator Dashboard settings, store page). Store
+pictures: `python3 tools/studio/sim.py run promo` (TestHarness/Promo, real
+maps and lighting) → `assets/store/`. Chat is the new TextChatService (set
+in the Rojo project; the legacy chat scripts errored in Studio clients).
+A published place ignores a leftover `HarnessArgs` attribute
+(`HarnessConfig`, lobby spec).
+
 ## What the tests cannot tell you
 
 Real Roblox physics for jumps, waves, updrafts and gusts; car-to-car contact
