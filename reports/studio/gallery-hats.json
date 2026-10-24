@@ -1,0 +1,414 @@
+{
+ "checks": [],
+ "commit": "51193a6",
+ "dirty": true,
+ "kind": "gallery",
+ "logErrors": [
+  "2026-10-24T10:33:10.504Z,0.504200,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-24T10:33:10.632Z,0.632290,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T10:33:10.704Z,0.704517,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T10:33:11.472Z,1.472116,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T10:33:12.299Z,2.299457,6c05f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"0a782161-d263-47b6-8230-0b202e87981e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T10:33:20.970Z,10.970175,6b75b000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T10:33:21.219Z,11.219692,6bcaf000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T10:33:41.730Z,31.730545,6b75b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"0a782161-d263-47b6-8230-0b202e87981e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "extra": [
+   {
+    "BODY": "Pizza",
+    "HEAD": "Propeller Hat"
+   },
+   {
+    "BODY": "Red Sofa",
+    "HEAD": "Cactus"
+   },
+   {
+    "BODY": "Skateboard",
+    "HEAD": "Trophy"
+   },
+   {
+    "HEAD": "Flower"
+   }
+  ],
+  "hold": 1.2,
+  "only": [
+   "Pizza"
+  ],
+  "token": "981dda88c0fb42f4a63201e8151a45fc"
+ },
+ "ranAt": "2026-10-24T19:33:45+0900",
+ "report": {
+  "hats": [
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Cactus",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Cactus",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Cactus",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Trophy",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Trophy",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Trophy",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Flower",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Flower",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Flower",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   }
+  ],
+  "items": [
+   {
+    "biome": "FOREST",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.28,
+     "itemL": 5.04,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     5,
+     1.6,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.26,
+     "itemL": 4.76,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     5.8,
+     4.3,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.23,
+     "itemL": 4.2,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     6,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.28,
+     "itemL": 5.04,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     5,
+     6,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.26,
+     "itemL": 4.76,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     5.8,
+     5.8,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.23,
+     "itemL": 4.2,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     6,
+     6.1,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.48,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 0.62
+    },
+    "riding": "Red Sofa",
+    "size": [
+     4.7,
+     7.1,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 3.01,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Red Sofa",
+    "size": [
+     5.6,
+     6.5,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 2,
+     "itemL": 3.17,
+     "itemW": 3,
+     "over": 0,
+     "sink": 0.54
+    },
+    "riding": "Red Sofa",
+    "size": [
+     6,
+     6.5,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.53,
+     "itemL": 5.2,
+     "itemW": 3.06,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     5.1,
+     7.4,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.66,
+     "itemL": 5.64,
+     "itemW": 3.31,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     6.3,
+     7,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.47,
+     "itemL": 5,
+     "itemW": 2.94,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     5.9,
+     6.9,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "size": [
+     4.4,
+     6.5,
+     2.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "size": [
+     7.1,
+     6.2,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "size": [
+     6,
+     6.5,
+     5
+    ]
+   }
+  ],
+  "shots": [
+   "01_pizza_side",
+   "01_pizza_rear",
+   "02_pizzapropellerhat_side",
+   "02_pizzapropellerhat_rear",
+   "03_redsofacactus_side",
+   "03_redsofacactus_rear",
+   "04_skateboardtrophy_side",
+   "04_skateboardtrophy_rear",
+   "05_noneflower_side",
+   "05_noneflower_rear"
+  ],
+  "summary": "gallery: 15 vehicles, 10 shots, 12 riding their BODY item, 15 riders made, 15 seated, 12 hats worn"
+ },
+ "scenario": "gallery-hats",
+ "studioExit": 0,
+ "summary": "gallery: 15 vehicles, 10 shots, 12 riding their BODY item, 15 riders made, 15 seated, 12 hats worn",
+ "wallSeconds": 34.8
+}

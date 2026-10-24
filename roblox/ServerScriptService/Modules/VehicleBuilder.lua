@@ -89,6 +89,8 @@ VehicleBuilder.bounds = bounds
 --   tip = true        lay it on its side first (its height runs along the vehicle)
 -- `minTop` (mount space): raise the item until its top reaches it.
 -- Returns the holder Model and the item's top and bottom in mount space.
+local hatBaseCF, makeHat
+
 local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 	local cfg = ItemConfig[itemName]
 	if not cfg then return nil end
@@ -193,6 +195,71 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 	end
 	holder.Parent = model
 	return holder, top, bottom
+end
+
+-- ─── Hat (HEAD item) ─────────────────────────────────────────────────────────
+
+-- Where the hat's bottom sits with nobody in the seat: about a seated
+-- avatar's head top (VehicleDesign.HAT).
+hatBaseCF = function(seat)
+	local hat = VehicleDesign.HAT
+	return seat.CFrame * CFrame.new(0, seat.Size.Y / 2 + hat.headTop - hat.sink, 0)
+end
+
+-- An invisible part standing on the middle of the hat's bottom is its pivot.
+local HAT_BASE = 0.05
+makeHat = function(holder, seat, chassis)
+	local base = Instance.new("Part")
+	base.Name = "HatBase"
+	base.Size = Vector3.new(HAT_BASE, HAT_BASE, HAT_BASE)
+	base.Transparency = 1
+	base.CFrame = hatBaseCF(seat) * CFrame.new(0, HAT_BASE / 2, 0)
+	decoration(base)
+	base.Parent = holder
+	weld(chassis, base)
+	holder.PrimaryPart = base
+	holder:SetAttribute("Hat", true)
+	holder:SetAttribute("HatSink", VehicleDesign.HAT.sink)
+end
+
+local function hatOf(model)
+	for _, c in ipairs(model:GetChildren()) do
+		if c:IsA("Model") and c:GetAttribute("Hat") and c.PrimaryPart then return c end
+	end
+	return nil
+end
+
+-- Unweld the hat, set it down at `cf` (its bottom) and weld it to `part`.
+local function moveHat(hat, cf, part)
+	for _, d in ipairs(hat:GetDescendants()) do
+		if d:IsA("WeldConstraint") then d:Destroy() end
+	end
+	hat:PivotTo(cf * CFrame.new(0, HAT_BASE / 2, 0))
+	for _, d in ipairs(hat:GetDescendants()) do
+		-- anchored like what it rides on, or it stays behind when that moves
+		if d:IsA("BasePart") then d.Anchored = part.Anchored; weld(part, d) end
+	end
+end
+
+--- Puts the vehicle's HEAD item on `character`'s head (it rides on the
+-- head from then on). Returns true when there was a hat and a head.
+function VehicleBuilder.wearHat(model, character)
+	local hat = model and hatOf(model)
+	local head = character and character:FindFirstChild("Head")
+	if not hat or not head or not head:IsA("BasePart") then return false end
+	moveHat(hat, head.CFrame * CFrame.new(0, head.Size.Y / 2 - VehicleDesign.HAT.sink, 0), head)
+	hat:SetAttribute("WornBy", character.Name)
+	return true
+end
+
+--- The rider left: the hat goes back over the seat.
+function VehicleBuilder.takeOffHat(model)
+	local hat = model and hatOf(model)
+	local seat = model and model:FindFirstChildWhichIsA("VehicleSeat", true)
+	if not hat or not seat or not hat:GetAttribute("WornBy") then return false end
+	moveHat(hat, hatBaseCF(seat), model.PrimaryPart)
+	hat:SetAttribute("WornBy", nil)
+	return true
 end
 
 local function _applyStatVisuals(model, stats)
@@ -410,9 +477,22 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 			for _, mount in ipairs(design.mounts[slot] or {}) do
 				local cf = mount.cf
 				if mount.onRide and rideTop then cf = CFrame.new(0, rideTop, 0) * cf end
-				placeItem(itemName, spawnCFrame * cf, mount, model, chassis, slot)
+				if mount.hat then cf = spawnCFrame:ToObjectSpace(hatBaseCF(seat)) * CFrame.new(0, mount.box.Y / 2, 0) end
+				local holder = placeItem(itemName, spawnCFrame * cf, mount, model, chassis, slot)
+				if holder and mount.hat then makeHat(holder, seat, chassis) end
 			end
 		end
+	end
+
+	-- the HEAD item goes onto whoever sits down, back over the seat when they leave
+	if slots.HEAD then
+		pcall(function()
+			seat:GetPropertyChangedSignal("Occupant"):Connect(function()
+				local hum = seat.Occupant
+				if hum and hum.Parent then VehicleBuilder.wearHat(model, hum.Parent)
+				else VehicleBuilder.takeOffHat(model) end
+			end)
+		end)
 	end
 
 	_applyStatVisuals(model, stats)

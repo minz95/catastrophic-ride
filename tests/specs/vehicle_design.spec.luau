@@ -204,14 +204,21 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 						if off.Magnitude > 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " off its mount centre")
 						end
-						if m.align == "bottom" and centre.Y - ext.Y / 2 < m.cf.Position.Y - m.box.Y / 2 - 0.02 then
+						if m.align == "bottom" and not m.hat and centre.Y - ext.Y / 2 < m.cf.Position.Y - m.box.Y / 2 - 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " below its mount floor")
 						end
 					end
 				end
 			end
-			if slots.HEAD and holders.HEAD and VehicleBuilder.bounds(holders.HEAD[1]).Z > 0 then
-				bad("headtail", slots, "HEAD item behind the centre")
+			-- HEAD is a hat: over the seat, its bottom at a seated avatar's head top
+			if slots.HEAD and holders.HEAD then
+				local hs = model:FindFirstChildWhichIsA("VehicleSeat")
+				local c, e = VehicleBuilder.bounds(holders.HEAD[1])
+				local want = hs.Position.Y + hs.Size.Y / 2 + VehicleDesign.HAT.headTop - VehicleDesign.HAT.sink
+				if math.abs(c.X - hs.Position.X) > 0.05 or math.abs(c.Z - hs.Position.Z) > 0.05
+					or math.abs(c.Y - e.Y / 2 - want) > 0.1 then
+					bad("headtail", slots, "HEAD item not over the seat at head height")
+				end
 			end
 			if slots.TAIL and holders.TAIL and VehicleBuilder.bounds(holders.TAIL[1]).Z < 0 then
 				bad("headtail", slots, "TAIL item in front of the centre")
@@ -255,7 +262,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		R.it("front parts at the front (-Z, the driving direction), back parts at the back", function()
 			R.expect(problems.ends).toBeEmpty("vehicle facing the wrong way")
 		end)
-		R.it("HEAD item at the front, TAIL item at the back", function()
+		R.it("HEAD item worn as a hat over the seat, TAIL item at the back", function()
 			R.expect(problems.headtail).toBeEmpty("head / tail swapped")
 		end)
 		R.it("nothing reaches under the ground or the hull", function()
@@ -275,3 +282,43 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		end)
 	end)
 end
+
+R.describe("HEAD item worn as a hat", function()
+	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+		for _, body in ipairs({ false, true }) do
+			local slots = { HEAD = "Rubber Duck", BODY = body and "Pizza" or nil }
+			R.it(biome .. (body and " riding a Pizza" or "") .. ": goes onto the rider's head and back", function()
+				local model = VehicleBuilder.build(statsFor(slots, biome), biome, CFrame.new(5, 10, 20), slots)
+				local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
+				local char = env.mock.Instance.new("Model")
+				char.Name = "Rider"
+				local head = env.mock.Instance.new("Part")
+				head.Name = "Head"
+				head.Size = Vector3.new(1.2, 1.2, 1.2)
+				head.CFrame = seat.CFrame * CFrame.new(0, 2.6, 0.2)
+				head.Parent = char
+				R.expect(VehicleBuilder.wearHat(model, char)).toBe(true)
+				local hat
+				for _, c in ipairs(model:GetChildren()) do
+					if c:IsA("Model") and c:GetAttribute("Hat") then hat = c end
+				end
+				local c, e = VehicleBuilder.bounds(hat)
+				local top = head.Position + Vector3.new(0, head.Size.Y / 2 - VehicleDesign.HAT.sink, 0)
+				R.expect(math.abs(c.X - top.X) < 0.05 and math.abs(c.Z - top.Z) < 0.05).toBe(true)
+				R.expect(math.abs(c.Y - e.Y / 2 - top.Y) < 0.1).toBe(true)
+				for _, p in ipairs(hat:GetDescendants()) do
+					if p:IsA("BasePart") then
+						local w = p:FindFirstChildWhichIsA("WeldConstraint")
+						R.expect(w and w.Part0 == head).toBe(true)
+					end
+				end
+				R.expect(VehicleBuilder.takeOffHat(model)).toBe(true)
+				c, e = VehicleBuilder.bounds(hat)
+				local want = seat.Position.Y + seat.Size.Y / 2 + VehicleDesign.HAT.headTop - VehicleDesign.HAT.sink
+				R.expect(math.abs(c.Y - e.Y / 2 - want) < 0.1).toBe(true)
+				R.expect(hat.PrimaryPart:FindFirstChildWhichIsA("WeldConstraint").Part0 == model.PrimaryPart).toBe(true)
+				model:Destroy()
+			end)
+		end
+	end
+end)

@@ -13,7 +13,8 @@
 --   * Items go into `mounts`: a box per slot in the place that matches the
 --     slot's role (BODY = cabin / deckhouse / dorsal hump, ENGINE = engine
 --     bay / outboard / nose, MOBILITY = hubcaps / masthead / wing pods,
---     SPECIAL = roof rack / foredeck / belly, HEAD = front, TAIL = back).
+--     SPECIAL = roof rack / foredeck / belly, HEAD = the rider's hat (see
+--     HAT), TAIL = back).
 --     An item is scaled to fit its box, keeping its proportions.
 --   * Parts listed in `replacedBy[slot]` are left out when that slot has an
 --     item (the cabin when a BODY item takes its place, for example).
@@ -172,7 +173,6 @@ local function car(stats)
 			table.insert(M.MOBILITY, { cf = CF(s * (wheelX + 0.35), wheelY, fz * wheelZ), box = V3(0.3, r * 1.3, r * 1.3) })
 		end
 	end
-	M.HEAD = { { cf = CF(0, top + 0.3, -L / 2 + 0.25), box = V3(0.6, 0.6, 0.5) } }
 	M.TAIL = { { cf = CF(0, -H / 2 + 0.4, L / 2 + 0.55), box = V3(0.8, 0.8, 0.6) } }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, cabZ) }
 	-- Riding the BODY item: it sits on the axles, the wheels move out to its
@@ -205,7 +205,6 @@ local function car(stats)
 			ENGINE = { { cf = CF(0, 0.35, rideL * 0.32), box = V3(rideW * 0.45, 0.7, rideL * 0.22), onRide = true } },
 			SPECIAL = { { cf = CF(0, 0.3, -rideL * 0.3), box = V3(rideW * 0.45, 0.6, rideL * 0.2), onRide = true } },
 			MOBILITY = rideMob,
-			HEAD = { { cf = CF(0, 0.3, -rideL / 2 + 0.25), box = V3(0.6, 0.6, 0.5), onRide = true } },
 		},
 		seatZ = cabZ,
 	}
@@ -265,7 +264,6 @@ local function boat(stats)
 	M.ENGINE = { { cf = CF(0, top + 0.3, L / 2 + 0.45), box = V3(0.8, 0.9, 0.8) } }
 	M.SPECIAL = { { cf = CF(0, top + 0.4, -L * 0.3), box = V3(W * 0.5, 0.7, L * 0.2) } }
 	M.MOBILITY = { { cf = CF(0, top + mastH + 0.4, mastZ), box = V3(0.9, 0.9, 0.9) } }
-	M.HEAD = { { cf = CF(0, top + 0.35, -L / 2 - prow + 0.35), box = V3(0.6, 0.6, 0.6) } }
 	M.TAIL = { { cf = CF(W / 2 - 0.3, top + 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6) } }
 	add(P, "FlagPole", "cylinder", V3(1.3, 0.07, 0.07), CF(W / 2 - 0.3, top + 0.65, L / 2 - 0.2) * ANG(0, 0, HALF_PI), "mast")
 	d.withSlot.TAIL = { "FlagPole" }
@@ -288,7 +286,6 @@ local function boat(stats)
 		mounts = {
 			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.2), onRide = true } },
 			MOBILITY = { { cf = CF(0, mastH + 0.4, bowMast), box = V3(0.9, 0.9, 0.9), onRide = true } },
-			HEAD = { { cf = CF(0, 0.3, -L / 2 - prow * 0.4), box = V3(0.6, 0.6, 0.6), onRide = true } },
 			TAIL = { { cf = CF(W / 2 - 0.3, 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6), onRide = true } },
 		},
 		seatZ = L * 0.15,
@@ -341,7 +338,6 @@ local function plane(stats)
 	for _, s in ipairs({ -1, 1 }) do
 		table.insert(M.MOBILITY, { cf = CF(s * span * 0.32, -R * 0.35 - 0.4, -L * 0.04), box = V3(0.6, 0.6, 1.0) })
 	end
-	M.HEAD = { { cf = CF(0, R + 0.3, -L / 2 + 0.3), box = V3(0.6, 0.6, 0.5) } }
 	M.TAIL = { { cf = CF(0, R + R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6) } }
 	d.seat = { size = V3(1.2, 0.3, 1.2), cf = CF(0, R + 0.15, -L * 0.05) }
 	-- Riding the BODY item: it is the fuselage, wings / prop / tail stay
@@ -351,7 +347,6 @@ local function plane(stats)
 			math.max(L + 1.0, VehicleDesign.RIDE_MIN.SKY.Z)), bottom = -R * 1.2, centreZ = 0,
 		lift = { "Fin", "Stabilizer" }, liftFrom = R,
 		mounts = {
-			HEAD = { { cf = CF(0, 0.3, -L / 2 + 0.3), box = V3(0.6, 0.6, 0.5), onRide = true } },
 			TAIL = { { cf = CF(0, R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6), onRide = true } },
 		},
 		seatZ = -L * 0.05,
@@ -396,8 +391,23 @@ function VehicleDesign.layout(biome, stats, slots)
 		if biome == "OCEAN" then d.withSlot.MOBILITY = nil end
 		for slot, list in pairs(ride.mounts) do d.mounts[slot] = list end
 	end
+	-- HEAD: a hat over the seat (VehicleBuilder puts it on the real seat
+	-- height, which a ridden item decides)
+	local hat = VehicleDesign.HAT
+	local seatTop = d.seat.cf.Position.Y + d.seat.size.Y / 2
+	local seatZ = d.riding and d.ride.seatZ or d.seat.cf.Position.Z
+	d.mounts.HEAD = { { cf = CF(0, seatTop + hat.headTop - hat.sink + hat.box.Y / 2, seatZ), box = hat.box,
+		align = "bottom", hat = true } }
 	return d
 end
+
+-- The HEAD item is worn as a hat by whoever sits in the seat. The vehicle
+-- carries it at about head height above the seat (`headTop` studs above the
+-- seat top: a seated R15 avatar, Studio gallery) so an empty seat, a race bot
+-- or the showroom still shows it; VehicleBuilder.wearHat moves it onto the
+-- real head when someone sits down. `sink` = how far it comes down over
+-- the head.
+VehicleDesign.HAT = { box = V3(1.7, 1.3, 1.7), headTop = 3.75, sink = 0.25 }
 
 -- How far a ridden item may be stretched beyond its own proportions along
 -- one axis to fill the vehicle's footprint.
