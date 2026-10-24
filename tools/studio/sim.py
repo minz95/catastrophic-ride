@@ -97,6 +97,39 @@ def run_gallery_studio(cmd, token, t0, timeout):
     return proc.returncode
 
 
+def run_with_shots(cmd, token, t0, timeout, name, shots):
+    """Runs Studio and takes screenshots (whole screen, scaled to 1600 px)
+    once the server log shows `shots["after"]` (e.g. "phase=CRAFTING"):
+    `count` shots `gap` s apart after `delay` s, into GALLERY_DIR (git-ignored:
+    the whole screen is in them). For looking at client UI in a match."""
+    os.makedirs(GALLERY_DIR, exist_ok=True)
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    seen_at, taken = None, 0
+    while proc.poll() is None and time.time() - t0 < timeout:
+        time.sleep(0.5)
+        if seen_at is None:
+            # the test server writes its own log (not the one with the token)
+            for path in glob.glob(os.path.join(LOG_DIR, "*Studio*.log")):
+                if os.path.getmtime(path) < t0:
+                    continue
+                with open(path, errors="replace") as f:
+                    if shots.get("after", "") in f.read():
+                        seen_at = time.time()
+                        break
+            continue
+        due = seen_at + shots.get("delay", 3) + taken * shots.get("gap", 4)
+        if taken < shots.get("count", 3) and time.time() >= due:
+            taken += 1
+            out = os.path.join(GALLERY_DIR, "%s_%d.png" % (name, taken))
+            subprocess.run(["screencapture", "-x", out])
+            subprocess.run(["sips", "-Z", "1600", out], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print("  shot %s → %s" % (name, os.path.relpath(out, ROOT)), flush=True)
+    if proc.poll() is None:
+        proc.terminate()
+        return "timeout"
+    return proc.returncode
+
+
 def load_scenarios():
     with open(SCENARIOS) as f:
         return json.load(f)["scenarios"]
@@ -651,6 +684,8 @@ def run_one(sc, place, args):
     cmd = [STUDIO, "-task", "RunScript", "-localPlaceFile", place, "-runScriptFile", script, "-quitAfterExecution"]
     if sc["kind"] == "gallery":
         code = run_gallery_studio(cmd, token, t0, timeout)
+    elif sc.get("shots"):
+        code = run_with_shots(cmd, token, t0, timeout, sc["name"], sc["shots"])
     else:
         try:
             proc = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=timeout)

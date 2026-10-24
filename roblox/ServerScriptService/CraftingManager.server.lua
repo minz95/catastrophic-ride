@@ -20,6 +20,7 @@ local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 local PlayerStore    = require(ServerScriptService.Modules.PlayerStore)
 local Cosmetics      = require(ReplicatedStorage.Shared.Cosmetics)
 local RaceGrid       = require(ServerScriptService.Modules.RaceGrid)
+local CraftPreview   = require(ServerScriptService.Modules.CraftPreview)
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,7 @@ local function _processCraft(player, submitted, auto, draft)
 	stats.slotAssignments = slots
 
 	SessionManager.setVehicle(player, nil, stats)
+	if not auto then CraftPreview.show(player, slots, biome) end   -- the submitted car, still turning
 	Telemetry.record("craft", {
 		userId = player.UserId,
 		auto = auto == true,
@@ -127,6 +129,8 @@ RemoteEvents.CraftDraft.OnServerEvent:Connect(function(player, slots)
 	if not data then return end
 	local clean = CraftingRules.validate(slots, data.inventory, ItemConfig)
 	_drafts[player.UserId] = clean
+	-- the showroom: what these slots build, turning on the crafting screen
+	if clean then CraftPreview.show(player, clean, GameManager.getBiome()) end
 end)
 
 -- ─── Auto-submit on timer expiry ─────────────────────────────────────────────
@@ -154,11 +158,13 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_drafts       = {}
 		_active       = true
 		_totalPlayers = #Players:GetPlayers()
+		for _, p in ipairs(Players:GetPlayers()) do CraftPreview.show(p, {}, biome) end
 
 	elseif phase == Constants.PHASES.RACING then
 		-- Auto-submit anyone who didn't manually submit
 		_autoSubmitAll()
 		_active = false
+		for _, p in ipairs(Players:GetPlayers()) do CraftPreview.clear(p) end
 
 		-- Spawn vehicles for all players
 		task.spawn(function()

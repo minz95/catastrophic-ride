@@ -485,6 +485,8 @@ Constants.BOTS = {
 		ABILITY_EVERY = 3,  -- s, average, between two tries
 		ABILITY_CHANCE = 0.6,
 		TARGET_RANGE = 45,  -- studs: aimed abilities wait for a car this close
+		MIN_SPEED = 20,     -- studs/s: no abilities below this (stuck, crawling)
+		STUCK_RESPAWN = 2.5, -- s pinned (driving, not moving) before a respawn
 	},
 }
 

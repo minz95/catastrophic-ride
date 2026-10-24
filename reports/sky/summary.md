@@ -34,14 +34,14 @@ Cars by top speed: slowest = Microwave + Hair Dryer + Pizza (top speed 85.7, tur
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 3 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.05 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.17
+- Fastest car won 1 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.01 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.09
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.47 |
-| farming: casual | 3.53 |
+| farming: sweaty | 3.56 |
+| farming: casual | 3.44 |
 | driving: expert | 1.50 |
 | driving: average | 3.50 |
 | driving: novice | 5.50 |
@@ -52,26 +52,26 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.50 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.25 |  .. 0.70 | the fastest build should not always win |
+| ✓ | closeShare | 0.58 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.08 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 33.46 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 2.42 | 1.00 ..  | the lead changes at least once |
-| ✗ | racingShare | 0.35 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.05 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 93.86 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | finishSpread | 32.50 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 2.17 | 1.00 ..  | the lead changes at least once |
+| ✗ | racingShare | 0.34 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
+| ✓ | speedPlaceCorr | -0.01 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 93.87 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 12.2. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 13.0. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 launch tunnel | 8.9 | 3.3 | 0 | 0 | 57 |
-| S2 cloud bend A | 16.9 | 5.4 | 0 | 0 | 107 |
-| S3 crossover | 7.6 | 3.9 | 0 | 0 | 61 |
-| S4 cloud bend B | 20.9 | 8.0 | 0 | 0 | 146 |
-| S5 crystal canyon | 28.4 | 11.6 | 12 | 0 | 387 |
-| S6 cloud corkscrew | 16.3 | 4.4 | 0 | 0 | 101 |
-| S7 dive | 5.9 | 1.7 | 0 | 0 | 38 |
+| S1 launch tunnel | 8.9 | 3.2 | 0 | 0 | 56 |
+| S2 cloud bend A | 16.8 | 5.2 | 0 | 0 | 97 |
+| S3 crossover | 7.7 | 4.0 | 0 | 0 | 59 |
+| S4 cloud bend B | 21.0 | 7.9 | 2 | 0 | 153 |
+| S5 crystal canyon | 28.2 | 11.2 | 10 | 0 | 397 |
+| S6 cloud corkscrew | 16.3 | 4.6 | 0 | 0 | 119 |
+| S7 dive | 5.9 | 1.7 | 0 | 0 | 44 |
 
 ## Geometry findings
 

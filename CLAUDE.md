@@ -139,7 +139,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   dropped and logged). The
   crafting screen (`StarterGui/CraftingUI`; `CraftingClient` is not shown)
   sends `CraftDraft` on every change; at the timeout the auto craft keeps the
-  draft and fills the rest with `CraftingRules.autoSlots`. A new item needs
+  draft and fills the rest with `CraftingRules.autoSlots`. Each draft also
+  builds a still copy of the vehicle into that player's
+  `PlayerGui.CraftPreview` (`Modules/CraftPreview`, the race's
+  VehicleBuilder call), which the crafting screen's showroom turns in a
+  ViewportFrame with the avatar seated (`sim.py run showroom` screenshots it). A new item needs
   a line in `Shared/ItemBlurbs`.
 - Character poses (FarmFx): avatars may have AnimationConstraint joints and
   no Motor6D; pose through FarmFx's `joint()` handle, never `Motor6D.C0`
@@ -154,7 +158,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Constants.BALANCE_TARGETS` green. Speed buffs stack to `SPEED_STACK_MAX`.
 - Shoves (abilities, obstacles) go to the driver as a `CarImpact` knock.
 - Falling-log spots come from `Shared/HazardPlan` (always a way past);
-  `Autopilot` avoids `state.hazards`.
+  `Autopilot` avoids `state.hazards`. Jump ramps span the whole corridor (a
+  narrower wedge's side face snagged cars near the wall). Race bots respawn
+  after `BOTS.RACE.STUCK_RESPAWN` s pinned and fire no abilities below
+  `MIN_SPEED` (a drop lands in their own way after a respawn).
 - Road heights: a track node may be `{ x, z, y }` (road surface Y). Pass
   the car's Y to `TrackGeometry:project` / `progressAt`,
   `RaceProgress.progress` / `respawnPoint` and `Autopilot` state, or a

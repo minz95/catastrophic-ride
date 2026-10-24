@@ -73,9 +73,11 @@ end
 
 -- Now and then, an ability: the next ready item in E order. Aimed ones
 -- (targetType "nearest", "random_enemy", "all_in_radius") wait for a car in range.
-local function tryAbility(bot, biome, pos)
+local function tryAbility(bot, biome, pos, speed)
 	local R = Constants.BOTS.RACE
 	if not _useAbility or bot.t < (bot.nextAbility or 0) then return end
+	-- stuck or crawling: a drop would land in its own way after a respawn
+	if speed < R.MIN_SPEED then return end
 	bot.nextAbility = bot.t + R.ABILITY_EVERY * _rng:NextNumber(0.6, 1.4)
 	if _rng:NextNumber() > R.ABILITY_CHANCE then return end
 	local slots = bot.slots
@@ -251,7 +253,7 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 		return
 	end
 
-	tryAbility(bot, biome, pos)
+	tryAbility(bot, biome, pos, speed)
 
 	-- the same catch-up as the players (Shared/CatchUp)
 	local cu = leadS and CatchUp.mult(leadS - bot.s) or 1
@@ -287,6 +289,14 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 		Telemetry.record("race_progress", { userId = bot.id, s = math.floor(bot.s), bot = true })
 	end
 	if cmd.forwardSpeed > 10 and speed < cmd.forwardSpeed * 0.25 then
+		-- pinned against something (a cactus dropped in front, a wall): back
+		-- on the line after STUCK_RESPAWN s, not after the Autopilot's longer wait
+		bot.stuckFor = (bot.stuckFor or 0) + dt
+		if bot.stuckFor > Constants.BOTS.RACE.STUCK_RESPAWN then
+			bot.stuckFor = 0
+			respawn(bot, biome, startY)
+			return
+		end
 		bot.blockedFor = (bot.blockedFor or 0) + dt
 		if bot.blockedFor > 1 then
 			bot.blockedFor = -3
@@ -294,8 +304,9 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 			Telemetry.record("bot_blocked", { userId = bot.id, s = math.floor(bot.s), x = math.floor(pos.X), z = math.floor(pos.Z),
 				part = hit and hit.Instance and hit.Instance:GetFullName() or "?" })
 		end
-	elseif (bot.blockedFor or 0) > 0 then
-		bot.blockedFor = 0
+	else
+		bot.stuckFor = 0
+		if (bot.blockedFor or 0) > 0 then bot.blockedFor = 0 end
 	end
 end
 
