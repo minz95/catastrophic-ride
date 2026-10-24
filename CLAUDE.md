@@ -57,10 +57,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the left) and `python3 tools/studio/sim.py run vehicles`.
   You ride your BODY item: with one, `VehicleDesign.layout(biome, stats,
   slots)` hides the chassis and body parts (`ride.hide`) and the item is
-  stretched over the footprint (wheels / motor and mast / wings, prop and
-  tail stay); seat and `onRide` mounts sit on the item's real top. See it
-  with real meshes: `python3 tools/studio/sim.py run gallery` (screenshots
-  in `reports/vehicles/studio/`).
+  stretched over the footprint (at least `VehicleDesign.RIDE_MIN`, so the
+  rider does not hide it; wheels / motor, mast and sail / wings, prop and
+  tail stay); seat and `onRide` mounts sit on the item's real top.
+  `VehicleDesign.RIDE_LOOK` fixes items that ride wrong by default (facing,
+  lying down, seat sunk into a tub or onto cushions). Some ENGINE / SPECIAL
+  items are rideable too (ItemConfig `ride` = weight and grip as a body;
+  `CraftingRules.fits`). See every rideable item as car, boat and plane with
+  an avatar seated: `python3 tools/studio/sim.py run gallery` (side and rear
+  shots in `reports/vehicles/studio/`, rider fit in the report).
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.
@@ -130,7 +135,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - The current phase and biome are also `ReplicatedStorage` attributes
   (`Phase`, `Biome`) for client scripts that start after the event went out.
 - Craft submissions go through `Shared/CraftingRules.validate` (core slots
-  only take their own item type; the rest is dropped and logged). The
+  only take their own item type, BODY also an item with `ride`; the rest is
+  dropped and logged). The
   crafting screen (`StarterGui/CraftingUI`; `CraftingClient` is not shown)
   sends `CraftDraft` on every change; at the timeout the auto craft keeps the
   draft and fills the rest with `CraftingRules.autoSlots`. A new item needs
@@ -216,7 +222,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
   Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
   `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /
-  punch / defend functions, then race the auto craft of their bag. Loop over
+  punch / guard / steal / defend functions (they keep a bag slot free to rob
+  someone), then race the auto craft of their bag and fire its abilities
+  through AbilityManager's handler (`RaceBots.setAbilityHandler`,
+  `Constants.BOTS.RACE`). Loop over
   `SessionManager.actors()` where bots take part (targets, contests), and
   never FireClient to a bot (FarmingManager `_fireClient`, AbilityManager
   `_screen`; shoves go to `RaceBots.knock`). Clients find a bot's NPC by the

@@ -1,0 +1,3057 @@
+{
+ "checks": [],
+ "commit": "45ca943",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-24T02:38:21.086Z,1.086385,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:38:21.843Z,1.843622,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:38:22.858Z,2.858376,6da1b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"6940dcab-b17f-4b2f-b5b3-bc35b9855c50\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T02:39:21.846Z,61.846951,6d3d3000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:39:45.343Z,85.343941,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-24T02:39:45.343Z,85.343964,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-24T02:39:45.343Z,85.343971,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/LogoutMenu must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-24T02:39:45.343Z,85.343979,3a460c0,6,Error [FLog::WidgetsManager] Widget DataModel:Standalone, PluginType:Standalone, PluginId:Ribbon, Category:Widgets, ItemId:RightMezzanine/Notifications must be underneath a plugin; silently failing since it was likely destroyed early",
+  "2026-10-24T02:39:45.455Z,85.455338,6d3d3000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"6940dcab-b17f-4b2f-b5b3-bc35b9855c50\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 8,
+   "FARMING": 60,
+   "RACING": 60,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "brawler"
+  ],
+  "fillBots": 4,
+  "maxSeconds": 300,
+  "players": 1,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-24T11:39:48+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "brawler"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 8,
+    "FARMING": 60,
+    "RACING": 60,
+    "RESULTS": 3
+   },
+   "fillBots": 4,
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 3,
+   "maxSeconds": 300,
+   "players": 1,
+   "rounds": 1,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.1,
+       "boostDuration": 1.7000000000000002,
+       "floatability": 2,
+       "flyability": 5.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     }
+    },
+    "craftT0": 67.264,
+    "durationSeconds": 62.51241674995981,
+    "farm": {
+     "attempts": [],
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 0,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100001": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100002": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100003": {
+       "attempts": [],
+       "contestsLost": 0,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "ledger": 8,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      }
+     },
+     "punches": {
+      "blocked": 9,
+      "hit": 7,
+      "miss": 61
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": []
+    },
+    "players": [
+     {
+      "boostDuration": 1.7000000000000002,
+      "driver": "expert",
+      "farm": "brawler",
+      "name": "Player1",
+      "slots": [],
+      "speed": 23,
+      "userId": -1
+     }
+    ],
+    "raceStartedAt": 70.82008579169633,
+    "round": 1,
+    "startedAt": 9.322382750047836,
+    "t0": 7.206
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: none\n    -100003: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -100001: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: bot_craft=1 bot_farm=29 bot_farmfx=16 bot_hud=31 bot_joined=1 bot_punch=77 bot_ready=1 bot_screen=2 craft=1 farm_bot=3 harness_crafting=1 harness_round=1 item_pickup=24 item_wave=3 phase=3 punch=77 race_bot=3 race_sample=2 race_start=1 server_perf=34 vehicle_spawn=1",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 21.2,
+     "kind": "server_perf",
+     "memMb": 2165,
+     "phase": "LOBBY",
+     "physicsFps": 58.3,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.023
+    },
+    {
+     "heartbeatHz": 58.5,
+     "kind": "server_perf",
+     "memMb": 2164,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 4.038
+    },
+    {
+     "driver": "expert",
+     "farm": "brawler",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 4.161,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "brawler"
+     },
+     "kind": "bot_ready",
+     "t": 4.422,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.4,
+     "kind": "server_perf",
+     "memMb": 2181,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 33.7,
+     "t": 6.039
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 7.173
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Rusty",
+     "t": 7.202,
+     "userId": -100001
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Duckie",
+     "t": 7.204,
+     "userId": -100002
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Turbo Tom",
+     "t": 7.206,
+     "userId": -100003
+    },
+    {
+     "count": 36,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 7.206,
+     "wave": 0
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 7.206
+    },
+    {
+     "inventory": 1,
+     "item": "Pizza",
+     "itemId": "7",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 7.422,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Pizza",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 7.422,
+     "userId": -100001
+    },
+    {
+     "inventory": 1,
+     "item": "Lantern",
+     "itemId": "17",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 7.422,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Lantern",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 7.422,
+     "userId": -100002
+    },
+    {
+     "inventory": 1,
+     "item": "Trophy",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 7.422,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Trophy",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 7.422,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 57.5,
+     "kind": "server_perf",
+     "memMb": 2278,
+     "phase": "FARMING",
+     "physicsFps": 59.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 50.8,
+     "t": 8.056
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:58"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 58.74326992034912
+     },
+     "kind": "bot_hud",
+     "t": 8.438,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Hair Dryer",
+     "itemId": "31",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 8.989,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Hair Dryer",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 8.989,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2271,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 41,
+     "t": 10.072
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:56"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 56.743813037872314
+     },
+     "kind": "bot_hud",
+     "t": 10.44,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 11.456
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 11.505,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 57,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 11.904,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 12.004
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 12.039,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2272,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 41.1,
+     "t": 12.072
+    },
+    {
+     "inventory": 2,
+     "item": "Barrel",
+     "itemId": "25",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 12.105,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Barrel",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 12.105,
+     "userId": -100001
+    },
+    {
+     "inventory": 2,
+     "item": "Hair Dryer",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 12.105,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Hair Dryer",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 12.105,
+     "userId": -100002
+    },
+    {
+     "inventory": 3,
+     "item": "Cactus",
+     "itemId": "30",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 12.355,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Cactus",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 12.355,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 42,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.438,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:54"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 54.72863793373108
+     },
+     "kind": "bot_hud",
+     "t": 12.454,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 12.554
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 12.587,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 35,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 12.989,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Lantern",
+     "itemId": "14",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 13.922,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Lantern",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 13.922,
+     "userId": -100001
+    },
+    {
+     "inventory": 3,
+     "item": "Camera",
+     "itemId": "36",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 13.922,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Camera",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 13.922,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2276,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 37,
+     "t": 14.088
+    },
+    {
+     "inventory": 4,
+     "item": "Fan",
+     "itemId": "29",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 14.173,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Fan",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 14.173,
+     "userId": -100003
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 14.206
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 14.255,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:52"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 52.72778105735779
+     },
+     "kind": "bot_hud",
+     "t": 14.485,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 57,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 14.654,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 14.956
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 14.989,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 36,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 15.406,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Lantern",
+     "itemId": "26",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 15.507,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Lantern",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 15.507,
+     "userId": -100003
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 15.537
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 15.555,
+     "userId": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Barrel",
+     "itemId": "20",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 15.772,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Barrel",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 15.772,
+     "userId": -100001
+    },
+    {
+     "inventory": 4,
+     "item": "Kite",
+     "itemId": "2",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 15.772,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Kite",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 15.772,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 33,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 15.956,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.9,
+     "kind": "server_perf",
+     "memMb": 2294,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31.3,
+     "t": 16.089
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 16.205
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 16.237,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:50"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 50.715389013290405
+     },
+     "kind": "bot_hud",
+     "t": 16.472,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 89,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 16.637,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 16.755
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 16.773,
+     "userId": -1
+    },
+    {
+     "inventory": 5,
+     "item": "Cactus",
+     "itemId": "12",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 16.807,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Cactus",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 16.807,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 107,
+      "result": "miss",
+      "turned": 51,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.172,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 17.305
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 17.322,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Bamboo Raft",
+     "itemId": "10",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 17.322,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Bamboo Raft",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 17.322,
+     "userId": -100002
+    },
+    {
+     "inventory": 6,
+     "item": "Pizza",
+     "itemId": "27",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 17.322,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Pizza",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 17.322,
+     "userId": -100003
+    },
+    {
+     "inventory": 5,
+     "item": "Shopping Cart",
+     "itemId": "28",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 17.59,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Shopping Cart",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 17.591,
+     "userId": -100001
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 17.873
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 17.905,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2296,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 25.6,
+     "t": 18.105
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:48"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 48.69786810874939
+     },
+     "kind": "bot_hud",
+     "t": 18.487,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 18.656
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 18.671,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Gas Can",
+     "itemId": "22",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 18.889,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Gas Can",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 18.889,
+     "userId": -100002
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 19.238
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 19.271,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 19.788
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 19.822,
+     "userId": -1
+    },
+    {
+     "inventory": 6,
+     "item": "Cardboard Box",
+     "itemId": "13",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 19.922,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Cardboard Box",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 19.922,
+     "userId": -100001
+    },
+    {
+     "inventory": 8,
+     "item": "Gas Can",
+     "itemId": "16",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 19.923,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Gas Can",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 19.923,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2244,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.9,
+     "t": 20.105
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 20.337
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 20.372,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:46"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 46.67999196052551
+     },
+     "kind": "bot_hud",
+     "t": 20.506,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 21.538
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 21.571,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2246,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 21,
+     "t": 22.122
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 22.204
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 22.238,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Barrel",
+     "itemId": "18",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 22.29,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Barrel",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 22.29,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:44"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 44.66369605064392
+     },
+     "kind": "bot_hud",
+     "t": 22.523,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Bamboo Raft",
+     "itemId": "19",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 22.556,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Bamboo Raft",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 22.556,
+     "userId": -100001
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 22.722
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 22.738,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 23.372
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 23.387,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 24.021
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 24.054,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2247,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.5,
+     "t": 24.139
+    },
+    {
+     "inventory": 7,
+     "item": "Cardboard Box",
+     "itemId": "21",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 24.14,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Cardboard Box",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 24.14,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:42"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 42.65530300140381
+     },
+     "kind": "bot_hud",
+     "t": 24.521,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 24.555
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 24.588,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 25.355
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 25.388,
+     "userId": -1
+    },
+    {
+     "inventory": 8,
+     "item": "Flower",
+     "itemId": "34",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 25.473,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Flower",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 25.473,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.1,
+     "t": 26.156
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.636842012405396
+     },
+     "kind": "bot_hud",
+     "t": 26.538,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 26.638
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 26.671,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 27.205
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 27.238,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 27.737
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 27.771,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2257,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16,
+     "t": 28.173
+    },
+    {
+     "count": 6,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 28.226,
+     "wave": 1
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 28.271,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 28.321
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 28.339,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.63161611557007
+     },
+     "kind": "bot_hud",
+     "t": 28.554,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 28.856
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 28.871,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 29.404
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 29.437,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 30.055
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 30.104,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2253,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.9,
+     "t": 30.188
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.61588907241821
+     },
+     "kind": "bot_hud",
+     "t": 30.571,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.704,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 30.737,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 30.92,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 30.937,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 31.739
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 31.787,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2253,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.3,
+     "t": 32.205
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 32.404,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 32.42,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 32.487,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.61449694633484
+     },
+     "kind": "bot_hud",
+     "t": 32.57,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 33.189
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 33.237,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 33.737
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 33.754,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2255,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.4,
+     "t": 34.205
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 34.387
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 34.42,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.59866690635681
+     },
+     "kind": "bot_hud",
+     "t": 34.587,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 35.138
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 35.154,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 35.672
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 35.72,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 36.22
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2257,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.5,
+     "t": 36.221
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 36.254,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.581165075302124
+     },
+     "kind": "bot_hud",
+     "t": 36.604,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 36.771
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 36.804,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 37.454
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 37.487,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 37.987
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 38.021,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2258,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.6,
+     "t": 38.239
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.521,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 38.554,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.564565896987915
+     },
+     "kind": "bot_hud",
+     "t": 38.621,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 39.172
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 39.22,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 39.938
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 39.954,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2259,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.4,
+     "t": 40.254
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 40.587
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 40.621,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.545217990875244
+     },
+     "kind": "bot_hud",
+     "t": 40.638,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 41.687
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 41.72,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 42.205
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 42.254,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2261,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.7,
+     "t": 42.272
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.541462898254395
+     },
+     "kind": "bot_hud",
+     "t": 42.637,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 42.954
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 42.987,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.487,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 43.52,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 44.138
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 44.153,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2263,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.7,
+     "t": 44.287
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.529119968414307
+     },
+     "kind": "bot_hud",
+     "t": 44.654,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 45.12
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 45.154,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.787,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 45.82,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 45.838,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 45.887,
+     "userId": -1
+    },
+    {
+     "count": 6,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 46.228,
+     "wave": 2
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 46.286,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2265,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 230.9,
+     "t": 46.305
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 46.537,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 46.553,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.531718969345093
+     },
+     "kind": "bot_hud",
+     "t": 46.653,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 47.086,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 47.104,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 47.453,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 3,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.62,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 47.654,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 48.186
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 48.203,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2266,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31.4,
+     "t": 48.322
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.51542901992798
+     },
+     "kind": "bot_hud",
+     "t": 48.67,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 49.037
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 49.054,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 49.587
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 49.62,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 50.238
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 50.287,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2266,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 50.338
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.51184391975403
+     },
+     "kind": "bot_hud",
+     "t": 50.671,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 50.769
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 50.786,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 51.454
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 51.486,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 52.005,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 52.053,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 52.105,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 52.12,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2266,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.8,
+     "t": 52.353
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 52.538,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 52.586,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.511287927627563
+     },
+     "kind": "bot_hud",
+     "t": 52.669,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 53.086,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 53.12,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 53.638,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 53.686,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 53.72,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 54.32
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 54.353,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2267,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31,
+     "t": 54.372
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.495261907577515
+     },
+     "kind": "bot_hud",
+     "t": 54.686,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 54.853
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 54.886,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 55.538
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 55.553,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 56.071
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 56.12,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2267,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.8,
+     "t": 56.387
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.481658935546875
+     },
+     "kind": "bot_hud",
+     "t": 56.703,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 56.736
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 56.754,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.42,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 57.453,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 57.636,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 57.653,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 58.071,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 58.086,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2268,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 58.404
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 58.619,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 58.652,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.480886936187744
+     },
+     "kind": "bot_hud",
+     "t": 58.702,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 59.186,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 59.203,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 59.203,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 60.154
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 60.203,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2267,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 60.404
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.462492942810059
+     },
+     "kind": "bot_hud",
+     "t": 60.72,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 61.036
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 61.053,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 61.587
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 61.619,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "kind": "punch",
+     "result": "miss",
+     "t": 62.136
+    },
+    {
+     "data": {
+      "result": "miss",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 62.154,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2268,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31,
+     "t": 62.42
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 62.588,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.460922002792358
+     },
+     "kind": "bot_hud",
+     "t": 62.721,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2268,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31,
+     "t": 64.436
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.4464330673217773
+     },
+     "kind": "bot_hud",
+     "t": 64.736,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2269,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 66.454
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.44585204124450684
+     },
+     "kind": "bot_hud",
+     "t": 66.736,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 67.254
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 67.264
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2256,
+     "phase": "CRAFTING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 5.1,
+     "t": 68.471
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.1,
+      "boostDuration": 1.7000000000000002,
+      "floatability": 2,
+      "flyability": 5.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 68.704,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 68.704
+    },
+    {
+     "farmed": true,
+     "id": -100001,
+     "kind": "race_bot",
+     "maxSpeed": 68.15318298339844,
+     "name": "Rusty",
+     "profile": "average",
+     "slots": {
+      "BODY": "Barrel",
+      "HEAD": "Barrel",
+      "MOBILITY": "Lantern",
+      "SPECIAL": "Pizza",
+      "TAIL": "Shopping Cart"
+     },
+     "t": 68.72
+    },
+    {
+     "farmed": true,
+     "id": -100002,
+     "kind": "race_bot",
+     "maxSpeed": 68.88709259033203,
+     "name": "Duckie",
+     "profile": "novice",
+     "slots": {
+      "BODY": "Kite",
+      "ENGINE": "Hair Dryer",
+      "HEAD": "Cactus",
+      "MOBILITY": "Camera",
+      "SPECIAL": "Lantern",
+      "TAIL": "Bamboo Raft"
+     },
+     "t": 68.726
+    },
+    {
+     "farmed": true,
+     "id": -100003,
+     "kind": "race_bot",
+     "maxSpeed": 68.88709259033203,
+     "name": "Turbo Tom",
+     "profile": "expert",
+     "slots": {
+      "BODY": "Cardboard Box",
+      "ENGINE": "Hair Dryer",
+      "HEAD": "Fan",
+      "MOBILITY": "Cactus",
+      "SPECIAL": "Trophy",
+      "TAIL": "Lantern"
+     },
+     "t": 68.732
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 8019.551979574296,
+     "racers": [
+      -1
+     ],
+     "round": 1,
+     "t": 68.751,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.15318298339844,
+     "progress": 10,
+     "speed": 0,
+     "t": 68.751,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:06"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 6.514781951904297
+     },
+     "kind": "bot_hud",
+     "t": 68.761,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [],
+      "result": "ok",
+      "slots": []
+     },
+     "kind": "bot_craft",
+     "t": 68.886,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 68.15318298339844,
+     "seated": false,
+     "t": 69.004,
+     "torque": 44.400001525878906,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.15318298339844,
+     "progress": 10,
+     "speed": 0,
+     "t": 69.252,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    }
+   ],
+   "samplesTotal": 2
+  },
+  "timedOut": false
+ },
+ "scenario": "bots-fight",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: none\n    -100003: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -100001: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil\n    -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: bot_craft=1 bot_farm=29 bot_farmfx=16 bot_hud=31 bot_joined=1 bot_punch=77 bot_ready=1 bot_screen=2 craft=1 farm_bot=3 harness_crafting=1 harness_round=1 item_pickup=24 item_wave=3 phase=3 punch=77 race_bot=3 race_sample=2 race_start=1 server_perf=34 vehicle_spawn=1\nfarm bots: 3 on the farm, 24 pickups, 0 punches thrown, 16 punches/steals on bots\nfarm bots: 0 steals tried (0 stolen), 5 guards\nbots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: \nserver: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 231 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 5 kbps; memory max 2296 MB",
+ "wallSeconds": 88.6
+}

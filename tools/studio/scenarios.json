@@ -1317,13 +1317,10 @@
         "vehicles",
         "full"
       ],
-      "_why": "every BODY item as the car, the boat and the plane with the real item meshes; screenshots of each row go to reports/vehicles/studio/ (whole screen, git-ignored; needs screen-recording permission)",
+      "_why": "every item you can ride (BODY items and `ride` items) as the car, the boat and the plane with the real item meshes and an avatar in the seat; screenshots go to reports/vehicles/studio/ (whole screen, git-ignored; needs screen-recording permission); the report has each rider's fit (sink, over)",
       "opts": {
-        "hold": 3,
+        "hold": 1.2,
         "extra": [
-          {
-            "BODY": "Pizza"
-          },
           {
             "BODY": "Bathtub",
             "ENGINE": "Rocket",
@@ -1374,6 +1371,35 @@
           "spawned": 3,
           "finished": 0
         }
+      }
+    },
+    {
+      "name": "bots-fight",
+      "kind": "match",
+      "tags": [
+        "bots",
+        "fight",
+        "full"
+      ],
+      "_why": "a brawler player among the farm bots: the bots raise their guard when hit or squared up to, try to rob the player, defend grabs; stops after CRAFTING",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "fillBots": 4,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 60,
+          "CRAFTING": 8,
+          "RACING": 60,
+          "RESULTS": 3
+        },
+        "farmProfiles": [
+          "brawler"
+        ],
+        "maxSeconds": 300
+      },
+      "checks": {
+        "allJoined": true
       }
     }
   ]

@@ -3,7 +3,7 @@
 -- Constants.BOTS.FILL_TO people (harness: `fillBots`), bots join at FARMING
 -- as NPC characters ("🤖 Rusty"), walk to items and pick them up through the
 -- same FarmingManager calls a player's client makes (pickup, contest
--- presses, punch, steal defence). They are SessionManager bot proxies, so
+-- presses, punch, guard, steal and steal defence). They are SessionManager bot proxies, so
 -- players can contest, punch and rob them like anyone else. Their bag
 -- becomes their race car (RaceBots, CraftingRules.autoSlots); they stay
 -- until LOBBY. Tuning: Constants.BOTS.FARM.
@@ -175,6 +175,42 @@ local function nearestHuman(bot, range)
 	return best
 end
 
+-- Someone (not the bot) with items to rob within `range`, nearest first.
+local function stealTarget(bot, range)
+	local best, bestD
+	local now = tick()
+	for _, other in ipairs(SessionManager.actors()) do
+		local od = other ~= bot.proxy and SessionManager.getData(other)
+		local r = od and #od.inventory > 0 and other.Character and other.Character:FindFirstChild("HumanoidRootPart")
+		if r and now >= (od.stealInvincibleEnd or 0) and now >= (od._hiddenUntil or 0) and not od._stealWindow then
+			local d = flat(r.Position - bot.root.Position).Magnitude
+			if d <= range and (not bestD or d < bestD) then best, bestD = other, d end
+		end
+	end
+	return best, bestD
+end
+
+-- A player in reach who faces the bot (about to swing).
+local function threatened(bot)
+	for _, p in ipairs(Players:GetPlayers()) do
+		local r = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+		if r then
+			local to = flat(bot.root.Position - r.Position)
+			if to.Magnitude <= Constants.FIGHT.RANGE + 1 and to.Magnitude > 1e-3
+				and flat(r.CFrame.LookVector).Unit:Dot(to.Unit) >= Constants.FIGHT.ARC then
+				return r
+			end
+		end
+	end
+	return nil
+end
+
+local function guard(bot, on, now)
+	bot.guardUntil = on and now + Constants.BOTS.FARM.GUARD_HOLD or nil
+	_api.guard(bot.proxy, on)
+	if on then Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "guard" }) end
+end
+
 local function think(bot, dt, now)
 	local F = Constants.BOTS.FARM
 	local data = SessionManager.getData(bot.proxy)
@@ -202,6 +238,57 @@ local function think(bot, dt, now)
 		bot.contest = nil
 	end
 
+	-- guarding: hold still until the guard is down
+	if bot.guardUntil then
+		if now < bot.guardUntil and (data._guardUntil or 0) > tick() then return end
+		if (data._guardUntil or 0) > tick() then guard(bot, false, now) end
+		bot.guardUntil = nil
+		bot.nextGuard = now + F.GUARD_REST
+	end
+	-- just hit, or a player squares up: raise the guard now and then
+	local lastHit = bot.seenHit
+	bot.seenHit = data._lastHitAt
+	if now >= (bot.nextGuard or 0) and _api.guard then
+		local hitNow = data._lastHitAt ~= nil and data._lastHitAt ~= lastHit   -- a new hit since the last think
+		local chance = hitNow and F.GUARD_HIT or (threatened(bot) and F.GUARD_NEAR) or 0
+		if chance > 0 and _rng:NextNumber() < chance * (hitNow and 1 or dt) then
+			local r = threatened(bot)
+			if r then face(bot, r.Position) end
+			guard(bot, true, now)
+			return
+		end
+	end
+
+	-- a chase: walk up to the victim and grab
+	if bot.chase then
+		local c = bot.chase
+		local r = c.victim.Character and c.victim.Character:FindFirstChild("HumanoidRootPart")
+		local vd = SessionManager.getData(c.victim)
+		if not r or not vd or #vd.inventory == 0 or now > c.untilT or #data.inventory >= Constants.INVENTORY_SIZE then
+			bot.chase = nil
+		elseif flat(r.Position - bot.root.Position).Magnitude <= Constants.STEAL_RANGE - 0.5 then
+			bot.chase = nil
+			face(bot, r.Position)
+			local victimId = c.victim.UserId
+			task.spawn(function()
+				local res = _api.steal(bot.proxy, victimId)
+				Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "steal", victim = victimId, result = res })
+			end)
+			return
+		else
+			walkTo(bot, r.Position, dt)
+			return
+		end
+	end
+	if _api.steal and now >= bot.nextSteal and not data._stealing and #data.inventory < Constants.INVENTORY_SIZE then
+		bot.nextSteal = now + F.STEAL_EVERY * _rng:NextNumber(0.6, 1.4)
+		local victim = _rng:NextNumber() < F.STEAL_CHANCE and stealTarget(bot, F.STEAL_CHASE)
+		if victim then
+			bot.chase = { victim = victim, untilT = now + F.CHASE_FOR }
+			return
+		end
+	end
+
 	-- a swing at a player in reach, now and then
 	if now >= bot.nextPunch then
 		bot.nextPunch = now + F.PUNCH_EVERY * _rng:NextNumber(0.6, 1.4)
@@ -214,10 +301,15 @@ local function think(bot, dt, now)
 		end
 	end
 
-	if #data.inventory >= Constants.INVENTORY_SIZE then
-		-- full bag: stroll around
+	if #data.inventory >= Constants.INVENTORY_SIZE - F.KEEP_FREE then
+		-- bag full (one slot kept for a steal): prowl near someone with
+		-- items, or stroll around
 		if not bot.goal or flat(bot.goal - bot.root.Position).Magnitude < 2 then
-			bot.goal = bot.root.Position + Vector3.new(_rng:NextNumber(-F.WANDER, F.WANDER), 0, _rng:NextNumber(-F.WANDER, F.WANDER))
+			local victim = _rng:NextNumber() < F.PROWL and stealTarget(bot, F.PROWL_RANGE)
+			local r = victim and victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
+			local around = r and r.Position or bot.root.Position
+			local spread = r and 6 or F.WANDER
+			bot.goal = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
 		end
 		walkTo(bot, bot.goal, dt)
 		return
@@ -239,7 +331,8 @@ local function think(bot, dt, now)
 end
 
 --- FARMING start: bots for the empty places, on the farm, thinking.
--- api = { items = fn() → _items, _contests; pickup, contestPress, punch, defend }
+-- api = { items = fn() → _items, _contests; pickup, contestPress, punch, defend,
+--         steal(thief, victimUserId), guard(player, on) }
 function FarmBots.start(biome, api)
 	FarmBots.stop()
 	_api = api
@@ -260,6 +353,8 @@ function FarmBots.start(biome, api)
 			proxy = proxy, model = model, root = root, hum = hum, contest = nil, presses = 0,
 			nextPunch = os.clock() + Constants.BOTS.FARM.PUNCH_EVERY * _rng:NextNumber(0.5, 1.5),
 			skip = {}, goal = nil, wait = _rng:NextNumber(0, Constants.BOTS.FARM.THINK),
+			nextSteal = os.clock() + Constants.BOTS.FARM.STEAL_EVERY * _rng:NextNumber(0.5, 1.5),
+			nextGuard = 0, guardUntil = nil, chase = nil,
 		})
 		Telemetry.record("farm_bot", { userId = proxy.UserId, name = proxy.Name, biome = biome })
 	end

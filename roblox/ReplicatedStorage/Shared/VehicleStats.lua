@@ -60,7 +60,12 @@ end
 --   boostDuration  – seconds of boost (from SPECIAL boost stat)
 
 function VehicleStats.calculate(bodyCfg, engineCfg, specialCfg, biome)
-	-- Defaults for empty slots
+	-- Defaults for empty slots. A ridden non-BODY item (ItemConfig `ride`,
+	-- CraftingRules.fits) counts with its ride weight and grip.
+	if bodyCfg and bodyCfg.slotType ~= "BODY" and bodyCfg.ride then
+		bodyCfg = { weight = bodyCfg.ride.weight, grip = bodyCfg.ride.grip, rarity = bodyCfg.rarity,
+			biomeBonus = bodyCfg.ride.biomeBonus }
+	end
 	local body    = bodyCfg    or { weight = 8,  grip = 0.5,  rarity = R.COMMON }
 	local engine  = engineCfg  or { power  = 10, rarity = R.COMMON }
 	local special = specialCfg or { boost  = 10, rarity = R.COMMON }

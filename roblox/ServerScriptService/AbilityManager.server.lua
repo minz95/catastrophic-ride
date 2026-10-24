@@ -702,8 +702,12 @@ end
 -- Telemetry wrapper: logs every ability request and its result, including
 -- each early "denied" return above. (OnServerInvoke is write-only in Roblox,
 -- so the handler is a local function wrapped here.)
-RemoteEvents.RequestAbility.OnServerInvoke = function(player, itemName)
+local function _request(player, itemName)
 	local result = _handleAbilityRequest(player, itemName)
-	Telemetry.record("ability", { userId = player.UserId, item = itemName, result = result })
+	Telemetry.record("ability", { userId = player.UserId, item = itemName, result = result,
+		bot = SessionManager.isBot(player) or nil })
 	return result
 end
+RemoteEvents.RequestAbility.OnServerInvoke = _request
+-- race bots fire through the same checks
+RaceBots.setAbilityHandler(_request)

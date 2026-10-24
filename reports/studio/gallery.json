@@ -1,25 +1,22 @@
 {
  "checks": [],
- "commit": "24b066b",
+ "commit": "45ca943",
  "dirty": true,
  "kind": "gallery",
  "logErrors": [
-  "2026-10-23T17:22:29.058Z,1.058590,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
-  "2026-10-23T17:22:29.178Z,1.178469,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-23T17:22:29.266Z,1.266754,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-23T17:22:30.000Z,2.000133,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-23T17:22:30.787Z,2.787951,6f927000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cd180c7c-0c8f-48be-877e-2a8638a2e398\",\"status\":400,\"message\":\"Place does not exist.\"}",
-  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-23T17:22:39.742Z,11.742874,703ab000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-23T17:22:39.979Z,11.979931,6fc6f000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
-  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-23T17:23:18.395Z,50.395878,6f71b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cd180c7c-0c8f-48be-877e-2a8638a2e398\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-24T02:32:22.416Z,1.416294,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:32:22.502Z,1.502467,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T02:32:23.424Z,2.424180,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:32:24.268Z,3.268048,6bf53000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"ad0e7cc3-4948-4b1c-aeaf-6e0f8fc79db9\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T02:32:32.934Z,11.934431,6c857000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T02:32:33.190Z,12.190351,6c64b000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T02:33:23.425Z,62.425449,6c15f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T02:33:48.643Z,87.643227,6bf53000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"ad0e7cc3-4948-4b1c-aeaf-6e0f8fc79db9\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "extra": [
-   {
-    "BODY": "Pizza"
-   },
    {
     "BODY": "Bathtub",
     "ENGINE": "Rocket",
@@ -29,478 +26,1132 @@
     "TAIL": "Racing Flag"
    }
   ],
-  "hold": 3,
-  "token": "80b6aa614821426287546c9f95aaa2be"
+  "hold": 1.2,
+  "token": "139fb851fcbe4337a2e9219cd3e6ff3f"
  },
- "ranAt": "2026-10-24T02:23:24+0900",
+ "ranAt": "2026-10-24T11:33:54+0900",
  "report": {
   "items": [
    {
     "biome": "FOREST",
     "body": "Backpack",
+    "fit": {
+     "itemH": 5.52,
+     "itemL": 3.63,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 1.68
+    },
     "riding": "Backpack",
     "size": [
-     4.5,
+     5.1,
      3.3,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Bamboo Raft",
-    "riding": "Bamboo Raft",
-    "size": [
-     4.3,
-     1.8,
-     2.7
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Barrel",
-    "riding": "Barrel",
-    "size": [
-     4,
-     3.2,
-     2.7
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Bathtub",
-    "riding": "Bathtub",
-    "size": [
-     4.5,
-     3.3,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Cardboard Box",
-    "riding": "Cardboard Box",
-    "size": [
-     4,
-     3.2,
-     2.6
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Kite",
-    "riding": "Kite",
-    "size": [
-     4.2,
-     3.2,
-     2.6
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Life Preserver",
-    "riding": "Life Preserver",
-    "size": [
-     4.1,
-     1.8,
-     2.7
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Log",
-    "riding": "Log",
-    "size": [
-     4.6,
-     3.3,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Microwave",
-    "riding": "Microwave",
-    "size": [
-     4.6,
-     3.3,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Red Sofa",
-    "riding": "Red Sofa",
-    "size": [
-     4.5,
-     3.3,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Shopping Cart",
-    "riding": "Shopping Cart",
-    "size": [
-     4.1,
-     3.2,
-     2.7
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Skateboard",
-    "riding": "Skateboard",
-    "size": [
-     4.3,
-     2.2,
-     2.6
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Suitcase",
-    "riding": "Suitcase",
-    "size": [
-     4.5,
-     2.6,
-     2.8
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Pizza",
-    "riding": "Pizza",
-    "size": [
-     4.1,
-     1.7,
-     2.7
-    ]
-   },
-   {
-    "biome": "FOREST",
-    "body": "Bathtub",
-    "riding": "Bathtub",
-    "size": [
-     5.2,
-     3.7,
-     3.4
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Backpack",
+    "fit": {
+     "itemH": 5.1,
+     "itemL": 3.38,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 1.56
+    },
     "riding": "Backpack",
     "size": [
-     5.8,
-     2.5,
-     2.4
+     5.9,
+     5.4,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Backpack",
+    "fit": {
+     "itemH": 5.25,
+     "itemL": 3.48,
+     "itemW": 3,
+     "over": 0,
+     "sink": 1.61
+    },
+    "riding": "Backpack",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bamboo Raft",
+    "fit": {
+     "itemH": 1.08,
+     "itemL": 6.94,
+     "itemW": 8.29,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Bamboo Raft",
+    "size": [
+     5.1,
+     2.1,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Bamboo Raft",
+    "fit": {
+     "itemH": 1.02,
+     "itemL": 7.02,
+     "itemW": 8.55,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Bamboo Raft",
     "size": [
-     5.7,
-     1.6,
-     2.5
+     6.3,
+     4.5,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bamboo Raft",
+    "fit": {
+     "itemH": 0.9,
+     "itemL": 6.21,
+     "itemW": 7.57,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Bamboo Raft",
+    "size": [
+     5.9,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Barrel",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.04,
+     "itemW": 3.04,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     4.7,
+     3.2,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Barrel",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.63,
+     "itemW": 2.63,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Barrel",
     "size": [
+     5.7,
+     5.4,
+     2.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Barrel",
+    "fit": {
+     "itemH": 2,
+     "itemL": 2.76,
+     "itemW": 2.76,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Barrel",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 4.03,
+     "itemL": 7.21,
+     "itemW": 6.43,
+     "over": 0,
+     "sink": 1.5
+    },
+    "riding": "Bathtub",
+    "size": [
      5.1,
-     2.5,
-     2.5
+     3,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Bathtub",
+    "fit": {
+     "itemH": 3.65,
+     "itemL": 7.3,
+     "itemW": 6.73,
+     "over": 0,
+     "sink": 1.33
+    },
     "riding": "Bathtub",
     "size": [
      6.2,
-     2.5,
-     2.4
+     5.4,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 3.51,
+     "itemL": 6.82,
+     "itemW": 6,
+     "over": 0,
+     "sink": 1.26
+    },
+    "riding": "Bathtub",
+    "size": [
+     5.9,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Cardboard Box",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 2.62,
+     "itemW": 3.49,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Cardboard Box",
+    "size": [
+     4.7,
+     3.2,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Cardboard Box",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.26,
+     "itemW": 3.01,
+     "over": 0.13,
+     "sink": -0.3
+    },
     "riding": "Cardboard Box",
     "size": [
-     5.1,
-     2.5,
+     5.7,
+     5.4,
      2.3
     ]
    },
    {
+    "biome": "SKY",
+    "body": "Cardboard Box",
+    "fit": {
+     "itemH": 2,
+     "itemL": 2.38,
+     "itemW": 3.17,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Cardboard Box",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Kite",
+    "fit": {
+     "itemH": 3.06,
+     "itemL": 4.69,
+     "itemW": 2.56,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Kite",
+    "size": [
+     5.1,
+     3.2,
+     3.7
+    ]
+   },
+   {
     "biome": "OCEAN",
     "body": "Kite",
+    "fit": {
+     "itemH": 2.77,
+     "itemL": 4.39,
+     "itemW": 2.21,
+     "over": 0,
+     "sink": 0.5
+    },
     "riding": "Kite",
     "size": [
      5.9,
-     2.5,
+     5.4,
      2.2
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Kite",
+    "fit": {
+     "itemH": 2.86,
+     "itemL": 4.49,
+     "itemW": 2.33,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Kite",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Life Preserver",
+    "fit": {
+     "itemH": 1.04,
+     "itemL": 5.04,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Life Preserver",
+    "size": [
+     5,
+     2.1,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Life Preserver",
+    "fit": {
+     "itemH": 0.98,
+     "itemL": 4.76,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Life Preserver",
     "size": [
-     5.3,
-     1.6,
-     2.5
+     5.9,
+     4.5,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Life Preserver",
+    "fit": {
+     "itemH": 0.87,
+     "itemL": 4.2,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Life Preserver",
+    "size": [
+     6,
+     2.3,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Log",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 7.41,
+     "itemW": 5.14,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Log",
+    "size": [
+     5.1,
+     3.3,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Log",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 7.6,
+     "itemW": 5.54,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Log",
     "size": [
      6.3,
-     2.5,
-     2.4
+     5.4,
+     2.5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Log",
+    "fit": {
+     "itemH": 2,
+     "itemL": 7.12,
+     "itemW": 4.95,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Log",
+    "size": [
+     5.9,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Microwave",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.4,
+     "itemW": 5.27,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Microwave",
+    "size": [
+     4.7,
+     3.3,
+     3.7
     ]
    },
    {
     "biome": "OCEAN",
     "body": "Microwave",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.93,
+     "itemW": 4.55,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Microwave",
     "size": [
-     5.4,
-     2.5,
-     2.4
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Red Sofa",
-    "riding": "Red Sofa",
-    "size": [
-     6,
-     2.5,
-     2.4
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Shopping Cart",
-    "riding": "Shopping Cart",
-    "size": [
-     5.1,
-     2.5,
-     2.2
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Skateboard",
-    "riding": "Skateboard",
-    "size": [
-     6.3,
-     2.2,
-     2.5
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Suitcase",
-    "riding": "Suitcase",
-    "size": [
-     6.1,
-     2,
-     2.4
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Pizza",
-    "riding": "Pizza",
-    "size": [
-     5.2,
-     1.6,
-     2.5
-    ]
-   },
-   {
-    "biome": "OCEAN",
-    "body": "Bathtub",
-    "riding": "Bathtub",
-    "size": [
-     6.5,
-     6.3,
+     5.6,
+     5.3,
      2.6
     ]
    },
    {
     "biome": "SKY",
-    "body": "Backpack",
-    "riding": "Backpack",
-    "size": [
-     6,
-     2.7,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Bamboo Raft",
-    "riding": "Bamboo Raft",
-    "size": [
-     5.9,
-     2.3,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Barrel",
-    "riding": "Barrel",
-    "size": [
-     6,
-     2.7,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Bathtub",
-    "riding": "Bathtub",
-    "size": [
-     5.9,
-     2.6,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Cardboard Box",
-    "riding": "Cardboard Box",
-    "size": [
-     6,
-     2.7,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Kite",
-    "riding": "Kite",
-    "size": [
-     6,
-     2.7,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Life Preserver",
-    "riding": "Life Preserver",
-    "size": [
-     6,
-     2.3,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
-    "body": "Log",
-    "riding": "Log",
-    "size": [
-     5.9,
-     2.6,
-     5
-    ]
-   },
-   {
-    "biome": "SKY",
     "body": "Microwave",
+    "fit": {
+     "itemH": 2,
+     "itemL": 3.09,
+     "itemW": 4.79,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Microwave",
     "size": [
      6,
-     2.7,
+     3.2,
      5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.48,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 0.62
+    },
+    "riding": "Red Sofa",
+    "size": [
+     4.7,
+     3,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 3.01,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Red Sofa",
+    "size": [
+     5.6,
+     5.4,
+     3.3
     ]
    },
    {
     "biome": "SKY",
     "body": "Red Sofa",
+    "fit": {
+     "itemH": 2,
+     "itemL": 3.17,
+     "itemW": 3,
+     "over": 0,
+     "sink": 0.54
+    },
     "riding": "Red Sofa",
     "size": [
      6,
-     2.7,
+     3.2,
      5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Shopping Cart",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.01,
+     "itemW": 1.86,
+     "over": 0,
+     "sink": 0.47
+    },
+    "riding": "Shopping Cart",
+    "size": [
+     4.7,
+     2.9,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Shopping Cart",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.6,
+     "itemW": 1.61,
+     "over": 0,
+     "sink": 0.37
+    },
+    "riding": "Shopping Cart",
+    "size": [
+     5.6,
+     5.4,
+     2.2
     ]
    },
    {
     "biome": "SKY",
     "body": "Shopping Cart",
+    "fit": {
+     "itemH": 2,
+     "itemL": 2.74,
+     "itemW": 1.69,
+     "over": 0,
+     "sink": 0.4
+    },
     "riding": "Shopping Cart",
     "size": [
      6,
-     2.7,
+     3.2,
      5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.53,
+     "itemL": 5.56,
+     "itemW": 5.2,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     5.1,
+     2.6,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.66,
+     "itemL": 6.03,
+     "itemW": 5.64,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     6.3,
+     5.1,
+     3.3
     ]
    },
    {
     "biome": "SKY",
     "body": "Skateboard",
+    "fit": {
+     "itemH": 1.47,
+     "itemL": 5.35,
+     "itemW": 5,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Skateboard",
     "size": [
      5.9,
-     2.3,
+     2.6,
      5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Suitcase",
+    "fit": {
+     "itemH": 4.32,
+     "itemL": 5.16,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 0.9
+    },
+    "riding": "Suitcase",
+    "size": [
+     5.1,
+     3,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Suitcase",
+    "fit": {
+     "itemH": 4.66,
+     "itemL": 5.55,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 1.08
+    },
+    "riding": "Suitcase",
+    "size": [
+     6.3,
+     5.4,
+     3.3
     ]
    },
    {
     "biome": "SKY",
     "body": "Suitcase",
+    "fit": {
+     "itemH": 4.15,
+     "itemL": 4.95,
+     "itemW": 3,
+     "over": 0,
+     "sink": 0.93
+    },
     "riding": "Suitcase",
     "size": [
      5.9,
+     2.9,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Compass",
+    "fit": {
+     "itemH": 1.04,
+     "itemL": 4.61,
+     "itemW": 5.03,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Compass",
+    "size": [
+     5.1,
+     2.1,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Compass",
+    "fit": {
+     "itemH": 0.98,
+     "itemL": 4.36,
+     "itemW": 4.76,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Compass",
+    "size": [
+     5.9,
+     4.4,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Compass",
+    "fit": {
+     "itemH": 0.86,
+     "itemL": 3.85,
+     "itemW": 4.2,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Compass",
+    "size": [
+     6,
      2.3,
      5
     ]
    },
    {
-    "biome": "SKY",
+    "biome": "FOREST",
     "body": "Pizza",
+    "fit": {
+     "itemH": 0.28,
+     "itemL": 5.04,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.3
+    },
     "riding": "Pizza",
     "size": [
-     5.9,
-     2.2,
+     5,
+     1.6,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.26,
+     "itemL": 4.76,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     5.8,
+     4.3,
+     3.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Pizza",
+    "fit": {
+     "itemH": 0.23,
+     "itemL": 4.2,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Pizza",
+    "size": [
+     6,
+     2.3,
      5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Rocket",
+    "fit": {
+     "itemH": 2.8,
+     "itemL": 5.15,
+     "itemW": 2.35,
+     "over": 0,
+     "sink": 0
+    },
+    "riding": "Rocket",
+    "size": [
+     5.1,
+     3.2,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Rocket",
+    "fit": {
+     "itemH": 3.03,
+     "itemL": 5.36,
+     "itemW": 2.3,
+     "over": 0,
+     "sink": 0.26
+    },
+    "riding": "Rocket",
+    "size": [
+     6.3,
+     5.4,
+     2.3
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Rocket",
+    "fit": {
+     "itemH": 2.69,
+     "itemL": 4.9,
+     "itemW": 2.26,
+     "over": 0,
+     "sink": 0.05
+    },
+    "riding": "Rocket",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Rubber Duck",
+    "fit": {
+     "itemH": 2.46,
+     "itemL": 3.57,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": -0.17
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     4.7,
+     3.2,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Rubber Duck",
+    "fit": {
+     "itemH": 2.13,
+     "itemL": 3.08,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.19
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     5.6,
+     5.4,
+     3.4
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Rubber Duck",
+    "fit": {
+     "itemH": 2.18,
+     "itemL": 3.2,
+     "itemW": 3,
+     "over": 0,
+     "sink": -0.21
+    },
+    "riding": "Rubber Duck",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Soda Bottle",
+    "fit": {
+     "itemH": 5.2,
+     "itemL": 4.01,
+     "itemW": 2.35,
+     "over": 0,
+     "sink": 1.2
+    },
+    "riding": "Soda Bottle",
+    "size": [
+     5.1,
+     3.2,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Soda Bottle",
+    "fit": {
+     "itemH": 5.62,
+     "itemL": 3.97,
+     "itemW": 2.54,
+     "over": 0,
+     "sink": 1.56
+    },
+    "riding": "Soda Bottle",
+    "size": [
+     6.3,
+     5.4,
+     2.5
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Soda Bottle",
+    "fit": {
+     "itemH": 5,
+     "itemL": 3.76,
+     "itemW": 2.26,
+     "over": 0,
+     "sink": 1.2
+    },
+    "riding": "Soda Bottle",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 3.25,
+     "itemL": 5.29,
+     "itemW": 3.08,
+     "over": 0,
+     "sink": 0.23
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     4.7,
+     3.2,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 2.81,
+     "itemL": 4.57,
+     "itemW": 2.66,
+     "over": 0,
+     "sink": 0.15
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     5.7,
+     5.4,
+     2.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 2.96,
+     "itemL": 4.81,
+     "itemW": 2.8,
+     "over": 0,
+     "sink": 0.18
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     6,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Treadmill",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.42,
+     "itemW": 1.87,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Treadmill",
+    "size": [
+     4.7,
+     3.2,
+     3.7
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Treadmill",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.96,
+     "itemW": 1.62,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Treadmill",
+    "size": [
+     5.6,
+     5.4,
+     2.1
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Treadmill",
+    "fit": {
+     "itemH": 2,
+     "itemL": 3.11,
+     "itemW": 1.7,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Treadmill",
+    "size": [
+     5.9,
+     3.2,
+     5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 4.03,
+     "itemL": 7.21,
+     "itemW": 6.43,
+     "over": 0,
+     "sink": 1.5
+    },
+    "riding": "Bathtub",
+    "size": [
+     5.3,
+     3.7,
+     4.1
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 3.65,
+     "itemL": 7.6,
+     "itemW": 7.04,
+     "over": 0,
+     "sink": 1.33
+    },
+    "riding": "Bathtub",
+    "size": [
+     6.5,
+     6.3,
+     3.3
     ]
    },
    {
     "biome": "SKY",
     "body": "Bathtub",
+    "fit": {
+     "itemH": 3.51,
+     "itemL": 7.06,
+     "itemW": 6.24,
+     "over": 0,
+     "sink": 1.26
+    },
     "riding": "Bathtub",
     "size": [
      6.3,
-     3.5,
+     3.9,
      5.5
     ]
    }
   ],
   "shots": [
-   "forest_1",
-   "forest_2",
-   "forest_3",
-   "ocean_1",
-   "ocean_2",
-   "ocean_3",
-   "sky_1",
-   "sky_2",
-   "sky_3"
+   "01_backpack_side",
+   "01_backpack_rear",
+   "02_bambooraft_side",
+   "02_bambooraft_rear",
+   "03_barrel_side",
+   "03_barrel_rear",
+   "04_bathtub_side",
+   "04_bathtub_rear",
+   "05_cardboardbox_side",
+   "05_cardboardbox_rear",
+   "06_kite_side",
+   "06_kite_rear",
+   "07_lifepreserver_side",
+   "07_lifepreserver_rear",
+   "08_log_side",
+   "08_log_rear",
+   "09_microwave_side",
+   "09_microwave_rear",
+   "10_redsofa_side",
+   "10_redsofa_rear",
+   "11_shoppingcart_side",
+   "11_shoppingcart_rear",
+   "12_skateboard_side",
+   "12_skateboard_rear",
+   "13_suitcase_side",
+   "13_suitcase_rear",
+   "14_compass_side",
+   "14_compass_rear",
+   "15_pizza_side",
+   "15_pizza_rear",
+   "16_rocket_side",
+   "16_rocket_rear",
+   "17_rubberduck_side",
+   "17_rubberduck_rear",
+   "18_sodabottle_side",
+   "18_sodabottle_rear",
+   "19_toiletpaper_side",
+   "19_toiletpaper_rear",
+   "20_treadmill_side",
+   "20_treadmill_rear",
+   "21_bathtubbuild_side",
+   "21_bathtubbuild_rear"
   ],
-  "summary": "gallery: 45 vehicles, 9 shots, 45 riding their BODY item"
+  "summary": "gallery: 63 vehicles, 42 shots, 63 riding their BODY item, 63 riders made, 63 seated"
  },
  "scenario": "gallery",
  "studioExit": 0,
- "summary": "gallery: 45 vehicles, 9 shots, 45 riding their BODY item",
- "wallSeconds": 56.6
+ "summary": "gallery: 63 vehicles, 42 shots, 63 riding their BODY item, 63 riders made, 63 seated",
+ "wallSeconds": 93.5
 }

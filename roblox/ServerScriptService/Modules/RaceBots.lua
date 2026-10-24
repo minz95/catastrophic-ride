@@ -8,7 +8,9 @@
 -- (Modules/FarmBots: same ids and names, SessionManager bot proxies): a bot
 -- that farmed races the auto craft of its bag, others a random build. Their
 -- car is the proxy's vehicleModel, so abilities and race effects hit them
--- like anyone (shoves arrive through RaceBots.knock).
+-- like anyone (shoves arrive through RaceBots.knock). They fire their own
+-- abilities too, through AbilityManager's request handler (the same checks
+-- as a player's E): self buffs when ready, aimed ones with a car in range.
 -- Off in harness sessions unless HarnessConfig `fillBots` asks for them.
 
 local CollectionService = game:GetService("CollectionService")
@@ -35,6 +37,8 @@ local RaceStart = require(ServerScriptService.Modules.RaceStart)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
 local SessionManager = require(ServerScriptService.SessionManager)
 local FarmBots = require(ServerScriptService.Modules.FarmBots)
+local AbilityConfig = require(ServerScriptService.Modules.AbilityConfig)
+local AbilitySlots = require(Shared.AbilitySlots)
 
 local RaceBots = {}
 
@@ -44,6 +48,7 @@ RaceBots.list = {}           -- bots of the current race
 local _conn = nil
 local _onFinish = nil
 local _otherProgress = nil   -- fn() → best progress of the players (catch-up)
+local _useAbility = nil      -- fn(proxy, item) → "ok" | "denied: …" (AbilityManager)
 local _rng = Random.new()
 
 local TRIGGERS = { "Checkpoint1", "Checkpoint2", "FinishLine" }
@@ -52,6 +57,44 @@ local TRIGGERS = { "Checkpoint1", "Checkpoint2", "FinishLine" }
 function RaceBots.onFinish(fn) _onFinish = fn end
 --- fn() → the leading player's progress, for the bots' catch-up.
 function RaceBots.setLeaderProgress(fn) _otherProgress = fn end
+--- fn(proxy, item) fires an ability for a bot (AbilityManager registers it).
+function RaceBots.setAbilityHandler(fn) _useAbility = fn end
+
+-- Another racer's car within `range` of `pos`?
+local function carNear(bot, pos, range)
+	for _, other in ipairs(SessionManager.actors()) do
+		local d = other ~= bot.proxy and SessionManager.getData(other)
+		local m = d and d.vehicleModel
+		local p = m and m.Parent and m.PrimaryPart
+		if p and (p.Position - pos).Magnitude <= range then return true end
+	end
+	return false
+end
+
+-- Now and then, an ability: the next ready item in E order. Aimed ones
+-- (targetType "nearest", "random_enemy", "all_in_radius") wait for a car in range.
+local function tryAbility(bot, biome, pos)
+	local R = Constants.BOTS.RACE
+	if not _useAbility or bot.t < (bot.nextAbility or 0) then return end
+	bot.nextAbility = bot.t + R.ABILITY_EVERY * _rng:NextNumber(0.6, 1.4)
+	if _rng:NextNumber() > R.ABILITY_CHANCE then return end
+	local slots = bot.slots
+	local items = AbilitySlots.list(slots)
+	if #items == 0 then return end
+	bot.abilityTurn = ((bot.abilityTurn or 0) % #items) + 1
+	for k = 0, #items - 1 do
+		local item = items[((bot.abilityTurn - 1 + k) % #items) + 1].item
+		local cfg = AbilityConfig.get(item, biome)
+		local aimed = cfg and (cfg.targetType == "nearest" or cfg.targetType == "random_enemy" or cfg.targetType == "all_in_radius")
+		if cfg and (not aimed or carNear(bot, pos, R.TARGET_RANGE)) then
+			local res = _useAbility(bot.proxy, item)
+			if res == "ok" then
+				Telemetry.record("bot_ability", { userId = bot.id, item = item, aimed = aimed or nil })
+				return
+			end
+		end
+	end
+end
 
 --- How many bots to add for `humans` racers (harness: args.fillBots).
 function RaceBots.wanted(humans, harness)
@@ -144,6 +187,7 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 			ap = geo and Autopilot.new(geo, Autopilot.PROFILES[profileName] or Autopilot.PROFILES.average, k * 977),
 			profile = profileName, drive = VehicleController.newState(), rayParams = rayParams, proxy = proxy, farmed = farmed,
 			cp = { false, false }, s = 0, finished = false, riseSeg = nil, t = 0, owned = false,
+			slots = slots, nextAbility = B.RACE.ABILITY_FIRST * _rng:NextNumber(0.7, 1.3),
 		}
 		table.insert(RaceBots.list, bot)
 		Telemetry.record("race_bot", { id = id, name = name, profile = profileName, slots = table.clone(slots), farmed = farmed,
@@ -206,6 +250,8 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 		respawn(bot, biome, startY)
 		return
 	end
+
+	tryAbility(bot, biome, pos)
 
 	-- the same catch-up as the players (Shared/CatchUp)
 	local cu = leadS and CatchUp.mult(leadS - bot.s) or 1

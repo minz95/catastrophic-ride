@@ -61,6 +61,7 @@ ItemBlurbs.ABILITY = {
 function ItemBlurbs.line(name, cfg)
 	local parts = {}
 	if cfg and ItemBlurbs.SLOT_HINT[cfg.slotType] then table.insert(parts, ItemBlurbs.SLOT_HINT[cfg.slotType]) end
+	if cfg and cfg.ride and cfg.slotType ~= "BODY" then table.insert(parts, "Rideable: fits Body too") end
 	if ItemBlurbs.ABILITY[name] then table.insert(parts, "E: " .. ItemBlurbs.ABILITY[name]) end
 	return table.concat(parts, "  ·  ")
 end

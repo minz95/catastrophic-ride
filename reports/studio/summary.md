@@ -9,7 +9,8 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
 | [bots-abilities](bots-abilities.json) | PASS | e58978d+ | 2026-10-24T02:41 |
-| [bots-forest](bots-forest.json) | PASS | e58978d+ | 2026-10-24T02:39 |
+| [bots-fight](bots-fight.json) | PASS | 45ca943+ | 2026-10-24T11:39 |
+| [bots-forest](bots-forest.json) | PASS | 45ca943+ | 2026-10-24T11:48 |
 | [bots-ocean](bots-ocean.json) | PASS | 4f74f56+ | 2026-10-24T00:33 |
 | [bots-sky](bots-sky.json) | PASS | 4f74f56+ | 2026-10-24T00:36 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
@@ -20,7 +21,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
 | [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
-| [gallery](gallery.json) | PASS | 24b066b+ | 2026-10-24T02:23 |
+| [gallery](gallery.json) | PASS | 45ca943+ | 2026-10-24T11:33 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 8941844+ | 2026-10-24T00:43 |
@@ -203,22 +204,41 @@ bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished:
 server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 67 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 10 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 23 kbps; memory max 2269 MB
 ```
 
+## bots-fight — PASS
+
+```
+Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
+  round 1 (FOREST): 0 finished of 1
+    steal attempts: none
+    -100003: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+  events: bot_craft=1 bot_farm=29 bot_farmfx=16 bot_hud=31 bot_joined=1 bot_punch=77 bot_ready=1 bot_screen=2 craft=1 farm_bot=3 harness_crafting=1 harness_round=1 item_pickup=24 item_wave=3 phase=3 punch=77 race_bot=3 race_sample=2 race_start=1 server_perf=34 vehicle_spawn=1
+farm bots: 3 on the farm, 24 pickups, 0 punches thrown, 16 punches/steals on bots
+farm bots: 0 steals tried (0 stolen), 5 guards
+bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: 
+server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 231 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 5 kbps; memory max 2296 MB
+```
+
 ## bots-forest — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 1 finished of 1
-    steal attempts: none
-    -100003: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -100001: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -100002: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -1: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    #1 Player1 122.4s
-  events: ability=21 ability_probe=69 bot_blocked=1 bot_craft=1 bot_farm=24 bot_fx=37 bot_hud=23 bot_joined=1 bot_ready=1 bot_screen=3 checkpoint=2 craft=1 drift_turbo=14 drop_placed=10 farm_bot=3 finish=4 harness_crafting=1 harness_round=1 hazard=42 hit=4 item_pickup=32 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=492 race_sample=257 race_start=1 reward=1 server_perf=92 speed_effect=131 vehicle_spawn=1
-driving: 0 hits, 14 drift turbos, drops: Kettle
-farm bots: 3 on the farm, 24 pickups, 0 punches thrown, 0 punches/steals on bots
-bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 116.7s, 119.5s, 127.0s
-server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 51 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 42 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 52 kbps; memory max 2299 MB
+    steal attempts: defended=1, denied: too late=1, stolen=3
+    -100003: picked 9, contests 1/2, stole 1, robbed 2, defences 0, items nil
+    -100001: picked 7, contests 0/0, stole 0, robbed 1, defences 0, items nil
+    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 6, contests 1/2, stole 2, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    #1 Player1 99.0s
+  events: ability=129 ability_probe=118 bot_ability=46 bot_blocked=3 bot_craft=1 bot_defend=1 bot_farm=28 bot_farmfx=18 bot_fx=49 bot_hud=23 bot_joined=1 bot_punch=1 bot_ready=1 bot_respawn=6 bot_screen=3 bot_steal=2 checkpoint=2 cleanse=5 contest_result=2 craft=1 drift_turbo=11 drop_placed=43 farm_bot=3 finish=3 harness_crafting=1 harness_round=1 hazard=36 item_pickup=29 item_wave=3 phase=4 phase_shortened=1 pu
+driving: 0 hits, 11 drift turbos, drops: Cactus, Gas Can, Kettle, Magnifying Glass, Pizza
+farm bots: 3 on the farm, 23 pickups, 1 punches thrown, 5 punches/steals on bots
+farm bots: 2 steals tried (1 stolen), 1 guards
+bot abilities: 46 fired (Bamboo Raft, Barrel, Flower, Gas Can, Magnifying Glass, Pizza, Skateboard)
+bots: 3 raced (average, novice, expert), 3 farmed their car, 2 finished: 105.2s, 113.1s
+server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 51 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 8 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 31 kbps; memory max 2301 MB
 ```
 
 ## bots-ocean — PASS
@@ -342,7 +362,7 @@ server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING
 ## gallery — PASS
 
 ```
-gallery: 45 vehicles, 9 shots, 45 riding their BODY item
+gallery: 63 vehicles, 42 shots, 63 riding their BODY item, 63 riders made, 63 seated
 ```
 
 ## load-10p — FAIL

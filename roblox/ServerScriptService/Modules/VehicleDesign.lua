@@ -24,7 +24,8 @@
 --     boat, a flying sofa. What says car / boat / plane stays: wheels,
 --     outboard motor and mast, wings / propeller / tail. Mounts and parts
 --     marked `onRide` / listed in `ride.lift` sit on the item's real top,
---     which VehicleBuilder measures once the item is placed.
+--     which VehicleBuilder measures once the item is placed. The box is at
+--     least RIDE_MIN; `ride.move` puts parts (the car's wheels) at its edges.
 --
 -- part = { name, shape = "block" | "wedge" | "cylinder" | "ball",
 --          size = Vector3, cf = CFrame, color = role or Color3,
@@ -43,6 +44,27 @@ local HALF_PI = math.pi / 2
 -- Widest any vehicle may be: start-grid columns are 7 studs apart.
 VehicleDesign.MAX_WIDTH = 6.6
 VehicleDesign.MAX_LENGTH = 10
+
+-- Smallest box a ridden item is stretched over (studs): an avatar sitting on
+-- it is about 2 wide and 3.5 tall, and hid a smaller item (Studio gallery,
+-- 2026-10-24). Decoration only: the chassis, and so the handling, is unchanged.
+-- How some items are ridden (Studio gallery checks): `yaw` (degrees) fixes
+-- which way the item faces instead of the best-fit turn (the model's -Z is
+-- the front), `tip` lays it on its side first (a roll rides like a log),
+-- `sink` lowers the seat by that share of the item's height (sit in the
+-- tub, on the cushions), `stretch` overrides RIDE_STRETCH.
+VehicleDesign.RIDE_LOOK = {
+	["Red Sofa"]      = { yaw = 0, sink = 0.42, stretch = 2.2 },   -- backrest at the back
+	["Bathtub"]       = { sink = 0.4 },
+	["Shopping Cart"] = { yaw = 180, sink = 0.35 },                -- handle at the back
+	["Toilet Paper"]  = { yaw = 0, tip = true },
+}
+
+VehicleDesign.RIDE_MIN = {
+	FOREST = Vector3.new(3.6, 0, 5.2),
+	OCEAN  = Vector3.new(3.4, 0, 5.6),
+	SKY    = Vector3.new(3.0, 2.0, 5.0),
+}
 
 VehicleDesign.PALETTE = {
 	FOREST = { body = Color3.fromRGB(196, 72, 52), accent = Color3.fromRGB(235, 190, 70) },
@@ -153,16 +175,37 @@ local function car(stats)
 	M.HEAD = { { cf = CF(0, top + 0.3, -L / 2 + 0.25), box = V3(0.6, 0.6, 0.5) } }
 	M.TAIL = { { cf = CF(0, -H / 2 + 0.4, L / 2 + 0.55), box = V3(0.8, 0.8, 0.6) } }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, cabZ) }
-	-- Riding the BODY item: it sits on the axles, wheels stay
+	-- Riding the BODY item: it sits on the axles, the wheels move out to its
+	-- corners. At least RIDE_MIN big, so the rider does not hide it.
+	local rideW = math.max(W + 0.3, VehicleDesign.RIDE_MIN.FOREST.X)
+	local rideL = math.max(L + 0.5, VehicleDesign.RIDE_MIN.FOREST.Z)
+	local rwX, rwZ = rideW / 2 - 0.2, rideL / 2 - r - 0.2
+	local move = {}
+	for _, fz in ipairs({ -1, 1 }) do
+		local tag = fz < 0 and "Front" or "Rear"
+		for _, s in ipairs({ -1, 1 }) do
+			local side = s < 0 and "L" or "R"
+			move["Wheel" .. tag .. side] = CF(s * rwX, wheelY, fz * rwZ)
+			move["Hub" .. tag .. side] = CF(s * (rwX + 0.25), wheelY, fz * rwZ)
+		end
+	end
+	local rideMob = {}
+	for _, fz in ipairs({ -1, 1 }) do
+		for _, s in ipairs({ -1, 1 }) do
+			table.insert(rideMob, { cf = CF(s * (rwX + 0.35), wheelY, fz * rwZ), box = V3(0.3, r * 1.3, r * 1.3) })
+		end
+	end
 	d.ride = {
 		hide = { "FenderFrontL", "FenderFrontR", "FenderRearL", "FenderRearR", "BumperFront", "BumperRear", "Grille",
 			"HeadlightL", "HeadlightR", "TaillightL", "TaillightR", "Windshield", "Cabin", "RearWindow",
-			"SideWindowL", "SideWindowR", "Roof", "SpoilerStrutL", "SpoilerStrutR", "Spoiler" },
-		box = V3(W + 0.3, 2.2, L + 0.5), bottom = wheelY + r * 0.4, centreZ = 0,
+			"SideWindowL", "SideWindowR", "Roof", "SpoilerStrutL", "SpoilerStrutR", "Spoiler", "ExhaustL", "ExhaustR" },
+		box = V3(rideW, 2.2, rideL), bottom = wheelY + r * 0.4, centreZ = 0,
+		move = move,
 		mounts = {
-			ENGINE = { { cf = CF(0, 0.35, L * 0.32), box = V3(W * 0.5, 0.7, L * 0.25), onRide = true } },
-			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.22), onRide = true } },
-			HEAD = { { cf = CF(0, 0.3, -L / 2 + 0.25), box = V3(0.6, 0.6, 0.5), onRide = true } },
+			ENGINE = { { cf = CF(0, 0.35, rideL * 0.32), box = V3(rideW * 0.45, 0.7, rideL * 0.22), onRide = true } },
+			SPECIAL = { { cf = CF(0, 0.3, -rideL * 0.3), box = V3(rideW * 0.45, 0.6, rideL * 0.2), onRide = true } },
+			MOBILITY = rideMob,
+			HEAD = { { cf = CF(0, 0.3, -rideL / 2 + 0.25), box = V3(0.6, 0.6, 0.5), onRide = true } },
 		},
 		seatZ = cabZ,
 	}
@@ -227,15 +270,24 @@ local function boat(stats)
 	add(P, "FlagPole", "cylinder", V3(1.3, 0.07, 0.07), CF(W / 2 - 0.3, top + 0.65, L / 2 - 0.2) * ANG(0, 0, HALF_PI), "mast")
 	d.withSlot.TAIL = { "FlagPole" }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, L * 0.28) }
-	-- Riding the BODY item: it floats on the water, motor and mast stay
+	-- Riding the BODY item: it floats on the water, motor and mast stay. The
+	-- mast moves to the bow so the rider does not hide the sail.
+	local rideL = math.max(L + prow * 0.6, VehicleDesign.RIDE_MIN.OCEAN.Z)
+	local bowMast = -prow * 0.3 - rideL / 2 + 0.7
 	d.ride = {
 		hide = { "ProwL", "ProwR", "StripeL", "StripeR", "GunwaleL", "GunwaleR", "BowRailL", "BowRailR", "Deck", "Transom",
 			"NavLightL", "NavLightR", "Cabin", "Windscreen" },
-		box = V3(W + 0.3, 1.9, L + prow * 0.6), bottom = -H / 2 + 0.05, centreZ = -prow * 0.3,
+		box = V3(math.max(W + 0.3, VehicleDesign.RIDE_MIN.OCEAN.X), 1.9, rideL),
+		bottom = -H / 2 + 0.05, centreZ = -prow * 0.3,
+		move = {
+			Mast = CF(0, top + mastH / 2, bowMast) * ANG(0, 0, HALF_PI),
+			Sail = CF(0, top + 0.35 + mastH * 0.4, bowMast + L * 0.21 + 0.08) * ANG(0, math.pi, 0),
+			Boom = CF(0, top + 0.3, bowMast + L * 0.22) * ANG(0, HALF_PI, 0),
+		},
 		lift = { "Mast", "Sail", "Boom", "FlagPole" }, liftFrom = top,
 		mounts = {
 			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.2), onRide = true } },
-			MOBILITY = { { cf = CF(0, mastH + 0.4, mastZ), box = V3(0.9, 0.9, 0.9), onRide = true } },
+			MOBILITY = { { cf = CF(0, mastH + 0.4, bowMast), box = V3(0.9, 0.9, 0.9), onRide = true } },
 			HEAD = { { cf = CF(0, 0.3, -L / 2 - prow * 0.4), box = V3(0.6, 0.6, 0.6), onRide = true } },
 			TAIL = { { cf = CF(W / 2 - 0.3, 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6), onRide = true } },
 		},
@@ -295,7 +347,8 @@ local function plane(stats)
 	-- Riding the BODY item: it is the fuselage, wings / prop / tail stay
 	d.ride = {
 		hide = { "Cowl", "TailCone", "Canopy", "CanopyBack" },
-		box = V3(R * 3.2, R * 3.0, L + 1.0), bottom = -R * 1.2, centreZ = 0,
+		box = V3(math.max(R * 3.2, VehicleDesign.RIDE_MIN.SKY.X), math.max(R * 3.0, VehicleDesign.RIDE_MIN.SKY.Y),
+			math.max(L + 1.0, VehicleDesign.RIDE_MIN.SKY.Z)), bottom = -R * 1.2, centreZ = 0,
 		lift = { "Fin", "Stabilizer" }, liftFrom = R,
 		mounts = {
 			HEAD = { { cf = CF(0, 0.3, -L / 2 + 0.3), box = V3(0.6, 0.6, 0.5), onRide = true } },
@@ -332,9 +385,15 @@ function VehicleDesign.layout(biome, stats, slots)
 		for _, n in ipairs(ride.lift or {}) do lift[n] = true end
 		for _, p in ipairs(d.parts) do
 			if lift[p.name] then p.lift = true end
+			if ride.move and ride.move[p.name] then p.cf = ride.move[p.name] end
 		end
+		local look = VehicleDesign.RIDE_LOOK[slots.BODY] or {}
 		d.mounts.BODY = { { cf = CF(0, ride.bottom + ride.box.Y / 2, ride.centreZ), box = ride.box, align = "bottom",
-			stretch = VehicleDesign.RIDE_STRETCH, orient = true } }
+			stretch = look.stretch or VehicleDesign.RIDE_STRETCH, orient = look.yaw == nil, yaw = look.yaw, tip = look.tip,
+			sink = look.sink } }
+		-- a ridden boat keeps its mast and sail: out of the water that is
+		-- what says "boat"
+		if biome == "OCEAN" then d.withSlot.MOBILITY = nil end
 		for slot, list in pairs(ride.mounts) do d.mounts[slot] = list end
 	end
 	return d

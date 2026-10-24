@@ -359,12 +359,12 @@ local function _refreshDisplay()
 			or RARITY_COLOUR[(cfg and cfg.rarity) or "Common"]
 		lbl.Parent           = btn
 
-		-- which slot it fits (core slots take only their own type)
+		-- which slot it fits (core slots take only their own type; RIDE: Body too)
 		local tag = Instance.new("TextLabel")
 		tag.Size             = UDim2.new(1, -4, 0, 10)
 		tag.Position         = UDim2.new(0, 2, 0, 1)
 		tag.BackgroundTransparency = 1
-		tag.Text             = cfg and cfg.slotType or ""
+		tag.Text             = cfg and (cfg.slotType .. ((cfg.ride and cfg.slotType ~= "BODY") and " · RIDE" or "")) or ""
 		tag.TextSize         = 8
 		tag.Font             = Enum.Font.GothamBold
 		tag.TextXAlignment   = Enum.TextXAlignment.Left
