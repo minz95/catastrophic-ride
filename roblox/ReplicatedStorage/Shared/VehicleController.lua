@@ -290,7 +290,11 @@ function VehicleController.resetRide(primary, rise)
 	primary:SetAttribute("RoadRiseApplied", rise or 0)
 	-- a jump in progress ends with the move (no launch from the old spot)
 	primary:SetAttribute("AirT", nil)
+	primary:SetAttribute("AirMin", nil)
 	primary:SetAttribute("SuspTarget", nil)
+	primary:SetAttribute("SpringT", nil)
+	primary:SetAttribute("SpringVY", nil)
+	primary:SetAttribute("SpringMin", nil)
 end
 
 function VehicleController.apply(primary, cmd, opts)
@@ -358,6 +362,7 @@ function VehicleController.apply(primary, cmd, opts)
 				0, VehicleController.SUSPENSION_AHEAD_MAX)
 			local ray
 			local rampLift = 0   -- RAMP_CLEARANCE when the highest hit is a jump ramp
+			local spring         -- a spring pad under the chassis (gap jumps)
 			local d = -halfL
 			-- A ray from the chassis centre starts inside a ramp that is higher
 			-- than the centre and does not see it: ahead of the centre a
@@ -375,6 +380,9 @@ function VehicleController.apply(primary, cmd, opts)
 						hit = high
 					end
 				end
+				if hit and d <= halfL and hit.Instance and string.sub(hit.Instance.Name, 1, 10) == "SpringPad_" then
+					spring = hit.Instance
+				end
 				if hit and (not ray or hit.Position.Y > ray.Position.Y) then
 					ray = hit
 					rampLift = (hit.Instance and string.sub(hit.Instance.Name, 1, 9) == "JumpRamp_")
@@ -390,22 +398,46 @@ function VehicleController.apply(primary, cmd, opts)
 			local J = Constants.DRIVE.JUMP
 			local air = primary:GetAttribute("AirT")
 			local target
-			if ray then
-				local ground = ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT + rampLift + lifted + liftStep
-				local prev = primary:GetAttribute("SuspTarget")
-				primary:SetAttribute("SuspTarget", ground)
-				if not air and prev and prev - ground >= J.MIN_DROP and (cmd.forwardSpeed or 0) >= J.MIN_SPEED then
-					air = 0
-					primary:SetAttribute("AirY0", prev)
-					primary:SetAttribute("Jumps", (primary:GetAttribute("Jumps") or 0) + 1)
+			-- a spring pad is remembered for SPRING_MEMORY s (its VY and MinSpeed)
+			if spring then
+				primary:SetAttribute("SpringVY", spring:GetAttribute("VY"))
+				primary:SetAttribute("SpringMin", spring:GetAttribute("MinSpeed"))
+				primary:SetAttribute("SpringT", J.SPRING_MEMORY)
+			elseif primary:GetAttribute("SpringT") then
+				local left = primary:GetAttribute("SpringT") - dt
+				primary:SetAttribute("SpringT", left > 0 and left or nil)
+				if left <= 0 then
+					primary:SetAttribute("SpringVY", nil)
+					primary:SetAttribute("SpringMin", nil)
 				end
+			end
+			local prev = primary:GetAttribute("SuspTarget")
+			local ground
+			if ray then
+				ground = ray.Position.Y + halfH + VehicleController.SUSPENSION_LIFT + rampLift + lifted + liftStep
 				target = ground
+			end
+			primary:SetAttribute("SuspTarget", ground)
+			-- launch: the ground fell away at once (a ramp's lip) or is gone
+			-- (a gap), at speed or off a spring pad
+			local springVY = primary:GetAttribute("SpringVY")
+			if not air and prev and ((ground and prev - ground >= J.MIN_DROP) or not ground)
+				and ((cmd.forwardSpeed or 0) >= J.MIN_SPEED or springVY) then
+				air = 0
+				primary:SetAttribute("AirY0", prev)
+				primary:SetAttribute("AirVY", springVY or J.VY)
+				primary:SetAttribute("AirMin", primary:GetAttribute("SpringMin"))
+				primary:SetAttribute("Jumps", (primary:GetAttribute("Jumps") or 0) + 1)
 			end
 			if air then
 				air += dt
-				local y = (primary:GetAttribute("AirY0") or primary.Position.Y) + J.VY * air - 0.5 * J.GRAVITY * air * air
-				if target and y <= target then
-					air = nil   -- landed
+				local y0 = primary:GetAttribute("AirY0") or primary.Position.Y
+				local y = y0 + (primary:GetAttribute("AirVY") or J.VY) * air - 0.5 * J.GRAVITY * air * air
+				if (ground and y <= ground) or (not ground and y < y0 - J.FALL_GIVE_UP) then
+					air = nil   -- landed (or fell short: let it drop)
+					primary:SetAttribute("LandedOn", ray and ray.Instance and ray.Instance.Name or nil)
+					primary:SetAttribute("AirMin", nil)
+					if not ground then target = nil end
 				else
 					target = y
 				end
@@ -425,7 +457,11 @@ function VehicleController.apply(primary, cmd, opts)
 		-- sliding: travel along travelYaw, keeping the look vector's slope
 		dir = Vector3.new(-math.sin(cmd.travelYaw), dir.Y, -math.cos(cmd.travelYaw))
 	end
-	bv.Velocity         = dir * cmd.forwardSpeed + Vector3.new(cmd.knockX or 0, 0, cmd.knockZ or 0)
+	-- off a spring pad the car keeps at least its MinSpeed in the air
+	local forward = cmd.forwardSpeed
+	local airMin = primary:GetAttribute("AirT") and primary:GetAttribute("AirMin")
+	if airMin and forward < airMin then forward = airMin end
+	bv.Velocity         = dir * forward + Vector3.new(cmd.knockX or 0, 0, cmd.knockZ or 0)
 	bav.AngularVelocity = Vector3.new(0, cmd.yawRate, 0)
 
 	local gyro = primary:FindFirstChild("UprightGyro")

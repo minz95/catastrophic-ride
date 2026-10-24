@@ -383,8 +383,16 @@ function MapChecks.floorCoverage(w, isFloor)
 		end
 		return false
 	end
+	-- a gap jump (track gapJumps) has no floor on purpose
+	local gaps = w.geo:gapIntervals(w.track.gapJumps)
+	local function inGap(s)
+		for _, g in ipairs(gaps) do
+			if s > g.s0 - 1 and s < g.s1 + 1 then return true end
+		end
+		return false
+	end
 	MapChecks.eachLanePoint(w, 2, 2, 2, function(x, z, s, _, seg)
-		if floored(x, z, roadY(w, s)) then return end
+		if inGap(s) or floored(x, z, roadY(w, s)) then return end
 		local node = seg + 1
 		holes[node] = (holes[node] or 0) + 1
 	end)

@@ -303,7 +303,12 @@ Constants.DRIVE = {
 	-- arcade arc: up at VY studs/s under a lighter GRAVITY until it meets
 	-- the ground again. (The suspension used to snap the car straight down
 	-- the 4-stud lip: no air at all, it only looked to slow down.)
-	JUMP = { MIN_DROP = 1.5, MIN_SPEED = 25, VY = 20, GRAVITY = 80 },
+	-- Over a gap (no ground under the car at all) it launches the same way;
+	-- a spring pad (track gapJumps, parts "SpringPad_*" with attributes VY
+	-- and MinSpeed) seen in the last SPRING_MEMORY s sets the launch and a
+	-- forward speed floor in the air. An arc that finds no ground FALL_GIVE_UP
+	-- below its start lets the car fall (a respawn follows).
+	JUMP = { MIN_DROP = 1.5, MIN_SPEED = 25, VY = 20, GRAVITY = 80, SPRING_MEMORY = 0.4, FALL_GIVE_UP = 30 },
 	DRIFT_TURBO = {            -- released drift → speed × mult for duration (server)
 		MIN_SLIDE = 0.15,      -- rad: sliding at least this much counts as drifting
 		{ time = 0.6, mult = 1.25, duration = 1.0, label = "MINI TURBO" },

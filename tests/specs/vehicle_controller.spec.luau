@@ -320,6 +320,55 @@ R.describe("VehicleController.apply on a VehicleBuilder car", function()
 		m:Destroy()
 	end)
 
+	R.it("FOREST gap jump: off a spring pad the car flies the gap at its MinSpeed and lands", function()
+		local m = VehicleBuilder.build(stats, "FOREST", CFrame.new(0, 2, 590), {})
+		local p = m.PrimaryPart
+		local pad = env.mock.Instance.new("Part")
+		pad.Name = "SpringPad_1"
+		pad:SetAttribute("VY", 26)
+		pad:SetAttribute("MinSpeed", 60)
+		local function at(groundY, speed, inst)
+			VC.apply(p, { forwardSpeed = speed, yawRate = 0, climb = 0 }, { biome = "FOREST", altitudeDt = 1 / 60,
+				raycast = function(origin)
+					if not groundY then return nil end
+					return { Position = Vector3.new(origin.X, groundY, origin.Z), Instance = inst }
+				end })
+			return p.SuspensionHover.Position.Y
+		end
+		at(1, 30, pad)                                  -- on the pad, slowed down to 30
+		local first = at(nil, 30)                       -- over the gap: launch
+		R.expect(p:GetAttribute("AirT") ~= nil).toBe(true)
+		R.expect(p:GetAttribute("AirVY")).toBe(26)
+		R.expect(first > 1 + p.Size.Y / 2).toBe(true)
+		-- the forward speed floor holds in the air
+		local look = p.CFrame.LookVector
+		R.expect(p.DriveVelocity.Velocity:Dot(look)).toBeNear(60, 1e-3)
+		for _ = 1, 20 do at(nil, 30) end
+		R.expect(p:GetAttribute("AirT") ~= nil).toBe(true)
+		local frames = 0
+		while p:GetAttribute("AirT") and frames < 300 do at(1.5, 30); frames += 1 end   -- the far side
+		R.expect(p:GetAttribute("AirT")).toBe(nil)
+		at(1.5, 30)
+		R.expect(p.DriveVelocity.Velocity:Dot(look)).toBeNear(30, 1e-3)   -- the floor ends on landing
+		m:Destroy()
+	end)
+
+	R.it("FOREST gap jump: a slow car with no spring pad drops into the gap", function()
+		local m = VehicleBuilder.build(stats, "FOREST", CFrame.new(0, 2, 590), {})
+		local p = m.PrimaryPart
+		local function at(groundY, speed)
+			VC.apply(p, { forwardSpeed = speed, yawRate = 0, climb = 0 }, { biome = "FOREST", altitudeDt = 1 / 60,
+				raycast = function(origin)
+					return groundY and { Position = Vector3.new(origin.X, groundY, origin.Z) } or nil
+				end })
+		end
+		at(1, 10)
+		at(nil, 10)
+		R.expect(p:GetAttribute("AirT")).toBe(nil)
+		R.expect(p.SuspensionHover.MaxForce.Magnitude).toBe(0)   -- nothing holds it up
+		m:Destroy()
+	end)
+
 	R.it("returns false when the drive movers are missing", function()
 		local bare = env.mock.Instance.new("Part")
 		R.expect(VC.apply(bare, { forwardSpeed = 1, yawRate = 0, climb = 0 }, {})).toBe(false)

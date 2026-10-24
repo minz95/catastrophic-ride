@@ -214,6 +214,16 @@ ForestTrack.jumpRamps = {
 -- 2026-10-24: a novice bot stuck twice at the S6 ramp, 20 s lost).
 ForestTrack.jumpRampSize = { ForestTrack.width, 4, 14 }
 
+-- Gap jumps: the road is cut for `length` studs centred on { x, z } (on a
+-- straight, raised stretch: falling in means a respawn), with a spring pad
+-- (`padLength` studs) right before the lip. The pad launches at `vy`
+-- studs/s up and holds at least `minSpeed` forward in the air, so any car
+-- that drives over it clears the gap (VehicleController, Constants.DRIVE.
+-- JUMP). A respawn near it goes back before the pad (RaceProgress).
+ForestTrack.gapJumps = {
+	{ x = 385, z = -695, length = 24, padLength = 12, vy = 26, minSpeed = 60 },   -- S3 climb, N12 → N13 (~28 up)
+}
+
 ForestTrack.boostPads = {
 	{   0,  400 },    -- S1 launch
 	{ 560, -380 },    -- S3 mid-sweep (rewards apex)

@@ -445,6 +445,48 @@ local function _buildJumpRamps(root)
 	})
 end
 
+-- Gap jump: a yellow spring pad with black chevrons and coil springs at its
+-- sides before a gap in the trestle, hazard stripes on both lips, a sign.
+local function _buildGapJumps(root)
+	KIT:buildGapJumps(root, {
+		color = Color3.fromRGB(255, 205, 40), material = Enum.Material.SmoothPlastic,
+		visual = function(r, padCF, gapCF, i, g)
+			local padLen = g.gap.padLength
+			for k = -1, 1 do   -- chevrons pointing down the track
+				for _, side in ipairs({ -1, 1 }) do
+					_part(r, {
+						Name = "SpringChevron_" .. i, Size = Vector3.new(6, 0.06, 1.2),
+						CFrame = padCF * CFrame.new(side * 3, 0.09, k * padLen / 3.5) * CFrame.Angles(0, side * math.rad(35), 0),
+						Color = Color3.fromRGB(30, 30, 30), CanCollide = false, CanQuery = false, CastShadow = false,
+					})
+				end
+			end
+			for _, side in ipairs({ -1, 1 }) do   -- coil springs at the pad's sides
+				for c = 0, 3 do
+					_part(r, {
+						Name = "SpringCoil_" .. i, Shape = Enum.PartType.Cylinder,
+						Size = Vector3.new(0.35, 1.6, 1.6),
+						CFrame = padCF * CFrame.new(side * (TRACK_W / 2 - 1.5), 0.25 + c * 0.4, 0) * CFrame.Angles(0, 0, math.pi / 2),
+						Color = Color3.fromRGB(170, 170, 180), Material = Enum.Material.Metal,
+						CanCollide = false, CanQuery = false, CastShadow = false,
+					})
+				end
+			end
+			-- hazard stripes along both lips of the gap
+			for _, lip in ipairs({ -1, 1 }) do
+				for k = -4, 4 do
+					_part(r, {
+						Name = "GapLip_" .. i, Size = Vector3.new(TRACK_W / 9 - 0.2, 0.08, 1),
+						CFrame = gapCF * CFrame.new(k * TRACK_W / 9, 0.04, lip * (g.gap.length / 2 - 0.5)),
+						Color = (k % 2 == 0) and Color3.fromRGB(255, 205, 40) or Color3.fromRGB(30, 30, 30),
+						CanCollide = false, CanQuery = false, CastShadow = false,
+					})
+				end
+			end
+		end,
+	})
+end
+
 local function _buildBoostPads(root)
 	KIT:buildBoostPads(root, { color = C.BOOST_PAD })
 end
@@ -583,6 +625,7 @@ local function buildForest()
 	_buildMudZones(trackSub)
 	_buildRockDecor(trackSub)
 	_buildJumpRamps(trackSub)
+	_buildGapJumps(trackSub)
 	_buildBoostPads(trackSub)
 	_buildDriftCorners(trackSub)
 	_buildCheckpoints(trackSub)

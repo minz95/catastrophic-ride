@@ -219,18 +219,40 @@ function TrackKit:buildSurface(root, style)
 	local th = style.thickness or 1
 	local overlap = style.overlap or 2
 	local colors = style.colors or { style.color }
+	local gaps = self.geo:gapIntervals(self.track.gapJumps)
 	for i = 1, #self.nodes - 1 do
 		local len = self:segLen(i)
 		if len < 0.1 then continue end
 		local cf = self:segCF(i, self.top - th / 2)
 		local color = colors[((i - 1) % #colors) + 1]
-		local slab = TrackKit.part(root, {
-			Name = style.name .. "_" .. i,
-			Size = Vector3.new(self.width, th, self:segLen3(i) + overlap * 2),
-			CFrame = cf, Color = color, Material = style.material,
-		})
-		slab:SetAttribute("TrackFloor", true)
-		if style.physics ~= false then slab.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
+		-- the slab, minus any gap jump on this segment (pieces along it, in
+		-- studs from the segment start; the ends overlap the neighbours)
+		local s0 = self.geo.segments[i].s0
+		local pieces = { { -overlap, len + overlap } }
+		for _, g in ipairs(gaps) do
+			local a, b = g.s0 - s0, g.s1 - s0
+			local nextPieces = {}
+			for _, pc in ipairs(pieces) do
+				if b <= pc[1] or a >= pc[2] then
+					table.insert(nextPieces, pc)
+				else
+					if a > pc[1] then table.insert(nextPieces, { pc[1], a }) end
+					if b < pc[2] then table.insert(nextPieces, { b, pc[2] }) end
+				end
+			end
+			pieces = nextPieces
+		end
+		local stretch = self:segLen3(i) / len   -- along the slope
+		for k, pc in ipairs(pieces) do
+			local piece = TrackKit.part(root, {
+				Name = style.name .. "_" .. i .. (#pieces > 1 and ("_" .. k) or ""),
+				Size = Vector3.new(self.width, th, (pc[2] - pc[1]) * stretch),
+				CFrame = cf * CFrame.new(0, 0, ((pc[1] + pc[2]) / 2 - len / 2) * stretch),
+				Color = color, Material = style.material,
+			})
+			piece:SetAttribute("TrackFloor", true)
+			if style.physics ~= false then piece.CustomPhysicalProperties = TrackKit.LOW_FRICTION end
+		end
 		if style.joints ~= false and i < #self.nodes - 1 then
 			local b = self.nodes[i + 1]
 			-- On a slope the disc is tilted to the mean of the two slabs'
@@ -753,6 +775,37 @@ function TrackKit:buildJumpZones(root, style)
 		})
 		TrackKit.tag(jz, "JumpZone")
 		if style and style.visual then style.visual(root, cf, i, r) end
+	end
+end
+
+--- Gap jumps (Track.gapJumps): the spring pad before each gap (the gap
+-- itself is cut out of the road by buildSurface). The pad is a collidable
+-- slab sunk into the road (its top 0.05 above it) named "SpringPad_<i>",
+-- with attributes VY and MinSpeed that VehicleController reads from the
+-- suspension rays. style.visual(root, padCF, gapCF, i, gap) dresses it.
+function TrackKit:buildGapJumps(root, style)
+	for i, g in ipairs(self.geo:gapIntervals(self.track.gapJumps)) do
+		local function frameAt(s)
+			local x, z, _, _, seg = self.geo:pointAt(s)
+			local len = self:segLen(seg)
+			local t = s - self.geo.segments[seg].s0
+			return self:segCF(seg, self.top) * CFrame.new(0, 0, (t - len / 2) * self:segLen3(seg) / len), x, z
+		end
+		local padLen = g.gap.padLength or 0
+		if padLen > 0 then
+			local padCF = frameAt(g.s0 - padLen / 2)
+			local pad = TrackKit.part(root, {
+				Name = "SpringPad_" .. i, Size = Vector3.new(self.width, 0.4, padLen),
+				CFrame = padCF * CFrame.new(0, 0.05 - 0.2, 0),
+				Color = style and style.color or Color3.fromRGB(255, 200, 40),
+				Material = style and style.material or Enum.Material.SmoothPlastic,
+			})
+			pad.CustomPhysicalProperties = TrackKit.LOW_FRICTION
+			pad:SetAttribute("VY", g.gap.vy)
+			pad:SetAttribute("MinSpeed", g.gap.minSpeed)
+			TrackKit.tag(pad, "SpringPad")
+			if style and style.visual then style.visual(root, padCF, frameAt((g.s0 + g.s1) / 2), i, g) end
+		end
 	end
 end
 

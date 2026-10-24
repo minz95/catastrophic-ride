@@ -25,6 +25,12 @@ function HazardPlan.keepClear(geo, track)
 			table.insert(out, geo:project(p[1], p[2]).s)
 		end
 	end
+	-- nor on a gap jump's spring pad, over the gap, or where cars land
+	for _, g in ipairs(geo:gapIntervals(track.gapJumps)) do
+		table.insert(out, g.pad0)
+		table.insert(out, (g.s0 + g.s1) / 2)
+		table.insert(out, g.s1 + 15)
+	end
 	-- nor under a higher layer of the road (the spiral's lower turns): a log
 	-- would fall through the deck above
 	if geo.hasHeights then
