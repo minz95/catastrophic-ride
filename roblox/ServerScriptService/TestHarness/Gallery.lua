@@ -149,6 +149,72 @@ local function fitOf(model, seat)
 		itemL = r(hi.Z - lo.Z), itemW = r(hi.X - lo.X) }
 end
 
+-- Wheels, paddle wheels and propellers that do not touch what carries them
+-- (the body or ridden item, an axle / post, a hub, a nacelle), with the
+-- real meshes. Same rule as tests/specs/vehicle_design.
+local function boxOf(x)
+	local list = x:IsA("BasePart") and { x } or x:GetDescendants()
+	local a, b
+	for _, p in ipairs(list) do
+		if p:IsA("BasePart") and p.Transparency < 1 then
+			local e = p.Size * 0.5
+			for _, sx in ipairs({ -1, 1 }) do for _, sy in ipairs({ -1, 1 }) do for _, sz in ipairs({ -1, 1 }) do
+				local v = p.CFrame * Vector3.new(sx * e.X, sy * e.Y, sz * e.Z)
+				a = a and Vector3.new(math.min(a.X, v.X), math.min(a.Y, v.Y), math.min(a.Z, v.Z)) or v
+				b = b and Vector3.new(math.max(b.X, v.X), math.max(b.Y, v.Y), math.max(b.Z, v.Z)) or v
+			end end end
+		end
+	end
+	return a, b
+end
+local function touch(x, y)
+	if not x or not y then return false end
+	local a1, b1 = boxOf(x)
+	local a2, b2 = boxOf(y)
+	if not a1 or not a2 then return false end
+	local t = 0.08
+	return a1.X <= b2.X + t and a2.X <= b1.X + t and a1.Y <= b2.Y + t and a2.Y <= b1.Y + t and a1.Z <= b2.Z + t and a2.Z <= b1.Z + t
+end
+function Gallery.looseParts(model, biome)
+	local holders = {}
+	for _, h in ipairs(model:GetChildren()) do
+		local s = h:IsA("Model") and h:GetAttribute("Slot")
+		if s then holders[s] = holders[s] or {}; table.insert(holders[s], h) end
+	end
+	local function part(n) return model:FindFirstChild(n) end
+	local base = holders.BODY and holders.BODY[1] or model.PrimaryPart
+	local out = {}
+	if biome == "FOREST" then
+		local wheels = holders.MOBILITY or {}
+		if #wheels == 0 then
+			for _, n in ipairs({ "WheelFrontL", "WheelFrontR", "WheelRearL", "WheelRearR" }) do table.insert(wheels, part(n)) end
+		end
+		for i, w in ipairs(wheels) do
+			local ok = touch(w, base)
+			for _, tag in ipairs({ "Front", "Rear" }) do
+				local axle, post = part("Axle" .. tag), part("Post" .. tag)
+				if axle and touch(w, axle) and (touch(axle, base) or (post and touch(axle, post) and touch(post, base))) then ok = true end
+			end
+			if not ok then table.insert(out, "wheel " .. i) end
+		end
+	elseif biome == "OCEAN" and holders.MOBILITY then
+		for _, n in ipairs({ "PaddleHubL", "PaddleHubR" }) do
+			if not touch(part(n), base) then table.insert(out, n) end
+		end
+		for i, h in ipairs(holders.MOBILITY) do
+			if not (touch(h, part("PaddleHubL")) or touch(h, part("PaddleHubR"))) then table.insert(out, "paddle " .. i) end
+		end
+	elseif biome == "SKY" and holders.MOBILITY then
+		for _, n in ipairs({ "NacelleL", "NacelleR" }) do
+			if not touch(part(n), part("Wing")) then table.insert(out, n) end
+		end
+		for i, h in ipairs(holders.MOBILITY) do
+			if not (touch(h, part("NacelleL")) or touch(h, part("NacelleR"))) then table.insert(out, "propeller " .. i) end
+		end
+	end
+	return out
+end
+
 function Gallery.run(args)
 	args = args or {}
 	local token = args.token or "-"
@@ -173,7 +239,7 @@ function Gallery.run(args)
 	floor.CFrame = CFrame.new(ORIGIN + Vector3.new(SIDE, -2.5, #list * SPACING / 2 - 30))
 	floor.Parent = folder
 
-	local report = { items = {}, shots = {} }
+	local report = { items = {}, shots = {}, loose = {} }
 	local riders = 0
 	for i, slots in ipairs(list) do
 		for b, biome in ipairs(BIOMES) do
@@ -186,7 +252,9 @@ function Gallery.run(args)
 					if p:IsA("BasePart") then p.Anchored = true end
 				end
 				model.Parent = folder
-				label(model, (slots.BODY or "-") .. (slots.HEAD and (" + " .. slots.HEAD .. " hat") or "") .. " · "
+				label(model, (slots.BODY or "-") .. (slots.MOBILITY and (" + " .. slots.MOBILITY .. " "
+					.. ({ FOREST = "wheels", OCEAN = "paddles", SKY = "props" })[biome]) or "")
+					.. (slots.HEAD and (" + " .. slots.HEAD .. " hat") or "") .. " · "
 					.. ({ FOREST = "car", OCEAN = "boat", SKY = "plane" })[biome])
 				local char, seat = seatRider(model, folder)
 				if char then riders += 1 end
@@ -194,6 +262,9 @@ function Gallery.run(args)
 				local entry = { biome = biome, body = slots.BODY, riding = model:GetAttribute("Riding"),
 					size = { math.floor(size.X * 10) / 10, math.floor(size.Y * 10) / 10, math.floor(size.Z * 10) / 10 } }
 				if seat then entry.fit = fitOf(model, seat) end
+				for _, what in ipairs(Gallery.looseParts(model, biome)) do
+					table.insert(report.loose, string.format("%s %s %s", biome, slots.BODY or "-", what))
+				end
 				table.insert(report.items, entry)
 			else
 				table.insert(report.items, { biome = biome, body = slots.BODY, error = tostring(model) })
@@ -227,13 +298,22 @@ function Gallery.run(args)
 		{ "side", Vector3.new(0, 3, -21), Vector3.new(0, 0.5, 0) },
 		{ "rear", Vector3.new(-17, 10, -13), Vector3.new(2, -0.5, 0) },
 	}
+	-- opts.closeUps: one more stop per vehicle, from close behind and to the side
+	local CLOSE = { { "car", 0 }, { "boat", 1 }, { "plane", 2 } }
 	for i, slots in ipairs(list) do
 		local centre = ORIGIN + Vector3.new(SIDE, 0.8, (i - 1) * SPACING)
-		for _, v in ipairs(VIEWS) do
+		local views = table.clone(VIEWS)
+		if args.closeUps then
+			for _, c in ipairs(CLOSE) do
+				local at = ORIGIN + Vector3.new(c[2] * SIDE, 0.8, (i - 1) * SPACING)
+				table.insert(views, { c[1], at + Vector3.new(-6, 3.2, -4.5) - centre, at + Vector3.new(0, 0.6, 0) - centre })
+			end
+		end
+		for _, v in ipairs(views) do
 			target = CFrame.lookAt(centre + v[2], centre + v[3])
 			task.wait(0.5)
 			n += 1
-			local item = ((slots.BODY or "none") .. (i > #names and (" " .. (slots.HEAD or "build")) or "")):lower():gsub("%W", "")
+			local item = ((slots.BODY or "none") .. (i > #names and (" " .. (slots.MOBILITY or slots.HEAD or "build")) or "")):lower():gsub("%W", "")
 			local name = string.format("%02d_%s_%s", i, item, v[1])
 			print(string.format("GALLERY_SHOT %s %d %s", token, n, name))
 			table.insert(report.shots, name)
@@ -263,8 +343,8 @@ function Gallery.run(args)
 	folder:Destroy()
 	local riding = 0
 	for _, it in ipairs(report.items) do if it.riding then riding += 1 end end
-	report.summary = string.format("gallery: %d vehicles, %d shots, %d riding their BODY item, %d riders made, %d seated, %d hats worn",
-		#report.items, #report.shots, riding, riders, seated, hats)
+	report.summary = string.format("gallery: %d vehicles, %d shots, %d riding their BODY item, %d riders made, %d seated, %d hats worn, %d loose wheels / paddles / propellers",
+		#report.items, #report.shots, riding, riders, seated, hats, #report.loose)
 	return report
 end
 

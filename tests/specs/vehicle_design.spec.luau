@@ -98,6 +98,7 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 	R.describe(biome .. " vehicle look (" .. #BUILDS .. " builds)", function()
 		local problems = {
 			physics = {}, welds = {}, size = {}, ends = {}, ground = {}, symmetry = {}, fit = {}, seat = {}, headtail = {}, ride = {},
+			attach = {},
 		}
 		local function bad(kind, slots, msg)
 			if #problems[kind] < 6 then table.insert(problems[kind], label(slots) .. ": " .. msg) end
@@ -108,11 +109,20 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 			local model = VehicleBuilder.build(stats, biome, CFrame.new(), slots)
 			local chassis = model.PrimaryPart
 			local design = VehicleDesign.layout(biome, stats, slots)
+			if design.riding then
+				local rlo, rhi = VehicleBuilder.boundsIn(model, CFrame.new(), "BODY")
+				if rlo then VehicleDesign.fitRide(design, rlo, rhi) end
+			end
 			local byName = {}
 			local lo, hi
 			local welded = {}
+			-- welded to the chassis, or to a spin hub jointed to it (MOBILITY)
+			local hubs = {}
 			for _, d in ipairs(model:GetDescendants()) do
-				if d:IsA("WeldConstraint") and d.Part0 == chassis then welded[d.Part1] = true end
+				if d:IsA("Motor6D") and d.Part0 == chassis then hubs[d.Part1] = true; welded[d.Part1] = true end
+			end
+			for _, d in ipairs(model:GetDescendants()) do
+				if d:IsA("WeldConstraint") and (d.Part0 == chassis or hubs[d.Part0]) then welded[d.Part1] = true end
 			end
 			for _, p in ipairs(model:GetDescendants()) do
 				if p:IsA("BasePart") then
@@ -142,6 +152,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 
 			-- Front and back
 			local ends = design.riding and RIDE_ENDS[biome] or ENDS[biome]
+			if design.riding and biome == "FOREST" and slots.MOBILITY then
+				ends = { front = { "AxleFront" }, back = { "AxleRear" } }   -- the item is the wheels
+			end
 			for _, n in ipairs(ends.front) do
 				local p = byName[n]
 				if not p then bad("ends", slots, "missing " .. n)
@@ -194,17 +207,37 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 					local m = mounts[i]
 					local centre, ext = VehicleBuilder.bounds(h)
 					if m then
+						-- measured in the mount's own axes (a paddle is turned)
+						local mlo, mhi
+						for _, p in ipairs(h:GetDescendants()) do
+							if p:IsA("BasePart") and p.Name ~= "HatBase" then
+								local a, b = box(p)
+								for _, v in ipairs({ a, b }) do
+									local q = m.cf:PointToObjectSpace(v)
+									mlo = mlo and Vector3.new(math.min(mlo.X, q.X), math.min(mlo.Y, q.Y), math.min(mlo.Z, q.Z)) or q
+									mhi = mhi and Vector3.new(math.max(mhi.X, q.X), math.max(mhi.Y, q.Y), math.max(mhi.Z, q.Z)) or q
+								end
+							end
+						end
+						if m.spin then ext = mhi - mlo end
 						local over = ext - m.box
 						if over.X > 0.02 or over.Y > 0.02 or over.Z > 0.02 then
 							bad("fit", slots, string.format("%s %s is %s, box %s", slot, slots[slot], tostring(ext), tostring(m.box)))
 						end
 						-- floor-standing and on-the-ride items: centred across, height set by the build
 						local off = centre - m.cf.Position
+						if m.spin then off = (mlo + mhi) * 0.5 end   -- in the mount's axes
+						if m.side then
+							-- flush with the outer side instead of centred across
+							local outer = m.side > 0 and mhi.X or mlo.X
+							if math.abs(outer - m.side * m.box.X / 2) > 0.02 then bad("fit", slots, slot .. " " .. slots[slot] .. " not flush outside") end
+							off = Vector3.new(0, off.Y, off.Z)
+						end
 						if m.align == "bottom" or m.onRide then off = Vector3.new(off.X, 0, off.Z) end
 						if off.Magnitude > 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " off its mount centre")
 						end
-						if m.align == "bottom" and not m.hat and centre.Y - ext.Y / 2 < m.cf.Position.Y - m.box.Y / 2 - 0.02 then
+						if m.align == "bottom" and not m.hat and not m.spin and centre.Y - ext.Y / 2 < m.cf.Position.Y - m.box.Y / 2 - 0.02 then
 							bad("fit", slots, slot .. " " .. slots[slot] .. " below its mount floor")
 						end
 					end
@@ -244,6 +277,78 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 				end
 			end
 
+			-- Wheels, paddle wheels and propellers touch what carries them: the
+			-- body (or the ridden item), or an axle / post that does
+			do
+				local function boxOf(x)
+					if x:IsA("BasePart") then return box(x) end
+					local a, b
+					for _, p in ipairs(x:GetDescendants()) do
+						if p:IsA("BasePart") and p.Transparency < 1 then
+							local pa, pb = box(p)
+							a = a and Vector3.new(math.min(a.X, pa.X), math.min(a.Y, pa.Y), math.min(a.Z, pa.Z)) or pa
+							b = b and Vector3.new(math.max(b.X, pb.X), math.max(b.Y, pb.Y), math.max(b.Z, pb.Z)) or pb
+						end
+					end
+					return a, b
+				end
+				local function touch(x, y)
+					if not x or not y then return false end
+					local a1, b1 = boxOf(x)
+					local a2, b2 = boxOf(y)
+					if not a1 or not a2 then return false end
+					local t = 0.05
+					return a1.X <= b2.X + t and a2.X <= b1.X + t and a1.Y <= b2.Y + t and a2.Y <= b1.Y + t
+						and a1.Z <= b2.Z + t and a2.Z <= b1.Z + t
+				end
+				local base = design.riding and holders.BODY and holders.BODY[1] or chassis
+				local function carried(x)
+					if touch(x, base) then return true end
+					for _, n in ipairs({ "AxleFront", "AxleRear" }) do
+						local axle = byName[n]
+						if axle and touch(x, axle) and (touch(axle, base)
+							or touch(byName[n:gsub("Axle", "Post")], base) and touch(axle, byName[n:gsub("Axle", "Post")])) then
+							return true
+						end
+					end
+					return false
+				end
+				if biome == "FOREST" then
+					local wheels = slots.MOBILITY and (holders.MOBILITY or {}) or {}
+					if not slots.MOBILITY then
+						for _, n in ipairs({ "WheelFrontL", "WheelFrontR", "WheelRearL", "WheelRearR" }) do table.insert(wheels, byName[n]) end
+					end
+					for _, w in ipairs(wheels) do
+						if not carried(w) then bad("attach", slots, "a wheel hangs loose") break end
+					end
+				elseif biome == "OCEAN" and slots.MOBILITY then
+					for _, n in ipairs({ "PaddleHubL", "PaddleHubR" }) do
+						if not touch(byName[n], base) then bad("attach", slots, n .. " off the hull") end
+					end
+					for _, h in ipairs(holders.MOBILITY or {}) do
+						if not (touch(h, byName.PaddleHubL) or touch(h, byName.PaddleHubR)) then
+							bad("attach", slots, "a paddle off its hub") break
+						end
+					end
+				elseif biome == "SKY" and slots.MOBILITY then
+					for _, n in ipairs({ "NacelleL", "NacelleR" }) do
+						if not touch(byName[n], byName.Wing) then bad("attach", slots, n .. " off the wing") end
+					end
+					for _, h in ipairs(holders.MOBILITY or {}) do
+						if not (touch(h, byName.NacelleL) or touch(h, byName.NacelleR)) then
+							bad("attach", slots, "a propeller off its nacelle") break
+						end
+					end
+				end
+				-- the sail stays clear of the deckhouse and the seat
+				if biome == "OCEAN" and byName.Sail then
+					local seatP = model:FindFirstChildWhichIsA("VehicleSeat")
+					for _, other in ipairs({ byName.Cabin, byName.Windscreen, seatP }) do
+						if other and other.Parent and touch(byName.Sail, other) then bad("attach", slots, "the sail cuts through " .. other.Name) end
+					end
+				end
+			end
+
 			-- Seat on top of the chassis
 			local seat = model:FindFirstChildWhichIsA("VehicleSeat")
 			if not seat or seat.Position.Y < chassis.Size.Y / 2 then bad("seat", slots, "seat missing or inside the chassis") end
@@ -276,6 +381,9 @@ for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
 		end)
 		R.it("with a BODY item you ride it: it covers the hidden chassis and carries the seat", function()
 			R.expect(problems.ride).toBeEmpty("ride problems")
+		end)
+		R.it("wheels, paddle wheels and propellers are attached; the sail is clear of cabin and seat", function()
+			R.expect(problems.attach).toBeEmpty("loose parts")
 		end)
 		R.it("has a seat on top of the chassis", function()
 			R.expect(problems.seat).toBeEmpty("seat problems")

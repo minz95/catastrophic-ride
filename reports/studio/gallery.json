@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "51193a6",
+ "commit": "9d470b1",
  "dirty": true,
  "kind": "gallery",
  "logErrors": [
-  "2026-10-24T10:34:09.788Z,0.788216,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T10:34:09.876Z,0.876718,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-24T10:34:10.655Z,1.655160,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T10:34:11.438Z,2.438198,6bb43000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cf6c6d47-00ce-4c58-be2e-fe0c1d83e2d6\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-24T11:38:57.101Z,1.101916,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T11:38:57.143Z,1.143818,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T11:38:57.895Z,1.895322,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T11:38:58.705Z,2.705155,6d6ff000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"42c34456-8ff0-46b4-9eb0-213eba5de58e\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T10:34:19.897Z,10.897696,6c7d3000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-24T10:34:20.136Z,11.136055,6c1af000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-24T11:39:07.217Z,11.217964,6d6ff000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T11:39:07.468Z,11.468143,6ec27000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T10:35:10.658Z,61.658443,6bd4f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T10:35:49.507Z,100.507584,6bb43000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"cf6c6d47-00ce-4c58-be2e-fe0c1d83e2d6\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-24T11:39:57.896Z,61.896530,6e98f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T11:40:37.087Z,101.087685,6d6ff000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"42c34456-8ff0-46b4-9eb0-213eba5de58e\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "extra": [
@@ -27,7 +27,8 @@
    },
    {
     "BODY": "Pizza",
-    "HEAD": "Propeller Hat"
+    "HEAD": "Propeller Hat",
+    "MOBILITY": "Pizza"
    },
    {
     "BODY": "Red Sofa",
@@ -42,9 +43,9 @@
    }
   ],
   "hold": 1.2,
-  "token": "4c1bb99352644822b8cdaafba0380f82"
+  "token": "9971ffcb7d95495686c21a19ab215641"
  },
- "ranAt": "2026-10-24T19:36:04+0900",
+ "ranAt": "2026-10-24T20:40:45+0900",
  "report": {
   "hats": [
    {
@@ -213,7 +214,7 @@
     "size": [
      5.1,
      3.3,
-     3.7
+     4.3
     ]
    },
    {
@@ -264,7 +265,7 @@
     "size": [
      5.1,
      2.1,
-     3.7
+     4.3
     ]
    },
    {
@@ -313,9 +314,9 @@
     },
     "riding": "Barrel",
     "size": [
-     4.7,
+     3.6,
      3.2,
-     3.7
+     3.8
     ]
    },
    {
@@ -366,7 +367,7 @@
     "size": [
      5.1,
      3,
-     3.7
+     4.3
     ]
    },
    {
@@ -415,9 +416,9 @@
     },
     "riding": "Cardboard Box",
     "size": [
-     4.7,
+     3.6,
      3.2,
-     3.7
+     3.4
     ]
    },
    {
@@ -468,7 +469,7 @@
     "size": [
      5.1,
      3.2,
-     3.7
+     3.3
     ]
    },
    {
@@ -519,7 +520,7 @@
     "size": [
      5,
      2.1,
-     3.7
+     4.3
     ]
    },
    {
@@ -570,7 +571,7 @@
     "size": [
      5.1,
      3.3,
-     3.7
+     3.5
     ]
    },
    {
@@ -619,9 +620,9 @@
     },
     "riding": "Microwave",
     "size": [
-     4.7,
+     4.6,
      3.3,
-     3.7
+     3.8
     ]
    },
    {
@@ -670,9 +671,9 @@
     },
     "riding": "Red Sofa",
     "size": [
-     4.7,
+     3.9,
      3,
-     3.7
+     4.3
     ]
    },
    {
@@ -721,9 +722,9 @@
     },
     "riding": "Shopping Cart",
     "size": [
-     4.7,
+     3.7,
      2.9,
-     3.7
+     2.6
     ]
    },
    {
@@ -774,7 +775,7 @@
     "size": [
      5.1,
      2.6,
-     3.7
+     3.8
     ]
    },
    {
@@ -825,7 +826,7 @@
     "size": [
      5.1,
      3,
-     3.7
+     4.3
     ]
    },
    {
@@ -876,7 +877,7 @@
     "size": [
      5.1,
      2.1,
-     3.7
+     4.3
     ]
    },
    {
@@ -927,7 +928,7 @@
     "size": [
      5,
      1.6,
-     3.7
+     4.3
     ]
    },
    {
@@ -978,7 +979,7 @@
     "size": [
      5.1,
      3.2,
-     3.7
+     3.1
     ]
    },
    {
@@ -1027,9 +1028,9 @@
     },
     "riding": "Rubber Duck",
     "size": [
-     4.7,
+     4,
      3.2,
-     3.7
+     4.3
     ]
    },
    {
@@ -1080,7 +1081,7 @@
     "size": [
      5.1,
      3.2,
-     3.7
+     3.1
     ]
    },
    {
@@ -1129,9 +1130,9 @@
     },
     "riding": "Toilet Paper",
     "size": [
-     4.7,
+     3.6,
      3.2,
-     3.7
+     3.8
     ]
    },
    {
@@ -1180,9 +1181,9 @@
     },
     "riding": "Treadmill",
     "size": [
-     4.7,
+     3.8,
      3.2,
-     3.7
+     2.6
     ]
    },
    {
@@ -1233,7 +1234,7 @@
     "size": [
      5.3,
      7.2,
-     4.1
+     4.5
     ]
    },
    {
@@ -1250,7 +1251,7 @@
     "size": [
      6.5,
      6.5,
-     3.3
+     4.6
     ]
    },
    {
@@ -1284,7 +1285,7 @@
     "size": [
      5,
      6,
-     3.7
+     4.5
     ]
    },
    {
@@ -1299,9 +1300,9 @@
     },
     "riding": "Pizza",
     "size": [
+     6,
      5.8,
-     5.8,
-     3.3
+     4.6
     ]
    },
    {
@@ -1316,9 +1317,9 @@
     },
     "riding": "Pizza",
     "size": [
-     6,
+     6.2,
      6.1,
-     5
+     5.8
     ]
    },
    {
@@ -1333,9 +1334,9 @@
     },
     "riding": "Red Sofa",
     "size": [
-     4.7,
+     3.9,
      7.1,
-     3.7
+     4.3
     ]
    },
    {
@@ -1386,7 +1387,7 @@
     "size": [
      5.1,
      7.4,
-     3.7
+     3.8
     ]
    },
    {
@@ -1448,6 +1449,7 @@
     ]
    }
   ],
+  "loose": [],
   "shots": [
    "01_backpack_side",
    "01_backpack_rear",
@@ -1489,10 +1491,10 @@
    "19_toiletpaper_rear",
    "20_treadmill_side",
    "20_treadmill_rear",
-   "21_bathtubrubberduck_side",
-   "21_bathtubrubberduck_rear",
-   "22_pizzapropellerhat_side",
-   "22_pizzapropellerhat_rear",
+   "21_bathtubkite_side",
+   "21_bathtubkite_rear",
+   "22_pizzapizza_side",
+   "22_pizzapizza_rear",
    "23_redsofacactus_side",
    "23_redsofacactus_rear",
    "24_skateboardtrophy_side",
@@ -1500,10 +1502,10 @@
    "25_noneflower_side",
    "25_noneflower_rear"
   ],
-  "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn"
+  "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers"
  },
  "scenario": "gallery",
  "studioExit": 0,
- "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn",
- "wallSeconds": 115.1
+ "summary": "gallery: 75 vehicles, 50 shots, 72 riding their BODY item, 75 riders made, 75 seated, 15 hats worn, 0 loose wheels / paddles / propellers",
+ "wallSeconds": 109.4
 }

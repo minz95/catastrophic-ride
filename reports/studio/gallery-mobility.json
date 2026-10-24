@@ -1,0 +1,344 @@
+{
+ "checks": [],
+ "commit": "9d470b1",
+ "dirty": true,
+ "kind": "gallery",
+ "logErrors": [
+  "2026-10-24T11:33:57.503Z,0.503826,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-24T11:33:57.639Z,0.639076,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T11:33:57.714Z,0.714329,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-24T11:33:58.447Z,1.447211,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-24T11:33:59.313Z,2.313447,6da7b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"89345832-14db-4589-b504-e16712ffdbd9\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T11:34:08.592Z,11.592065,6dc87000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-24T11:34:08.868Z,11.868664,6d86f000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-24T11:34:55.209Z,58.209385,6d203000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"89345832-14db-4589-b504-e16712ffdbd9\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "closeUps": true,
+  "extra": [
+   {
+    "MOBILITY": "Pizza"
+   },
+   {
+    "BODY": "Bathtub",
+    "MOBILITY": "Rubber Duck"
+   },
+   {
+    "BODY": "Toilet Paper",
+    "MOBILITY": "Life Preserver"
+   },
+   {
+    "BODY": "Skateboard",
+    "MOBILITY": "Alarm Clock"
+   },
+   {
+    "BODY": "Red Sofa",
+    "HEAD": "Propeller Hat",
+    "MOBILITY": "Fan"
+   }
+  ],
+  "hold": 1.2,
+  "only": [],
+  "token": "6e905b39a46b4f298a6d4133ce1aa936"
+ },
+ "ranAt": "2026-10-24T20:34:59+0900",
+ "report": {
+  "hats": [
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   },
+   {
+    "headAboveSeat": 3.75,
+    "item": "Propeller Hat",
+    "offset": [
+     0,
+     -0.23,
+     0
+    ],
+    "worn": true
+   }
+  ],
+  "items": [
+   {
+    "biome": "FOREST",
+    "size": [
+     4.8,
+     2.2,
+     3
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "size": [
+     7.4,
+     4.4,
+     3.4
+    ]
+   },
+   {
+    "biome": "SKY",
+    "size": [
+     6.2,
+     2.3,
+     5.1
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 5.26,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 0.58
+    },
+    "riding": "Bathtub",
+    "size": [
+     5.2,
+     3,
+     4.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 6.04,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 0.46
+    },
+    "riding": "Bathtub",
+    "size": [
+     6.7,
+     5.5,
+     4.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Bathtub",
+    "fit": {
+     "itemH": 2,
+     "itemL": 5.17,
+     "itemW": 3,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Bathtub",
+    "size": [
+     6.3,
+     3.2,
+     5.5
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.26,
+     "itemW": 3.08,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     4.2,
+     3.3,
+     3.9
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 2.82,
+     "itemW": 2.66,
+     "over": 0.03,
+     "sink": -0.3
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     6.4,
+     5.7,
+     3.8
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Toilet Paper",
+    "fit": {
+     "itemH": 2,
+     "itemL": 2.97,
+     "itemW": 2.8,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Toilet Paper",
+    "size": [
+     6.3,
+     3.2,
+     5.6
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.53,
+     "itemL": 5.2,
+     "itemW": 3.06,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     5.1,
+     2.6,
+     3.9
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.73,
+     "itemL": 5.87,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     6.5,
+     5.3,
+     4.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Skateboard",
+    "fit": {
+     "itemH": 1.47,
+     "itemL": 5.02,
+     "itemW": 2.95,
+     "over": 0,
+     "sink": -0.3
+    },
+    "riding": "Skateboard",
+    "size": [
+     6.1,
+     2.7,
+     5.8
+    ]
+   },
+   {
+    "biome": "FOREST",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 2.2,
+     "itemL": 3.48,
+     "itemW": 3.6,
+     "over": 0,
+     "sink": 0.62
+    },
+    "riding": "Red Sofa",
+    "size": [
+     4.3,
+     6.8,
+     4.5
+    ]
+   },
+   {
+    "biome": "OCEAN",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 1.9,
+     "itemL": 3.01,
+     "itemW": 3.4,
+     "over": 0,
+     "sink": 0.5
+    },
+    "riding": "Red Sofa",
+    "size": [
+     5.8,
+     6.1,
+     4.6
+    ]
+   },
+   {
+    "biome": "SKY",
+    "body": "Red Sofa",
+    "fit": {
+     "itemH": 2,
+     "itemL": 3.17,
+     "itemW": 3,
+     "over": 0,
+     "sink": 0.54
+    },
+    "riding": "Red Sofa",
+    "size": [
+     6.1,
+     6.1,
+     5.4
+    ]
+   }
+  ],
+  "loose": [],
+  "shots": [
+   "01_nonepizza_side",
+   "01_nonepizza_rear",
+   "01_nonepizza_car",
+   "01_nonepizza_boat",
+   "01_nonepizza_plane",
+   "02_bathtubrubberduck_side",
+   "02_bathtubrubberduck_rear",
+   "02_bathtubrubberduck_car",
+   "02_bathtubrubberduck_boat",
+   "02_bathtubrubberduck_plane",
+   "03_toiletpaperlifepreserver_side",
+   "03_toiletpaperlifepreserver_rear",
+   "03_toiletpaperlifepreserver_car",
+   "03_toiletpaperlifepreserver_boat",
+   "03_toiletpaperlifepreserver_plane",
+   "04_skateboardalarmclock_side",
+   "04_skateboardalarmclock_rear",
+   "04_skateboardalarmclock_car",
+   "04_skateboardalarmclock_boat",
+   "04_skateboardalarmclock_plane",
+   "05_redsofafan_side",
+   "05_redsofafan_rear",
+   "05_redsofafan_car",
+   "05_redsofafan_boat",
+   "05_redsofafan_plane"
+  ],
+  "summary": "gallery: 15 vehicles, 25 shots, 12 riding their BODY item, 15 riders made, 15 seated, 3 hats worn, 0 loose wheels / paddles / propellers"
+ },
+ "scenario": "gallery-mobility",
+ "studioExit": 0,
+ "summary": "gallery: 15 vehicles, 25 shots, 12 riding their BODY item, 15 riders made, 15 seated, 3 hats worn, 0 loose wheels / paddles / propellers",
+ "wallSeconds": 62.0
+}

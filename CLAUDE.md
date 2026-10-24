@@ -75,6 +75,18 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the head's Anchored (an anchored hat stays behind when the head moves).
   Quick look: `sim.py run gallery-hats` (report `hats`: offset from the
   head top).
+  The MOBILITY item spins where it moves you: the car's four wheels (flush
+  with the wheel's outer side, on axles), a boat's side paddle wheels
+  (copies round a hub), a propeller in front of each wing nacelle. Mounts
+  with `spin` hang on an invisible hub jointed to the chassis by a Motor6D
+  "Spin"; `StarterPlayerScripts/SpinFx` turns the joint's C0 on every
+  client (never the server). Riding, `VehicleDesign.fitRide` moves wheels,
+  paddles and propellers against the item's measured box, with axles and
+  posts. The boat's mast stands near the bow and the sail runs back to
+  just before the deckhouse, sheeted out `VehicleDesign.SHEET` degrees.
+  Check: `sim.py run gallery-mobility` (close-ups, report `loose` = parts
+  not touching what carries them; the spec checks the same offline);
+  the match checks `spin` count cars whose items turned.
 - Driving: `Shared/VehicleController.lua` is the single key → velocity path
   for players (RacingClient), bots and simulators. `Shared/Autopilot.lua` is
   the simulated driver; `Shared/BotBrain.lua` the farming/crafting bot.

@@ -87,11 +87,35 @@ VehicleBuilder.bounds = bounds
 --   orient = true     turn the item so its longer side runs along the vehicle
 --   yaw = degrees     turn it this way instead (VehicleDesign.RIDE_LOOK)
 --   tip = true        lay it on its side first (its height runs along the vehicle)
+--   side = ±1         push it flush with the box's outer X side
+--   flat = "X" | "Z"  turn it so its thinnest side runs along that axis (a
+--                     wheel seen from the side, a propeller face-on)
 -- `minTop` (mount space): raise the item until its top reaches it.
 -- Returns the holder Model and the item's top and bottom in mount space.
 local hatBaseCF, makeHat
 
-local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
+-- Box of the `slot` item's parts in `cf`'s space (lo, hi corners).
+local function boundsIn(model, cf, slot)
+	local lo, hi
+	for _, h in ipairs(model:GetChildren()) do
+		if h:IsA("Model") and h:GetAttribute("Slot") == slot then
+			for _, p in ipairs(h:GetDescendants()) do
+				if p:IsA("BasePart") then
+					local e = p.Size * 0.5
+					for _, sx in ipairs({ -1, 1 }) do for _, sy in ipairs({ -1, 1 }) do for _, sz in ipairs({ -1, 1 }) do
+						local v = cf:PointToObjectSpace(p.CFrame * Vector3.new(sx * e.X, sy * e.Y, sz * e.Z))
+						lo = lo and Vector3.new(math.min(lo.X, v.X), math.min(lo.Y, v.Y), math.min(lo.Z, v.Z)) or v
+						hi = hi and Vector3.new(math.max(hi.X, v.X), math.max(hi.Y, v.Y), math.max(hi.Z, v.Z)) or v
+					end end end
+				end
+			end
+		end
+	end
+	return lo, hi
+end
+VehicleBuilder.boundsIn = boundsIn
+
+local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop, weldTo)
 	local cfg = ItemConfig[itemName]
 	if not cfg then return nil end
 	local box = mount.box
@@ -122,6 +146,19 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 		if mount.yaw then
 			turn = CFrame.Angles(0, math.rad(mount.yaw), 0) * turn
 			if math.abs(math.sin(math.rad(mount.yaw))) > 0.7 then size = Vector3.new(size.Z, size.Y, size.X) end
+		end
+		if mount.flat then
+			-- candidate turns and which original axis each brings onto `flat`
+			local turns = mount.flat == "X"
+				and { { CFrame.new(), size.X, size }, { CFrame.Angles(0, math.pi / 2, 0), size.Z, Vector3.new(size.Z, size.Y, size.X) },
+					{ CFrame.Angles(0, 0, math.pi / 2), size.Y, Vector3.new(size.Y, size.X, size.Z) } }
+				or { { CFrame.new(), size.Z, size }, { CFrame.Angles(0, math.pi / 2, 0), size.X, Vector3.new(size.Z, size.Y, size.X) },
+					{ CFrame.Angles(math.pi / 2, 0, 0), size.Y, Vector3.new(size.X, size.Z, size.Y) } }
+			local best = turns[1]
+			for _, t in ipairs(turns) do
+				if t[2] < best[2] - 1e-3 then best = t end
+			end
+			turn, size = best[1] * turn, best[3]
 		end
 		local base = fitOf(size)
 		if mount.orient then
@@ -179,9 +216,23 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 			hi = hi and Vector3.new(math.max(hi.X, v.X), math.max(hi.Y, v.Y), math.max(hi.Z, v.Z)) or v
 		end end end
 	end
+	-- stretching a turned sub-part is not exact: shrink the whole item back
+	-- into its box if it came out a little over
+	local ext = hi - lo
+	local k = math.min(1, box.X / math.max(ext.X, 1e-3), box.Y / math.max(ext.Y, 1e-3), box.Z / math.max(ext.Z, 1e-3))
+	if k < 0.999 then
+		local c = (lo + hi) * 0.5
+		for _, it in ipairs(placed) do
+			it.part.Size *= k
+			it.cf = CFrame.new(c + (it.cf.Position - c) * k) * (it.cf - it.cf.Position)
+		end
+		lo, hi = c + (lo - c) * k, c + (hi - c) * k
+	end
 	local mid = (lo + hi) * 0.5
 	local shift = -mid
 	if mount.align == "bottom" then shift = Vector3.new(-mid.X, -box.Y / 2 - lo.Y, -mid.Z) end
+	-- side = ±1: flush with the box's outer side (a thin wheel outside the body)
+	if mount.side then shift = Vector3.new(mount.side * box.X / 2 - (mount.side > 0 and hi.X or lo.X), shift.Y, shift.Z) end
 	local top = hi.Y + shift.Y
 	if minTop and top < minTop then
 		shift += Vector3.new(0, minTop - top, 0)
@@ -191,10 +242,37 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop)
 	for _, it in ipairs(placed) do
 		it.part.CFrame = mountCF * CFrame.new(shift) * it.cf
 		decoration(it.part)
-		weld(chassis, it.part)
+		weld(weldTo or chassis, it.part)
 	end
 	holder.Parent = model
 	return holder, top, bottom
+end
+
+-- ─── Spinning MOBILITY items ─────────────────────────────────────────────────
+
+-- An invisible hub at `cf` joined to the chassis by a Motor6D named "Spin";
+-- SpinFx (every client) turns the joint. Attributes say how.
+local function spinHub(model, chassis, cf, spin, name)
+	local hub = Instance.new("Part")
+	hub.Name = name
+	hub.Size = Vector3.new(0.1, 0.1, 0.1)
+	hub.Transparency = 1
+	hub.CFrame = cf
+	decoration(hub)
+	hub.Parent = model
+	local m = Instance.new("Motor6D")
+	m.Name = "Spin"
+	m.Part0 = chassis
+	m.Part1 = hub
+	m.C0 = chassis.CFrame:ToObjectSpace(cf)
+	m.C1 = CFrame.new()
+	m.Parent = hub
+	hub:SetAttribute("SpinAxis", spin.axis)
+	hub:SetAttribute("SpinMode", spin.mode)
+	hub:SetAttribute("SpinRadius", spin.radius or 1)
+	hub:SetAttribute("SpinDir", spin.dir or 1)
+	pcall(function() game:GetService("CollectionService"):AddTag(hub, "Spin") end)
+	return hub
 end
 
 -- ─── Hat (HEAD item) ─────────────────────────────────────────────────────────
@@ -432,6 +510,9 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		rideTop = mount.cf.Position.Y + (top or 0)
 		rideSink = (mount.sink and top and bottom) and mount.sink * (top - bottom) or 0
 		model:SetAttribute("Riding", slots.BODY)
+		-- wheels / paddle wheels / propellers against the item's real size
+		local lo, hi = boundsIn(model, spawnCFrame, "BODY")
+		if lo then VehicleDesign.fitRide(design, lo, hi) end
 	end
 	local ride = design.ride
 
@@ -471,14 +552,25 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	weld(chassis, seat)
 
 	-- Crafted items in their slot boxes (the ridden BODY item is already in)
+	local hubs = {}
 	for _, slot in ipairs(VehicleBuilder.SLOTS) do
 		local itemName = slots[slot]
 		if itemName and not (slot == "BODY" and design.riding) then
-			for _, mount in ipairs(design.mounts[slot] or {}) do
+			for i, mount in ipairs(design.mounts[slot] or {}) do
 				local cf = mount.cf
 				if mount.onRide and rideTop then cf = CFrame.new(0, rideTop, 0) * cf end
 				if mount.hat then cf = spawnCFrame:ToObjectSpace(hatBaseCF(seat)) * CFrame.new(0, mount.box.Y / 2, 0) end
-				local holder = placeItem(itemName, spawnCFrame * cf, mount, model, chassis, slot)
+				-- spinning copies hang on a hub (one per group: a paddle wheel)
+				local hub
+				if mount.spin then
+					local key = mount.spin.group or (slot .. i)
+					hub = hubs[key]
+					if not hub then
+						hub = spinHub(model, chassis, spawnCFrame * (mount.spin.hub or cf), mount.spin, "SpinHub_" .. key)
+						hubs[key] = hub
+					end
+				end
+				local holder = placeItem(itemName, spawnCFrame * cf, mount, model, chassis, slot, nil, hub)
 				if holder and mount.hat then makeHat(holder, seat, chassis) end
 			end
 		end

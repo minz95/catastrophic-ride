@@ -12,7 +12,8 @@
 --     every other part is decoration (massless, no collision).
 --   * Items go into `mounts`: a box per slot in the place that matches the
 --     slot's role (BODY = cabin / deckhouse / dorsal hump, ENGINE = engine
---     bay / outboard / nose, MOBILITY = hubcaps / masthead / wing pods,
+--     bay / outboard / nose, MOBILITY = the wheels / side paddle wheels /
+--     wing propellers (copies of the item that spin, see SPIN),
 --     SPECIAL = roof rack / foredeck / belly, HEAD = the rider's hat (see
 --     HAT), TAIL = back).
 --     An item is scaled to fit its box, keeping its proportions.
@@ -26,7 +27,13 @@
 --     outboard motor and mast, wings / propeller / tail. Mounts and parts
 --     marked `onRide` / listed in `ride.lift` sit on the item's real top,
 --     which VehicleBuilder measures once the item is placed. The box is at
---     least RIDE_MIN; `ride.move` puts parts (the car's wheels) at its edges.
+--     least RIDE_MIN; `ride.move` puts parts at its edges, and `ride.fit`
+--     (VehicleDesign.fitRide) moves the wheels, paddle wheels and propellers
+--     against the item's real size once it is placed.
+--   * A mount with `spin` turns on every client (StarterPlayerScripts/SpinFx):
+--     its copies are welded to an invisible hub joined to the chassis by a
+--     Motor6D. `flat` = the axis the item is laid thin along (a wheel's
+--     side, a propeller's face).
 --
 -- part = { name, shape = "block" | "wedge" | "cylinder" | "ball",
 --          size = Vector3, cf = CFrame, color = role or Color3,
@@ -167,12 +174,25 @@ local function car(stats)
 	M.BODY = { { cf = CF(0, top + 0.55, cabZ), box = V3(cabW, 1.1, cabL + 0.9) } }
 	M.ENGINE = { { cf = CF(0, top + 0.35, -L / 2 + L * 0.17), box = V3(W * 0.55, 0.7, L * 0.3) } }
 	M.SPECIAL = { { cf = CF(0, top + 1.45, cabZ), box = V3(W * 0.6, 0.7, cabL * 0.8) } }
+	-- MOBILITY: the item is the wheels (four spinning copies in their place)
+	-- (flush with the outer side: a flat item is a thin wheel, and centred
+	-- it would hide inside the body)
+	local function wheelMount(x, z)
+		return { cf = CF(x, wheelY, z), box = V3(VehicleDesign.WHEEL_WIDTH, r * 2, r * 2), flat = "X", stretch = 1.8,
+			side = x < 0 and -1 or 1, spin = { axis = "X", mode = "wheel", radius = r } }
+	end
 	M.MOBILITY = {}
 	for _, fz in ipairs({ -1, 1 }) do
-		for _, s in ipairs({ -1, 1 }) do
-			table.insert(M.MOBILITY, { cf = CF(s * (wheelX + 0.35), wheelY, fz * wheelZ), box = V3(0.3, r * 1.3, r * 1.3) })
-		end
+		for _, s in ipairs({ -1, 1 }) do table.insert(M.MOBILITY, wheelMount(s * wheelX, fz * wheelZ)) end
 	end
+	d.replacedBy.MOBILITY = { "WheelFrontL", "WheelFrontR", "WheelRearL", "WheelRearR",
+		"HubFrontL", "HubFrontR", "HubRearL", "HubRearR" }
+	-- axles out to the item wheels (a kite or a flag makes a very thin wheel)
+	for _, fz in ipairs({ -1, 1 }) do
+		add(P, "Axle" .. (fz < 0 and "Front" or "Rear"), "cylinder",
+			V3((wheelX + VehicleDesign.WHEEL_WIDTH / 2 - 0.05) * 2, 0.22, 0.22), CF(0, wheelY, fz * wheelZ), "trim", Enum.Material.Metal)
+	end
+	d.withSlot = { MOBILITY = { "AxleFront", "AxleRear" } }
 	M.TAIL = { { cf = CF(0, -H / 2 + 0.4, L / 2 + 0.55), box = V3(0.8, 0.8, 0.6) } }
 	d.seat = { size = V3(1.4, 0.3, 1.4), cf = CF(0, top + 0.15, cabZ) }
 	-- Riding the BODY item: it sits on the axles, the wheels move out to its
@@ -191,14 +211,46 @@ local function car(stats)
 	end
 	local rideMob = {}
 	for _, fz in ipairs({ -1, 1 }) do
-		for _, s in ipairs({ -1, 1 }) do
-			table.insert(rideMob, { cf = CF(s * (rwX + 0.35), wheelY, fz * rwZ), box = V3(0.3, r * 1.3, r * 1.3) })
+		for _, s in ipairs({ -1, 1 }) do table.insert(rideMob, wheelMount(s * rwX, fz * rwZ)) end
+	end
+	-- Once the item is placed (lo / hi = its real box): the wheels go against
+	-- its sides, front and rear ends; axles join each pair under it, and a
+	-- post joins an axle to the item when the item sits higher.
+	local function fit(dd, lo, hi)
+		local halfW = math.max(-lo.X, hi.X)
+		local wx = math.min(halfW + 0.1, VehicleDesign.MAX_WIDTH / 2 - VehicleDesign.WHEEL_WIDTH / 2 - 0.05)
+		dd.withSlot.MOBILITY = nil   -- a ridden car always has its axles (added below)
+		local reach = L * 0.3 + 0.05   -- the axles stay this far from the centre
+		local zs = { [-1] = math.min(lo.Z + r + 0.15, -reach), [1] = math.max(hi.Z - r - 0.15, reach) }
+		local at = {}
+		local k = 0
+		for _, fz in ipairs({ -1, 1 }) do
+			local tag = fz < 0 and "Front" or "Rear"
+			for _, s in ipairs({ -1, 1 }) do
+				local side = s < 0 and "L" or "R"
+				at["Wheel" .. tag .. side] = CF(s * wx, wheelY, zs[fz])
+				at["Hub" .. tag .. side] = CF(s * (wx + 0.25), wheelY, zs[fz])
+				k += 1
+				if dd.mounts.MOBILITY[k] then dd.mounts.MOBILITY[k] = wheelMount(s * wx, zs[fz]) end
+			end
+			-- out to just inside the wheels' outer faces (a thin item wheel too)
+			local axleHalf = wx + VehicleDesign.WHEEL_WIDTH / 2 - 0.05
+			add(dd.parts, "Axle" .. tag, "cylinder", V3(axleHalf * 2, 0.22, 0.22), CF(0, wheelY, zs[fz]), "trim", Enum.Material.Metal)
+			local gap = lo.Y - (wheelY + 0.11)
+			if gap > 0.02 then
+				add(dd.parts, "Post" .. tag, "block", V3(0.3, gap + 0.2, 0.3), CF(0, wheelY + 0.11 + gap / 2, zs[fz]), "trim",
+					Enum.Material.Metal)
+			end
+		end
+		for _, p in ipairs(dd.parts) do
+			if at[p.name] then p.cf = at[p.name] end
 		end
 	end
 	d.ride = {
 		hide = { "FenderFrontL", "FenderFrontR", "FenderRearL", "FenderRearR", "BumperFront", "BumperRear", "Grille",
 			"HeadlightL", "HeadlightR", "TaillightL", "TaillightR", "Windshield", "Cabin", "RearWindow",
-			"SideWindowL", "SideWindowR", "Roof", "SpoilerStrutL", "SpoilerStrutR", "Spoiler", "ExhaustL", "ExhaustR" },
+			"SideWindowL", "SideWindowR", "Roof", "SpoilerStrutL", "SpoilerStrutR", "Spoiler", "ExhaustL", "ExhaustR",
+			"AxleFront", "AxleRear" },   -- (fit adds its own)
 		box = V3(rideW, 2.2, rideL), bottom = wheelY + r * 0.4, centreZ = 0,
 		move = move,
 		mounts = {
@@ -206,6 +258,7 @@ local function car(stats)
 			SPECIAL = { { cf = CF(0, 0.3, -rideL * 0.3), box = V3(rideW * 0.45, 0.6, rideL * 0.2), onRide = true } },
 			MOBILITY = rideMob,
 		},
+		fit = fit,
 		seatZ = cabZ,
 	}
 	return d
@@ -248,22 +301,59 @@ local function boat(stats)
 	add(P, "MotorLeg", "block", V3(0.18, 1.0, 0.18), CF(0, -0.2, L / 2 + 0.4), "trim")
 	add(P, "Motor", "block", V3(0.55, 0.6, 0.6), CF(0, top + 0.2, L / 2 + 0.4), "trim")
 	d.replacedBy.ENGINE = { "Motor" }
-	-- Mast and sail only with a MOBILITY item (it rides at the masthead)
+	-- Mast near the bow and a mainsail: its tall edge on the mast, the foot
+	-- on the boom running back, ending before the deckhouse (it used to cut
+	-- through the cabin and the rider). Sheeted out SHEET degrees to
+	-- starboard so a chaser sees it, not just its edge.
 	local mastH = statScale(stats.floatability, 3.0, 4.5)
-	local mastZ = -L * 0.12
-	d.withSlot = { MOBILITY = { "Mast", "Sail", "Boom" } }
-	add(P, "Mast", "cylinder", V3(mastH, 0.14, 0.14), CF(0, top + mastH / 2, mastZ) * ANG(0, 0, HALF_PI), "mast",
-		Enum.Material.Wood)
-	add(P, "Sail", "wedge", V3(0.06, mastH * 0.8, L * 0.42), CF(0, top + 0.35 + mastH * 0.4, mastZ + L * 0.21 + 0.08) * ANG(0, math.pi, 0), "sail",
-		Enum.Material.Fabric)
-	add(P, "Boom", "cylinder", V3(L * 0.45, 0.1, 0.1), CF(0, top + 0.3, mastZ + L * 0.22) * ANG(0, HALF_PI, 0), "mast",
-		Enum.Material.Wood)
+	local mastZ = -L / 2 + 0.35
+	local sailL = math.min(L * 0.42, houseZ - houseL / 2 - 0.2 - mastZ)
+	d.withSlot = {}
+	local function rig(z, len)
+		local turn = CF(0, 0, z) * ANG(0, math.rad(VehicleDesign.SHEET), 0)
+		return {
+			Mast = CF(0, top + mastH / 2, z) * ANG(0, 0, HALF_PI),
+			Sail = turn * CF(0, top + 0.35 + mastH * 0.4, len / 2 + 0.08) * ANG(0, math.pi, 0),
+			Boom = turn * CF(0, top + 0.3, len / 2 + 0.05) * ANG(0, HALF_PI, 0),
+		}
+	end
+	local at = rig(mastZ, sailL)
+	add(P, "Mast", "cylinder", V3(mastH, 0.14, 0.14), at.Mast, "mast", Enum.Material.Wood)
+	-- smooth: Fabric showed as a dark triangle on the shaded side (Studio gallery)
+	add(P, "Sail", "wedge", V3(0.06, mastH * 0.8, sailL), at.Sail, "sail", Enum.Material.SmoothPlastic)
+	add(P, "Boom", "cylinder", V3(sailL + 0.1, 0.1, 0.1), at.Boom, "mast", Enum.Material.Wood)
+	-- MOBILITY: side paddle wheels, like a river steamer: on each side
+	-- PADDLES copies of the item round a hub, turning (the hubs show only then)
+	local rp = VehicleDesign.PADDLE_RADIUS
+	local wheelY = -H / 2 + rp + 0.05
+	local function paddles(x, z)
+		local list = {}
+		for _, s in ipairs({ -1, 1 }) do
+			local hub = CF(s * x, wheelY, z)
+			for k = 0, VehicleDesign.PADDLES - 1 do
+				table.insert(list, { cf = hub * ANG(k * 2 * math.pi / VehicleDesign.PADDLES, 0, 0) * CF(0, rp * 0.5, 0),
+					box = V3(0.6, rp, 0.4), flat = "Z", stretch = 1.5, align = "bottom",   -- out from the hub
+					spin = { axis = "X", mode = "wheel", radius = rp, hub = hub, group = s < 0 and "PaddleL" or "PaddleR" } })
+			end
+		end
+		return list
+	end
+	local function paddleHubs(x, z)
+		return {
+			PaddleHubL = CF(-(x - 0.25), wheelY, z) * ANG(0, 0, 0),
+			PaddleHubR = CF(x - 0.25, wheelY, z),
+		}
+	end
+	local paddleX, paddleZ = W / 2 + 0.3, -L * 0.08
+	pair(P, "PaddleHub", "cylinder", V3(0.8, 0.35, 0.35), function(s) return CF(s * (paddleX - 0.25), wheelY, paddleZ) end,
+		"trim", Enum.Material.Metal)
+	d.withSlot.MOBILITY = { "PaddleHubL", "PaddleHubR" }
 
 	local M = d.mounts
 	M.BODY = { { cf = CF(0, top + 0.08 + 0.6, houseZ), box = V3(houseW, 1.2, houseL + 0.4) } }
 	M.ENGINE = { { cf = CF(0, top + 0.3, L / 2 + 0.45), box = V3(0.8, 0.9, 0.8) } }
 	M.SPECIAL = { { cf = CF(0, top + 0.4, -L * 0.3), box = V3(W * 0.5, 0.7, L * 0.2) } }
-	M.MOBILITY = { { cf = CF(0, top + mastH + 0.4, mastZ), box = V3(0.9, 0.9, 0.9) } }
+	M.MOBILITY = paddles(paddleX, paddleZ)
 	M.TAIL = { { cf = CF(W / 2 - 0.3, top + 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6) } }
 	add(P, "FlagPole", "cylinder", V3(1.3, 0.07, 0.07), CF(W / 2 - 0.3, top + 0.65, L / 2 - 0.2) * ANG(0, 0, HALF_PI), "mast")
 	d.withSlot.TAIL = { "FlagPole" }
@@ -272,20 +362,28 @@ local function boat(stats)
 	-- mast moves to the bow so the rider does not hide the sail.
 	local rideL = math.max(L + prow * 0.6, VehicleDesign.RIDE_MIN.OCEAN.Z)
 	local bowMast = -prow * 0.3 - rideL / 2 + 0.7
+	local rideRig = rig(bowMast, sailL)
+	-- once placed: the paddle wheels against the item's sides, by the rider
+	local function fit(dd, lo, hi)
+		local halfW = math.max(-lo.X, hi.X)
+		local x = math.min(halfW + 0.3, VehicleDesign.MAX_WIDTH / 2 - 0.3)
+		local z = (lo.Z + hi.Z) / 2 - (hi.Z - lo.Z) * 0.1
+		if dd.mounts.MOBILITY and #dd.mounts.MOBILITY > 0 then dd.mounts.MOBILITY = paddles(x, z) end
+		local at = paddleHubs(x, z)
+		for _, p in ipairs(dd.parts) do
+			if at[p.name] then p.cf = at[p.name] end
+		end
+	end
 	d.ride = {
 		hide = { "ProwL", "ProwR", "StripeL", "StripeR", "GunwaleL", "GunwaleR", "BowRailL", "BowRailR", "Deck", "Transom",
 			"NavLightL", "NavLightR", "Cabin", "Windscreen" },
 		box = V3(math.max(W + 0.3, VehicleDesign.RIDE_MIN.OCEAN.X), 1.9, rideL),
 		bottom = -H / 2 + 0.05, centreZ = -prow * 0.3,
-		move = {
-			Mast = CF(0, top + mastH / 2, bowMast) * ANG(0, 0, HALF_PI),
-			Sail = CF(0, top + 0.35 + mastH * 0.4, bowMast + L * 0.21 + 0.08) * ANG(0, math.pi, 0),
-			Boom = CF(0, top + 0.3, bowMast + L * 0.22) * ANG(0, HALF_PI, 0),
-		},
+		move = rideRig,
+		fit = fit,
 		lift = { "Mast", "Sail", "Boom", "FlagPole" }, liftFrom = top,
 		mounts = {
 			SPECIAL = { { cf = CF(0, 0.3, -L * 0.3), box = V3(W * 0.5, 0.6, L * 0.2), onRide = true } },
-			MOBILITY = { { cf = CF(0, mastH + 0.4, bowMast), box = V3(0.9, 0.9, 0.9), onRide = true } },
 			TAIL = { { cf = CF(W / 2 - 0.3, 1.4, L / 2 - 0.2), box = V3(0.6, 0.6, 0.6), onRide = true } },
 		},
 		seatZ = L * 0.15,
@@ -300,7 +398,8 @@ local function plane(stats)
 	local R = statScale(stats.flyability, 0.45, 0.75)
 	local span = math.min(statScale(stats.flyability, 4.5, 7.5), VehicleDesign.MAX_WIDTH)
 	local chord = statScale(stats.flyability, 1.1, 1.6)
-	local d = { chassis = { size = V3(R * 2, R * 2, L), color = "body" }, parts = {}, mounts = {}, replacedBy = {} }
+	local d = { chassis = { size = V3(R * 2, R * 2, L), color = "body" }, parts = {}, mounts = {}, replacedBy = {},
+		withSlot = {} }
 	local P = d.parts
 	-- Nose: cowl, spinner, two-blade propeller
 	add(P, "Cowl", "block", V3(R * 1.9, R * 1.9, 0.5), CF(0, 0, -L / 2 - 0.25), "accent")
@@ -334,10 +433,25 @@ local function plane(stats)
 	M.BODY = { { cf = CF(0, R + 0.45, L * 0.18), box = V3(R * 1.8, 0.9, L * 0.4) } }
 	M.ENGINE = { { cf = CF(0, 0, -L / 2 - 0.3), box = V3(R * 2.1, R * 2.1, 0.6) } }
 	M.SPECIAL = { { cf = CF(0, -R - 0.35, L * 0.08), box = V3(R * 1.6, 0.7, L * 0.3) } }
-	M.MOBILITY = {}
-	for _, s in ipairs({ -1, 1 }) do
-		table.insert(M.MOBILITY, { cf = CF(s * span * 0.32, -R * 0.35 - 0.4, -L * 0.04), box = V3(0.6, 0.6, 1.0) })
+	-- MOBILITY: a propeller on each wing, the item spinning face-on in front
+	-- of a nacelle (the nacelles show only then)
+	local wingY, wingZ = -R * 0.35, -L * 0.04
+	local propD = VehicleDesign.PROP_SIZE
+	local propZ = wingZ - chord / 2 - 0.45
+	local nacL = chord / 2 + 0.45   -- reaches the propeller's centre
+	local function props(x)
+		local list = {}
+		for _, s in ipairs({ -1, 1 }) do
+			table.insert(list, { cf = CF(s * x, wingY, propZ), box = V3(propD, propD, 0.35), flat = "Z", stretch = 1.8,
+				spin = { axis = "Z", mode = "prop", dir = s } })
+		end
+		return list
 	end
+	local propX = span * 0.3
+	pair(P, "Nacelle", "cylinder", V3(nacL, 0.42, 0.42), function(s) return CF(s * propX, wingY, wingZ - nacL / 2)
+		* ANG(0, HALF_PI, 0) end, "accent")
+	d.withSlot.MOBILITY = { "NacelleL", "NacelleR" }
+	M.MOBILITY = props(propX)
 	M.TAIL = { { cf = CF(0, R + R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6) } }
 	d.seat = { size = V3(1.2, 0.3, 1.2), cf = CF(0, R + 0.15, -L * 0.05) }
 	-- Riding the BODY item: it is the fuselage, wings / prop / tail stay
@@ -346,6 +460,18 @@ local function plane(stats)
 		box = V3(math.max(R * 3.2, VehicleDesign.RIDE_MIN.SKY.X), math.max(R * 3.0, VehicleDesign.RIDE_MIN.SKY.Y),
 			math.max(L + 1.0, VehicleDesign.RIDE_MIN.SKY.Z)), bottom = -R * 1.2, centreZ = 0,
 		lift = { "Fin", "Stabilizer" }, liftFrom = R,
+		-- once placed: the propellers out past the item's sides, on the wing
+		fit = function(dd, lo, hi)
+			local halfW = math.max(-lo.X, hi.X)
+			local x = math.clamp(halfW + propD / 2 + 0.15, propX, span / 2 - 0.2)
+			if dd.mounts.MOBILITY and #dd.mounts.MOBILITY > 0 then dd.mounts.MOBILITY = props(x) end
+			for _, p in ipairs(dd.parts) do
+				if p.name == "NacelleL" or p.name == "NacelleR" then
+					local s = p.name == "NacelleL" and -1 or 1
+					p.cf = CF(s * x, wingY, wingZ - nacL / 2) * ANG(0, HALF_PI, 0)
+				end
+			end
+		end,
 		mounts = {
 			TAIL = { { cf = CF(0, R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6), onRide = true } },
 		},
@@ -386,9 +512,6 @@ function VehicleDesign.layout(biome, stats, slots)
 		d.mounts.BODY = { { cf = CF(0, ride.bottom + ride.box.Y / 2, ride.centreZ), box = ride.box, align = "bottom",
 			stretch = look.stretch or VehicleDesign.RIDE_STRETCH, orient = look.yaw == nil, yaw = look.yaw, tip = look.tip,
 			sink = look.sink } }
-		-- a ridden boat keeps its mast and sail: out of the water that is
-		-- what says "boat"
-		if biome == "OCEAN" then d.withSlot.MOBILITY = nil end
 		for slot, list in pairs(ride.mounts) do d.mounts[slot] = list end
 	end
 	-- HEAD: a hat over the seat (VehicleBuilder puts it on the real seat
@@ -408,6 +531,21 @@ end
 -- real head when someone sits down. `sink` = how far it comes down over
 -- the head.
 VehicleDesign.HAT = { box = V3(1.7, 1.3, 1.7), headTop = 3.75, sink = 0.25 }
+
+-- MOBILITY looks: a car wheel's width, a boat's paddles per wheel and their
+-- reach, a plane propeller's size, and how far the sail is sheeted out.
+VehicleDesign.WHEEL_WIDTH = 0.7
+VehicleDesign.PADDLES = 4
+VehicleDesign.PADDLE_RADIUS = 0.8
+VehicleDesign.PROP_SIZE = 1.3
+VehicleDesign.SHEET = 20
+
+--- Riding: moves the wheels / paddle wheels / propellers (parts and
+-- MOBILITY mounts) against the ridden item's real box `lo`..`hi` (chassis
+-- space), measured once VehicleBuilder has placed it.
+function VehicleDesign.fitRide(d, lo, hi)
+	if d.riding and d.ride.fit then d.ride.fit(d, lo, hi) end
+end
 
 -- How far a ridden item may be stretched beyond its own proportions along
 -- one axis to fill the vehicle's footprint.
