@@ -24,6 +24,7 @@ CraftPreview.GAP = 0.15   -- s between two builds for one player
 
 local _pending = {}   -- [player] = { slots, biome }
 local _busy = {}
+local _shown = {}     -- [player] = { slots, biome } last asked for (refresh)
 
 -- Physics movers and scripts have no place in a picture.
 local STRIP = { "BodyMover", "BodyGyro", "BodyPosition", "BodyVelocity", "BodyAngularVelocity", "BodyForce",
@@ -72,7 +73,8 @@ end
 
 --- Shows the vehicle `slots` (validated) make in `biome` to `player`.
 function CraftPreview.show(player, slots, biome)
-	_pending[player] = { slots = slots or {}, biome = biome }
+	_shown[player] = { slots = slots or {}, biome = biome }
+	_pending[player] = _shown[player]
 	if _busy[player] then return end
 	_busy[player] = true
 	task.spawn(function()
@@ -87,9 +89,18 @@ function CraftPreview.show(player, slots, biome)
 	end)
 end
 
+--- The player's shop look changed (Modules/Shop equip): build the same
+-- slots again so the showroom shows the new paint / trail. Nothing outside
+-- CRAFTING (no showroom then).
+function CraftPreview.refresh(player)
+	local last = _shown[player]
+	if last then CraftPreview.show(player, last.slots, last.biome) end
+end
+
 --- Crafting over: the previews go.
 function CraftPreview.clear(player)
 	_pending[player] = nil
+	_shown[player] = nil
 	local gui = player:FindFirstChild("PlayerGui")
 	local folder = gui and gui:FindFirstChild(CraftPreview.FOLDER)
 	if folder then folder:ClearAllChildren() end

@@ -259,6 +259,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   only change the punch's look (`style`); gadgets (Smoke Bomb) are one use
   per round (`Constants.GADGETS`, `RemoteEvents.UseGadget`, key T).
   Prices vs earnings: `lune run tools/economy.luau` (reports/economy.md).
+  The shop screen (ShopUI, B) opens in every phase but RACING; a buy or
+  equip rebuilds the crafting showroom (`CraftPreview.refresh`).
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING
@@ -279,7 +281,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `FloodSurface` sheet only while the sea is up.
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
-  hold Q emotes. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
+  hold Q emotes, B shop. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
   H / F1 opens all; its RACING guide closes at GO.
 - Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
   (keyboard, gamepad map, on-screen `TouchControls` buttons), never

@@ -33,6 +33,7 @@ Each round cycles through three phases: Farming, Crafting, and Racing.
 | G (hold) | Guard |
 | X | Drop your oldest item |
 | Q (hold) | Open emote menu |
+| B | Open the shop (also the SHOP button; every phase but racing) |
 
 The keys of the current phase stay listed at the bottom left; H (or F1, or
 the Controls button) opens all of them.

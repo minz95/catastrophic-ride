@@ -205,3 +205,57 @@ R.describe("the next car wears what is equipped (CraftingManager)", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)
+
+-- Playtest 2026-10-25: the shop opened only in LOBBY and RESULTS, and the
+-- lobby counts down 8 s once two players are in: no time to shop. It is open
+-- in every phase but RACING now, and a look bought on the crafting screen
+-- shows in its showroom at once.
+R.describe("Shopping time", function()
+	R.it("buying a paint on the crafting screen rebuilds the showroom in it", function()
+		local e = Loader.boot()
+		local Store = e.requirePath("ServerScriptService.Modules.PlayerStore")
+		local Shop = e.requirePath("ServerScriptService.Modules.Shop")
+		local CraftPreview = e.requirePath("ServerScriptService.Modules.CraftPreview")
+		local p = e.mock.addPlayer("Crafter", 5151)
+		local gui = e.mock.Instance.new("Folder")
+		gui.Name = "PlayerGui"
+		gui.Parent = p
+		local rec = Store.load(p)
+		rec.coins = 500
+		local function painted()
+			local folder = gui:FindFirstChild(CraftPreview.FOLDER)
+			local model = folder and folder:GetChildren()[1]
+			if not model then return nil end
+			local want = Cosmetics.get("paint_sunset").body
+			for _, d in ipairs(model:GetDescendants()) do
+				if d:IsA("BasePart") and math.abs(d.Color.R - want.R) < 0.01 and math.abs(d.Color.G - want.G) < 0.01
+					and math.abs(d.Color.B - want.B) < 0.01 then return true end
+			end
+			return false
+		end
+		CraftPreview.show(p, {}, "FOREST")
+		e.mock.advance(0.5)
+		R.expect(painted()).toBe(false)
+		R.expect(Shop.handle(p, "buy", "paint_sunset").result).toBe("ok")
+		e.mock.advance(0.5)
+		R.expect(painted()).toBe(true)
+		-- crafting over: no showroom to refresh, an equip builds nothing
+		CraftPreview.clear(p)
+		R.expect(Shop.handle(p, "equip", "paint_default").result).toBe("ok")
+		e.mock.advance(0.5)
+		R.expect(#gui:FindFirstChild(CraftPreview.FOLDER):GetChildren()).toBe(0)
+		R.expect(e.mock.errors).toBeEmpty("errors")
+	end)
+
+	R.it("the shop screen opens in every phase but RACING, also with B; the guides list it", function()
+		local fs = require("@lune/fs")
+		local src = fs.readFile("roblox/StarterGui/ShopUI/init.client.lua")
+		R.expect(src:find("phase ~= Constants.PHASES.RACING", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("PHASES.LOBBY or phase", 1, true)).toBe(nil)
+		R.expect(src:find("KeyCode.B", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("KeyInput.began", 1, true) ~= nil).toBe(true)
+		local tutorial = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
+		local _, n = tutorial:gsub('key = "B",%s+short = "Shop"', "")
+		R.expect(n).toBe(2)   -- FARMING and CRAFTING
+	end)
+end)

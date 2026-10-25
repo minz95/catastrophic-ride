@@ -59,6 +59,10 @@ function Shop.handle(player, action, id)
 	elseif action ~= "state" then
 		result = "denied: bad action"
 	end
+	-- buying equips too; on the crafting screen the showroom shows it now
+	if result == "ok" and action ~= "state" then
+		require(ServerScriptService.Modules.CraftPreview).refresh(player)
+	end
 	return { result = result, state = Shop.state(rec) }
 end
 
