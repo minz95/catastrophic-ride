@@ -24,6 +24,7 @@ local ServerStorage     = game:GetService("ServerStorage")
 local Debris            = game:GetService("Debris")
 
 local ItemConfig = require(ReplicatedStorage.Shared.ItemConfig)
+local BiomeConfig = require(game:GetService("ServerScriptService").Modules.BiomeConfig)
 
 local TrackDrops = {}
 
@@ -46,13 +47,22 @@ local function flat(v)
 end
 
 -- Ground under a point, ignoring cars and other drops. Returns Y or nil.
+-- OCEAN: the rays skip the Terrain water (TerrainPlan.WATER), so out at sea
+-- they found the seabed 13 studs down or nothing (2026-10-25: drops sank or
+-- hung in the air); a drop floats on the surface unless something higher
+-- (a dock, the flume) is under it.
 local function groundY(pos, ignore)
 	local params = RaycastParams.new()
-	params.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
+	params.IgnoreWater = true
 	params.FilterType = Enum.RaycastFilterType.Exclude
 	params.FilterDescendantsInstances = ignore
 	local hit = workspace:Raycast(pos + Vector3.new(0, 6, 0), Vector3.new(0, -40, 0), params)
-	return hit and hit.Position.Y or nil
+	local y = hit and hit.Position.Y or nil
+	local biome = ReplicatedStorage:GetAttribute("Biome")
+	local water = biome and BiomeConfig[biome] and BiomeConfig[biome].waterPlaneY
+	if water then water += workspace:GetAttribute("WaterLevelOffset") or 0 end   -- waveFlood raises it
+	if water and (y == nil or y < water) then y = water end
+	return y
 end
 
 local function bounds(parts)
