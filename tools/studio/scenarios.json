@@ -1611,6 +1611,9 @@
         "players": 1,
         "rounds": 1,
         "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
         "farmProfiles": [
           "thief"
         ],
@@ -1646,6 +1649,9 @@
         "players": 1,
         "rounds": 1,
         "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
         "farmProfiles": [
           "slow"
         ],
@@ -1681,6 +1687,9 @@
         "players": 1,
         "rounds": 1,
         "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
         "farmProfiles": [
           "thief"
         ],

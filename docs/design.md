@@ -346,6 +346,15 @@ spot with its track section; the RESULTS report lists them per section.
   built (end of CRAFTING) is on this round's car, and the crafting showroom
   rebuilds at once (`CraftPreview.refresh`). The lobby stays short.
 
+- **2026-10-26 — A fair boost.** In all six Studio matches with bots the
+  harness player won by 2–10 s: the server granted a boost on cooldown
+  alone (the gauge lived on the client), so the harness client boosted every
+  5 s, while server bots never boosted. The server now keeps the gauge for
+  everyone (`Modules/BoostGauge`); bots boost on straights that stay
+  straight for the whole boost (a novice boosting into a bend got stuck on
+  the wall). After: a bot won 2 of 3 FOREST runs; OCEAN finished
+  97.5 / 97.7 / 98.0 s.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

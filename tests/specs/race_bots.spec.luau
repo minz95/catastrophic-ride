@@ -127,3 +127,63 @@ R.describe("bots in a race", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)
+
+-- History (2026-10-26): the boost gauge lived only on the client; the server
+-- granted a boost on cooldown alone. The harness player called RequestBoost
+-- every 5 s and server bots never boosted: the harness player won all six
+-- Studio matches with bots. Now the server keeps the gauge (Modules/
+-- BoostGauge) for players and bots alike.
+R.describe("boost gauge on the server", function()
+	R.it("a player boosts once on the full start gauge, then needs two drift corners", function()
+		local srv, cars, _, C, tick = race(1, 0)
+		local p = srv.players[1]
+		tick(C.RACE_COUNTDOWN + 0.5)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestBoost, p)).toBe("ok")
+		tick(C.BOOST_COOLDOWN + 0.5)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestBoost, p)).toBe("denied: gauge")
+		local corners = srv.mock.CollectionService:GetTagged("DriftCorner")
+		R.expect(#corners >= 2).toBe(true)
+		corners[1].Touched:Fire(cars[1].PrimaryPart)
+		corners[1].Touched:Fire(cars[1].PrimaryPart)   -- the same zone again: no charge
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestBoost, p)).toBe("denied: gauge")
+		corners[2].Touched:Fire(cars[1].PrimaryPart)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestBoost, p)).toBe("ok")
+		R.expect(#srv.Telemetry.events("boost")).toBe(2)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a race bot boosts on a full gauge going straight, then after two drift corners", function()
+		local srv, _, RaceBots, C, tick = race(1, 2)
+		tick(C.RACE_COUNTDOWN + 0.5)
+		local bot = RaceBots.list[1]
+		local seat = bot.seat
+		local base = seat.MaxSpeed
+		RaceBots.tryBoost(bot, 40, { err = 0.5 })   -- turning: no
+		R.expect(#srv.Telemetry.events("boost")).toBe(0)
+		-- a corner within the boost's reach: no (FOREST's first bend)
+		local RaceProgress = srv.env.requirePath("ReplicatedStorage.Shared.RaceProgress")
+		local geo = RaceProgress.geometry("FOREST")
+		local bend
+		for s = 0, 2000, 10 do
+			local _, _, dx0, dz0 = geo:pointAt(s)
+			local _, _, dx1, dz1 = geo:pointAt(s + 150)
+			if math.abs(math.atan2(dx1, dz1) - math.atan2(dx0, dz0)) > 0.8 then bend = s break end
+		end
+		RaceBots.tryBoost(bot, 40, { err = 0, s = bend }, "FOREST")
+		R.expect(#srv.Telemetry.events("boost")).toBe(0)
+		RaceBots.tryBoost(bot, 40, { err = 0 })
+		R.expect(#srv.Telemetry.events("boost")).toBe(1)
+		R.expect(seat.MaxSpeed).toBeNear(base * C.BOOST_MULTIPLIER, 1e-3)
+		bot.t += C.BOOST_COOLDOWN + 1
+		RaceBots.tryBoost(bot, 40, { err = 0 })     -- gauge empty
+		R.expect(#srv.Telemetry.events("boost")).toBe(1)
+		local BoostGauge = srv.env.requirePath("ServerScriptService.Modules.BoostGauge")
+		local corners = srv.mock.CollectionService:GetTagged("DriftCorner")
+		BoostGauge.corner(bot.id, corners[1], os.clock())
+		BoostGauge.corner(bot.id, corners[2], os.clock())
+		RaceBots.tryBoost(bot, 40, { err = 0 })
+		R.expect(#srv.Telemetry.events("boost")).toBe(2)
+		R.expect(srv.Telemetry.events("boost")[2].bot).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)

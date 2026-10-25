@@ -505,6 +505,9 @@ Constants.BOTS = {
 		TARGET_RANGE = 45,  -- studs: aimed abilities wait for a car this close
 		MIN_SPEED = 20,     -- studs/s: no abilities below this (stuck, crawling)
 		STUCK_RESPAWN = 2.5, -- s pinned (driving, not moving) before a respawn
+		BOOST_MAX_ERR = 0.1, -- rad off the line: boosts only going straight (as BotDriver)
+		BOOST_MAX_TURN = 0.35, -- rad: no boost if the road turns more within the boost's reach
+		BOOST_SETTLE = 1.5,  -- s after the boost, still fast, counted in that reach
 	},
 }
 

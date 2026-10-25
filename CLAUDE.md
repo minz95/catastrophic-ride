@@ -153,6 +153,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `state.travelYaw`, so `actualForward` must be measured along
   `VehicleController.travelDir`, not the nose (else the blocked-car clamp
   kills the speed). Mini-turbos are applied by the server (`DriftTurbo`).
+- Boost (F): the server keeps the gauge (`Modules/BoostGauge`, full at
+  the start, two DriftCorner zones refill it, Backpack fills it) and
+  `RequestBoost` needs it full; the client's bar only mirrors it. Race bots
+  use the same gauge and boost when going straight with no bend within the
+  boost's reach (`Constants.BOTS.RACE.BOOST_*`). The harness player used to
+  boost every 5 s on cooldown alone and won every match.
 - Ability drops go through `Modules/TrackDrops` (item model on the ground,
   ring, label, hitbox the model's size).
 - Client phase timers count down to the `PhaseEndsAt` attribute

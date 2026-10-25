@@ -37,6 +37,7 @@ local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
 local RaceStart         = require(ServerScriptService.Modules.RaceStart)
 local RaceSeat          = require(ServerScriptService.Modules.RaceSeat)
+local BoostGauge        = require(ServerScriptService.Modules.BoostGauge)
 
 local P = Constants.PASSIVES
 
@@ -458,19 +459,13 @@ end
 
 -- ─── Drift corner zones (all biomes) ─────────────────────────────────────────
 
-local _cornerCooldowns = {}   -- [part][userId] = expireTick
-
 local function _connectDriftCorner(part)
 	_once(part, "drift", "Touched", function(hit)
 		if not _active then return end
 		local player = _ownerOf(hit)
 		if not player then return end
-		_cornerCooldowns[part] = _cornerCooldowns[part] or {}
-		local cds = _cornerCooldowns[part]
-		local now = tick()
-		if cds[player.UserId] and now < cds[player.UserId] then return end
-		cds[player.UserId] = now + Constants.DRIFT_CORNER_COOLDOWN
-		RemoteEvents.DriftCharge:FireClient(player, Constants.DRIFT_CHARGE_PER_CORNER)
+		local amount = BoostGauge.corner(player.UserId, part, tick())
+		if amount then RemoteEvents.DriftCharge:FireClient(player, amount) end
 	end)
 end
 
@@ -788,7 +783,11 @@ RemoteEvents.RequestBoost.OnServerInvoke = function(player)
 	if not vehicle then return "denied: no vehicle" end
 	local seat = _seatOf(vehicle)
 	if not seat then return "denied: no seat" end
+	-- the gauge (drift corners fill it), kept here: the client's own copy
+	-- only draws the bar
+	if not BoostGauge.spend(player.UserId) then return "denied: gauge" end
 	_ensureRacer(player)
+	Telemetry.record("boost", { userId = player.UserId })
 
 	local duration = (pdata.vehicleStats and pdata.vehicleStats.boostDuration)
 		or Constants.BOOST_DURATION
@@ -975,7 +974,6 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end)
 		_contactCooldown = {}
 		_impactCooldown  = {}
-		_cornerCooldowns = {}
 
 		for _, player in ipairs(Players:GetPlayers()) do
 			RaceEffects.reset(player)
@@ -987,6 +985,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 				cleanSince         = tick(),
 				head = {}, tail = {}, slots = {},
 			}
+			BoostGauge.start(player.UserId)   -- full, like the bar on the client
 			_ensureRacer(player)
 		end
 

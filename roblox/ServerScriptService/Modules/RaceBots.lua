@@ -38,6 +38,8 @@ local Telemetry = require(ServerScriptService.Modules.Telemetry)
 local SessionManager = require(ServerScriptService.SessionManager)
 local FarmBots = require(ServerScriptService.Modules.FarmBots)
 local SeatedRider = require(ServerScriptService.Modules.SeatedRider)
+local BoostGauge = require(ServerScriptService.Modules.BoostGauge)
+local EffectFx = require(ServerScriptService.Modules.EffectFx)
 local AbilityConfig = require(ServerScriptService.Modules.AbilityConfig)
 local AbilitySlots = require(Shared.AbilitySlots)
 
@@ -52,7 +54,7 @@ local _otherProgress = nil   -- fn() → best progress of the players (catch-up)
 local _useAbility = nil      -- fn(proxy, item) → "ok" | "denied: …" (AbilityManager)
 local _rng = Random.new()
 
-local TRIGGERS = { "Checkpoint1", "Checkpoint2", "FinishLine" }
+local TRIGGERS = { "Checkpoint1", "Checkpoint2", "FinishLine", "DriftCorner" }
 
 --- fn(bot) when a bot crosses the line (RacingManager).
 function RaceBots.onFinish(fn) _onFinish = fn end
@@ -74,6 +76,42 @@ end
 
 -- Now and then, an ability: the next ready item in E order. Aimed ones
 -- (targetType "nearest", "random_enemy", "all_in_radius") wait for a car in range.
+-- How far the road turns over the next `ahead` studs from `s` (rad, the
+-- largest heading change from here).
+local function turnAhead(biome, s, ahead)
+	local geo = RaceProgress.geometry(biome)
+	if not geo then return 0 end
+	local _, _, dx0, dz0 = geo:pointAt(s)
+	local h0 = math.atan2(dx0, dz0)
+	local most = 0
+	for d = 10, ahead, 10 do
+		local _, _, dx, dz = geo:pointAt(s + d)
+		local diff = math.abs((math.atan2(dx, dz) - h0 + math.pi) % (2 * math.pi) - math.pi)
+		most = math.max(most, diff)
+	end
+	return most
+end
+
+-- Boost (F) like a player: a full gauge (BoostGauge: drift corners fill
+-- it), off cooldown, going straight at speed, and the road stays straight
+-- for the whole boost (Studio 2026-10-26: a novice boosted into the next
+-- corner, hit the wall and was stuck there).
+local function tryBoost(bot, speed, info, biome)
+	local R = Constants.BOTS.RACE
+	if bot.t < (bot.boostReady or 0) or speed < R.MIN_SPEED then return end
+	if math.abs(info.err or 1) > R.BOOST_MAX_ERR or not BoostGauge.ready(bot.id) then return end
+	local duration = (bot.stats and bot.stats.boostDuration) or Constants.BOOST_DURATION
+	local ahead = speed * Constants.BOOST_MULTIPLIER * (duration + R.BOOST_SETTLE)
+	if biome and info.s and turnAhead(biome, info.s, ahead) > R.BOOST_MAX_TURN then return end
+	BoostGauge.spend(bot.id)
+	bot.boostReady = bot.t + Constants.BOOST_COOLDOWN
+	VehicleTuning.set(bot.seat, "MaxSpeed", "boost", Constants.BOOST_MULTIPLIER, duration)
+	EffectFx.play("boost", bot.proxy, duration)
+	Telemetry.record("boost", { userId = bot.id, bot = true })
+end
+
+RaceBots.tryBoost = tryBoost   -- tests: nothing drives offline
+
 local function tryAbility(bot, biome, pos, speed)
 	local R = Constants.BOTS.RACE
 	if not _useAbility or bot.t < (bot.nextAbility or 0) then return end
@@ -197,6 +235,7 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 			slots = slots, stats = stats, nextAbility = B.RACE.ABILITY_FIRST * _rng:NextNumber(0.7, 1.3),
 		}
 		table.insert(RaceBots.list, bot)
+		BoostGauge.start(id)   -- full, like a player's
 		Telemetry.record("race_bot", { id = id, name = name, profile = profileName, slots = table.clone(slots), farmed = farmed,
 			maxSpeed = bot.seat and bot.seat.MaxSpeed })
 	end
@@ -244,6 +283,8 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 	for _, p in ipairs(workspace:GetPartsInPart(primary, overlap)) do
 		if CollectionService:HasTag(p, "Checkpoint1") then bot.cp[1] = true
 		elseif CollectionService:HasTag(p, "Checkpoint2") and bot.cp[1] then bot.cp[2] = true
+		elseif CollectionService:HasTag(p, "DriftCorner") then
+			BoostGauge.corner(bot.id, p, tick())
 		elseif CollectionService:HasTag(p, "FinishLine") and bot.cp[1] and bot.cp[2] then
 			bot.finished = true
 			VehicleTuning.set(seat, "MaxSpeed", "finished", 0)
@@ -259,6 +300,7 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 	end
 
 	tryAbility(bot, biome, pos, speed)
+	tryBoost(bot, speed, info, biome)
 
 	-- the same catch-up as the players (Shared/CatchUp)
 	local cu = leadS and CatchUp.mult(leadS - bot.s) or 1
