@@ -294,3 +294,46 @@ R.describe("items left on the track show the item, on the ground", function()
 		end
 	end)
 end)
+
+-- Studio record-ocean 2026-10-25: since OCEAN's water became Terrain water
+-- (rays skip it), a drop out at sea found the seabed or nothing ("did not
+-- find the ground"): it sank out of the boats' reach or hung in the air.
+R.describe("OCEAN drops float on the sea", function()
+	local Loader = require("../lib/loader")
+	local function place(waterOffset, floorY)
+		local e = Loader.boot()
+		local Vector3, CFrame = roblox.Vector3, roblox.CFrame
+		e.game:GetService("ReplicatedStorage"):SetAttribute("Biome", "OCEAN")
+		e.workspace:SetAttribute("WaterLevelOffset", waterOffset)
+		e.mock.groundY = floorY or -1000   -- the mock's one flat ground (nil: none in reach)
+		local boat = e.mock.Instance.new("Model")
+		local chassis = e.mock.Instance.new("Part")
+		chassis.Size = Vector3.new(6, 2, 10)
+		chassis.CFrame = CFrame.new(0, 4, 0)
+		chassis.Parent = boat
+		boat.PrimaryPart = chassis
+		boat.Parent = e.workspace
+		local TrackDrops = e.requirePath("ServerScriptService.Modules.TrackDrops")
+		local drop = TrackDrops.place("Cactus", boat, { hazard = { kind = "obstacle" } })
+		e.mock.groundY = 1   -- the mock module may be shared with later specs
+		return drop.folder, drop.position.Y
+	end
+
+	R.it("open sea (nothing under it): on the surface, Y 2", function()
+		local drop, y = place(nil, nil)
+		R.expect(drop:GetAttribute("OnGround")).toBe(true)
+		R.expect(y).toBeNear(2, 0.01)
+	end)
+	R.it("over the seabed: on the surface, not on the floor", function()
+		local _, y = place(nil, -11)
+		R.expect(y).toBeNear(2, 0.01)
+	end)
+	R.it("a dock above the water: on the dock", function()
+		local _, y = place(nil, 3)
+		R.expect(y).toBeNear(3, 0.01)
+	end)
+	R.it("in a flood: on the raised sea", function()
+		local _, y = place(4, -11)
+		R.expect(y).toBeNear(6, 0.01)
+	end)
+end)

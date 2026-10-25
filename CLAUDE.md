@@ -277,7 +277,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   seats a massless, non-colliding avatar in the bot's car (`Rider`).
 - OCEAN's water is Terrain water (`TerrainPlan.WATER`, painted with the
   biome), not parts: race and drop rays set `IgnoreWater = true` (it is
-  not ground; boats hold their height). waveFlood raises a see-through
+  not ground; boats hold their height). A drop at sea floats at
+  `BiomeConfig.waterPlaneY` (+ flood offset) unless a dock is higher
+  (`TrackDrops` groundY). waveFlood raises a see-through
   `FloodSurface` sheet only while the sea is up.
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
