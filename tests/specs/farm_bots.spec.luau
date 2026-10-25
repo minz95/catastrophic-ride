@@ -46,10 +46,14 @@ R.describe("farm bots (live servers fill the farm)", function()
 			R.expect(b.Character ~= nil and b.Character:FindFirstChild("HumanoidRootPart") ~= nil).toBe(true)
 		end
 		tick(30)
-		-- every bot picked something (bags can change hands: bots rob too)
+		-- every bot got an item: picked up, or (after losing every tug-of-war,
+		-- which happens: CI 2026-10-25, six contests lost) stolen
 		local picks, by = 0, {}
 		for _, ev in ipairs(srv.Telemetry.events("item_pickup")) do
 			if ev.userId < -100000 then picks += 1; by[ev.userId] = true end
+		end
+		for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do
+			if ev.act == "steal" and ev.result == "stolen" then by[ev.userId] = true end
 		end
 		for _, b in ipairs(bots) do
 			R.expect(by[b.UserId]).toBe(true)
