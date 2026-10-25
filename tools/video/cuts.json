@@ -1,0 +1,309 @@
+{
+  "_doc": "Edit lists for tools/video/cut.py. format 16x9 | 9x16. A segment is a card (store picture or colour, with text) or footage: take (reports/video/raw/<take>), t (seconds into the take's joined file; `cut.py sheets` labels every 2 s), dur, speed (>1 = faster, <1 = slow motion), fit (blur: the whole view, a blurred copy fills the frame, the default; fill: crop to the frame), zoom (with blur: >1 crops into the middle of the view), shift (with blur: move the view down, share of the height), y (top of the text, share of the height). Text: tag (step label), title (big), sub (smaller line), color (tag colour; title colour on a card).",
+  "cuts": {
+    "explainer": {
+      "_why": "how a round goes, phase by phase, with the keys (16:9, ~55 s): store page, YouTube, a Discord or group post",
+      "format": "16x9",
+      "segments": [
+        {
+          "card": true,
+          "image": "assets/store/1_grid.png",
+          "dur": 3,
+          "title": "CATASTROPHIC DAY",
+          "sub": "Farm junk. Build a ride. Race!",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-forest",
+          "t": 6,
+          "dur": 4,
+          "tag": "STEP 1 · FARM",
+          "title": "Grab junk on the farm",
+          "sub": "E to pick up",
+          "color": "#7CE04C"
+        },
+        {
+          "take": "record-forest",
+          "t": 9.5,
+          "dur": 3,
+          "tag": "STEP 1 · FARM",
+          "title": "Rarer items drop in waves",
+          "color": "#7CE04C"
+        },
+        {
+          "take": "record-forest",
+          "t": 14,
+          "dur": 4.5,
+          "tag": "STEP 1 · FARM",
+          "title": "Steal from other players",
+          "sub": "Hold E to steal  ·  F to punch",
+          "color": "#7CE04C"
+        },
+        {
+          "take": "record-forest",
+          "t": 22.5,
+          "dur": 4,
+          "tag": "STEP 1 · FARM",
+          "title": "They steal back!",
+          "sub": "Tap E ×3 to defend  ·  hold G to guard",
+          "color": "#7CE04C"
+        },
+        {
+          "take": "record-forest",
+          "t": 26,
+          "dur": 3.5,
+          "speed": 1.6,
+          "tag": "STEP 1 · FARM",
+          "title": "Fill your bag",
+          "color": "#7CE04C"
+        },
+        {
+          "take": "record-forest",
+          "t": 34.5,
+          "dur": 3.5,
+          "speed": 0.5,
+          "tag": "STEP 2 · CRAFT",
+          "title": "Your junk becomes your ride",
+          "sub": "Body · Engine · Special  +  wheels, hat, tail",
+          "color": "#FFB020"
+        },
+        {
+          "card": true,
+          "image": "assets/store/2_ramp_jump.png",
+          "dur": 3,
+          "title": "Bathtubs. Sofas. Pizzas.",
+          "sub": "Every item looks and plays different",
+          "color": "#FFB020"
+        },
+        {
+          "take": "record-forest",
+          "t": 38.5,
+          "dur": 2.5,
+          "tag": "STEP 3 · RACE",
+          "title": "Everyone starts together",
+          "color": "#4CA8FF"
+        },
+        {
+          "take": "record-forest",
+          "t": 44,
+          "dur": 4,
+          "tag": "STEP 3 · RACE",
+          "title": "Drift for a mini turbo",
+          "sub": "Shift + steer",
+          "color": "#4CA8FF"
+        },
+        {
+          "take": "record-forest",
+          "t": 79.5,
+          "dur": 4,
+          "tag": "STEP 3 · RACE",
+          "title": "Boost pads and super turbos",
+          "sub": "F to boost when the bar is full",
+          "color": "#4CA8FF"
+        },
+        {
+          "take": "record-forest",
+          "t": 131.5,
+          "dur": 4,
+          "tag": "STEP 3 · RACE",
+          "title": "Fire your items' abilities",
+          "sub": "E: traps, blasts, slicks",
+          "color": "#4CA8FF"
+        },
+        {
+          "card": true,
+          "image": "assets/store/4_ocean.png",
+          "dur": 2.5,
+          "title": "Sail the OCEAN",
+          "color": "#4CE0FF"
+        },
+        {
+          "card": true,
+          "image": "assets/store/5_sky.png",
+          "dur": 2.5,
+          "title": "Fly through the SKY",
+          "color": "#FFFFFF"
+        },
+        {
+          "take": "record-forest",
+          "t": 149.6,
+          "dur": 1.5,
+          "tag": "RESULTS",
+          "title": "Win coins, buy new looks",
+          "sub": "B for the shop",
+          "color": "#FFD23C"
+        },
+        {
+          "card": true,
+          "image": "assets/store/1_grid.png",
+          "dur": 3,
+          "title": "CATASTROPHIC DAY",
+          "sub": "Play free on Roblox",
+          "color": "#FFD23C"
+        }
+      ]
+    },
+    "ad": {
+      "_why": "fast 16:9 ad (~22 s): one beat per word",
+      "format": "16x9",
+      "segments": [
+        {
+          "take": "record-forest",
+          "t": 81,
+          "dur": 2,
+          "title": "JUNK. RIDES. CHAOS.",
+          "y": 0.5
+        },
+        {
+          "take": "record-forest",
+          "t": 15,
+          "dur": 2,
+          "title": "STEAL",
+          "y": 0.5
+        },
+        {
+          "take": "record-forest",
+          "t": 34.5,
+          "dur": 2,
+          "speed": 0.5,
+          "title": "BUILD",
+          "y": 0.5
+        },
+        {
+          "take": "record-forest",
+          "t": 44.5,
+          "dur": 2,
+          "title": "DRIFT",
+          "y": 0.5
+        },
+        {
+          "card": true,
+          "image": "assets/store/2_ramp_jump.png",
+          "dur": 1.6,
+          "title": "JUMP",
+          "y": 0.5
+        },
+        {
+          "card": true,
+          "image": "assets/store/4_ocean.png",
+          "dur": 1.6,
+          "title": "SAIL",
+          "y": 0.5
+        },
+        {
+          "card": true,
+          "image": "assets/store/5_sky.png",
+          "dur": 1.6,
+          "title": "FLY",
+          "y": 0.5
+        },
+        {
+          "take": "record-forest",
+          "t": 133,
+          "dur": 2,
+          "title": "BLAST",
+          "y": 0.5
+        },
+        {
+          "take": "record-forest",
+          "t": 149.6,
+          "dur": 1.5,
+          "title": "WIN",
+          "y": 0.5
+        },
+        {
+          "card": true,
+          "image": "assets/store/1_grid.png",
+          "dur": 3.5,
+          "title": "CATASTROPHIC DAY",
+          "sub": "Play free on Roblox",
+          "color": "#FFD23C"
+        }
+      ]
+    },
+    "reel": {
+      "_why": "vertical 9:16 (~22 s) for Reels / Shorts / TikTok: hook first, big words above the footage",
+      "format": "9x16",
+      "segments": [
+        {
+          "take": "record-forest",
+          "t": 81,
+          "dur": 2.2,
+          "zoom": 1.7,
+          "title": "Turn JUNK\ninto a\nRACE CAR",
+          "y": 0.1
+        },
+        {
+          "take": "record-forest",
+          "t": 6,
+          "dur": 2.2,
+          "title": "Grab stuff",
+          "sub": "on the farm",
+          "zoom": 1.6
+        },
+        {
+          "take": "record-forest",
+          "t": 15,
+          "dur": 2.2,
+          "title": "STEAL it",
+          "sub": "from other players",
+          "zoom": 1.6
+        },
+        {
+          "take": "record-forest",
+          "t": 34.5,
+          "dur": 2.4,
+          "speed": 0.5,
+          "title": "BUILD",
+          "sub": "your ride from it",
+          "fit": "fill",
+          "cx": 0.78
+        },
+        {
+          "take": "record-forest",
+          "t": 44.5,
+          "dur": 2.2,
+          "zoom": 1.7,
+          "title": "DRIFT"
+        },
+        {
+          "card": true,
+          "image": "assets/store/2_ramp_jump.png",
+          "dur": 1.6,
+          "title": "JUMP",
+          "y": 0.12
+        },
+        {
+          "card": true,
+          "image": "assets/store/4_ocean.png",
+          "dur": 1.6,
+          "title": "SAIL",
+          "y": 0.12
+        },
+        {
+          "card": true,
+          "image": "assets/store/5_sky.png",
+          "dur": 1.6,
+          "title": "FLY",
+          "y": 0.12
+        },
+        {
+          "take": "record-forest",
+          "t": 133,
+          "dur": 2,
+          "zoom": 1.7,
+          "title": "BLAST"
+        },
+        {
+          "card": true,
+          "image": "assets/store/1_grid.png",
+          "dur": 3,
+          "title": "CATASTROPHIC\nDAY",
+          "sub": "Play free on Roblox",
+          "color": "#FFD23C",
+          "y": 0.12
+        }
+      ]
+    }
+  }
+}
