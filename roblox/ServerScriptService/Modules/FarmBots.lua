@@ -64,9 +64,14 @@ local SHIRTS = {
 	Color3.fromRGB(190, 100, 220), Color3.fromRGB(240, 140, 190), Color3.fromRGB(80, 200, 200), Color3.fromRGB(160, 120, 80),
 }
 
+--- The shirt colour of bot `index` (its farm avatar and its race driver).
+function FarmBots.shirt(index)
+	return SHIRTS[(((index or 1) - 1) % #SHIRTS) + 1]
+end
+
 -- A plain R15 avatar (a minimal rig where that cannot be made, e.g. offline).
 local function makeCharacter(proxy, at)
-	local colour = SHIRTS[((proxy.index - 1) % #SHIRTS) + 1]
+	local colour = FarmBots.shirt(proxy.index)
 	local model
 	local ok = pcall(function()
 		local desc = Instance.new("HumanoidDescription")

@@ -23,6 +23,7 @@ local C = {
 	WATER_MID   = Color3.fromRGB(12,  55,  140),
 	WATER_TOP   = Color3.fromRGB(25,  105, 210),
 	WATER_FOAM  = Color3.fromRGB(120, 200, 255),
+	SEABED      = Color3.fromRGB(176, 160, 112),
 	LANE        = Color3.fromRGB(80,  180, 255),
 	DOCK        = Color3.fromRGB(140, 100, 60),
 	SAND        = Color3.fromRGB(220, 190, 120),
@@ -73,29 +74,21 @@ end
 
 local function _buildWater(root)
 	local cx, cz, w, d = _waterBox(250)
+	-- The water itself is Terrain water (TerrainPlan.WATER, painted when an
+	-- OCEAN round starts): it waves, reflects and shows this sandy floor.
 	_part(root, {
 		Name = "OceanFloor", Size = Vector3.new(w + 200, 2, d + 200),
 		Position = Vector3.new(cx, WATER_Y - 14, cz),
-		Color = C.WATER_DEEP, Material = Enum.Material.SmoothPlastic,
+		Color = C.SEABED, Material = MAT.SAND,
 		CanCollide = false, CastShadow = false,
 	})
+	-- The rising sea of the waveFlood hazard (HazardManager): see-through
+	-- only while it is up, so it never hides the terrain water.
 	_part(root, {
-		Name = "WaterVolume", Size = Vector3.new(w + 100, 12, d + 100),
-		Position = Vector3.new(cx, WATER_Y - 8, cz),
-		Color = C.WATER_MID, Material = Enum.Material.SmoothPlastic,
-		Transparency = 0.15, CanCollide = false, CastShadow = false,
-	})
-	_part(root, {
-		Name = "WaterPlane", Size = Vector3.new(w, 4, d),
-		Position = Vector3.new(cx, WATER_Y - 2, cz),
-		Color = C.WATER_TOP, Material = MAT.WATER,
-		Transparency = 0.35, CanCollide = false,
-	})
-	_part(root, {
-		Name = "WaterShimmer", Size = Vector3.new(w, 0.25, d),
+		Name = "FloodSurface", Size = Vector3.new(w, 0.4, d),
 		Position = Vector3.new(cx, WATER_Y, cz),
-		Color = C.WATER_FOAM, Material = MAT.NEON,
-		Transparency = 0.82, CanCollide = false, CastShadow = false,
+		Color = C.WATER_TOP, Material = MAT.WATER,
+		Transparency = 1, CanCollide = false, CanQuery = false, CastShadow = false,
 	})
 	local zone = _part(root, {
 		Name = "BuoyancyZone_Main", Size = Vector3.new(w, 8, d),
@@ -108,7 +101,7 @@ end
 -- ─── Channel: tinted lane strip, reef walls, rough water ─────────────────────
 
 local function _buildChannel(root)
-	-- Tinted water on the lane (visual only; boats float on the water).
+	-- Tinted water in the raised flume (visual only; boats float on the water).
 	local strips = Instance.new("Folder")
 	strips.Name = "LaneStrips"
 	strips.Parent = root
@@ -117,10 +110,16 @@ local function _buildChannel(root)
 		color = C.LANE, material = MAT.NEON, physics = false,
 	})
 	for _, d in ipairs(strips:GetChildren()) do
-		d.CanCollide = false
-		d.CastShadow = false
-		d.Transparency = 0.6
-		d.Parent = root
+		if d:IsA("BasePart") and d.Position.Y < WATER_Y + 1 then
+			-- on the open sea the Terrain water is the lane: a strip there
+			-- poked through the waves as flat neon patches
+			d:Destroy()
+		else
+			d.CanCollide = false
+			d.CastShadow = false
+			d.Transparency = 0.6
+			d.Parent = root
+		end
 	end
 	strips:Destroy()
 	KIT:buildWalls(root, {

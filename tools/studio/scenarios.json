@@ -1285,6 +1285,36 @@
       }
     },
     {
+      "name": "eject-ocean",
+      "kind": "match",
+      "tags": [
+        "full"
+      ],
+      "_why": "playtest 2026-10-25: Space in an OCEAN race jumped the driver into the sea, and the respawn went to the farm for good. Bots jump mid-race, then die: they must stay in / get back into their car (Modules/RaceSeat). Server bots with drivers (SeatedRider) fill the grid.",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 2,
+        "rounds": 1,
+        "fillBots": 4,
+        "ejectTest": true,
+        "durations": {
+          "FARMING": 30,
+          "CRAFTING": 8,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "maxSeconds": 450
+      },
+      "checks": {
+        "finishRate": 1.0,
+        "eject": true,
+        "bots": {
+          "spawned": 2,
+          "finished": 2
+        }
+      }
+    },
+    {
       "name": "bots-sky",
       "kind": "match",
       "tags": [

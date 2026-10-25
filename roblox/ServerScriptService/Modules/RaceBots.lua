@@ -37,6 +37,7 @@ local RaceStart = require(ServerScriptService.Modules.RaceStart)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
 local SessionManager = require(ServerScriptService.SessionManager)
 local FarmBots = require(ServerScriptService.Modules.FarmBots)
+local SeatedRider = require(ServerScriptService.Modules.SeatedRider)
 local AbilityConfig = require(ServerScriptService.Modules.AbilityConfig)
 local AbilitySlots = require(Shared.AbilitySlots)
 
@@ -174,11 +175,15 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 		model.Parent = workspace
 		local primary = model.PrimaryPart
 		nameTag(primary, name)
+		-- a driver in the seat, in the bot's farm shirt (massless: the car
+		-- handles as before)
+		SeatedRider.seat(model, model, FarmBots.shirt(proxy.index or k), { passenger = true, fallback = true })
 		local hover = primary:FindFirstChild("HoverPosition")
 		if hover then hover.Position = primary.Position end
 		VehicleController.resetRide(primary, 0)
 		RaceStart.hold(primary)
 		local rayParams = RaycastParams.new()
+		rayParams.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
 		rayParams.FilterType = Enum.RaycastFilterType.Exclude
 		rayParams.FilterDescendantsInstances = { model }
 		rayParams.RespectCanCollide = true

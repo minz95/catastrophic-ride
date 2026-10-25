@@ -133,6 +133,49 @@ function PLANS.SKY(track, geo)
 	return out
 end
 
+-- ─── Water (OCEAN) ────────────────────────────────────────────────────────────
+-- Terrain water, not parts: it waves, reflects the sky and shows the sea
+-- floor through it (playtest 2026-10-25: the old Glass / Neon sheets read as
+-- a flat blue plane). It is not ground: boats hold their height
+-- (VehicleController), and every race ray sets IgnoreWater. A character that
+-- falls in swims. Filled in TILE-sized blocks, from DEPTH under the surface
+-- (the OceanMap floor) up to the surface, over the track's bounds + MARGIN.
+TerrainPlan.WATER = {
+	OCEAN = {
+		DEPTH = 13, MARGIN = 250, TILE = 512,
+		look = {
+			WaterColor        = Color3.fromRGB(28, 132, 168),
+			WaterTransparency = 0.45,
+			WaterReflectance  = 0.6,
+			WaterWaveSize     = 0.15,
+			WaterWaveSpeed    = 12,
+		},
+	},
+}
+
+--- Water fills for a biome (empty for one without water) and its look.
+function TerrainPlan.water(biome)
+	local cfg = TerrainPlan.WATER[biome]
+	if not cfg then return {}, nil end
+	local track = require(TerrainPlan.TRACKS[biome])
+	local x0, x1, z0, z1 = bounds(track, cfg.MARGIN)
+	local top = track.trackTop
+	local out = {}
+	local x = x0
+	while x < x1 do
+		local sx = math.min(cfg.TILE, x1 - x)
+		local z = z0
+		while z < z1 do
+			local sz = math.min(cfg.TILE, z1 - z)
+			table.insert(out, { kind = "box", material = "Water",
+				cx = x + sx / 2, cy = top - cfg.DEPTH / 2, cz = z + sz / 2, sx = sx, sy = cfg.DEPTH, sz = sz })
+			z += sz
+		end
+		x += sx
+	end
+	return out, cfg.look
+end
+
 --- The fill operations for a biome (deterministic).
 function TerrainPlan.build(biome)
 	local mod = TerrainPlan.TRACKS[biome]

@@ -80,4 +80,40 @@ R.describe("terrain follows the played biome", function()
 	end)
 end)
 
+R.describe("OCEAN water is Terrain water (playtest: the parts read as flat blue)", function()
+	local water, look = TerrainPlan.water("OCEAN")
+	local track = env.requirePath("ReplicatedStorage.Shared.Tracks.OceanTrack")
+	R.it("covers every track node, from the sea floor up to the surface", function()
+		R.expect(#water > 0).toBe(true)
+		R.expect(look and look.WaterTransparency ~= nil).toBe(true)
+		local missing = {}
+		for i, n in ipairs(track.nodes) do
+			local inside = false
+			for _, op in ipairs(water) do
+				if math.abs(n[1] - op.cx) <= op.sx / 2 and math.abs(n[2] - op.cz) <= op.sz / 2 then inside = true end
+			end
+			if not inside then table.insert(missing, i) end
+		end
+		R.expect(missing).toBeEmpty("nodes outside the water")
+		for _, op in ipairs(water) do
+			R.expect(op.material).toBe("Water")
+			R.expect(op.cy + op.sy / 2).toBeNear(track.trackTop, 1e-6)
+		end
+	end)
+	R.it("no water in FOREST or SKY", function()
+		R.expect(#TerrainPlan.water("FOREST")).toBe(0)
+		R.expect(#TerrainPlan.water("SKY")).toBe(0)
+	end)
+	R.it("race rays ignore it (it is not ground)", function()
+		local fs = require("@lune/fs")
+		for _, f in ipairs({
+			"roblox/ServerScriptService/Modules/RaceBots.lua",
+			"roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua",
+			"roblox/ServerScriptService/TestHarness/RaceSim.lua",
+		}) do
+			R.expect(fs.readFile(f):find("IgnoreWater = true", 1, true) ~= nil).toBe(true)
+		end
+	end)
+end)
+
 local _ = TrackGeometry

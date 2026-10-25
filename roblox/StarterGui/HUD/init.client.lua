@@ -392,6 +392,14 @@ RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, vehicleModel)
 	end
 end)
 
+-- This script starts again when the character respawns; mid-race the HUD
+-- comes back at once (RaceSeat puts the driver back in the car and sends
+-- VehicleSpawned again).
+if ReplicatedStorage:GetAttribute("Phase") == "RACING" then
+	_cachedBiome = ReplicatedStorage:GetAttribute("Biome")
+	_enableHUD(_cachedBiome)
+end
+
 RemoteEvents.PlayerPositionSync.OnClientEvent:Connect(function(data)
 	if not screenGui.Enabled then return end
 	_updatePositionTracker(data)

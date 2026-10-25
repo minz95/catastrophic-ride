@@ -35,7 +35,15 @@ function TerrainPainter.paint(biome, force)
 		return 0
 	end
 	local ops = TerrainPlan.build(biome)
+	local water, look = TerrainPlan.water(biome)
 	t:Clear()
+	-- water first: the sand bars then replace it where they break the surface
+	for _, op in ipairs(water) do
+		t:FillBlock(CFrame.new(op.cx, op.cy, op.cz), Vector3.new(op.sx, op.sy, op.sz), Enum.Material.Water)
+	end
+	for prop, value in pairs(look or {}) do
+		pcall(function() t[prop] = value end)
+	end
 	for _, op in ipairs(ops) do
 		local mat = Enum.Material[op.material]
 		if op.kind == "ball" then
@@ -45,8 +53,8 @@ function TerrainPainter.paint(biome, force)
 		end
 	end
 	_painted = biome
-	print(string.format("[TerrainPainter] %s terrain painted (%d fills)", biome, #ops))
-	return #ops
+	print(string.format("[TerrainPainter] %s terrain painted (%d fills, %d water)", biome, #ops, #water))
+	return #ops + #water
 end
 
 return TerrainPainter

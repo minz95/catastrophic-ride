@@ -311,8 +311,45 @@ local lastBoostTry = 0
 local lastAbilityTap = 0
 local ABILITY_EVERY = 2.5   -- s between E taps (items have 10-60 s cooldowns)
 
+-- Eject test (attribute BotEjectTest, scenario eject-*): what a curious
+-- player did in the 2026-10-25 playtest. Some seconds after GO it jumps
+-- (what Space does: Humanoid.Jump) and reports whether it is still seated;
+-- then its character dies, and it reports whether the new one is back in
+-- the car (Modules/RaceSeat).
+local _ejectDone = false
+local function _seatedIn(model)
+	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	local seatPart = hum and hum.SeatPart
+	return seatPart ~= nil and model ~= nil and seatPart:IsDescendantOf(model)
+end
+local function _ejectTest(model)
+	if _ejectDone or not LocalPlayer:GetAttribute("BotEjectTest") then return end
+	_ejectDone = true
+	task.spawn(function()
+		local goAt = ReplicatedStorage:GetAttribute("RaceGoAt")
+		if type(goAt) == "number" then task.wait(math.max(goAt - workspace:GetServerTimeNow(), 0)) end
+		task.wait(6)
+		for _ = 1, 5 do
+			local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+			if hum then hum.Jump = true end
+			task.wait(0.2)
+		end
+		task.wait(1)
+		report("eject", { stage = "jump", seated = _seatedIn(model) })
+		task.wait(3)
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		local old = LocalPlayer.Character
+		if hum then hum.Health = 0 end
+		local t0 = os.clock()
+		repeat task.wait(0.25) until (LocalPlayer.Character ~= old and _seatedIn(model)) or os.clock() - t0 > 12
+		report("eject", { stage = "respawn", seated = LocalPlayer.Character ~= old and _seatedIn(model),
+			after = math.floor((os.clock() - t0) * 10) / 10 })
+	end)
+end
+
 RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, model)
 	if userId ~= LocalPlayer.UserId then return end
+	_ejectTest(model)
 	vehicle = model
 	local data = TRACKS[biome or "FOREST"]
 	if data then

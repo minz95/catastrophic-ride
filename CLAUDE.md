@@ -264,6 +264,23 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   no car at GO becomes a spectator. Never count cars at the RACING
   transition: CraftingManager builds them just after it. A running pickup
   contest locks its item for its two players.
+- Racers stay in their car: RacingClient turns the humanoid's Jumping state
+  off during RACING (Space on a seated humanoid leaves the seat whatever
+  its JumpHeight), and `Modules/RaceSeat` (RacingManager, every
+  `Constants.RACE_SEAT.CHECK_EVERY`) seats a racer who is out of it again,
+  reloads a dead one at once and re-sends VehicleSpawned after a respawn
+  (telemetry `reseat`; Studio `eject-ocean`). StarterGui scripts restart on
+  a respawn: the HUD turns itself back on when Phase is RACING.
+- Race bots have a driver: `Modules/SeatedRider` (also the gallery's rider)
+  seats a massless, non-colliding avatar in the bot's car (`Rider`).
+- OCEAN's water is Terrain water (`TerrainPlan.WATER`, painted with the
+  biome), not parts: race and drop rays set `IgnoreWater = true` (it is
+  not ground; boats hold their height). waveFlood raises a see-through
+  `FloodSurface` sheet only while the sea is up.
+- Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
+  held, label over the target), F / left click punch, hold G guard, X drop,
+  hold Q emotes. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
+  H / F1 opens all; its RACING guide closes at GO.
 - Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
   (keyboard, gamepad map, on-screen `TouchControls` buttons), never
   `UserInputService.InputBegan` directly. Touch / gamepad driving comes from
