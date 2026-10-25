@@ -26,6 +26,7 @@ local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
 local VehicleStats = require(ReplicatedStorage.Shared.VehicleStats)
 local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
 local VehicleDesign = require(ServerScriptService.Modules.VehicleDesign)
+local SeatedRider = require(ServerScriptService.Modules.SeatedRider)
 
 local Gallery = {}
 
@@ -73,54 +74,9 @@ local function label(model, text)
 	gui.Parent = model.PrimaryPart
 end
 
--- Bends a joint by `rot` around the joint, in its parent part's axes. Avatars
--- may have AnimationConstraint joints instead of Motor6D (see FarmFx).
-local function bend(char, jointName, rot)
-	local j = char:FindFirstChild(jointName, true)
-	local obj, prop
-	if j and j:IsA("Motor6D") then obj, prop = j, "C0"
-	elseif j and j:IsA("AnimationConstraint") and j.Attachment0 then obj, prop = j.Attachment0, "CFrame"
-	else return false end
-	local c0 = obj[prop]
-	local p = c0.Position
-	obj[prop] = CFrame.new(p) * rot * (c0 - p)
-	return true
-end
-
--- An avatar sitting in the vehicle's seat, legs bent like the sit pose
--- (`shirt`: torso colour, optional).
+-- An avatar sitting in the vehicle's seat (Modules/SeatedRider).
 local function seatRider(model, folder, shirt)
-	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
-	if not seat then return nil end
-	local ok, char = pcall(function()
-		local desc = Instance.new("HumanoidDescription")
-		desc.HeadColor = Color3.fromRGB(255, 220, 180)
-		desc.LeftArmColor, desc.RightArmColor = desc.HeadColor, desc.HeadColor
-		desc.TorsoColor = shirt or Color3.fromRGB(60, 140, 230)
-		desc.LeftLegColor, desc.RightLegColor = Color3.fromRGB(60, 60, 80), Color3.fromRGB(60, 60, 80)
-		return Players:CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R15)
-	end)
-	if not ok or not char then return nil end
-	char.Name = "Rider"
-	local hum = char:FindFirstChildOfClass("Humanoid")
-	hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-	local animate = char:FindFirstChild("Animate")
-	if animate then animate:Destroy() end
-	for _, p in ipairs(char:GetDescendants()) do
-		if p:IsA("BasePart") then p.Anchored = false end
-	end
-	char:PivotTo(seat.CFrame * CFrame.new(0, 3, 0))
-	char.Parent = folder
-	seat:Sit(hum)
-	-- the pose: thighs forward, shins down, hands on the knees
-	local q = math.pi / 2
-	bend(char, "LeftHip", CFrame.Angles(q, 0, 0))
-	bend(char, "RightHip", CFrame.Angles(q, 0, 0))
-	bend(char, "LeftKnee", CFrame.Angles(-q, 0, 0))
-	bend(char, "RightKnee", CFrame.Angles(-q, 0, 0))
-	bend(char, "LeftShoulder", CFrame.Angles(q * 0.6, 0, 0))
-	bend(char, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
-	return char, seat
+	return SeatedRider.seat(model, folder, shirt)
 end
 
 Gallery.seatRider = seatRider

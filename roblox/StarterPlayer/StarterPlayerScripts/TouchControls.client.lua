@@ -35,7 +35,7 @@ local LAYOUT = {
 		{ text = "GRAB",  key = Enum.KeyCode.E, col = 1, row = 1, color = Color3.fromRGB(60, 170, 90) },
 		{ text = "PUNCH", key = Enum.KeyCode.F, col = 2, row = 1, color = Color3.fromRGB(210, 80, 60) },
 		{ text = "GUARD", key = Enum.KeyCode.G, col = 2, row = 2, color = Color3.fromRGB(70, 110, 200) },
-		{ text = "DROP",  key = Enum.KeyCode.Q, col = 1, row = 2, color = Color3.fromRGB(110, 110, 125) },
+		{ text = "DROP",  key = Enum.KeyCode.X, col = 1, row = 2, color = Color3.fromRGB(110, 110, 125) },
 		{ text = "SMOKE", key = Enum.KeyCode.T, col = 1, row = 0, color = Color3.fromRGB(90, 90, 100), gadget = true },
 	},
 	RACING = {

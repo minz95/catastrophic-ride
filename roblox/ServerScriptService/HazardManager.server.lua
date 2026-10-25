@@ -96,7 +96,7 @@ local function _waterParts()
 	local ocean = maps and maps:FindFirstChild("OceanMap")
 	local out = {}
 	if not ocean then return out end
-	for _, name in ipairs({ "WaterPlane", "WaterShimmer" }) do
+	for _, name in ipairs({ "FloodSurface" }) do
 		local p = ocean:FindFirstChild(name, true)
 		if p then table.insert(out, p) end
 	end
@@ -123,14 +123,19 @@ local function _resetWater()
 		for _, p in ipairs(_waterParts()) do p.CFrame = p.CFrame - Vector3.new(0, level, 0) end
 	end
 	workspace:SetAttribute("WaterLevelOffset", 0)
+	for _, p in ipairs(_waterParts()) do p.Transparency = 1 end
 end
 
 local function _flood(hz, _, id)
 	RemoteEvents.ScreenEffect:FireAllClients("waveFlood", { duration = hz.duration })
 	Telemetry.record("hazard", { type = "waveFlood", rise = hz.riseHeight })
+	-- the flood sheet shows only while the sea is up (the sea itself is
+	-- Terrain water, which stays put)
+	for _, p in ipairs(_waterParts()) do p.Transparency = 0.45 end
 	_setWater(hz.riseHeight or 3, id)
 	task.wait(hz.duration or 4)
 	_setWater(0, id)
+	for _, p in ipairs(_waterParts()) do p.Transparency = 1 end
 end
 
 -- ─── gustZone ─────────────────────────────────────────────────────────────────

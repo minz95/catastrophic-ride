@@ -36,17 +36,8 @@ screen.IgnoreGuiInset = true
 screen.Enabled        = true    -- always present; radial hidden until Q held
 screen.Parent         = LocalPlayer.PlayerGui
 
--- Hint label (always visible during farming/lobby)
-local hintLabel = Instance.new("TextLabel")
-hintLabel.Name             = "Hint"
-hintLabel.Size             = UDim2.new(0, 120, 0, 24)
-hintLabel.Position         = UDim2.new(0, 10, 1, -40)
-hintLabel.BackgroundTransparency = 1
-hintLabel.Text             = "[Q] Emote"
-hintLabel.TextColor3       = Color3.fromRGB(200, 200, 200)
-hintLabel.TextScaled       = true
-hintLabel.Font             = Enum.Font.Gotham
-hintLabel.Parent           = screen
+-- (The "Hold Q  Emote" hint is in TutorialUI's key list; a label of its own
+-- here sat on top of the Controls button.)
 
 -- Radial container (hidden by default)
 local radial = Instance.new("Frame")

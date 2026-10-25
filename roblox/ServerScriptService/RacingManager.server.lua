@@ -36,6 +36,7 @@ local VehicleLift       = require(ServerScriptService.Modules.VehicleLift)
 local VehicleTuning     = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
 local RaceStart         = require(ServerScriptService.Modules.RaceStart)
+local RaceSeat          = require(ServerScriptService.Modules.RaceSeat)
 
 local P = Constants.PASSIVES
 
@@ -290,9 +291,31 @@ end
 -- ─── Kill plane (all biomes) ──────────────────────────────────────────────────
 
 local _respawnCooldown = {}   -- { [userId] = expireTick }
+local _seatCheckAt = 0
+
+-- Racers stay in their car (Modules/RaceSeat): out of the seat or respawned
+-- at the farm, they are put back in it.
+local function _keepSeated()
+	local now = tick()
+	if now < _seatCheckAt then return end
+	_seatCheckAt = now + Constants.RACE_SEAT.CHECK_EVERY
+	for _, player in ipairs(Players:GetPlayers()) do
+		if not _racers[player.UserId] then continue end
+		local pdata = SessionManager.getData(player)
+		local vehicle = pdata and pdata.vehicleModel
+		local result = vehicle and RaceSeat.check(player, vehicle, now)
+		if result then
+			Telemetry.record("reseat", { userId = player.UserId, why = result })
+			if result == "respawned" then
+				RemoteEvents.VehicleSpawned:FireClient(player, player.UserId, vehicle)
+			end
+		end
+	end
+end
 
 RunService.Heartbeat:Connect(function()
 	if not _active then return end
+	_keepSeated()
 	local cfg = _biome and BiomeConfig[_biome]
 	local killY = (cfg and cfg.killPlaneY) or -50
 	for _, player in ipairs(Players:GetPlayers()) do
@@ -916,6 +939,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_startTick   = tick() + Constants.RACE_COUNTDOWN
 		_finishOrder = {}
 		_physState   = {}
+		RaceSeat.reset()
 		-- Racers: everyone here when RACING starts except those who joined
 		-- during a race (Spectating). CraftingManager builds the cars just
 		-- after this, so whoever still has no car at GO watches instead and

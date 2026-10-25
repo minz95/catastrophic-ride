@@ -1,6 +1,9 @@
 -- TutorialUI/init.client.lua
--- Phase-specific control guide shown at the start of each phase.
--- Pressing F1 (or tapping the ? button) toggles the full reference panel.
+-- Phase-specific control guide shown at the start of each phase, a small
+-- key list that stays on screen all phase (keyboard players: the keys are
+-- always there to look up), and the full reference panel (H or F1, or the
+-- Controls button). The RACING guide closes at GO so it never covers the
+-- road (ReplicatedStorage "RaceGoAt").
 
 local Players          = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -34,22 +37,23 @@ local PHASE_GUIDES = {
 		title = "🌾  FARMING PHASE",
 		colour = Color3.fromRGB(80, 180, 60),
 		keys = {
-			{ key = "E",        desc = "Pick up items / mash in a contest" },
-			{ key = "Hold E", desc = "Steal from a player (0.9 s)" },
-			{ key = "E ×3 fast", desc = "Defend a steal" },
-			{ key = "F", desc = "Punch (4 hits knock an item loose)" },
-			{ key = "Hold G", desc = "Guard against punches" },
-			{ key = "Hold Q",     desc = "Emote menu" },
+			{ key = "E",          short = "Grab",   desc = "Pick up an item (tap fast to win a tug-of-war)" },
+			{ key = "Hold E",     short = "Steal",  desc = "Next to a player: steal an item" },
+			{ key = "Tap E ×3",   short = "Defend", desc = "Someone is stealing from you: stop them" },
+			{ key = "F / Click",  short = "Punch",  desc = "Punch (4 hits knock an item loose)" },
+			{ key = "Hold G",     short = "Guard",  desc = "Block punches" },
+			{ key = "X",          short = "Drop",   desc = "Drop your oldest item" },
+			{ key = "Hold Q",     short = "Emote",  desc = "Emote menu" },
 		},
-		tip = "Collect the items with icons and names!\nRarity: grey (Common) < green (Uncommon) < blue (Rare) < purple (Epic)",
+		tip = "Grab the items with icons and names, or rob other players!\nRarity: grey (Common) < green (Uncommon) < blue (Rare) < purple (Epic)",
 	},
 	CRAFTING = {
 		title = "🔧  CRAFTING PHASE",
 		colour = Color3.fromRGB(200, 140, 40),
 		keys = {
-			{ key = "Click & drag", desc = "Put an inventory item in a slot" },
-			{ key = "Click a slot",     desc = "Remove its item" },
-			{ key = "COMBINE",      desc = "Finish your vehicle (button)" },
+			{ key = "Click & drag", short = "Place",  desc = "Put an inventory item in a slot" },
+			{ key = "Click a slot", short = "Remove", desc = "Remove its item" },
+			{ key = "COMBINE",      short = "Finish", desc = "Finish your vehicle (button)" },
 		},
 		tip = "BODY + ENGINE + SPECIAL are required!\nMOBILITY (wheels / sail / wings), HEAD and TAIL are optional.",
 	},
@@ -57,16 +61,31 @@ local PHASE_GUIDES = {
 		title = "🏎  RACING PHASE",
 		colour = Color3.fromRGB(60, 140, 255),
 		keys = {
-			{ key = "W / ↑",      desc = "Accelerate" },
-			{ key = "S / ↓",      desc = "Brake / reverse" },
-			{ key = "A / ←  D / →", desc = "Steer" },
-			{ key = "F",          desc = "Boost (needs a full gauge)" },
-			{ key = "SHIFT + steer", desc = "Drift (above half speed)" },
-			{ key = "E",          desc = "Use an item ability" },
+			{ key = "W / ↑",         short = "Gas",     desc = "Accelerate" },
+			{ key = "S / ↓",         short = "Brake",   desc = "Brake / reverse" },
+			{ key = "A D / ← →",     short = "Steer",   desc = "Steer" },
+			{ key = "Shift + steer", short = "Drift",   desc = "Drift (above half speed)" },
+			{ key = "F",             short = "Boost",   desc = "Boost (needs a full gauge)" },
+			{ key = "E",             short = "Ability", desc = "Use an item ability" },
+			{ key = "Space / Ctrl",  short = "Up/Down", desc = "Climb / dive (SKY)", biome = "SKY" },
+			{ key = "R",             short = "Reset",   desc = "Put the car back on the road" },
 		},
 		tip = "Release a long drift for a mini turbo!\nBoost pads (yellow) give extra speed.",
 	},
 }
+
+local function _biome()
+	return game:GetService("ReplicatedStorage"):GetAttribute("Biome")
+end
+
+-- Keys of a phase that apply in this round's biome.
+local function _keysFor(guide)
+	local out = {}
+	for _, k in ipairs(guide.keys) do
+		if not k.biome or k.biome == _biome() then table.insert(out, k) end
+	end
+	return out
+end
 
 -- ─── Floating toast (shows at phase start, auto-hides after 6s) ──────────────
 
@@ -158,7 +177,7 @@ toastTipPad.Parent        = toastTip
 local toastDismiss = Instance.new("TextLabel")
 toastDismiss.Size          = UDim2.new(1, 0, 0, 18)
 toastDismiss.BackgroundTransparency = 1
-toastDismiss.Text          = "[ F1 ] Full controls guide  •  closes by itself"
+toastDismiss.Text          = "[ H ] All controls  •  closes by itself"
 toastDismiss.TextScaled    = false
 toastDismiss.TextSize      = 10
 toastDismiss.Font          = Enum.Font.Gotham
@@ -255,7 +274,7 @@ local function _showToast(phase)
 	toastTip.Text    = guide.tip
 
 	_clearKeyRows()
-	for i, k in ipairs(guide.keys) do
+	for i, k in ipairs(_keysFor(guide)) do
 		_buildKeyRow(k.key, k.desc, i)
 	end
 
@@ -266,9 +285,14 @@ local function _showToast(phase)
 		Position = UDim2.new(0.5, -180, 0, 80)
 	}):Play()
 
-	-- Auto-hide after 7s
+	-- Auto-hide after 7 s; the RACING guide at GO, before the cars move
+	local show = 7
+	if phase == "RACING" then
+		local goAt = game:GetService("ReplicatedStorage"):GetAttribute("RaceGoAt")
+		show = type(goAt) == "number" and math.max(goAt - workspace:GetServerTimeNow() - 0.3, 0.5) or 3
+	end
 	if _toastTimer then pcall(task.cancel, _toastTimer) end
-	_toastTimer = task.delay(7, function()
+	_toastTimer = task.delay(show, function()
 		_toastTimer = nil
 		_hideToast()
 	end)
@@ -473,21 +497,21 @@ closeBtn.Activated:Connect(_togglePanel)
 
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
-	if input.KeyCode == Enum.KeyCode.F1 then
+	if input.KeyCode == Enum.KeyCode.F1 or input.KeyCode == Enum.KeyCode.H then
 		_togglePanel()
 	end
 end)
 
--- ─── F1 hint button (always visible, bottom-left) ────────────────────────────
+-- ─── Controls button (always visible, bottom-left) ───────────────────────────
 
 local hintBtn = Instance.new("TextButton")
 hintBtn.Name             = "HintButton"
-hintBtn.Size             = UDim2.new(0, 90, 0, 28)
+hintBtn.Size             = UDim2.new(0, 120, 0, 28)
 hintBtn.Position         = UDim2.new(0, 8, 1, -36)
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0
-hintBtn.Text             = "[ F1 ] Help"
+hintBtn.Text             = "[ H ] Controls"
 hintBtn.TextScaled       = true
 hintBtn.Font             = Enum.Font.Gotham
 hintBtn.TextColor3       = Color3.fromRGB(180, 180, 220)
@@ -499,13 +523,83 @@ hintCorner.Parent        = hintBtn
 
 hintBtn.Activated:Connect(_togglePanel)
 
+-- ─── Key list (always on screen during a phase, left edge) ───────────────────
+-- Keyboard players can always look a key up without opening anything; phones
+-- and tablets have labelled buttons instead (TouchControls).
+
+local strip = Instance.new("Frame")
+strip.Name                   = "KeyStrip"
+strip.AnchorPoint            = Vector2.new(0, 1)
+strip.Position               = UDim2.new(0, 8, 1, -44)
+strip.Size                   = UDim2.new(0, 170, 0, 0)
+strip.AutomaticSize          = Enum.AutomaticSize.Y
+strip.BackgroundColor3       = Color3.fromRGB(12, 12, 22)
+strip.BackgroundTransparency = 0.45
+strip.BorderSizePixel        = 0
+strip.Visible                = false
+strip.Parent                 = screen
+Instance.new("UICorner", strip).CornerRadius = UDim.new(0, 8)
+local stripPad = Instance.new("UIPadding", strip)
+stripPad.PaddingTop, stripPad.PaddingBottom = UDim.new(0, 6), UDim.new(0, 6)
+stripPad.PaddingLeft, stripPad.PaddingRight = UDim.new(0, 6), UDim.new(0, 6)
+local stripLayout = Instance.new("UIListLayout", strip)
+stripLayout.SortOrder = Enum.SortOrder.LayoutOrder
+stripLayout.Padding   = UDim.new(0, 2)
+
+local function _touchOnly()
+	return UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+end
+
+local function _showStrip(phase)
+	for _, c in ipairs(strip:GetChildren()) do
+		if c:IsA("Frame") then c:Destroy() end
+	end
+	local guide = PHASE_GUIDES[phase]
+	if not guide or phase == "CRAFTING" or _touchOnly() then
+		strip.Visible = false
+		return
+	end
+	for i, k in ipairs(_keysFor(guide)) do
+		local row = Instance.new("Frame")
+		row.Size = UDim2.new(1, 0, 0, 17)
+		row.BackgroundTransparency = 1
+		row.LayoutOrder = i
+		row.Parent = strip
+		local key = Instance.new("TextLabel")
+		key.Size = UDim2.new(0, 92, 1, 0)
+		key.BackgroundTransparency = 1
+		key.Text = k.key
+		key.TextScaled = true
+		key.Font = Enum.Font.GothamBold
+		key.TextColor3 = Color3.fromRGB(255, 220, 60)
+		key.TextXAlignment = Enum.TextXAlignment.Right
+		key.Parent = row
+		local what = Instance.new("TextLabel")
+		what.Size = UDim2.new(1, -100, 1, 0)
+		what.Position = UDim2.new(0, 100, 0, 0)
+		what.BackgroundTransparency = 1
+		what.Text = k.short
+		what.TextScaled = true
+		what.Font = Enum.Font.Gotham
+		what.TextColor3 = Color3.fromRGB(225, 225, 235)
+		what.TextXAlignment = Enum.TextXAlignment.Left
+		what.Parent = row
+	end
+	strip.Visible = true
+end
+
 -- ─── Phase listener ───────────────────────────────────────────────────────────
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
-	-- Auto-show relevant toast
+local function _onPhase(phase)
+	_showStrip(phase)
 	task.wait(0.5)   -- slight delay so other UIs settle first
 	_showToast(phase)
-
 	-- Close reference panel on phase change
 	if _panelOpen then _togglePanel() end
-end)
+end
+
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
+
+-- Joined (or respawned) mid-phase: show that phase's key list now.
+local phaseNow = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
+if phaseNow then _showStrip(phaseNow) end

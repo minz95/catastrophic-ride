@@ -54,6 +54,8 @@ local _keys = {
 }
 
 local _suspParams = RaycastParams.new()
+
+_suspParams.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
 _suspParams.FilterType = Enum.RaycastFilterType.Exclude
 -- Only solid parts carry the car: trigger volumes and see-through scenery
 -- (the Sky map's haze planes at Y 28-34 overlap FOREST's spiral, Studio
@@ -829,6 +831,32 @@ RemoteEvents.CarImpact.OnClientEvent:Connect(function(dvx, dvz, spin, strength)
 	end
 end)
 
+-- ─── No jumping out of the car ───────────────────────────────────────────────
+-- Space on a seated humanoid jumps it off the seat whatever its JumpHeight
+-- (playtest 2026-10-25: Space in an OCEAN race dropped the driver into the
+-- sea). With the Jumping state off the humanoid cannot leave the seat; SKY
+-- still reads Space as "climb" through KeyInput. Modules/RaceSeat on the
+-- server puts back anyone who gets out anyway.
+local _jumpConn = nil
+local function _lockJump(char, on)
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	if _jumpConn then _jumpConn:Disconnect(); _jumpConn = nil end
+	if not hum then return end
+	hum.JumpHeight = on and 0 or 7.2
+	pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, not on) end)
+	if on then
+		_jumpConn = hum:GetPropertyChangedSignal("Jump"):Connect(function()
+			if hum.Jump then hum.Jump = false end
+		end)
+	end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+	if not _active then return end
+	char:WaitForChild("Humanoid", 5)
+	if _active then _lockJump(char, true) end
+end)
+
 -- ─── Enable / Disable ─────────────────────────────────────────────────────────
 
 function RacingClient.enable()
@@ -840,8 +868,7 @@ function RacingClient.enable()
 	_updateBoostHUD()
 	_resetCheckpointHUD()
 
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	if hum then hum.JumpHeight = 0 end
+	_lockJump(LocalPlayer.Character, true)
 
 	_abilityReadyAt = {}
 	_abilityBusy    = false
@@ -865,8 +892,7 @@ function RacingClient.disable()
 	_seat    = nil
 	_hideDriftLabel()
 
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	if hum then hum.JumpHeight = 7.2 end
+	_lockJump(LocalPlayer.Character, false)
 end
 
 -- ─── Biome / Phase listeners ─────────────────────────────────────────────────

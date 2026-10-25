@@ -176,6 +176,8 @@ function MatchHarness.start(args, endTest)
 		player:SetAttribute("BotDriverProfile", driverProfiles[((joined - 1) % #driverProfiles) + 1])
 		player:SetAttribute("BotIndex", joined)   -- loadouts[round][BotIndex]
 		player:SetAttribute("HarnessBot", true)
+		-- eject test: the bot presses jump in the race, then dies (BotDriver)
+		if args.ejectTest then player:SetAttribute("BotEjectTest", true) end
 		-- shop experiments: coins and a level for the bot, and what it buys
 		-- through ShopAction (BotDriver)
 		if args.shop and args.shop[joined] then

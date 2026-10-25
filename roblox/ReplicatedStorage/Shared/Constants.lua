@@ -55,6 +55,10 @@ Constants.FINISH_GRACE_MAX   = 75
 -- +MAX top speed, full at GAP_FULL studs (Shared/CatchUp, RacingManager).
 -- The leader never gets it, so a build or a driver still wins on merit.
 Constants.CATCH_UP = { GAP_START = 60, GAP_FULL = 400, MAX = 0.12 }
+-- Racers stay in their car (Modules/RaceSeat): a driver out of the seat (a
+-- respawned character, a jump the client did not stop) is put back after
+-- RESEAT_AFTER s; checked every CHECK_EVERY s.
+Constants.RACE_SEAT = { RESEAT_AFTER = 0.3, CHECK_EVERY = 0.25 }
 Constants.RACE_COUNTDOWN = 4 -- s from RACING to GO (cars spawn and seat, then 3-2-1); Modules/RaceStart
 Constants.RACING_TIMEOUT = 240 -- failsafe; the slowest build with a novice driver needs ~180 s on the 2026-10-20 tracks
 
@@ -167,6 +171,7 @@ Constants.STEAL_INVINCIBLE   = 3    -- seconds of steal immunity after being rob
 Constants.STEAL_DEFEND_WINDOW = 1   -- seconds victim has to defend
 Constants.STEAL_DEFEND_PRESSES = 3  -- taps needed to block
 Constants.STEAL_DEFENDED_COOLDOWN = 0.5 -- thief may try again this soon after a defended attempt
+Constants.STEAL_HOLD         = 0.9  -- s of holding E near someone; the steal starts while still held (FarmingClient)
 
 -- ─── Farming fights (FarmingManager, FarmingRules.punch) ─────────────────────
 -- F punches the player in front of you; landed hits pile up on the victim

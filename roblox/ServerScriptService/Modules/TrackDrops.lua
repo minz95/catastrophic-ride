@@ -48,6 +48,7 @@ end
 -- Ground under a point, ignoring cars and other drops. Returns Y or nil.
 local function groundY(pos, ignore)
 	local params = RaycastParams.new()
+	params.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
 	params.FilterType = Enum.RaycastFilterType.Exclude
 	params.FilterDescendantsInstances = ignore
 	local hit = workspace:Raycast(pos + Vector3.new(0, 6, 0), Vector3.new(0, -40, 0), params)

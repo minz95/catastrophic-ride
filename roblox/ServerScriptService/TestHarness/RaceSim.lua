@@ -241,6 +241,8 @@ function RaceSim.runOne(opts)
 	if not opts.contact then ghostCars(parts) end
 
 	local rayParams = RaycastParams.new()
+
+	rayParams.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
 	rayParams.FilterDescendantsInstances = { model }
 	rayParams.RespectCanCollide = true   -- like RacingClient: only solid ground carries the car

@@ -326,6 +326,20 @@ spot with its track section; the RESULTS report lists them per section.
   now 270° / 225° bends forming an S. A map spec fails any track that meets
   itself on one layer.
 
+- **2026-10-25 — First real playtest.** The steal was invisible (it fired on
+  letting go of E, nothing showed over the other player) and tapping Q to
+  open emotes dropped an item: the steal now starts while E is held, with a
+  "[Hold E] Steal" bar over the nearest player; drop moved to X; left click
+  punches; the phase's keys stay on screen (TutorialUI key list, H opens the
+  rest). The RACING guide stayed 3 s into the race; it now closes at GO.
+  Space jumped the driver off the seat (JumpHeight 0 does not stop that)
+  into the sea, and the respawn went to the farm for good: the Jumping
+  state is off in races and `Modules/RaceSeat` puts any racer back in their
+  car (Studio `eject-ocean`). Race bots got a driver in the seat
+  (`Modules/SeatedRider`, massless). OCEAN's water is Terrain water now
+  (waves, reflections, the sandy floor shows through), not Glass and Neon
+  sheets; race rays ignore it.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

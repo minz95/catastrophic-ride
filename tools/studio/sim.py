@@ -450,6 +450,15 @@ def check(sc, report):
                   and ((e.get("data") or {}).get("groups") or 0) > 0 and ((e.get("data") or {}).get("turned") or 0) > 0]
             if len(sr) < c["showroomSpin"]:
                 out.append(("fail", "nothing turned in the crafting showroom"))
+        if c.get("eject"):
+            ej = [e.get("data") or {} for e in events if e.get("kind") == "bot_eject"]
+            for stage in ("jump", "respawn"):
+                got = [d for d in ej if d.get("stage") == stage]
+                if not got:
+                    out.append(("fail", "eject test: no %s report" % stage))
+                elif not all(d.get("seated") for d in got):
+                    out.append(("fail", "eject test: out of the car after the %s (%d of %d)" %
+                                (stage, sum(1 for d in got if not d.get("seated")), len(got))))
         if c.get("spin"):
             turned = {e.get("userId") for e in events if e.get("kind") == "bot_spin_fx"
                        and ((e.get("data") or {}).get("turns") or 0) >= 3}

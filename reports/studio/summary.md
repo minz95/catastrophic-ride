@@ -5,15 +5,16 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | Scenario | Result | Commit | Ran |
 |---|---|---|---|
 | [abilities-forest](abilities-forest.json) | WARN | fd36242+ | 2026-10-22T02:09 |
-| [abilities-ocean](abilities-ocean.json) | PASS | aeab89c | 2026-10-22T01:10 |
+| [abilities-ocean](abilities-ocean.json) | WARN | 9608317 | 2026-10-25T00:39 |
 | [abilities-sky](abilities-sky.json) | PASS | aeab89c+ | 2026-10-22T01:19 |
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
 | [bots-abilities](bots-abilities.json) | PASS | e58978d+ | 2026-10-24T02:41 |
 | [bots-fight](bots-fight.json) | PASS | 45ca943+ | 2026-10-24T11:39 |
 | [bots-forest](bots-forest.json) | PASS | e47e961+ | 2026-10-24T23:26 |
-| [bots-ocean](bots-ocean.json) | PASS | 4f74f56+ | 2026-10-24T00:33 |
+| [bots-ocean](bots-ocean.json) | PASS | 9608317 | 2026-10-25T00:32 |
 | [bots-sky](bots-sky.json) | PASS | 4f74f56+ | 2026-10-24T00:36 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
+| [eject-ocean](eject-ocean.json) | PASS | 21d2d06+ | 2026-10-25T20:46 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
 | [escape-ocean](escape-ocean.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
 | [escape-sky](escape-sky.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
@@ -29,10 +30,11 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [match-forest](match-forest.json) | PASS | 9608317+ | 2026-10-25T00:51 |
 | [match-ocean](match-ocean.json) | PASS | 5b1f6b6+ | 2026-10-24T21:22 |
 | [match-sky](match-sky.json) | PASS | 5b1f6b6+ | 2026-10-24T21:41 |
-| [promo](promo.json) | PASS | 9608317+ | 2026-10-25T00:43 |
+| [promo](promo.json) | PASS | 21d2d06+ | 2026-10-25T20:48 |
 | [race-forest-builds](race-forest-builds.json) | PASS | e47e961+ | 2026-10-24T23:23 |
 | [race-forest](race-forest.json) | PASS | e47e961+ | 2026-10-24T23:20 |
-| [race-ocean](race-ocean.json) | PASS | 2315090+ | 2026-10-22T23:02 |
+| [race-ocean-builds](race-ocean-builds.json) | PASS | 9608317 | 2026-10-25T00:36 |
+| [race-ocean](race-ocean.json) | PASS | 21d2d06+ | 2026-10-25T20:54 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
 | [shop-4p](shop-4p.json) | PASS | 1bde8b9+ | 2026-10-24T00:10 |
 | [showroom](showroom.json) | PASS | 5b1f6b6+ | 2026-10-24T21:33 |
@@ -114,42 +116,37 @@ driving: 18 hits (closing speed max 70, push max 45 studs/s), 2 drift turbos, dr
 - **warn** lifeFloat (1 landings): never rose 1.5 studs (rose 0.0)
 - **warn** sofaFortress (1 landings): MaxSpeed never went down (0→0)
 
-## abilities-ocean — PASS
+## abilities-ocean — WARN
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 2
-  round 1 (OCEAN): 0 finished of 4
-    steal attempts: denied: too late=1
-    -4: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -2: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
-    -1: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
-    -3: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-  events: ability=56 ability_probe=115 bot_craft=4 bot_fx=336 bot_hud=19 bot_joined=4 bot_pickup_denied=1 bot_ready=4 bot_respawn=1 bot_screen=4 bot_steal=1 checkpoint=8 contact=9 craft=4 harness_crafting=1 harness_round=1 hazard=3 item_pickup=2 phase=4 race_go=1 race_launch=4 race_progress=244 race_sample=504 race_start=1 respawn=1 speed_effect=143 steal_attempt=1 vehicle_spawn=4
-abilities: 12 items fired ok, 23 effect keys measured
-  bathSplash      x4   rise 0.0  MaxSpeed 88.8→88.8 88.8→88.8  drawn 20
-  blocked         x1   rise 0.0  MaxSpeed 125.8→125.8  drawn 4
-  boost           x33  rise 4.0  MaxSpeed 59.9→89.8 54→81.1  drawn 24
-  boostRocket     x10  rise 3.0  MaxSpeed 61.4→92.1 92.1→92.1  drawn 24
-  bumperAbsorb    x4   rise 0.0  MaxSpeed 60→60 90.1→90.1  drawn 16
-  cactusSting     x1   rise 4.0  MaxSpeed 92.1→46  drawn 4
-  cartShove       x3   rise 0.2  MaxSpeed 88.8→88.8 53.3→53.3  drawn 12
-  dropTrap        x4   rise 0.0  MaxSpeed 92.1→92.1 82.9→82.9  drawn 16
-  frozen          x1   rise 1.8  MaxSpeed 102.2→0  drawn 4
-  fullBuoyancy    x4   rise 3.0  MaxSpeed 92.1→92.1 92.1→92.1  drawn 16
-  hover           x5   rise 3.5  MaxSpeed 102.2→0 88.8→88.8  drawn 20
-  kiteLift        x3   rise 4.0  MaxSpeed 92.1→92.1 92.1→46  drawn 16
-  leadFlag        x5   rise 0.0  MaxSpeed 60→63.1 60→63.1  drawn 20
-  lifeFloat       x4   rise 3.5  MaxSpeed 125.8→89.8 125.8→89.8  drawn 16
-  microFreeze     x3   rise 0.0  MaxSpeed 60→60 63.1→37.8  drawn 12
-  rammed          x1   rise 3.9  MaxSpeed 92.1→46  drawn 4
-  rise            x8   rise 4.0  MaxSpeed 59.9→89.8 60→81.1  drawn 24
-  rocketBurst     x6   rise 0.0  MaxSpeed 90.1→180.1 90.1→108.1  drawn 24
-  slipstream      x5   rise 3.7  MaxSpeed 60→81.1 60→81.1  drawn 20
-  splashed        x1   rise 0.0  MaxSpeed 89.8→71.9  drawn 4
-  steamed         x2   rise 0.0  MaxSpeed 61.4→92.1 54→81.1  drawn 8
-  umbrellaSail    x3   rise 0.0  MaxSpeed 88.8→102.2 88.8→102.2  drawn 12
-  windRide        x4   rise 0.0  MaxSpeed 89.8→125.8 89.8→125.8  drawn 16
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+  round 1 (OCEAN): 0 finished of 3
+    steal attempts: denied: too late=2
+    -3: picked 1, contests 0/0, stole 0, robbed 0, defences 0, items 1 | craft submitted, rejected 0
+    -2: picked 2, contests 0/0, stole 0, robbed 0, defences 0, items 2 | craft submitted, rejected 0
+    -1: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+  events: ability=43 ability_probe=82 bot_craft=3 bot_fx=177 bot_hud=14 bot_joined=3 bot_pickup_denied=1 bot_ready=3 bot_screen=7 bot_showroom_spin=3 bot_steal=2 checkpoint=6 craft=3 craft_preview=6 drift_turbo=9 drop_placed=4 harness_crafting=1 harness_round=1 hazard=3 hit_blocked=1 item_pickup=3 item_wave=3 phase=4 race_go=1 race_launch=3 race_progress=180 race_sample=378 race_start=1 race_timeout=1 reward=3 server_perf=84 speed_effect=119 steal_attempt=2 vehicle_spawn=3
+abilities: 9 items fired ok, 16 effect keys measured
+  bathSplash      x5   rise 0.5  MaxSpeed 93.1→55.8 96.7→97  drawn 15
+  blocked         x1   rise 0.1  MaxSpeed 80→80  drawn 3
+  boost           x21  rise 9.2  MaxSpeed 62.1→93.1 62.1→93.2  drawn 18
+  boostRocket     x12  rise 9.3  MaxSpeed 62.7→108.1 62.7→108.1  drawn 18
+  dropTrap        x4   rise 0.0  MaxSpeed 72.1→72.1 108.1→108.1  drawn 12
+  fullBuoyancy    x4   rise 3.1  MaxSpeed 94→97.3 62.7→108.1  drawn 12
+  hover           x5   rise 8.6  MaxSpeed 71.4→82.1 63.3→73.4  drawn 15
+  kiteLift        x4   rise 8.6  MaxSpeed 94→108.1 62.7→108.1  drawn 12
+  lifeFloat       x4   rise 3.5  MaxSpeed 68.3→107.2 76.5→80  drawn 12
+  miniTurbo       x8   rise 3.1  MaxSpeed 108.1→125.4 65.7→82  drawn 18
+  rise            x4   rise 9.1  MaxSpeed 93.2→111.8 64.5→78.2  drawn 12
+  slipped         x1   rise 0.0  MaxSpeed 67.7→40.7  drawn 3
+  slipstream      x1   rise 0.0  MaxSpeed 108.1→97.3  drawn 3
+  superTurbo      x1   rise 3.4  MaxSpeed 62.7→86.5  drawn 3
+  umbrellaSail    x3   rise 0.0  MaxSpeed 93.1→107 65.2→75  drawn 9
+  windRide        x4   rise 4.6  MaxSpeed 74.5→82 69.6→76.5  drawn 12
+driving: 0 hits, 9 drift turbos, drops: Magnifying Glass
+server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 66 kbps; RACING heartbeat 60-60 Hz, physics 60-60 fps, send max 114 kbps; memory max 2332 MB
 ```
+- **warn** round 1: 3 of 4 players joined (Studio did not start every client)
 
 ## abilities-sky — PASS
 
@@ -250,13 +247,21 @@ server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 216 kbps; CRAFTI
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (OCEAN): 1 finished of 1
-    steal attempts: none
-    -1: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
-    #1 Player1 91.8s
-  events: ability=16 ability_probe=35 bot_craft=1 bot_fx=20 bot_hud=11 bot_joined=1 bot_pickup_denied=1 bot_ready=1 bot_screen=3 checkpoint=2 craft=1 drift_turbo=8 finish=4 harness_crafting=1 harness_round=1 hazard=6 item_pickup=7 item_wave=3 phase=4 phase_shortened=1 race_bot=3 race_go=1 race_launch=1 race_progress=401 race_sample=209 race_start=1 reward=1 server_perf=67 speed_effect=82 vehicle_spawn=1
-driving: 0 hits, 8 drift turbos
-bots: 3 raced (average, novice, expert), 3 finished: 96.2s, 97.2s, 102.5s
-server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 24 kbps; RACING heartbeat 60-60 Hz, physics 60-60 fps, send max 30 kbps; memory max 2263 MB
+    steal attempts: defended=1, denied: too late=1, stolen=4
+    -100003: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 8, contests 0/0, stole 0, robbed 1, defences 0, items nil
+    -100002: picked 7, contests 1/2, stole 2, robbed 2, defences 0, items nil
+    -1: picked 11, contests 1/2, stole 2, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player1 84.5s
+  events: ability=139 ability_probe=82 ability_target=3 bot_ability=37 bot_craft=1 bot_defend=1 bot_farm=26 bot_farmfx=22 bot_fx=62 bot_hud=23 bot_joined=1 bot_ready=1 bot_respawn=3 bot_screen=3 bot_showroom_spin=1 bot_spin_fx=56 bot_steal=2 checkpoint=2 cleanse=4 contest_result=2 craft=1 craft_preview=2 drift_turbo=5 drop_placed=6 farm_bot=3 finish=4 harness_crafting=1 harness_round=1 hazard=6 item_drop=4 item_
+driving: 0 hits, 5 drift turbos, drops: Pizza
+farm bots: 3 on the farm, 22 pickups, 0 punches thrown, 5 punches/steals on bots
+farm bots: 3 steals tried (2 stolen), 0 guards
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1263
+bot abilities: 37 fired (Bamboo Raft, Camera, Cardboard Box, Compass, Flower, Lantern, Pizza)
+ability targets: 3, on bots 3
+bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 93.0s, 93.5s, 108.5s
+server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 59 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 12 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 22 kbps; memory max 2267 MB
 ```
 
 ## bots-sky — PASS
@@ -284,6 +289,28 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
     -1: picked 12, contests 2/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
     -3: picked 15, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
   events: ability=3 bot_craft=3 bot_farmfx=52 bot_guard=3 bot_hud=218 bot_joined=4 bot_pickup_denied=1 bot_punch=7 bot_ready=4 bot_screen=8 bot_steal=3 contest_result=4 craft=4 harness_crafting=1 harness_round=1 item_drop=18 item_pickup=42 item_wave=3 phase=3 punch=7 race_sample=8 race_start=1 steal_attempt=3 vehicle_spawn=4
+```
+
+## eject-ocean — PASS
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (OCEAN): 2 finished of 2
+    steal attempts: denied: too late=1, stolen=1
+    -1: picked 5, contests 0/1, stole 1, robbed 0, defences 0, items 6 | craft submitted, rejected 0
+    -2: picked 12, contests 1/1, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    #1 Player1 93.8s
+    #2 Player2 95.4s
+  events: ability=104 ability_probe=125 bot_ability=31 bot_craft=2 bot_defend=1 bot_eject=4 bot_farm=15 bot_farmfx=16 bot_fx=144 bot_guard=1 bot_hud=32 bot_joined=2 bot_punch=1 bot_ready=2 bot_respawn=4 bot_screen=6 bot_showroom_spin=4 bot_spin_fx=117 bot_steal=1 checkpoint=4 cleanse=4 contact=6 contest_result=1 craft=2 craft_preview=4 drift_turbo=5 drop_placed=12 farm_bot=2 finis
+driving: 2 hits (closing speed max 37, push max 26 studs/s), 5 drift turbos, drops: Cactus, Pizza
+farm bots: 2 on the farm, 14 pickups, 0 punches thrown, 1 punches/steals on bots
+farm bots: 0 steals tried (0 stolen), 0 guards
+spinning wheels / paddles / propellers: 2 cars (wheel), most turns 1283
+bot abilities: 31 fired (Barrel, Cactus, Flower, Pizza, Treadmill)
+bots: 2 raced (average, novice), 2 farmed their car, 2 finished: 97.1s, 111.9s
+server: FARMING heartbeat 52-60 Hz, physics 54-60 fps, send max 48731 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 29 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 94 kbps; memory max 2329 MB
 ```
 
 ## escape-forest — PASS
@@ -470,7 +497,7 @@ server: FARMING heartbeat 57-60 Hz, physics 58-60 fps, send max 43479 kbps; CRAF
 ## promo — PASS
 
 ```
-promo: 1 shots, 0 errors
+promo: 6 shots, 0 errors
 ```
 
 ## race-forest-builds — PASS
@@ -492,13 +519,22 @@ RaceSim FOREST (shipped) — 122.8s wall time
 drifts: expert 19/12, average 33/9, novice 0/0
 ```
 
+## race-ocean-builds — PASS
+
+```
+RaceSim OCEAN (shipped) — 110.8s wall time
+  novice   [slowest-novice] car=slowest max=62 mass=6.48 → 111.69s | CPs 2 | respawns 0 | blocked 0
+  expert   [fastest-expert] car=fastest max=63 mass=6.74 → 99.16s | CPs 2 | respawns 0 | blocked 0
+drifts: slowest-novice 0/0, fastest-expert 24/3
+```
+
 ## race-ocean — PASS
 
 ```
-RaceSim OCEAN (shipped) — 109.3s wall time
-  expert   car=p50 max=62 mass=6.46 → 102.36s | CPs 2 | respawns 0 | blocked 0
-  average  car=p50 max=62 mass=6.46 → 104.23s | CPs 2 | respawns 0 | blocked 0
-  novice   car=p50 max=62 mass=6.46 → 110.61s | CPs 2 | respawns 0 | blocked 0
+RaceSim OCEAN (shipped) — 112.9s wall time
+  expert   car=p50 max=62 mass=6.46 → 101.64s | CPs 2 | respawns 0 | blocked 0
+  average  car=p50 max=62 mass=6.46 → 103.43s | CPs 2 | respawns 0 | blocked 0
+  novice   car=p50 max=62 mass=6.46 → 113.63s | CPs 2 | respawns 0 | blocked 0
 drifts: expert 24/3, average 29/0, novice 0/0
 ```
 

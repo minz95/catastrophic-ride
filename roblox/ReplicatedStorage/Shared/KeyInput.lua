@@ -18,7 +18,7 @@ KeyInput.GAMEPAD = {   -- by KeyCode name
 	ButtonR1 = Enum.KeyCode.G,          -- guard
 	ButtonL1 = Enum.KeyCode.LeftShift,  -- drift
 	ButtonY  = Enum.KeyCode.R,          -- reset car
-	DPadDown = Enum.KeyCode.Q,          -- drop item
+	DPadDown = Enum.KeyCode.X,          -- drop item
 	DPadUp   = Enum.KeyCode.T,          -- gadget
 }
 

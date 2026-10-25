@@ -272,6 +272,7 @@ local function surfaceUnder(holder, spawnCF, seatLocal)
 		holder.Parent = workspace
 		for _, p in ipairs(parts) do p.CanQuery = true end
 		local params = RaycastParams.new()
+		params.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
 		params.FilterType = Enum.RaycastFilterType.Include
 		params.FilterDescendantsInstances = parts
 		for _, o in ipairs({ Vector3.zero, Vector3.new(0.5, 0, 0), Vector3.new(-0.5, 0, 0), Vector3.new(0, 0, 0.5),

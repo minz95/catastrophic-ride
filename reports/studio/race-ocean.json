@@ -1,19 +1,19 @@
 {
  "checks": [],
- "commit": "9608317",
- "dirty": false,
+ "commit": "21d2d06",
+ "dirty": true,
  "kind": "race",
  "logErrors": [
-  "2026-10-24T15:32:22.119Z,1.119464,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-24T15:32:22.850Z,1.850619,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T15:32:23.601Z,2.601949,6e147000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"b8b30b14-1f3c-48df-a4ff-315a5d638385\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-25T11:52:06.120Z,1.120166,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-25T11:52:06.921Z,1.921262,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-25T11:52:07.751Z,2.751958,6bf9b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"b345023d-e9d2-4db2-a45f-0d648c8e36b8\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T15:32:32.428Z,11.428838,6e703000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-24T15:32:32.656Z,11.656060,6f463000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-25T11:52:16.600Z,11.600535,6c96f000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-25T11:52:16.843Z,11.843441,6d22b000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-24T15:33:22.852Z,61.852242,6e147000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T15:34:22.853Z,121.853745,6e147000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-24T15:34:25.296Z,124.296310,6df3b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"b8b30b14-1f3c-48df-a4ff-315a5d638385\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-25T11:53:06.922Z,61.922665,6bd8f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-25T11:54:06.923Z,121.923912,6c763000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-25T11:54:11.654Z,126.654282,6c34b000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"b345023d-e9d2-4db2-a45f-0d648c8e36b8\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "biome": "OCEAN",
@@ -25,41 +25,41 @@
    "novice"
   ]
  },
- "ranAt": "2026-10-25T00:34:26+0900",
+ "ranAt": "2026-10-25T20:54:13+0900",
  "report": {
   "biome": "OCEAN",
   "results": [
    {
-    "airborne": 101.46,
+    "airborne": 101.64,
     "blocked": [],
     "car": "p50",
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.73
+      "t": 12.91
      },
      {
       "index": 2,
-      "t": 47.41
+      "t": 47.6
      }
     ],
     "drifts": 24,
     "effects": [],
-    "endT": 101.46,
+    "endT": 101.64,
     "engine": "studio-heartbeat",
     "finished": true,
     "jumps": [],
     "mass": 6.46,
-    "maxNoseOff": 26.6,
-    "maxProgress": 6375,
+    "maxNoseOff": 25.9,
+    "maxProgress": 6376,
     "maxSpeed": 62.432899475097656,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.4,
      "keys": "WD",
-     "s": 358,
+     "s": 359,
      "speed": 62.4,
-     "t": 7.96,
+     "t": 8.15,
      "tilt": 0,
      "vy": 0
     },
@@ -71,44 +71,44 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 101.46,
-    "topSpeed": 104.3,
+    "time": 101.64,
+    "topSpeed": 103.1,
     "trackLength": 6531,
     "turbos": 3,
     "turnSpeed": 1.5319863557815552,
     "visibility": "shipped"
    },
    {
-    "airborne": 103.36,
+    "airborne": 103.43,
     "blocked": [],
     "car": "p50",
     "checkpoints": [
      {
       "index": 1,
-      "t": 12.48
+      "t": 12.68
      },
      {
       "index": 2,
-      "t": 48.7
+      "t": 48.75
      }
     ],
     "drifts": 29,
     "effects": [],
-    "endT": 103.36,
+    "endT": 103.43,
     "engine": "studio-heartbeat",
     "finished": true,
     "jumps": [],
     "mass": 6.46,
-    "maxNoseOff": 25.3,
+    "maxNoseOff": 24.4,
     "maxProgress": 6376,
     "maxSpeed": 62.432899475097656,
     "maxTilt": 0,
     "noseOffAt": {
      "cmd": 62.4,
      "keys": "WD",
-     "s": 4842,
+     "s": 361,
      "speed": 62.4,
-     "t": 78.71,
+     "t": 7.95,
      "tilt": 0,
      "vy": 0
     },
@@ -120,44 +120,44 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 103.36,
+    "time": 103.43,
     "topSpeed": 93.6,
     "trackLength": 6531,
     "turnSpeed": 1.5319863557815552,
     "visibility": "shipped"
    },
    {
-    "airborne": 111.38,
+    "airborne": 113.63,
     "blocked": [],
     "car": "p50",
     "checkpoints": [
      {
       "index": 1,
-      "t": 13.53
+      "t": 13.7
      },
      {
       "index": 2,
-      "t": 54.54
+      "t": 56.23
      }
     ],
     "effects": [],
-    "endT": 111.38,
+    "endT": 113.63,
     "engine": "studio-heartbeat",
     "finished": true,
     "jumps": [],
     "mass": 6.46,
-    "maxNoseOff": 7.4,
+    "maxNoseOff": 9.6,
     "maxProgress": 6376,
     "maxSpeed": 62.432899475097656,
-    "maxTilt": 0,
+    "maxTilt": 0.1,
     "noseOffAt": {
      "cmd": 62.4,
-     "keys": "W",
-     "s": 315,
-     "speed": 62.4,
-     "t": 7.24,
+     "keys": "WD",
+     "s": 2343,
+     "speed": 61.4,
+     "t": 45.76,
      "tilt": 0,
-     "vy": 0
+     "vy": 1.6
     },
     "profile": "novice",
     "respawnMode": "legacy",
@@ -167,19 +167,19 @@
      "ENGINE": "Magnifying Glass",
      "SPECIAL": "Toilet Paper"
     },
-    "time": 111.38,
-    "topSpeed": 93.6,
+    "time": 113.63,
+    "topSpeed": 78.8,
     "trackLength": 6531,
     "turnSpeed": 1.5319863557815552,
     "visibility": "shipped"
    }
   ],
-  "summary": "RaceSim OCEAN (shipped) \u2014 110.6s wall time\n  expert   car=p50 max=62 mass=6.46 \u2192 101.46s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=62 mass=6.46 \u2192 103.36s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=62 mass=6.46 \u2192 111.38s | CPs 2 | respawns 0 | blocked 0",
+  "summary": "RaceSim OCEAN (shipped) \u2014 112.9s wall time\n  expert   car=p50 max=62 mass=6.46 \u2192 101.64s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=62 mass=6.46 \u2192 103.43s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=62 mass=6.46 \u2192 113.63s | CPs 2 | respawns 0 | blocked 0",
   "visibility": "shipped",
-  "wallSeconds": 110.6
+  "wallSeconds": 112.9
  },
  "scenario": "race-ocean",
  "studioExit": 0,
- "summary": "RaceSim OCEAN (shipped) \u2014 110.6s wall time\n  expert   car=p50 max=62 mass=6.46 \u2192 101.46s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=62 mass=6.46 \u2192 103.36s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=62 mass=6.46 \u2192 111.38s | CPs 2 | respawns 0 | blocked 0\ndrifts: expert 24/3, average 29/0, novice 0/0",
- "wallSeconds": 125.3
+ "summary": "RaceSim OCEAN (shipped) \u2014 112.9s wall time\n  expert   car=p50 max=62 mass=6.46 \u2192 101.64s | CPs 2 | respawns 0 | blocked 0\n  average  car=p50 max=62 mass=6.46 \u2192 103.43s | CPs 2 | respawns 0 | blocked 0\n  novice   car=p50 max=62 mass=6.46 \u2192 113.63s | CPs 2 | respawns 0 | blocked 0\ndrifts: expert 24/3, average 29/0, novice 0/0",
+ "wallSeconds": 127.6
 }

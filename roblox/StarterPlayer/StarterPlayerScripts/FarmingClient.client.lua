@@ -1,6 +1,6 @@
 -- FarmingClient.client.lua
 -- Proximity detection, pickup prompt, contest UI, steal prompt, and fight
--- keys (F punch, hold G guard). Animations and the defence prompt: FarmFx.
+-- keys (F or left click punch, hold G guard, X drop). Animations and the defence prompt: FarmFx.
 -- Resolves: Issue #18, #64
 
 print("[FarmingClient] LocalScript started")
@@ -221,13 +221,12 @@ KeyInput.began(function(input, processed)
 	end
 end)
 
--- Q key: manually drop the item in the first inventory slot
+-- X: drop the item in the first inventory slot (Q is the emote menu: a tap
+-- of Q used to drop an item on the way to opening it)
 KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
-	if input.KeyCode == Enum.KeyCode.Q then
+	if input.KeyCode == Enum.KeyCode.X then
 		if #_inventory == 0 then return end
-		-- Drop slot 1 (the least recently picked up item — server auto-tracks)
-		-- Player can press Q multiple times to clear earlier slots.
 		local result = RemoteEvents.RequestDrop:InvokeServer(1)
 		if result == "ok" then
 			local ui = _getUIManager()
@@ -236,23 +235,92 @@ KeyInput.began(function(input, processed)
 	end
 end)
 
--- Long-press E for steal (hold ~0.9s near another player)
-local _eHoldStart = nil
+-- ─── Steal: hold E next to someone (Constants.STEAL_HOLD) ───────────────────
+-- A label over the nearest player or bot says so; while E is held its bar
+-- fills and the steal starts the moment it is full (it used to wait for E to
+-- be let go, so holding it down did nothing you could see).
+local _eHoldStart, _eHoldTarget = nil, nil
+local _targetGui, _targetFill, _targetOf = nil, nil, nil
+
+local function _hideTargetPrompt()
+	if _targetGui then _targetGui:Destroy() end
+	_targetGui, _targetFill, _targetOf = nil, nil, nil
+end
+
+local function _showTargetPrompt(target)
+	local char = target and target.Character
+	local head = char and (char:FindFirstChild("Head") or char:FindFirstChild("HumanoidRootPart"))
+	if not head then _hideTargetPrompt() return end
+	if _targetGui and _targetOf == head and _targetGui.Parent then return end
+	_hideTargetPrompt()
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "StealPrompt"
+	gui.Size = UDim2.new(0, 190, 0, 46)
+	gui.StudsOffset = Vector3.new(0, 3.2, 0)
+	gui.AlwaysOnTop = true
+	gui.Adornee = head
+	local text = Instance.new("TextLabel")
+	text.Size = UDim2.new(1, 0, 0, 30)
+	text.BackgroundTransparency = 1
+	text.Text = "[Hold E] Steal   [F] Punch"
+	text.TextColor3 = Color3.fromRGB(255, 225, 120)
+	text.TextStrokeTransparency = 0.2
+	text.TextScaled = true
+	text.Font = Enum.Font.GothamBlack
+	text.Parent = gui
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.new(0.8, 0, 0, 8)
+	bar.Position = UDim2.new(0.1, 0, 0, 34)
+	bar.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+	bar.BackgroundTransparency = 0.3
+	bar.BorderSizePixel = 0
+	bar.Parent = gui
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.new(0, 0, 1, 0)
+	fill.BackgroundColor3 = Color3.fromRGB(255, 200, 60)
+	fill.BorderSizePixel = 0
+	fill.Parent = bar
+	gui.Parent = head
+	_targetGui, _targetFill, _targetOf = gui, fill, head
+end
+
 KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
-	if input.KeyCode == Enum.KeyCode.E and _nearestPlayer and not _nearestItem then
-		_eHoldStart = tick()
+	if input.KeyCode == Enum.KeyCode.E and _nearestPlayer and not _nearestItem and not _contestItemId then
+		_eHoldStart, _eHoldTarget = tick(), _nearestPlayer
 	end
 end)
 
 KeyInput.ended(function(input)
 	if input.KeyCode == Enum.KeyCode.E then
-		if _eHoldStart and (tick() - _eHoldStart) >= 0.9 and _nearestPlayer then
-			RemoteEvents.RequestSteal:InvokeServer(_nearestPlayer.UserId)
-		end
-		_eHoldStart = nil
+		_eHoldStart, _eHoldTarget = nil, nil
 	end
 end)
+
+-- Called every frame from _tick.
+local function _updateSteal()
+	if _nearestPlayer and not _nearestItem and not _contestItemId then
+		_showTargetPrompt(_nearestPlayer)
+	else
+		_hideTargetPrompt()
+	end
+	if not _eHoldStart then
+		if _targetFill then _targetFill.Size = UDim2.new(0, 0, 1, 0) end
+		return
+	end
+	-- walked away from (or past) the one being robbed: start over
+	if not _nearestPlayer or not _eHoldTarget or _nearestPlayer.UserId ~= _eHoldTarget.UserId then
+		_eHoldStart, _eHoldTarget = nil, nil
+		return
+	end
+	local f = math.clamp((tick() - _eHoldStart) / Constants.STEAL_HOLD, 0, 1)
+	if _targetFill then _targetFill.Size = UDim2.new(f, 0, 1, 0) end
+	if f >= 1 then
+		local target = _eHoldTarget
+		_eHoldStart, _eHoldTarget = nil, nil
+		task.spawn(function() RemoteEvents.RequestSteal:InvokeServer(target.UserId) end)
+	end
+end
 
 -- ─── Gadget: T (shop "gadget", e.g. Smoke Bomb; server: UseGadget) ───────────
 KeyInput.began(function(input, processed)
@@ -272,7 +340,7 @@ end)
 -- (server: FarmingManager RequestPunch / SetGuard; looks: FarmFx)
 KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
-	if input.KeyCode == Enum.KeyCode.F then
+	if input.KeyCode == Enum.KeyCode.F or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		task.spawn(function() RemoteEvents.RequestPunch:InvokeServer() end)
 	elseif input.KeyCode == Enum.KeyCode.G then
 		RemoteEvents.SetGuard:FireServer(true)
@@ -346,6 +414,7 @@ local function _tick()
 	else
 		_hidePrompt()
 	end
+	_updateSteal()
 end
 
 -- ─── Enable / Disable ─────────────────────────────────────────────────────────
@@ -362,6 +431,8 @@ end
 function FarmingClient.disable()
 	_enabled = false
 	_hidePrompt()
+	_hideTargetPrompt()
+	_eHoldStart, _eHoldTarget = nil, nil
 	_nearestItem    = nil
 	_nearestPlayer  = nil
 	_contestItemId  = nil

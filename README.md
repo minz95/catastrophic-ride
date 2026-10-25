@@ -27,9 +27,15 @@ Each round cycles through three phases: Farming, Crafting, and Racing.
 | Key | Action |
 |-----|--------|
 | E (tap) | Pick up nearby item / mash during contest |
-| E (hold 0.9s) | Attempt to steal from nearby player |
+| E (hold 0.9s) | Steal from the player next to you (a label over them says so) |
 | E (tap x3 quickly) | Defend against steal attempt |
+| F / left click | Punch |
+| G (hold) | Guard |
+| X | Drop your oldest item |
 | Q (hold) | Open emote menu |
+
+The keys of the current phase stay listed at the bottom left; H (or F1, or
+the Controls button) opens all of them.
 
 ### Crafting
 | Input | Action |
@@ -48,6 +54,10 @@ Each round cycles through three phases: Farming, Crafting, and Racing.
 | F | Activate boost when the gauge is full (drift corners fill it) |
 | E | Use item ability |
 | R | Respawn on the track |
+| Space / Ctrl | Climb / dive (SKY) |
+
+You cannot jump out of the car during a race; if your character dies it is
+put straight back into it.
 | Space / Ctrl | Climb / descend (Sky) |
 
 ### Playtesting (Studio and test servers only)
@@ -109,7 +119,7 @@ roblox/
     LobbyUI/                        -- Player list, biome reveal
     EmoteUI/                        -- Q-hold radial menu
     ResultsUI/                      -- Podium and leaderboard
-    TutorialUI/                     -- Phase key guide (F1 to toggle)
+    TutorialUI/                     -- Phase key guide, key list, H / F1 panel
   ReplicatedStorage/
     RemoteEvents/                   -- All server <-> client events
     Shared/
