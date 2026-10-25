@@ -1,15 +1,19 @@
 -- ShopUI/init.client.lua
 -- The cosmetics shop: paints and trails bought with coins (Shared/Cosmetics,
 -- server: Modules/Shop through RemoteEvents.ShopAction) and Robux coin packs
--- (Shared/Products). Opened with the SHOP button in LOBBY and RESULTS; the
--- look shows on the next car you build.
+-- (Shared/Products). Opened with the SHOP button or B in every phase but
+-- RACING (the lobby countdown alone was too short to shop); a look bought
+-- before the car is built (CRAFTING end) shows on this round's car, and the
+-- crafting showroom shows it at once (CraftPreview.refresh).
 
 local MarketplaceService = game:GetService("MarketplaceService")
+local UserInputService   = game:GetService("UserInputService")
 local Players            = game:GetService("Players")
 local ReplicatedStorage  = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local Cosmetics    = require(ReplicatedStorage.Shared.Cosmetics)
+local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local LocalPlayer  = Players.LocalPlayer
@@ -53,10 +57,13 @@ end
 -- ── Open button ───────────────────────────────────────────────────────────────
 local openBtn = Instance.new("TextButton")
 openBtn.Name             = "OpenShop"
-openBtn.Size             = UDim2.new(0, 140, 0, 46)
-openBtn.Position         = UDim2.new(0, 16, 1, -62)
+openBtn.Size             = UDim2.new(0, 120, 0, 40)
+-- left edge, mid-height: clear of the key strip and Controls button (bottom
+-- left), the inventory bar and the crafting screen's buttons
+openBtn.AnchorPoint      = Vector2.new(0, 0.5)
+openBtn.Position         = UDim2.new(0, 8, 0.5, 0)
 openBtn.BackgroundColor3 = Color3.fromRGB(230, 160, 30)
-openBtn.Text             = "SHOP"
+openBtn.Text             = (UserInputService.KeyboardEnabled and "SHOP [B]") or "SHOP"
 openBtn.TextColor3       = Color3.new(1, 1, 1)
 openBtn.TextScaled       = true
 openBtn.Font             = Enum.Font.GothamBlack
@@ -102,7 +109,7 @@ closeBtn.Font             = Enum.Font.GothamBlack
 closeBtn.Parent           = panel
 corner(closeBtn)
 
-local hint = label(panel, "Looks only: your car drives the same. Shows on your next car.",
+local hint = label(panel, "Looks only: your car drives the same. Shows on the car you craft.",
 	UDim2.new(1, -28, 0, 18), UDim2.new(0, 14, 0, 50), Enum.Font.Gotham, Color3.fromRGB(190, 190, 210))
 hint.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -113,8 +120,8 @@ local TABS = { "ride", "paint", "trail", "move", "gadget", "coins" }
 local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets", coins = "Coins" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
-	paint  = "Looks only: your car drives the same. Shows on your next car.",
-	trail  = "Looks only: a trail behind your car. Shows on your next car.",
+	paint  = "Looks only: your car drives the same. Shows on the car you craft.",
+	trail  = "Looks only: a trail behind your car. Shows on the car you craft.",
 	move   = "Farming: how your punch looks. Same reach and power.",
 	gadget = "Farming: one trick per round. Press T (or the SMOKE button).",
 	coins  = "Coins buy looks and tricks. Win races and come back daily for more.",
@@ -345,8 +352,14 @@ local function open()
 	task.spawn(act, "state")
 end
 
-openBtn.Activated:Connect(function()
+local function toggle()
+	if not openBtn.Visible then return end
 	if panel.Visible then panel.Visible = false else open() end
+end
+openBtn.Activated:Connect(toggle)
+KeyInput.began(function(input, processed)
+	if processed then return end
+	if input.KeyCode == Enum.KeyCode.B then toggle() end
 end)
 closeBtn.Activated:Connect(function() panel.Visible = false end)
 for key, b in pairs(tabBtns) do
@@ -362,11 +375,11 @@ RemoteEvents.ShopUpdated.OnClientEvent:Connect(function(state)
 	if panel.Visible then _redraw() end
 end)
 
--- The shop is open between races only.
+-- Open in every phase but RACING (driving needs the whole screen).
 local function onPhase(phase)
-	local between = phase == Constants.PHASES.LOBBY or phase == Constants.PHASES.RESULTS
-	openBtn.Visible = between
-	if not between then panel.Visible = false end
+	local open = phase ~= Constants.PHASES.RACING
+	openBtn.Visible = open
+	if not open then panel.Visible = false end
 end
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
 onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)

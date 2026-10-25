@@ -339,6 +339,12 @@ spot with its track section; the RESULTS report lists them per section.
   (`Modules/SeatedRider`, massless). OCEAN's water is Terrain water now
   (waves, reflections, the sandy floor shows through), not Glass and Neon
   sheets; race rays ignore it.
+- **2026-10-25 — Time to shop.** The shop opened only in LOBBY and
+  RESULTS, and the lobby counts down 8 s once two players are in: there was
+  no time to buy before a round. It now opens in every phase but RACING
+  (SHOP button at the left edge, or B). A look bought before the car is
+  built (end of CRAFTING) is on this round's car, and the crafting showroom
+  rebuilds at once (`CraftPreview.refresh`). The lobby stays short.
 
 ## Open questions (from the reports, not decided)
 

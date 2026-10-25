@@ -36,7 +36,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 9608317 | 2026-10-25T00:36 |
 | [race-ocean](race-ocean.json) | PASS | 21d2d06+ | 2026-10-25T20:54 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
-| [shop-4p](shop-4p.json) | PASS | 1bde8b9+ | 2026-10-24T00:10 |
+| [shop-4p](shop-4p.json) | WARN | cc85ba4+ | 2026-10-25T23:12 |
 | [showroom](showroom.json) | PASS | 5b1f6b6+ | 2026-10-24T21:33 |
 | [sounds](sounds.json) | PASS | 9fbb280+ | 2026-10-23T21:23 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
@@ -547,24 +547,27 @@ RaceSim SKY (shipped) — 133.4s wall time
   novice   car=p50 max=87 mass=2.9 → 134.95s | CPs 2 | respawns 0 | blocked 0
 ```
 
-## shop-4p — PASS
+## shop-4p — WARN
 
 ```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 1
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 4 finished of 4
-    steal attempts: denied: too late=1, denied: victim has nothing=22, escaped=1
-    -4: picked 0, contests 0/0, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -2: picked 0, contests 0/3, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -1: picked 4, contests 0/0, stole 0, robbed 0, defences 0, items 4 | craft submitted, rejected 0
-    -3: picked 10, contests 3/3, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
-    #1 Player1 97.0s
-    #2 Player4 111.2s
-    #3 Player2 123.8s
-    #4 Player3 127.9s
-  events: ability=54 ability_probe=198 bot_craft=4 bot_defend=1 bot_farmfx=76 bot_fx=284 bot_gadget=1 bot_guard=8 bot_hud=123 bot_joined=4 bot_pickup_denied=1 bot_punch=106 bot_ready=4 bot_respawn=6 bot_ride_fx=261 bot_screen=20 bot_shop=10 bot_steal=24 check
-driving: 2 hits (closing speed max 20, push max 19 studs/s), 36 drift turbos, drops: Kettle
-server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 28496 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 26 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 40 kbps; memory max 2284 MB
+    steal attempts: denied: victim has nothing=23
+    -4: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -2: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -1: picked 14, contests 4/5, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -3: picked 11, contests 1/1, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player1 99.5s
+    #2 Player4 104.6s
+    #3 Player2 105.3s
+    #4 Player3 117.0s
+  events: ability=48 ability_probe=175 ability_target=5 bot_craft=4 bot_farmfx=96 bot_fx=232 bot_guard=12 bot_hud=122 bot_joined=4 bot_punch=137 bot_ready=4 bot_respawn=3 bot_ride_fx=240 bot_screen=18 bot_shop=10 bot_showroom_spin=8 bot_spin_fx=241 bot_steal=23 checkpoint=8 contact=12 con
+driving: 6 hits (closing speed max 65, push max 45 studs/s), 34 drift turbos
+spinning wheels / paddles / propellers: 4 cars (wheel), most turns 2306
+ability targets: 5, on bots 0
+server: FARMING heartbeat 54-60 Hz, physics 57-60 fps, send max 336 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 7 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 11 kbps; memory max 2311 MB
 ```
+- **warn** no Smoke Bomb was thrown (no bot with one was grabbed)
 
 ## showroom — PASS
 
