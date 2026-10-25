@@ -20,6 +20,7 @@ local VehicleTuning  = require(ServerScriptService.Modules.VehicleTuning)
 local RaceEffects    = require(ServerScriptService.Modules.RaceEffects)
 local RaceStart      = require(ServerScriptService.Modules.RaceStart)
 local EffectFx       = require(ServerScriptService.Modules.EffectFx)
+local BoostGauge = require(ServerScriptService.Modules.BoostGauge)
 local VehicleLift    = require(ServerScriptService.Modules.VehicleLift)
 local AbilitySlots   = require(ReplicatedStorage.Shared.AbilitySlots)
 local TrackDrops     = require(ServerScriptService.Modules.TrackDrops)
@@ -594,7 +595,8 @@ EFFECTS.bathSplash = function(activator, target, cfg)
 end
 
 EFFECTS.backpackBoost = function(activator, _, cfg)
-	-- Backpack: the client refills its boost gauge
+	-- Backpack: refills the boost gauge (the server's, and the client's bar)
+	BoostGauge.fill(activator.UserId)
 	EffectFx.play(cfg.effectKey, activator, nil)
 	_screen(activator, "boostRecharge", {})
 	if cfg.selfSpeed then _applySpeedMult(_getVehicle(activator), cfg.selfSpeed, cfg.duration, "backpack") end
