@@ -47,6 +47,16 @@ STORE_DIR = os.path.join(ROOT, "assets", "store")
 GALLERY_DIR = os.path.join(ROOT, "reports", "vehicles", "studio")
 # Cropped to the Studio view (no desktop, no screen-share banner): safe to commit.
 SHEET_DIR = os.path.join(ROOT, "reports", "vehicles", "gallery")
+# Screen recordings of a bot client's window (scenario "record"): cropped to
+# the Studio view, git-ignored (large). tools/video/cut.py edits them.
+VIDEO_DIR = os.path.join(ROOT, "reports", "video", "raw")
+
+
+def _is_client_frame(px):
+    """A play client's outline: bright blue, or dark blue (25, 47, 127)
+    while Studio's window is not focused."""
+    r, g, b = px[:3]
+    return (b > 230 and r < 90 and 80 < g < 140) or (110 < b < 145 and r < 40 and 35 < g < 60)
 
 
 def _is_frame(px):
@@ -65,6 +75,23 @@ def _stay_awake(proc):
         pass
 
 
+def view_box(im, client=False):
+    """(left, top, right, bottom) of the 3D view inside Studio's coloured
+    outline in a whole-screen PIL image, or None. client: only a play
+    client's (blue) outline."""
+    w, h = im.size
+    is_frame = _is_client_frame if client else _is_frame
+    px = im.load()
+    rows = [y for y in range(0, h, 1) if sum(1 for x in range(0, w, 4) if is_frame(px[x, y])) > w / 4 * 0.3]
+    cols = [x for x in range(0, w, 1) if sum(1 for y in range(0, h, 4) if is_frame(px[x, y])) > h / 4 * 0.3]
+    if len(rows) < 2 or len(cols) < 2:
+        return None
+    top, bottom, left, right = min(rows), max(rows), min(cols), max(cols)
+    if bottom - top < 100 or right - left < 100:
+        return None
+    return (left + 4, top + 4, right - 3, bottom - 3)
+
+
 def crop_view(path):
     """The 3D view inside Studio's coloured outline, as a PIL image (None
     without PIL or when no outline is found). The whole-screen shot keeps the
@@ -74,16 +101,8 @@ def crop_view(path):
     except ImportError:
         return None
     im = Image.open(path).convert("RGB")
-    w, h = im.size
-    px = im.load()
-    rows = [y for y in range(0, h, 1) if sum(1 for x in range(0, w, 4) if _is_frame(px[x, y])) > w / 4 * 0.3]
-    cols = [x for x in range(0, w, 1) if sum(1 for y in range(0, h, 4) if _is_frame(px[x, y])) > h / 4 * 0.3]
-    if len(rows) < 2 or len(cols) < 2:
-        return None
-    top, bottom, left, right = min(rows), max(rows), min(cols), max(cols)
-    if bottom - top < 100 or right - left < 100:
-        return None
-    return im.crop((left + 4, top + 4, right - 3, bottom - 3))
+    box = view_box(im)
+    return im.crop(box) if box else None
 
 
 def contact_sheets(paths, name, per_row=2, per_sheet=6, width=560):
@@ -254,6 +273,84 @@ def run_with_shots(cmd, token, t0, timeout, name, shots):
         proc.terminate()
         return "timeout"
     contact_sheets(paths, name, per_row=2, per_sheet=4)
+    return proc.returncode
+
+
+def _screen_scale():
+    """Pixels per point of the main display (2 on Retina): screencapture -R
+    takes points, screenshots are in pixels."""
+    tmp = os.path.join(tempfile.mkdtemp(prefix="scale-"), "s.png")
+    subprocess.run(["screencapture", "-x", "-R0,0,100,100", tmp])
+    try:
+        from PIL import Image
+        return Image.open(tmp).size[0] / 100.0
+    except Exception:
+        return 2.0
+
+
+def run_with_record(cmd, token, t0, timeout, name, rec):
+    """Runs Studio and records a play client's view (blue outline: the bot
+    client's window in a match) as video. Studio writes its log only at the
+    end of a match, so nothing waits on phases: from the moment the client
+    view is on screen, `screencapture -v -R` records only that rectangle (no
+    desktop, no e-mail banner) in rec["chunk"]-second pieces, back to back,
+    until Studio closes. Pieces: a running recording cannot be stopped
+    cleanly (any signal loses the file); the piece running when Studio
+    closes would film what lies under it, so it is deleted. Studio is
+    brought to the front once at launch (open -a). Writes
+    VIDEO_DIR/<name>/NNN.mov and take.json (each piece's start in seconds),
+    which tools/video/cut.py edits; `cut.py sheets` shows what is where."""
+    import shutil
+    folder = os.path.join(VIDEO_DIR, name)
+    shutil.rmtree(folder, ignore_errors=True)
+    os.makedirs(folder)
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _stay_awake(proc)
+    from PIL import Image
+    chunk = rec.get("chunk", 10)
+    rect, pieces, current, rec_t0, raised, k = None, [], None, None, 0, _screen_scale()
+    while proc.poll() is None and time.time() - t0 < timeout:
+        time.sleep(0.25)
+        if rect is None:
+            if not raised and time.time() - t0 >= 4:
+                # Studio to the front once, before the client window opens:
+                # a new window of the active app opens on top. Raising it
+                # later puts Studio's edit window over the client.
+                subprocess.run(["open", "-a", os.path.dirname(os.path.dirname(os.path.dirname(STUDIO)))])
+                raised = time.time()
+            if time.time() - t0 < rec.get("delay", 20):
+                continue   # Studio opening, the place building
+            shot = os.path.join(tempfile.mkdtemp(prefix="rec-"), "s.png")
+            subprocess.run(["screencapture", "-x", shot])
+            box = view_box(Image.open(shot).convert("RGB"), client=True)
+            if os.environ.get("SIM_DEBUG"):
+                print("  look at %.0f s: %s (%s)" % (time.time() - t0, box, shot), flush=True)
+            if not box:
+                continue
+            x, y = int(box[0] / k) + 1, int(box[1] / k) + 1
+            w, h = int((box[2] - box[0]) / k) - 2, int((box[3] - box[1]) / k) - 2
+            w, h = w - w % 2, h - h % 2
+            rect = "-R%d,%d,%d,%d" % (x, y, w, h)
+            print("  recording %dx%d pt → %s/" % (w, h, os.path.relpath(folder, ROOT)), flush=True)
+        if current is None or current.poll() is not None:
+            out = os.path.join(folder, "%03d.mov" % len(pieces))
+            current = subprocess.Popen(["screencapture", "-x", "-v", "-V", str(chunk), rect, out],
+                                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            now = time.time()
+            rec_t0 = rec_t0 or now
+            pieces.append({"file": os.path.basename(out), "start": round(now - rec_t0, 2)})
+    if current is not None and current.poll() is None:
+        # it outlives Studio: drop it (it would film the desktop)
+        current.wait(timeout=chunk + 10)
+        os.remove(os.path.join(folder, pieces[-1]["file"]))
+        pieces.pop()
+    if rec_t0:
+        with open(os.path.join(folder, "take.json"), "w") as f:
+            json.dump({"pieces": pieces, "chunk": chunk}, f, indent=1)
+        print("  %d pieces, %.0f s" % (len(pieces), (pieces[-1]["start"] + chunk) if pieces else 0), flush=True)
+    if proc.poll() is None:
+        proc.terminate()
+        return "timeout"
     return proc.returncode
 
 
@@ -841,6 +938,8 @@ def run_one(sc, place, args):
         code = run_gallery_studio(cmd, token, t0, timeout, sc["name"])
     elif sc["kind"] == "promo":
         code = run_promo_studio(cmd, token, t0, timeout)
+    elif sc.get("record"):
+        code = run_with_record(cmd, token, t0, timeout, sc["name"], sc["record"])
     elif sc.get("shots"):
         code = run_with_shots(cmd, token, t0, timeout, sc["name"], sc["shots"])
     else:

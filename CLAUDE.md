@@ -348,6 +348,14 @@ in the Rojo project; the legacy chat scripts errored in Studio clients).
 A published place ignores a leftover `HarnessArgs` attribute
 (`HarnessConfig`, lobby spec).
 
+Trailer videos: `python3 tools/studio/sim.py run record-forest` (also
+`record-ocean`, `record-sky`; one at a time, screen unlocked) records the bot
+client's window in 10 s pieces; `python3 tools/video/cut.py sheets` shows the
+footage every 2 s, `tools/video/cuts.json` is the edit (explainer 16:9, ad
+16:9, reel 9:16), `cut.py build` writes `reports/video/*.mp4` (git-ignored,
+silent: add music where you post). Needs ffmpeg (`pip install
+imageio-ffmpeg`) and Pillow.
+
 ## What the tests cannot tell you
 
 Real Roblox physics for jumps, waves, updrafts and gusts; car-to-car contact

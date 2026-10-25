@@ -1598,6 +1598,111 @@
         "hold": 2
       },
       "checks": {}
+    },
+    {
+      "name": "record-forest",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "farmProfiles": [
+          "thief"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 15,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "record-ocean",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "farmProfiles": [
+          "slow"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 12,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "record-sky",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "opts": {
+        "biome": "SKY",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "farmProfiles": [
+          "thief"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 15,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
     }
   ]
 }
