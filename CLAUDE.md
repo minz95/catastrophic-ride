@@ -273,6 +273,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   once `Constants.SHOP.CRAFT_CLOSE_AT` s before the car is built
   (`Shared/ShopTiming`; the draft is kept either way). Studio: `sim.py run
   shop-ui`. Live lobby: `Constants.LOBBY` (15 s once two players are in).
+  Shop cards show each vehicle look on a real car / boat / plane
+  (`Modules/ShopPreview`, built at boot into `ReplicatedStorage.ShopPreviews`,
+  turned in ViewportFrames; trails as a ribbon). Without Studio: `lune run
+  tools/shop_preview_dump.luau <BIOME>` + `tools/scene_render.py`. The results
+  screen suggests a buy (`Cosmetics.suggest`) with a SHOP button.
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING

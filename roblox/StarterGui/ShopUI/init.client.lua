@@ -192,7 +192,7 @@ grid.AutomaticCanvasSize  = Enum.AutomaticSize.Y
 grid.CanvasSize           = UDim2.new()
 grid.Parent               = panel
 local layout = Instance.new("UIGridLayout")
-layout.CellSize    = UDim2.new(0, 116, 0, 128)
+layout.CellSize    = UDim2.new(0, 156, 0, 152)
 layout.CellPadding = UDim2.new(0, 8, 0, 8)
 layout.SortOrder   = Enum.SortOrder.LayoutOrder
 layout.Parent      = grid
@@ -210,10 +210,76 @@ local function owns(id)
 	return false
 end
 
+-- ── 3D pictures (server: Modules/ShopPreview) ─────────────────────────────────
+-- Each vehicle look turns on this round's vehicle (car / boat / plane) in a
+-- ViewportFrame; a rainbow ride cycles its colour like the real one.
+local _spinning = {}   -- { vp, cam, center, dist, height, hue = { parts } }
+
+local function previewModel(it)
+	local root = ReplicatedStorage:FindFirstChild("ShopPreviews")
+	local biome = ReplicatedStorage:GetAttribute("Biome") or "FOREST"
+	local folder = root and (root:FindFirstChild(biome) or root:FindFirstChild("FOREST"))
+	return folder and folder:FindFirstChild(it.id)
+end
+
+local function preview(card, it)
+	if it.category ~= "ride" and it.category ~= "paint" and it.category ~= "trail" then return false end
+	local src = previewModel(it)
+	if not src then return false end
+	local vp = Instance.new("ViewportFrame")
+	vp.Name             = "Preview"
+	vp.Size             = UDim2.new(1, -12, 0, 80)
+	vp.Position         = UDim2.new(0, 6, 0, 6)
+	vp.BackgroundColor3 = Color3.fromRGB(64, 70, 96)
+	vp.Ambient          = Color3.fromRGB(150, 150, 160)
+	vp.LightColor       = Color3.fromRGB(255, 250, 240)
+	vp.LightDirection   = Vector3.new(-1, -2, -0.6)
+	vp.Parent           = card
+	corner(vp, 6)
+	local model = src:Clone()
+	model.Parent = vp
+	local cam = Instance.new("Camera")
+	cam.FieldOfView = 40
+	cam.Parent = vp
+	vp.CurrentCamera = cam
+	local cf, size = model:GetBoundingBox()
+	local radius = size.Magnitude * 0.5
+	local hue = {}
+	if model:GetAttribute("RideHue") then
+		for _, d in ipairs(model:GetDescendants()) do
+			if d:IsA("BasePart") and d:GetAttribute("RideBody") then table.insert(hue, d) end
+		end
+	end
+	table.insert(_spinning, {
+		cam = cam, center = cf.Position, dist = radius / math.tan(math.rad(cam.FieldOfView * 0.5)) * 0.95,
+		height = radius * 0.45, hue = hue, phase = #_spinning * 0.7,
+	})
+	if it.category == "ride" and not it.body then return true end
+	if it.category == "ride" then
+		label(vp, "★", UDim2.new(0, 22, 0, 22), UDim2.new(0, 4, 0, 2), Enum.Font.GothamBlack, GOLD)
+	end
+	return true
+end
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if not panel.Visible then return end
+	local t = os.clock()
+	for _, sp in ipairs(_spinning) do
+		local a = t * 0.6 + sp.phase
+		local eye = sp.center + Vector3.new(math.sin(a) * sp.dist, sp.height, math.cos(a) * sp.dist)
+		sp.cam.CFrame = CFrame.lookAt(eye, sp.center)
+		if #sp.hue > 0 then
+			local c = Color3.fromHSV((t * 0.15) % 1, 0.75, 1)
+			for _, p in ipairs(sp.hue) do p.Color = c end
+		end
+	end
+end)
+
 local function swatch(card, it)
+	if preview(card, it) then return end
 	local s = Instance.new("Frame")
-	s.Size             = UDim2.new(1, -16, 0, 46)
-	s.Position         = UDim2.new(0, 8, 0, 8)
+	s.Size             = UDim2.new(1, -12, 0, 80)
+	s.Position         = UDim2.new(0, 6, 0, 6)
 	s.BorderSizePixel  = 0
 	s.BackgroundColor3 = Color3.new(1, 1, 1)
 	s.Parent           = card
@@ -306,7 +372,7 @@ local function itemCard(it, order)
 	card.Parent           = grid
 	corner(card)
 	swatch(card, it)
-	label(card, it.name, UDim2.new(1, -12, 0, 22), UDim2.new(0, 6, 0, 58), Enum.Font.GothamBold)
+	label(card, it.name, UDim2.new(1, -12, 0, 20), UDim2.new(0, 6, 0, 89), Enum.Font.GothamBold)
 
 	local equipped = _state and _state.equipped and _state.equipped[it.category]
 	local isOn = equipped == it.id or (equipped == nil and Cosmetics.isDefault(it.id))
@@ -367,6 +433,7 @@ _redraw = function()
 	for _, c in ipairs(grid:GetChildren()) do
 		if c:IsA("GuiObject") then c:Destroy() end
 	end
+	table.clear(_spinning)
 	for key, b in pairs(tabBtns) do
 		b.BackgroundColor3 = key == _tab and Color3.fromRGB(230, 160, 30) or CARD
 	end
@@ -401,6 +468,17 @@ KeyInput.began(function(input, processed)
 	if input.KeyCode == Enum.KeyCode.B then toggle() end
 end)
 closeBtn.Activated:Connect(function() panel.Visible = false end)
+
+-- Other screens open the shop through this (ResultsUI's SHOP button), on a
+-- tab: Fire(tab?).
+local openEvent = Instance.new("BindableEvent")
+openEvent.Name = "Open"
+openEvent.Parent = screen
+openEvent.Event:Connect(function(tab)
+	if not openBtn.Visible then return end
+	if type(tab) == "string" and tabBtns[tab] then _tab = tab end
+	open()
+end)
 for key, b in pairs(tabBtns) do
 	b.Activated:Connect(function()
 		_tab = key
