@@ -389,16 +389,43 @@ R.describe("race tricks and taunts (shop)", function()
 		R.expect(first ~= nil).toBe(true)
 		R.expect(first.args[1]).toBe(cars[1].player.UserId)
 		R.expect(first.args[2]).toBe(cars[1].model.PrimaryPart)
-		R.expect(first.args[4]).toBe("BYE-BYE!")
+		R.expect(first.args[4]).toBe("BYE-BYE~")
 		srv.RemoteEvents.Taunt.OnServerEvent:Fire(cars[1].player)   -- too soon
 		srv.advance(0.05)
 		R.expect(#calls()).toBe(1)
-		equipShop(srv, cars[1].player, "taunt", "taunt_slow")
+		equipShop(srv, cars[1].player, "taunt", "taunt_snail")
 		srv.advance(Constants.TAUNT.COOLDOWN)
 		srv.RemoteEvents.Taunt.OnServerEvent:Fire(cars[1].player)
 		srv.advance(0.05)
 		R.expect(#calls()).toBe(2)
-		R.expect(calls()[2].args[3]).toBe("🐢")
+		R.expect(calls()[2].args[3]).toBe("🐌")
+		R.expect(calls()[2].args[5]).toBe(cars[1].player.DisplayName or cars[1].player.Name)
+	end)
+
+	R.it("a race bot just ahead of a player taunts them (random taunt, then a cooldown)", function()
+		-- the bot proxy needs its car before RACING starts (the taunt loop starts then)
+		local srv, cars = abilityServer({ beforeGo = true })
+		local T = Constants.TAUNT
+		local chance = T.BOT_CHANCE
+		T.BOT_CHANCE = 1
+		local env = srv.env
+		local bot = { UserId = -7, Name = "Rival", isBot = true }
+		srv.SessionManager.addBot(bot)
+		local VehicleBuilder = env.requirePath("ServerScriptService.Modules.VehicleBuilder")
+		local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+		local stats = VehicleStats.calculate(nil, nil, nil, "FOREST")
+		local model = VehicleBuilder.build(stats, "FOREST", CFrame.new(20, 2, 486), {})   -- 28 studs ahead of car 2, off to the side
+		model.Parent = env.workspace
+		srv.SessionManager.setVehicle(bot, model, stats)
+		srv.advance(Constants.RACE_COUNTDOWN + T.BOT_EVERY * 2 + 0.5)
+		T.BOT_CHANCE = chance
+		local mine = {}
+		for _, c in ipairs(rawget(srv.RemoteEvents.TauntShown, "_calls") or {}) do
+			if c.args[1] == -7 then table.insert(mine, c) end
+		end
+		R.expect(#mine).toBe(1)   -- once: then BOT_COOLDOWN
+		R.expect(mine[1].args[2]).toBe(model.PrimaryPart)
+		R.expect(mine[1].args[5]).toBe("Rival")
 	end)
 
 	R.it("the race client sends T and Q; touch buttons and the key strip show them", function()

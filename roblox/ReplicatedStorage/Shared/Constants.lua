@@ -535,7 +535,10 @@ Constants.RACE_TRICKS = {
 
 -- Taunts (shop "taunt", key Q in RACING): a bubble over the car for
 -- SECONDS, at most one per COOLDOWN s.
-Constants.TAUNT = { COOLDOWN = 4, SECONDS = 2.5 }
+-- Race bots taunt too: every BOT_EVERY s a bot just ahead of a player
+-- (within BOT_RANGE studs) taunts with chance BOT_CHANCE, at most every
+-- BOT_COOLDOWN s, with a random taunt.
+Constants.TAUNT = { COOLDOWN = 4, SECONDS = 2.5, BOT_EVERY = 2, BOT_RANGE = 45, BOT_CHANCE = 0.3, BOT_COOLDOWN = 12 }
 
 -- ─── Emotes ───────────────────────────────────────────────────────────────────
 Constants.EMOTE_IDS = { "Wave", "Dance", "Laugh" }

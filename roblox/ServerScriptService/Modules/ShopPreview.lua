@@ -20,7 +20,7 @@ local VehicleStats = require(ReplicatedStorage.Shared.VehicleStats)
 local ShopPreview = {}
 
 ShopPreview.FOLDER = "ShopPreviews"
-ShopPreview.CATEGORIES = { "ride", "paint", "trail" }   -- the vehicle looks
+ShopPreview.CATEGORIES = { "ride", "paint", "trail", "hat" }   -- vehicle looks; hats on a head
 ShopPreview.RIBBON = { SEGMENTS = 5, LENGTH = 1.1, WIDTH = 0.6, HEIGHT = 0.3 }
 
 local RAINBOW = {
@@ -57,8 +57,45 @@ local function ribbon(model, chassis, trail)
 	end
 end
 
---- The still model of `item` on `biome`'s vehicle.
+-- A hat on a classic yellow head (with a face, so the front shows).
+local function hatOnHead(item)
+	local HatDesigns = require(ReplicatedStorage.Shared.HatDesigns)
+	local ShopHat = require(ServerScriptService.Modules.ShopHat)
+	local model = Instance.new("Model")
+	local head = Instance.new("Part")
+	head.Name = "Head"
+	head.Size = Vector3.new(1.2, 1.2, 1.2)
+	head.Shape = Enum.PartType.Ball
+	head.Color = Color3.fromRGB(255, 205, 80)
+	head.Anchored = true
+	head.Parent = model
+	for _, x in ipairs({ -0.22, 0.22 }) do
+		local eye = Instance.new("Part")
+		eye.Name = "Eye"
+		eye.Size = Vector3.new(0.12, 0.2, 0.05)
+		eye.CFrame = CFrame.new(x, 0.1, -0.57)
+		eye.Color = Color3.fromRGB(30, 30, 30)
+		eye.Anchored = true
+		eye.Parent = model
+	end
+	local design = item.hat and HatDesigns.get(item.hat)
+	if design then
+		local hat = ShopHat.build(design, CFrame.new(0, 0.6, 0), 1)
+		for _, p in ipairs(hat:GetChildren()) do
+			p.Anchored = true
+			p.Parent = model
+		end
+	end
+	return model
+end
+
+--- The still model of `item` on `biome`'s vehicle (a hat: on a head).
 function ShopPreview.buildOne(item, biome)
+	if item.category == "hat" then
+		local model = hatOnHead(item)
+		model.Name = item.id
+		return model
+	end
 	local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
 	local stats = VehicleStats.calculate(nil, nil, nil, biome)
 	local look = Cosmetics.look({ [item.category] = item.id })

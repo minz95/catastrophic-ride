@@ -807,18 +807,19 @@ RemoteEvents.UseRaceTrick.OnServerInvoke = function(player)
 	return res
 end
 
---- Shows `player`'s taunt over their car (or head) to everyone.
-local function _taunt(player)
+--- Shows `player`'s taunt (or `item`) over their car (or head) to everyone.
+local function _taunt(player, item)
 	if GameManager.getPhase() ~= Constants.PHASES.RACING then return "denied: not racing" end
 	local now = os.clock()
 	if now - (_tauntAt[player.UserId] or -math.huge) < Constants.TAUNT.COOLDOWN then return "denied: cooldown" end
-	local item = _equipped(player, "taunt") or Cosmetics.default("taunt")
+	item = item or _equipped(player, "taunt") or Cosmetics.default("taunt")
 	local vehicle = _getVehicle(player)
 	local part = (vehicle and vehicle.PrimaryPart)
 		or (player.Character and player.Character:FindFirstChild("Head"))
 	if not part then return "denied: no car" end
 	_tauntAt[player.UserId] = now
-	RemoteEvents.TauntShown:FireAllClients(player.UserId, part, item.emoji, item.text)
+	RemoteEvents.TauntShown:FireAllClients(player.UserId, part, item.emoji, item.text,
+		player.DisplayName or player.Name)
 	Telemetry.record("taunt", { userId = player.UserId, id = item.id })
 	return "ok"
 end
@@ -827,9 +828,50 @@ RemoteEvents.Taunt.OnServerEvent:Connect(function(player)
 	if not ok then warn("[AbilityManager] taunt: " .. tostring(err)) end
 end)
 
+-- Race bots taunt the player they just passed (Constants.TAUNT.BOT_*).
+local _botTauntAt = {}
+local function _botTaunts()
+	local T = Constants.TAUNT
+	local now = os.clock()
+	for _, bot in ipairs(SessionManager.actors()) do
+		if SessionManager.isBot(bot) and now - (_botTauntAt[bot.UserId] or -math.huge) >= T.BOT_COOLDOWN then
+			local bv = _getVehicle(bot)
+			local bp = bv and bv.PrimaryPart
+			if bp then
+				for _, p in ipairs(Players:GetPlayers()) do
+					local pv = _getVehicle(p)
+					local pp = pv and pv.PrimaryPart
+					if pp then
+						local d = bp.Position - pp.Position
+						if d.Magnitude < T.BOT_RANGE and _flat(d):Dot(_flat(pp.CFrame.LookVector)) > 0
+							and math.random() < T.BOT_CHANCE then
+							local list = Cosmetics.ITEMS.taunt
+							_botTauntAt[bot.UserId] = now
+							_taunt(bot, list[math.random(#list)])
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+end
+local _botTauntRace = 0
+
 GameManager.onPhaseChanged(function(phase)
 	if phase ~= Constants.PHASES.RACING then return end
-	_trickUses, _tauntAt = {}, {}
+	_trickUses, _tauntAt, _botTauntAt = {}, {}, {}
+	_botTauntRace += 1
+	local race = _botTauntRace
+	task.spawn(function()
+		while GameManager.getPhase() == Constants.PHASES.RACING and race == _botTauntRace do
+			task.wait(Constants.TAUNT.BOT_EVERY)
+			if RaceStart.isGo() then
+				local ok, err = pcall(_botTaunts)
+				if not ok then warn("[AbilityManager] bot taunts: " .. tostring(err)) end
+			end
+		end
+	end)
 	for _, p in ipairs(Players:GetPlayers()) do
 		-- which trick button to show (TouchControls, RacingClient)
 		local item = _equipped(p, "trick")

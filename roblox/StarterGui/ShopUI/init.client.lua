@@ -155,9 +155,9 @@ hint.TextXAlignment = Enum.TextXAlignment.Left
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
 
 -- tabs
-local TABS = { "ride", "paint", "trail", "taunt", "trick", "move", "gadget", "coins" }
-local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", taunt = "😜 Taunts", trick = "💣 Race",
-	move = "Moves", gadget = "Gadgets", coins = "Coins" }
+local TABS = { "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "coins" }
+local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", hat = "🎩 Hats", taunt = "😜 Taunts",
+	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
 	paint  = "Looks only: your car drives the same. Shows on the car you craft.",
@@ -165,16 +165,17 @@ local TAB_HINTS = {
 	move   = "Farming: how your punch looks. Same reach and power.",
 	gadget = "Farming: one trick per round. Press T (or the SMOKE button).",
 	coins  = "Coins buy looks and tricks. Win races and come back daily for more.",
-	taunt  = "Racing: press Q (or 😜) and everyone sees it over your car.",
+	taunt  = "Racing: press Q (or 😜). Everyone sees it; the ones behind you get it on screen.",
+	hat    = "On your avatar all game. Looks only.",
 	trick  = "Racing: press T (or BOMB) once a race: the car ahead hops and slows.",
 }
 local tabBtns = {}
 for i, key in ipairs(TABS) do
 	local b = Instance.new("TextButton")
 	b.Name             = "Tab_" .. key
-	-- two rows of four
-	b.Size             = UDim2.new(0, 117, 0, 30)
-	b.Position         = UDim2.new(0, 14 + ((i - 1) % 4) * 124, 0, 98 + ((i - 1) // 4) * 34)
+	-- two rows of five
+	b.Size             = UDim2.new(0, 92, 0, 30)
+	b.Position         = UDim2.new(0, 14 + ((i - 1) % 5) * 99, 0, 98 + ((i - 1) // 5) * 34)
 	b.BackgroundColor3 = CARD
 	b.Text             = TAB_TITLES[key]
 	b.TextColor3       = Color3.new(1, 1, 1)
@@ -227,7 +228,7 @@ local function previewModel(it)
 end
 
 local function preview(card, it)
-	if it.category ~= "ride" and it.category ~= "paint" and it.category ~= "trail" then return false end
+	if it.category ~= "ride" and it.category ~= "paint" and it.category ~= "trail" and it.category ~= "hat" then return false end
 	local src = previewModel(it)
 	if not src then return false end
 	local vp = Instance.new("ViewportFrame")

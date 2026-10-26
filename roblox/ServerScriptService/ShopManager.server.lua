@@ -35,3 +35,6 @@ task.delay(3, function()
 	end)
 	if not ok then warn("[ShopManager] previews: " .. tostring(err)) end
 end)
+
+-- Shop hats on every avatar (Modules/ShopHat).
+require(game:GetService("ServerScriptService").Modules.ShopHat).start()

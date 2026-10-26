@@ -62,6 +62,10 @@ function Shop.handle(player, action, id)
 	-- buying equips too; on the crafting screen the showroom shows it now
 	if result == "ok" and action ~= "state" then
 		require(ServerScriptService.Modules.CraftPreview).refresh(player)
+		local it = Cosmetics.get(id)
+		if it and it.category == "hat" then
+			require(ServerScriptService.Modules.ShopHat).refresh(player)
+		end
 	end
 	return { result = result, state = Shop.state(rec) }
 end

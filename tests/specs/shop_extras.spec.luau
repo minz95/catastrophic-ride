@@ -225,3 +225,98 @@ R.describe("Cosmetics.suggest (results screen)", function()
 		R.expect(Cosmetics.suggest({ coins = 0, level = 99, owned = all })).toBe(nil)
 	end)
 end)
+
+-- 2026-10-27: hats for the avatar (Cosmetics "hat", Modules/ShopHat).
+R.describe("shop hats (Modules/ShopHat)", function()
+	local HatDesigns = env.requirePath("ReplicatedStorage.Shared.HatDesigns")
+	local ShopHat = env.requirePath("ServerScriptService.Modules.ShopHat")
+	local roblox2 = require("@lune/roblox")
+	local Vector3 = roblox2.Vector3
+
+	local function character(headSize)
+		local m = env.mock.Instance.new("Model")
+		m.Name = "Avatar"
+		local head = env.mock.Instance.new("Part")
+		head.Name = "Head"
+		head.Size = headSize or Vector3.new(1.2, 1.2, 1.2)
+		head.CFrame = CFrame.new(0, 10, 0)
+		head.Parent = m
+		m.Parent = env.workspace
+		return m, head
+	end
+
+	R.it("every hat has a design of a few parts that sits on the head, not inside it or far above", function()
+		local bad = {}
+		for i, it in ipairs(Cosmetics.ITEMS.hat) do
+			if i > 1 then
+				local d = it.hat and HatDesigns.get(it.hat)
+				if not d then
+					table.insert(bad, it.id .. ": no design")
+				else
+					for _, p in ipairs(d) do
+						if p.pos.Y < -0.2 or p.pos.Y > 1.6 or math.abs(p.pos.X) > 1.2 or math.abs(p.pos.Z) > 1.2 then
+							table.insert(bad, it.id .. ": part far off the head")
+						end
+					end
+				end
+			end
+		end
+		R.expect(bad).toBeEmpty("hat designs")
+	end)
+
+	R.it("a worn hat is welded to the head, massless, collides with nothing, and replaces the last one", function()
+		local m, head = character()
+		local hat = ShopHat.wear(m, "hat_crown")
+		R.expect(hat ~= nil).toBe(true)
+		local parts = 0
+		for _, p in ipairs(hat:GetChildren()) do
+			parts += 1
+			R.expect(p.Massless).toBe(true)
+			R.expect(p.CanCollide).toBe(false)
+			R.expect(p.Anchored).toBe(false)
+			local w = p:FindFirstChildWhichIsA("WeldConstraint")
+			R.expect(w ~= nil and w.Part0 == head).toBe(true)
+			R.expect(p.Position.Y >= head.Position.Y).toBe(true)   -- on top, not inside
+		end
+		R.expect(parts).toBeGreaterThan(3)
+		ShopHat.wear(m, "hat_party")
+		local n = 0
+		for _, c in ipairs(m:GetChildren()) do if c.Name == ShopHat.NAME then n += 1 end end
+		R.expect(n).toBe(1)
+		R.expect(m:FindFirstChild(ShopHat.NAME):GetAttribute("HatId")).toBe("hat_party")
+		ShopHat.wear(m, "hat_none")
+		R.expect(m:FindFirstChild(ShopHat.NAME)).toBe(nil)
+		-- the avatar's own hat accessory is hidden under a shop hat, back after
+		local acc = env.mock.Instance.new("Accessory")
+		acc.AccessoryType = roblox2.Enum.AccessoryType.Hat
+		local handle = env.mock.Instance.new("Part")
+		handle.Name = "Handle"
+		handle.Transparency = 0.2
+		handle.Parent = acc
+		acc.Parent = m
+		ShopHat.wear(m, "hat_crown")
+		R.expect(handle.Transparency).toBe(1)
+		ShopHat.wear(m, "hat_none")
+		R.expect(handle.Transparency).toBe(0.2)
+	end)
+
+	R.it("hidden under a crafted HEAD item, and still hidden after changing hats then", function()
+		local m = character(Vector3.new(2, 1, 1))   -- an R6 head: scaled to its smallest side
+		ShopHat.wear(m, "hat_top")
+		ShopHat.setHidden(m, true)
+		for _, p in ipairs(m:FindFirstChild(ShopHat.NAME):GetChildren()) do R.expect(p.Transparency).toBe(1) end
+		ShopHat.wear(m, "hat_viking")
+		for _, p in ipairs(m:FindFirstChild(ShopHat.NAME):GetChildren()) do R.expect(p.Transparency).toBe(1) end
+		ShopHat.setHidden(m, false)
+		for _, p in ipairs(m:FindFirstChild(ShopHat.NAME):GetChildren()) do R.expect(p.Transparency).toBe(0) end
+	end)
+
+	R.it("VehicleBuilder hides it while a crafted hat is worn and shows it after", function()
+		local fs = require("@lune/fs")
+		local vb = fs.readFile("roblox/ServerScriptService/Modules/VehicleBuilder.lua")
+		R.expect(vb:find("ShopHat).setHidden(character, true)", 1, true) ~= nil).toBe(true)
+		R.expect(vb:find("ShopHat).setHidden(wearer.Character, false)", 1, true) ~= nil).toBe(true)
+		local mgr = fs.readFile("roblox/ServerScriptService/ShopManager.server.lua")
+		R.expect(mgr:find("ShopHat).start()", 1, true) ~= nil).toBe(true)
+	end)
+end)

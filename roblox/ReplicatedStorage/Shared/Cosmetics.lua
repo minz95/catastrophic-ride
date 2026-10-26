@@ -8,9 +8,9 @@
 
 local Cosmetics = {}
 
-Cosmetics.CATEGORIES = { "ride", "paint", "trail", "move", "gadget", "trick", "taunt" }
-Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets",
-	trick = "Race Tricks", taunt = "Taunts" }
+Cosmetics.CATEGORIES = { "ride", "paint", "trail", "hat", "move", "gadget", "trick", "taunt" }
+Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", hat = "Hats", move = "Moves",
+	gadget = "Gadgets", trick = "Race Tricks", taunt = "Taunts" }
 
 local C3 = Color3.fromRGB
 
@@ -71,15 +71,30 @@ Cosmetics.ITEMS = {
 		{ id = "trick_none", name = "No Trick", price = 0 },
 		{ id = "trick_bomb", name = "Bounce Bomb", price = 1200, minLevel = 3, trick = "bomb" },
 	},
-	-- Taunts (RACING, key Q): a bubble over your car everyone sees
-	-- (Constants.TAUNT). Show only.
+	-- Taunts (RACING, key Q): a wobbling bubble over your car everyone
+	-- sees, and a line on the screens of the drivers behind you
+	-- (Constants.TAUNT, TauntFx). Show only.
 	taunt = {
-		{ id = "taunt_bye",    name = "Bye-Bye",     price = 0,   emoji = "👋", text = "BYE-BYE!" },
-		{ id = "taunt_slow",   name = "Too Slow",    price = 150, emoji = "🐢", text = "TOO SLOW!" },
-		{ id = "taunt_nyah",   name = "Nyah Nyah",   price = 200, emoji = "😜", text = "NYAH NYAH!" },
-		{ id = "taunt_lol",    name = "LOL",         price = 250, emoji = "😂", text = "LOL!" },
-		{ id = "taunt_dust",   name = "Eat My Dust", price = 350, emoji = "💨", text = "EAT MY DUST!", minLevel = 2 },
-		{ id = "taunt_crown",  name = "Bow Down",    price = 600, emoji = "👑", text = "BOW DOWN!", minLevel = 4 },
+		{ id = "taunt_bye",   name = "Bye-Bye",       price = 0,   emoji = "👋😜", text = "BYE-BYE~" },
+		{ id = "taunt_bleh",  name = "Blehhh",        price = 150, emoji = "😝",   text = "BLEHHH~" },
+		{ id = "taunt_catch", name = "Can't Catch Me", price = 200, emoji = "🤪",  text = "CAN'T CATCH ME!" },
+		{ id = "taunt_lol",   name = "Hahaha",        price = 250, emoji = "👉🤣", text = "HAHAHA!" },
+		{ id = "taunt_snail", name = "Slowpoke",      price = 300, emoji = "🐌",   text = "HI SLOWPOKE!" },
+		{ id = "taunt_yawn",  name = "Too Easy",      price = 350, emoji = "🥱",   text = "TOO EASY~", minLevel = 2 },
+		{ id = "taunt_clown", name = "Nice Try",      price = 450, emoji = "🤡",   text = "NICE TRY!", minLevel = 3 },
+		{ id = "taunt_crown", name = "Bow Down",      price = 600, emoji = "👑",   text = "BOW DOWN!", minLevel = 4 },
+	},
+	-- Hats: on your avatar in every phase (Modules/ShopHat, parts from
+	-- Shared/HatDesigns); a crafted HEAD item covers it while you ride.
+	hat = {
+		{ id = "hat_none",      name = "No Hat",        price = 0 },
+		{ id = "hat_party",     name = "Party Cone",    price = 200, hat = "party" },
+		{ id = "hat_cat",       name = "Cat Ears",      price = 300, hat = "cat" },
+		{ id = "hat_propeller", name = "Propeller Cap", price = 400, hat = "propeller" },
+		{ id = "hat_viking",    name = "Viking Helmet", price = 500, hat = "viking", minLevel = 2 },
+		{ id = "hat_top",       name = "Top Hat",       price = 600, hat = "top", minLevel = 3 },
+		{ id = "hat_crown",     name = "Royal Crown",   price = 900, hat = "crown", minLevel = 5 },
+		{ id = "hat_halo",      name = "Halo",          price = 1200, hat = "halo", minLevel = 6 },
 	},
 }
 

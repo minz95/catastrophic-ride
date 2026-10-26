@@ -369,6 +369,8 @@ function VehicleBuilder.wearHat(model, character)
 	if not hat or not head or not head:IsA("BasePart") then return false end
 	moveHat(hat, head.CFrame * CFrame.new(0, head.Size.Y / 2 - VehicleDesign.HAT.sink, 0), head)
 	hat:SetAttribute("WornBy", character.Name)
+	-- the shop hat would sit inside this one
+	require(script.Parent.ShopHat).setHidden(character, true)
 	return true
 end
 
@@ -377,6 +379,8 @@ function VehicleBuilder.takeOffHat(model)
 	local hat = model and hatOf(model)
 	local seat = model and model:FindFirstChildWhichIsA("VehicleSeat", true)
 	if not hat or not seat or not hat:GetAttribute("WornBy") then return false end
+	local wearer = game:GetService("Players"):FindFirstChild(hat:GetAttribute("WornBy"))
+	if wearer then require(script.Parent.ShopHat).setHidden(wearer.Character, false) end
 	moveHat(hat, hatBaseCF(seat), model.PrimaryPart)
 	hat:SetAttribute("WornBy", nil)
 	return true

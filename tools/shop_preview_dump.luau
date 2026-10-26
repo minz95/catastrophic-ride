@@ -4,7 +4,8 @@
 -- looks on a biome's vehicle side by side and writes them as a scene for
 -- tools/scene_render.py.
 --
---   lune run tools/shop_preview_dump.luau <BIOME> [id,id,…] [out.json]
+--   lune run tools/shop_preview_dump.luau <BIOME> [id,id,…] [out.json] [gap]
+--   (hats: gap 3)
 --   python3 tools/scene_render.py <out.json> <out.png>
 
 local fs = require("@lune/fs")
@@ -33,7 +34,7 @@ else
 end
 local out = process.args[3] or ("reports/scenes/shop-" .. biome:lower() .. ".json")
 
-local COLS, GAP = 4, 18
+local COLS, GAP = 4, tonumber(process.args[4] or "18")
 local parts = {}
 for i, id in ipairs(ids) do
 	local m = ShopPreview.buildOne(Cosmetics.get(id), biome)
@@ -60,7 +61,8 @@ for i, id in ipairs(ids) do
 end
 local w = (math.min(#ids, COLS) - 1) * GAP
 local rows = (#ids - 1) // COLS
-local cam = { eye = { w / 2, 34 + rows * 8, -26 }, target = { w / 2, 0, rows * GAP * 0.65 } }
+local k = GAP / 18
+local cam = { eye = { w / 2, (34 + rows * 8) * k, -26 * k }, target = { w / 2, 0, rows * GAP * 0.65 } }
 local dir = out:match("(.*)/[^/]*$")
 if dir and not fs.isDir(dir) then fs.writeDir(dir) end
 fs.writeFile(out, serde.encode("json", { biome = biome, camera = cam, parts = parts }))
