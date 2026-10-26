@@ -290,7 +290,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
-  H / F1 opens all; its RACING guide closes at GO.
+  H / F1 opens all. RACING shows no guide toast: the keys are on the
+  strip, the objective and tips in RacingClient's RACE START banner under
+  the 3-2-1 (the three used to pile up mid-screen).
 - Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
   (keyboard, gamepad map, on-screen `TouchControls` buttons), never
   `UserInputService.InputBegan` directly. Touch / gamepad driving comes from

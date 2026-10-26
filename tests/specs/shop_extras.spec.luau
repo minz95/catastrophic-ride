@@ -40,6 +40,23 @@ R.describe("special rides (VehicleBuilder.applyRide)", function()
 		end
 	end
 
+	R.it("on SKY's pale road a ride's glow, particles and trail are toned down (they added up to a white blob)", function()
+		local look = Cosmetics.look({ ride = "ride_rainbow" })
+		local function parts(biome)
+			local car = VehicleBuilder.build(VehicleStats.calculate(nil, nil, nil, biome), biome, CFrame.new(), {}, look)
+			local emitter
+			for _, d in ipairs(car:GetDescendants()) do
+				if d:IsA("ParticleEmitter") and d:GetAttribute("BaseRate") then emitter = d end
+			end
+			return car.PrimaryPart:FindFirstChild("RideGlow"), emitter, car.PrimaryPart:FindFirstChild("CosmeticTrail")
+		end
+		local g1, e1, t1 = parts("FOREST")
+		local g2, e2, t2 = parts("SKY")
+		R.expect(g2.Brightness).toBeLessThan(g1.Brightness * 0.5)
+		R.expect(e2.LightEmission).toBeLessThan(e1.LightEmission * 0.5)
+		R.expect(t2.LightEmission).toBeLessThan(t1.LightEmission * 0.5)
+	end)
+
 	R.it("a ride replaces the paint and the trail", function()
 		local look = Cosmetics.look({ ride = "ride_neon", paint = "paint_lime", trail = "trail_fire" })
 		R.expect(look.paint.body).toBe(Cosmetics.get("ride_neon").body)

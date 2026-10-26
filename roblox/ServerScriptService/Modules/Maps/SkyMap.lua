@@ -25,12 +25,13 @@ local C = {
 	CLOUD_FLAT   = Color3.fromRGB(240, 245, 255),
 	CLOUD_PUFF   = Color3.fromRGB(255, 255, 255),
 	CLOUD_SHADOW = Color3.fromRGB(230, 233, 248),
-	-- the road: soft cloud tones, a little blue so a sunlit floor is not glaring
-	ROAD         = Color3.fromRGB(222, 230, 244),
-	ROAD2        = Color3.fromRGB(212, 222, 240),
+	-- the road: a soft sky blue, darker than the white clouds round it (a
+	-- near-white road under the sun was glaring and did not stand out)
+	ROAD         = Color3.fromRGB(160, 190, 236),
+	ROAD2        = Color3.fromRGB(150, 182, 232),
 	ROAD_EDGE    = Color3.fromRGB(246, 206, 120),   -- gold edge line
 	BARRIER      = Color3.fromRGB(170, 210, 250),   -- air barrier (see-through)
-	RAIL         = Color3.fromRGB(236, 242, 252),   -- cloud rail
+	RAIL         = Color3.fromRGB(212, 228, 250),   -- cloud rail
 	SEA          = Color3.fromRGB(176, 200, 236),   -- cloud sea far below
 	PLATFORM     = Color3.fromRGB(175, 155, 218),
 	PLATFORM2    = Color3.fromRGB(135, 115, 188),
