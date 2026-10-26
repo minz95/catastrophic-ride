@@ -15,7 +15,7 @@
         },
         {
           "take": "record-forest",
-          "t": 23.5,
+          "t": 19,
           "dur": 3,
           "tag": "STEP 1 · FARM",
           "title": "Grab junk on the farm",
@@ -24,16 +24,16 @@
         },
         {
           "take": "record-forest",
-          "t": 26.5,
-          "dur": 2.5,
+          "t": 14.5,
+          "dur": 2,
           "tag": "STEP 1 · FARM",
           "title": "Rarer items drop in waves",
           "color": "#7CE04C"
         },
         {
           "take": "record-forest",
-          "t": 28.5,
-          "dur": 3.5,
+          "t": 16.3,
+          "dur": 2.5,
           "tag": "STEP 1 · FARM",
           "title": "Steal from other players",
           "sub": "Hold E to steal  ·  F to punch",
@@ -41,7 +41,7 @@
         },
         {
           "take": "record-forest",
-          "t": 34,
+          "t": 10,
           "dur": 2.5,
           "tag": "STEP 1 · FARM",
           "title": "...or get robbed!",
@@ -50,9 +50,8 @@
         },
         {
           "take": "record-forest",
-          "t": 39.5,
-          "dur": 3,
-          "speed": 0.5,
+          "t": 43.5,
+          "dur": 3.5,
           "tag": "STEP 2 · CRAFT",
           "title": "Your junk becomes your ride",
           "sub": "Body · Engine · Special  +  wheels, hat, tail",
@@ -68,37 +67,28 @@
         },
         {
           "take": "record-forest",
-          "t": 44,
-          "dur": 2.5,
+          "t": 57.3,
+          "dur": 2.2,
           "tag": "STEP 3 · RACE",
           "title": "Everyone starts together",
           "color": "#4CA8FF"
         },
         {
           "take": "record-forest",
-          "t": 106.5,
+          "t": 59.5,
           "dur": 3,
-          "tag": "STEP 3 · RACE",
-          "title": "Drift for a mini turbo",
-          "sub": "Shift + steer",
-          "color": "#4CA8FF"
-        },
-        {
-          "take": "record-forest",
-          "t": 124,
-          "dur": 3,
-          "tag": "STEP 3 · RACE",
-          "title": "Fill the bar, then BOOST",
-          "sub": "F to boost",
-          "color": "#4CA8FF"
-        },
-        {
-          "take": "record-forest",
-          "t": 134.5,
-          "dur": 3.5,
           "tag": "STEP 3 · RACE",
           "title": "Bump, blast and pass",
           "sub": "E: your items' abilities",
+          "color": "#4CA8FF"
+        },
+        {
+          "take": "record-forest",
+          "t": 101,
+          "dur": 2.5,
+          "tag": "STEP 3 · RACE",
+          "title": "Drift for a mini turbo",
+          "sub": "Shift + steer  ·  F to boost",
           "color": "#4CA8FF"
         },
         {
@@ -119,8 +109,8 @@
         },
         {
           "take": "record-sky",
-          "t": 42.3,
-          "dur": 2.2,
+          "t": 58,
+          "dur": 2,
           "tag": "SKY",
           "title": "Fly through the SKY",
           "sub": "Space / Ctrl to climb and dive",
@@ -128,27 +118,18 @@
         },
         {
           "take": "record-sky",
-          "t": 135.5,
-          "dur": 2.2,
+          "t": 85.3,
+          "dur": 2.5,
           "tag": "SKY",
-          "title": "Close to the line",
+          "title": "Wing to wing",
           "color": "#FFFFFF"
-        },
-        {
-          "take": "record-forest",
-          "t": 175.6,
-          "dur": 1.4,
-          "tag": "RESULTS",
-          "title": "Win coins, buy new looks",
-          "sub": "B for the shop",
-          "color": "#FFD23C"
         },
         {
           "card": true,
           "image": "assets/store/1_grid.png",
-          "dur": 3,
+          "dur": 3.5,
           "title": "CATASTROPHIC DAY",
-          "sub": "Play free on Roblox",
+          "sub": "Win coins, buy new looks  ·  Play free on Roblox",
           "color": "#FFD23C"
         }
       ]
@@ -159,36 +140,35 @@
       "segments": [
         {
           "take": "record-forest",
-          "t": 134.5,
+          "t": 59.5,
           "dur": 2,
           "title": "JUNK. RIDES. CHAOS.",
           "y": 0.5
         },
         {
           "take": "record-forest",
-          "t": 28.5,
+          "t": 16.3,
           "dur": 2,
           "title": "STEAL",
           "y": 0.5
         },
         {
           "take": "record-forest",
-          "t": 39.5,
+          "t": 44,
           "dur": 2,
-          "speed": 0.5,
           "title": "BUILD",
           "y": 0.5
         },
         {
           "take": "record-forest",
-          "t": 44.5,
-          "dur": 2,
+          "t": 57.3,
+          "dur": 1.8,
           "title": "RACE",
           "y": 0.5
         },
         {
           "take": "record-forest",
-          "t": 106.5,
+          "t": 101,
           "dur": 1.8,
           "title": "DRIFT",
           "y": 0.5
@@ -209,7 +189,7 @@
         },
         {
           "take": "record-sky",
-          "t": 42.3,
+          "t": 85.3,
           "dur": 1.8,
           "title": "FLY",
           "y": 0.5
@@ -219,13 +199,6 @@
           "t": 142.5,
           "dur": 1.8,
           "title": "BLAST",
-          "y": 0.5
-        },
-        {
-          "take": "record-forest",
-          "t": 175.6,
-          "dur": 1.4,
-          "title": "WIN",
           "y": 0.5
         },
         {
@@ -244,7 +217,7 @@
       "segments": [
         {
           "take": "record-forest",
-          "t": 134.5,
+          "t": 59.5,
           "dur": 2.2,
           "zoom": 1.7,
           "title": "Turn JUNK\ninto a\nRACE CAR",
@@ -252,7 +225,7 @@
         },
         {
           "take": "record-forest",
-          "t": 23.5,
+          "t": 19,
           "dur": 2,
           "title": "Grab stuff",
           "sub": "on the farm",
@@ -260,7 +233,7 @@
         },
         {
           "take": "record-forest",
-          "t": 28.5,
+          "t": 16.3,
           "dur": 2.2,
           "title": "STEAL it",
           "sub": "from other players",
@@ -268,17 +241,16 @@
         },
         {
           "take": "record-forest",
-          "t": 39.5,
+          "t": 44,
           "dur": 2.4,
-          "speed": 0.5,
           "title": "BUILD",
           "sub": "your ride from it",
           "fit": "fill",
-          "cx": 0.78
+          "cx": 0.85
         },
         {
           "take": "record-forest",
-          "t": 44.5,
+          "t": 57.3,
           "dur": 2,
           "zoom": 1.7,
           "title": "RACE",
@@ -286,7 +258,7 @@
         },
         {
           "take": "record-forest",
-          "t": 106.5,
+          "t": 101,
           "dur": 1.8,
           "zoom": 1.7,
           "title": "DRIFT"
@@ -300,7 +272,7 @@
         },
         {
           "take": "record-sky",
-          "t": 42.3,
+          "t": 85.3,
           "dur": 2,
           "zoom": 1.7,
           "title": "FLY"

@@ -256,6 +256,11 @@ end
 
 local function _showToast(phase)
 	local guide = PHASE_GUIDES[phase]
+	-- RACING: no toast. Its keys are on the key strip and the objective and
+	-- tips are in RacingClient's RACE START banner under the 3-2-1; the
+	-- three of them used to pile up in the middle of the screen. H still
+	-- opens the full RACING guide.
+	if phase == "RACING" then guide = nil end
 	if not guide then
 		-- Phases without a guide (e.g. RESULTS, LOBBY) should clear any
 		-- lingering toast so it doesn't persist across phase changes.
@@ -287,12 +292,8 @@ local function _showToast(phase)
 		Position = UDim2.new(0.5, -180, 0, 80)
 	}):Play()
 
-	-- Auto-hide after 7 s; the RACING guide at GO, before the cars move
+	-- Auto-hide after 7 s
 	local show = 7
-	if phase == "RACING" then
-		local goAt = game:GetService("ReplicatedStorage"):GetAttribute("RaceGoAt")
-		show = type(goAt) == "number" and math.max(goAt - workspace:GetServerTimeNow() - 0.3, 0.5) or 3
-	end
 	if _toastTimer then pcall(task.cancel, _toastTimer) end
 	_toastTimer = task.delay(show, function()
 		_toastTimer = nil

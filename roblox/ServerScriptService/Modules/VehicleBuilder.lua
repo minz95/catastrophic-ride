@@ -405,7 +405,8 @@ end
 -- @returns Model
 --- A trail behind the chassis (cosmetic): a flat ribbon between two rear
 -- attachments. Trails and attachments have no mass or collision.
-function VehicleBuilder.addTrail(chassis, trail)
+function VehicleBuilder.addTrail(chassis, trail, biome)
+	local pale = VehicleBuilder.RIDE_PALE_ROAD[biome or ""]
 	local half = chassis.Size.X * 0.4
 	local rear = chassis.Size.Z * 0.5
 	local y = -chassis.Size.Y * 0.3
@@ -422,7 +423,7 @@ function VehicleBuilder.addTrail(chassis, trail)
 	t.Attachment0, t.Attachment1 = a0, a1
 	t.Lifetime = 0.7
 	t.MinLength = 0.1
-	t.LightEmission = trail.light or 0
+	t.LightEmission = (trail.light or 0) * (pale and pale.emission or 1)
 	t.Transparency = NumberSequence.new(0.15, 1)
 	t.WidthScale = NumberSequence.new(1, 0.3)
 	if trail.rainbow then
@@ -464,10 +465,15 @@ local function rainbowSequence()
 	})
 end
 
+-- Roads so pale that a ride's glow and glowing particles add up to a white
+-- blob under the car (SKY's cloud road): both are toned down there.
+VehicleBuilder.RIDE_PALE_ROAD = { SKY = { light = 0.35, emission = 0.25 } }
+
 --- A special ride (Shared/Cosmetics "ride"): body material, a glow and
 -- particles at the back. The particles' Rate follows the forward speed on
 -- every client (CosmeticFx, attribute BaseRate); tagged "RideFx".
-function VehicleBuilder.applyRide(model, chassis, ride)
+function VehicleBuilder.applyRide(model, chassis, ride, biome)
+	local pale = VehicleBuilder.RIDE_PALE_ROAD[biome or ""]
 	model:SetAttribute("Ride", ride.id)
 	if ride.hue then model:SetAttribute("RideHue", true) end
 	local ok, mat = pcall(function() return Enum.Material[ride.material or "SmoothPlastic"] end)
@@ -484,7 +490,7 @@ function VehicleBuilder.applyRide(model, chassis, ride)
 		local light = Instance.new("PointLight")
 		light.Name = "RideGlow"
 		light.Color = ride.light
-		light.Brightness = 2
+		light.Brightness = 2 * (pale and pale.light or 1)
 		light.Range = 16
 		light.Parent = chassis
 	end
@@ -503,7 +509,7 @@ function VehicleBuilder.applyRide(model, chassis, ride)
 		e.Speed = NumberRange.new(fx.speed[1], fx.speed[2])
 		e.SpreadAngle = Vector2.new(fx.spread, fx.spread)
 		e.EmissionDirection = Enum.NormalId.Back
-		e.LightEmission = fx.light or 0
+		e.LightEmission = (fx.light or 0) * (pale and pale.emission or 1)
 		e.Transparency = NumberSequence.new(0, 1)
 		e.Rate = 0   -- CosmeticFx sets it from the speed
 		e:SetAttribute("BaseRate", fx.rate)
@@ -651,8 +657,8 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	end
 
 	_applyStatVisuals(model, stats)
-	if look.trail then VehicleBuilder.addTrail(chassis, look.trail) end
-	if look.ride then VehicleBuilder.applyRide(model, chassis, look.ride) end
+	if look.trail then VehicleBuilder.addTrail(chassis, look.trail, biome) end
+	if look.ride then VehicleBuilder.applyRide(model, chassis, look.ride, biome) end
 
 	-- ── Physics drive constraints ─────────────────────────────────────────────
 	-- VehicleSeat's built-in Torque/TurnSpeed require Motor6D wheel joints to

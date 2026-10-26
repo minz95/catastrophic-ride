@@ -59,7 +59,7 @@ local openBtn = Instance.new("TextButton")
 openBtn.Name             = "OpenShop"
 openBtn.Size             = UDim2.new(0, 120, 0, 40)
 -- left edge, mid-height: clear of the key strip and Controls button (bottom
--- left), the inventory bar and the crafting screen's buttons
+-- left) and the inventory bar; in CRAFTING on the crafting panel (_place)
 openBtn.AnchorPoint      = Vector2.new(0, 0.5)
 openBtn.Position         = UDim2.new(0, 8, 0.5, 0)
 openBtn.BackgroundColor3 = Color3.fromRGB(230, 160, 30)
@@ -375,11 +375,41 @@ RemoteEvents.ShopUpdated.OnClientEvent:Connect(function(state)
 	if panel.Visible then _redraw() end
 end)
 
+-- Where the button sits: the left edge, mid-height, except in CRAFTING,
+-- where that spot is the crafting screen's Body slot: there the button goes
+-- into the crafting panel itself, top-right beside the title (drawn with the
+-- panel; the shop panel still opens from this ScreenGui, above it).
+local function _craftPanel()
+	for _, g in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+		-- the ScreenGui, not the LocalScript of the same name next to it
+		if g.Name == "CraftingUI" and g:IsA("ScreenGui") then return g:FindFirstChild("Panel") end
+	end
+	return nil
+end
+
+local function _place(phase)
+	local craftPanel = phase == Constants.PHASES.CRAFTING and _craftPanel()
+	if craftPanel then
+		openBtn.AnchorPoint = Vector2.new(1, 0)
+		openBtn.Position    = UDim2.new(1, -10, 0, 12)
+		openBtn.Size        = UDim2.new(0, 100, 0, 30)
+		openBtn.ZIndex      = 5
+		openBtn.Parent      = craftPanel
+	else
+		openBtn.AnchorPoint = Vector2.new(0, 0.5)
+		openBtn.Position    = UDim2.new(0, 8, 0.5, 0)
+		openBtn.Size        = UDim2.new(0, 120, 0, 40)
+		openBtn.ZIndex      = 1
+		openBtn.Parent      = screen
+	end
+end
+
 -- Open in every phase but RACING (driving needs the whole screen).
 local function onPhase(phase)
 	local open = phase ~= Constants.PHASES.RACING
 	openBtn.Visible = open
 	if not open then panel.Visible = false end
+	_place(phase)
 end
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
 onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)

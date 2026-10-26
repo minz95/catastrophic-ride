@@ -36,6 +36,9 @@ BotBrain.PROFILES = {
 	thief   = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, punchChance = 0,   guardChance = 0.2, crafter = "casual",  huntRange = 120 },
 	guard   = { mashRate = 9,  greed = 20, stealChance = 0,   defendChance = 1,   punchChance = 0,   guardChance = 1,   crafter = "optimal", huntRange = 0 },
 	brawler = { mashRate = 9,  greed = 10, stealChance = 0,   defendChance = 0.3, punchChance = 8,   guardChance = 0.2, crafter = "casual",  huntRange = 120 },
+	-- trailer recording (record-* scenarios): a thief that leaves its draft on the
+	-- crafting screen, so the phase runs its whole timer on camera
+	filmer  = { mashRate = 9,  greed = 10, stealChance = 5,   defendChance = 0.2, punchChance = 0,   guardChance = 0.2, crafter = "slow",    huntRange = 120 },
 }
 
 local function rarityRank(name)

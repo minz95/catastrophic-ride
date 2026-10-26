@@ -462,9 +462,11 @@ local function _showRaceIntro()
 
 	local frame = Instance.new("Frame")
 	frame.Name                   = "RaceIntroBanner"
-	frame.Size                   = UDim2.new(0, 540, 0, 96)
-	frame.AnchorPoint            = Vector2.new(0.5, 0.5)
-	frame.Position               = UDim2.new(0.5, 0, 0.42, 0)
+	-- the only thing under the 3-2-1 (RaceCountdown, 0.22): the objective and
+	-- two tips (the tutorial shows no RACING toast; its keys are on the strip)
+	frame.Size                   = UDim2.new(0.92, 0, 0, 124)
+	frame.AnchorPoint            = Vector2.new(0.5, 0)
+	frame.Position               = UDim2.new(0.5, 0, 0.40, 0)
 	frame.BackgroundColor3       = Color3.fromRGB(15, 18, 28)
 	frame.BackgroundTransparency = 0.2
 	frame.BorderSizePixel        = 0
@@ -472,6 +474,9 @@ local function _showRaceIntro()
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 10)
 	corner.Parent = frame
+	local maxW = Instance.new("UISizeConstraint")
+	maxW.MaxSize = Vector2.new(560, 124)
+	maxW.Parent = frame
 
 	local title = Instance.new("TextLabel")
 	title.Size                   = UDim2.new(1, -20, 0, 36)
@@ -495,7 +500,18 @@ local function _showRaceIntro()
 	body.TextStrokeTransparency  = 0.5
 	body.Parent                  = frame
 
-	task.delay(2.8, function()
+	local tip = Instance.new("TextLabel")
+	tip.Size                     = UDim2.new(1, -20, 0, 26)
+	tip.Position                 = UDim2.new(0, 10, 0, 92)
+	tip.BackgroundTransparency   = 1
+	tip.Text                     = "Long drift = mini turbo  ·  Yellow pads = speed"
+	tip.TextColor3               = Color3.fromRGB(255, 220, 80)
+	tip.Font                     = Enum.Font.GothamBold
+	tip.TextScaled               = true
+	tip.TextStrokeTransparency   = 0.5
+	tip.Parent                   = frame
+
+	task.delay(3.4, function()
 		if not frame.Parent then return end
 		local tw = TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quad), {
 			BackgroundTransparency = 1,

@@ -1605,7 +1605,7 @@
       "tags": [
         "video"
       ],
-      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride, profile filmer: its draft stays on the crafting screen until the timer ends) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
       "opts": {
         "biome": "FOREST",
         "players": 1,
@@ -1615,7 +1615,7 @@
           "average"
         ],
         "farmProfiles": [
-          "thief"
+          "filmer"
         ],
         "shop": [
           [
@@ -1643,7 +1643,7 @@
       "tags": [
         "video"
       ],
-      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride, profile filmer: its draft stays on the crafting screen until the timer ends) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
       "opts": {
         "biome": "OCEAN",
         "players": 1,
@@ -1681,7 +1681,7 @@
       "tags": [
         "video"
       ],
-      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
+      "_why": "footage for the trailer cuts (tools/video/cut.py): one bot client (a thief with a special ride, profile filmer: its draft stays on the crafting screen until the timer ends) farms, crafts and races with server bots on a full grid; its window is recorded in pieces into reports/video/raw/ (git-ignored). The screen must be awake and unlocked",
       "opts": {
         "biome": "SKY",
         "players": 1,
@@ -1691,7 +1691,7 @@
           "average"
         ],
         "farmProfiles": [
-          "thief"
+          "filmer"
         ],
         "shop": [
           [

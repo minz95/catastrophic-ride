@@ -40,7 +40,7 @@ panel.Name                  = "Panel"
 panel.Size                  = UDim2.new(0, 500, 0, 476)
 panel.Position              = UDim2.new(0.5, -405, 0.5, -238)   -- the showroom sits on its right
 panel.BackgroundColor3      = Color3.fromRGB(10, 10, 22)
-panel.BackgroundTransparency = 0.12
+panel.BackgroundTransparency = 0   -- opaque: the tutorial guide behind it showed through
 panel.BorderSizePixel       = 0
 panel.Parent                = screen
 local _pc = Instance.new("UICorner"); _pc.CornerRadius = UDim.new(0, 14); _pc.Parent = panel
