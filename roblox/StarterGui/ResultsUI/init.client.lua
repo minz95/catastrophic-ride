@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
+local Cosmetics    = require(ReplicatedStorage.Shared.Cosmetics)
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build GUI ────────────────────────────────────────────────────────────────
@@ -149,7 +150,7 @@ nextLbl.Parent                 = bg
 -- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
 local rewardFrame = Instance.new("Frame")
 rewardFrame.Name              = "Reward"
-rewardFrame.Size              = UDim2.new(0, 360, 0, 92)
+rewardFrame.Size              = UDim2.new(0, 360, 0, 132)
 rewardFrame.Position          = UDim2.new(0.5, -180, 0.12, 0)
 rewardFrame.BackgroundColor3  = Color3.fromRGB(30, 26, 50)
 rewardFrame.BackgroundTransparency = 0.2
@@ -191,6 +192,47 @@ xpFill.BackgroundColor3 = Color3.fromRGB(90, 180, 255)
 xpFill.BorderSizePixel  = 0
 xpFill.Parent           = xpBar
 
+-- What the coins just earned can buy (Cosmetics.suggest on the shop state),
+-- with a button straight to it: the moment after a race is when a player
+-- wants to spend.
+local buyLbl = _rewardLabel("Suggest", 92, 18, Enum.Font.GothamBold, Color3.fromRGB(255, 220, 60))
+buyLbl.Size = UDim2.new(1, -116, 0, 18)
+buyLbl.Position = UDim2.new(0, 8, 0, 100)
+buyLbl.TextXAlignment = Enum.TextXAlignment.Left
+local shopBtn = Instance.new("TextButton")
+shopBtn.Name             = "Shop"
+shopBtn.Size             = UDim2.new(0, 96, 0, 30)
+shopBtn.Position         = UDim2.new(1, -104, 0, 94)
+shopBtn.BackgroundColor3 = Color3.fromRGB(230, 160, 30)
+shopBtn.Text             = "SHOP"
+shopBtn.TextColor3       = Color3.new(1, 1, 1)
+shopBtn.TextScaled       = true
+shopBtn.Font             = Enum.Font.GothamBlack
+shopBtn.Parent           = rewardFrame
+local shopCorner = Instance.new("UICorner")
+shopCorner.CornerRadius = UDim.new(0, 6)
+shopCorner.Parent       = shopBtn
+local _suggestTab = nil
+shopBtn.Activated:Connect(function()
+	for _, g in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+		-- the ScreenGui, not the LocalScript of the same name next to it
+		local open = g.Name == "ShopUI" and g:IsA("ScreenGui") and g:FindFirstChild("Open")
+		if open then open:Fire(_suggestTab) end
+	end
+end)
+
+local function _showSuggestion()
+	buyLbl.Text = "New looks in the SHOP"
+	_suggestTab = nil
+	local ok, res = pcall(function() return RemoteEvents.ShopAction:InvokeServer("state") end)
+	local tip = ok and type(res) == "table" and res.state and Cosmetics.suggest(res.state)
+	if not tip then return end
+	_suggestTab = tip.item.category
+	buyLbl.Text = tip.affordable
+		and string.format("You can buy %s now!", tip.item.name)
+		or string.format("%s: %d more coins", tip.item.name, tip.short)
+end
+
 local function _showReward(r)
 	if type(r) ~= "table" then return end
 	gainLbl.Text = string.format("+%d XP    +%d Coins", r.xp or 0, (r.coins or 0) + (r.daily or 0))
@@ -206,6 +248,7 @@ local function _showReward(r)
 	levelLbl.TextColor3 = (r.levelsGained or 0) > 0 and Color3.fromRGB(255, 200, 80) or Color3.new(1, 1, 1)
 	xpFill.Size = UDim2.fromScale(0, 1)
 	rewardFrame.Visible = true
+	task.spawn(_showSuggestion)
 	TweenService:Create(xpFill, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {
 		Size = UDim2.fromScale(math.clamp((r.xpInLevel or 0) / math.max(1, r.xpToNext or 1), 0, 1), 1),
 	}):Play()

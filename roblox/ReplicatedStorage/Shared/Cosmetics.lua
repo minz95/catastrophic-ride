@@ -113,6 +113,34 @@ function Cosmetics.buy(rec, id)
 	return "ok"
 end
 
+--- What to put in front of a player who just earned coins (results
+-- screen): the priciest look they can buy now ({ item, affordable = true }),
+-- else the cheapest one their level allows ({ item, short = coins missing }),
+-- nil when they own everything. `rec`: { coins, level, owned } with owned a
+-- set or a list of ids (Modules/Shop.state sends a list).
+function Cosmetics.suggest(rec)
+	local owned = {}
+	for k, v in pairs(rec.owned or {}) do
+		if type(k) == "string" and v then owned[k] = true elseif type(v) == "string" then owned[v] = true end
+	end
+	local probe = { coins = rec.coins or 0, level = rec.level or 1, owned = owned }
+	local best, cheapest
+	for _, cat in ipairs(Cosmetics.CATEGORIES) do
+		for _, it in ipairs(Cosmetics.ITEMS[cat]) do
+			if not Cosmetics.owns(probe, it.id) and probe.level >= (it.minLevel or 1) then
+				if probe.coins >= it.price then
+					if not best or it.price > best.price then best = it end
+				elseif not cheapest or it.price < cheapest.price then
+					cheapest = it
+				end
+			end
+		end
+	end
+	if best then return { item = best, affordable = true } end
+	if cheapest then return { item = cheapest, short = cheapest.price - probe.coins } end
+	return nil
+end
+
 --- Equips an owned item. Returns "ok" or "denied: <reason>".
 function Cosmetics.equip(rec, id)
 	local it = _byId[id]
