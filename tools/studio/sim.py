@@ -531,6 +531,8 @@ def check(sc, report):
             out += check_hud_timer(c, events)
         if c.get("shopUi"):
             out += check_shop_ui(c["shopUi"], events)
+        if c.get("raceTricks"):
+            out += check_race_tricks(events)
         if c.get("abilities"):
             out += check_abilities(sc, events)
         perf = [e for e in events if e.get("kind") == "server_perf"]
@@ -830,6 +832,20 @@ def ability_summary(events):
 def parse_clock(text):
     m = re.search(r"(\d+):(\d\d)", text or "")
     return int(m.group(1)) * 60 + int(m.group(2)) if m else None
+
+
+def check_race_tricks(events):
+    """Shop race extras (AbilityManager): the bomb landed on a car ahead
+    once, and taunts went out."""
+    out = []
+    hits = [e for e in events if e.get("kind") == "race_trick"]
+    tries = [(e.get("data") or {}).get("result") for e in events if e.get("kind") == "bot_race_trick"]
+    taunts = [e for e in events if e.get("kind") == "taunt"]
+    if len(hits) != 1:
+        out.append(("fail", "bomb: %d hits (want 1); tries: %s" % (len(hits), sorted(set(map(str, tries))))))
+    if not taunts:
+        out.append(("fail", "no taunt shown"))
+    return out
 
 
 def check_shop_ui(sc, events):

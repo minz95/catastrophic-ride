@@ -278,6 +278,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   turned in ViewportFrames; trails as a ribbon). Without Studio: `lune run
   tools/shop_preview_dump.luau <BIOME>` + `tools/scene_render.py`. The results
   screen suggests a buy (`Cosmetics.suggest`) with a SHOP button.
+  Race extras (shop "trick" / "taunt", AbilityManager): T throws the
+  equipped trick once a race (Bounce Bomb: the nearest car ahead hops via
+  VehicleLift and slows, `Constants.RACE_TRICKS`; shields block it), Q
+  shows the taunt bubble (`TauntFx`, `Constants.TAUNT`). Studio: `sim.py
+  run race-tricks`.
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING

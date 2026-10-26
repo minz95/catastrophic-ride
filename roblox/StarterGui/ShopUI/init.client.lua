@@ -107,8 +107,8 @@ end
 -- ── Panel ─────────────────────────────────────────────────────────────────────
 local panel = Instance.new("Frame")
 panel.Name             = "Panel"
-panel.Size             = UDim2.new(0, 520, 0, 454)
-panel.Position         = UDim2.new(0.5, -260, 0.5, -227)
+panel.Size             = UDim2.new(0, 520, 0, 520)
+panel.Position         = UDim2.new(0.5, -260, 0.5, -260)
 panel.BackgroundColor3 = PANEL
 panel.Visible          = false
 panel.Parent           = screen
@@ -120,7 +120,7 @@ local function rescale()
 	local cam = workspace.CurrentCamera
 	local w = cam and cam.ViewportSize.X or 1000
 	local h = cam and cam.ViewportSize.Y or 800
-	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 454)
+	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 520)
 end
 rescale()
 if workspace.CurrentCamera then
@@ -155,8 +155,9 @@ hint.TextXAlignment = Enum.TextXAlignment.Left
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
 
 -- tabs
-local TABS = { "ride", "paint", "trail", "move", "gadget", "coins" }
-local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets", coins = "Coins" }
+local TABS = { "ride", "paint", "trail", "taunt", "trick", "move", "gadget", "coins" }
+local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", taunt = "😜 Taunts", trick = "💣 Race",
+	move = "Moves", gadget = "Gadgets", coins = "Coins" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
 	paint  = "Looks only: your car drives the same. Shows on the car you craft.",
@@ -164,13 +165,16 @@ local TAB_HINTS = {
 	move   = "Farming: how your punch looks. Same reach and power.",
 	gadget = "Farming: one trick per round. Press T (or the SMOKE button).",
 	coins  = "Coins buy looks and tricks. Win races and come back daily for more.",
+	taunt  = "Racing: press Q (or 😜) and everyone sees it over your car.",
+	trick  = "Racing: press T (or BOMB) once a race: the car ahead hops and slows.",
 }
 local tabBtns = {}
 for i, key in ipairs(TABS) do
 	local b = Instance.new("TextButton")
 	b.Name             = "Tab_" .. key
-	b.Size             = UDim2.new(0, 78, 0, 32)
-	b.Position         = UDim2.new(0, 14 + (i - 1) * 83, 0, 98)
+	-- two rows of four
+	b.Size             = UDim2.new(0, 117, 0, 30)
+	b.Position         = UDim2.new(0, 14 + ((i - 1) % 4) * 124, 0, 98 + ((i - 1) // 4) * 34)
 	b.BackgroundColor3 = CARD
 	b.Text             = TAB_TITLES[key]
 	b.TextColor3       = Color3.new(1, 1, 1)
@@ -183,8 +187,8 @@ end
 
 local grid = Instance.new("ScrollingFrame")
 grid.Name                 = "Items"
-grid.Size                 = UDim2.new(1, -28, 1, -174)
-grid.Position             = UDim2.new(0, 14, 0, 140)
+grid.Size                 = UDim2.new(1, -28, 1, -208)
+grid.Position             = UDim2.new(0, 14, 0, 174)
 grid.BackgroundTransparency = 1
 grid.BorderSizePixel      = 0
 grid.ScrollBarThickness   = 6
@@ -285,6 +289,20 @@ local function swatch(card, it)
 	s.Parent           = card
 	corner(s, 6)
 	local g = Instance.new("UIGradient")
+	if it.category == "taunt" then
+		-- the bubble as others see it over your car
+		s.BackgroundColor3 = Color3.fromRGB(70, 90, 130)
+		local b = label(s, it.emoji .. " " .. it.text, UDim2.new(1, -16, 0, 34), UDim2.new(0, 8, 0.5, -17), Enum.Font.GothamBlack, Color3.fromRGB(30, 30, 40))
+		b.BackgroundTransparency = 0.05
+		b.BackgroundColor3 = Color3.new(1, 1, 1)
+		corner(b, 17)
+		return
+	end
+	if it.category == "trick" then
+		s.BackgroundColor3 = Color3.fromRGB(90, 50, 40)
+		label(s, it.trick and "💣 BOOM!" or "—", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.fromRGB(255, 170, 60))
+		return
+	end
 	if it.category == "move" or it.category == "gadget" then
 		s.BackgroundColor3 = Color3.fromRGB(70, 70, 90)
 		local icon = (it.style == "kick" and "🦶") or (it.gadget == "smoke" and "💨")

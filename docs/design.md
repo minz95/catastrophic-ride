@@ -365,6 +365,12 @@ spot with its track section; the RESULTS report lists them per section.
   (`Shared/ShopTiming`); what is on the crafting slots is kept and the rest
   auto-filled, so shopping never costs the car. Floating effect words are
   smaller (`EffectLook.TEXT`), one per car.
+- **2026-10-27 — Things worth buying.** Shop cards show each look on a
+  real car / boat / plane (they were colour swatches), the results screen
+  names what the coins just earned can buy, and the race got extras: the
+  Bounce Bomb (once a race, about a second lost for the car ahead, shields
+  block it: small enough that a buy does not decide the race) and taunt
+  bubbles (show only). No lobby wait for shoppers: others must not wait.
 
 ## Open questions (from the reports, not decided)
 

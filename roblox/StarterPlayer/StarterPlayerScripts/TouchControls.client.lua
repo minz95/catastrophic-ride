@@ -5,7 +5,8 @@
 -- (the seat's ThrottleFloat / SteerFloat, read by RacingClient).
 --   FARMING: GRAB (E; hold near a player to steal, tap fast in a contest),
 --            PUNCH (F), GUARD (hold G), DROP (Q), SMOKE (T, with a gadget)
---   RACING:  DRIFT (hold Shift), BOOST (F), ITEM (E), RESET (R)
+--   RACING:  DRIFT (hold Shift), BOOST (F), ITEM (E), RESET (R), BOMB (T,
+--            with a race trick), taunt (Q)
 
 local Players           = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -43,6 +44,8 @@ local LAYOUT = {
 		{ text = "BOOST", key = Enum.KeyCode.F, col = 1, row = 1, color = Color3.fromRGB(60, 150, 240) },
 		{ text = "ITEM",  key = Enum.KeyCode.E, col = 1, row = 2, color = Color3.fromRGB(170, 80, 220) },
 		{ text = "RESET", key = Enum.KeyCode.R, col = 2, row = 2, color = Color3.fromRGB(110, 110, 125), small = true },
+		{ text = "BOMB",  key = Enum.KeyCode.T, col = 1, row = 0, color = Color3.fromRGB(220, 90, 40), attr = "RaceTrick" },
+		{ text = "😜",    key = Enum.KeyCode.Q, col = 2, row = 0, color = Color3.fromRGB(240, 200, 60), small = true },
 	},
 }
 
@@ -69,10 +72,12 @@ for phase, list in pairs(LAYOUT) do
 		btn.Font                   = Enum.Font.GothamBlack
 		btn.AutoButtonColor        = true
 		btn.Parent                 = frame
-		if b.gadget then
-			-- only with a gadget equipped (FarmingManager sets the attribute)
-			local function show() btn.Visible = LocalPlayer:GetAttribute("Gadget") ~= nil end
-			LocalPlayer:GetAttributeChangedSignal("Gadget"):Connect(show)
+		local attr = (b.gadget and "Gadget") or b.attr
+		if attr then
+			-- only with a gadget / race trick equipped (FarmingManager /
+			-- AbilityManager set the attribute)
+			local function show() btn.Visible = LocalPlayer:GetAttribute(attr) ~= nil end
+			LocalPlayer:GetAttributeChangedSignal(attr):Connect(show)
 			show()
 		end
 		local c = Instance.new("UICorner")

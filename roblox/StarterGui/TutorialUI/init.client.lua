@@ -71,6 +71,8 @@ local PHASE_GUIDES = {
 			{ key = "E",             short = "Ability", desc = "Use an item ability" },
 			{ key = "Space / Ctrl",  short = "Up/Down", desc = "Climb / dive (SKY)", biome = "SKY" },
 			{ key = "R",             short = "Reset",   desc = "Put the car back on the road" },
+			{ key = "T",             short = "Bomb",    desc = "Bounce Bomb: the car ahead hops (once a race)", attr = "RaceTrick" },
+			{ key = "Q",             short = "Taunt",   desc = "Taunt the others (more in the SHOP)" },
 		},
 		tip = "Release a long drift for a mini turbo!\nBoost pads (yellow) give extra speed.",
 	},
@@ -84,7 +86,10 @@ end
 local function _keysFor(guide)
 	local out = {}
 	for _, k in ipairs(guide.keys) do
-		if not k.biome or k.biome == _biome() then table.insert(out, k) end
+		if (not k.biome or k.biome == _biome())
+			and (not k.attr or game:GetService("Players").LocalPlayer:GetAttribute(k.attr) ~= nil) then
+			table.insert(out, k)
+		end
 	end
 	return out
 end
@@ -592,6 +597,12 @@ local function _showStrip(phase)
 end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
+
+-- the race trick key shows once the server says one is equipped
+game:GetService("Players").LocalPlayer:GetAttributeChangedSignal("RaceTrick"):Connect(function()
+	local phase = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
+	if phase then _showStrip(phase) end
+end)
 
 local function _onPhase(phase)
 	_showStrip(phase)

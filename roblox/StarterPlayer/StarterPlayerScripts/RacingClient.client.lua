@@ -80,6 +80,47 @@ local KEY_MAP = {
 	[Enum.KeyCode.F]           = "F",
 }
 
+-- A short line under the race HUD ("No car ahead"): why T did nothing.
+local function _raceNote(text)
+	local gui = LocalPlayer.PlayerGui:FindFirstChild("RaceNote")
+	if not gui then
+		gui = Instance.new("ScreenGui")
+		gui.Name = "RaceNote"
+		gui.ResetOnSpawn = false
+		gui.Parent = LocalPlayer.PlayerGui
+		local l = Instance.new("TextLabel")
+		l.Name = "Text"
+		l.AnchorPoint = Vector2.new(0.5, 0)
+		l.Position = UDim2.new(0.5, 0, 0.62, 0)
+		l.Size = UDim2.new(0, 300, 0, 26)
+		l.BackgroundTransparency = 1
+		l.TextColor3 = Color3.new(1, 1, 1)
+		l.TextStrokeTransparency = 0.3
+		l.TextScaled = true
+		l.Font = Enum.Font.GothamBold
+		l.Parent = gui
+	end
+	local l = gui:FindFirstChild("Text")
+	l.Text = text
+	l.Visible = true
+	local token = tostring(os.clock())
+	l:SetAttribute("Token", token)
+	task.delay(1.6, function()
+		if l:GetAttribute("Token") == token then l.Visible = false end
+	end)
+end
+
+local TRICK_NOTES = {
+	["denied: no car ahead"] = "💣 No car ahead in range",
+	["denied: used"]         = "💣 Bomb used: one per race",
+	["denied: countdown"]    = "💣 Wait for GO",
+}
+function _useRaceTrick()
+	local ok, res = pcall(function() return RemoteEvents.UseRaceTrick:InvokeServer() end)
+	local note = ok and TRICK_NOTES[res]
+	if note then _raceNote(note) end
+end
+
 KeyInput.began(function(input, processed)
 	local k = KEY_MAP[input.KeyCode]
 	if k then _keys[k] = true end
@@ -98,6 +139,14 @@ KeyInput.began(function(input, processed)
 
 	if input.KeyCode == Enum.KeyCode.R then
 		RemoteEvents.RequestRespawn:InvokeServer()
+	end
+
+	-- T: the shop's race trick (Bounce Bomb), once a race; Q: taunt
+	if input.KeyCode == Enum.KeyCode.T and LocalPlayer:GetAttribute("RaceTrick") then
+		task.spawn(_useRaceTrick)
+	end
+	if input.KeyCode == Enum.KeyCode.Q then
+		RemoteEvents.Taunt:FireServer()
 	end
 end)
 

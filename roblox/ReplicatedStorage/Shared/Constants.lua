@@ -526,6 +526,17 @@ Constants.GADGETS = {
 	smoke = { USES = 1, HIDE = 3.5, CLOUD = 6 },
 }
 
+-- Race tricks (shop "trick", key T in RACING). Bounce Bomb: the nearest car
+-- ahead within RANGE studs hops LIFT studs for LIFT_FOR s and drives at
+-- SLOW of its speed for SLOW_FOR s (about a second lost: once a race).
+Constants.RACE_TRICKS = {
+	bomb = { USES = 1, RANGE = 80, LIFT = 7, LIFT_FOR = 0.7, SLOW = 0.7, SLOW_FOR = 1.5 },
+}
+
+-- Taunts (shop "taunt", key Q in RACING): a bubble over the car for
+-- SECONDS, at most one per COOLDOWN s.
+Constants.TAUNT = { COOLDOWN = 4, SECONDS = 2.5 }
+
 -- ─── Emotes ───────────────────────────────────────────────────────────────────
 Constants.EMOTE_IDS = { "Wave", "Dance", "Laugh" }
 

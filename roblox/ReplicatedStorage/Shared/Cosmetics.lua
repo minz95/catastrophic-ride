@@ -8,8 +8,9 @@
 
 local Cosmetics = {}
 
-Cosmetics.CATEGORIES = { "ride", "paint", "trail", "move", "gadget" }
-Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets" }
+Cosmetics.CATEGORIES = { "ride", "paint", "trail", "move", "gadget", "trick", "taunt" }
+Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", move = "Moves", gadget = "Gadgets",
+	trick = "Race Tricks", taunt = "Taunts" }
 
 local C3 = Color3.fromRGB
 
@@ -61,6 +62,24 @@ Cosmetics.ITEMS = {
 	gadget = {
 		{ id = "gadget_none",  name = "No Gadget", price = 0 },
 		{ id = "gadget_smoke", name = "Smoke Bomb", price = 900, minLevel = 3, gadget = "smoke" },
+	},
+	-- Race tricks (RACING, key T): once per race (Constants.RACE_TRICKS).
+	-- Bounce Bomb: the nearest car ahead hops up and loses a moment
+	-- (AbilityManager; shields block it). Small and once a race, so a buy
+	-- never decides the race.
+	trick = {
+		{ id = "trick_none", name = "No Trick", price = 0 },
+		{ id = "trick_bomb", name = "Bounce Bomb", price = 1200, minLevel = 3, trick = "bomb" },
+	},
+	-- Taunts (RACING, key Q): a bubble over your car everyone sees
+	-- (Constants.TAUNT). Show only.
+	taunt = {
+		{ id = "taunt_bye",    name = "Bye-Bye",     price = 0,   emoji = "👋", text = "BYE-BYE!" },
+		{ id = "taunt_slow",   name = "Too Slow",    price = 150, emoji = "🐢", text = "TOO SLOW!" },
+		{ id = "taunt_nyah",   name = "Nyah Nyah",   price = 200, emoji = "😜", text = "NYAH NYAH!" },
+		{ id = "taunt_lol",    name = "LOL",         price = 250, emoji = "😂", text = "LOL!" },
+		{ id = "taunt_dust",   name = "Eat My Dust", price = 350, emoji = "💨", text = "EAT MY DUST!", minLevel = 2 },
+		{ id = "taunt_crown",  name = "Bow Down",    price = 600, emoji = "👑", text = "BOW DOWN!", minLevel = 4 },
 	},
 }
 

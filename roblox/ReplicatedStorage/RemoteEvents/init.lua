@@ -43,6 +43,9 @@
 --   RewardGranted       → server→client (reward: table) -- RESULTS: Progression.applyRound
 --                          result + { saved: bool } (ProgressionManager)
 --   ShopUpdated         → server→client (state: table) -- coins changed outside the shop screen (Robux pack)
+--   Taunt               → client→server () -- show my equipped taunt (RACING, Constants.TAUNT)
+--   TauntShown          → server→client (userId, part: BasePart, emoji, text) -- draw it over that car (TauntFx)
+--   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -87,6 +90,8 @@ local EVENTS = {
 	"CraftDraft",
 	"RewardGranted",
 	"ShopUpdated",
+	"Taunt",
+	"TauntShown",
 }
 
 local FUNCTIONS = {
@@ -102,6 +107,7 @@ local FUNCTIONS = {
 	"RequestPunch",
 	"ShopAction",
 	"UseGadget",
+	"UseRaceTrick",
 }
 
 local RemoteEvents = {}

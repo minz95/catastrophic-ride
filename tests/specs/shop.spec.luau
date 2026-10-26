@@ -27,6 +27,7 @@ R.describe("Cosmetics rules", function()
 			local list = Cosmetics.ITEMS[cat]
 			if list[1].price ~= 0 then table.insert(bad, cat .. ": default not free") end
 			for i, it in ipairs(list) do
+				if cat == "taunt" and not (it.emoji and it.text) then table.insert(bad, it.id .. ": no bubble") end
 				if seen[it.id] then table.insert(bad, "duplicate " .. it.id) end
 				seen[it.id] = true
 				if i > 1 then
@@ -36,6 +37,7 @@ R.describe("Cosmetics rules", function()
 					if cat == "ride" and not (it.body and it.accent and it.fx and it.trail) then table.insert(bad, it.id .. ": incomplete ride") end
 					if cat == "move" and not it.style then table.insert(bad, it.id .. ": no style") end
 					if cat == "gadget" and not (it.gadget and C.GADGETS[it.gadget]) then table.insert(bad, it.id .. ": unknown gadget") end
+					if cat == "trick" and not (it.trick and C.RACE_TRICKS[it.trick]) then table.insert(bad, it.id .. ": unknown trick") end
 				end
 			end
 		end
