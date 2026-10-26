@@ -135,3 +135,21 @@ R.describe("AbilitySlots", function()
 		R.expect(back.HEAD).toBe(nil)
 	end)
 end)
+
+-- 2026-10-26: the floating words ("STOLEN!", "RAM!") of two cars or players
+-- side by side ran into each other in the trailer footage.
+R.describe("effect words", function()
+	R.it("are small (EffectLook.TEXT), one per car, and both effect scripts use that size", function()
+		local env = Loader.boot()
+		local T = env.requirePath("ReplicatedStorage.Shared.EffectLook").TEXT
+		R.expect(T.W <= 130 and T.H <= 28).toBe(true)
+		R.expect(T.BIG_W <= 170 and T.BIG_H <= 36).toBe(true)
+		R.expect(T.SCREEN_H <= 0.07 and T.SCREEN_MAX_PX <= 44).toBe(true)
+		local fx = read("StarterPlayer/StarterPlayerScripts/EffectFx.client.lua")
+		local farm = read("StarterPlayer/StarterPlayerScripts/FarmFx.client.lua")
+		R.expect(fx:find("T.BIG_W or T.W", 1, true) ~= nil).toBe(true)
+		R.expect(fx:find('old.Name == "EffectLabel"', 1, true) ~= nil).toBe(true)
+		R.expect(fx:find("UITextSizeConstraint", 1, true) ~= nil).toBe(true)
+		R.expect(farm:find("EffectLook.TEXT.W", 1, true) ~= nil).toBe(true)
+	end)
+end)

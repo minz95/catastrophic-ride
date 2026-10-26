@@ -1,6 +1,6 @@
 # Launch checklist
 
-What is left to publish Catastrophic Day on Roblox and measure how players
+What is left to publish Catastrophic Ride on Roblox and measure how players
 react. Code-side switches are already set for a live server
 (`Constants.SOLO_TEST_MODE = false`, live lobby countdown, DiagnosticLogger
 and playtest markers Studio-only, a leftover `HarnessArgs` attribute is
@@ -65,7 +65,7 @@ and the Smoke Bomb (one escape per round); nothing sold changes speed.
 
 ## 3. Store page
 
-**Title:** Catastrophic Day
+**Title:** Catastrophic Ride
 
 **Description (English, paste as is):**
 

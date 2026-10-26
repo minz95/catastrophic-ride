@@ -29,6 +29,7 @@ local CollectionService = game:GetService("CollectionService")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
+local EffectLook   = require(ReplicatedStorage.Shared.EffectLook)
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -181,7 +182,7 @@ local function label(character, text, color, seconds, key)
 	if old then old:Destroy() end
 	local gui = Instance.new("BillboardGui")
 	gui.Name = name
-	gui.Size = UDim2.new(0, 160, 0, 36)
+	gui.Size = UDim2.new(0, EffectLook.TEXT.W, 0, EffectLook.TEXT.H)
 	gui.StudsOffset = Vector3.new(0, key == "hits" and 2.4 or 3.6, 0)
 	gui.AlwaysOnTop = true
 	gui.MaxDistance = 90

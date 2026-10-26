@@ -131,6 +131,46 @@ task.spawn(function()
 	end
 end)
 
+-- Shop screen test (MatchHarness args.shopUi): press B, as a player would,
+-- in the lobby and at the start of CRAFTING, and report every 0.5 s whether
+-- the panel is open and what its clock says (sim.py check shopUi: it must
+-- close itself before the car is built and when the round starts).
+if LocalPlayer:GetAttribute("BotShopUi") then
+	local KeyInput = require(ReplicatedStorage.Shared.KeyInput)
+	local function shopPanel()
+		local gui = nil
+		for _, g in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+			-- the ScreenGui, not the LocalScript of the same name next to it
+			if g.Name == "ShopUI" and g:IsA("ScreenGui") then gui = g end
+		end
+		return gui and gui:FindFirstChild("Panel"), gui and gui:FindFirstChild("ShopNotice")
+	end
+	local pressedIn = {}
+	task.spawn(function()
+		while true do
+			task.wait(0.5)
+			local ph = ReplicatedStorage:GetAttribute("Phase")
+			local panel, notice = shopPanel()
+			if panel and not pressedIn[ph] and (ph == Constants.PHASES.LOBBY or ph == Constants.PHASES.CRAFTING) then
+				pressedIn[ph] = true
+				task.wait(1)
+				if not panel.Visible then KeyInput.press(Enum.KeyCode.B) end
+				task.wait(0.3)
+			end
+			if panel then
+				local endsAt = ReplicatedStorage:GetAttribute("PhaseEndsAt")
+				local clock = panel:FindFirstChild("PhaseClock")
+				report("shop_ui", {
+					phase = ph, open = panel.Visible,
+					left = endsAt and endsAt - workspace:GetServerTimeNow(),
+					clock = clock and clock.Text,
+					notice = notice and notice.Visible and notice.Text or nil,
+				})
+			end
+		end
+	end)
+end
+
 -- A grabbed bot with a Smoke Bomb throws it (once per round).
 local _gadgetUsed = false
 RemoteEvents.StealAttempt.OnClientEvent:Connect(function()
