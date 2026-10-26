@@ -1,4 +1,4 @@
-# Catastrophic Day
+# Catastrophic Ride
 
 A competitive multiplayer racing game for Roblox (up to 10 players) built with Luau and Rojo.
 Each round cycles through three phases: Farming, Crafting, and Racing.

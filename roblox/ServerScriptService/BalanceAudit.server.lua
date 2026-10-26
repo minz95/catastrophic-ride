@@ -141,7 +141,7 @@ end
 
 task.defer(function()
 	print("\n╔══════════════════════════════════════╗")
-	print("║   CATASTROPHIC DAY — BALANCE AUDIT  ║")
+	print("║   CATASTROPHIC RIDE — BALANCE AUDIT  ║")
 	print("╚══════════════════════════════════════╝")
 
 	local allWarnings = {}

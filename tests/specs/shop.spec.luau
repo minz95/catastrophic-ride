@@ -259,3 +259,44 @@ R.describe("Shopping time", function()
 		R.expect(n).toBe(2)   -- FARMING and CRAFTING
 	end)
 end)
+
+-- 2026-10-26: the shop stayed open over the crafting screen while its clock
+-- ran out, and a lobby shopper found the round started under the panel.
+R.describe("shop timing (Shared/ShopTiming)", function()
+	local ShopTiming = env.requirePath("ReplicatedStorage.Shared.ShopTiming")
+	local S = C.SHOP
+
+	R.it("the panel shows what the game around it is doing, red in the last seconds", function()
+		local t, warn = ShopTiming.line("LOBBY", 14.2)
+		R.expect(t).toBe("Round starts in 0:14")
+		R.expect(warn).toBe(false)
+		R.expect(ShopTiming.line("LOBBY", nil)).toBe("Waiting for players")
+		local c, w = ShopTiming.line("CRAFTING", S.WARN_AT - 1)
+		R.expect(c:find("slots are kept", 1, true) ~= nil).toBe(true)
+		R.expect(w).toBe(true)
+		R.expect(ShopTiming.line("RESULTS", 25):find("Next round", 1, true) ~= nil).toBe(true)
+		R.expect(ShopTiming.line("FARMING", 60):find("grab items", 1, true) ~= nil).toBe(true)
+	end)
+
+	R.it("an open shop closes when a round starts, for the race and once near the end of crafting", function()
+		R.expect(ShopTiming.closeFor("FARMING", "LOBBY", 90, {})).toBe(true)
+		R.expect(ShopTiming.closeFor("FARMING", nil, 60, {})).toBe(false)       -- opened during farming: stays
+		R.expect(ShopTiming.closeFor("LOBBY", "RESULTS", 15, {})).toBe(false)   -- results → lobby: keep shopping
+		R.expect(ShopTiming.closeFor("RACING", "CRAFTING", nil, {})).toBe(true)
+		R.expect(ShopTiming.closeFor("CRAFTING", nil, S.CRAFT_CLOSE_AT + 5, {})).toBe(false)
+		local close, why = ShopTiming.closeFor("CRAFTING", nil, S.CRAFT_CLOSE_AT - 0.5, {})
+		R.expect(close).toBe(true)
+		R.expect(why:find("Finish your car", 1, true) ~= nil).toBe(true)
+		-- reopened after that: the player's choice
+		R.expect(ShopTiming.closeFor("CRAFTING", nil, 5, { craftClosed = true })).toBe(false)
+		R.expect(S.CRAFT_CLOSE_AT < C.CRAFT_HURRY.SECONDS).toBe(true)   -- the hurry clock still leaves shopping time
+	end)
+
+	R.it("the shop screen uses those rules on every frame and keeps the draft promise visible", function()
+		local fs = require("@lune/fs")
+		local src = fs.readFile("roblox/StarterGui/ShopUI/init.client.lua")
+		R.expect(src:find("ShopTiming.closeFor(", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("ShopTiming.line(", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("Heartbeat:Connect", 1, true) ~= nil).toBe(true)
+	end)
+end)

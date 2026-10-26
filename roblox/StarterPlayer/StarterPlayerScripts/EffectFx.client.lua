@@ -90,9 +90,14 @@ end)
 -- ─── Floating label ──────────────────────────────────────────────────────────
 
 local function floatLabel(primary, text, color, big)
+	-- one label per car: a newer effect replaces the older word
+	for _, old in ipairs(primary:GetChildren()) do
+		if old.Name == "EffectLabel" and old:IsA("BillboardGui") then old:Destroy() end
+	end
+	local T = EffectLook.TEXT
 	local bb = Instance.new("BillboardGui")
 	bb.Name = "EffectLabel"
-	bb.Size = UDim2.new(0, big and 220 or 160, 0, big and 46 or 34)
+	bb.Size = UDim2.new(0, big and T.BIG_W or T.W, 0, big and T.BIG_H or T.H)
 	bb.StudsOffset = Vector3.new(0, 4, 0)
 	bb.AlwaysOnTop = true
 	bb.MaxDistance = MAX_DISTANCE
@@ -467,8 +472,13 @@ local function overlay()
 	_tint.BorderSizePixel = 0
 	_tint.Parent = _overlay
 	_text = Instance.new("TextLabel")
-	_text.Size = UDim2.new(0.6, 0, 0.09, 0)
-	_text.Position = UDim2.new(0.2, 0, 0.28, 0)
+	local T = EffectLook.TEXT
+	_text.AnchorPoint = Vector2.new(0.5, 0)
+	_text.Size = UDim2.new(T.SCREEN_W, 0, T.SCREEN_H, 0)
+	_text.Position = UDim2.new(0.5, 0, 0.28, 0)
+	local cap = Instance.new("UITextSizeConstraint")
+	cap.MaxTextSize = T.SCREEN_MAX_PX
+	cap.Parent = _text
 	_text.BackgroundTransparency = 1
 	_text.TextScaled = true
 	_text.Font = Enum.Font.GothamBlack

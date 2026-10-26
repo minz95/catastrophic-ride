@@ -355,6 +355,17 @@ spot with its track section; the RESULTS report lists them per section.
   the wall). After: a bot won 2 of 3 FOREST runs; OCEAN finished
   97.5 / 97.7 / 98.0 s.
 
+- **2026-10-27 — Catastrophic Ride; the shop gets out of the way.** The
+  game is called Catastrophic Ride. Once two players are in, the lobby
+  counts down 15 s (8 s left no time to load in or shop). There is no
+  separate "enter" step: everyone in the server plays the next round
+  (bots fill the grid), and a player joining mid-round watches until the
+  next one. The shop panel shows the phase clock and closes itself when a
+  round starts, for the race and once 12 s before the car is built
+  (`Shared/ShopTiming`); what is on the crafting slots is kept and the rest
+  auto-filled, so shopping never costs the car. Floating effect words are
+  smaller (`EffectLook.TEXT`), one per car.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

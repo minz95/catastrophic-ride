@@ -91,6 +91,17 @@ EffectLook.CAR = {
 	superTurbo     = { style = "boost",   color = ORANGE, label = "🔥 SUPER TURBO" },
 }
 
+-- Size of the floating effect words ("STOLEN!", "RAM!") in pixels, over a
+-- car (EffectFx) or a farming avatar (FarmFx); BIG = your own car. SCREEN
+-- text is that share of the screen, capped at SCREEN_MAX_PX.
+-- History (2026-10-26): at 160 x 36 (220 x 46 for your car) and 9 % of the
+-- screen the words of two cars or two players side by side ran into each
+-- other; a car hit twice stacked two labels on one spot.
+EffectLook.TEXT = {
+	W = 120, H = 26, BIG_W = 160, BIG_H = 34,
+	SCREEN_W = 0.44, SCREEN_H = 0.06, SCREEN_MAX_PX = 40,
+}
+
 EffectLook.SCREEN = {
 	steerDisable  = { color = WHITE,  alpha = 0.35, text = "STEERING JAMMED!" },
 	slippery      = { color = ORANGE, alpha = 0.25, text = "SLIPPED!", shake = 0.03, seconds = 0.8 },

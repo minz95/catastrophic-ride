@@ -14,7 +14,7 @@ local Workspace         = game:GetService("Workspace")
 
 -- ─── Toolbar ──────────────────────────────────────────────────────────────────
 
-local toolbar = plugin:CreateToolbar("Catastrophic Day Preview")
+local toolbar = plugin:CreateToolbar("Catastrophic Ride Preview")
 
 local btnForest = toolbar:CreateButton(
 	"Forest Map",
@@ -293,4 +293,4 @@ btnBotMatch.Click:Connect(function()
 	end)
 end)
 
-notify("Plugin loaded. Use the 'Catastrophic Day Preview' toolbar buttons.")
+notify("Plugin loaded. Use the 'Catastrophic Ride Preview' toolbar buttons.")

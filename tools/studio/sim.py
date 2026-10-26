@@ -529,6 +529,8 @@ def check(sc, report):
             out += check_fair_start(c, events)
         if c.get("hudTimer"):
             out += check_hud_timer(c, events)
+        if c.get("shopUi"):
+            out += check_shop_ui(c["shopUi"], events)
         if c.get("abilities"):
             out += check_abilities(sc, events)
         perf = [e for e in events if e.get("kind") == "server_perf"]
@@ -828,6 +830,35 @@ def ability_summary(events):
 def parse_clock(text):
     m = re.search(r"(\d+):(\d\d)", text or "")
     return int(m.group(1)) * 60 + int(m.group(2)) if m else None
+
+
+def check_shop_ui(sc, events):
+    """The shop screen (ShopUI) a bot opened with B: shows the phase clock,
+    closes itself `closeAt` s before the car is built and when the round
+    starts (Shared/ShopTiming)."""
+    out = []
+    s = [e.get("data") or {} for e in events if e.get("kind") == "bot_shop_ui"]
+    if not s:
+        return [("fail", "no shop screen samples (did the bot open it?)")]
+    close_at = sc.get("closeAt", 12)
+    craft = [x for x in s if x.get("phase") == "CRAFTING" and x.get("left") is not None]
+    early = [x for x in craft if x["left"] > close_at + 1]
+    late = [x for x in craft if x["left"] < close_at - 1]
+    if not any(x.get("open") for x in early):
+        out.append(("fail", "CRAFTING: the shop never opened before %d s left" % close_at))
+    elif not any((x.get("clock") or "").startswith("Car is built in") for x in early if x.get("open")):
+        out.append(("fail", "CRAFTING: no phase clock on the open shop: %r" % [x.get("clock") for x in early][:3]))
+    if any(x.get("open") for x in late):
+        out.append(("fail", "CRAFTING: the shop was still open with %.0f s left" % min(x["left"] for x in late if x.get("open"))))
+    if not any((x.get("notice") or "").startswith("Finish your car") for x in craft):
+        out.append(("fail", "CRAFTING: no 'Finish your car' notice when the shop closed"))
+    lobby_open = any(x.get("open") for x in s if x.get("phase") == "LOBBY")
+    farm = [x for x in s if x.get("phase") == "FARMING"]
+    if lobby_open and farm and farm[0].get("open"):
+        out.append(("fail", "FARMING: the shop opened in the lobby stayed open when the round started"))
+    if any(x.get("open") for x in s if x.get("phase") == "RACING"):
+        out.append(("fail", "RACING: the shop is open"))
+    return out
 
 
 def check_hud_timer(c, events):

@@ -68,8 +68,15 @@ Constants.SKIN_COUNT     = 10   -- must match ServerStorage/CharacterSkins count
 Constants.MIN_TO_START   = 2    -- with this many players the lobby counts down LOBBY.FILL_SECONDS
 Constants.SOLO_TEST_MODE = false -- true: start 5 s after the first player, print the balance audit (local testing only)
 -- Live lobby: a lone player starts after MAX_WAIT s; once MIN_TO_START are
--- in, the countdown drops to FILL_SECONDS (time for friends to load in).
-Constants.LOBBY = { MAX_WAIT = 25, FILL_SECONDS = 8 }
+-- in, the countdown drops to FILL_SECONDS (time for friends to load in and
+-- to shop; 8 s was too short for either).
+Constants.LOBBY = { MAX_WAIT = 25, FILL_SECONDS = 15 }
+
+-- The shop screen (ShopUI, rules in Shared/ShopTiming) shows the phase
+-- clock; under WARN_AT s it turns red. In CRAFTING it closes itself once at
+-- CRAFT_CLOSE_AT s left so the player can finish the car (the draft is kept
+-- either way); it closes when a round starts (FARMING) and for RACING.
+Constants.SHOP = { WARN_AT = 10, CRAFT_CLOSE_AT = 12, NOTICE_SECONDS = 4 }
 
 -- ─── Inventory ────────────────────────────────────────────────────────────────
 Constants.INVENTORY_SIZE       = 8

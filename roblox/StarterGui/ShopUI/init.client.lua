@@ -4,7 +4,9 @@
 -- (Shared/Products). Opened with the SHOP button or B in every phase but
 -- RACING (the lobby countdown alone was too short to shop); a look bought
 -- before the car is built (CRAFTING end) shows on this round's car, and the
--- crafting showroom shows it at once (CraftPreview.refresh).
+-- crafting showroom shows it at once (CraftPreview.refresh). The panel shows
+-- the phase clock and gets out of the way before the game needs the player
+-- (Shared/ShopTiming): a round starting, the last seconds of CRAFTING, RACING.
 
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService   = game:GetService("UserInputService")
@@ -15,6 +17,8 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local Cosmetics    = require(ReplicatedStorage.Shared.Cosmetics)
 local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
+local ShopTiming   = require(ReplicatedStorage.Shared.ShopTiming)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local LocalPlayer  = Players.LocalPlayer
 
@@ -71,11 +75,40 @@ openBtn.Visible          = false
 openBtn.Parent           = screen
 corner(openBtn)
 
+-- ── Notice (why the shop closed itself) ─────────────────────────────────────
+local notice = Instance.new("TextLabel")
+notice.Name                   = "ShopNotice"
+notice.AnchorPoint            = Vector2.new(0.5, 0)
+notice.Position               = UDim2.new(0.5, 0, 0.16, 0)
+notice.Size                   = UDim2.new(0, 420, 0, 34)
+notice.BackgroundColor3       = Color3.fromRGB(28, 24, 46)
+notice.BackgroundTransparency = 0.15
+notice.TextColor3             = Color3.fromRGB(255, 210, 60)
+notice.TextScaled             = true
+notice.Font                   = Enum.Font.GothamBold
+notice.Visible                = false
+notice.Parent                 = screen
+corner(notice)
+local noticePad = Instance.new("UIPadding")
+noticePad.PaddingLeft, noticePad.PaddingRight = UDim.new(0, 10), UDim.new(0, 10)
+noticePad.PaddingTop, noticePad.PaddingBottom = UDim.new(0, 4), UDim.new(0, 4)
+noticePad.Parent = notice
+local _noticeToken = 0
+local function showNotice(text)
+	_noticeToken += 1
+	local token = _noticeToken
+	notice.Text = text
+	notice.Visible = true
+	task.delay(Constants.SHOP.NOTICE_SECONDS, function()
+		if token == _noticeToken then notice.Visible = false end
+	end)
+end
+
 -- ── Panel ─────────────────────────────────────────────────────────────────────
 local panel = Instance.new("Frame")
 panel.Name             = "Panel"
-panel.Size             = UDim2.new(0, 520, 0, 430)
-panel.Position         = UDim2.new(0.5, -260, 0.5, -215)
+panel.Size             = UDim2.new(0, 520, 0, 454)
+panel.Position         = UDim2.new(0.5, -260, 0.5, -227)
 panel.BackgroundColor3 = PANEL
 panel.Visible          = false
 panel.Parent           = screen
@@ -87,7 +120,7 @@ local function rescale()
 	local cam = workspace.CurrentCamera
 	local w = cam and cam.ViewportSize.X or 1000
 	local h = cam and cam.ViewportSize.Y or 800
-	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 430)
+	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 454)
 end
 rescale()
 if workspace.CurrentCamera then
@@ -109,8 +142,14 @@ closeBtn.Font             = Enum.Font.GothamBlack
 closeBtn.Parent           = panel
 corner(closeBtn)
 
+-- the game around the shopper: "Round starts in 0:12" (ShopTiming.line)
+local CLOCK_OK, CLOCK_WARN = Color3.fromRGB(150, 220, 255), Color3.fromRGB(255, 110, 100)
+local clockLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 0, 48), Enum.Font.GothamBold, CLOCK_OK)
+clockLbl.Name = "PhaseClock"
+clockLbl.TextXAlignment = Enum.TextXAlignment.Left
+
 local hint = label(panel, "Looks only: your car drives the same. Shows on the car you craft.",
-	UDim2.new(1, -28, 0, 18), UDim2.new(0, 14, 0, 50), Enum.Font.Gotham, Color3.fromRGB(190, 190, 210))
+	UDim2.new(1, -28, 0, 18), UDim2.new(0, 14, 0, 72), Enum.Font.Gotham, Color3.fromRGB(190, 190, 210))
 hint.TextXAlignment = Enum.TextXAlignment.Left
 
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
@@ -131,7 +170,7 @@ for i, key in ipairs(TABS) do
 	local b = Instance.new("TextButton")
 	b.Name             = "Tab_" .. key
 	b.Size             = UDim2.new(0, 78, 0, 32)
-	b.Position         = UDim2.new(0, 14 + (i - 1) * 83, 0, 74)
+	b.Position         = UDim2.new(0, 14 + (i - 1) * 83, 0, 98)
 	b.BackgroundColor3 = CARD
 	b.Text             = TAB_TITLES[key]
 	b.TextColor3       = Color3.new(1, 1, 1)
@@ -144,8 +183,8 @@ end
 
 local grid = Instance.new("ScrollingFrame")
 grid.Name                 = "Items"
-grid.Size                 = UDim2.new(1, -28, 1, -150)
-grid.Position             = UDim2.new(0, 14, 0, 116)
+grid.Size                 = UDim2.new(1, -28, 1, -174)
+grid.Position             = UDim2.new(0, 14, 0, 140)
 grid.BackgroundTransparency = 1
 grid.BorderSizePixel      = 0
 grid.ScrollBarThickness   = 6
@@ -404,12 +443,44 @@ local function _place(phase)
 	end
 end
 
--- Open in every phase but RACING (driving needs the whole screen).
+-- Open in every phase but RACING (driving needs the whole screen). An open
+-- panel closes itself when the game needs the player (ShopTiming.closeFor).
+local _phase = nil
+local _timing = { craftClosed = false }
+
+local function _closeIfDue(from)
+	local left = PhaseClock.remaining(nil)
+	if panel.Visible then
+		local close, why = ShopTiming.closeFor(_phase, from, left, _timing)
+		if close then
+			panel.Visible = false
+			if why then showNotice(why) end
+		end
+	end
+	-- once under the mark the choice is the player's: reopening stays open
+	if _phase == Constants.PHASES.CRAFTING and left and left <= Constants.SHOP.CRAFT_CLOSE_AT then
+		_timing.craftClosed = true
+	end
+end
+
 local function onPhase(phase)
-	local open = phase ~= Constants.PHASES.RACING
-	openBtn.Visible = open
-	if not open then panel.Visible = false end
+	local from = _phase
+	_phase = phase
+	if phase ~= from then _timing.craftClosed = false end
+	openBtn.Visible = phase ~= Constants.PHASES.RACING
+	_closeIfDue(from)
+	if phase == Constants.PHASES.RACING then panel.Visible = false end
 	_place(phase)
 end
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
 onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)
+
+game:GetService("RunService").Heartbeat:Connect(function()
+	if not _phase then return end
+	_closeIfDue(nil)
+	if panel.Visible then
+		local text, warn = ShopTiming.line(_phase, PhaseClock.remaining(nil))
+		clockLbl.Text = text
+		clockLbl.TextColor3 = warn and CLOCK_WARN or CLOCK_OK
+	end
+end)

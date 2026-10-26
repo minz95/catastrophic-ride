@@ -54,6 +54,12 @@ R.describe("live lobby", function()
 		R.expect(srv.GameManager.getPhase()).toBe("FARMING")
 	end)
 
+	R.it("two or more players get LOBBY.FILL_SECONDS (>= 15 s) to load in and shop", function()
+		local _, C = live(0)
+		R.expect(C.LOBBY.FILL_SECONDS >= 15).toBe(true)
+		R.expect(C.LOBBY.FILL_SECONDS <= C.LOBBY.MAX_WAIT).toBe(true)
+	end)
+
 	R.it("an empty server does not start a round", function()
 		local srv, C = live(0)
 		srv.advance(C.LOBBY.MAX_WAIT * 3)

@@ -172,7 +172,7 @@ function Runner.runMatch(opts)
 		biome = opts.biome or "FOREST",
 		players = players,
 		rounds = opts.rounds or 1,
-		lobbyDelay = 3,
+		lobbyDelay = opts.lobbyDelay or 3,
 		joinTimeout = opts.joinTimeout or 90,
 		stopAfter = opts.stopAfter,   -- "CRAFTING": end when the race would start
 		durations = opts.durations or { FARMING = 60, CRAFTING = 20, RACING = 240, RESULTS = 5 },
@@ -184,6 +184,7 @@ function Runner.runMatch(opts)
 		shop = opts.shop, shopCoins = opts.shopCoins, shopLevel = opts.shopLevel,
 		fillBots = opts.fillBots,   -- RaceBots fill the grid to this many racers
 		ejectTest = opts.ejectTest, -- bots jump and die mid-race (BotDriver, Modules/RaceSeat)
+		shopUi = opts.shopUi,       -- bots open the shop screen with B (BotDriver, sim.py shopUi)
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

@@ -1,4 +1,4 @@
-# Catastrophic Day — notes for AI agents
+# Catastrophic Ride — notes for AI agents
 
 Roblox racing game (Luau, Rojo). Read `README.md` for the game loop,
 `docs/design.md` for principles, track specs, fun targets and the decision
@@ -137,6 +137,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (`Shared/EffectLook` + `StarterPlayerScripts/EffectFx`) and the Studio
   harness measures it. A new effect needs an `EffectLook.CAR` entry; a new
   `ScreenEffect` name needs an `EffectLook.SCREEN` entry or a handler.
+  Floating words (cars and FarmFx avatars) take their size from
+  `EffectLook.TEXT`, one per car (bigger ones overlapped side by side).
 - Lift abilities set the chassis attribute `LiftOffset` through
   `Modules/VehicleLift`; an upward BodyForce cannot beat the ride-height
   BodyPosition. Never tween or set a race car's CFrame from a client.
@@ -266,7 +268,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   per round (`Constants.GADGETS`, `RemoteEvents.UseGadget`, key T).
   Prices vs earnings: `lune run tools/economy.luau` (reports/economy.md).
   The shop screen (ShopUI, B) opens in every phase but RACING; a buy or
-  equip rebuilds the crafting showroom (`CraftPreview.refresh`).
+  equip rebuilds the crafting showroom (`CraftPreview.refresh`). It shows
+  the phase clock and closes itself when a round starts, for the race and
+  once `Constants.SHOP.CRAFT_CLOSE_AT` s before the car is built
+  (`Shared/ShopTiming`; the draft is kept either way). Studio: `sim.py run
+  shop-ui`. Live lobby: `Constants.LOBBY` (15 s once two players are in).
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING
