@@ -171,6 +171,27 @@ if LocalPlayer:GetAttribute("BotShopUi") then
 	end)
 end
 
+-- Race tricks and taunts bought in a shop experiment: after GO the bot
+-- throws its Bounce Bomb as soon as a car is ahead in range (retrying), and
+-- taunts every few seconds when it bought a taunt.
+local function raceTricks()
+	local shop = LocalPlayer:GetAttribute("BotShop") or ""
+	local taunts = shop:find("taunt_", 1, true) ~= nil
+	local bombed = false
+	local t0 = os.clock()
+	while phase == Constants.PHASES.RACING and os.clock() - t0 < 300 do
+		task.wait(1.5)
+		if not bombed and LocalPlayer:GetAttribute("RaceTrick") then
+			local ok, r = pcall(function() return RemoteEvents.UseRaceTrick:InvokeServer() end)
+			report("race_trick", { result = ok and r or tostring(r) })
+			bombed = ok and r == "ok"
+		end
+		if taunts and os.clock() - t0 > 8 and math.floor(os.clock() - t0) % 6 < 2 then
+			RemoteEvents.Taunt:FireServer()
+		end
+	end
+end
+
 -- A grabbed bot with a Smoke Bomb throws it (once per round).
 local _gadgetUsed = false
 RemoteEvents.StealAttempt.OnClientEvent:Connect(function()
@@ -455,6 +476,8 @@ local function onPhase(newPhase)
 		task.spawn(farmLoop)
 	elseif newPhase == Constants.PHASES.CRAFTING then
 		task.spawn(craft)
+	elseif newPhase == Constants.PHASES.RACING then
+		task.spawn(raceTricks)
 	elseif newPhase ~= Constants.PHASES.RACING then
 		vehicle, autopilot = nil, nil
 	end

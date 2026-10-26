@@ -1485,6 +1485,37 @@
       }
     },
     {
+      "name": "race-tricks",
+      "kind": "match",
+      "tags": [
+        "shop"
+      ],
+      "_why": "shop race extras in a real race: the bot client buys the Bounce Bomb and a taunt, throws the bomb at the first car ahead in range (server bots fill the grid) and taunts every few seconds; the hit car hops (VehicleLift) and slows",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "shop": [
+          [
+            "trick_bomb",
+            "taunt_slow"
+          ]
+        ],
+        "durations": {
+          "FARMING": 20,
+          "CRAFTING": 8,
+          "RACING": 240,
+          "RESULTS": 3
+        },
+        "maxSeconds": 500
+      },
+      "checks": {
+        "allJoined": true,
+        "raceTricks": true
+      }
+    },
+    {
       "name": "shop-ui",
       "kind": "match",
       "tags": [

@@ -337,3 +337,82 @@ R.describe("OCEAN drops float on the sea", function()
 		R.expect(y).toBeNear(6, 0.01)
 	end)
 end)
+
+-- 2026-10-27: tricks and taunts sold in the shop for the race (Cosmetics
+-- "trick" / "taunt", AbilityManager UseRaceTrick / Taunt).
+R.describe("race tricks and taunts (shop)", function()
+	local function equipShop(srv, player, category, id)
+		local PlayerStore = srv.env.requirePath("ServerScriptService.Modules.PlayerStore")
+		PlayerStore.setMemoryOnly(true)
+		if not PlayerStore.get(player) then PlayerStore.load(player) end
+		local rec = PlayerStore.get(player)
+		rec.owned = rec.owned or {}
+		rec.owned[id] = true
+		rec.equipped = rec.equipped or {}
+		rec.equipped[category] = id
+	end
+
+	R.it("Bounce Bomb: the car ahead hops and slows for a moment, once a race; nobody ahead keeps it", function()
+		local srv, cars = abilityServer()
+		local B = Constants.RACE_TRICKS.bomb
+		local VehicleTuning = srv.env.requirePath("ServerScriptService.Modules.VehicleTuning")
+		-- car 2 stands 6 studs in front of car 1 (cars face -Z)
+		equipShop(srv, cars[2].player, "trick", "trick_bomb")
+		R.expect(srv.mock.invoke(srv.RemoteEvents.UseRaceTrick, cars[2].player)).toBe("denied: no car ahead")
+		equipShop(srv, cars[1].player, "trick", "trick_bomb")
+		R.expect(srv.mock.invoke(srv.RemoteEvents.UseRaceTrick, cars[1].player)).toBe("ok")
+		srv.advance(0.05)
+		R.expect(cars[2].model.PrimaryPart:GetAttribute("LiftOffset")).toBe(B.LIFT)
+		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed") * B.SLOW, 1e-6)
+		R.expect(cars[1].player:GetAttribute("RaceTrickLeft")).toBe(0)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.UseRaceTrick, cars[1].player)).toBe("denied: used")
+		srv.advance(B.SLOW_FOR + 0.2)
+		R.expect(cars[2].model.PrimaryPart:GetAttribute("LiftOffset")).toBe(nil)
+		R.expect(cars[2].seat.MaxSpeed).toBeNear(VehicleTuning.base(cars[2].seat, "MaxSpeed"), 1e-6)
+		R.expect(#srv.mock.errors).toBe(0)
+	end)
+
+	R.it("no trick equipped, or before GO: nothing happens", function()
+		local srv, cars = abilityServer({ beforeGo = true })
+		equipShop(srv, cars[1].player, "trick", "trick_bomb")
+		R.expect(srv.mock.invoke(srv.RemoteEvents.UseRaceTrick, cars[1].player)).toBe("denied: countdown")
+		srv.advance(Constants.RACE_COUNTDOWN)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.UseRaceTrick, cars[2].player)).toBe("denied: no trick")
+	end)
+
+	R.it("a taunt goes to every client over the car, the equipped one or Bye-Bye, at most once per cooldown", function()
+		local srv, cars = abilityServer()
+		local calls = function() return rawget(srv.RemoteEvents.TauntShown, "_calls") or {} end
+		srv.RemoteEvents.Taunt.OnServerEvent:Fire(cars[1].player)
+		srv.advance(0.05)
+		local first = calls()[1]
+		R.expect(first ~= nil).toBe(true)
+		R.expect(first.args[1]).toBe(cars[1].player.UserId)
+		R.expect(first.args[2]).toBe(cars[1].model.PrimaryPart)
+		R.expect(first.args[4]).toBe("BYE-BYE!")
+		srv.RemoteEvents.Taunt.OnServerEvent:Fire(cars[1].player)   -- too soon
+		srv.advance(0.05)
+		R.expect(#calls()).toBe(1)
+		equipShop(srv, cars[1].player, "taunt", "taunt_slow")
+		srv.advance(Constants.TAUNT.COOLDOWN)
+		srv.RemoteEvents.Taunt.OnServerEvent:Fire(cars[1].player)
+		srv.advance(0.05)
+		R.expect(#calls()).toBe(2)
+		R.expect(calls()[2].args[3]).toBe("🐢")
+	end)
+
+	R.it("the race client sends T and Q; touch buttons and the key strip show them", function()
+		local fs = require("@lune/fs")
+		local rc = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua")
+		R.expect(rc:find("RemoteEvents.UseRaceTrick:InvokeServer()", 1, true) ~= nil).toBe(true)
+		R.expect(rc:find("RemoteEvents.Taunt:FireServer()", 1, true) ~= nil).toBe(true)
+		local touch = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
+		R.expect(touch:find('attr = "RaceTrick"', 1, true) ~= nil).toBe(true)
+		R.expect(touch:find("KeyCode.Q", 1, true) ~= nil).toBe(true)
+		local tut = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
+		R.expect(tut:find('short = "Taunt"', 1, true) ~= nil).toBe(true)
+		R.expect(tut:find('short = "Bomb"', 1, true) ~= nil).toBe(true)
+		local fx = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TauntFx.client.lua")
+		R.expect(fx:find("TauntShown.OnClientEvent", 1, true) ~= nil).toBe(true)
+	end)
+end)

@@ -160,6 +160,8 @@ local _holdConn  = nil
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
 	if input.KeyCode ~= Enum.KeyCode.Q then return end
+	-- in a race Q is the taunt (RacingClient), not this menu
+	if ReplicatedStorage:GetAttribute("Phase") == "RACING" then return end
 	_qDown     = true
 	_qHoldTime = 0
 

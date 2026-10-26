@@ -713,3 +713,128 @@ end
 RemoteEvents.RequestAbility.OnServerInvoke = _request
 -- race bots fire through the same checks
 RaceBots.setAbilityHandler(_request)
+
+-- ─── Race tricks and taunts (shop "trick" / "taunt") ─────────────────────────
+-- Bought looks-and-tricks, not crafted items: the equipped trick fires once
+-- per race (Constants.RACE_TRICKS, key T), a taunt is a bubble over the car
+-- (Constants.TAUNT, key Q). Attribute RaceTrick tells the client which
+-- button to show.
+
+local Cosmetics   = require(ReplicatedStorage.Shared.Cosmetics)
+local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
+
+local _trickUses = {}   -- [userId] = uses this race
+local _tauntAt   = {}   -- [userId] = os.clock() of the last taunt
+
+local function _equipped(player, category)
+	local rec = PlayerStore.get(player)
+	return rec and Cosmetics.equipped(rec.equipped, category)
+end
+
+--- The nearest car in front of `player`'s car within `range` studs.
+local function _carAhead(player, range)
+	local vehicle = _getVehicle(player)
+	local primary = vehicle and vehicle.PrimaryPart
+	if not primary then return nil end
+	local pos, look = primary.Position, primary.CFrame.LookVector
+	local best, bestDist = nil, range
+	for _, other in ipairs(SessionManager.actors()) do
+		if other ~= player and _targetable(other) then
+			local ov = _getVehicle(other)
+			local op = ov and ov.PrimaryPart
+			if op then
+				local d = op.Position - pos
+				if d.Magnitude < bestDist and _flat(d):Dot(_flat(look)) > 0 then
+					best, bestDist = other, d.Magnitude
+				end
+			end
+		end
+	end
+	return best
+end
+
+local TRICKS = {}
+
+-- Bounce Bomb: the car ahead hops and loses a moment (shields block it).
+TRICKS.bomb = function(player, cfg)
+	local target = _carAhead(player, cfg.RANGE)
+	if not target then return "denied: no car ahead" end
+	if _hurts(target) then
+		local vehicle = _getVehicle(target)
+		EffectFx.play("bombHit", target, cfg.LIFT_FOR, player)
+		VehicleLift.set(vehicle, "bomb", cfg.LIFT, cfg.LIFT_FOR)
+		_applySpeedMult(vehicle, cfg.SLOW, cfg.SLOW_FOR, "bomb")
+		_screen(target, "bombed", { duration = cfg.LIFT_FOR + 0.3 })
+		local primary = vehicle and vehicle.PrimaryPart
+		if primary then
+			-- the bang itself: an Explosion with no push and no damage
+			local boom = Instance.new("Explosion")
+			boom.Position = primary.Position
+			boom.BlastPressure = 0
+			boom.BlastRadius = 6
+			boom.DestroyJointRadiusPercent = 0
+			boom.ExplosionType = Enum.ExplosionType.NoCraters
+			boom.Parent = workspace
+		end
+	end
+	Telemetry.record("race_trick", { userId = player.UserId, trick = "bomb", target = target.UserId,
+		bot = SessionManager.isBot(target) or nil })
+	return "ok"
+end
+
+local function _useRaceTrick(player)
+	if GameManager.getPhase() ~= Constants.PHASES.RACING then return "denied: not racing" end
+	if not RaceStart.isGo() then return "denied: countdown" end
+	local item = _equipped(player, "trick")
+	local cfg = item and Constants.RACE_TRICKS[item.trick]
+	if not cfg or not TRICKS[item.trick] then return "denied: no trick" end
+	if not _getVehicle(player) then return "denied: no vehicle" end
+	if (_trickUses[player.UserId] or 0) >= cfg.USES then return "denied: used" end
+	local result = TRICKS[item.trick](player, cfg)
+	if result == "ok" then
+		_trickUses[player.UserId] = (_trickUses[player.UserId] or 0) + 1
+		player:SetAttribute("RaceTrickLeft", cfg.USES - _trickUses[player.UserId])
+	end
+	return result
+end
+RemoteEvents.UseRaceTrick.OnServerInvoke = function(player)
+	local ok, res = pcall(_useRaceTrick, player)
+	if not ok then
+		warn("[AbilityManager] race trick: " .. tostring(res))
+		res = "denied: error"
+	end
+	Telemetry.record("race_trick_use", { userId = player.UserId, result = res })
+	return res
+end
+
+--- Shows `player`'s taunt over their car (or head) to everyone.
+local function _taunt(player)
+	if GameManager.getPhase() ~= Constants.PHASES.RACING then return "denied: not racing" end
+	local now = os.clock()
+	if now - (_tauntAt[player.UserId] or -math.huge) < Constants.TAUNT.COOLDOWN then return "denied: cooldown" end
+	local item = _equipped(player, "taunt") or Cosmetics.default("taunt")
+	local vehicle = _getVehicle(player)
+	local part = (vehicle and vehicle.PrimaryPart)
+		or (player.Character and player.Character:FindFirstChild("Head"))
+	if not part then return "denied: no car" end
+	_tauntAt[player.UserId] = now
+	RemoteEvents.TauntShown:FireAllClients(player.UserId, part, item.emoji, item.text)
+	Telemetry.record("taunt", { userId = player.UserId, id = item.id })
+	return "ok"
+end
+RemoteEvents.Taunt.OnServerEvent:Connect(function(player)
+	local ok, err = pcall(_taunt, player)
+	if not ok then warn("[AbilityManager] taunt: " .. tostring(err)) end
+end)
+
+GameManager.onPhaseChanged(function(phase)
+	if phase ~= Constants.PHASES.RACING then return end
+	_trickUses, _tauntAt = {}, {}
+	for _, p in ipairs(Players:GetPlayers()) do
+		-- which trick button to show (TouchControls, RacingClient)
+		local item = _equipped(p, "trick")
+		local cfg = item and Constants.RACE_TRICKS[item.trick]
+		p:SetAttribute("RaceTrick", cfg and item.trick or nil)
+		p:SetAttribute("RaceTrickLeft", cfg and cfg.USES or nil)
+	end
+end)

@@ -73,6 +73,7 @@ EffectLook.CAR = {
 	frozen         = { style = "stun",    color = ICE,    label = "🧊 FROZEN!", beam = true },
 	blown          = { style = "hit",     color = SKY,    label = "💨 BLOWN AWAY!",   beam = true },
 	rammed         = { style = "hit",     color = ORANGE, label = "💥 BANG!" },
+	bombHit        = { style = "hit",     color = ORANGE, label = "💣 BOOM!",          beam = true },   -- shop trick
 	blocked        = { style = "hit",     color = BLUE,   label = "🛡️ BLOCKED!" },
 
 	-- ── HEAD / TAIL passives and boost ─────────────────────────────────────
@@ -111,6 +112,7 @@ EffectLook.SCREEN = {
 	steamBlind    = { color = WHITE,  alpha = 0.8,  text = "CAN'T SEE!" },
 	noodleSnare   = { color = YELLOW, alpha = 0.3,  text = "NOODLE SNARE!" },
 	windBlast     = { color = SKY,    alpha = 0.25, text = "BLOWN AWAY!", shake = 0.05, seconds = 0.6 },
+	bombed        = { color = ORANGE, alpha = 0.3,  text = "💣 BOMBED!", shake = 0.06, seconds = 1 },
 	microFreeze   = { color = ICE,    alpha = 0.5,  text = "FROZEN!", shake = 0.01 },
 	bathSplash    = { color = BLUE,   alpha = 0.55, text = "SOAKED!" },
 	itemWave      = { color = YELLOW, alpha = 0.12, text = "✨ NEW ITEMS DROPPED! Rare items more likely", seconds = 2.5 },
