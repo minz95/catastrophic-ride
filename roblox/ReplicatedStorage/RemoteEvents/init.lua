@@ -44,7 +44,7 @@
 --                          result + { saved: bool } (ProgressionManager)
 --   ShopUpdated         → server→client (state: table) -- coins changed outside the shop screen (Robux pack)
 --   Taunt               → client→server () -- show my equipped taunt (RACING, Constants.TAUNT)
---   TauntShown          → server→client (userId, part: BasePart, emoji, text) -- draw it over that car (TauntFx)
+--   TauntShown          → server→client (userId, part: BasePart, emoji, text, name) -- draw it over that car (TauntFx)
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --
 -- RemoteFunctions (server-authoritative):

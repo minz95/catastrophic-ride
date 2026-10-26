@@ -281,8 +281,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Race extras (shop "trick" / "taunt", AbilityManager): T throws the
   equipped trick once a race (Bounce Bomb: the nearest car ahead hops via
   VehicleLift and slows, `Constants.RACE_TRICKS`; shields block it), Q
-  shows the taunt bubble (`TauntFx`, `Constants.TAUNT`). Studio: `sim.py
-  run race-tricks`.
+  shows the taunt bubble (`TauntFx`, `Constants.TAUNT`; drivers behind
+  the taunter also get it on screen; race bots taunt the player they just
+  passed). Studio: `sim.py run race-tricks`. Hats (shop "hat"): parts from
+  `Shared/HatDesigns` welded on the avatar's head by `Modules/ShopHat`
+  (massless, no collision), hidden while a crafted HEAD item is worn.
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING
