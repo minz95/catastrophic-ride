@@ -30,6 +30,7 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local EffectLook   = require(ReplicatedStorage.Shared.EffectLook)
+local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -115,14 +116,15 @@ local A = CFrame.Angles
 local R = math.rad
 -- arm forward: rotate +X; inward: rotate about Y (towards the chest)
 local POSE = {
-	windup    = A(R(-35), 0, 0),
-	punchR    = A(R(95), R(12), 0),
+	windup    = A(R(-50), R(-15), 0),
+	punchR    = A(R(105), R(22), 0),
+	twistR    = A(0, R(20), 0),
 	guardR    = A(R(75), R(35), R(15)),
 	guardL    = A(R(75), R(-35), R(-15)),
 	reachR    = A(R(85), R(-8), 0),
 	reachL    = A(R(85), R(8), 0),
 	swatR     = A(R(60), R(-40), 0),
-	twistL    = A(0, R(-18), 0),
+	twistL    = A(0, R(-32), 0),
 	flinch    = A(R(-14), 0, 0),
 	kickWind  = A(R(-30), 0, 0),
 	kickR     = A(R(95), 0, 0),
@@ -311,16 +313,47 @@ end
 
 -- ─── Actions ─────────────────────────────────────────────────────────────────
 
+-- A short streak behind the fist (or foot) while it swings: the arm alone
+-- was hard to see from the camera behind the player (playtest 2026-10-28:
+-- "F does nothing").
+local function streak(character, limbNames, seconds)
+	local limb
+	for _, n in ipairs(limbNames) do
+		limb = character:FindFirstChild(n)
+		if limb and limb:IsA("BasePart") then break end
+		limb = nil
+	end
+	if not limb then return end
+	local a0, a1 = Instance.new("Attachment"), Instance.new("Attachment")
+	local h = limb.Size.Y / 2
+	a0.Position, a1.Position = Vector3.new(-0.3, -h, 0), Vector3.new(0.3, -h, 0)
+	a0.Parent, a1.Parent = limb, limb
+	local t = Instance.new("Trail")
+	t.Attachment0, t.Attachment1 = a0, a1
+	t.Lifetime = 0.16
+	t.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 220, 90))
+	t.Transparency = NumberSequence.new(0.15, 1)
+	t.WidthScale = NumberSequence.new(1, 0.2)
+	t.LightEmission = 0.6
+	t.FaceCamera = true
+	t.Parent = limb
+	Debris:AddItem(t, seconds)
+	Debris:AddItem(a0, seconds)
+	Debris:AddItem(a1, seconds)
+end
+
 local function swing(character)
 	local r, waist = joint(character, "right"), joint(character, "waist")
 	if not r then return false end
-	tweenTo(r, POSE.windup, 0.07)
-	tweenTo(waist, POSE.twistL, 0.07)
-	task.delay(0.07, function()
+	tweenTo(r, POSE.windup, 0.08)
+	tweenTo(waist, POSE.twistR, 0.08)
+	task.delay(0.08, function()
+		streak(character, { "RightHand", "Right Arm" }, 0.4)
 		tweenTo(r, POSE.punchR, 0.08, Enum.EasingStyle.Back)
-		task.delay(0.16, function()
-			if _guarding[character] then tweenTo(r, POSE.guardR, 0.15) else release(r, 0.18) end
-			release(waist, 0.18)
+		tweenTo(waist, POSE.twistL, 0.08, Enum.EasingStyle.Back)
+		task.delay(0.2, function()
+			if _guarding[character] then tweenTo(r, POSE.guardR, 0.15) else release(r, 0.2) end
+			release(waist, 0.2)
 		end)
 	end)
 	return true
@@ -332,6 +365,7 @@ local function kick(character)
 	if not leg then return false end
 	tweenTo(leg, POSE.kickWind, 0.07)
 	task.delay(0.07, function()
+		streak(character, { "RightFoot", "Right Leg" }, 0.4)
 		tweenTo(leg, POSE.kickR, 0.09, Enum.EasingStyle.Back)
 		tweenTo(waist, POSE.leanBack, 0.09)
 		task.delay(0.2, function()
@@ -342,12 +376,66 @@ local function kick(character)
 	return true
 end
 
+-- A comic word that pops on a landed hit.
+local POW_WORDS = { "POW!", "BAM!", "WHAM!", "BONK!", "SMACK!" }
+local function pow(character, big)
+	local head = character:FindFirstChild("Head") or character:FindFirstChild("HumanoidRootPart")
+	if not head then return end
+	local T = EffectLook.TEXT
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "FarmFxPow"
+	gui.Size = UDim2.new(0, 0, 0, 0)
+	gui.StudsOffset = Vector3.new((math.random() - 0.5) * 1.5, 1.2, 0)
+	gui.AlwaysOnTop = true
+	gui.MaxDistance = 90
+	local t = Instance.new("TextLabel")
+	t.BackgroundTransparency = 1
+	t.Size = UDim2.fromScale(1, 1)
+	t.TextScaled = true
+	t.Font = Enum.Font.LuckiestGuy
+	t.Text = POW_WORDS[math.random(#POW_WORDS)]
+	t.TextColor3 = big and Color3.fromRGB(255, 90, 60) or Color3.fromRGB(255, 225, 60)
+	t.TextStrokeColor3 = Color3.fromRGB(120, 20, 20)
+	t.TextStrokeTransparency = 0
+	t.Rotation = math.random(-14, 14)
+	t.Parent = gui
+	gui.Parent = head
+	local w, h = big and T.BIG_W or T.W, big and T.BIG_H or T.H
+	TweenService:Create(gui, TweenInfo.new(0.12, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+		{ Size = UDim2.new(0, w, 0, h) }):Play()
+	task.delay(0.45, function()
+		if t.Parent then TweenService:Create(t, TweenInfo.new(0.2), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play() end
+	end)
+	Debris:AddItem(gui, 0.7)
+end
+
+-- Our own punch swings when F is pressed (FarmingClient sets PunchAt); the
+-- server's echo of it then only draws the hit.
+local _predictedAt = -math.huge
+local function punchNow()
+	local c = LocalPlayer.Character
+	if not c then return end
+	_predictedAt = os.clock()
+	if LocalPlayer:GetAttribute("MoveStyle") == "kick" then kick(c) else swing(c) end
+	SoundFx.play("PUNCH_SWING")
+	local root = c:FindFirstChild("HumanoidRootPart")
+	if root then
+		local look = root.CFrame.LookVector
+		root.AssemblyLinearVelocity += Vector3.new(look.X, 0, look.Z) * F.LUNGE
+	end
+end
+LocalPlayer:GetAttributeChangedSignal("PunchAt"):Connect(function()
+	local ok, err = pcall(punchNow)
+	if not ok then report("farmfx", { what = "punchNow", error = tostring(err) }) end
+end)
+
 local function onPunch(attackerId, victimId, info)
 	local aChar = charOf(attackerId)
 	local vChar, victim = charOf(victimId)
 	local result = info and info.result
 	local isKick = info and info.style == "kick"
-	local swung = aChar ~= nil and (isKick and kick(aChar) or (not isKick and swing(aChar)))
+	local mine = attackerId == LocalPlayer.UserId and os.clock() - _predictedAt < 0.8
+	local swung = aChar ~= nil and (mine or (isKick and kick(aChar) or (not isKick and swing(aChar))))
 	if LocalPlayer:GetAttribute("HarnessBot") then
 		-- Studio harness: drawn = the attacker's arm really turned against the
 		-- torso during the swing (largest angle over 0.4 s), not just "a
@@ -381,6 +469,8 @@ local function onPunch(attackerId, victimId, info)
 	if not vChar then return end
 	task.delay(0.12, function()
 		if result == "hit" or result == "knockout" then
+			pow(vChar, result == "knockout")
+			if attackerId == LocalPlayer.UserId then shake(result == "knockout" and 0.05 or 0.025, 0.18) end
 			flash(vChar, Color3.fromRGB(255, 70, 60), 0.3)
 			burst(vChar, Color3.fromRGB(255, 230, 90), (result == "knockout" and 30 or 14) * (isKick and 2 or 1))
 			if isKick then label(vChar, "🦶 KICK!", Color3.fromRGB(255, 200, 80), 0.9, "kick") end

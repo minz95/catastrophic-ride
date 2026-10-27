@@ -11,20 +11,37 @@ local SoundConfig = {}
 -- playtest and swap any that do not fit. Never use uploads of game or film
 -- audio (copyright).
 
+-- ─── Mix ─────────────────────────────────────────────────────────────────────
+-- Every sound plays through one of these SoundGroups (Shared/SoundFx.group).
+-- Playtest 2026-10-28: the music was so loud the game was hard to play; it
+-- now sits well under the effects. The 🎵 button (SoundClient) mutes Music.
+
+SoundConfig.GROUPS = {
+	Music    = 0.45,
+	Ambience = 0.6,
+	Effects  = 1.0,
+}
+
 -- ─── BGM ─────────────────────────────────────────────────────────────────────
 
 SoundConfig.BGM = {
-	LOBBY = { id = "rbxassetid://71612604315412", volume = 0.4, looped = true },    -- Blissful Leap Fiesta (DistroKid)
+	-- Playtest 2026-10-28: the first picks (rock, tropical house, "warm
+	-- breeze") did not fit and drowned the game. Now kitschy, bouncy game
+	-- music: chase tunes while grabbing and punching, a quirky one while
+	-- building, chiptune for the race. Found with `sim.py run sounds --set
+	-- search=[…]` (DistroKid / APM catalogues, all load); picked by title
+	-- and genre, so swap any that do not sound right in a playtest.
+	LOBBY = { id = "rbxassetid://133710918293530", volume = 0.5, looped = true },   -- Rainbow Slide (PAPERWIZ)
 	FARMING = {
-		FOREST = { id = "rbxassetid://106729070236769", volume = 0.45, looped = true }, -- The forest adventure
-		OCEAN  = { id = "rbxassetid://90091763838597",  volume = 0.45, looped = true }, -- Tropical House
-		SKY    = { id = "rbxassetid://132915893124028", volume = 0.45, looped = true }, -- Floating On A Cloud
+		FOREST = { id = "rbxassetid://122180244370179", volume = 0.5, looped = true }, -- Funny Cartoon Chase
+		OCEAN  = { id = "rbxassetid://118070543189702", volume = 0.5, looped = true }, -- Funny Chase (PAPERWIZ)
+		SKY    = { id = "rbxassetid://9045344810",      volume = 0.5, looped = true }, -- Bouncy Vision (APM)
 	},
-	CRAFTING = { id = "rbxassetid://85643586571329", volume = 0.35, looped = true }, -- Warm Breeze
+	CRAFTING = { id = "rbxassetid://1841146648", volume = 0.45, looped = true },    -- Castles and Crayons (APM, quirky)
 	RACING = {
-		FOREST = { id = "rbxassetid://140563561636307", volume = 0.55, looped = true }, -- Energetic and Upbeat Rock
-		OCEAN  = { id = "rbxassetid://127764396558082", volume = 0.55, looped = true }, -- Blue Lagoon Ride
-		SKY    = { id = "rbxassetid://1837808539",      volume = 0.55, looped = true }, -- OMG Run (a) (APM)
+		FOREST = { id = "rbxassetid://117780627999526", volume = 0.55, looped = true }, -- Go Bunny Boom Zone 1 (8-bit)
+		OCEAN  = { id = "rbxassetid://99939135861375",  volume = 0.55, looped = true }, -- Arcade Pizza (2025 Remaster)
+		SKY    = { id = "rbxassetid://88951633857057",  volume = 0.55, looped = true }, -- 16-Bit Revolution
 	},
 	RESULTS_WIN  = { id = "rbxassetid://1836473422", volume = 0.6, looped = false }, -- Victory Fanfare Sting (APM)
 	RESULTS_LOSE = { id = "rbxassetid://1841391669", volume = 0.5, looped = false }, -- Wipsy La La Sting 3 (APM)
@@ -59,7 +76,8 @@ SoundConfig.SFX = {
 	GRAB_WARN           = { id = "rbxassetid://9113251685", volume = 0.9, pitch = 1.0 }, -- Bag Grab Quick (someone grabs you)
 	ITEM_STOLEN         = { id = "rbxassetid://9113722807", volume = 0.9, pitch = 0.9 }, -- Card Swipe
 	ITEM_DEFENDED       = { id = "rbxassetid://9114343910", volume = 0.8, pitch = 1.2 }, -- Energy Presence
-	PUNCH_HIT           = { id = "rbxassetid://9118616398", volume = 0.9, pitch = 1.1 }, -- muted thud
+	PUNCH_SWING         = { id = "rbxassetid://9116399935", volume = 0.6, pitch = 1.7 }, -- Airy Whips Swooshes, quick (every F)
+	PUNCH_HIT           = { id = "rbxassetid://9118616398", volume = 1.0, pitch = 1.1 }, -- muted thud
 	PUNCH_BLOCKED       = { id = "rbxassetid://9119075972", volume = 0.7, pitch = 1.2 }, -- Shield Impacts
 	KNOCKOUT            = { id = "rbxassetid://9113470178", volume = 1.0, pitch = 1.0 }, -- Body Fall Heavy
 

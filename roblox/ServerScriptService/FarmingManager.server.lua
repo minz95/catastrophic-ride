@@ -800,7 +800,10 @@ RemoteEvents.UseGadget.OnServerInvoke = function(player)
 	return "ok"
 end
 
-local function _punchTarget(attacker, aRoot)
+-- `hintId`: the player the attacker's client turned to (aim help); taken
+-- when within RANGE and in front by ASSIST_ARC (the client's turn may not
+-- have reached the server yet), else the nearest one faced within ARC.
+local function _punchTarget(attacker, aRoot, hintId)
 	local look = _flatUnit(aRoot.CFrame.LookVector)
 	local best, bestD
 	for _, other in ipairs(SessionManager.actors()) do
@@ -811,7 +814,10 @@ local function _punchTarget(attacker, aRoot)
 			local to = Vector3.new(r.Position.X - aRoot.Position.X, 0, r.Position.Z - aRoot.Position.Z)
 			local d = to.Magnitude
 			local facing = d > 1e-3 and look:Dot(to.Unit) or 1
-			local ok = FarmingRules.canPunch({ now = 0, distance = d, range = F.RANGE, facing = facing, arc = F.ARC })
+			local hinted = hintId ~= nil and other.UserId == hintId
+			local ok = FarmingRules.canPunch({ now = 0, distance = d, range = F.RANGE, facing = facing,
+				arc = hinted and F.ASSIST_ARC or F.ARC })
+			if ok and hinted then return other end
 			if ok and (not bestD or d < bestD) then best, bestD = other, d end
 		end
 	end
@@ -842,8 +848,9 @@ local function _guard(player, on)
 end
 RemoteEvents.SetGuard.OnServerEvent:Connect(_guard)
 
-local function _punch(attacker)
+local function _punch(attacker, hintId)
 	if not _active then return "denied: not farming" end
+	if type(hintId) ~= "number" then hintId = nil end
 	local aData = SessionManager.getData(attacker)
 	local aRoot = _root(attacker)
 	if not aData or not aRoot then return "denied: no character" end
@@ -852,7 +859,7 @@ local function _punch(attacker)
 	aData._punchCooldownEnd = now + F.COOLDOWN
 	if (aData._guardUntil or 0) > now then _setGuard(attacker, aData, false) end   -- punching drops your guard
 
-	local victim = _punchTarget(attacker, aRoot)
+	local victim = _punchTarget(attacker, aRoot, hintId)
 	if not victim then
 		RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, nil, { result = "miss", style = _moveStyle(attacker) })
 		Telemetry.record("punch", { attacker = attacker.UserId, result = "miss" })

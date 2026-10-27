@@ -56,3 +56,24 @@ R.describe("player-facing text", function()
 		R.expect(bad).toBeEmpty("lines with Korean text")
 	end)
 end)
+
+-- History (playtest 2026-10-28): the crafting screen put any item into Body;
+-- the server dropped the ones that do not fit (CraftingRules.validate) and the
+-- car kept its plain body: "it goes into Body but the body does not become it".
+R.describe("crafting screen slots", function()
+	local src = SOURCES.CraftingUI
+	R.it("a slot click checks CraftingRules.fits before placing and says why not", function()
+		local click = src:sub((src:find("MouseButton1Click:Connect", (src:find("Slot click handlers", 1, true)), true)))
+		local check = click:find("CraftingRules.fits(capturedSlot", 1, true)
+		local place = click:find("_assignments[capturedSlot] = _selectedItem", 1, true)
+		R.expect(check ~= nil and place ~= nil and check < place).toBe(true)
+		R.expect(click:find("CraftingRules.whyNot", 1, true) ~= nil).toBe(true)
+	end)
+	R.it("whyNot explains Body and the core slots in English", function()
+		local env = require("../lib/loader").boot()
+		local CraftingRules = env.requirePath("ReplicatedStorage.Shared.CraftingRules")
+		local ItemConfig = env.requirePath("ReplicatedStorage.Shared.ItemConfig")
+		R.expect(CraftingRules.whyNot("BODY", "Magnet", ItemConfig.Magnet):find("RIDE", 1, true) ~= nil).toBe(true)
+		R.expect(CraftingRules.whyNot("ENGINE", "Log", ItemConfig.Log)).toBe("Log is a BODY item: Engine takes only ENGINE items.")
+	end)
+end)

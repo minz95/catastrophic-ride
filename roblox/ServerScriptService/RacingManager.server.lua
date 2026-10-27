@@ -539,10 +539,51 @@ end
 -- driver's client), plus the HEAD / TAIL passives when it was a rear-end.
 -- The drive model sets each car's velocity every frame, so without this a
 -- hit felt like touching a wall.
+-- A race bot's car (RaceBots.list) that `hit` belongs to, or nil.
+local function _botOf(hit)
+	for _, bot in ipairs(RaceBots.list) do
+		if bot.model and hit:IsDescendantOf(bot.model) then return bot end
+	end
+	return nil
+end
+
+-- A player's car meeting a race bot's: the same physical hit, the bot's
+-- half through RaceBots.knock. Without it the two drive models pushed into
+-- each other like into a wall: the player stopped dead, side-on, juddering
+-- (playtest 2026-10-28, Studio record-sky: 0 km/h behind a bot in the dive).
+local function _onBotContact(ownerA, vehicleA, bot)
+	if not vehicleA.PrimaryPart or not bot.primary or not bot.primary.Parent then return end
+	if RaceEffects.has(ownerA, "disguised") then return end
+	local a, b = ownerA.UserId, bot.id
+	local key = a .. ":" .. b
+	local now = tick()
+	if (_impactCooldown[key] or 0) > now then return end
+	_impactCooldown[key] = now + Constants.IMPACT.PAIR_COOLDOWN
+	local impact = CarImpact.resolve(_body(vehicleA), _body(bot.model))
+	if not impact then return end
+	RemoteEvents.CarImpact:FireClient(ownerA, impact.a.dvx, impact.a.dvz, impact.a.spin, impact.strength, b)
+	RaceBots.knock(bot.id, impact.b.dvx, impact.b.dvz, impact.b.spin)
+	if impact.strength >= Constants.IMPACT.BIG_HIT then
+		EffectFx.play("bump", ownerA, nil, bot.proxy)
+		EffectFx.play("bump", bot.proxy, nil, ownerA)
+	end
+	local function r1(x) return math.floor(x * 10 + 0.5) / 10 end
+	Telemetry.record("impact", {
+		a = a, b = b, bot = true, strength = r1(impact.strength),
+		dvA = r1(math.sqrt(impact.a.dvx ^ 2 + impact.a.dvz ^ 2)), spinA = r1(impact.a.spin),
+		dvB = r1(math.sqrt(impact.b.dvx ^ 2 + impact.b.dvz ^ 2)), spinB = r1(impact.b.spin),
+	})
+end
+
 local function _onCarContact(ownerA, vehicleA, hit)
 	if not _active then return end
 	local ownerB, vehicleB = _ownerOf(hit)
-	if not ownerB or ownerB == ownerA then return end
+	if not ownerB then
+		local bot = _botOf(hit)
+		if bot then _onBotContact(ownerA, vehicleA, bot) end
+		return
+	end
+	if ownerB == ownerA then return end
 	if not vehicleA.PrimaryPart or not vehicleB.PrimaryPart then return end
 	if RaceEffects.has(ownerA, "disguised") or RaceEffects.has(ownerB, "disguised") then return end
 

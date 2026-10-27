@@ -46,7 +46,7 @@ local function _playBGM(cfg)
 			_bgmInstance:Destroy()
 			_bgmInstance = nil
 		end
-		local s = _makeSound(cfg, SoundService)
+		local s = _makeSound(cfg, SoundService, "Music")
 		if not s then return end
 		s.Volume = 0
 		s:Play()
@@ -72,7 +72,7 @@ local function _startAmbience(biome)
 	local ambiList = SoundConfig.AMBIENCE[biome]
 	if not ambiList then return end
 	for _, cfg in ipairs(ambiList) do
-		local s = _makeSound(cfg, SoundService)
+		local s = _makeSound(cfg, SoundService, "Ambience")
 		if not s then continue end
 		s.Volume = 0
 		s:Play()
@@ -285,3 +285,41 @@ Players.PlayerAdded:Connect(function(player)
 		_playSFX("PLAYER_JOIN")
 	end
 end)
+
+-- ─── Music on / off ──────────────────────────────────────────────────────────
+-- A 🎵 button by Roblox's own top-left buttons mutes the Music group (BGM
+-- only: effects and ambience stay). Per session.
+
+local function _musicButton()
+	local pg = LocalPlayer:WaitForChild("PlayerGui")
+	local old = pg:FindFirstChild("MusicToggle")
+	if old then old:Destroy() end
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "MusicToggle"
+	gui.ResetOnSpawn = false
+	gui.IgnoreGuiInset = true
+	gui.DisplayOrder = 5
+	local b = Instance.new("TextButton")
+	b.Name = "Button"
+	b.Size = UDim2.new(0, 36, 0, 36)
+	b.Position = UDim2.new(0, 112, 0, 4)
+	b.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+	b.BackgroundTransparency = 0.35
+	b.TextScaled = true
+	b.Font = Enum.Font.GothamBold
+	b.TextColor3 = Color3.new(1, 1, 1)
+	b.Parent = gui
+	Instance.new("UICorner", b).CornerRadius = UDim.new(1, 0)
+	local music = SoundFx.group("Music")
+	local function draw()
+		local on = music.Volume > 0
+		b.Text = on and "🎵" or "🔇"
+	end
+	b.MouseButton1Click:Connect(function()
+		music.Volume = (music.Volume > 0) and 0 or SoundConfig.GROUPS.Music
+		draw()
+	end)
+	draw()
+	gui.Parent = pg
+end
+task.spawn(_musicButton)

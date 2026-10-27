@@ -38,7 +38,7 @@ local VehicleController = {}
 local LIFT = Constants.ABILITY_LIFT
 
 VehicleController.REVERSE_THROTTLE  = -0.5
-VehicleController.SKY_TURN_CAP      = 1.5
+VehicleController.SKY_TURN_CAP      = 1.8
 VehicleController.ALTITUDE_RATE     = 20     -- studs per second at 60 FPS
 VehicleController.LEGACY_FRAME_DT   = 1 / 60
 VehicleController.DRIFT_TURN_MULT   = Constants.DRIVE.DRIFT_TURN_MULT

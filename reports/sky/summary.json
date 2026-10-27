@@ -2,118 +2,118 @@
   "biome": "SKY",
   "fun": {
     "aggregate": {
-      "closeShare": 0.5815627355318957,
-      "fastestWinRate": 0.08333333333333333,
+      "closeShare": 0.5742558777845549,
+      "fastestWinRate": 0.25,
       "finishRate": 1,
-      "finishSpread": 32.49999999999867,
-      "gap12": 0.8083333333332874,
-      "lastTime": 126.37222222221686,
-      "leadChanges": 2.1666666666666665,
-      "overtakes": 13,
+      "finishSpread": 25.522222222220773,
+      "gap12": 0.5430555555555246,
+      "lastTime": 109.70416666666172,
+      "leadChanges": 1.6666666666666667,
+      "overtakes": 8.666666666666666,
       "races": 12,
-      "racingShare": 0.3449285031919476,
+      "racingShare": 0.3137056321414432,
       "sections": [
         {
           "deciding": 0,
-          "hits": 56,
+          "hits": 40,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 8.942903186361072,
+          "meanTime": 8.754544555893323,
           "name": "S1 launch tunnel",
           "respawns": 0,
-          "spread": 3.2128724344288826
+          "spread": 2.6780374652841368
         },
         {
           "deciding": 0,
-          "hits": 97,
+          "hits": 91,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 16.782851026272006,
+          "meanTime": 16.408382369277067,
           "name": "S2 cloud bend A",
           "respawns": 0,
-          "spread": 5.158366918338541
+          "spread": 3.7082008072686086
         },
         {
           "deciding": 0,
-          "hits": 59,
+          "hits": 63,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 7.712836894692821,
+          "meanTime": 7.395831269855196,
           "name": "S3 crossover",
           "respawns": 0,
-          "spread": 3.9862866100655707
+          "spread": 2.9715435867460407
         },
         {
-          "deciding": 2,
-          "hits": 153,
+          "deciding": 4,
+          "hits": 151,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 20.989643517604947,
+          "meanTime": 20.72096226423233,
           "name": "S4 cloud bend B",
           "respawns": 0,
-          "spread": 7.936540051404083
+          "spread": 7.509147054800169
         },
         {
-          "deciding": 10,
-          "hits": 397,
+          "deciding": 8,
+          "hits": 187,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 28.177230814823385,
+          "meanTime": 16.65298298154702,
           "name": "S5 crystal canyon",
           "respawns": 0,
-          "spread": 11.164786123602346
+          "spread": 8.254620619585461
         },
         {
           "deciding": 0,
-          "hits": 119,
+          "hits": 130,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 16.273309387713645,
+          "meanTime": 16.59858687331826,
           "name": "S6 cloud corkscrew",
           "respawns": 0,
-          "spread": 4.58063633369273
+          "spread": 2.840520838520554
         },
         {
           "deciding": 0,
-          "hits": 44,
+          "hits": 35,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 5.9409010984534705,
+          "meanTime": 6.072413389576529,
           "name": "S7 dive",
           "respawns": 0,
-          "spread": 1.7315911466816718
+          "spread": 1.4133841017266633
         }
       ],
-      "speedPlaceCorr": -0.012155122515917327,
-      "winnerTime": 93.87222222221818
+      "speedPlaceCorr": -0.19718309859154926,
+      "winnerTime": 84.18194444444096
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
         "ok": true,
-        "value": 0.5815627355318957,
+        "value": 0.5742558777845549,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.08333333333333333,
+        "value": 0.25,
         "why": "the fastest build should not always win"
       },
       {
@@ -127,21 +127,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 32.49999999999867,
+        "value": 25.522222222220773,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 2.1666666666666665,
+        "value": 1.6666666666666667,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
         "ok": false,
-        "value": 0.3449285031919476,
+        "value": 0.3137056321414432,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -149,7 +149,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.012155122515917327,
+        "value": -0.19718309859154926,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -157,7 +157,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 93.87222222221818,
+        "value": 84.18194444444096,
         "why": "a race should take about 90 s"
       }
     ]
@@ -165,7 +165,7 @@
   "generatedBy": "tools/report.luau",
   "geometry": {
     "respawnOffTrackSamples": 0,
-    "respawnSamples": 164,
+    "respawnSamples": 157,
     "solidOnlyBecauseOfCanCollideBug": 0,
     "treesInLane": 0,
     "wallIntrusionSpots": 0
@@ -173,20 +173,20 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 1,
+    "fastestCarWins": 3,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
-      "average": 3.5,
-      "expert": 1.5,
+      "average": 2.7083333333333335,
+      "expert": 2.2916666666666665,
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.4444444444444446,
-      "sweaty": 3.5555555555555554
+      "casual": 3.611111111111111,
+      "sweaty": 3.388888888888889
     },
-    "spearmanRarityVsPlace": -0.09042382146761851,
-    "spearmanTopSpeedVsPlace": -0.012155122515917327
+    "spearmanRarityVsPlace": -0.19718309859154926,
+    "spearmanTopSpeedVsPlace": -0.19718309859154926
   },
   "raceRuns": [
     {
@@ -196,9 +196,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 85.695,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 96.88333333332912,
+      "time": 86.89999999999635,
       "world": "authored"
     },
     {
@@ -208,9 +208,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 85.695,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 96.88333333332912,
+      "time": 86.89999999999635,
       "world": "live code"
     },
     {
@@ -218,11 +218,11 @@
       "carBuild": "Microwave + Hair Dryer + Pizza",
       "driver": "average",
       "finished": true,
-      "impacts": 5,
+      "impacts": 0,
       "maxSpeed": 85.695,
-      "progress": 7939,
+      "progress": 7607,
       "respawns": 0,
-      "time": 101.7999999999955,
+      "time": 87.56666666666298,
       "world": "authored"
     },
     {
@@ -230,11 +230,11 @@
       "carBuild": "Microwave + Hair Dryer + Pizza",
       "driver": "average",
       "finished": true,
-      "impacts": 5,
+      "impacts": 0,
       "maxSpeed": 85.695,
-      "progress": 7939,
+      "progress": 7607,
       "respawns": 0,
-      "time": 101.7999999999955,
+      "time": 87.56666666666298,
       "world": "live code"
     },
     {
@@ -242,11 +242,11 @@
       "carBuild": "Microwave + Hair Dryer + Pizza",
       "driver": "novice",
       "finished": true,
-      "impacts": 23,
+      "impacts": 17,
       "maxSpeed": 85.695,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 134.08333333333218,
+      "time": 111.89999999999493,
       "world": "authored"
     },
     {
@@ -254,11 +254,11 @@
       "carBuild": "Microwave + Hair Dryer + Pizza",
       "driver": "novice",
       "finished": true,
-      "impacts": 23,
+      "impacts": 17,
       "maxSpeed": 85.695,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 134.08333333333218,
+      "time": 111.89999999999493,
       "world": "live code"
     },
     {
@@ -266,11 +266,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "expert",
       "finished": true,
-      "impacts": 1,
+      "impacts": 0,
       "maxSpeed": 86.64878395653564,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 94.9499999999959,
+      "time": 85.5166666666631,
       "world": "authored"
     },
     {
@@ -278,11 +278,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "expert",
       "finished": true,
-      "impacts": 1,
+      "impacts": 0,
       "maxSpeed": 86.64878395653564,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 94.9499999999959,
+      "time": 85.5166666666631,
       "world": "live code"
     },
     {
@@ -290,11 +290,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "average",
       "finished": true,
-      "impacts": 6,
+      "impacts": 0,
       "maxSpeed": 86.64878395653564,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 99.43333333332897,
+      "time": 86.0999999999964,
       "world": "authored"
     },
     {
@@ -302,11 +302,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "average",
       "finished": true,
-      "impacts": 6,
+      "impacts": 0,
       "maxSpeed": 86.64878395653564,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 99.43333333332897,
+      "time": 86.0999999999964,
       "world": "live code"
     },
     {
@@ -314,11 +314,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "novice",
       "finished": true,
-      "impacts": 24,
+      "impacts": 20,
       "maxSpeed": 86.64878395653564,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 130.44999999999595,
+      "time": 118.46666666666123,
       "world": "authored"
     },
     {
@@ -326,11 +326,11 @@
       "carBuild": "Microwave + Kettle + Magnet",
       "driver": "novice",
       "finished": true,
-      "impacts": 24,
+      "impacts": 20,
       "maxSpeed": 86.64878395653564,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 130.44999999999595,
+      "time": 118.46666666666123,
       "world": "live code"
     },
     {
@@ -340,9 +340,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 88.30499999999999,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 89.84999999999619,
+      "time": 82.78333333332992,
       "world": "authored"
     },
     {
@@ -352,9 +352,9 @@
       "finished": true,
       "impacts": 0,
       "maxSpeed": 88.30499999999999,
-      "progress": 7938,
+      "progress": 7607,
       "respawns": 0,
-      "time": 89.84999999999619,
+      "time": 82.78333333332992,
       "world": "live code"
     },
     {
@@ -362,11 +362,11 @@
       "carBuild": "Kite + Cup Noodle + Trophy + Kite",
       "driver": "average",
       "finished": true,
-      "impacts": 6,
+      "impacts": 0,
       "maxSpeed": 88.30499999999999,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 95.14999999999588,
+      "time": 83.43333333332988,
       "world": "authored"
     },
     {
@@ -374,11 +374,11 @@
       "carBuild": "Kite + Cup Noodle + Trophy + Kite",
       "driver": "average",
       "finished": true,
-      "impacts": 6,
+      "impacts": 0,
       "maxSpeed": 88.30499999999999,
-      "progress": 7939,
+      "progress": 7608,
       "respawns": 0,
-      "time": 95.14999999999588,
+      "time": 83.43333333332988,
       "world": "live code"
     },
     {
@@ -386,11 +386,11 @@
       "carBuild": "Kite + Cup Noodle + Trophy + Kite",
       "driver": "novice",
       "finished": true,
-      "impacts": 25,
+      "impacts": 10,
       "maxSpeed": 88.30499999999999,
-      "progress": 7938,
+      "progress": 7608,
       "respawns": 0,
-      "time": 124.34999999999422,
+      "time": 103.98333333332872,
       "world": "authored"
     },
     {
@@ -398,16 +398,16 @@
       "carBuild": "Kite + Cup Noodle + Trophy + Kite",
       "driver": "novice",
       "finished": true,
-      "impacts": 25,
+      "impacts": 10,
       "maxSpeed": 88.30499999999999,
-      "progress": 7938,
+      "progress": 7608,
       "respawns": 0,
-      "time": 124.34999999999422,
+      "time": 103.98333333332872,
       "world": "live code"
     }
   ],
   "track": {
-    "length": 8161.019222501517,
+    "length": 7830.536223828487,
     "nodes": 41
   }
 }

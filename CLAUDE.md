@@ -148,7 +148,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   off the lane: they did nothing.
 - Car-to-car hits: `RacingManager` resolves every contact with
   `Shared/CarImpact` and sends each driver `RemoteEvents.CarImpact`;
-  `VehicleController.knock` adds it to the drive state. Never push a race
+  `VehicleController.knock` adds it to the drive state. A player meeting a
+  race bot is a hit too (`_onBotContact`, the bot's half via
+  `RaceBots.knock`); without it the player stopped dead as against a wall. Never push a race
   car with a second BodyVelocity (it fights `DriveVelocity`).
 - Drift: one rule, `VehicleController.updateDrift`, for RacingClient,
   RaceSim and the offline sim. While sliding the car travels along
@@ -166,8 +168,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Client phase timers count down to the `PhaseEndsAt` attribute
   (`Shared/PhaseClock`), not to `Constants.PHASE_DURATION`.
 - Handling: `Constants.turnSpeedFor(biome, stats)` maps the stat onto a range.
-  SKY is also capped at `VehicleController.SKY_TURN_CAP` (1.5) inside the
-  controller; use `VehicleController.turnRate` for the real rate.
+  SKY is also capped at `VehicleController.SKY_TURN_CAP` (1.8) inside the
+  controller; use `VehicleController.turnRate` for the real rate. Planes
+  have no grip limit, so every SKY corner must fit the slowest turn at top
+  speed (`map_sky` spec "corners a plane can make"; the canyon used to
+  need more than the lane and every plane hit the fence).
 - Track data `obstacleBand` is the body height band above `trackTop` that
   collides: boats ride over the 1-stud dock, flyers hover at Y 84.
 - Race progress is distance along the centerline (`TrackGeometry:progressAt`,
@@ -199,6 +204,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   pure rules in `FarmingRules.canPunch` / `punch`; knock-outs drop through
   `_dropItem` (reason "knocked_out"). Every fight or steal step is
   broadcast as `RemoteEvents.FarmAction` and drawn by `FarmFx` for all.
+  Your own punch swings at once: FarmingClient turns you to the nearest
+  target in reach, sets the LocalPlayer attribute `PunchAt` (FarmFx swings,
+  whooshes, lunges) and sends that target as RequestPunch's aim hint
+  (taken within RANGE and `FIGHT.ASSIST_ARC`). The echo then draws only
+  the hit (POW!). The equipped move's style reaches the client as the
+  player attribute `MoveStyle` (ShopHat.refresh).
+- Crafting slots: the screen places an item only where
+  `CraftingRules.fits` (else `CraftingRules.whyNot` on the info line);
+  picking an item lights the slots it fits.
 - Ability strengths are data in `AbilityConfig` (selfSpeed, victimSpeed,
   push, …); `tests/lib/balance.luau` reads the same numbers. After changing
   items, stats or abilities run `lune run tools/balance.luau` and keep
@@ -243,7 +257,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Sounds: ids in `Shared/SoundConfig` (only APM / ProSoundEffects /
   DistroKid catalogue ids, which Roblox licenses for every experience),
   played through `Shared/SoundFx.play(key)`; check new ids with
-  `python3 tools/studio/sim.py run sounds`.
+  `python3 tools/studio/sim.py run sounds` (`--set search=[…]` searches
+  the Creator Store). Every sound plays through a SoundGroup
+  (`SoundConfig.GROUPS`: Music, Ambience, Effects); music stays well under
+  the effects and the 🎵 button (SoundClient) mutes it.
 - Saved progress: `Modules/PlayerStore` (DataStore) holds each player's
   record; `Shared/Progression` the rules (levels, coins, daily streak);
   `ProgressionManager` pays at RESULTS (`RemoteEvents.RewardGranted`,

@@ -1,22 +1,105 @@
 {
  "checks": [],
- "commit": "9fbb280",
+ "commit": "e643405",
  "dirty": true,
  "kind": "sounds",
  "logErrors": [
-  "2026-10-23T12:23:18.529Z,0.529465,3a460c0,6,Error [FLog::Error] Redundant Flag ID: SolidModelingOnMeshes",
-  "2026-10-23T12:23:18.529Z,0.529468,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIGradients",
-  "2026-10-23T12:23:18.529Z,0.529471,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIShadows",
-  "2026-10-23T12:23:18.529Z,0.529474,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
-  "2026-10-23T12:23:18.662Z,0.662433,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-23T12:23:18.746Z,0.746770,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-23T12:23:19.661Z,1.661435,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-23T12:23:20.490Z,2.490825,6c0b7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c7f6586d-3bd1-4918-ae5b-aaafc2dcb8e7\",\"status\":400,\"message\":\"Place does not exist.\"}",
-  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-23T12:23:43.078Z,25.078104,6beab000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"c7f6586d-3bd1-4918-ae5b-aaafc2dcb8e7\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-27T16:58:59.164Z,1.164045,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIGradients",
+  "2026-10-27T16:58:59.164Z,1.164049,3a460c0,6,Error [FLog::Error] Redundant Flag ID: UpgradedUIShadows",
+  "2026-10-27T16:58:59.164Z,1.164053,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-27T16:58:59.414Z,1.414898,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-27T16:58:59.495Z,1.495303,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-27T16:59:00.913Z,2.913168,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-27T16:59:02.304Z,4.304111,6d793000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e43b83d5-1b57-4282-b52e-7ea0188cb503\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-27T17:00:00.913Z,62.913643,6dbcf000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-27T17:00:01.035Z,63.035477,6d587000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e43b83d5-1b57-4282-b52e-7ea0188cb503\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
- "opts": {},
- "ranAt": "2026-10-23T21:23:45+0900",
+ "opts": {
+  "search": [
+   {
+    "key": "chiptune",
+    "keyword": "chiptune",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "8bit",
+    "keyword": "8 bit game",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "bouncy",
+    "keyword": "bouncy",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "quirky",
+    "keyword": "quirky",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "cartoon",
+    "keyword": "cartoon",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "silly",
+    "keyword": "silly",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "arcade",
+    "keyword": "arcade",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "kawaii",
+    "keyword": "kawaii",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "funny chase",
+    "keyword": "funny chase",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   },
+   {
+    "key": "carnival",
+    "keyword": "carnival",
+    "limit": 5,
+    "minDur": 60,
+    "music": true,
+    "pages": 2
+   }
+  ]
+ },
+ "ranAt": "2026-10-28T02:00:04+0900",
  "report": {
   "configured": {
    "AMBIENCE.FOREST.1": {
@@ -295,6 +378,12 @@
     "ok": true,
     "status": "Success"
    },
+   "SFX.PUNCH_SWING": {
+    "id": "9116399935",
+    "length": 1.5,
+    "ok": true,
+    "status": "Success"
+   },
    "SFX.RESPAWN": {
     "id": "6026984224",
     "length": 1.5,
@@ -321,10 +410,481 @@
    }
   },
   "kind": "sounds",
-  "searches": []
+  "searches": {
+   "8bit": [
+    {
+     "artist": "Patte",
+     "creator": "DistrokidOfficial",
+     "duration": 126,
+     "id": "133333284252137",
+     "length": 126.1,
+     "ok": true,
+     "title": "Snow & ice levels"
+    },
+    {
+     "artist": "Jorge Ponce",
+     "creator": "DistrokidOfficial",
+     "duration": 319,
+     "id": "117780627999526",
+     "length": 318.5,
+     "ok": true,
+     "title": "Go Bunny Boom Zone 1"
+    },
+    {
+     "artist": "Patte",
+     "creator": "DistrokidOfficial",
+     "duration": 117,
+     "id": "101105060688650",
+     "length": 116.6,
+     "ok": true,
+     "title": "Level Up"
+    },
+    {
+     "artist": "Patte",
+     "creator": "DistrokidOfficial",
+     "duration": 187,
+     "id": "103014564342613",
+     "length": 187.4,
+     "ok": true,
+     "title": "Dungeon"
+    },
+    {
+     "artist": "Patte",
+     "creator": "DistrokidOfficial",
+     "duration": 337,
+     "id": "100585407454746",
+     "length": 337.1,
+     "ok": true,
+     "title": "Lava-Level"
+    }
+   ],
+   "arcade": [
+    {
+     "artist": "Neon Arcades",
+     "creator": "DistrokidOfficial",
+     "duration": 237,
+     "id": "87886567723762",
+     "length": 237.3,
+     "ok": true,
+     "title": "In Another Life (Synthwave Music)"
+    },
+    {
+     "artist": "Arcade Digital",
+     "creator": "DistrokidOfficial",
+     "duration": 164,
+     "id": "116155493709494",
+     "length": 164,
+     "ok": true,
+     "title": "Hurry Up"
+    },
+    {
+     "artist": "The Worried Chest",
+     "creator": "DistrokidOfficial",
+     "duration": 117,
+     "id": "99939135861375",
+     "length": 117.3,
+     "ok": true,
+     "title": "Arcade Pizza (2025 Remaster)"
+    },
+    {
+     "artist": "Headphone Hero",
+     "creator": "DistrokidOfficial",
+     "duration": 138,
+     "id": "88951633857057",
+     "length": 137.8,
+     "ok": true,
+     "title": "16-Bit Revolution"
+    },
+    {
+     "artist": "Sonatara",
+     "creator": "DistrokidOfficial",
+     "duration": 295,
+     "id": "124097780826875",
+     "length": 294.5,
+     "ok": true,
+     "title": "Drown Sequence"
+    }
+   ],
+   "bouncy": [
+    {
+     "artist": "David \"Meso\" Brown",
+     "creator": "DistrokidOfficial",
+     "duration": 185,
+     "id": "112176384281275",
+     "length": 184.8,
+     "ok": true,
+     "title": "Bouncy Girls"
+    },
+    {
+     "artist": "Big On MTV",
+     "creator": "DistrokidOfficial",
+     "duration": 154,
+     "id": "127237419482967",
+     "length": 154.2,
+     "ok": true,
+     "title": "bouncy"
+    },
+    {
+     "artist": "PAPERWIZ",
+     "creator": "DistrokidOfficial",
+     "duration": 100,
+     "id": "133710918293530",
+     "length": 99.9,
+     "ok": true,
+     "title": "Rainbow Slide"
+    },
+    {
+     "artist": "Crossbreed",
+     "creator": "APMOfficial",
+     "duration": 154,
+     "id": "9045344810",
+     "length": 154.1,
+     "ok": true,
+     "title": "Bouncy Vision"
+    },
+    {
+     "artist": "Paul H Brokaw",
+     "creator": "APMOfficial",
+     "duration": 64,
+     "id": "1846431920",
+     "length": 63.6,
+     "ok": true,
+     "title": "Freight Train Comin'"
+    }
+   ],
+   "carnival": [
+    {
+     "artist": "Prathmesh Mayekar",
+     "creator": "DistrokidOfficial",
+     "duration": 303,
+     "id": "93165263802857",
+     "length": 302.8,
+     "ok": true,
+     "title": "Feeling Lead"
+    },
+    {
+     "artist": "Carnival of Complexes",
+     "creator": "DistrokidOfficial",
+     "duration": 266,
+     "id": "120334385961452",
+     "length": 265.6,
+     "ok": true,
+     "title": "Hands That Still Get Paid"
+    },
+    {
+     "artist": "Carnival of Complexes",
+     "creator": "DistrokidOfficial",
+     "duration": 213,
+     "id": "83789868133761",
+     "length": 213.3,
+     "ok": true,
+     "title": "Bundled and Broken"
+    },
+    {
+     "artist": "Sharnjit",
+     "creator": "DistrokidOfficial",
+     "duration": 318,
+     "id": "120133798611415",
+     "length": 318.3,
+     "ok": true,
+     "title": "carnival"
+    },
+    {
+     "artist": "Vyrakune",
+     "creator": "DistrokidOfficial",
+     "duration": 121,
+     "id": "78156938348742",
+     "length": 120.9,
+     "ok": true,
+     "title": "Rio Carnival (Latin Pop)"
+    }
+   ],
+   "cartoon": [
+    {
+     "artist": "Charlie Brissette",
+     "creator": "APMOfficial",
+     "duration": 117,
+     "id": "1846278449",
+     "length": 116.9,
+     "ok": true,
+     "title": "Oh Ma Ma Mia! A"
+    },
+    {
+     "artist": "CartoonForChrist",
+     "creator": "DistrokidOfficial",
+     "duration": 224,
+     "id": "89677447537665",
+     "length": 224.4,
+     "ok": true,
+     "title": "I'm Coming Home"
+    },
+    {
+     "artist": "Kosinus",
+     "creator": "APMOfficial",
+     "duration": 80,
+     "id": "1839396884",
+     "length": 79.7,
+     "ok": true,
+     "title": "Cook With Me Cartoon"
+    },
+    {
+     "artist": "Pete Dunn",
+     "creator": "APMOfficial",
+     "duration": 64,
+     "id": "1844780033",
+     "length": 63.7,
+     "ok": true,
+     "title": "Wild Horses"
+    },
+    {
+     "artist": "Garbi KW",
+     "creator": "DistrokidOfficial",
+     "duration": 162,
+     "id": "118995033762422",
+     "length": 161.7,
+     "ok": true,
+     "title": "Cartoon Rave Mutation"
+    }
+   ],
+   "chiptune": [
+    {
+     "artist": "al ka-pwn",
+     "creator": "DistrokidOfficial",
+     "duration": 165,
+     "id": "135268637161184",
+     "length": 164.9,
+     "ok": true,
+     "title": "burn the flame (bonus track) [chiptune remix]"
+    },
+    {
+     "artist": "Magnetic Zero",
+     "creator": "DistrokidOfficial",
+     "duration": 198,
+     "id": "94185225253376",
+     "length": 197.9,
+     "ok": true,
+     "title": "Chiptune Odyssey (Original Game Soundtrack)"
+    },
+    {
+     "artist": "Heavenly Hopecore",
+     "creator": "DistrokidOfficial",
+     "duration": 148,
+     "id": "111298808852201",
+     "length": 147.9,
+     "ok": true,
+     "title": "Game Level Twenty"
+    },
+    {
+     "artist": "Heavenly Hopecore",
+     "creator": "DistrokidOfficial",
+     "duration": 161,
+     "id": "79346445214749",
+     "length": 160.7,
+     "ok": true,
+     "title": "Game Level Ninety"
+    },
+    {
+     "artist": "GuzyTracks",
+     "creator": "DistrokidOfficial",
+     "duration": 81,
+     "id": "87614776980545",
+     "length": 81,
+     "ok": true,
+     "title": "Chiptune Chillout"
+    }
+   ],
+   "funny chase": [
+    {
+     "artist": "Midnight Jazz Society",
+     "creator": "DistrokidOfficial",
+     "duration": 146,
+     "id": "114888019003956",
+     "length": 145.6,
+     "ok": true,
+     "title": "My Three Rascals (Funny Big Band Chase)"
+    },
+    {
+     "artist": "PAPERWIZ",
+     "creator": "DistrokidOfficial",
+     "duration": 92,
+     "id": "118070543189702",
+     "length": 91.8,
+     "ok": true,
+     "title": "\ucd94\uaca9\uc804_(Funny_Chase)"
+    },
+    {
+     "artist": "Sonic Drawings",
+     "creator": "DistrokidOfficial",
+     "duration": 152,
+     "id": "122180719209065",
+     "length": 152.3,
+     "ok": true,
+     "title": "Funny Cat Meowing Chase"
+    },
+    {
+     "artist": "PAPERWIZ",
+     "creator": "DistrokidOfficial",
+     "duration": 92,
+     "id": "73554297166988",
+     "length": 92,
+     "ok": true,
+     "title": "\ucd94\uaca9\uc804_(Funny_Chase) Ver2"
+    },
+    {
+     "artist": "Nkwain Sam",
+     "creator": "DistrokidOfficial",
+     "duration": 128,
+     "id": "122180244370179",
+     "length": 127.7,
+     "ok": true,
+     "title": "Funny Cartoon Chase"
+    }
+   ],
+   "kawaii": [
+    {
+     "artist": "EirwenProd",
+     "creator": "DistrokidOfficial",
+     "duration": 199,
+     "id": "88442206079333",
+     "length": 199.1,
+     "ok": true,
+     "title": "Cheerful Demons of Kawaii"
+    },
+    {
+     "artist": "PAPERWIZ",
+     "creator": "DistrokidOfficial",
+     "duration": 168,
+     "id": "81526391965611",
+     "length": 168.2,
+     "ok": true,
+     "title": "###################################"
+    },
+    {
+     "artist": "KawaiiStacie",
+     "creator": "DistrokidOfficial",
+     "duration": 140,
+     "id": "98644089313612",
+     "length": 139.8,
+     "ok": true,
+     "title": "The Past is Behind Me"
+    },
+    {
+     "artist": "Koko Neko",
+     "creator": "DistrokidOfficial",
+     "duration": 155,
+     "id": "138465465776551",
+     "length": 154.6,
+     "ok": true,
+     "title": "Kawaii Slowjam"
+    },
+    {
+     "artist": "YAMI-KAWAII LAB.",
+     "creator": "DistrokidOfficial",
+     "duration": 184,
+     "id": "111515799266208",
+     "length": 184.2,
+     "ok": true,
+     "title": "\u652f\u914d\u3055\u308c\u305f\u3044\u3093\u3067\u3057\u3087\uff1f"
+    }
+   ],
+   "quirky": [
+    {
+     "artist": "Romain Paillot",
+     "creator": "APMOfficial",
+     "duration": 94,
+     "id": "85876739782615",
+     "length": 94.4,
+     "ok": true,
+     "title": "Spoon Theory"
+    },
+    {
+     "artist": "Kosinus",
+     "creator": "APMOfficial",
+     "duration": 62,
+     "id": "1839818817",
+     "length": 62.4,
+     "ok": true,
+     "title": "Quirky Dramedy"
+    },
+    {
+     "artist": "Paul Louis Reeves",
+     "creator": "APMOfficial",
+     "duration": 123,
+     "id": "1841146648",
+     "length": 122.9,
+     "ok": true,
+     "title": "Castles and Crayons"
+    },
+    {
+     "artist": "John Epping",
+     "creator": "APMOfficial",
+     "duration": 89,
+     "id": "1847525204",
+     "length": 89.4,
+     "ok": true,
+     "title": "Puzzle Waltz C"
+    },
+    {
+     "artist": "Jason Moss",
+     "creator": "APMOfficial",
+     "duration": 103,
+     "id": "1836794533",
+     "length": 103.4,
+     "ok": true,
+     "title": "Girl With Carrot"
+    }
+   ],
+   "silly": [
+    {
+     "artist": "Happy Hippo Harmonies",
+     "creator": "DistrokidOfficial",
+     "duration": 81,
+     "id": "136833165577660",
+     "length": 81.3,
+     "ok": true,
+     "title": "Campground Silly Parade"
+    },
+    {
+     "artist": "Mayhem4",
+     "creator": "DistrokidOfficial",
+     "duration": 102,
+     "id": "120729565240696",
+     "length": 101.7,
+     "ok": true,
+     "title": "French Fry Fall"
+    },
+    {
+     "artist": "DON'T PLAY",
+     "creator": "DistrokidOfficial",
+     "duration": 96,
+     "id": "116168789647286",
+     "length": 95.5,
+     "ok": true,
+     "title": "Silly World, Pt. 2"
+    },
+    {
+     "artist": "Kosinus",
+     "creator": "APMOfficial",
+     "duration": 117,
+     "id": "9040145864",
+     "length": 117.2,
+     "ok": true,
+     "title": "Silly Outtakes"
+    },
+    {
+     "artist": "Mikel Ross Giffin",
+     "creator": "APMOfficial",
+     "duration": 117,
+     "id": "1838708049",
+     "length": 116.8,
+     "ok": true,
+     "title": "Silly"
+    }
+   ]
+  }
  },
  "scenario": "sounds",
  "studioExit": 0,
- "summary": "SoundCheck: 50 sounds load, 0 missing",
- "wallSeconds": 26.9
+ "summary": "SoundCheck: 51 sounds load, 0 missing",
+ "wallSeconds": 66.8
 }
