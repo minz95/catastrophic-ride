@@ -63,7 +63,7 @@ function Shop.handle(player, action, id)
 	if result == "ok" and action ~= "state" then
 		require(ServerScriptService.Modules.CraftPreview).refresh(player)
 		local it = Cosmetics.get(id)
-		if it and it.category == "hat" then
+		if it and (it.category == "hat" or it.category == "move") then
 			require(ServerScriptService.Modules.ShopHat).refresh(player)
 		end
 	end

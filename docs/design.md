@@ -371,6 +371,17 @@ spot with its track section; the RESULTS report lists them per section.
   Bounce Bomb (once a race, about a second lost for the car ahead, shields
   block it: small enough that a buy does not decide the race) and taunt
   bubbles (show only). No lobby wait for shoppers: others must not wait.
+- **2026-10-28 — Playtest fixes: feel before features.** SKY's canyon
+  zigzag was too sharp for a plane at top speed (it needed up to 34 of the
+  lane's 25 studs per side): every plane met the fence side-on and crept
+  round. ±40 now, planes turn 1.5–1.8 rad/s, and a spec checks every corner
+  against the slowest turn. A player's car meeting a race bot's is a hit
+  for both (it used to be a wall). The punch swings the moment F is
+  pressed (big wind-up, streak, lunge, POW!) and turns to the nearest
+  target in reach; the server still decides. The crafting screen refuses
+  an item a slot cannot take and says why (Body took anything and the
+  server dropped it). Music plays through its own quieter group with a
+  🎵 mute button, and the tracks are cheerful, bouncy game music.
 
 ## Open questions (from the reports, not decided)
 

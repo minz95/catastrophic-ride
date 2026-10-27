@@ -187,3 +187,35 @@ R.describe("boost gauge on the server", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 end)
+
+-- History (playtest 2026-10-28): only player-player contacts were resolved
+-- as hits. A player who met a bot's car pushed into it like into a wall and
+-- stopped dead, side-on, juddering (Studio record-sky: 0 km/h behind a bot).
+R.describe("a player's car meeting a bot's", function()
+	R.it("is a hit for both: the player gets CarImpact, the bot's drive state a knock", function()
+		local srv, cars, RaceBots, C, tick = race(1, 2)
+		tick(C.RACE_COUNTDOWN + 0.5)
+		local bot = RaceBots.list[1]
+		local mine = cars[1].PrimaryPart
+		local Vector3 = require("@lune/roblox").Vector3
+		mine.CFrame = CFrame.new(0, 2, 400)
+		bot.model:PivotTo(CFrame.new(0, 2, 394))
+		mine.AssemblyLinearVelocity = Vector3.new(0, 0, -70)
+		bot.primary.AssemblyLinearVelocity = Vector3.new(0, 0, -10)
+		local before = bot.drive.speed or 0
+		mine.Touched:Fire(bot.primary)
+		local calls = rawget(srv.RemoteEvents.CarImpact, "_calls") or {}
+		local toPlayer = 0
+		for _, c in ipairs(calls) do
+			if c.method == "FireClient" and c.args[1] == srv.players[1] then toPlayer += 1 end
+		end
+		R.expect(toPlayer).toBe(1)
+		R.expect((bot.drive.speed or 0) > before).toBe(true)   -- pushed forward by the car behind
+		local hits = srv.Telemetry.events("impact")
+		R.expect(#hits).toBe(1)
+		R.expect(hits[1].bot).toBe(true)
+		mine.Touched:Fire(bot.primary)   -- the same pair again within PAIR_COOLDOWN: once
+		R.expect(#srv.Telemetry.events("impact")).toBe(1)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)

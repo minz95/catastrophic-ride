@@ -196,6 +196,12 @@ Constants.FIGHT = {
 	KNOCKBACK    = 26,    -- studs/s pushed away on a landed hit
 	GUARD_MAX    = 3,     -- s a guard can be held before it drops
 	GUARD_SLOW   = 0.5,   -- walk speed × this while guarding
+	-- Aim help: the client names the player it turned to (nearest within
+	-- RANGE + ASSIST_REACH, in front within ASSIST_ARC); the server takes it
+	-- when that player is within RANGE and in front by ASSIST_ARC.
+	ASSIST_ARC   = 0.0,   -- dot(look, toVictim): 90° either side
+	ASSIST_REACH = 2,
+	LUNGE        = 16,    -- studs/s the puncher steps forward (own client)
 }
 
 -- ─── Rarity ───────────────────────────────────────────────────────────────────
@@ -374,7 +380,7 @@ end
 Constants.TURN_SPEED = {
 	FOREST = { stat = "stability",    lo = 20, hi = 100, min = 2.0, max = 3.2 },
 	OCEAN  = { stat = "floatability", lo = 10, hi = 45,  min = 1.5, max = 1.85 },
-	SKY    = { stat = "flyability",   lo = 8,  hi = 36,  min = 1.3, max = 1.5 },
+	SKY    = { stat = "flyability",   lo = 8,  hi = 36,  min = 1.5, max = 1.8 },   -- 1.3-1.5 missed the canyon corners
 }
 
 function Constants.turnSpeedFor(biome, stats)

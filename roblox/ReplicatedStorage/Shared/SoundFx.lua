@@ -12,10 +12,24 @@ local SoundFx = {}
 
 local _cache = {}   -- key → Sound
 
+--- The SoundGroup `name` (SoundConfig.GROUPS: Music, Ambience, Effects),
+-- made on first use. Every sound plays through one, so a whole kind can be
+-- turned down (or the music off) at once.
+function SoundFx.group(name)
+	local g = SoundService:FindFirstChild(name)
+	if g and g:IsA("SoundGroup") then return g end
+	g = Instance.new("SoundGroup")
+	g.Name = name
+	g.Volume = SoundConfig.GROUPS[name] or 1
+	g.Parent = SoundService
+	return g
+end
+
 --- A 2D Sound for a SoundConfig entry, or nil when it has no id.
-function SoundFx.make(cfg, parent)
+function SoundFx.make(cfg, parent, groupName)
 	if not cfg or not cfg.id or cfg.id == "" then return nil end
 	local s = Instance.new("Sound")
+	s.SoundGroup = SoundFx.group(groupName or "Effects")
 	s.SoundId = cfg.id
 	s.Volume = cfg.volume or 0.5
 	s.Looped = cfg.looped or false

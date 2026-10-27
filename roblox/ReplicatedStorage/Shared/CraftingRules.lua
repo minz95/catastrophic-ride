@@ -18,6 +18,19 @@ function CraftingRules.fits(slot, cfg)
 	return cfg.slotType == slot or (slot == "BODY" and cfg.ride ~= nil)
 end
 
+local SLOT_NAMES = { BODY = "Body", ENGINE = "Engine", SPECIAL = "Special" }
+
+--- Why `item` (config `cfg`) cannot go into `slot`, for the crafting screen
+-- (English, player-facing).
+function CraftingRules.whyNot(slot, item, cfg)
+	local name = SLOT_NAMES[slot] or slot
+	if not cfg then return item .. " is not an item." end
+	if slot == "BODY" then
+		return string.format("%s can't be your ride. Body takes BODY items or ones marked RIDE.", item)
+	end
+	return string.format("%s is a %s item: %s takes only %s items.", item, cfg.slotType, name, slot)
+end
+
 --- Returns clean slots (every item from the inventory, each inventory entry
 -- used once) and the rejected entries { slot, item, reason }.
 -- Returns nil, "bad slots" when `slots` is not a table.

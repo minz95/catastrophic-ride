@@ -184,6 +184,7 @@ local SLOT_KR     = { BODY="Body", ENGINE="Engine", SPECIAL="Special", MOBILITY=
 local C_SLOT_EMPTY   = Color3.fromRGB(28,  28,  48)
 local C_SLOT_FILLED  = Color3.fromRGB(45,  45,  72)
 local C_SLOT_TARGET  = Color3.fromRGB(70,  60,  20)   -- when item selected, hoverable
+local C_SLOT_NO      = Color3.fromRGB(22,  20,  28)   -- the selected item cannot go here
 local C_INV_NORMAL   = Color3.fromRGB(35,  35,  58)
 local C_INV_SELECTED = Color3.fromRGB(90,  70,  15)
 local C_INV_USED     = Color3.fromRGB(22,  22,  38)
@@ -292,15 +293,17 @@ local function _refreshSlots()
 		local btn  = slotBtns[slotName]
 		local lbl  = slotItemLbls[slotName]
 		local item = _assignments[slotName]
+		-- with an item picked: the slots it fits light up, the rest go dark
+		local fits = hasSelected and CraftingRules.fits(slotName, ItemConfig[_selectedItem])
 		if item then
 			local cfg = ItemConfig[item]
 			lbl.Text       = ((cfg and cfg.icon) or "") .. " " .. item
 			lbl.TextColor3 = RARITY_COLOUR[(cfg and cfg.rarity) or "Common"]
-			btn.BackgroundColor3 = C_SLOT_FILLED
+			btn.BackgroundColor3 = (hasSelected and not fits) and C_SLOT_NO or C_SLOT_FILLED
 		else
 			lbl.Text       = "—"
 			lbl.TextColor3 = Color3.fromRGB(100, 100, 120)
-			btn.BackgroundColor3 = hasSelected and C_SLOT_TARGET or C_SLOT_EMPTY
+			btn.BackgroundColor3 = hasSelected and (fits and C_SLOT_TARGET or C_SLOT_NO) or C_SLOT_EMPTY
 		end
 	end
 end
@@ -415,7 +418,15 @@ for _, slotName in ipairs(SLOT_ORDER) do
 	slotBtns[slotName].MouseButton1Click:Connect(function()
 		if _submitted then return end
 		local current = _assignments[capturedSlot]  -- item already in this slot
-		if _selectedItem then
+		if _selectedItem and not CraftingRules.fits(capturedSlot, ItemConfig[_selectedItem]) then
+			-- the server would drop it (CraftingRules.validate) and the car would
+			-- not change: say why instead (playtest 2026-10-28: "it goes into
+			-- Body but the body does not become it")
+			infoLbl.Text = CraftingRules.whyNot(capturedSlot, _selectedItem, ItemConfig[_selectedItem])
+			infoLbl.TextColor3 = Color3.fromRGB(255, 140, 110)
+			SoundFx.play("CONTEST_LOSE")
+			return
+		elseif _selectedItem then
 			-- Assign selected item to this slot
 			-- If selected item was in another slot, clear that slot first
 			local prevSlot = _slotOf(_selectedItem)

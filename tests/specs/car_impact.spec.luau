@@ -69,8 +69,9 @@ R.describe("RacingManager sends hits to both drivers", function()
 	local src = require("@lune/fs").readFile("roblox/ServerScriptService/RacingManager.server.lua")
 	R.it("every contact goes through CarImpact and RemoteEvents.CarImpact", function()
 		R.expect(src:find("CarImpact.resolve", 1, true) ~= nil).toBe(true)
-		-- both drivers of a car hit, plus the bounce off an obstacle
-		R.expect(select(2, src:gsub("RemoteEvents.CarImpact:FireClient", ""))).toBe(3)
+		-- both drivers of a car hit, the player in a hit with a bot, and the
+		-- bounce off an obstacle
+		R.expect(select(2, src:gsub("RemoteEvents.CarImpact:FireClient", ""))).toBe(4)
 	end)
 	R.it("no second BodyVelocity pushes a car off an obstacle", function()
 		local hit = src:sub(src:find("local function _onObstacleTouched", 1, true), src:find("local function _connectObstacle", 1, true))

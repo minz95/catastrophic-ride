@@ -338,10 +338,55 @@ end)
 
 -- ─── Fight: F punches the player you face, hold G to guard ───────────────────
 -- (server: FarmingManager RequestPunch / SetGuard; looks: FarmFx)
+-- Aim help: the nearest player or farm bot within reach in front of us.
+-- We turn to it at once (our own character) and name it to the server.
+local function _aimTarget(root)
+	local F = Constants.FIGHT
+	local look = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z).Unit
+	local best, bestD, bestId
+	local function consider(char, id)
+		local r = char and char:FindFirstChild("HumanoidRootPart")
+		if not r or not id then return end
+		local to = Vector3.new(r.Position.X - root.Position.X, 0, r.Position.Z - root.Position.Z)
+		local d = to.Magnitude
+		if d < 1e-3 or d > F.RANGE + F.ASSIST_REACH then return end
+		if look:Dot(to.Unit) < F.ASSIST_ARC then return end
+		if not bestD or d < bestD then best, bestD, bestId = r, d, id end
+	end
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p ~= LocalPlayer then consider(p.Character, p.UserId) end
+	end
+	for _, m in ipairs(CollectionService:GetTagged("FarmBot")) do
+		consider(m, m:GetAttribute("BotUserId"))
+	end
+	return best, bestId
+end
+
+local _punchReadyAt = 0
+local function _punch()
+	local now = os.clock()
+	if now < _punchReadyAt then return end
+	_punchReadyAt = now + Constants.FIGHT.COOLDOWN
+	local char = LocalPlayer.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local aimId
+	if root then
+		local target, id = _aimTarget(root)
+		if target then
+			aimId = id
+			local p = root.Position
+			root.CFrame = CFrame.lookAt(p, Vector3.new(target.Position.X, p.Y, target.Position.Z))
+		end
+	end
+	-- FarmFx swings our arm now (not a server round trip later)
+	LocalPlayer:SetAttribute("PunchAt", now)
+	task.spawn(function() RemoteEvents.RequestPunch:InvokeServer(aimId) end)
+end
+
 KeyInput.began(function(input, processed)
 	if processed or not _enabled then return end
 	if input.KeyCode == Enum.KeyCode.F or input.UserInputType == Enum.UserInputType.MouseButton1 then
-		task.spawn(function() RemoteEvents.RequestPunch:InvokeServer() end)
+		_punch()
 	elseif input.KeyCode == Enum.KeyCode.G then
 		RemoteEvents.SetGuard:FireServer(true)
 	end

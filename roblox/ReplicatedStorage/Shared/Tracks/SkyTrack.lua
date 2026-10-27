@@ -55,13 +55,17 @@ Track.nodes = {
 	{  880,  330 }, -- N13 CP2 (eastern extent)
 	{  751,   19 }, -- N14
 	{  440, -110 }, -- N15 south apex (drift corner)
-	-- S5 Crystal Canyon (zigzag Z -60 → -1040)
-	{  120,  -60 }, -- N16
-	{  -80, -200 }, -- N17
-	{   80, -380 }, -- N18
-	{  -80, -560 }, -- N19
-	{   80, -740 }, -- N20
-	{  -80, -900 }, -- N21
+	-- S5 Crystal Canyon (zigzag Z -60 → -1040). ±40 across: a plane at top
+	-- speed turning at its slowest rate (Constants.TURN_SPEED.SKY) needs
+	-- under 7 studs of the 25 to each side. It was ±80 (83-97° corners
+	-- needing 15-34 studs): every plane met the outer fence, stopped side-on
+	-- and crept round (Studio record-sky, playtest 2026-10-28).
+	{  150, -110 }, -- N16
+	{   40, -200 }, -- N17
+	{  -40, -380 }, -- N18
+	{   40, -560 }, -- N19
+	{  -40, -740 }, -- N20
+	{   40, -900 }, -- N21
 	{    0,-1040 }, -- N22 end S5
 	-- S6 Cloud Corkscrew (2026-10-22, the final straight was 1000 studs of
 	-- nothing): one full turn (left) around the sky tower, centre
@@ -131,14 +135,14 @@ Track.boostPads = {
 Track.driftCorners = {
 	{ -440, 1270 },   -- N4 bend A north apex
 	{  440, -110 },   -- N15 bend B south apex
-	{  -80, -200 },   -- N17 canyon zigzag entry
+	{   40, -200 },   -- N17 canyon zigzag entry
 }
 
 -- Jump zones { x, z } (S5 XZ boost dressed as ramps).
 Track.jumpRamps = {
-	{  80, -380 },    -- N18 S5 entry
-	{ -80, -560 },    -- N19 S5 mid
-	{  80, -740 },    -- N20 S5 late
+	{ -40, -380 },    -- N18 S5 entry
+	{  40, -560 },    -- N19 S5 mid
+	{ -40, -740 },    -- N20 S5 late
 }
 
 -- Trigger sizes: { across the track, height, along the track }.

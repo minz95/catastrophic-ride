@@ -57,7 +57,7 @@
 --   RequestAbility      → itemName: string        → "ok" | "denied: <reason>"
 --   UseGadget           → (none) → "ok" | "denied: <reason>"  (FARMING, equipped shop gadget)
 --   ShopAction          → action: "state" | "buy" | "equip", id: string?  → { result, state }  (Modules/Shop)
---   RequestPunch        → (none)                  → "hit" | "blocked" | "immune" | "knockout" | "miss" | "denied: <reason>"
+--   RequestPunch        → (aimUserId?)            → "hit" | "blocked" | "immune" | "knockout" | "miss" | "denied: <reason>"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
