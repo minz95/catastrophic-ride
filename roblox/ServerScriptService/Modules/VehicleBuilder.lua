@@ -649,6 +649,9 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		end
 	end
 
+	-- whoever sits rides weightless and without collision (Modules/RiderGhost)
+	pcall(function() require(script.Parent.RiderGhost).watch(seat) end)
+
 	-- the HEAD item goes onto whoever sits down, back over the seat when they leave
 	if slots.HEAD then
 		pcall(function()

@@ -141,3 +141,31 @@ R.describe("farming keys", function()
 		R.expect(racing:find("Long drift = mini turbo", 1, true) ~= nil).toBe(true)
 	end)
 end)
+
+-- Studio bots-sky 2026-10-28: a bot plane touching a player's seated avatar
+-- (not the chassis) stopped the player's car dead; bot riders never collide.
+R.describe("a seated racer rides as a ghost (Modules/RiderGhost)", function()
+	R.it("parts massless and in the non-colliding group while seated, restored after", function()
+		local env = require("../lib/loader").boot()
+		local RiderGhost = env.requirePath("ServerScriptService.Modules.RiderGhost")
+		local Instance = env.mock.Instance
+		local char = Instance.new("Model")
+		local torso = Instance.new("Part")
+		torso.Name = "UpperTorso"
+		torso.Massless = false
+		torso.CollisionGroup = "Default"
+		torso.Parent = char
+		RiderGhost.set(char, true)
+		R.expect(torso.Massless).toBe(true)
+		R.expect(char:GetAttribute("RaceGhost")).toBe(true)
+		RiderGhost.set(char, true)   -- twice: still restores the first originals
+		RiderGhost.set(char, false)
+		R.expect(torso.Massless).toBe(false)
+		R.expect(torso.CollisionGroup).toBe("Default")
+		R.expect(char:GetAttribute("RaceGhost")).toBe(nil)
+	end)
+	R.it("every race seat is watched", function()
+		local src = fs.readFile("roblox/ServerScriptService/Modules/VehicleBuilder.lua")
+		R.expect(src:find("RiderGhost).watch(seat)", 1, true) ~= nil).toBe(true)
+	end)
+end)

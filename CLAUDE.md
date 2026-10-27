@@ -150,7 +150,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Shared/CarImpact` and sends each driver `RemoteEvents.CarImpact`;
   `VehicleController.knock` adds it to the drive state. A player meeting a
   race bot is a hit too (`_onBotContact`, the bot's half via
-  `RaceBots.knock`); without it the player stopped dead as against a wall. Never push a race
+  `RaceBots.knock`); without it the player stopped dead as against a wall.
+  A seated player's avatar is massless and collides with nothing
+  (`Modules/RiderGhost`, every race seat), like a bot's rider: only the
+  chassis meets the world (a bot touching the avatar used to be a wall). Never push a race
   car with a second BodyVelocity (it fights `DriveVelocity`).
 - Drift: one rule, `VehicleController.updateDrift`, for RacingClient,
   RaceSim and the offline sim. While sliding the car travels along
