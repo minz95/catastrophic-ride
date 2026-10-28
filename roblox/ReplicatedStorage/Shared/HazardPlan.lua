@@ -6,8 +6,8 @@
 --   * logs of one drop are at least LOG_SPACING studs apart along the track,
 --     so they never line up into a wall;
 --   * none lands in the last stretch before the finish, on a jump ramp,
---     a mud patch or a boost pad, or under a higher layer of the road
---     (keepClear).
+--     a mud patch or a boost pad, in or just after a tight corner, or under
+--     a higher layer of the road (keepClear).
 -- No Roblox types.
 
 local Constants = require(script.Parent.Constants)
@@ -30,6 +30,15 @@ function HazardPlan.keepClear(geo, track)
 		table.insert(out, g.pad0)
 		table.insert(out, (g.s0 + g.s1) / 2)
 		table.insert(out, g.s1 + 15)
+	end
+	-- nor in a tight corner or just out of it (2026-10-29, the R 35 drift
+	-- corners): a car sliding round it cannot see a log there in time
+	local H = Constants.HAZARDS
+	for i = 2, #geo.nodes - 1 do
+		if geo:nodeRadius(i) < H.LOG_CORNER_RADIUS then
+			local s0 = geo.segments[i].s0
+			for d = 0, H.LOG_CORNER_RUNOUT, 20 do table.insert(out, s0 + d) end
+		end
 	end
 	-- nor under a higher layer of the road (the spiral's lower turns): a log
 	-- would fall through the deck above

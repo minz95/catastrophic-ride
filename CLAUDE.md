@@ -46,7 +46,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Look of a map or a drop without Studio: `tools/scene_dump.luau` +
   `tools/scene_render.py` (PNG). Layout and where simulated drivers
   slip out: `lune run tools/topview.luau <BIOME>` + `python3 tools/topview.py
-  reports/<biome>/topview.json` (top-down PNG, respawns marked). Drift timing: `tools/drift_sim.luau`.
+  reports/<biome>/topview.json` (top-down PNG, respawns marked). Drift timing: `tools/drift_sim.luau`
+  (where each drift was, which paid a turbo). Every flat corner is tight
+  (FOREST R 35, OCEAN R 45) with a DriftCorner zone: a wide arc is taken
+  flat out and a drift there never slides long enough for a turbo.
 - Studio runs are heavy: one small batch at a time, never in parallel with
   another Studio run or the full offline suite.
 - Vehicle look: `Modules/VehicleDesign.lua` (car / boat / plane as data:
@@ -170,7 +173,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `VehicleController.travelDir`, not the nose (else the blocked-car clamp
   kills the speed). Mini-turbos are applied by the server (`DriftTurbo`).
 - Boost (F): the server keeps the gauge (`Modules/BoostGauge`, full at
-  the start, two DriftCorner zones refill it, Backpack fills it) and
+  the start, three DriftCorner zones refill it, Backpack fills it) and
   `RequestBoost` needs it full; the client's bar only mirrors it. Race bots
   use the same gauge and boost when going straight with no bend within the
   boost's reach (`Constants.BOTS.RACE.BOOST_*`). The harness player used to
@@ -247,7 +250,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   puts it GAP_RUNUP before the pad. Logs keep off it (`HazardPlan`).
   Checked by `tests/specs/gap_jump` (no floor in the gap, pad, the arc
   clears it with 40 % to spare, respawn before the pad).
-- Falling-log spots come from `Shared/HazardPlan` (always a way past);
+- Falling-log spots come from `Shared/HazardPlan` (always a way past; never
+  in a corner tighter than `HAZARDS.LOG_CORNER_RADIUS` or just out of it);
   `Autopilot` avoids `state.hazards`. Jump ramps span the whole corridor (a
   narrower wedge's side face snagged cars near the wall). Race bots respawn
   after `BOTS.RACE.STUCK_RESPAWN` s pinned and fire no abilities below

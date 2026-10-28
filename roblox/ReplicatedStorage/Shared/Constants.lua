@@ -168,7 +168,10 @@ Constants.BALANCE_TARGETS = {
 -- ─── Drift / DriftCorner ──────────────────────────────────────────────────────
 -- Driving through a tagged DriftCorner zone fills the boost gauge by this amount.
 -- Key bindings: Shift = drift slide; F = activate boost when gauge is full.
-Constants.DRIFT_CHARGE_PER_CORNER = 0.5   -- 2 corners = full gauge
+-- 2026-10-29: 0.5 → 0.34 (3 corners = full): FOREST and OCEAN got about
+-- twice as many drift corners (tight R 35 / 45 corners, Tracks/*), so a lap
+-- still refills the gauge about 3 times.
+Constants.DRIFT_CHARGE_PER_CORNER = 0.34  -- 3 corners = full gauge
 Constants.DRIFT_CORNER_COOLDOWN   = 8     -- seconds before same zone charges again
 
 -- ─── Farming Contest (button-mash) ────────────────────────────────────────────
@@ -441,6 +444,8 @@ Constants.HAZARDS = {
 	LOG_SPACING       = 30,     -- studs along the track between logs of one drop
 	LOG_FINISH_CLEAR  = 60,     -- no logs this close to the finish
 	LOG_KEEP_CLEAR    = 25,     -- ... or to a jump ramp, mud patch or boost pad (HazardPlan.keepClear)
+	LOG_CORNER_RADIUS = 60,     -- ... nor in a corner tighter than this (centerline radius) ...
+	LOG_CORNER_RUNOUT = 40,     -- ... or this far out of it (a drifting car cannot see a log there)
 	LOG_YAW_JITTER    = 0.3,    -- rad
 	LOG_WARN          = 1.2,    -- s the landing marker shows before the log drops
 	GUST_DURATION     = 2,

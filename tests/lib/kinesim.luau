@@ -141,6 +141,7 @@ function KineSim.run(world, opts)
 		car = car, profile = opts.profileName, seed = seed,
 		visibility = world.visibility, respawnMode = respawnMode,
 		drifts = 0, turbos = 0, driftSeconds = 0,
+		driftLog = {},   -- { s0, s1, level } per drift (level nil = no turbo)
 	}
 	for _ in pairs(active) do res.pads.active += 1 end
 
@@ -368,7 +369,12 @@ function KineSim.run(world, opts)
 		local change, level = VehicleController.updateDrift(driveState, input, speed, maxNow, isSky)
 		if change == "enter" then
 			res.drifts += 1
-		elseif level then
+			table.insert(res.driftLog, { s0 = s })
+		elseif change == "exit" then
+			local last = res.driftLog[#res.driftLog]
+			if last and not last.s1 then last.s1, last.level = s, level end
+		end
+		if change ~= "enter" and level then
 			local tb = Constants.DRIVE.DRIFT_TURBO[level]
 			mods:set("driftTurbo", tb.mult, t + tb.duration)
 			res.turbos += 1
