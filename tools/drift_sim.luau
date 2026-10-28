@@ -5,6 +5,9 @@
 -- Autopilot), per section. Shows where drifting wins time.
 --
 --   lune run tools/drift_sim.luau [FOREST|OCEAN] [profile]
+--
+-- "drifts at s": each drift as start-end progress (studs), T1 / T2 = the
+-- mini / super turbo it paid on release.
 
 local process = require("@lune/process")
 local World = require("../tests/lib/world")
@@ -37,6 +40,12 @@ for _, rep in ipairs(reps) do
 			print(string.format("%s %-4s %-7s grip %6s s  drift %6s s  (%d drifts, %d turbos, %.0f s sliding, respawns %d/%d, walls %d/%d)",
 				biome, rep.label, prof, fmt(g.time), fmt(d.time), d.drifts, d.turbos, d.driftSeconds,
 				#g.respawns, #d.respawns, #g.impacts, #d.impacts))
+			-- where the drifts were (s along the track) and which paid a turbo
+			local marks = {}
+			for _, e in ipairs(d.driftLog or {}) do
+				table.insert(marks, string.format("%d-%d%s", e.s0, e.s1 or -1, e.level and ("T" .. e.level) or ""))
+			end
+			print("    drifts at s: " .. table.concat(marks, " "))
 			for i, sec in ipairs(d.sections) do
 				local gs = g.sections[i]
 				if gs and gs.exit and sec.exit then

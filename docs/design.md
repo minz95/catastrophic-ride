@@ -37,11 +37,11 @@ only scenery. Current shape: `reports/<biome>/track.svg`.
 | | Forest | Ocean | Sky |
 |---|---|---|---|
 | Lane width | 40 | 60 | 50 |
-| Length (centerline) | ~8,020 | ~6,530 | ~8,160 |
+| Length (centerline) | ~7,840 | ~6,770 | ~7,830 |
 | Walls | wood, 8 high, continuous | reef rock, sea floor to 12 above water, continuous | see-through glass pillars 2×2, touching, Y 54–114, cloud rail |
 | Off-track | mud slow zones | rough-water slow zones | none (kill plane below) |
-| Sections | start straight, outcrop hairpin, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, lighthouse spiral (flume up 1¼ turns, Y 2 → 40), water slide (down to the sea, 6.2%) + lagoon run, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, cloud corkscrew (one turn up around the sky tower, Y 80 → 128), dive to the finish (Y 90) |
-| Checkpoints | N14, S4b straight | N5, water slide | N6, N13 |
+| Sections | start straight, outcrop corner, trestle climb (Y 1 → 44, river bridge), giant tree spiral (1½ turns down, 28.7 studs per turn), run-out, mud hook, pine switchbacks, ridge chicane | harbor launch, island arc, open channel, lighthouse spiral (flume up 1¼ turns, Y 2 → 40), water slide (down to the sea, 6.2%) + lagoon run, reef hairpin + buoy slalom, kelp channel | launch tunnel, cloud bend A, crossover, cloud bend B, crystal canyon, cloud corkscrew (one turn up around the sky tower, Y 80 → 128), dive to the finish (Y 90) |
+| Checkpoints | N15, S4b straight | N5, water slide | N6, N13 |
 
 Wall layout rule (`TrackGeometry:boundaryRuns`): every wall is extended to
 close the outside of a turn and dropped wherever it would stand inside the
@@ -400,6 +400,52 @@ spot with its track section; the RESULTS report lists them per section.
   items are bigger (RIDE_MIN) and a ridden plane's wings shrink and go grey:
   players saw "the default car with the item pasted on". Lobby music is
   casual (whistling swing); opening the shop is silent.
+- **2026-10-29 — Smaller farms nobody falls off.** The farms were 220×320,
+  180×260 and 200×240 with nothing at the edge that held anyone (FOREST's
+  fence did not collide, OCEAN's island ended in the sea, SKY's platform in
+  the air). Each is now about two thirds of that (150×210, 120×170,
+  130×160: `Shared/FarmBounds`), closed by invisible walls 40 high, and
+  `FarmRescue` puts back anyone under the floor, flung high over it or
+  past a wall. Items, drops, spawn markers and bots all take the farm from
+  FarmBounds; the item spread used to come from the FarmArea model's
+  bounding box and a table of farm centres 500 studs off. Bots no longer
+  appear inside each other or on the players' spawn markers (overlapping
+  characters are pushed apart, upwards too: "bots shoot into the sky").
+- **2026-10-29 — Corners worth a drift.** Playtest: "almost nowhere to drift,
+  the maps are flat". Measured (`tools/drift_sim.luau`, now listing where
+  each drift was and which paid a turbo): Ocean had no corner tighter than
+  R 100, where a boat at 63 studs/s turns 0.55 rad/s, the slide stays under
+  `DRIFT_TURBO.MIN_SLIDE` and no drift ever paid (1 turbo a lap, 0 s
+  gained); Forest's only tight corners were the R 25 switchbacks, whose
+  39-stud arcs end before the 0.6 s a mini-turbo needs (10 turbos, 1 s).
+  Every flat corner is now R 35 (Forest) / R 45 (Ocean) round the same
+  vertex, so the straights and everything on them stay put; Ocean's reef
+  hairpin is two right angles with a straight between; Forest's S6
+  hairpins moved 80 / 140 studs in (S6 was 2,000 studs of mostly straight)
+  and the ridge chicane is an 80-stud dip of four right angles. Turbos per
+  lap (p50 car, average driver): Forest 10 → 14, Ocean 1 → 8; drifting
+  saves 1.9 s / 1.4 s. Each such corner has a drift zone (Forest 11, Ocean
+  10), so a corner charges the boost gauge 0.34 (was 0.5) and a lap still
+  refills it about 3 times (Sky got two more zones). Falling logs keep out
+  of tight corners and 40 studs past them (a sliding car cannot see one).
+  Sky's planes still do not drift (`isSky`).
+
+- **2026-10-29 — Things that looked broken were drawn wrong.** "The plane
+  does not face forward" / "the boat feels like it goes backwards": Studio
+  (record-sky, bots-ocean, BotDriver `drive`) measured travel within 1.3° /
+  3.5° of the nose and no frame moving backwards; the ridden item was the
+  problem. Laying an item down turned its top to the back, so every Rocket
+  and Soda Bottle rode nose-backwards, and the quarter turn that lays the
+  Rubber Duck along the vehicle put its head at the back. Items now lie
+  top-forward. The bangs were two user uploads, one literally titled
+  "Explosion", on every pickup, slot and item use; all effects are now
+  catalogue blips, chimes and pops. Bots shooting up: two farm bots that
+  robbed each other walked into each other and physics threw both ~30 up
+  (twice in two Studio runs); bots no longer collide with each other. A
+  boat that left the lane floated on the open sea forever (no fall rule
+  saw it): off-lane respawn. Punches got a wind-up, a hold, a flash and a
+  view kick, bots are pushed when hit, items fly into the picker's hands,
+  and ENGINE / SPECIAL / TAIL items are big enough to see.
 
 ## Open questions (from the reports, not decided)
 

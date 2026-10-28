@@ -12,17 +12,9 @@ local RemoteEvents     = require(ReplicatedStorage.RemoteEvents)
 local Constants        = require(ReplicatedStorage.Shared.Constants)
 
 -- ─── Farming spawn points ─────────────────────────────────────────────────────
--- 10 points arranged in a 2×5 grid around the farm area center.
--- These are fallback positions; Studio map should have Parts tagged "FarmSpawn".
+-- The map's parts tagged "FarmSpawn" (placed at Shared/FarmBounds.spawnPoints).
 
-local SPAWN_SPACING = 8
-
--- Biome-specific fallback spawn centres (used when no FarmSpawn tags found in map)
-local BIOME_SPAWN_DEFAULTS = {
-	FOREST = Vector3.new(0,  3,  320),  -- FarmGround top=1, HRP = top+2
-	OCEAN  = Vector3.new(0,  7,  375),  -- FarmGrass top=5 (WATER_Y+2.5+0.5), HRP = top+2; Z=farm center
-	SKY    = Vector3.new(0, 82,  390),  -- FarmPlatform top=80 (SKY_BASE_Y-4.5+4.5), HRP = top+2
-}
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
 
 -- Returns CFrame array of spawn points for the given biome.
 -- Filters CollectionService "FarmSpawn" tags to only those inside the active map model
@@ -44,14 +36,10 @@ local function _getFarmSpawnPoints(biome)
 		end
 	end
 
-	-- Fallback: biome-specific 2×5 grid
-	local center = (biome and BIOME_SPAWN_DEFAULTS[biome]) or BIOME_SPAWN_DEFAULTS.FOREST
+	-- Fallback (map not built): the markers' spots from Shared/FarmBounds
 	local points = {}
-	for row = 0, 1 do
-		for col = 0, 4 do
-			local idx = row * 5 + col + 1
-			points[idx] = CFrame.new(center + Vector3.new((col - 2) * SPAWN_SPACING, 0, row * SPAWN_SPACING))
-		end
+	for _, at in ipairs(FarmBounds.spawnPoints(biome)) do
+		table.insert(points, CFrame.new(at + Vector3.new(0, FarmBounds.SPAWN_LIFT, 0)))
 	end
 	return points
 end

@@ -37,7 +37,9 @@ SoundConfig.BGM = {
 		OCEAN  = { id = "rbxassetid://1838029319", volume = 0.5, looped = true },   -- Food Tray Fight (a) (APM)
 		SKY    = { id = "rbxassetid://111298808852201", volume = 0.5, looped = true }, -- Game Level Twenty (chiptune)
 	},
-	CRAFTING = { id = "rbxassetid://1839396884", volume = 0.45, looped = true },    -- Cook With Me Cartoon (APM)
+	-- crafting: quiet thinking music (playtest 2026-10-29: "Cook With Me
+	-- Cartoon" was too loud and did not fit)
+	CRAFTING = { id = "rbxassetid://83000834000142", volume = 0.3, looped = true }, -- Crafting Menu Loops While Thinking
 	RACING = {
 		FOREST = { id = "rbxassetid://1847415881", volume = 0.55, looped = true },  -- Racing Games A (APM)
 		OCEAN  = { id = "rbxassetid://1845092006", volume = 0.55, looped = true },  -- The Racing Game (APM)
@@ -66,6 +68,8 @@ SoundConfig.TRY = {
 		T("136833165577660", "Campground Silly Parade"), T("123897301584254", "Bubblegum"),
 	},
 	CRAFTING = {
+		T("83000834000142", "Crafting Menu Loops While Thinking"), T("9048058841", "Building Blocks (a) (APM)"),
+		T("1836663996", "Tinker (APM)"), T("94937056784916", "Puzzle Game Theme"),
 		T("1839396884", "Cook With Me Cartoon (APM)"), T("1839403410", "Happy Game alt 2 (APM)"),
 		T("1841146648", "Castles and Crayons (APM)"), T("1839398358", "Feel The Love Cartoon (APM)"),
 		T("87614776980545", "Chiptune Chillout"), T("1847540538", "Main Street Strut (APM)"),
@@ -96,65 +100,83 @@ SoundConfig.AMBIENCE = {
 }
 
 -- ─── SFX ─────────────────────────────────────────────────────────────────────
--- 258057783 and 6026984224 are older ids that load (pickup chime, UI beep).
+-- Playtest 2026-10-29: two old ids were the "bangs" heard everywhere:
+-- 258057783 is a user upload named "Explosion" (BOOM!) and played on every
+-- pickup, slot, item use (ABILITY_GENERIC) and join; 6026984224 a user upload
+-- of a chat-app notification (countdown, GO, respawn, contests, finish). Both
+-- are gone: every id below is a ProSoundEffects / APM catalogue sound, soft
+-- by design (blips, chimes, pops; no crashes or explosions). Find more without
+-- Studio: `python3 tools/sound_search.py "<words>"`. The spec
+-- playtest_polish checks no SFX is a banned id or a crash / explosion title.
 
 SoundConfig.COLLISION_GAP = 0.6   -- s between two COLLISION sounds
 
+-- ids (title from the Creator Store)
+local BLIP   = "rbxassetid://9125397583"  -- Blip Tone Single High Pitch Synth Blip (PSE, "Notify, UI")
+local CHIME  = "rbxassetid://9116394545"  -- Magic Glows Soft Clusters Of Chiming Hits 1 (PSE)
+local CHIME2 = "rbxassetid://9116394876"  -- Magic Glows Soft Clusters Of Chiming Hits 2 (PSE)
+local CLICK  = "rbxassetid://9119717529"  -- Switch Click On Or Off Toggle Button 1 (PSE)
+local BOINK  = "rbxassetid://9113537815"  -- Boink Wet Suction Pop Blip Hollow 3 (PSE)
+local POP    = "rbxassetid://9112872239"  -- Small Bubbles Water Surface Float Up Pop 5 (PSE)
+local TINKLE = "rbxassetid://9125537079"  -- Electronic Tinkles Sharp Relay Falling Beeps (PSE)
+
 SoundConfig.SFX = {
 	-- Farming
-	ITEM_PICKUP         = { id = "rbxassetid://258057783",  volume = 0.7, pitch = 1.2 },
-	ITEM_PICKUP_RARE    = { id = "rbxassetid://258057783",  volume = 0.8, pitch = 1.4 },
-	ITEM_PICKUP_EPIC    = { id = "rbxassetid://258057783",  volume = 1.0, pitch = 1.6 },
-	CONTEST_START       = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 1.0 },
-	CONTEST_WIN         = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.3 },
-	CONTEST_LOSE        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.7 },
-	GRAB_WARN           = { id = "rbxassetid://9113251685", volume = 0.9, pitch = 1.0 }, -- Bag Grab Quick (someone grabs you)
-	ITEM_STOLEN         = { id = "rbxassetid://9113722807", volume = 0.9, pitch = 0.9 }, -- Card Swipe
-	ITEM_DEFENDED       = { id = "rbxassetid://9114343910", volume = 0.8, pitch = 1.2 }, -- Energy Presence
-	PUNCH_SWING         = { id = "rbxassetid://9116399935", volume = 0.6, pitch = 1.7 }, -- Airy Whips Swooshes, quick (every F)
-	PUNCH_HIT           = { id = "rbxassetid://9118616398", volume = 1.0, pitch = 1.1 }, -- muted thud
-	PUNCH_BLOCKED       = { id = "rbxassetid://9119075972", volume = 0.7, pitch = 1.2 }, -- Shield Impacts
-	KNOCKOUT            = { id = "rbxassetid://9113470178", volume = 1.0, pitch = 1.0 }, -- Body Fall Heavy
+	ITEM_PICKUP         = { id = CHIME,  volume = 0.45, pitch = 1.2 },
+	ITEM_PICKUP_RARE    = { id = CHIME,  volume = 0.5,  pitch = 1.4 },
+	ITEM_PICKUP_EPIC    = { id = CHIME2, volume = 0.55, pitch = 1.5 },
+	CONTEST_START       = { id = BLIP,   volume = 0.4,  pitch = 1.0 },
+	CONTEST_WIN         = { id = CHIME2, volume = 0.5,  pitch = 1.3 },
+	CONTEST_LOSE        = { id = BLIP,   volume = 0.35, pitch = 0.7 },
+	GRAB_WARN           = { id = "rbxassetid://9113251685", volume = 0.6, pitch = 1.0 }, -- Bag Grab Quick (someone grabs you)
+	ITEM_STOLEN         = { id = "rbxassetid://9113722807", volume = 0.6, pitch = 0.9 }, -- Card Swipe
+	ITEM_DEFENDED       = { id = "rbxassetid://9114343910", volume = 0.5, pitch = 1.2 }, -- Energy Presence
+	-- the punch: an arm-swing whoosh on every F, a slappy cloth hit when it
+	-- lands (the old muted rock thud gave no punch), a cartoon smack on a KO
+	PUNCH_SWING         = { id = "rbxassetid://9120729007", volume = 0.6, pitch = 1.15 }, -- Whoosh Heavy Punches 3 (arm swings)
+	PUNCH_HIT           = { id = "rbxassetid://9113534108", volume = 0.8, pitch = 1.05 }, -- Body Pats Cloth Hits 24 (slaps, hits)
+	PUNCH_BLOCKED       = { id = "rbxassetid://9119075972", volume = 0.45, pitch = 1.3 }, -- Shield Impacts
+	KNOCKOUT            = { id = "rbxassetid://9113263968", volume = 0.6, pitch = 1.0 }, -- Balloon Pops Slap Clap Smack 3
 
 	-- Crafting
-	SLOT_ASSIGN         = { id = "rbxassetid://258057783",  volume = 0.4, pitch = 1.1 },
-	CRAFT_COMPLETE      = { id = "rbxassetid://1841209857", volume = 0.8, pitch = 1.0 }, -- Simple Chimes (APM)
+	SLOT_ASSIGN         = { id = CLICK,  volume = 0.4,  pitch = 1.1 },
+	CRAFT_COMPLETE      = { id = "rbxassetid://1841209857", volume = 0.5, pitch = 1.0 }, -- Simple Chimes (APM)
 
 	-- Racing
-	BOOST_ACTIVATE      = { id = "rbxassetid://9114329395", volume = 0.8, pitch = 1.0 }, -- Energy Cloud Whooshing By Very Fast
-	BOOST_PAD           = { id = "rbxassetid://9116411685", volume = 0.7, pitch = 1.1 }, -- Magic Swoosh Fast Zooming
-	DRIFT_START         = { id = "rbxassetid://9116399935", volume = 0.5, pitch = 0.9 }, -- Airy Whips Swooshes
-	DRIFT_SLINGSHOT     = { id = "rbxassetid://9121000116", volume = 0.8, pitch = 1.1 }, -- Zip Bys Airy Rips
-	-- a cartoon pop, not a crash: "Big Thuds Wall Impact" at 0.8 was a loud
-	-- BANG on every bump and ability hit (playtest 2026-10-28). SoundClient
-	-- plays it at most once per COLLISION_GAP s.
-	COLLISION           = { id = "rbxassetid://9112872239", volume = 0.45, pitch = 0.75 }, -- Small Bubbles Pop, low
-	MUD_ENTER           = { id = "rbxassetid://9120352855", volume = 0.6, pitch = 0.8 }, -- Underwater Splash
-	UPDRAFT_ENTER       = { id = "rbxassetid://9125806782", volume = 0.5, pitch = 1.0 }, -- Rising Whoosh
-	RESPAWN             = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.0 },
-	BUBBLE_POP          = { id = "rbxassetid://9112872239", volume = 0.8, pitch = 1.0 }, -- Small Bubbles Pop
-	FINISH_1ST          = { id = "rbxassetid://6026984224", volume = 1.0, pitch = 1.0 },
-	FINISH_OTHER        = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 0.9 },
+	BOOST_ACTIVATE      = { id = "rbxassetid://9114329395", volume = 0.5, pitch = 1.0 }, -- Energy Cloud Whooshing By Very Fast
+	BOOST_PAD           = { id = "rbxassetid://9116411685", volume = 0.45, pitch = 1.1 }, -- Magic Swoosh Fast Zooming
+	DRIFT_START         = { id = "rbxassetid://9116399935", volume = 0.35, pitch = 0.9 }, -- Airy Whips Swooshes
+	DRIFT_SLINGSHOT     = { id = "rbxassetid://9121000116", volume = 0.5, pitch = 1.1 }, -- Zip Bys Airy Rips
+	-- a cartoon pop, not a crash; at most once per COLLISION_GAP s
+	COLLISION           = { id = POP,    volume = 0.35, pitch = 0.75 },
+	MUD_ENTER           = { id = "rbxassetid://9120352855", volume = 0.4, pitch = 0.8 }, -- Underwater Splash
+	UPDRAFT_ENTER       = { id = "rbxassetid://9125806782", volume = 0.35, pitch = 1.0 }, -- Rising Whoosh
+	RESPAWN             = { id = BOINK,  volume = 0.45, pitch = 1.0 },
+	BUBBLE_POP          = { id = POP,    volume = 0.5,  pitch = 1.0 },
+	FINISH_1ST          = { id = CHIME2, volume = 0.6,  pitch = 1.2 },
+	FINISH_OTHER        = { id = CHIME,  volume = 0.45, pitch = 1.0 },
 
-	-- Countdown
-	COUNTDOWN_BEEP      = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.0 },
-	-- GO is the countdown beep, higher (kart-racer style); the air horn that
-	-- was here sounded like a BANG at every start
-	COUNTDOWN_GO        = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.6 },
+	-- Countdown: a short synth blip, GO the same blip higher (kart style)
+	COUNTDOWN_BEEP      = { id = BLIP,   volume = 0.5,  pitch = 1.0 },
+	COUNTDOWN_GO        = { id = BLIP,   volume = 0.6,  pitch = 1.5 },
 
-	-- Abilities (category-based; SoundClient picks these by ABILITY_SFX key)
-	ABILITY_SPEED       = { id = "rbxassetid://9114328260", volume = 0.7, pitch = 1.1 }, -- Energy Cloud Whooshing By 2
-	ABILITY_SHIELD      = { id = "rbxassetid://9114343910", volume = 0.7, pitch = 0.9 }, -- Energy Presence
-	ABILITY_OBSTACLE    = { id = "rbxassetid://9120873997", volume = 0.7, pitch = 1.0 }, -- Wooden Gate Crash
-	ABILITY_HACK        = { id = "rbxassetid://6026984224", volume = 0.8, pitch = 0.6 },
-	ABILITY_FLOAT       = { id = "rbxassetid://9114320437", volume = 0.7, pitch = 1.1 }, -- Energy Cloud Whooshing Medium
-	ABILITY_GENERIC     = { id = "rbxassetid://258057783",  volume = 0.6, pitch = 1.0 },
+	-- Abilities (category-based; SoundClient picks these by ABILITY_SFX key).
+	-- Soft cues only: the effect itself is drawn on the car (EffectFx).
+	ABILITY_SPEED       = { id = "rbxassetid://9114328260", volume = 0.35, pitch = 1.1 }, -- Energy Cloud Whooshing By 2
+	ABILITY_SHIELD      = { id = "rbxassetid://9114343910", volume = 0.35, pitch = 0.9 }, -- Energy Presence
+	ABILITY_OBSTACLE    = { id = BOINK,  volume = 0.4,  pitch = 0.8 },  -- was a wooden-gate crash on every use
+	ABILITY_HACK        = { id = TINKLE, volume = 0.35, pitch = 1.0 },
+	ABILITY_FLOAT       = { id = "rbxassetid://9114320437", volume = 0.35, pitch = 1.1 }, -- Energy Cloud Whooshing Medium
+	ABILITY_GENERIC     = { id = CHIME,  volume = 0.35, pitch = 1.0 },
 
 	-- UI
-	PLAYER_JOIN         = { id = "rbxassetid://258057783",  volume = 0.5, pitch = 1.0 },
-	PHASE_TRANSITION    = { id = "rbxassetid://6026984224", volume = 0.6, pitch = 1.0 },
-	TIMER_LOW           = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.5 },
+	PLAYER_JOIN         = { id = CLICK,  volume = 0.3,  pitch = 1.0 },
+	PHASE_TRANSITION    = { id = CHIME,  volume = 0.35, pitch = 1.0 },
+	TIMER_LOW           = { id = BLIP,   volume = 0.35, pitch = 1.3 },
 }
+
+-- Ids that must never come back (spec playtest_polish).
+SoundConfig.BANNED = { "258057783", "6026984224", "9120873997" }
 
 -- ─── Ability → SFX category mapping ─────────────────────────────────────────
 -- Maps effectKey strings (from AbilityConfig) to SFX category keys above.

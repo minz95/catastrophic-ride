@@ -60,6 +60,14 @@ local function build(player, slots, biome)
 	end
 	model.Name = "Preview"
 	model:SetAttribute("Biome", biome)
+	-- how many parts it has: the client shows it only once all arrived (a
+	-- big item model can replicate after the Model itself; a copy taken too
+	-- early showed the vehicle without its ridden item)
+	local n = 0
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") then n += 1 end
+	end
+	model:SetAttribute("Parts", n)
 	local folder = gui:FindFirstChild(CraftPreview.FOLDER)
 	if not folder then
 		folder = Instance.new("Folder")

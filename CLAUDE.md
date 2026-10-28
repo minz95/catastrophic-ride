@@ -46,11 +46,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Look of a map or a drop without Studio: `tools/scene_dump.luau` +
   `tools/scene_render.py` (PNG). Layout and where simulated drivers
   slip out: `lune run tools/topview.luau <BIOME>` + `python3 tools/topview.py
-  reports/<biome>/topview.json` (top-down PNG, respawns marked). Drift timing: `tools/drift_sim.luau`.
+  reports/<biome>/topview.json` (top-down PNG, respawns marked). Drift timing: `tools/drift_sim.luau`
+  (where each drift was, which paid a turbo). Every flat corner is tight
+  (FOREST R 35, OCEAN R 45) with a DriftCorner zone: a wide arc is taken
+  flat out and a drift there never slides long enough for a turbo.
 - Studio runs are heavy: one small batch at a time, never in parallel with
   another Studio run or the full offline suite.
 - Vehicle look: `Modules/VehicleDesign.lua` (car / boat / plane as data:
   parts, slot boxes for the crafted items), built by `Modules/VehicleBuilder`.
+  ENGINE, SPECIAL and TAIL boxes are at least `VehicleDesign.SHOWCASE`
+  (grown away from what carries them) so every crafted part shows; look:
+  `lune run tools/ride_dump.luau <BIOME> "-,Pizza" out.json full`.
   Only the chassis has mass and collision, sized from the stats as before, so
   the look never changes handling. Check a change with
   `lune run tools/vehicle_gallery.luau` (`reports/vehicles/*.svg`, front on
@@ -62,6 +68,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   tail stay); seat and `onRide` mounts sit on the item's real top.
   Riding, a plane's wings shrink to the item (`RIDE_WING_OVER`) and go
   grey (`ride.recolor`) so the item, not the default plane, shows.
+  An item laid down (tip / orient) puts its top to the front (a rocket's
+  nose; the old +90° rode them backwards); the spec checks Rocket and
+  Soda Bottle.
   `VehicleDesign.RIDE_LOOK` fixes items that ride wrong by default (facing,
   lying down, seat sunk into a tub or onto cushions). Some ENGINE / SPECIAL
   items are rideable too (ItemConfig `ride` = weight and grip as a body;
@@ -170,7 +179,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `VehicleController.travelDir`, not the nose (else the blocked-car clamp
   kills the speed). Mini-turbos are applied by the server (`DriftTurbo`).
 - Boost (F): the server keeps the gauge (`Modules/BoostGauge`, full at
-  the start, two DriftCorner zones refill it, Backpack fills it) and
+  the start, three DriftCorner zones refill it, Backpack fills it) and
   `RequestBoost` needs it full; the client's bar only mirrors it. Race bots
   use the same gauge and boost when going straight with no bend within the
   boost's reach (`Constants.BOTS.RACE.BOOST_*`). The harness player used to
@@ -187,6 +196,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   need more than the lane and every plane hit the fence).
 - Track data `obstacleBand` is the body height band above `trackTop` that
   collides: boats ride over the 1-stud dock, flyers hover at Y 84.
+- Off the lane: a race car more than `Constants.OFF_LANE.MARGIN` studs
+  outside its lane for `SECONDS` is respawned (`RaceProgress.offLane` /
+  `offLaneStep`, players in RacingManager, bots in RaceBots, reason
+  `off_lane`). Boats that slipped out floated on the open sea at the right
+  height, so no fall rule saw them. Race bots log `bot_high` (what lifted
+  them) when `BOTS.RACE.HIGH_LOG` over the road.
 - Race progress is distance along the centerline (`TrackGeometry:progressAt`,
   continuous across kinks), never a raw Z coordinate. Respawns go to
   `RaceProgress.respawnPoint`, on the centerline facing along the track.
@@ -207,7 +222,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   builds a still copy of the vehicle into that player's
   `PlayerGui.CraftPreview` (`Modules/CraftPreview`, the race's
   VehicleBuilder call), which the crafting screen's showroom turns in a
-  ViewportFrame with the avatar seated (`sim.py run showroom` screenshots it). A new item needs
+  ViewportFrame with the avatar seated (`sim.py run showroom` screenshots it);
+  the screen shows a preview only once all its parts arrived (attribute
+  `Parts`): a copy taken early lacked the ridden item. A new item needs
   a line in `Shared/ItemBlurbs`.
 - Character poses (FarmFx): avatars may have AnimationConstraint joints and
   no Motor6D; pose through FarmFx's `joint()` handle, never `Motor6D.C0`
@@ -221,7 +238,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   whooshes, lunges) and sends that target as RequestPunch's aim hint
   (taken within RANGE and `FIGHT.ASSIST_ARC`). The echo then draws only
   the hit (POW!). Harness bots punch the same way (PunchAt) and report
-  `ownPunch` / `ownKick`. The equipped move's style reaches the client as the
+  `ownPunch` / `ownKick`. The swing winds up, snaps, holds and comes
+  back (FarmFx `SWING`); a landed hit flashes a ball and ring on the
+  victim and kicks your view (FOV); the server pushes a hit farm bot
+  (`FIGHT.BOT_KNOCKBACK`, a hop of `KNOCK_UP`). Pick-ups: the item flies
+  into the picker's hands (`PICKUP_FLY`, FarmingManager) and every client
+  draws a bow-and-lift (FarmFx `onPickup`). The equipped move's style reaches the client as the
   player attribute `MoveStyle` (ShopHat.refresh).
 - Crafting slots: the screen places an item only where
   `CraftingRules.fits` (else `CraftingRules.whyNot` on the info line);
@@ -247,7 +269,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   puts it GAP_RUNUP before the pad. Logs keep off it (`HazardPlan`).
   Checked by `tests/specs/gap_jump` (no floor in the gap, pad, the arc
   clears it with 40 % to spare, respawn before the pad).
-- Falling-log spots come from `Shared/HazardPlan` (always a way past);
+- Falling-log spots come from `Shared/HazardPlan` (always a way past; never
+  in a corner tighter than `HAZARDS.LOG_CORNER_RADIUS` or just out of it);
   `Autopilot` avoids `state.hazards`. Jump ramps span the whole corridor (a
   narrower wedge's side face snagged cars near the wall). Race bots respawn
   after `BOTS.RACE.STUCK_RESPAWN` s pinned and fire no abilities below
@@ -280,7 +303,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   playtest `[` / `]` switch the music through `SoundConfig.TRY` (the
   phase's candidates; Output prints `[MusicTry] …`) so a person can pick
   by ear; live games never run it. No bangs: GO is a high countdown beep,
-  a bump a soft pop at most every `SoundConfig.COLLISION_GAP` s. FarmSpawnPoint
+  a bump a soft pop at most every `SoundConfig.COLLISION_GAP` s. Two user
+  uploads were the bangs heard everywhere (258057783 is an "Explosion",
+  on every pickup and item use) and are `SoundConfig.BANNED`; the spec
+  rejects crash / explosion titles. Search the Creator Store without
+  Studio: `python3 tools/sound_search.py "<words>"` (`--id` names an id). FarmSpawnPoint
   parts are invisible markers.
 - Saved progress: `Modules/PlayerStore` (DataStore) holds each player's
   record; `Shared/Progression` the rules (levels, coins, daily streak);
@@ -348,6 +375,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   RACING) lists every item by slot with its `ItemBlurbs` line; the first
   pickup of an item in a session shows a NEW card (ItemPickedUp carries
   `item`). A new item needs its ItemBlurbs line (the guide shows it).
+- The farm of each biome is `Shared/FarmBounds` (centre from the track's
+  `farm`, wall-to-wall size, floor Y, item area, spawn markers): the map
+  builders, `Maps/FarmKit` (invisible walls in FarmArea), FarmingManager
+  (item spawns, drops clamped inside), CharacterManager, FarmBots and
+  `Modules/FarmRescue` (FARMING: anyone fallen, flung or outside goes back
+  to a spawn marker, telemetry `farm_rescue`) all read it. Change the farm
+  there, not in a map file (spec `farm_bounds`).
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
@@ -373,6 +407,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Bots are SessionManager proxies (`SessionManager.addBot`, `bots()`,
   `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
   Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
+  collision group `FarmBot`: bots pass through each other, two that met
+  were flung ~30 up;
   `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /
   punch / guard / steal / defend functions (they keep a bag slot free to rob
   someone), then race the auto craft of their bag and fire its abilities

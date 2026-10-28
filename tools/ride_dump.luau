@@ -5,7 +5,9 @@
 -- much of the item still shows on a car / boat / plane can be checked
 -- without Studio. Item meshes are boxes of the mesh's size offline.
 --
---   lune run tools/ride_dump.luau <BIOME> [item,item,…] [out.json]
+--   lune run tools/ride_dump.luau <BIOME> [item,item,…] [out.json] [full]
+-- "full" also fills ENGINE / SPECIAL / MOBILITY / TAIL / HEAD (how much of
+-- every crafted part shows); "-" as an item = no BODY.
 --   python3 tools/scene_render.py <out.json> <out.png>
 
 local fs = require("@lune/fs")
@@ -35,7 +37,11 @@ local COLS, GAP = 4, 14
 local parts = {}
 for i, item in ipairs(items) do
 	local stats = VehicleStats.calculate(nil, nil, nil, biome)
-	local m = VehicleBuilder.build(stats, biome, CFrame.new(), { BODY = item })
+	local slots = { BODY = item ~= "-" and item or nil }
+	if process.args[4] == "full" then
+		slots.ENGINE, slots.SPECIAL, slots.MOBILITY, slots.TAIL, slots.HEAD = "Rocket", "Cactus", "Alarm Clock", "Racing Flag", "Fan"
+	end
+	local m = VehicleBuilder.build(stats, biome, CFrame.new(), slots)
 	local col, row = (i - 1) % COLS, (i - 1) // COLS
 	local shift = CFrame.new(col * GAP, 0, row * GAP * 1.3) * CFrame.Angles(0, math.rad(-35), 0)
 	for _, d in ipairs(m:GetDescendants()) do

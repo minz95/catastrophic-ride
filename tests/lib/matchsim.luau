@@ -72,7 +72,9 @@ function MatchSim.run(opts)
 	local Autopilot = env.requirePath("ReplicatedStorage.Shared.Autopilot")
 	local map = env.workspace.Maps[World.BIOMES[biome].builder]
 	local farm = world.track.farm
-	local groundY = world.track.trackTop + 2
+	-- start inside the farm's walls (Shared/FarmBounds)
+	local fb = env.requirePath("ReplicatedStorage.Shared.FarmBounds").get(biome)
+	local groundY = fb.floorY + 2
 
 	local farmProfiles = opts.farmProfiles or { "sweaty", "casual" }
 	local driverProfiles = opts.driverProfiles or { "expert", "average", "novice" }
@@ -83,7 +85,7 @@ function MatchSim.run(opts)
 		-- Start on the farm edge, spread around
 		local ang = (i / n) * 2 * math.pi
 		local root = p.Character.HumanoidRootPart
-		root.Position = Vector3.new(farm.cx + math.cos(ang) * 90, groundY, farm.cz + math.sin(ang) * 140)
+		root.Position = Vector3.new(farm.cx + math.cos(ang) * fb.halfX * 0.8, groundY, farm.cz + math.sin(ang) * fb.halfZ * 0.8)
 		bots[i] = {
 			player = p, farm = fp, drive = dp, profile = BotBrain.PROFILES[fp],
 			target = nil, nextTry = 0, contest = nil, walked = 0,

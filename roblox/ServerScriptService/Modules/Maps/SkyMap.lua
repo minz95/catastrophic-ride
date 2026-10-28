@@ -19,6 +19,8 @@ local BiomeConfig = require(script.Parent.Parent.BiomeConfig)
 local TrackKit = require(script.Parent.TrackKit)
 
 local KIT = TrackKit.new(Track)
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
+local FarmKit = require(script.Parent.FarmKit)
 local _part, _wedge, _tag = TrackKit.part, TrackKit.wedge, TrackKit.tag
 
 local C = {
@@ -416,9 +418,12 @@ end
 
 -- ─── Farm platform (FARMING phase only) ──────────────────────────────────────
 
+-- FarmBounds' wall-to-wall box (was 200 × 240 with no rail: a step off the
+-- edge was a fall to the kill plane), ringed by a glass rail you see and
+-- FarmKit's taller invisible walls.
 local function _buildFarmPlatform(root)
-	local farm = Track.farm
-	local cx, cz, w, d = farm.cx, farm.cz, farm.size[1], farm.size[2]
+	local F = FarmBounds.get("SKY")
+	local cx, cz, w, d = F.cx, F.cz, 2 * F.halfX, 2 * F.halfZ
 	_part(root, {
 		Name = "FarmPlatform", Size = Vector3.new(w, 9, d),
 		Position = Vector3.new(cx, SKY_BASE_Y - 4.5, cz),
@@ -441,17 +446,32 @@ local function _buildFarmPlatform(root)
 			})
 		end
 	end
-	for _, rz in ipairs({ cz - 45, cz + 45 }) do
-		for _, ox in ipairs({ -65, -32, 0, 32, 65 }) do
-			local sp = _part(root, {
-				Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
-				Position = Vector3.new(cx + ox, SKY_BASE_Y + 4.5, rz),
-				-- a marker for item spawns and farm spawns, never seen (playtest
-				-- 2026-10-28: yellow plates floating round the farm)
-				CanCollide = false, Transparency = 1, CanQuery = false, CanTouch = false,
-			})
-			_tag(sp, "FarmSpawn")
-		end
+	-- glass rail round the edge (the look of the boundary)
+	local railH = 4
+	for _, side in ipairs({ -1, 1 }) do
+		_part(root, {
+			Name = "FarmRail", Size = Vector3.new(w, railH, 0.6),
+			Position = Vector3.new(cx, SKY_BASE_Y + railH / 2, cz + side * (d / 2 - 0.3)),
+			Color = C.BARRIER, Material = Enum.Material.Glass, Transparency = 0.6,
+			CanCollide = false, CastShadow = false,
+		})
+		_part(root, {
+			Name = "FarmRail", Size = Vector3.new(0.6, railH, d),
+			Position = Vector3.new(cx + side * (w / 2 - 0.3), SKY_BASE_Y + railH / 2, cz),
+			Color = C.BARRIER, Material = Enum.Material.Glass, Transparency = 0.6,
+			CanCollide = false, CastShadow = false,
+		})
+	end
+	FarmKit.buildWalls(root, "SKY")
+	for _, at in ipairs(FarmBounds.spawnPoints("SKY")) do
+		local sp = _part(root, {
+			Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
+			Position = at,
+			-- a marker for item spawns and farm spawns, never seen (playtest
+			-- 2026-10-28: yellow plates floating round the farm)
+			CanCollide = false, Transparency = 1, CanQuery = false, CanTouch = false,
+		})
+		_tag(sp, "FarmSpawn")
 	end
 end
 

@@ -424,6 +424,68 @@ RunService.Heartbeat:Connect(function()
 	if a.Magnitude < 1e-3 or b.Magnitude < 1e-3 then return end
 	table.insert(_camSamples, math.deg(math.acos(math.clamp(a.Unit:Dot(b.Unit), -1, 1))))
 end)
+-- How the car really drives (playtest 2026-10-29: "SKY: the plane does not
+-- look forward and will not go forward", "OCEAN: sometimes it goes
+-- backwards"): the nose against the road's direction, the travel against
+-- the nose (sliding sideways), frames moving backwards, slow frames, and
+-- every knock the server sends (how many pushed backwards). `drive` at the
+-- race's end.
+local _drv = nil
+local function _drvReset() _drv = { nose = {}, crab = {}, back = 0, slow = 0, n = 0, knocks = 0, knockBack = 0, knockMax = 0,
+	backAt = {}, seg = nil } end
+_drvReset()
+RemoteEvents.CarImpact.OnClientEvent:Connect(function(dvx, dvz)
+	if phase ~= Constants.PHASES.RACING or not vehicle or not vehicle.PrimaryPart then return end
+	local k = Vector3.new(dvx or 0, 0, dvz or 0)
+	local m = k.Magnitude
+	if m < 0.5 then return end
+	local look = vehicle.PrimaryPart.CFrame.LookVector
+	_drv.knocks += 1
+	_drv.knockMax = math.max(_drv.knockMax, m)
+	if k.Unit:Dot(Vector3.new(look.X, 0, look.Z).Unit) < -0.5 then _drv.knockBack += 1 end
+end)
+RunService.Heartbeat:Connect(function()
+	if phase ~= Constants.PHASES.RACING or not vehicle or not vehicle.PrimaryPart or not geo then return end
+	if os.clock() - raceStart < 6 or #_drv.nose > 6000 then return end
+	local primary = vehicle.PrimaryPart
+	if primary.Anchored then return end
+	local pos, v = primary.Position, primary.AssemblyLinearVelocity
+	local look = Vector3.new(primary.CFrame.LookVector.X, 0, primary.CFrame.LookVector.Z)
+	if look.Magnitude < 1e-3 then return end
+	look = look.Unit
+	local flat = Vector3.new(v.X, 0, v.Z)
+	local proj = geo:project(pos.X, pos.Z, _drv.seg, 3, pos.Y)
+	_drv.seg = proj.seg
+	local seg = geo.segments[proj.seg]
+	local road = Vector3.new(seg.dx, 0, seg.dz)
+	_drv.n += 1
+	table.insert(_drv.nose, math.deg(math.acos(math.clamp(look:Dot(road.Unit), -1, 1))))
+	if flat.Magnitude > 10 then
+		table.insert(_drv.crab, math.deg(math.acos(math.clamp(look:Dot(flat.Unit), -1, 1))))
+	end
+	if flat:Dot(look) < -2 then
+		_drv.back += 1
+		if #_drv.backAt < 12 then table.insert(_drv.backAt, { s = math.floor(proj.s), v = math.floor(flat:Dot(look)) }) end
+	end
+	local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+	if seat and flat.Magnitude < seat.MaxSpeed * 0.35 then _drv.slow += 1 end
+end)
+local function _stats(list)
+	if #list == 0 then return nil end
+	table.sort(list)
+	local sum, over = 0, 0
+	for _, d in ipairs(list) do sum += d; if d > 20 then over += 1 end end
+	return { mean = math.floor(sum / #list * 10) / 10, p90 = math.floor(list[math.ceil(#list * 0.9)] * 10) / 10,
+		over20 = math.floor(over / #list * 1000) / 1000 }
+end
+local function _reportDrive()
+	if _drv.n == 0 then return end
+	report("drive", { biome = biome, frames = _drv.n, noseVsRoad = _stats(_drv.nose), travelVsNose = _stats(_drv.crab),
+		backFrac = math.floor(_drv.back / _drv.n * 1000) / 1000, slowFrac = math.floor(_drv.slow / _drv.n * 1000) / 1000,
+		knocks = _drv.knocks, knockBack = _drv.knockBack, knockMax = math.floor(_drv.knockMax * 10) / 10, backAt = _drv.backAt })
+	_drvReset()
+end
+
 local function _reportCamera()
 	local n = #_camSamples
 	if n == 0 then return end
@@ -513,6 +575,7 @@ local function onPhase(newPhase)
 		task.spawn(raceTricks)
 	elseif newPhase ~= Constants.PHASES.RACING then
 		_reportCamera()
+		_reportDrive()
 		vehicle, autopilot = nil, nil
 	end
 end

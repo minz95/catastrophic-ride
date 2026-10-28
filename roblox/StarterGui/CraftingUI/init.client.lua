@@ -779,12 +779,30 @@ local function _show(model)
 		or "Put an item in Body to ride it  ·  drag to turn"
 end
 
+-- Shows `m` once all its parts are here (attribute Parts, CraftPreview),
+-- or after 3 s whatever arrived; a newer preview replaces a waiting one.
+local _latest = nil
+local function _showWhenWhole(m)
+	_latest = m
+	local want = m:GetAttribute("Parts") or 0
+	local t0 = os.clock()
+	while m.Parent and _latest == m and os.clock() - t0 < 3 do
+		local n = 0
+		for _, d in ipairs(m:GetDescendants()) do
+			if d:IsA("BasePart") then n += 1 end
+		end
+		if n >= want then break end
+		task.wait(0.05)
+	end
+	if _latest == m and m.Parent then _show(m) end
+end
+
 local function _watch(folder)
 	folder.ChildAdded:Connect(function(m)
-		if m:IsA("Model") then task.defer(_show, m) end
+		if m:IsA("Model") then task.spawn(_showWhenWhole, m) end
 	end)
 	local m = folder:FindFirstChildWhichIsA("Model")
-	if m then _show(m) end
+	if m then task.spawn(_showWhenWhole, m) end
 end
 local _pf = LocalPlayer.PlayerGui:FindFirstChild("CraftPreview")
 if _pf then _watch(_pf) end

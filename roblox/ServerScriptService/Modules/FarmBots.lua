@@ -15,6 +15,7 @@ local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Constants = require(ReplicatedStorage.Shared.Constants)
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
 local SessionManager = require(ServerScriptService.SessionManager)
 local GameManager = require(ServerScriptService.GameManager)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
@@ -25,6 +26,7 @@ FarmBots.ID_BASE = -100000   -- the same ids RaceBots uses: bot k is ID_BASE - k
 FarmBots.list = {}           -- { proxy, model, root, hum, ... }
 -- Offline tests have no physics: walk by moving the root (set by specs).
 FarmBots.kinematic = false
+FarmBots.GROUP = "FarmBot"   -- collision group: bots pass through each other
 FarmBots.paused = false      -- specs: bots stand still
 
 local _conn = nil
@@ -113,21 +115,69 @@ local function makeCharacter(proxy, at)
 		pcall(function() hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer end)
 	end
 	local root = model:FindFirstChild("HumanoidRootPart")
+	-- Bots do not collide with each other (they still meet players and the
+	-- world). Studio 2026-10-29 (bots-ocean, record-sky): two bots that
+	-- robbed each other walked into each other, one stood on the other and
+	-- physics threw both ~30 studs up ("bots shoot into the sky").
+	local grouped = pcall(function()
+		local PhysicsService = game:GetService("PhysicsService")
+		if not PhysicsService:IsCollisionGroupRegistered(FarmBots.GROUP) then
+			PhysicsService:RegisterCollisionGroup(FarmBots.GROUP)
+		end
+		PhysicsService:CollisionGroupSetCollidable(FarmBots.GROUP, FarmBots.GROUP, false)
+	end)
+	if grouped then
+		for _, p in ipairs(model:GetDescendants()) do
+			if p:IsA("BasePart") then p.CollisionGroup = FarmBots.GROUP end
+		end
+	end
 	model:PivotTo(CFrame.new(at))
 	model.Parent = workspace
 	if root then pcall(function() root:SetNetworkOwner(nil) end) end
 	return model, root, hum
 end
 
--- A spot on the farm ground: next to a random free item.
-local function farmSpot(items)
+-- Where a bot appears: on the farm floor (FarmBounds) next to a random free
+-- item, at least BOT_GAP from anyone already there.
+-- History (playtest 2026-10-29: "bots suddenly shoot up into the sky"):
+-- this took the item's own height + 3 (items float and bob over the floor)
+-- and let several bots appear on the same item, inside each other or a
+-- player; with no free item it used (0, 6, 350), a spot off every farm
+-- (they are at Z 850 / 1850). Overlapping characters are pushed apart by
+-- the physics, upwards too. FarmRescue now also puts back anyone flung.
+local function farmSpot(biome, items, taken)
+	local b = FarmBounds.get(biome)
+	local y = b.floorY + FarmBounds.SPAWN_LIFT
 	local spots = {}
 	for _, it in pairs(items) do
 		if not it.taken and it.part and it.part.Parent then table.insert(spots, it.part.Position) end
 	end
-	if #spots == 0 then return Vector3.new(0, 6, 350) end
-	local p = spots[_rng:NextInteger(1, #spots)]
-	return p + Vector3.new(_rng:NextNumber(-4, 4), 3, _rng:NextNumber(-4, 4))
+	if #spots == 0 then table.insert(spots, Vector3.new(b.cx, b.floorY, b.cz)) end
+	local function clear(at)
+		for _, o in ipairs(taken) do
+			if Vector3.new(o.X - at.X, 0, o.Z - at.Z).Magnitude < FarmBounds.BOT_GAP then return false end
+		end
+		return true
+	end
+	for _ = 1, 40 do
+		local p = spots[_rng:NextInteger(1, #spots)]
+		local x, z = FarmBounds.clamp(biome, p.X + _rng:NextNumber(-4, 4), p.Z + _rng:NextNumber(-4, 4))
+		local at = Vector3.new(x, y, z)
+		if clear(at) and FarmBounds.itemSpotOk(biome, x, z) then return at end
+	end
+	local p = FarmBounds.randomItemSpot(biome, function() return _rng:NextNumber() end)
+	return Vector3.new(p.X, y, p.Z)
+end
+
+-- Spots taken: everyone standing around, and the spawn markers (players are
+-- put on those just after the bots appear: CharacterManager).
+local function occupied(biome)
+	local out = FarmBounds.spawnPoints(biome)
+	for _, p in ipairs(Players:GetPlayers()) do
+		local r = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+		if r then table.insert(out, r.Position) end
+	end
+	return out
 end
 
 local function flat(v) return Vector3.new(v.X, 0, v.Z) end
@@ -314,7 +364,9 @@ local function think(bot, dt, now)
 			local r = victim and victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
 			local around = r and r.Position or bot.root.Position
 			local spread = r and 6 or F.WANDER
-			bot.goal = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
+			local g = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
+			local gx, gz = FarmBounds.clamp(bot.biome, g.X, g.Z)   -- not into a wall
+			bot.goal = Vector3.new(gx, g.Y, gz)
 		end
 		walkTo(bot, bot.goal, dt)
 		return
@@ -348,14 +400,17 @@ function FarmBots.start(biome, api)
 	end
 	if n == 0 then return {} end
 	local items = api.items()
+	local taken = occupied(biome)
 	for k = 1, n do
 		local proxy = FarmBots.proxy(k)
 		local data = SessionManager.getData(proxy)
 		data.inventory = {}
-		local model, root, hum = makeCharacter(proxy, farmSpot(items))
+		local at = farmSpot(biome, items, taken)
+		table.insert(taken, at)
+		local model, root, hum = makeCharacter(proxy, at)
 		proxy.Character = model
 		table.insert(FarmBots.list, {
-			proxy = proxy, model = model, root = root, hum = hum, contest = nil, presses = 0,
+			proxy = proxy, model = model, root = root, hum = hum, contest = nil, presses = 0, biome = biome,
 			nextPunch = os.clock() + Constants.BOTS.FARM.PUNCH_EVERY * _rng:NextNumber(0.5, 1.5),
 			skip = {}, goal = nil, wait = _rng:NextNumber(0, Constants.BOTS.FARM.THINK),
 			nextSteal = os.clock() + Constants.BOTS.FARM.STEAL_EVERY * _rng:NextNumber(0.5, 1.5),

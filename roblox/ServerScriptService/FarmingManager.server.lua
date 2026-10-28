@@ -23,6 +23,7 @@ local FarmingRules       = require(ReplicatedStorage.Shared.FarmingRules)
 local Cosmetics          = require(ReplicatedStorage.Shared.Cosmetics)
 local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
 local FarmBots           = require(ServerScriptService.Modules.FarmBots)
+local FarmRescue         = require(ServerScriptService.Modules.FarmRescue)
 
 print("[FarmingManager] All requires succeeded")
 
@@ -42,15 +43,11 @@ local _active     = false
 local _itemCounter = 0   -- monotonic ID so every spawned part gets a unique key
 local _farmRound   = 0   -- item waves of an older round do nothing
 
--- Per-biome farm zone constants. Hardcoded baseY values match the surface Y
--- each MapBuilder uses for its farm ground; bounding-box inference is unreliable
--- (tall trees skew Y, water planes skew X/Z). Lifted to module scope so both
--- _spawnItems and _dropItem can resolve the correct ground Y for the active biome.
-local BIOME_ZONES = {
-	FOREST = { cx=0, cz=350, halfX=80, halfZ=120, baseY=1.0 },  -- FarmGround surface Y=1
-	OCEAN  = { cx=0, cz=375, halfX=55, halfZ=90,  baseY=5.0 },  -- FarmGrass surface Y=5 (WATER_Y+2.5+0.5)
-	SKY    = { cx=0, cz=390, halfX=35, halfZ=70,  baseY=80.0 }, -- FarmPlatform surface Y=80
-}
+-- Where the farm is, its floor and where items may land: Shared/FarmBounds
+-- (the same numbers the maps build their walls from). The old table here had
+-- farm centres at Z 350–390 (the farms are at 850 / 1850) and items were
+-- spread over the FarmArea model's bounding box, decoration included.
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
 
 -- ─── Weighted spawn pool ──────────────────────────────────────────────────────
 
@@ -93,32 +90,10 @@ local function _spawnItems(biome, count, dist, keep)
 		return
 	end
 
-	-- Derive farm area bounds from FarmSpawnPoint parts inside this biome's map.
-	-- Each MapBuilder places tagged FarmSpawnPoint Parts at the correct position
-	-- and height for their biome — using them avoids hardcoded coordinates that
-	-- break for SKY (floating platforms) and OCEAN (elevated dock/island).
-	local spawnCX, spawnCZ, halfX, halfZ, baseY
-
-	-- Always use hardcoded baseY: bounding-box Y is skewed by tall objects (barn, trees).
-	local zone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
-	baseY = zone.baseY
-
-	local farmModel = mapModel:FindFirstChild("FarmArea")
-	if farmModel then
-		-- Use bounding box only for horizontal extent (X/Z), not Y.
-		local fcf, fsize = farmModel:GetBoundingBox()
-		spawnCX = fcf.Position.X
-		spawnCZ = fcf.Position.Z
-		halfX   = math.min(fsize.X * 0.45, 80)
-		halfZ   = math.min(fsize.Z * 0.45, 150)
-	else
-		spawnCX = zone.cx
-		spawnCZ = zone.cz
-		halfX   = zone.halfX
-		halfZ   = zone.halfZ
-	end
-	print(string.format("[FarmingManager] Spawn zone biome=%s cx=%d cz=%d halfX=%d halfZ=%d baseY=%.1f",
-		tostring(biome), spawnCX, spawnCZ, halfX, halfZ, baseY))
+	-- Items land on the farm floor, inside the walls and clear of solid
+	-- scenery (FarmBounds.itemSpotOk).
+	local zone = FarmBounds.get(biome)
+	local baseY = zone.floorY
 
 	local usedPositions = {}
 	if keep then
@@ -138,11 +113,7 @@ local function _spawnItems(biome, count, dist, keep)
 		-- Find non-overlapping position (max 20 attempts)
 		local pos
 		for _ = 1, 20 do
-			local candidate = Vector3.new(
-				spawnCX + (math.random() * 2 - 1) * halfX,
-				baseY,
-				spawnCZ + (math.random() * 2 - 1) * halfZ
-			)
+			local candidate = FarmBounds.randomItemSpot(biome)
 			local ok = true
 			for _, used in ipairs(usedPositions) do
 				if (candidate - used).Magnitude < MIN_SEPARATION then
@@ -322,7 +293,7 @@ local function _dropItem(player, slotIndex, reason)
 		local gm = require(game.ServerScriptService.GameManager)
 		return gm.getBiome()
 	end)()) or "FOREST"
-	local biomeZone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
+	local biomeZone = FarmBounds.get(biome)
 
 	local char = player.Character
 	local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -337,9 +308,11 @@ local function _dropItem(player, slotIndex, reason)
 		look = look.Magnitude > 1e-3 and look.Unit or Vector3.new(0, 0, -1)
 		local side = Vector3.new(-look.Z, 0, look.X)
 		local at = root.Position + look * Constants.DROP_TOSS + side * (math.random() * 2 - 1) * 1.5
-		spawnPos = Vector3.new(at.X, biomeZone.baseY, at.Z)
+		-- never past the farm's walls (a drop next to one stays inside)
+		local x, z = FarmBounds.clamp(biome, at.X, at.Z)
+		spawnPos = Vector3.new(x, biomeZone.floorY, z)
 	else
-		spawnPos = Vector3.new(0, biomeZone.baseY, 0)
+		spawnPos = Vector3.new(biomeZone.cx, biomeZone.floorY, biomeZone.cz)
 	end
 
 	local mapName  = biome:sub(1,1):upper() .. biome:sub(2):lower() .. "Map"
@@ -469,6 +442,41 @@ end
 -- With a full inventory the weakest item is swapped out here, when the new
 -- item is really handed over (it used to be dropped before the distance and
 -- contest checks, so a refused pickup or a lost contest cost an item).
+-- A picked-up item model moves (anchored parts, translated like the spawn
+-- placement) into the picker's hands over PICKUP_FLY s, then is destroyed.
+local function _flyToHands(model, root)
+	model.Name = "PickedUp"
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") then d.Anchored, d.CanCollide, d.CanQuery, d.CanTouch = true, false, false, false
+		elseif d:IsA("ProximityPrompt") or d:IsA("BillboardGui") then d:Destroy() end
+	end
+	if not root then model:Destroy() return end
+	local T = Constants.PICKUP_FLY
+	task.spawn(function()
+		-- a fixed number of frames (not the wall clock: a busy server, or the
+		-- offline mock, would stretch it)
+		local frames = math.max(1, math.ceil(T * 60))
+		local i = 0
+		while model.Parent and root.Parent do
+			i += 1
+			local k = math.min(1, i / frames)
+			local ok, cf = pcall(function() return model:GetBoundingBox() end)
+			if not ok then break end
+			local hands = root.Position + root.CFrame.LookVector * 1.2 + Vector3.new(0, 0.8 + 1.5 * k, 0)
+			local step = (hands - cf.Position) * math.min(1, k * 0.6 + 0.25)
+			for _, d in ipairs(model:GetDescendants()) do
+				if d:IsA("BasePart") then
+					d.CFrame = d.CFrame + step
+					d.Transparency = math.max(d.Transparency, k * k)
+				end
+			end
+			if k >= 1 then break end
+			RunService.Heartbeat:Wait()
+		end
+		model:Destroy()
+	end)
+end
+
 local function _giveItem(player, itemId)
 	local data = SessionManager.getData(player)
 	local item = _items[itemId]
@@ -483,10 +491,11 @@ local function _giveItem(player, itemId)
 	item.taken = true
 	table.insert(data.inventory, item.itemName)
 
-	-- Stop idle animation then destroy full model
+	-- Stop the idle animation; the item flies into the picker's hands
+	-- (playtest 2026-10-29: items just vanished, no pick-up motion), then goes.
 	if item.model then
 		ItemVisualUpgrader.stopIdle(item.model)
-		item.model:Destroy()
+		_flyToHands(item.model, player.Character and player.Character:FindFirstChild("HumanoidRootPart"))
 	else
 		item.part:Destroy()
 	end
@@ -882,6 +891,13 @@ local function _punch(attacker, hintId)
 	end
 	local vRoot = _root(victim)
 	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK or Vector3.zero
+	-- a farm bot is pushed here (a player's own client pushes them, FarmFx):
+	-- a hit must visibly land, not bounce off a statue
+	if vRoot and SessionManager.isBot(victim) and (result == "hit" or result == "knockout") then
+		pcall(function()
+			vRoot.AssemblyLinearVelocity += push * F.BOT_KNOCKBACK + Vector3.new(0, F.KNOCK_UP, 0)
+		end)
+	end
 	RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, victim.UserId, {
 		style = _moveStyle(attacker),
 		result = result, hits = (result == "knockout") and F.HITS_TO_DROP or hits, needed = F.HITS_TO_DROP,
@@ -922,6 +938,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		local n = humans + FarmBots.wanted(humans, GameManager.getHarness())
 		local first = _spawnItems(biome, Constants.farmSupply(n))
 		-- Bots fill an empty farm (live servers; harness `fillBots`)
+		FarmRescue.start(biome)   -- nobody leaves the farm (Shared/FarmBounds)
 		FarmBots.start(biome, {
 			items = function() return _items, _contests end,
 			pickup = _requestPickup, contestPress = _contestPress, punch = _punch, defend = _defend,
@@ -944,10 +961,12 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end)())
 
 	elseif phase == Constants.PHASES.LOBBY then
+		FarmRescue.stop()
 		FarmBots.clear()
 	elseif phase == Constants.PHASES.CRAFTING then
 		_active = false
 		_contests = {}
+		FarmRescue.stop()
 		FarmBots.stop()
 		-- fights end with the phase: drop guards and hit counts
 		for _, p in ipairs(SessionManager.actors()) do
