@@ -370,7 +370,9 @@ local function act(action, id)
 	local r = res.result or "?"
 	if r == "ok" then
 		msgLbl.Text = ""
-		if action == "buy" then SoundFx.play("CRAFT_COMPLETE") else SoundFx.play("SLOT_ASSIGN") end
+		-- a buy or an equip clicks; opening the shop ("state") is silent
+		-- (playtest 2026-10-28: a loud sound every time the shop opened)
+		if action == "buy" then SoundFx.play("CRAFT_COMPLETE") elseif action == "equip" then SoundFx.play("SLOT_ASSIGN") end
 	elseif r == "denied: coins" then
 		msgLbl.Text = "Not enough coins: win races and come back daily for more"
 	elseif r:sub(1, 14) == "denied: level " then

@@ -30,7 +30,8 @@ SoundConfig.BGM = {
 	-- as game music (titles "Happy Game", "Fun Arcade", "The Racing Game"),
 	-- chiptune for SKY. Still picked by title: in a Studio playtest [ / ]
 	-- plays the other candidates in SoundConfig.TRY (SoundClient).
-	LOBBY = { id = "rbxassetid://1839406050", volume = 0.5, looped = true },        -- Happy Game (APM, Yannick Kalfayan)
+	-- lobby: casual, laid back (playtest 2026-10-28: "Happy Game" was too busy)
+	LOBBY = { id = "rbxassetid://122548743506590", volume = 0.45, looped = true },  -- Playful Whistling Swing (APM)
 	FARMING = {
 		FOREST = { id = "rbxassetid://1843599021", volume = 0.5, looped = true },   -- Fun Arcade (APM)
 		OCEAN  = { id = "rbxassetid://1838029319", volume = 0.5, looped = true },   -- Food Tray Fight (a) (APM)
@@ -51,9 +52,11 @@ SoundConfig.BGM = {
 local function T(id, title) return { id = id, title = title } end
 SoundConfig.TRY = {
 	LOBBY = {
-		T("1839406050", "Happy Game (APM)"), T("1839404385", "Happy Game alt (APM)"),
-		T("133710918293530", "Rainbow Slide"), T("105774799756277", "Bubblegum Supercluster"),
-		T("9045344810", "Bouncy Vision (APM)"), T("1838029718", "Kids At Gigs (APM)"),
+		T("122548743506590", "Playful Whistling Swing (APM)"), T("133462395737742", "Cheerful Whistling Swing (APM)"),
+		T("117904207848395", "Hyper Casual Sports Game Theme"), T("70502914416994", "Casual Gamer"),
+		T("9047158085", "Little Rascals A (APM)"), T("1839627176", "Cute Moments (APM)"),
+		T("9046270989", "Playful Penguins C (APM)"), T("9038818729", "Lucky And Carefree C (APM)"),
+		T("1837480547", "Easy Going (APM)"), T("1839406050", "Happy Game (APM)"),
 	},
 	FARMING = {
 		T("1843599021", "Fun Arcade (APM)"), T("1838029319", "Food Tray Fight (APM)"),

@@ -60,6 +60,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   stretched over the footprint (at least `VehicleDesign.RIDE_MIN`, so the
   rider does not hide it; wheels / motor, mast and sail / wings, prop and
   tail stay); seat and `onRide` mounts sit on the item's real top.
+  Riding, a plane's wings shrink to the item (`RIDE_WING_OVER`) and go
+  grey (`ride.recolor`) so the item, not the default plane, shows.
   `VehicleDesign.RIDE_LOOK` fixes items that ride wrong by default (facing,
   lying down, seat sunk into a tub or onto cushions). Some ENGINE / SPECIAL
   items are rideable too (ItemConfig `ride` = weight and grip as a body;
@@ -342,9 +344,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `BiomeConfig.waterPlaneY` (+ flood offset) unless a dock is higher
   (`TrackDrops` groundY). waveFlood raises a see-through
   `FloodSurface` sheet only while the sea is up.
+- Item guide: `StarterGui/ItemGuideUI` (📖 ITEMS / J, every phase but
+  RACING) lists every item by slot with its `ItemBlurbs` line; the first
+  pickup of an item in a session shows a NEW card (ItemPickedUp carries
+  `item`). A new item needs its ItemBlurbs line (the guide shows it).
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
-  hold Q emotes, B shop. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
+  hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
   H / F1 opens all. RACING shows no guide toast: the keys are on the
   strip, the objective and tips in RacingClient's RACE START banner under
   the 3-2-1 (the three used to pile up mid-screen).

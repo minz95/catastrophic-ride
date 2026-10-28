@@ -395,6 +395,11 @@ spot with its track section; the RESULTS report lists them per section.
   level stretch 230 studs back (same height) and steered round. The GO air
   horn and the crash thud on every bump became a beep and a soft pop; the
   yellow farm-spawn markers are hidden.
+- **2026-10-28 — Learn the items by playing.** An item guide (J) lists what
+  every item does; the first pickup of each item says it on a card. Ridden
+  items are bigger (RIDE_MIN) and a ridden plane's wings shrink and go grey:
+  players saw "the default car with the item pasted on". Lobby music is
+  casual (whistling swing); opening the shop is silent.
 
 ## Open questions (from the reports, not decided)
 
