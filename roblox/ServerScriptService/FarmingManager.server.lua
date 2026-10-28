@@ -498,6 +498,7 @@ local function _giveItem(player, itemId)
 	RemoteEvents.ItemPickedUp:FireAllClients(itemId, player.UserId, {
 		rarity = item.rarity,
 		userId = player.UserId,
+		item = item.itemName,   -- ItemGuideUI: what a new item does
 	})
 	_fireClient(RemoteEvents.InventoryUpdated, player, data.inventory)
 	return true

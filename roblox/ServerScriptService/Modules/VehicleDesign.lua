@@ -70,10 +70,12 @@ VehicleDesign.RIDE_LOOK = {
 	["Treadmill"]     = { stretch = 2.0 },                         -- narrow: the rider hid it
 }
 
+-- Playtest 2026-10-28: still too small next to the rider (and a plane's
+-- wings outshone it): "the item is pasted on the default car". Bigger now.
 VehicleDesign.RIDE_MIN = {
-	FOREST = Vector3.new(3.6, 0, 5.2),
-	OCEAN  = Vector3.new(3.4, 0, 5.6),
-	SKY    = Vector3.new(3.0, 2.0, 5.0),
+	FOREST = Vector3.new(4.2, 0, 6.0),
+	OCEAN  = Vector3.new(4.0, 0, 6.2),
+	SKY    = Vector3.new(3.6, 2.4, 5.8),
 }
 
 VehicleDesign.PALETTE = {
@@ -501,10 +503,29 @@ local function plane(stats)
 		box = V3(math.max(R * 3.2, VehicleDesign.RIDE_MIN.SKY.X), math.max(R * 3.0, VehicleDesign.RIDE_MIN.SKY.Y),
 			math.max(L + 1.0, VehicleDesign.RIDE_MIN.SKY.Z)), bottom = -R * 1.2, centreZ = 0,
 		lift = { "Fin", "Stabilizer" }, liftFrom = R,
-		-- once placed: the propellers out past the item's sides, on the wing
+		-- the wings and tail stay grey: the purple default wings, wider than
+		-- the item, made it look like the default plane with something on it
+		recolor = { Wing = "metal", WingTipL = "metal", WingTipR = "metal", Stabilizer = "metal", Fin = "metal",
+			NacelleL = "metal", NacelleR = "metal" },
+		-- once placed: the wing only a little wider than the item, the
+		-- propellers out past the item's sides, on the wing
 		fit = function(dd, lo, hi)
 			local halfW = math.max(-lo.X, hi.X)
-			local x = math.clamp(halfW + propD / 2 + 0.15, propX, span / 2 - 0.2)
+			local rideSpan = math.clamp(2 * halfW + VehicleDesign.RIDE_WING_OVER * 2, 3.4, span)
+			for _, p in ipairs(dd.parts) do
+				local side = (p.name:sub(-1) == "L") and -1 or 1
+				if p.name == "Wing" then
+					p.size = V3(rideSpan, p.size.Y, p.size.Z)
+				elseif p.name == "WingTipL" or p.name == "WingTipR" then
+					p.cf = CF(side * (rideSpan / 2 - 0.15), p.cf.Position.Y, p.cf.Position.Z)
+				elseif p.name == "NavLightL" or p.name == "NavLightR" then
+					p.cf = CF(side * (rideSpan / 2 - 0.05), p.cf.Position.Y, p.cf.Position.Z)
+				elseif p.name == "Stabilizer" then
+					p.size = V3(math.min(p.size.X, rideSpan * 0.45), p.size.Y, p.size.Z)
+				end
+			end
+			span = rideSpan
+			local x = math.clamp(halfW + propD / 2 + 0.15, math.min(propX, span / 2 - 0.2), span / 2 - 0.2)
 			if dd.mounts.MOBILITY and #dd.mounts.MOBILITY > 0 then dd.mounts.MOBILITY = props(x) end
 			for _, p in ipairs(dd.parts) do
 				if p.name == "NacelleL" or p.name == "NacelleR" then
@@ -548,6 +569,8 @@ function VehicleDesign.layout(biome, stats, slots)
 		for _, p in ipairs(d.parts) do
 			if lift[p.name] then p.lift = true end
 			if ride.move and ride.move[p.name] then p.cf = ride.move[p.name] end
+			-- parts that stay (to say plane) but should not outshine the item
+			if ride.recolor and ride.recolor[p.name] then p.color = ride.recolor[p.name] end
 		end
 		local look = VehicleDesign.RIDE_LOOK[slots.BODY] or {}
 		d.mounts.BODY = { { cf = CF(0, ride.bottom + ride.box.Y / 2, ride.centreZ), box = ride.box, align = "bottom",
@@ -597,6 +620,8 @@ end
 -- How far a ridden item may be stretched beyond its own proportions along
 -- one axis to fill the vehicle's footprint.
 VehicleDesign.RIDE_STRETCH = 1.4
+-- A ridden plane's wing reaches this far past the item on each side.
+VehicleDesign.RIDE_WING_OVER = 1.6
 
 --- Colour for a part's role.
 function VehicleDesign.color(d, role)
