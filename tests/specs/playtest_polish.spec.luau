@@ -61,6 +61,32 @@ R.describe("a ridden item is the vehicle (playtest: 'pasted on the default car')
 	local VS = env2.requirePath("ReplicatedStorage.Shared.VehicleStats")
 	local VD = env2.requirePath("ServerScriptService.Modules.VehicleDesign")
 	local IC = env2.requirePath("ReplicatedStorage.Shared.ItemConfig")
+	R.it("a ridden item lies nose-forward (playtest 2026-10-29: rockets and the duck rode backwards)", function()
+		local Mock = require("../lib/mock")
+		local SS = env2.game:GetService("ServerStorage")
+		-- where the template's `axis` (its own up for a lying item, its own
+		-- +X for the duck, whose head is +X in the mesh) ends up on the vehicle
+		local function dirOf(item, axis, biome)
+			local m = VB.build(VS.calculate(IC[item], nil, nil, biome), biome, roblox.CFrame.new(), { BODY = item })
+			local holder = m:FindFirstChild("Item_BODY_" .. item, true)
+			local a
+			for _, p in ipairs(holder:GetDescendants()) do if p:IsA("BasePart") then a = p break end end
+			local b
+			for _, p in ipairs(SS.ItemModels:FindFirstChild(item):GetDescendants()) do
+				if p:IsA("BasePart") and p.Name == a.Name then b = p break end
+			end
+			local ca, cb = Mock.props(a).CFrame, Mock.props(b).CFrame
+			return ca:VectorToWorldSpace(cb:VectorToObjectSpace(axis))
+		end
+		for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
+			for _, item in ipairs({ "Rocket", "Soda Bottle" }) do
+				R.expect(dirOf(item, roblox.Vector3.new(0, 1, 0), biome).Z).toBeLessThan(-0.9)
+			end
+			-- Studio gallery: the duck's head looked back with a +90° turn
+			R.expect(VD.RIDE_LOOK["Rubber Duck"].yaw).toBe(-90)
+		end
+	end)
+
 	R.it("a ridden plane's wings are grey and only a little wider than the item", function()
 		local plain = VB.build(VS.calculate(IC.Pizza, nil, nil, "SKY"), "SKY", roblox.CFrame.new(), {})
 		local m = VB.build(VS.calculate(IC.Pizza, nil, nil, "SKY"), "SKY", roblox.CFrame.new(), { BODY = "Pizza" })

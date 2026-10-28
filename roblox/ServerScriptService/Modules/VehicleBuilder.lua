@@ -144,8 +144,12 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop,
 		-- orient: the way round that comes out biggest (upright unless lying
 		-- down or turning gains a quarter): a kite becomes a flying carpet
 		local turn = CFrame.new()
+		-- lying an item down puts its top to the FRONT (-Z): a rocket's nose,
+		-- a bottle's neck. Playtest 2026-10-29: +90° laid every rocket
+		-- nose-backwards ("the body does not face forward").
+		local TIP = -math.pi / 2
 		if mount.tip then
-			turn = CFrame.Angles(math.pi / 2, 0, 0)
+			turn = CFrame.Angles(TIP, 0, 0)
 			size = Vector3.new(size.X, size.Z, size.Y)
 		end
 		if mount.yaw then
@@ -169,8 +173,8 @@ local function placeItem(itemName, mountCF, mount, model, chassis, slot, minTop,
 		if mount.orient then
 			local options = {
 				{ CFrame.Angles(0, math.pi / 2, 0), Vector3.new(size.Z, size.Y, size.X), 1.0 },
-				{ CFrame.Angles(math.pi / 2, 0, 0), Vector3.new(size.X, size.Z, size.Y), 1.25 },
-				{ CFrame.Angles(0, math.pi / 2, 0) * CFrame.Angles(math.pi / 2, 0, 0), Vector3.new(size.Y, size.Z, size.X), 1.25 },
+				{ CFrame.Angles(TIP, 0, 0), Vector3.new(size.X, size.Z, size.Y), 1.25 },
+				{ CFrame.Angles(0, math.pi / 2, 0) * CFrame.Angles(TIP, 0, 0), Vector3.new(size.Y, size.Z, size.X), 1.25 },
 			}
 			local best = base
 			for i, o in ipairs(options) do

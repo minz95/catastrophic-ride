@@ -68,6 +68,9 @@ VehicleDesign.RIDE_LOOK = {
 	["Toilet Paper"]  = { yaw = 0, tip = true },
 	["Kite"]          = { yaw = 0, tip = true },                   -- flat, a flying carpet (stood on its edge)
 	["Treadmill"]     = { stretch = 2.0 },                         -- narrow: the rider hid it
+	-- the quarter turn that lays it along the vehicle put its head at the
+	-- back (Studio gallery 2026-10-29): the other quarter turn
+	["Rubber Duck"]   = { yaw = -90 },
 }
 
 -- Playtest 2026-10-28: still too small next to the rider (and a plane's

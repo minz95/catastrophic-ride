@@ -430,6 +430,23 @@ spot with its track section; the RESULTS report lists them per section.
   of tight corners and 40 studs past them (a sliding car cannot see one).
   Sky's planes still do not drift (`isSky`).
 
+- **2026-10-29 — Things that looked broken were drawn wrong.** "The plane
+  does not face forward" / "the boat feels like it goes backwards": Studio
+  (record-sky, bots-ocean, BotDriver `drive`) measured travel within 1.3° /
+  3.5° of the nose and no frame moving backwards; the ridden item was the
+  problem. Laying an item down turned its top to the back, so every Rocket
+  and Soda Bottle rode nose-backwards, and the quarter turn that lays the
+  Rubber Duck along the vehicle put its head at the back. Items now lie
+  top-forward. The bangs were two user uploads, one literally titled
+  "Explosion", on every pickup, slot and item use; all effects are now
+  catalogue blips, chimes and pops. Bots shooting up: two farm bots that
+  robbed each other walked into each other and physics threw both ~30 up
+  (twice in two Studio runs); bots no longer collide with each other. A
+  boat that left the lane floated on the open sea forever (no fall rule
+  saw it): off-lane respawn. Punches got a wind-up, a hold, a flash and a
+  view kick, bots are pushed when hit, items fly into the picker's hands,
+  and ENGINE / SPECIAL / TAIL items are big enough to see.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

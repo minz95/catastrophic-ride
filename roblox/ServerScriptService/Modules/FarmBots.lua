@@ -26,6 +26,7 @@ FarmBots.ID_BASE = -100000   -- the same ids RaceBots uses: bot k is ID_BASE - k
 FarmBots.list = {}           -- { proxy, model, root, hum, ... }
 -- Offline tests have no physics: walk by moving the root (set by specs).
 FarmBots.kinematic = false
+FarmBots.GROUP = "FarmBot"   -- collision group: bots pass through each other
 FarmBots.paused = false      -- specs: bots stand still
 
 local _conn = nil
@@ -114,6 +115,22 @@ local function makeCharacter(proxy, at)
 		pcall(function() hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer end)
 	end
 	local root = model:FindFirstChild("HumanoidRootPart")
+	-- Bots do not collide with each other (they still meet players and the
+	-- world). Studio 2026-10-29 (bots-ocean, record-sky): two bots that
+	-- robbed each other walked into each other, one stood on the other and
+	-- physics threw both ~30 studs up ("bots shoot into the sky").
+	local grouped = pcall(function()
+		local PhysicsService = game:GetService("PhysicsService")
+		if not PhysicsService:IsCollisionGroupRegistered(FarmBots.GROUP) then
+			PhysicsService:RegisterCollisionGroup(FarmBots.GROUP)
+		end
+		PhysicsService:CollisionGroupSetCollidable(FarmBots.GROUP, FarmBots.GROUP, false)
+	end)
+	if grouped then
+		for _, p in ipairs(model:GetDescendants()) do
+			if p:IsA("BasePart") then p.CollisionGroup = FarmBots.GROUP end
+		end
+	end
 	model:PivotTo(CFrame.new(at))
 	model.Parent = workspace
 	if root then pcall(function() root:SetNetworkOwner(nil) end) end

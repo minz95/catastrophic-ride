@@ -68,6 +68,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   tail stay); seat and `onRide` mounts sit on the item's real top.
   Riding, a plane's wings shrink to the item (`RIDE_WING_OVER`) and go
   grey (`ride.recolor`) so the item, not the default plane, shows.
+  An item laid down (tip / orient) puts its top to the front (a rocket's
+  nose; the old +90° rode them backwards); the spec checks Rocket and
+  Soda Bottle.
   `VehicleDesign.RIDE_LOOK` fixes items that ride wrong by default (facing,
   lying down, seat sunk into a tub or onto cushions). Some ENGINE / SPECIAL
   items are rideable too (ItemConfig `ride` = weight and grip as a body;
@@ -404,6 +407,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Bots are SessionManager proxies (`SessionManager.addBot`, `bots()`,
   `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
   Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
+  collision group `FarmBot`: bots pass through each other, two that met
+  were flung ~30 up;
   `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /
   punch / guard / steal / defend functions (they keep a bag slot free to rob
   someone), then race the auto craft of their bag and fire its abilities
