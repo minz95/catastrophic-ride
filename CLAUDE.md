@@ -154,7 +154,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   A seated player's avatar is massless and collides with nothing
   (`Modules/RiderGhost`, every race seat), like a bot's rider: only the
   chassis meets the world (a bot touching the avatar used to be a wall). Never push a race
-  car with a second BodyVelocity (it fights `DriveVelocity`).
+  car with a second BodyVelocity (it fights `DriveVelocity`; SKY gusts did:
+  cars stuck and slid back). Gusts (HazardManager) are sideways knocks to
+  players and race bots (`HAZARDS.GUST_KNOCK_PER_FORCE`).
+- The race camera is RacingClient's alone (`_updateCamera`, behind the
+  chassis' LookVector, which is the nose of car, boat and plane).
+  `Modules/CameraController` leaves RACING alone: a second chase cam there
+  aimed SKY along RightVector and the view sat ~45° off the plane. Studio
+  bot matches report `camera` (camera vs nose angle).
 - Drift: one rule, `VehicleController.updateDrift`, for RacingClient,
   RaceSim and the offline sim. While sliding the car travels along
   `state.travelYaw`, so `actualForward` must be measured along
@@ -211,7 +218,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   target in reach, sets the LocalPlayer attribute `PunchAt` (FarmFx swings,
   whooshes, lunges) and sends that target as RequestPunch's aim hint
   (taken within RANGE and `FIGHT.ASSIST_ARC`). The echo then draws only
-  the hit (POW!). The equipped move's style reaches the client as the
+  the hit (POW!). Harness bots punch the same way (PunchAt) and report
+  `ownPunch` / `ownKick`. The equipped move's style reaches the client as the
   player attribute `MoveStyle` (ShopHat.refresh).
 - Crafting slots: the screen places an item only where
   `CraftingRules.fits` (else `CraftingRules.whyNot` on the info line);
@@ -246,6 +254,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the car's Y to `TrackGeometry:project` / `progressAt`,
   `RaceProgress.progress` / `respawnPoint` and `Autopilot` state, or a
   road passing over itself (FOREST's spiral) is read on the wrong layer.
+  `project` takes a stretch under the car (lane + LAYER_REACH) within
+  LAYER_GAP of its height, else the one under it nearest in height (a
+  lifted plane once read a stretch 230 studs back and turned round).
   Build things on the road with `TrackKit:segCF` / `trackCF` (they follow
   the height). Suspension rays use `RespectCanCollide = true` (track drops
   do not: OCEAN's water is not solid). Boats (OCEAN) and flyers (SKY)
@@ -263,7 +274,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `python3 tools/studio/sim.py run sounds` (`--set search=[…]` searches
   the Creator Store). Every sound plays through a SoundGroup
   (`SoundConfig.GROUPS`: Music, Ambience, Effects); music stays well under
-  the effects and the 🎵 button (SoundClient) mutes it.
+  the effects and the 🎵 button (SoundClient) mutes it. In a Studio
+  playtest `[` / `]` switch the music through `SoundConfig.TRY` (the
+  phase's candidates; Output prints `[MusicTry] …`) so a person can pick
+  by ear; live games never run it. No bangs: GO is a high countdown beep,
+  a bump a soft pop at most every `SoundConfig.COLLISION_GAP` s. FarmSpawnPoint
+  parts are invisible markers.
 - Saved progress: `Modules/PlayerStore` (DataStore) holds each player's
   record; `Shared/Progression` the rules (levels, coins, daily streak);
   `ProgressionManager` pays at RESULTS (`RemoteEvents.RewardGranted`,

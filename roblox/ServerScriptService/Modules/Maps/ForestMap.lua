@@ -181,8 +181,9 @@ local function _buildFarmArea(root)
 			local sp = _part(root, {
 				Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
 				Position = Vector3.new(FARM_CX + cx, 1.5, rz),
-				Color = Color3.fromRGB(255, 220, 60), Material = MAT.NEON,
-				CanCollide = false, CastShadow = false, Transparency = 0.5,
+				-- a marker for item spawns and farm spawns, never seen (playtest
+				-- 2026-10-28: yellow plates floating round the farm)
+				CanCollide = false, CastShadow = false, Transparency = 1, CanQuery = false, CanTouch = false,
 			})
 			_tag(sp, "FarmSpawn")
 		end

@@ -382,6 +382,19 @@ spot with its track section; the RESULTS report lists them per section.
   an item a slot cannot take and says why (Body took anything and the
   server dropped it). Music plays through its own quieter group with a
   🎵 mute button, and the tracks are cheerful, bouncy game music.
+- **2026-10-28 — The diagonal plane was the camera.** Two chase cams ran in
+  every race (RacingClient and an old CameraController loop); in SKY the old
+  one aimed along RightVector (a cylinder fuselage long gone) and the view
+  settled ~45° off the plane, so it looked to fly sideways and steering felt
+  wrong. One camera now. SKY gusts pushed with a second BodyVelocity held at
+  the car's old velocity plus a push in any direction (backwards too): cars
+  stuck, slid back and juddered for 2 s, and bots were never pushed. They
+  are sideways knocks for everyone. Music can be tried by ear in Studio
+  ([ / ]) because nobody choosing ids here can hear them. The dive's stall
+  after the updraft: a plane lifted 15 over the road was placed on the
+  level stretch 230 studs back (same height) and steered round. The GO air
+  horn and the crash thud on every bump became a beep and a soft pop; the
+  yellow farm-spawn markers are hidden.
 
 ## Open questions (from the reports, not decided)
 

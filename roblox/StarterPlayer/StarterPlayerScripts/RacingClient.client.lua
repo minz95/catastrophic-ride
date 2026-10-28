@@ -827,11 +827,15 @@ end)
 
 -- ─── Camera follow ────────────────────────────────────────────────────────────
 
+-- The only race camera (Modules/CameraController leaves racing alone):
+-- behind the chassis' nose (LookVector is the nose for car, boat and plane
+-- alike), a little further back and higher at speed.
 local function _updateCamera()
 	if not _vehicle or not _vehicle.PrimaryPart then return end
 	local primary = _vehicle.PrimaryPart
 	local lookDir = primary.CFrame.LookVector
-	local camPos  = primary.Position - lookDir * 12 + Vector3.new(0, 5, 0)
+	local vel     = primary.AssemblyLinearVelocity.Magnitude
+	local camPos  = primary.Position - lookDir * (12 + vel * 0.04) + Vector3.new(0, 5 + vel * 0.02, 0)
 	Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(camPos, primary.Position + Vector3.new(0, 1.5, 0)), 0.12)
 end
 

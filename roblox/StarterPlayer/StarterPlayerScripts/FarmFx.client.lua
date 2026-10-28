@@ -416,7 +416,24 @@ local function punchNow()
 	local c = LocalPlayer.Character
 	if not c then return end
 	_predictedAt = os.clock()
-	if LocalPlayer:GetAttribute("MoveStyle") == "kick" then kick(c) else swing(c) end
+	local isKick = LocalPlayer:GetAttribute("MoveStyle") == "kick"
+	local swung = if isKick then kick(c) else swing(c)
+	if LocalPlayer:GetAttribute("HarnessBot") then
+		-- Studio harness: our own swing (the F path) really posed the joint
+		local h = joint(c, isKick and "rightLeg" or "right")
+		local posedMax, t0, conn = 0, os.clock(), nil
+		conn = RunService.Heartbeat:Connect(function()
+			if h then
+				local a, b = h.obj[h.prop], _base[h.obj]
+				posedMax = math.max(posedMax, math.deg(math.acos(math.clamp(a.UpVector:Dot(b.UpVector), -1, 1))))
+			end
+			if os.clock() - t0 > 0.4 then
+				conn:Disconnect()
+				report("farmfx", { what = isKick and "ownKick" or "ownPunch", drawn = swung and posedMax > 60,
+					posed = math.floor(posedMax), joint = h and h.prop })
+			end
+		end)
+	end
 	SoundFx.play("PUNCH_SWING")
 	local root = c:FindFirstChild("HumanoidRootPart")
 	if root then

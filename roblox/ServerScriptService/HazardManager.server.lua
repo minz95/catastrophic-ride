@@ -140,24 +140,36 @@ end
 
 -- ─── gustZone ─────────────────────────────────────────────────────────────────
 
+-- Each pulse is a sideways knock (left or right of each car's nose, one side
+-- per gust) sent to its driver, players through RemoteEvents.CarImpact and
+-- race bots through RaceBots.knock, like every other shove.
+-- History (2026-10-28): gusts pushed with a second BodyVelocity set to the
+-- car's velocity at that moment + a random push (any direction, backwards
+-- too). It fought DriveVelocity for 2 s: cars stuck, slid back and juddered,
+-- and only players were pushed, never the bots.
 local function _gust(hz, _, id)
-	local angle = math.random() * math.pi * 2
-	local dir = Vector3.new(math.cos(angle), 0, math.sin(angle))
-	local push = (hz.force or 150) * H.GUST_PUSH_PER_FORCE
+	local side = math.random() < 0.5 and -1 or 1     -- -1 = left of the nose
+	local push = (hz.force or 150) * H.GUST_KNOCK_PER_FORCE
 	RemoteEvents.ScreenEffect:FireAllClients("gust", { duration = H.GUST_DURATION })
-	Telemetry.record("hazard", { type = "gustZone", angle = math.floor(math.deg(angle)) })
+	Telemetry.record("hazard", { type = "gustZone", side = side, push = push })
+	local RaceBots = require(ServerScriptService.Modules.RaceBots)
 	local t = 0
 	while t < H.GUST_DURATION and _alive(id) do
-		for _, player in ipairs(Players:GetPlayers()) do
-			local d = SessionManager.getData(player)
-			local primary = d and d.vehicleModel and d.vehicleModel.PrimaryPart
+		for _, actor in ipairs(SessionManager.actors()) do
+			local d = SessionManager.getData(actor)
+			local primary = d and not d.finishTime and d.vehicleModel and d.vehicleModel.PrimaryPart
 			if primary then
-				local bv = Instance.new("BodyVelocity")
-				bv.Name = "GustPush"
-				bv.Velocity = primary.AssemblyLinearVelocity + dir * push
-				bv.MaxForce = Vector3.new(1e4, 0, 1e4)
-				bv.Parent = primary
-				Debris:AddItem(bv, H.GUST_PULSE * 0.8)
+				local look = primary.CFrame.LookVector
+				local flat = Vector3.new(look.X, 0, look.Z)
+				if flat.Magnitude > 1e-3 then
+					local right = Vector3.new(-flat.Z, 0, flat.X).Unit   -- right of the nose
+					local k = right * side * push
+					if SessionManager.isBot(actor) then
+						RaceBots.knock(actor.UserId, k.X, k.Z, 0)
+					else
+						RemoteEvents.CarImpact:FireClient(actor, k.X, k.Z, 0, 0)
+					end
+				end
 			end
 		end
 		task.wait(H.GUST_PULSE)

@@ -152,10 +152,28 @@ R.describe("hazards", function()
 		R.expect(srv.mock.errors).toBeEmpty("errors")
 	end)
 
-	R.it("SKY gusts push racers sideways", function()
+	R.it("SKY gusts knock racers sideways through CarImpact, never with a BodyVelocity", function()
 		local srv, model = hazardServer("SKY")
-		srv.advance(10.1)
-		R.expect(model.PrimaryPart:FindFirstChild("GustPush") ~= nil).toBe(true)
+		srv.advance(10.6)
+		-- a second BodyVelocity fought DriveVelocity: stuck, sliding back
+		for _, d in ipairs(model.PrimaryPart:GetChildren()) do
+			R.expect(d.ClassName == "BodyVelocity" and d.Name ~= "DriveVelocity").toBe(false)
+		end
+		local look = model.PrimaryPart.CFrame.LookVector
+		local n, side = 0, nil
+		for _, c in ipairs(rawget(srv.RemoteEvents.CarImpact, "_calls") or {}) do
+			if c.method == "FireClient" and c.args[1] == srv.players[1] then
+				local dx, dz = c.args[2], c.args[3]
+				n += 1
+				-- sideways: nothing along the nose, the same side every pulse
+				R.expect(math.abs(dx * look.X + dz * look.Z)).toBeLessThan(1e-3)
+				local s = (look.X * dz - look.Z * dx) > 0 and 1 or -1
+				side = side or s
+				R.expect(s).toBe(side)
+				R.expect(math.sqrt(dx * dx + dz * dz)).toBeLessThan(10)
+			end
+		end
+		R.expect(n).toBeGreaterThan(0)
 		R.expect(srv.mock.errors).toBeEmpty("errors")
 	end)
 end)

@@ -24,6 +24,9 @@ TrackGeometry.__index = TrackGeometry
 
 -- Two stretches of road more than this far apart in Y are different layers.
 TrackGeometry.LAYER_GAP = 10
+-- project(): a stretch counts as "under the car" up to this far outside its
+-- lane (seen from above).
+TrackGeometry.LAYER_REACH = 10
 
 function TrackGeometry.new(nodes, width, baseY)
 	assert(#nodes >= 2, "TrackGeometry.new: need at least 2 nodes")
@@ -104,19 +107,42 @@ function TrackGeometry:project(x, z, hintSeg, window, y)
 	end
 	local layered = y ~= nil and self.hasHeights
 	local best
-	for pass = 1, layered and 2 or 1 do
+	if layered then
+		-- the layer the car is on: a stretch under it (within the lane plus
+		-- LAYER_REACH, seen from above) within LAYER_GAP of its height,
+		-- nearest first; if none, the stretch under it nearest in height
+		-- (a car lifted high over its road).
+		-- History (2026-10-28): any stretch within LAYER_GAP in height
+		-- counted, however far away. A SKY plane lifted 15 by the dive's
+		-- updraft was read on the level stretch 230 studs back; bots steered
+		-- round towards it and stalled against the fence.
+		local reach = self.halfWidth + TrackGeometry.LAYER_REACH
+		local closest, closestDy
 		for i = lo, hi do
 			local seg = self.segments[i]
 			local t, cx, cz, dist = projectOnSegment(seg, x, z)
-			-- first pass: only the layer the car is on
-			if pass == 1 and layered and math.abs(self:segHeight(i, t) - y) > TrackGeometry.LAYER_GAP then
-				continue
+			if dist <= reach then
+				local dy = math.abs(self:segHeight(i, t) - y)
+				local cand = { seg = i, t = t, cx = cx, cz = cz, dist = dist }
+				if dy <= TrackGeometry.LAYER_GAP and (not best or dist < best.dist - 1e-9) then
+					best = cand
+				end
+				if not closest or dy < closestDy - 1e-6 then
+					closest, closestDy = cand, dy
+				end
 			end
+		end
+		best = best or closest
+	end
+	if not best then
+		-- off every lane (or a flat track): the nearest point
+		for i = lo, hi do
+			local seg = self.segments[i]
+			local t, cx, cz, dist = projectOnSegment(seg, x, z)
 			if not best or dist < best.dist - 1e-9 then
 				best = { seg = i, t = t, cx = cx, cz = cz, dist = dist }
 			end
 		end
-		if best then break end
 	end
 	local seg = self.segments[best.seg]
 	-- Right of travel = (-dz, dx)

@@ -1,5 +1,5 @@
 -- CameraController.lua
--- Farming follow-cam, crafting orbit, racing dynamic FOV.
+-- Farming follow-cam, crafting orbit. (The race camera is RacingClient's.)
 -- Required by GameClient.
 -- Resolves: Issue #49
 
@@ -70,38 +70,13 @@ local function _craftingLoop(focusPoint)
 	end)
 end
 
--- ─── RACING follow-cam ────────────────────────────────────────────────────────
--- Smooth chase camera with FOV scaling based on speed.
-
-local function _racingLoop(vehicle)
-	_conn = RunService.Heartbeat:Connect(function()
-		if _mode ~= "racing" then return end
-		if not vehicle or not vehicle.PrimaryPart then return end
-
-		local primary = vehicle.PrimaryPart
-
-		-- SKY flyer fuselage is a Cylinder rotated Ry(π/2):
-		--   its length (local X) → world -Z (forward), but LookVector → world -X (left).
-		--   Use RightVector instead, which equals world -Z for the flyer.
-		local biomeTag = vehicle:FindFirstChild("BiomeTag")
-		local isSky    = biomeTag and biomeTag.Value == "SKY"
-		local lookDir  = isSky and primary.CFrame.RightVector or primary.CFrame.LookVector
-		local vel      = primary.AssemblyLinearVelocity.Magnitude
-
-		-- Dynamic FOV: 70 at rest, up to 90 at max speed
-		local targetFOV = _baseFOV + math.min(vel * 0.12, 20)
-		Camera.FieldOfView = Camera.FieldOfView + (targetFOV - Camera.FieldOfView) * 0.08
-
-		-- Camera position: behind and above, further back at higher speed
-		local backDist = 12 + vel * 0.04
-		local camPos = primary.Position
-			- lookDir * backDist
-			+ Vector3.new(0, 5 + vel * 0.02, 0)
-		local lookAt = primary.Position + Vector3.new(0, 1.5, 0)
-		local desired = CFrame.new(camPos, lookAt)
-		Camera.CFrame = Camera.CFrame:Lerp(desired, 0.12)
-	end)
-end
+-- ─── RACING ──────────────────────────────────────────────────────────────────
+-- RacingClient owns the race camera (chase cam behind the car's nose, shakes,
+-- boost FOV). This module stays out of it.
+-- History (2026-10-28): a second chase cam ran here at the same time. For
+-- SKY it aimed along the chassis' RightVector (left over from a cylinder
+-- fuselage the planes no longer have), and the two cameras settled ~45°
+-- apart: the plane looked to fly diagonally and steering felt wrong.
 
 -- ─── Public API ──────────────────────────────────────────────────────────────
 
@@ -125,11 +100,8 @@ function CameraController.setMode(mode, arg)
 		_craftingLoop(arg)
 
 	elseif mode == "racing" then
-		_setScriptable(true)
-		Camera.FieldOfView = _baseFOV
-		-- arg: vehicle Model
+		-- arg: vehicle Model; the camera itself is RacingClient's
 		_target = arg
-		_racingLoop(arg)
 
 	elseif mode == "results" then
 		_setScriptable(false)

@@ -87,7 +87,7 @@ RemoteEvents.BiomeSelected.OnClientEvent:Connect(function(biome)
 	if UIManager then UIManager.applyBiomeTheme(biome) end
 end)
 
--- When vehicle spawns during RACING, hand it to CameraController
+-- When the vehicle spawns: racing mode (the camera itself is RacingClient's)
 RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, vehicleModel)
 	if userId ~= LocalPlayer.UserId then return end
 	if CameraController then
