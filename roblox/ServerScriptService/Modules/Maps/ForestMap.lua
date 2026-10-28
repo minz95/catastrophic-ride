@@ -110,23 +110,27 @@ end
 -- Relocated behind the start grid (Z=700–1000) so its props never sit inside
 -- the racing corridor.
 
-local FARM_CX, FARM_CZ = Track.farm.cx, Track.farm.cz
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
+local FarmKit = require(script.Parent.FarmKit)
+local FARM = FarmBounds.get("FOREST")
+local FARM_CX, FARM_CZ = FARM.cx, FARM.cz
+local FHX, FHZ = FARM.halfX, FARM.halfZ   -- wall to wall / 2 (was 110 × 160)
 
 local function _buildFarmArea(root)
 	_part(root, {
 		Name     = "FarmGround",
-		Size     = Vector3.new(220, 2, 320),
+		Size     = Vector3.new(2 * FHX + 10, 2, 2 * FHZ + 10),
 		Position = Vector3.new(FARM_CX, 0, FARM_CZ),
 		Color    = C.DIRT,
 		Material = MAT.DIRT,
 	})
 
-	for row = 0, 7 do
-		for col = -3, 3 do
+	for row = 0, 6 do
+		for col = -2, 2 do
 			_part(root, {
 				Name       = "CropRow",
 				Size       = Vector3.new(18, 1.5, 3),
-				Position   = Vector3.new(FARM_CX + col * 22, 0.8, FARM_CZ - 100 + row * 30),
+				Position   = Vector3.new(FARM_CX + col * 26, 0.8, FARM_CZ - 84 + row * 28),
 				Color      = C.CROP_GREEN,
 				Material   = MAT.LEAVES,
 				CanCollide = false,
@@ -135,10 +139,12 @@ local function _buildFarmArea(root)
 		end
 	end
 
+	-- the barn, in a corner (FarmBounds keepOut: no item lands inside it)
+	local BX, BZ = FARM_CX - 58.5, FARM_CZ + 80
 	_part(root, {
 		Name     = "BarnWall",
 		Size     = Vector3.new(25, 14, 18),
-		Position = Vector3.new(FARM_CX - 80, 7, FARM_CZ),
+		Position = Vector3.new(BX, 7, BZ),
 		Color    = C.BARN_WALL,
 		Material = MAT.WOOD,
 	})
@@ -146,47 +152,56 @@ local function _buildFarmArea(root)
 		Name = "BarnRoof", Size = Vector3.new(12, 8, 18),
 		Color = C.BARN_ROOF, Material = MAT.WOOD, CanCollide = false,
 	})
-	r1.CFrame = CFrame.new(FARM_CX - 86, 18, FARM_CZ) * CFrame.Angles(0,  math.pi/2, 0)
+	r1.CFrame = CFrame.new(BX - 6, 18, BZ) * CFrame.Angles(0,  math.pi/2, 0)
 	local r2 = _wedge(root, {
 		Name = "BarnRoof2", Size = Vector3.new(12, 8, 18),
 		Color = C.BARN_ROOF, Material = MAT.WOOD, CanCollide = false,
 	})
-	r2.CFrame = CFrame.new(FARM_CX - 74, 18, FARM_CZ) * CFrame.Angles(0, -math.pi/2, 0)
+	r2.CFrame = CFrame.new(BX + 6, 18, BZ) * CFrame.Angles(0, -math.pi/2, 0)
 
-	-- Fence boundary (cosmetic; CanCollide false)
+	-- Fence on the farm's edge: the look of the boundary (rails and posts);
+	-- FarmKit's invisible walls just outside it are what stops people.
 	local fences = {
-		{ Vector3.new(222, 5, 1.5), Vector3.new(FARM_CX,     2.5, FARM_CZ - 160) },
-		{ Vector3.new(222, 5, 1.5), Vector3.new(FARM_CX,     2.5, FARM_CZ + 160) },
-		{ Vector3.new(1.5, 5, 322), Vector3.new(FARM_CX - 111, 2.5, FARM_CZ) },
-		{ Vector3.new(1.5, 5, 322), Vector3.new(FARM_CX + 111, 2.5, FARM_CZ) },
+		{ Vector3.new(2 * FHX + 2, 5, 1.5), Vector3.new(FARM_CX,       2.5, FARM_CZ - FHZ) },
+		{ Vector3.new(2 * FHX + 2, 5, 1.5), Vector3.new(FARM_CX,       2.5, FARM_CZ + FHZ) },
+		{ Vector3.new(1.5, 5, 2 * FHZ + 2), Vector3.new(FARM_CX - FHX, 2.5, FARM_CZ) },
+		{ Vector3.new(1.5, 5, 2 * FHZ + 2), Vector3.new(FARM_CX + FHX, 2.5, FARM_CZ) },
 	}
 	for _, fd in ipairs(fences) do
 		local f = _part(root, { Name="Fence", Size=fd[1], Position=fd[2], Color=C.FENCE, Material=MAT.WOOD })
 		f.CanCollide   = false
 		f.Transparency = 0.2
 	end
-	for px = -100, 100, 20 do
-		_part(root, {
-			Name = "FencePost", Size = Vector3.new(1.5, 7, 1.5),
-			Position = Vector3.new(FARM_CX + px, 3.5, FARM_CZ - 160),
-			Color = C.FENCE, Material = MAT.WOOD,
-		})
-	end
-
-	-- FarmSpawn tags (item-spawn anchor points). Spread across crop rows.
-	local cols = { -80, -40, 0, 40, 80 }
-	local rows = { FARM_CZ - 60, FARM_CZ + 20 }
-	for _, rz in ipairs(rows) do
-		for _, cx in ipairs(cols) do
-			local sp = _part(root, {
-				Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
-				Position = Vector3.new(FARM_CX + cx, 1.5, rz),
-				-- a marker for item spawns and farm spawns, never seen (playtest
-				-- 2026-10-28: yellow plates floating round the farm)
-				CanCollide = false, CastShadow = false, Transparency = 1, CanQuery = false, CanTouch = false,
+	for _, z in ipairs({ FARM_CZ - FHZ, FARM_CZ + FHZ }) do
+		for px = -FHX, FHX, 15 do
+			_part(root, {
+				Name = "FencePost", Size = Vector3.new(1.5, 7, 1.5),
+				Position = Vector3.new(FARM_CX + px, 3.5, z),
+				Color = C.FENCE, Material = MAT.WOOD,
 			})
-			_tag(sp, "FarmSpawn")
 		end
+	end
+	for _, x in ipairs({ FARM_CX - FHX, FARM_CX + FHX }) do
+		for pz = -FHZ + 15, FHZ - 15, 15 do
+			_part(root, {
+				Name = "FencePost", Size = Vector3.new(1.5, 7, 1.5),
+				Position = Vector3.new(x, 3.5, FARM_CZ + pz),
+				Color = C.FENCE, Material = MAT.WOOD,
+			})
+		end
+	end
+	FarmKit.buildWalls(root, "FOREST")
+
+	-- FarmSpawn tags (where people are put; FarmBounds.spawnPoints)
+	for _, at in ipairs(FarmBounds.spawnPoints("FOREST")) do
+		local sp = _part(root, {
+			Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
+			Position = at,
+			-- a marker for item spawns and farm spawns, never seen (playtest
+			-- 2026-10-28: yellow plates floating round the farm)
+			CanCollide = false, CastShadow = false, Transparency = 1, CanQuery = false, CanTouch = false,
+		})
+		_tag(sp, "FarmSpawn")
 	end
 end
 

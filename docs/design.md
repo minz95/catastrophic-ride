@@ -400,6 +400,17 @@ spot with its track section; the RESULTS report lists them per section.
   items are bigger (RIDE_MIN) and a ridden plane's wings shrink and go grey:
   players saw "the default car with the item pasted on". Lobby music is
   casual (whistling swing); opening the shop is silent.
+- **2026-10-29 — Smaller farms nobody falls off.** The farms were 220×320,
+  180×260 and 200×240 with nothing at the edge that held anyone (FOREST's
+  fence did not collide, OCEAN's island ended in the sea, SKY's platform in
+  the air). Each is now about two thirds of that (150×210, 120×170,
+  130×160: `Shared/FarmBounds`), closed by invisible walls 40 high, and
+  `FarmRescue` puts back anyone under the floor, flung high over it or
+  past a wall. Items, drops, spawn markers and bots all take the farm from
+  FarmBounds; the item spread used to come from the FarmArea model's
+  bounding box and a table of farm centres 500 studs off. Bots no longer
+  appear inside each other or on the players' spawn markers (overlapping
+  characters are pushed apart, upwards too: "bots shoot into the sky").
 
 ## Open questions (from the reports, not decided)
 
