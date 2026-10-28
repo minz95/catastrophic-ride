@@ -47,6 +47,20 @@ R.describe("TrackGeometry with heights", function()
 		R.expect(sHigh).toBeGreaterThan(300)
 	end)
 
+	R.it("a car lifted above its road stays on that road, not on a far stretch at its height", function()
+		-- SKY's dive (Y ~110 at z -1680) after its updraft: a plane 15-30
+		-- above it was read on the level stretch 230 studs back (Y 128)
+		local sky = RaceProgress.geometry("SKY")
+		for _, lift in ipairs({ 0, 12, 16, 20, 30 }) do
+			local p = sky:project(0, -1680, nil, nil, 110 + lift)
+			R.expect(p.dist).toBeLessThan(1)
+		end
+		-- the corkscrew top passes 48 over its entry: a lift picks the nearer layer
+		R.expect(sky:segHeight(sky:project(0, -1250, nil, nil, 80 + 16).seg, 0)).toBeLessThan(100)
+		local top = sky:project(0, -1250, nil, nil, 128 + 16)
+		R.expect(sky:segHeight(top.seg, top.t)).toBeGreaterThan(120)
+	end)
+
 	R.it("walls of one layer are not dropped for standing in the lane of another", function()
 		local g = loop()
 		-- last stretch runs over (0, 0): its walls at x = ±11 cross the first

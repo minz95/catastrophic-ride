@@ -25,26 +25,56 @@ SoundConfig.GROUPS = {
 -- ─── BGM ─────────────────────────────────────────────────────────────────────
 
 SoundConfig.BGM = {
-	-- Playtest 2026-10-28: the first picks (rock, tropical house, "warm
-	-- breeze") did not fit and drowned the game. Now kitschy, bouncy game
-	-- music: chase tunes while grabbing and punching, a quirky one while
-	-- building, chiptune for the race. Found with `sim.py run sounds --set
-	-- search=[…]` (DistroKid / APM catalogues, all load); picked by title
-	-- and genre, so swap any that do not sound right in a playtest.
-	LOBBY = { id = "rbxassetid://133710918293530", volume = 0.5, looped = true },   -- Rainbow Slide (PAPERWIZ)
+	-- Playtest 2026-10-28 (twice): rock / tropical house did not fit, nor did
+	-- the next random "chase" picks. Now mostly APM production music written
+	-- as game music (titles "Happy Game", "Fun Arcade", "The Racing Game"),
+	-- chiptune for SKY. Still picked by title: in a Studio playtest [ / ]
+	-- plays the other candidates in SoundConfig.TRY (SoundClient).
+	LOBBY = { id = "rbxassetid://1839406050", volume = 0.5, looped = true },        -- Happy Game (APM, Yannick Kalfayan)
 	FARMING = {
-		FOREST = { id = "rbxassetid://122180244370179", volume = 0.5, looped = true }, -- Funny Cartoon Chase
-		OCEAN  = { id = "rbxassetid://118070543189702", volume = 0.5, looped = true }, -- Funny Chase (PAPERWIZ)
-		SKY    = { id = "rbxassetid://9045344810",      volume = 0.5, looped = true }, -- Bouncy Vision (APM)
+		FOREST = { id = "rbxassetid://1843599021", volume = 0.5, looped = true },   -- Fun Arcade (APM)
+		OCEAN  = { id = "rbxassetid://1838029319", volume = 0.5, looped = true },   -- Food Tray Fight (a) (APM)
+		SKY    = { id = "rbxassetid://111298808852201", volume = 0.5, looped = true }, -- Game Level Twenty (chiptune)
 	},
-	CRAFTING = { id = "rbxassetid://1841146648", volume = 0.45, looped = true },    -- Castles and Crayons (APM, quirky)
+	CRAFTING = { id = "rbxassetid://1839396884", volume = 0.45, looped = true },    -- Cook With Me Cartoon (APM)
 	RACING = {
-		FOREST = { id = "rbxassetid://117780627999526", volume = 0.55, looped = true }, -- Go Bunny Boom Zone 1 (8-bit)
-		OCEAN  = { id = "rbxassetid://99939135861375",  volume = 0.55, looped = true }, -- Arcade Pizza (2025 Remaster)
-		SKY    = { id = "rbxassetid://88951633857057",  volume = 0.55, looped = true }, -- 16-Bit Revolution
+		FOREST = { id = "rbxassetid://1847415881", volume = 0.55, looped = true },  -- Racing Games A (APM)
+		OCEAN  = { id = "rbxassetid://1845092006", volume = 0.55, looped = true },  -- The Racing Game (APM)
+		SKY    = { id = "rbxassetid://140250810677459", volume = 0.55, looped = true }, -- Racing Through Time (Video Game Soundtrack)
 	},
 	RESULTS_WIN  = { id = "rbxassetid://1836473422", volume = 0.6, looped = false }, -- Victory Fanfare Sting (APM)
 	RESULTS_LOSE = { id = "rbxassetid://1841391669", volume = 0.5, looped = false }, -- Wipsy La La Sting 3 (APM)
+}
+
+-- Candidates per phase for the Studio music tryout ([ / ], SoundClient).
+-- All licensed catalogue ids that loaded in `sim.py run sounds`.
+local function T(id, title) return { id = id, title = title } end
+SoundConfig.TRY = {
+	LOBBY = {
+		T("1839406050", "Happy Game (APM)"), T("1839404385", "Happy Game alt (APM)"),
+		T("133710918293530", "Rainbow Slide"), T("105774799756277", "Bubblegum Supercluster"),
+		T("9045344810", "Bouncy Vision (APM)"), T("1838029718", "Kids At Gigs (APM)"),
+	},
+	FARMING = {
+		T("1843599021", "Fun Arcade (APM)"), T("1838029319", "Food Tray Fight (APM)"),
+		T("111298808852201", "Game Level Twenty"), T("122180244370179", "Funny Cartoon Chase"),
+		T("118070543189702", "Funny Chase"), T("1845463755", "Scary Comedy Chase (APM)"),
+		T("9040145864", "Silly Outtakes (APM)"), T("1838708049", "Silly (APM)"),
+		T("136833165577660", "Campground Silly Parade"), T("123897301584254", "Bubblegum"),
+	},
+	CRAFTING = {
+		T("1839396884", "Cook With Me Cartoon (APM)"), T("1839403410", "Happy Game alt 2 (APM)"),
+		T("1841146648", "Castles and Crayons (APM)"), T("1839398358", "Feel The Love Cartoon (APM)"),
+		T("87614776980545", "Chiptune Chillout"), T("1847540538", "Main Street Strut (APM)"),
+	},
+	RACING = {
+		T("1847415881", "Racing Games A (APM)"), T("1845092006", "The Racing Game (APM)"),
+		T("140250810677459", "Racing Through Time"), T("79346445214749", "Game Level Ninety"),
+		T("94185225253376", "Chiptune Odyssey"), T("117780627999526", "Go Bunny Boom Zone 1"),
+		T("99939135861375", "Arcade Pizza"), T("88951633857057", "16-Bit Revolution"),
+		T("116155493709494", "Hurry Up"), T("1837769109", "Battle Hero (APM)"),
+		T("139584088721641", "8-Bit Tidepool"), T("123046034394607", "Adrenaline (Pulse Pixel)"),
+	},
 }
 
 -- ─── Biome ambience (FARMING and RACING) ──────────────────────────────────────
@@ -64,6 +94,8 @@ SoundConfig.AMBIENCE = {
 
 -- ─── SFX ─────────────────────────────────────────────────────────────────────
 -- 258057783 and 6026984224 are older ids that load (pickup chime, UI beep).
+
+SoundConfig.COLLISION_GAP = 0.6   -- s between two COLLISION sounds
 
 SoundConfig.SFX = {
 	-- Farming
@@ -90,7 +122,10 @@ SoundConfig.SFX = {
 	BOOST_PAD           = { id = "rbxassetid://9116411685", volume = 0.7, pitch = 1.1 }, -- Magic Swoosh Fast Zooming
 	DRIFT_START         = { id = "rbxassetid://9116399935", volume = 0.5, pitch = 0.9 }, -- Airy Whips Swooshes
 	DRIFT_SLINGSHOT     = { id = "rbxassetid://9121000116", volume = 0.8, pitch = 1.1 }, -- Zip Bys Airy Rips
-	COLLISION           = { id = "rbxassetid://9113437833", volume = 0.8, pitch = 1.0 }, -- Big Thuds Wall Impact
+	-- a cartoon pop, not a crash: "Big Thuds Wall Impact" at 0.8 was a loud
+	-- BANG on every bump and ability hit (playtest 2026-10-28). SoundClient
+	-- plays it at most once per COLLISION_GAP s.
+	COLLISION           = { id = "rbxassetid://9112872239", volume = 0.45, pitch = 0.75 }, -- Small Bubbles Pop, low
 	MUD_ENTER           = { id = "rbxassetid://9120352855", volume = 0.6, pitch = 0.8 }, -- Underwater Splash
 	UPDRAFT_ENTER       = { id = "rbxassetid://9125806782", volume = 0.5, pitch = 1.0 }, -- Rising Whoosh
 	RESPAWN             = { id = "rbxassetid://6026984224", volume = 0.7, pitch = 1.0 },
@@ -100,7 +135,9 @@ SoundConfig.SFX = {
 
 	-- Countdown
 	COUNTDOWN_BEEP      = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.0 },
-	COUNTDOWN_GO        = { id = "rbxassetid://9113071178", volume = 0.8, pitch = 1.0 }, -- Air Horn Bursts
+	-- GO is the countdown beep, higher (kart-racer style); the air horn that
+	-- was here sounded like a BANG at every start
+	COUNTDOWN_GO        = { id = "rbxassetid://6026984224", volume = 0.9, pitch = 1.6 },
 
 	-- Abilities (category-based; SoundClient picks these by ABILITY_SFX key)
 	ABILITY_SPEED       = { id = "rbxassetid://9114328260", volume = 0.7, pitch = 1.1 }, -- Energy Cloud Whooshing By 2

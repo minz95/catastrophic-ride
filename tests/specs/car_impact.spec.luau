@@ -83,3 +83,35 @@ R.describe("RacingManager sends hits to both drivers", function()
 		R.expect(contact:find("BodyVelocity", 1, true)).toBe(nil)
 	end)
 end)
+
+R.describe("nothing but DriveVelocity moves a race car", function()
+	local fs = require("@lune/fs")
+	R.it("no server script pushes a car with a BodyVelocity of its own", function()
+		-- a second BodyVelocity fights DriveVelocity (SKY gusts used one:
+		-- cars stuck, slid back and juddered for 2 s)
+		for _, path in ipairs({ "roblox/ServerScriptService/HazardManager.server.lua",
+			"roblox/ServerScriptService/AbilityManager.server.lua",
+			"roblox/ServerScriptService/RacingManager.server.lua" }) do
+			R.expect(fs.readFile(path):find("Instance.new(\"BodyVelocity\")", 1, true)).toBe(nil)
+		end
+	end)
+end)
+
+R.describe("the race camera has one owner (RacingClient)", function()
+	local fs = require("@lune/fs")
+	local cc = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/Modules/CameraController.lua")
+	local rc = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua")
+	R.it("CameraController does not drive the camera while racing", function()
+		-- two chase cams settled ~45° apart in SKY (the old one aimed along
+		-- RightVector): the plane looked to fly diagonally
+		local racing = (cc:sub((cc:find('mode == "racing"', 1, true)), (cc:find('mode == "results"', 1, true))))
+		R.expect(racing:find("Heartbeat", 1, true)).toBe(nil)
+		R.expect(racing:find("Loop(", 1, true)).toBe(nil)
+		R.expect(cc:find("RightVector", 1, true) == nil or cc:find("lookDir", 1, true) == nil).toBe(true)
+	end)
+	R.it("RacingClient chases the chassis' nose", function()
+		local cam = (rc:sub((rc:find("local function _updateCamera", 1, true)), (rc:find("-- ─── Speedometer", 1, true))))
+		R.expect(cam:find("LookVector", 1, true) ~= nil).toBe(true)
+		R.expect(cam:find("RightVector", 1, true)).toBe(nil)
+	end)
+end)

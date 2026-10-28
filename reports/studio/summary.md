@@ -26,6 +26,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [gallery-mobility](gallery-mobility.json) | PASS | 5b1f6b6+ | 2026-10-24T21:15 |
 | [gallery-rides](gallery-rides.json) | PASS | 5b1f6b6+ | 2026-10-24T21:26 |
 | [gallery](gallery.json) | PASS | 83fee51+ | 2026-10-24T21:45 |
+| [shop-4p](shop-4p.json) | FAIL | 9479ec7+ | 2026-10-28T10:01 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | WARN | 62db88a+ | 2026-10-23T22:45 |
 | [match-forest](match-forest.json) | PASS | 9608317+ | 2026-10-25T00:51 |
@@ -45,7 +46,7 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [shop-4p](shop-4p.json) | WARN | cc85ba4+ | 2026-10-25T23:12 |
 | [shop-ui](shop-ui.json) | PASS | 6af091e+ | 2026-10-27T00:35 |
 | [showroom](showroom.json) | PASS | 5b1f6b6+ | 2026-10-24T21:33 |
-| [sounds](sounds.json) | PASS | e643405+ | 2026-10-28T02:00 |
+| [sounds](sounds.json) | PASS | 9479ec7+ | 2026-10-28T09:57 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
@@ -426,6 +427,26 @@ gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 se
 ```
 gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers
 ```
+
+## shop-4p — FAIL
+
+```
+Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
+  round 1 (SKY): 2 finished of 2
+    steal attempts: none
+    -1: picked 0, contests 0/5, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -2: picked 12, contests 5/5, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player2 86.9s
+    #2 Player1 87.5s
+  events: ability=18 ability_probe=25 boost=8 bot_camera=2 bot_craft=2 bot_farmfx=56 bot_fx=48 bot_guard=7 bot_hud=60 bot_joined=2 bot_punch=75 bot_ready=2 bot_screen=6 bot_shop=2 bot_showroom_spin=4 bot_spin_fx=91 checkpoint=4 contact=2 contest_result=5 craft=2 craft_preview=4 finish=2 harness_crafting=1 harness_round=1 hazard=7 item_drop=4 item_dropped_world=4 item_pickup=12 item_wave=3 phase=4 phase_shortened=1 punch=75 race_go=1 race_launch=2 race_progress=176 race_sample=360 race_start=1 reward=2 server_perf=83 shop=2 speed_effect=15 updraft=6 vehicle_sp
+spinning wheels / paddles / propellers: 2 cars (prop), most turns 700
+updrafts: 6 lifts (0 bots), zones UpdraftZone_1, UpdraftZone_2, UpdraftZone_3, lift 15.6/8.3 studs
+server: FARMING heartbeat 44-60 Hz, physics 47-60 fps, send max 35088 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 13 kbps; RACING heartbeat 57-60 Hz, physics 59-60 fps, send max 50 kbps; memory max 2303 MB
+```
+- **warn** round 1: 2 of 4 players joined (Studio did not start every client)
+- **fail** bought 2 of 10 shop items ()
+- **fail** special-ride particles seen while driving on 0 cars, want 3
+- **warn** no Smoke Bomb was thrown (no bot with one was grabbed)
 
 ## load-10p — FAIL
 

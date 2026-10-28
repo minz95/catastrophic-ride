@@ -123,8 +123,13 @@ end)
 
 -- ─── ScreenEffect → SFX ───────────────────────────────────────────────────────
 
+local _lastCollision = -math.huge
 RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(effectName, params)
-	if effectName == "collision"       then _playSFX("COLLISION")
+	if effectName == "collision" then
+		if os.clock() - _lastCollision >= (SoundConfig.COLLISION_GAP or 0) then
+			_lastCollision = os.clock()
+			_playSFX("COLLISION")
+		end
 	elseif effectName == "mudWarning"  then _playSFX("MUD_ENTER")
 	elseif effectName == "updraftWarning" then _playSFX("UPDRAFT_ENTER")
 	elseif effectName == "boostPad"    then _playSFX("BOOST_PAD")
@@ -323,3 +328,69 @@ local function _musicButton()
 	gui.Parent = pg
 end
 task.spawn(_musicButton)
+
+-- ─── Music tryout (Studio playtests only) ────────────────────────────────────
+-- The tracks are picked by title (nobody here can listen), so in a Studio
+-- playtest [ and ] switch the playing music through SoundConfig.TRY for
+-- the current phase. A label under the 🎵 button names the track, and the
+-- Output prints "[MusicTry] RACING 3/8 <title> <id>": tell which ones fit
+-- and they go into SoundConfig.BGM. Live games never run this.
+
+if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
+	local KeyInput = require(ReplicatedStorage.Shared.KeyInput)
+	local _tryIndex = {}   -- [slot] = index in SoundConfig.TRY[slot]
+	local label
+	local function slotOf(phase)
+		if phase == Constants.PHASES.RESULTS then return nil end
+		return phase
+	end
+	local function showLabel(text)
+		local pg = LocalPlayer:FindFirstChild("PlayerGui")
+		if not pg then return end
+		local gui = pg:FindFirstChild("MusicTry")
+		if not gui then
+			gui = Instance.new("ScreenGui")
+			gui.Name = "MusicTry"
+			gui.ResetOnSpawn = false
+			gui.IgnoreGuiInset = true
+			gui.DisplayOrder = 5
+			label = Instance.new("TextLabel")
+			label.Size = UDim2.new(0, 380, 0, 22)
+			label.Position = UDim2.new(0, 112, 0, 44)
+			label.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+			label.BackgroundTransparency = 0.35
+			label.TextColor3 = Color3.new(1, 1, 1)
+			label.Font = Enum.Font.GothamBold
+			label.TextSize = 13
+			label.TextXAlignment = Enum.TextXAlignment.Left
+			label.Parent = gui
+			Instance.new("UIPadding", label).PaddingLeft = UDim.new(0, 8)
+			gui.Parent = pg
+		end
+		label = gui:FindFirstChildOfClass("TextLabel")
+		if label then label.Text = text end
+	end
+	local function step(delta)
+		local slot = slotOf(_phase)
+		local list = slot and SoundConfig.TRY[slot]
+		if not list or #list == 0 then return end
+		local i = (((_tryIndex[slot] or 1) - 1 + delta) % #list) + 1
+		_tryIndex[slot] = i
+		local t = list[i]
+		_playBGM({ id = "rbxassetid://" .. t.id, volume = t.volume or 0.5, looped = true })
+		local text = string.format("♪ %s %d/%d  %s   [ / ] switch", slot, i, #list, t.title)
+		showLabel(text)
+		print(string.format("[MusicTry] %s %d/%d %s %s", slot, i, #list, t.title, t.id))
+	end
+	KeyInput.began(function(input, processed)
+		if processed then return end
+		if input.KeyCode == Enum.KeyCode.RightBracket then step(1)
+		elseif input.KeyCode == Enum.KeyCode.LeftBracket then step(-1) end
+	end)
+	RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+		local slot = slotOf(phase)
+		local list = slot and SoundConfig.TRY[slot]
+		showLabel(list and string.format("♪ %s: [ / ] try %d tracks", slot, #list) or "")
+	end)
+	task.defer(function() showLabel("♪ [ / ] try other music") end)
+end

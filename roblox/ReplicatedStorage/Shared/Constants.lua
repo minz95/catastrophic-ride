@@ -445,7 +445,9 @@ Constants.HAZARDS = {
 	LOG_WARN          = 1.2,    -- s the landing marker shows before the log drops
 	GUST_DURATION     = 2,
 	GUST_PULSE        = 0.25,   -- s between sideways shoves while a gust blows
-	GUST_PUSH_PER_FORCE = 0.12, -- shove speed (studs/s) per unit of BiomeConfig force
+	-- knock (studs/s, sideways) per pulse per unit of BiomeConfig force: 150 →
+	-- 4.5 a pulse, a drift of ~10 studs/s at most (knocks fade, IMPACT.KNOCK_DECAY)
+	GUST_KNOCK_PER_FORCE = 0.03,
 	FLOOD_STEPS       = 10,     -- water rises/falls in this many steps over 1 s
 }
 

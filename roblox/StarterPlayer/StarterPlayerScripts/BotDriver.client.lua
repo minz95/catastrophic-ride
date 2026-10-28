@@ -221,8 +221,11 @@ local punching = false
 local function punchAt(root, foe)
 	punching = true
 	root.CFrame = CFrame.lookAt(root.Position, Vector3.new(foe.x, root.Position.Y, foe.z))
+	-- like FarmingClient on F: our own swing starts now (FarmFx, PunchAt)
+	-- and the server gets the aim hint
+	LocalPlayer:SetAttribute("PunchAt", os.clock())
 	task.spawn(function()
-		local ok, result = pcall(function() return RemoteEvents.RequestPunch:InvokeServer() end)
+		local ok, result = pcall(function() return RemoteEvents.RequestPunch:InvokeServer(foe.userId) end)
 		report("punch", { victim = foe.userId, result = ok and result or ("error: " .. tostring(result)) })
 		task.wait(Constants.FIGHT.COOLDOWN)
 		punching = false
@@ -408,6 +411,36 @@ local function _ejectTest(model)
 	end)
 end
 
+-- What the driver sees: the angle (degrees, flat) between the camera's view
+-- and the car's nose, sampled through the race and reported at its end
+-- (`camera`). Two chase cams once fought and left SKY's view ~45° off.
+local _camSamples = {}
+RunService.Heartbeat:Connect(function()
+	if phase ~= Constants.PHASES.RACING or not vehicle or not vehicle.PrimaryPart then return end
+	if #_camSamples > 4000 then return end
+	local cam = workspace.CurrentCamera
+	local a, b = cam.CFrame.LookVector, vehicle.PrimaryPart.CFrame.LookVector
+	a, b = Vector3.new(a.X, 0, a.Z), Vector3.new(b.X, 0, b.Z)
+	if a.Magnitude < 1e-3 or b.Magnitude < 1e-3 then return end
+	table.insert(_camSamples, math.deg(math.acos(math.clamp(a.Unit:Dot(b.Unit), -1, 1))))
+end)
+local function _reportCamera()
+	local n = #_camSamples
+	if n == 0 then return end
+	table.sort(_camSamples)
+	local sum, off = 0, 0
+	for _, d in ipairs(_camSamples) do
+		sum += d
+		if d > 20 then off += 1 end
+	end
+	report("camera", { samples = n, mean = math.floor(sum / n * 10) / 10,
+		median = math.floor(_camSamples[math.ceil(n / 2)] * 10) / 10,
+		p90 = math.floor(_camSamples[math.ceil(n * 0.9)] * 10) / 10,
+		over20 = math.floor(off / n * 1000) / 1000, biome = biome,
+		cameraType = workspace.CurrentCamera.CameraType.Name })
+	_camSamples = {}
+end
+
 RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, model)
 	if userId ~= LocalPlayer.UserId then return end
 	_ejectTest(model)
@@ -479,6 +512,7 @@ local function onPhase(newPhase)
 	elseif newPhase == Constants.PHASES.RACING then
 		task.spawn(raceTricks)
 	elseif newPhase ~= Constants.PHASES.RACING then
+		_reportCamera()
 		vehicle, autopilot = nil, nil
 	end
 end
