@@ -129,6 +129,11 @@ local POSE = {
 	kickWind  = A(R(-30), 0, 0),
 	kickR     = A(R(95), 0, 0),
 	leanBack  = A(R(-12), 0, 0),
+	bendDown  = A(R(32), 0, 0),      -- waist: bow to pick something up
+	reachDownR = A(R(40), R(-10), 0),
+	reachDownL = A(R(40), R(10), 0),
+	liftR     = A(R(150), R(-10), 0), -- arms up: "got it!"
+	liftL     = A(R(150), R(10), 0),
 }
 
 -- A player's character, or a farm bot's (Modules/FarmBots: tagged "FarmBot",
@@ -226,7 +231,7 @@ end
 local function pushMe(push)
 	local root = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	if root and push then
-		root.AssemblyLinearVelocity = root.AssemblyLinearVelocity + push + Vector3.new(0, 14, 0)
+		root.AssemblyLinearVelocity = root.AssemblyLinearVelocity + push + Vector3.new(0, F.KNOCK_UP, 0)
 	end
 end
 
@@ -342,21 +347,69 @@ local function streak(character, limbNames, seconds)
 	Debris:AddItem(a1, seconds)
 end
 
+-- A punch you can read: wind up (arm back, body turned away, the other
+-- fist up), snap through, hold the arm out, come back.
+-- Playtest 2026-10-29: the old 0.16 s flick (no hold, one arm) did not read
+-- as a punch at all.
+local SWING = { WIND = 0.11, STRIKE = 0.07, HOLD = 0.13, BACK = 0.22 }
 local function swing(character)
-	local r, waist = joint(character, "right"), joint(character, "waist")
+	local r, l, waist = joint(character, "right"), joint(character, "left"), joint(character, "waist")
 	if not r then return false end
-	tweenTo(r, POSE.windup, 0.08)
-	tweenTo(waist, POSE.twistR, 0.08)
-	task.delay(0.08, function()
+	tweenTo(r, POSE.windup, SWING.WIND)
+	tweenTo(waist, POSE.twistR, SWING.WIND)
+	tweenTo(l, POSE.guardL, SWING.WIND)
+	task.delay(SWING.WIND, function()
 		streak(character, { "RightHand", "Right Arm" }, 0.4)
-		tweenTo(r, POSE.punchR, 0.08, Enum.EasingStyle.Back)
-		tweenTo(waist, POSE.twistL, 0.08, Enum.EasingStyle.Back)
-		task.delay(0.2, function()
-			if _guarding[character] then tweenTo(r, POSE.guardR, 0.15) else release(r, 0.2) end
-			release(waist, 0.2)
+		tweenTo(r, POSE.punchR, SWING.STRIKE, Enum.EasingStyle.Back)
+		tweenTo(waist, POSE.twistL, SWING.STRIKE, Enum.EasingStyle.Back)
+		task.delay(SWING.STRIKE + SWING.HOLD, function()
+			if _guarding[character] then
+				tweenTo(r, POSE.guardR, 0.15)
+			else
+				release(r, SWING.BACK)
+				release(l, SWING.BACK)
+			end
+			release(waist, SWING.BACK)
 		end)
 	end)
 	return true
+end
+
+-- The hit itself, where the fist lands: a white flash ball and a ring
+-- (client-only parts, no collision).
+local function impact(character, big)
+	local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
+		or character:FindFirstChild("HumanoidRootPart")
+	if not torso then return end
+	local function puff(shape, size0, size1, color, seconds)
+		local p = Instance.new("Part")
+		p.Shape = shape
+		p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+		p.Material = Enum.Material.Neon
+		p.Color = color
+		p.Size = size0
+		p.CFrame = CFrame.new(torso.Position) * (shape == Enum.PartType.Cylinder and CFrame.Angles(0, 0, math.rad(90)) or CFrame.new())
+		p.Parent = workspace
+		TweenService:Create(p, TweenInfo.new(seconds, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ Size = size1, Transparency = 1 }):Play()
+		Debris:AddItem(p, seconds + 0.05)
+	end
+	local k = big and 1.6 or 1
+	puff(Enum.PartType.Ball, Vector3.one * 0.8, Vector3.one * 4 * k, Color3.fromRGB(255, 255, 230), 0.16)
+	puff(Enum.PartType.Cylinder, Vector3.new(0.2, 1, 1), Vector3.new(0.2, 7 * k, 7 * k), Color3.fromRGB(255, 210, 80), 0.22)
+end
+
+-- Your own landed hit: the view kicks in and back (a short zoom) and shakes.
+local function hitKick(big)
+	local cam = workspace.CurrentCamera
+	if not cam then return end
+	local fov = cam.FieldOfView
+	local d = big and 9 or 6
+	TweenService:Create(cam, TweenInfo.new(0.05), { FieldOfView = fov - d }):Play()
+	task.delay(0.06, function()
+		TweenService:Create(cam, TweenInfo.new(0.2, Enum.EasingStyle.Quad), { FieldOfView = fov }):Play()
+	end)
+	shake(big and 0.07 or 0.045, 0.22)
 end
 
 -- Flying Kick (shop move "kick"): the right leg instead of the right arm.
@@ -484,10 +537,13 @@ local function onPunch(attackerId, victimId, info)
 		end)
 	end
 	if not vChar then return end
-	task.delay(0.12, function()
+	-- our own swing started when F went down: the hit shows as soon as the
+	-- server says so; someone else's swing starts now and lands after the wind-up
+	task.delay(mine and 0 or SWING.WIND + 0.02, function()
 		if result == "hit" or result == "knockout" then
 			pow(vChar, result == "knockout")
-			if attackerId == LocalPlayer.UserId then shake(result == "knockout" and 0.05 or 0.025, 0.18) end
+			impact(vChar, result == "knockout")
+			if attackerId == LocalPlayer.UserId then hitKick(result == "knockout") end
 			flash(vChar, Color3.fromRGB(255, 70, 60), 0.3)
 			burst(vChar, Color3.fromRGB(255, 230, 90), (result == "knockout" and 30 or 14) * (isKick and 2 or 1))
 			if isKick then label(vChar, "🦶 KICK!", Color3.fromRGB(255, 200, 80), 0.9, "kick") end
@@ -690,6 +746,38 @@ local function onDrop(actorId, info)
 	if c then label(c, "📦 " .. tostring(info.item or "item"), Color3.fromRGB(255, 220, 140), 1.0, "drop") end
 	report("farmfx", { what = "drop", drawn = true, arc = math.floor((from - to).Magnitude * 10) / 10 })
 end
+
+-- Picking an item up (anyone, on every client): bow and reach down, then
+-- both arms up with the item's icon over the head, while the item itself
+-- flies into the hands (FarmingManager). Playtest 2026-10-29: items just
+-- vanished with no pick-up motion.
+local function onPickup(userId, info)
+	local c = charOf(userId)
+	if not c then return end
+	local r, l, waist = joint(c, "right"), joint(c, "left"), joint(c, "waist")
+	tweenTo(waist, POSE.bendDown, 0.12)
+	tweenTo(r, POSE.reachDownR, 0.12)
+	tweenTo(l, POSE.reachDownL, 0.12)
+	task.delay(0.2, function()
+		release(waist, 0.15)
+		tweenTo(r, POSE.liftR, 0.15, Enum.EasingStyle.Back)
+		tweenTo(l, POSE.liftL, 0.15, Enum.EasingStyle.Back)
+		local cfg = info and info.item and ItemConfig[info.item]
+		label(c, (cfg and cfg.icon or "✨") .. " " .. tostring(info and info.item or ""),
+			Color3.fromRGB(255, 240, 160), 1.0, "pickup")
+		burst(c, Color3.fromRGB(255, 240, 150), 10)
+		task.delay(0.4, function()
+			if _guarding[c] then return end
+			release(r, 0.25)
+			release(l, 0.25)
+		end)
+	end)
+	report("farmfx", { what = "pickup", drawn = waist ~= nil and r ~= nil })
+end
+RemoteEvents.ItemPickedUp.OnClientEvent:Connect(function(_itemId, userId, info)
+	local ok, err = pcall(onPickup, userId, info)
+	if not ok then report("farmfx", { what = "pickup", error = tostring(err) }) end
+end)
 
 RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, info)
 	local ok, err = pcall(function()

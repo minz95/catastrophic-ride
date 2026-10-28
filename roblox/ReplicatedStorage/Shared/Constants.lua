@@ -186,6 +186,9 @@ Constants.STEAL_HOLD         = 0.9  -- s of holding E near someone; the steal st
 -- random item out onto the ground, for anyone to grab. Holding G guards:
 -- punches on a guarding player are blocked. A knocked-out player cannot be
 -- knocked out again for DROP_IMMUNE s.
+-- s a picked-up item takes to fly into the picker's hands (FarmingManager)
+Constants.PICKUP_FLY = 0.3
+
 Constants.FIGHT = {
 	RANGE        = 6,     -- studs between root parts
 	ARC          = 0.35,  -- attacker must face the victim: dot(look, toVictim) >= this
@@ -202,6 +205,8 @@ Constants.FIGHT = {
 	ASSIST_ARC   = 0.0,   -- dot(look, toVictim): 90° either side
 	ASSIST_REACH = 2,
 	LUNGE        = 16,    -- studs/s the puncher steps forward (own client)
+	BOT_KNOCKBACK = 1.0,  -- × KNOCKBACK for a farm bot that is hit (server pushes it)
+	KNOCK_UP     = 9,     -- studs/s up with a knock-back (players and bots): a hop, never a launch
 }
 
 -- ─── Rarity ───────────────────────────────────────────────────────────────────
@@ -461,6 +466,10 @@ Constants.RACE_BOOST_PAD_ACTIVE_RATIO      = 0.6  -- fraction of placed BoostPad
 Constants.SKY_GRAVITY_MULT                 = 1.2  -- outside updraft zones
 -- Updraft (SKY): lifts a plane LIFT studs for DURATION s (VehicleLift),
 -- scaled by flyability / FLY_REF within [MIN_SCALE, MAX_SCALE].
+-- A race car this far (studs) outside its lane for SECONDS is respawned
+-- (RaceProgress.offLane): boats and bots that slipped out onto the open sea.
+Constants.OFF_LANE = { MARGIN = 8, SECONDS = 1.5 }
+
 Constants.UPDRAFT = { LIFT = 12, DURATION = 2.5, FLY_REF = 20, MIN_SCALE = 0.7, MAX_SCALE = 1.3 }
 
 -- ─── Progression (saved: Modules/PlayerStore, rules: Shared/Progression) ──────
@@ -523,6 +532,7 @@ Constants.BOTS = {
 		BOOST_MAX_ERR = 0.1, -- rad off the line: boosts only going straight (as BotDriver)
 		BOOST_MAX_TURN = 0.35, -- rad: no boost if the road turns more within the boost's reach
 		BOOST_SETTLE = 1.5,  -- s after the boost, still fast, counted in that reach
+		HIGH_LOG = 22,       -- studs over the road: telemetry bot_high (what lifted it)
 	},
 }
 

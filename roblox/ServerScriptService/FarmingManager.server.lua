@@ -469,6 +469,41 @@ end
 -- With a full inventory the weakest item is swapped out here, when the new
 -- item is really handed over (it used to be dropped before the distance and
 -- contest checks, so a refused pickup or a lost contest cost an item).
+-- A picked-up item model moves (anchored parts, translated like the spawn
+-- placement) into the picker's hands over PICKUP_FLY s, then is destroyed.
+local function _flyToHands(model, root)
+	model.Name = "PickedUp"
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") then d.Anchored, d.CanCollide, d.CanQuery, d.CanTouch = true, false, false, false
+		elseif d:IsA("ProximityPrompt") or d:IsA("BillboardGui") then d:Destroy() end
+	end
+	if not root then model:Destroy() return end
+	local T = Constants.PICKUP_FLY
+	task.spawn(function()
+		-- a fixed number of frames (not the wall clock: a busy server, or the
+		-- offline mock, would stretch it)
+		local frames = math.max(1, math.ceil(T * 60))
+		local i = 0
+		while model.Parent and root.Parent do
+			i += 1
+			local k = math.min(1, i / frames)
+			local ok, cf = pcall(function() return model:GetBoundingBox() end)
+			if not ok then break end
+			local hands = root.Position + root.CFrame.LookVector * 1.2 + Vector3.new(0, 0.8 + 1.5 * k, 0)
+			local step = (hands - cf.Position) * math.min(1, k * 0.6 + 0.25)
+			for _, d in ipairs(model:GetDescendants()) do
+				if d:IsA("BasePart") then
+					d.CFrame = d.CFrame + step
+					d.Transparency = math.max(d.Transparency, k * k)
+				end
+			end
+			if k >= 1 then break end
+			RunService.Heartbeat:Wait()
+		end
+		model:Destroy()
+	end)
+end
+
 local function _giveItem(player, itemId)
 	local data = SessionManager.getData(player)
 	local item = _items[itemId]
@@ -483,10 +518,11 @@ local function _giveItem(player, itemId)
 	item.taken = true
 	table.insert(data.inventory, item.itemName)
 
-	-- Stop idle animation then destroy full model
+	-- Stop the idle animation; the item flies into the picker's hands
+	-- (playtest 2026-10-29: items just vanished, no pick-up motion), then goes.
 	if item.model then
 		ItemVisualUpgrader.stopIdle(item.model)
-		item.model:Destroy()
+		_flyToHands(item.model, player.Character and player.Character:FindFirstChild("HumanoidRootPart"))
 	else
 		item.part:Destroy()
 	end
@@ -882,6 +918,13 @@ local function _punch(attacker, hintId)
 	end
 	local vRoot = _root(victim)
 	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK or Vector3.zero
+	-- a farm bot is pushed here (a player's own client pushes them, FarmFx):
+	-- a hit must visibly land, not bounce off a statue
+	if vRoot and SessionManager.isBot(victim) and (result == "hit" or result == "knockout") then
+		pcall(function()
+			vRoot.AssemblyLinearVelocity += push * F.BOT_KNOCKBACK + Vector3.new(0, F.KNOCK_UP, 0)
+		end)
+	end
 	RemoteEvents.FarmAction:FireAllClients("punch", attacker.UserId, victim.UserId, {
 		style = _moveStyle(attacker),
 		result = result, hits = (result == "knockout") and F.HITS_TO_DROP or hits, needed = F.HITS_TO_DROP,

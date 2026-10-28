@@ -474,8 +474,9 @@ local function plane(stats)
 
 	local M = d.mounts
 	M.BODY = { { cf = CF(0, R + 0.45, L * 0.18), box = V3(R * 1.8, 0.9, L * 0.4) } }
-	M.ENGINE = { { cf = CF(0, 0, -L / 2 - 0.3), box = V3(R * 2.1, R * 2.1, 0.6) } }
-	M.SPECIAL = { { cf = CF(0, -R - 0.35, L * 0.08), box = V3(R * 1.6, 0.7, L * 0.3) } }
+	M.ENGINE = { { cf = CF(0, 0, -L / 2 - 0.3), box = V3(R * 2.1, R * 2.1, 0.6), grow = "fwd" } }
+	-- on the back, behind the hump (under the belly it was hidden)
+	M.SPECIAL = { { cf = CF(0, R + 0.3, L * 0.4), box = V3(R * 1.2, 0.6, L * 0.15) } }
 	-- MOBILITY: a propeller on each wing, the item spinning face-on in front
 	-- of a nacelle (the nacelles show only then)
 	local wingY, wingZ = -R * 0.35, -L * 0.04
@@ -536,6 +537,8 @@ local function plane(stats)
 		end,
 		mounts = {
 			TAIL = { { cf = CF(0, R * 1.8 + 0.35, L / 2 + 0.7), box = V3(0.6, 0.6, 0.6), onRide = true } },
+			-- on the ridden item's back, not under it (the belly mount was hidden)
+			SPECIAL = { { cf = CF(0, 0.3, L * 0.3), box = V3(R * 1.2, 0.6, L * 0.2), onRide = true } },
 		},
 		seatZ = -L * 0.05,
 	}
@@ -585,6 +588,7 @@ function VehicleDesign.layout(biome, stats, slots)
 	local seatZ = d.riding and d.ride.seatZ or d.seat.cf.Position.Z
 	d.mounts.HEAD = { { cf = CF(0, seatTop + hat.headTop - hat.sink + hat.box.Y / 2, seatZ), box = hat.box,
 		align = "bottom", hat = true } }
+	VehicleDesign.showcase(d)
 	return d
 end
 
@@ -610,11 +614,53 @@ VehicleDesign.PADDLE_RADIUS = 0.8
 VehicleDesign.PROP_SIZE = 1.3
 VehicleDesign.SHEET = 20
 
+-- Every crafted part shows (playtest 2026-10-29: "다른 파트도 바꿀때마다
+-- craft 된 차체 어딘가에서 보여야"): the ENGINE, SPECIAL and TAIL boxes were
+-- 0.6–0.7 studs tall, so a rocket or a cactus shrank to a dot. Their boxes
+-- are at least this big; they grow away from what carries them (`grow`:
+-- "up" by default, "fwd" for a plane's nose, "down" under a hull) and the
+-- item sits against that surface.
+VehicleDesign.SHOWCASE = {
+	ENGINE  = V3(1.8, 1.8, 1.8),
+	SPECIAL = V3(1.9, 1.9, 1.9),
+	TAIL    = V3(1.5, 1.5, 1.5),
+}
+
+local function showcase(d)
+	for slot, min in pairs(VehicleDesign.SHOWCASE) do
+		for _, m in ipairs(d.mounts[slot] or {}) do
+			if not m.showcased then
+				m.showcased = true
+				local old = m.box
+				local new = V3(math.max(old.X, min.X), math.max(old.Y, min.Y), math.max(old.Z, min.Z))
+				local grow = m.grow or "up"
+				local p = m.cf.Position
+				local rot = m.cf - p
+				if grow == "fwd" then
+					m.cf = CF(p.X, p.Y, p.Z - (new.Z - old.Z) / 2) * rot
+				elseif grow == "down" then
+					m.cf = CF(p.X, p.Y - (new.Y - old.Y) / 2, p.Z) * rot
+				else
+					-- the old box's floor stays where it was
+					local floor = p.Y - old.Y / 2
+					-- front = true (a boat's ENGINE on the stern): its front face stays put
+					local z = m.front and p.Z + (new.Z - old.Z) / 2 or p.Z
+					m.cf = CF(p.X, floor + new.Y / 2, z) * rot
+					m.align = "bottom"
+				end
+				m.box = new
+			end
+		end
+	end
+end
+VehicleDesign.showcase = showcase
+
 --- Riding: moves the wheels / paddle wheels / propellers (parts and
 -- MOBILITY mounts) against the ridden item's real box `lo`..`hi` (chassis
 -- space), measured once VehicleBuilder has placed it.
 function VehicleDesign.fitRide(d, lo, hi)
 	if d.riding and d.ride.fit then d.ride.fit(d, lo, hi) end
+	showcase(d)
 end
 
 -- How far a ridden item may be stretched beyond its own proportions along

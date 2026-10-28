@@ -68,6 +68,36 @@ function RaceProgress.geometry(biome)
 	return _geo[biome]
 end
 
+--- How far (studs, flat) a car at (x, z) is outside its lane: 0 on the
+-- lane, > 0 beyond its edge. y picks the layer on a road over itself.
+-- Playtest 2026-10-29: a boat (OCEAN) or a bot that left the lane floated
+-- on the open sea at the right height, so no fall rule caught it and it
+-- could never come back. RacingManager and RaceBots respawn a car that
+-- stays more than Constants.OFF_LANE.MARGIN out for SECONDS.
+function RaceProgress.offLane(biome, x, z, hintSeg, y)
+	local geo = RaceProgress.geometry(biome)
+	if not geo then return 0, hintSeg end
+	local p = geo:project(x, z, hintSeg, hintSeg and RaceProgress.SEARCH_WINDOW or nil, y)
+	return math.max(0, p.dist - geo.halfWidth), p.seg
+end
+
+--- One step of the off-lane timer kept in `state` (a table per car).
+-- Returns true when the car has been more than OFF_LANE.MARGIN out for
+-- OFF_LANE.SECONDS (and resets the timer).
+function RaceProgress.offLaneStep(state, beyond, dt)
+	local O = Constants.OFF_LANE
+	if beyond > O.MARGIN then
+		state.offFor = (state.offFor or 0) + dt
+		if state.offFor >= O.SECONDS then
+			state.offFor = 0
+			return true
+		end
+	else
+		state.offFor = 0
+	end
+	return false
+end
+
 --- Length used to normalise progress.
 function RaceProgress.trackLength(biome)
 	local geo = RaceProgress.geometry(biome)

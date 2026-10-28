@@ -28,6 +28,20 @@ R.describe("playtest polish", function()
 		R.expect(SoundConfig.COLLISION_GAP).toBeGreaterThan(0)
 	end)
 
+	R.it("no effect is an explosion, crash or banned id (playtest 2026-10-29: bangs on every pickup and item use)", function()
+		local banned = {}
+		for _, id in ipairs(SoundConfig.BANNED) do banned["rbxassetid://" .. id] = true end
+		local src = fs.readFile("roblox/ReplicatedStorage/Shared/SoundConfig.lua")
+		local sfx = src:sub(src:find("SoundConfig.SFX = {", 1, true), src:find("SoundConfig.BANNED", 1, true))
+		for _, word in ipairs({ "Explosion", "Crash", "Thud", "Big Thuds", "Air Horn" }) do
+			R.expect(sfx:find(word, 1, true) == nil).toBe(true)
+		end
+		for key, cfg in pairs(SoundConfig.SFX) do
+			if banned[cfg.id] then error(key .. " uses banned id " .. cfg.id) end
+			R.expect(cfg.volume).toBeLessThan(0.81)
+		end
+	end)
+
 	R.it("every music tryout candidate has an id and a title", function()
 		for slot, list in pairs(SoundConfig.TRY) do
 			R.expect(#list).toBeGreaterThan(2)

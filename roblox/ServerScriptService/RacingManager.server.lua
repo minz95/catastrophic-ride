@@ -314,7 +314,7 @@ local function _keepSeated()
 	end
 end
 
-RunService.Heartbeat:Connect(function()
+RunService.Heartbeat:Connect(function(dt)
 	if not _active then return end
 	_keepSeated()
 	local cfg = _biome and BiomeConfig[_biome]
@@ -331,6 +331,11 @@ RunService.Heartbeat:Connect(function()
 			local s = ps and ps.progressSeg and RaceProgress.progress(_biome, pos.X, pos.Z, ps.progressSeg)
 			local roadY = s and RaceProgress.roadY(_biome, s)
 			if roadY and pos.Y < roadY - RaceProgress.FALL_BELOW then reason = "fell" end
+			-- out of the lane (a boat on the open sea): back on the road
+			if not reason and ps and not pdata.finishTime and RaceStart.isGo() then
+				local beyond = RaceProgress.offLane(_biome, pos.X, pos.Z, ps.progressSeg, pos.Y)
+				if RaceProgress.offLaneStep(ps, beyond, dt or 1 / 60) then reason = "off_lane" end
+			end
 		end
 		if reason then
 			local now = tick()

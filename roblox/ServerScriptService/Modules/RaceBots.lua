@@ -298,6 +298,21 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 		respawn(bot, biome, startY)
 		return
 	end
+	-- out of the lane (OCEAN: a boat that slipped out floats on the open sea)
+	local beyond = RaceProgress.offLane(biome, pos.X, pos.Z, bot.ap.segHint, pos.Y)
+	if RaceProgress.offLaneStep(bot, beyond, dt) then
+		Telemetry.record("off_lane", { userId = bot.id, bot = true, s = math.floor(bot.s),
+			x = math.floor(pos.X), y = math.floor(pos.Y), z = math.floor(pos.Z) })
+		respawn(bot, biome, startY)
+		return
+	end
+	-- what lifts a bot high over its road (playtest: "bots shoot up into the sky")
+	if geo and pos.Y > geo:heightAt(info.s) + Constants.BOTS.RACE.HIGH_LOG and (bot.highLogAt or -99) < bot.t - 3 then
+		bot.highLogAt = bot.t
+		Telemetry.record("bot_high", { userId = bot.id, s = math.floor(bot.s), above = math.floor(pos.Y - geo:heightAt(info.s)),
+			vy = math.floor(vel.Y), lift = primary:GetAttribute("LiftOffset"), air = primary:GetAttribute("AirT") ~= nil,
+			spring = primary:GetAttribute("SpringVY"), biome = biome })
+	end
 
 	tryAbility(bot, biome, pos, speed)
 	tryBoost(bot, speed, info, biome)
