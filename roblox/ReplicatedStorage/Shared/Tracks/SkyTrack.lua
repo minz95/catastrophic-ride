@@ -136,6 +136,11 @@ Track.driftCorners = {
 	{ -440, 1270 },   -- N4 bend A north apex
 	{  440, -110 },   -- N15 bend B south apex
 	{   40, -200 },   -- N17 canyon zigzag entry
+	-- 2026-10-29: two more (canyon zigzag) when a corner's charge went 0.5 →
+	-- 0.34, so a SKY lap still refills the gauge ~1.7 times (flyers do not
+	-- drift: these zones only charge it)
+	{   40, -560 },   -- N19 canyon zigzag
+	{   40, -900 },   -- N21 canyon zigzag exit
 }
 
 -- Jump zones { x, z } (S5 XZ boost dressed as ramps).

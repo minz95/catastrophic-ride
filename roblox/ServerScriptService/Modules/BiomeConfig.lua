@@ -30,7 +30,7 @@ BiomeConfig["FOREST"] = {
 	},
 
 	-- Drift corner parameters (Issue #66)
-	driftCorners = 6,
+	driftCorners = 11,
 	jumpRamps    = 4,
 	boostPads    = 6,
 }
@@ -61,7 +61,7 @@ BiomeConfig["OCEAN"] = {
 		},
 	},
 
-	driftCorners = 5,
+	driftCorners = 10,
 	jumpRamps    = 4,
 	boostPads    = 6,
 }
@@ -90,7 +90,7 @@ BiomeConfig["SKY"] = {
 		},
 	},
 
-	driftCorners = 3,
+	driftCorners = 5,
 	jumpRamps    = 3,
 	boostPads    = 5,
 }

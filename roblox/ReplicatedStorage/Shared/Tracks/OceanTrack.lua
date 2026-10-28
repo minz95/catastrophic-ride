@@ -76,45 +76,54 @@ Track.nodes = {
 	{ 386.6, -960, 32.57 },  -- N32
 	{  400, -1010, 29.35 }, -- N33 heading south
 	{  400, -1450, 2 },     -- N34 splash-down
-	{ 386.6, -1500 }, -- N35
-	{  350, -1536.6 }, -- N36
-	{  300, -1550 }, -- N37 heading west
-	{  100, -1550 }, -- N38
-	{   50, -1563.4 }, -- N39
-	{ 13.4, -1600 }, -- N40
-	{ 0, -1650 }, -- N41  S6 begins
-	{ 16.1, -1710 }, -- N42
-	{ 60, -1753.9 }, -- N43
-	{ 120, -1770 }, -- N44  heading east
-	{ 370, -1770 }, -- N45  reef hairpin entry
-	{ 425, -1784.7 }, -- N46
-	{ 465.3, -1825 }, -- N47
-	{ 480, -1880 }, -- N48  hairpin apex (drift corner)
-	{ 465.3, -1935 }, -- N49
-	{ 425, -1975.3 }, -- N50
-	{ 370, -1990 }, -- N51  heading west
-	{ 190, -1990 }, -- N52  buoy slalom
-	{ 151.7, -1982.4 }, -- N53
-	{ 119.3, -1960.7 }, -- N54
-	{ 74.5, -1934.8 }, -- N55
-	{ 22.7, -1934.8 }, -- N56
-	{ -22.1, -1960.7 }, -- N57
-	{ -54.6, -1982.4 }, -- N58  slalom exit
+	-- 2026-10-29: the flat corners from here on are R = 45 (were R = 100 to
+	-- 120: at 63 studs/s a boat turned only 0.55 rad/s there, the drift slide
+	-- stayed under DRIFT_TURBO.MIN_SLIDE and no drift ever paid a turbo).
+	-- Each turns round the same vertex as before; the straights did not move.
+	{  400, -1505 },  -- N35 lagoon turn (vertex 400, -1550)
+	{  394, -1527.5 }, -- N36 apex (drift corner)
+	{ 377.5, -1544 }, -- N37
+	{  355, -1550 },  -- N38 heading west
+	{   45, -1550 },  -- N39 corner south (vertex 0, -1550)
+	{ 22.5, -1556 },  -- N40 apex (drift corner)
+	{    6, -1572.5 }, -- N41
+	{    0, -1595 },  -- N42 heading south: S6 begins
+	{    0, -1725 },  -- N43 corner east (vertex 0, -1770)
+	{    6, -1747.5 }, -- N44 apex (drift corner)
+	{ 22.5, -1764 },  -- N45
+	{   45, -1770 },  -- N46 heading east
+	-- reef hairpin: two right angles with a straight between (was one
+	-- R = 110 half circle)
+	{  435, -1770 },  -- N47 hairpin entry (vertex 480, -1770)
+	{ 457.5, -1776 }, -- N48
+	{  474, -1792.5 }, -- N49
+	{  480, -1815 },  -- N50 heading south
+	{  480, -1945 },  -- N51 hairpin exit (vertex 480, -1990)
+	{  474, -1967.5 }, -- N52
+	{ 457.5, -1984 }, -- N53
+	{  435, -1990 },  -- N54 heading west
+	{ 190, -1990 }, -- N55  buoy slalom
+	{ 151.7, -1982.4 }, -- N56
+	{ 119.3, -1960.7 }, -- N57
+	{ 74.5, -1934.8 }, -- N58
+	{ 22.7, -1934.8 }, -- N59
+	{ -22.1, -1960.7 }, -- N60
+	{ -54.6, -1982.4 }, -- N61  slalom exit
 	-- S7: kelp channel and the final straight
-	{ -92.8, -1990 }, -- N59  S6 end
-	{ -192.8, -1990 }, -- N60
-	{ -252.8, -2006.1 }, -- N61
-	{ -296.8, -2050 }, -- N62
-	{ -312.8, -2110 }, -- N63  kelp channel, heading north
-	{ -312.8, -2330 }, -- N64
-	{ -296.8, -2390 }, -- N65
-	{ -252.8, -2433.9 }, -- N66
-	{ -192.8, -2450 }, -- N67  heading east
-	{ 67.2, -2450 }, -- N68
-	{ 127.2, -2466.1 }, -- N69
-	{ 171.1, -2510 }, -- N70
-	{ 187.2, -2570 }, -- N71  onto the final straight
-	{ 187.2, -2950 }, -- N72  runoff past the finish (150 studs, end wall; was 70)
+	{ -92.8, -1990 }, -- N62  S6 end
+	{ -267.8, -1990 }, -- N63 corner south (vertex -312.8, -1990)
+	{ -290.3, -1996 }, -- N64 apex (drift corner)
+	{ -306.8, -2012.5 }, -- N65
+	{ -312.8, -2035 }, -- N66 kelp channel, heading -Z
+	{ -312.8, -2405 }, -- N67 corner east (vertex -312.8, -2450)
+	{ -306.8, -2427.5 }, -- N68 apex (drift corner)
+	{ -290.3, -2444 }, -- N69
+	{ -267.8, -2450 }, -- N70 heading east
+	{ 142.2, -2450 }, -- N71 corner onto the final straight (vertex 187.2, -2450)
+	{ 164.7, -2456 }, -- N72 apex (drift corner)
+	{ 181.2, -2472.5 }, -- N73
+	{ 187.2, -2495 }, -- N74 onto the final straight
+	{ 187.2, -2950 }, -- N75 runoff past the finish (150 studs, end wall; was 70)
 }
 
 -- Named sections for reports (inclusive node index ranges).
@@ -124,14 +133,14 @@ Track.sections = {
 	{ name = "S3 open channel",   from = 8,  to = 13 },
 	{ name = "S3b to the lighthouse", from = 13, to = 14 },
 	{ name = "S4 lighthouse spiral", from = 14, to = 29 },
-	{ name = "S5 water slide",    from = 29, to = 41 },
-	{ name = "S6 reef hairpin",   from = 41, to = 59 },
-	{ name = "S7 kelp channel",   from = 59, to = 72 },
+	{ name = "S5 water slide",    from = 29, to = 42 },
+	{ name = "S6 reef hairpin",   from = 42, to = 62 },
+	{ name = "S7 kelp channel",   from = 62, to = 75 },
 }
 
 -- Finish-line Z. Must match Constants.TRACK.OCEAN.zFinish.
 Track.finishZ = -2800
-Track.finishX = 187.2   -- on the N58 → N59 final straight
+Track.finishX = 187.2   -- on the N74 → N75 final straight
 
 -- Start grid: CraftingManager._buildSpawnGrid (x = (col-3)*7, rows 8 apart
 -- from BiomeConfig.OCEAN.raceStartZ = 590).
@@ -157,13 +166,20 @@ Track.boostPads = {
 	{ -60, -2450 },  -- S7 east channel
 }
 
--- Drift corner trigger centres { x, z } (spec §3.3).
+-- Drift corner trigger centres { x, z }: one per corner worth a drift (a
+-- marker on the water; each fills the boost gauge by
+-- Constants.DRIFT_CHARGE_PER_CORNER).
 Track.driftCorners = {
 	{ 180,    0 },   -- S2 island arc apex (N5)
 	{ 220, -800, 17.2 }, -- S4 spiral, east side (one layer here; the third number picks it)
-	{ 370.7, -1520.7 },  -- S5 lagoon turn (N35/N36)
-	{ 480, -1880 },  -- S6 reef hairpin apex (N35)
-	{ 0, -1935 },    -- S6 buoy slalom crest (N42/N43)
+	{ 386.8, -1536.8 }, -- S5 lagoon turn apex (N36)
+	{ 13.2, -1563.2 },  -- S5 corner south apex (N40)
+	{ 13.2, -1756.8 },  -- S6 corner east apex (N44)
+	{ 480, -1880 },  -- S6 reef hairpin, between its two corners
+	{ 0, -1935 },    -- S6 buoy slalom crest (N58/N59)
+	{ -299.6, -2003.2 }, -- S7 corner into the kelp channel (N64)
+	{ -299.6, -2436.8 }, -- S7 corner out of the kelp channel (N68)
+	{ 174, -2463.2 },    -- S7 corner onto the final straight (N72)
 }
 
 -- Wave ramps / jump zones { x, z }.
