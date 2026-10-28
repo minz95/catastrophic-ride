@@ -16,6 +16,8 @@ local Track = require(ReplicatedStorage.Shared.Tracks.OceanTrack)
 local TrackKit = require(script.Parent.TrackKit)
 
 local KIT = TrackKit.new(Track)
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
+local FarmKit = require(script.Parent.FarmKit)
 local _part, _tag = TrackKit.part, TrackKit.tag
 
 local C = {
@@ -308,9 +310,13 @@ end
 
 -- ─── Farm island (FARMING phase only; hidden during RACING) ──────────────────
 
+-- The island is FarmBounds' wall-to-wall box; the walls stand on its beach
+-- (was 180 × 260 with nothing at the water's edge: whoever walked into the
+-- sea could not climb back up the island's side).
 local function _buildFarmIsland(root)
 	local farm = Track.farm
-	local cx, cz, w, d = farm.cx, farm.cz, farm.size[1], farm.size[2]
+	local F = FarmBounds.get("OCEAN")
+	local cx, cz, w, d = F.cx, F.cz, 2 * F.halfX, 2 * F.halfZ
 	_part(root, {
 		Name = "FarmIsland", Size = Vector3.new(w, 6, d),
 		Position = Vector3.new(cx, WATER_Y - 1, cz),
@@ -318,26 +324,60 @@ local function _buildFarmIsland(root)
 	})
 	-- SmoothPlastic, not Grass: grass blades survive the RACING hide.
 	_part(root, {
-		Name = "FarmGrass", Size = Vector3.new(w - 20, 1, d - 30),
+		Name = "FarmGrass", Size = Vector3.new(2 * F.grassHalfX, 1, 2 * F.grassHalfZ),
 		Position = Vector3.new(cx, WATER_Y + 2.5, cz),
 		Color = C.GRASS, Material = Enum.Material.SmoothPlastic,
 	})
-	for _, rz in ipairs({ cz - 50, cz + 50 }) do
-		for _, ox in ipairs({ -60, -30, 0, 30, 60 }) do
-			local sp = _part(root, {
-				Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
-				Position = Vector3.new(cx + ox, WATER_Y + 3.5, rz),
-				-- a marker for item spawns and farm spawns, never seen (playtest
-				-- 2026-10-28: yellow plates floating round the farm)
-				CanCollide = false, Transparency = 1, CanQuery = false, CanTouch = false,
+	for _, at in ipairs(FarmBounds.spawnPoints("OCEAN")) do
+		local sp = _part(root, {
+			Name = "FarmSpawnPoint", Size = Vector3.new(4, 0.5, 4),
+			Position = at,
+			-- a marker for item spawns and farm spawns, never seen (playtest
+			-- 2026-10-28: yellow plates floating round the farm)
+			CanCollide = false, Transparency = 1, CanQuery = false, CanTouch = false,
+		})
+		_tag(sp, "FarmSpawn")
+	end
+	-- a rope rail on posts round the beach: the edge you see (the walls
+	-- just outside it are invisible)
+	local railY = WATER_Y + 2
+	for _, side in ipairs({ -1, 1 }) do
+		_part(root, {
+			Name = "FarmRope", Size = Vector3.new(w - 2, 0.4, 0.4),
+			Position = Vector3.new(cx, railY + 3, cz + side * (d / 2 - 1)),
+			Color = C.DOCK, Material = MAT.WOOD, CanCollide = false, CastShadow = false,
+		})
+		_part(root, {
+			Name = "FarmRope", Size = Vector3.new(0.4, 0.4, d - 2),
+			Position = Vector3.new(cx + side * (w / 2 - 1), railY + 3, cz),
+			Color = C.DOCK, Material = MAT.WOOD, CanCollide = false, CastShadow = false,
+		})
+	end
+	for _, side in ipairs({ -1, 1 }) do
+		for ox = -w / 2 + 1, w / 2 - 1, 12 do
+			_part(root, {
+				Name = "FarmPost", Size = Vector3.new(1, 4, 1),
+				Position = Vector3.new(cx + ox, railY + 2, cz + side * (d / 2 - 1)),
+				Color = C.DOCK, Material = MAT.WOOD, CanCollide = false,
 			})
-			_tag(sp, "FarmSpawn")
+		end
+		for oz = -d / 2 + 13, d / 2 - 13, 12 do
+			_part(root, {
+				Name = "FarmPost", Size = Vector3.new(1, 4, 1),
+				Position = Vector3.new(cx + side * (w / 2 - 1), railY + 2, cz + oz),
+				Color = C.DOCK, Material = MAT.WOOD, CanCollide = false,
+			})
 		end
 	end
+	FarmKit.buildWalls(root, "OCEAN")
+	-- palms on the beach strip round the grass (non-colliding)
 	local rng = Random.new(farm.seed)
 	for _ = 1, farm.palms do
-		_palm(root, rng, rng:NextNumber(cx - w / 2 + 20, cx + w / 2 - 20),
-			rng:NextNumber(cz - d / 2 + 30, cz + d / 2 - 30), WATER_Y + 2.5, false)
+		local sx = rng:NextNumber() < 0.5 and -1 or 1
+		local alongX = rng:NextNumber() < 0.5
+		local px = alongX and rng:NextNumber(cx - w / 2 + 5, cx + w / 2 - 5) or (cx + sx * (F.grassHalfX + 4))
+		local pz = alongX and (cz + sx * (F.grassHalfZ + 7)) or rng:NextNumber(cz - d / 2 + 5, cz + d / 2 - 5)
+		_palm(root, rng, px, pz, WATER_Y + 2, false)
 	end
 end
 

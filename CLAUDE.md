@@ -348,6 +348,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   RACING) lists every item by slot with its `ItemBlurbs` line; the first
   pickup of an item in a session shows a NEW card (ItemPickedUp carries
   `item`). A new item needs its ItemBlurbs line (the guide shows it).
+- The farm of each biome is `Shared/FarmBounds` (centre from the track's
+  `farm`, wall-to-wall size, floor Y, item area, spawn markers): the map
+  builders, `Maps/FarmKit` (invisible walls in FarmArea), FarmingManager
+  (item spawns, drops clamped inside), CharacterManager, FarmBots and
+  `Modules/FarmRescue` (FARMING: anyone fallen, flung or outside goes back
+  to a spawn marker, telemetry `farm_rescue`) all read it. Change the farm
+  there, not in a map file (spec `farm_bounds`).
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`),

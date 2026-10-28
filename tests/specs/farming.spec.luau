@@ -645,7 +645,7 @@ R.describe("dropping an item (Q, swap, knock-out)", function()
 		local srv = farmServer(2)
 		local a, b = srv.players[1], srv.players[2]
 		local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")
-		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(10, 3, 300)   -- faces -Z
+		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(10, 3, 850)   -- faces -Z (on the farm: drops stay inside its walls)
 		srv.SessionManager.getData(a).inventory = { "Kettle", "Pizza" }
 		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestDrop, a, 2)).toBe("ok")
 		R.expect(table.concat(srv.SessionManager.getData(a).inventory, ",")).toBe("Kettle")
@@ -654,8 +654,8 @@ R.describe("dropping an item (Q, swap, knock-out)", function()
 		R.expect(placed[1].item).toBe("Pizza")
 		R.expect(placed[1].parts).toBeGreaterThan(0)
 		-- landed ahead (-Z) of the dropper, about DROP_TOSS studs away
-		R.expect(placed[1].z).toBeLessThan(300 - C.DROP_TOSS + 2)
-		R.expect(placed[1].z).toBeGreaterThan(300 - C.DROP_TOSS - 3)
+		R.expect(placed[1].z).toBeLessThan(850 - C.DROP_TOSS + 2)
+		R.expect(placed[1].z).toBeGreaterThan(850 - C.DROP_TOSS - 3)
 		-- the dropped Pizza is a pickable item again, for the other player
 		local tag
 		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
@@ -671,7 +671,7 @@ R.describe("dropping an item (Q, swap, knock-out)", function()
 	R.it("tells every client to draw the throw, from the dropper to the landing spot", function()
 		local srv = farmServer(2)
 		local a = srv.players[1]
-		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 300)
+		a.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 850)
 		srv.SessionManager.getData(a).inventory = { "Log" }
 		srv.mock.invoke(srv.RemoteEvents.RequestDrop, a, 1)
 		local drops = farmActions(srv, "drop")

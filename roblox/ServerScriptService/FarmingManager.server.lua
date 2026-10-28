@@ -23,6 +23,7 @@ local FarmingRules       = require(ReplicatedStorage.Shared.FarmingRules)
 local Cosmetics          = require(ReplicatedStorage.Shared.Cosmetics)
 local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
 local FarmBots           = require(ServerScriptService.Modules.FarmBots)
+local FarmRescue         = require(ServerScriptService.Modules.FarmRescue)
 
 print("[FarmingManager] All requires succeeded")
 
@@ -42,15 +43,11 @@ local _active     = false
 local _itemCounter = 0   -- monotonic ID so every spawned part gets a unique key
 local _farmRound   = 0   -- item waves of an older round do nothing
 
--- Per-biome farm zone constants. Hardcoded baseY values match the surface Y
--- each MapBuilder uses for its farm ground; bounding-box inference is unreliable
--- (tall trees skew Y, water planes skew X/Z). Lifted to module scope so both
--- _spawnItems and _dropItem can resolve the correct ground Y for the active biome.
-local BIOME_ZONES = {
-	FOREST = { cx=0, cz=350, halfX=80, halfZ=120, baseY=1.0 },  -- FarmGround surface Y=1
-	OCEAN  = { cx=0, cz=375, halfX=55, halfZ=90,  baseY=5.0 },  -- FarmGrass surface Y=5 (WATER_Y+2.5+0.5)
-	SKY    = { cx=0, cz=390, halfX=35, halfZ=70,  baseY=80.0 }, -- FarmPlatform surface Y=80
-}
+-- Where the farm is, its floor and where items may land: Shared/FarmBounds
+-- (the same numbers the maps build their walls from). The old table here had
+-- farm centres at Z 350–390 (the farms are at 850 / 1850) and items were
+-- spread over the FarmArea model's bounding box, decoration included.
+local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
 
 -- ─── Weighted spawn pool ──────────────────────────────────────────────────────
 
@@ -93,32 +90,10 @@ local function _spawnItems(biome, count, dist, keep)
 		return
 	end
 
-	-- Derive farm area bounds from FarmSpawnPoint parts inside this biome's map.
-	-- Each MapBuilder places tagged FarmSpawnPoint Parts at the correct position
-	-- and height for their biome — using them avoids hardcoded coordinates that
-	-- break for SKY (floating platforms) and OCEAN (elevated dock/island).
-	local spawnCX, spawnCZ, halfX, halfZ, baseY
-
-	-- Always use hardcoded baseY: bounding-box Y is skewed by tall objects (barn, trees).
-	local zone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
-	baseY = zone.baseY
-
-	local farmModel = mapModel:FindFirstChild("FarmArea")
-	if farmModel then
-		-- Use bounding box only for horizontal extent (X/Z), not Y.
-		local fcf, fsize = farmModel:GetBoundingBox()
-		spawnCX = fcf.Position.X
-		spawnCZ = fcf.Position.Z
-		halfX   = math.min(fsize.X * 0.45, 80)
-		halfZ   = math.min(fsize.Z * 0.45, 150)
-	else
-		spawnCX = zone.cx
-		spawnCZ = zone.cz
-		halfX   = zone.halfX
-		halfZ   = zone.halfZ
-	end
-	print(string.format("[FarmingManager] Spawn zone biome=%s cx=%d cz=%d halfX=%d halfZ=%d baseY=%.1f",
-		tostring(biome), spawnCX, spawnCZ, halfX, halfZ, baseY))
+	-- Items land on the farm floor, inside the walls and clear of solid
+	-- scenery (FarmBounds.itemSpotOk).
+	local zone = FarmBounds.get(biome)
+	local baseY = zone.floorY
 
 	local usedPositions = {}
 	if keep then
@@ -138,11 +113,7 @@ local function _spawnItems(biome, count, dist, keep)
 		-- Find non-overlapping position (max 20 attempts)
 		local pos
 		for _ = 1, 20 do
-			local candidate = Vector3.new(
-				spawnCX + (math.random() * 2 - 1) * halfX,
-				baseY,
-				spawnCZ + (math.random() * 2 - 1) * halfZ
-			)
+			local candidate = FarmBounds.randomItemSpot(biome)
 			local ok = true
 			for _, used in ipairs(usedPositions) do
 				if (candidate - used).Magnitude < MIN_SEPARATION then
@@ -322,7 +293,7 @@ local function _dropItem(player, slotIndex, reason)
 		local gm = require(game.ServerScriptService.GameManager)
 		return gm.getBiome()
 	end)()) or "FOREST"
-	local biomeZone = BIOME_ZONES[biome] or BIOME_ZONES.FOREST
+	local biomeZone = FarmBounds.get(biome)
 
 	local char = player.Character
 	local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -337,9 +308,11 @@ local function _dropItem(player, slotIndex, reason)
 		look = look.Magnitude > 1e-3 and look.Unit or Vector3.new(0, 0, -1)
 		local side = Vector3.new(-look.Z, 0, look.X)
 		local at = root.Position + look * Constants.DROP_TOSS + side * (math.random() * 2 - 1) * 1.5
-		spawnPos = Vector3.new(at.X, biomeZone.baseY, at.Z)
+		-- never past the farm's walls (a drop next to one stays inside)
+		local x, z = FarmBounds.clamp(biome, at.X, at.Z)
+		spawnPos = Vector3.new(x, biomeZone.floorY, z)
 	else
-		spawnPos = Vector3.new(0, biomeZone.baseY, 0)
+		spawnPos = Vector3.new(biomeZone.cx, biomeZone.floorY, biomeZone.cz)
 	end
 
 	local mapName  = biome:sub(1,1):upper() .. biome:sub(2):lower() .. "Map"
@@ -922,6 +895,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 		local n = humans + FarmBots.wanted(humans, GameManager.getHarness())
 		local first = _spawnItems(biome, Constants.farmSupply(n))
 		-- Bots fill an empty farm (live servers; harness `fillBots`)
+		FarmRescue.start(biome)   -- nobody leaves the farm (Shared/FarmBounds)
 		FarmBots.start(biome, {
 			items = function() return _items, _contests end,
 			pickup = _requestPickup, contestPress = _contestPress, punch = _punch, defend = _defend,
@@ -944,10 +918,12 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end)())
 
 	elseif phase == Constants.PHASES.LOBBY then
+		FarmRescue.stop()
 		FarmBots.clear()
 	elseif phase == Constants.PHASES.CRAFTING then
 		_active = false
 		_contests = {}
+		FarmRescue.stop()
 		FarmBots.stop()
 		-- fights end with the phase: drop guards and hit counts
 		for _, p in ipairs(SessionManager.actors()) do
