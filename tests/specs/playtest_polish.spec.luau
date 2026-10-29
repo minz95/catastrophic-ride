@@ -42,6 +42,15 @@ R.describe("playtest polish", function()
 		end
 	end)
 
+	R.it("the pick-up bow leans forward (playtest 2026-10-30: +32° leant back, no pick-up showed)", function()
+		local roblox = require("@lune/roblox")
+		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmFx.client.lua")
+		local deg = tonumber(src:match("bendDown%s*=%s*A%(R%((%-?%d+)%)"))
+		-- the waist pose turns the upper body in its parent's space (-Z forward)
+		local up = roblox.CFrame.Angles(math.rad(deg), 0, 0).UpVector
+		R.expect(up.Z).toBeLessThan(-0.6)
+	end)
+
 	R.it("every music tryout candidate has an id and a title", function()
 		for slot, list in pairs(SoundConfig.TRY) do
 			R.expect(#list).toBeGreaterThan(2)

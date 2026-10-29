@@ -562,6 +562,41 @@ R.describe("fights: punches pile up and knock an item loose", function()
 		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("miss")
 	end)
 
+	R.it("the client's aim reach counts for the one it turned to (playtest 2026-10-30: punches missed a step away)", function()
+		local srv, a, b, F = setup()
+		b.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 850 - F.RANGE - F.ASSIST_REACH + 0.3)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a)).toBe("miss")                -- no aim: RANGE
+		srv.advance(F.COOLDOWN + 0.05)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, a, b.UserId)).toBe("hit")       -- aimed at b
+	end)
+
+	R.it("a hit pushes the victim only a little: the next punch still reaches", function()
+		local _, _, _, F = setup()
+		-- the push decays within about a third of a second on the ground
+		R.expect(F.KNOCKBACK * 0.35).toBeLessThan(F.RANGE)
+		R.expect(F.KNOCKBACK * F.KO_KNOCKBACK).toBeGreaterThan(F.KNOCKBACK)
+		R.expect(F.HITS_TO_DROP).toBeLessThan(4)
+	end)
+
+	R.it("punching a thief mid-grab breaks the grab: nothing is taken (playtest 2026-10-30)", function()
+		local srv, a, b, F = setup()
+		local SM = srv.SessionManager
+		srv.advance(25)   -- past the steal-free start
+		SM.getData(a).inventory = {}
+		-- A grabs B (4 studs in front); B turns round and punches A
+		local _, box = srv.mock.invoke(srv.RemoteEvents.RequestSteal, a, b.UserId)
+		srv.advance(0.2)
+		R.expect(box.done).toBe(false)
+		-- (turned with Angles: Lune's CFrame.lookAt flips Z)
+		b.Character.HumanoidRootPart.CFrame = roblox.CFrame.new(0, 3, 846) * roblox.CFrame.Angles(0, math.pi, 0)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, b, a.UserId)).toBe("hit")
+		srv.advance(0.2)
+		R.expect(box.done).toBe(true)          -- let go at once, not at the end of the window
+		R.expect(box.result).toBe("punched")
+		R.expect(#SM.getData(b).inventory).toBe(3)
+		R.expect(#SM.getData(a).inventory).toBe(0)
+	end)
+
 	R.it("every punch is logged with its result", function()
 		local srv, _, _, _, punch = setup()
 		punch()

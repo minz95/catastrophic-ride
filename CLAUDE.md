@@ -241,7 +241,16 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `ownPunch` / `ownKick`. The swing winds up, snaps, holds and comes
   back (FarmFx `SWING`); a landed hit flashes a ball and ring on the
   victim and kicks your view (FOV); the server pushes a hit farm bot
-  (`FIGHT.BOT_KNOCKBACK`, a hop of `KNOCK_UP`). Pick-ups: the item flies
+  (`FIGHT.BOT_KNOCKBACK`, a hop of `KNOCK_UP`). Knock-backs are small
+  (`KNOCKBACK` 14, the knock-out `KO_KNOCKBACK` ×): 26 sent victims out of
+  RANGE and the next punch missed. The server takes the aimed target within
+  RANGE + ASSIST_REACH (the client's own reach). A landed punch on someone
+  mid-grab breaks the grab (`FIGHT.BREAKS_GRAB`, steal result "punched").
+  On your own avatar the Animate script's tracks drowned the posed joints
+  (shoulder 117°, arm 15-41° on screen): FarmFx `quietAnim` fades them out
+  (and strengthens AnimationConstraint motors) while a swing, kick or
+  pick-up plays, put back after the last one. A waist rotation leans
+  FORWARD only when negative about X (the old +32° pick-up bow leant back). Pick-ups: the item flies
   into the picker's hands (`PICKUP_FLY`, FarmingManager) and every client
   draws a bow-and-lift (FarmFx `onPickup`). The equipped move's style reaches the client as the
   player attribute `MoveStyle` (ShopHat.refresh).
@@ -381,7 +390,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (item spawns, drops clamped inside), CharacterManager, FarmBots and
   `Modules/FarmRescue` (FARMING: anyone fallen, flung or outside goes back
   to a spawn marker, telemetry `farm_rescue`) all read it. Change the farm
-  there, not in a map file (spec `farm_bounds`).
+  there, not in a map file (spec `farm_bounds`; FOREST's crop rows and barn
+  follow its size). Since 2026-10-30 about 100 × 130, 84 × 112, 88 × 108.
+  Studio `sim.py run farm-feel`: one brawler client and three farm bots;
+  every sound a client starts is reported (`bot_sound`, with `shopOpen`).
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
@@ -408,7 +420,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
   Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
   collision group `FarmBot`: bots pass through each other, two that met
-  were flung ~30 up;
+  were flung ~30 up; they hit back, chase whoever hit or robbed them
+  (`REVENGE_FOR`), punch a thief off, weigh rarity (`GREED`), leave an item
+  another bot is nearer to, and give up on one they get no closer to
+  (`GIVE_UP`, telemetry `give_up`);
   `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /
   punch / guard / steal / defend functions (they keep a bag slot free to rob
   someone), then race the auto craft of their bag and fire its abilities

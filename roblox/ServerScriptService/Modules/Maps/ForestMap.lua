@@ -125,12 +125,14 @@ local function _buildFarmArea(root)
 		Material = MAT.DIRT,
 	})
 
+	-- crop rows over the farm, clear of the fence (they scale with it)
+	local colGap, rowGap = (FHX - 14) / 2, (2 * FHZ - 34) / 6
 	for row = 0, 6 do
 		for col = -2, 2 do
 			_part(root, {
 				Name       = "CropRow",
-				Size       = Vector3.new(18, 1.5, 3),
-				Position   = Vector3.new(FARM_CX + col * 26, 0.8, FARM_CZ - 84 + row * 28),
+				Size       = Vector3.new(math.min(18, colGap - 4), 1.5, 3),
+				Position   = Vector3.new(FARM_CX + col * colGap, 0.8, FARM_CZ - FHZ + 17 + row * rowGap),
 				Color      = C.CROP_GREEN,
 				Material   = MAT.LEAVES,
 				CanCollide = false,
@@ -140,7 +142,7 @@ local function _buildFarmArea(root)
 	end
 
 	-- the barn, in a corner (FarmBounds keepOut: no item lands inside it)
-	local BX, BZ = FARM_CX - 58.5, FARM_CZ + 80
+	local BX, BZ = FARM_CX - FHX + 16.5, FARM_CZ + FHZ - 25   -- keepOut in FarmBounds
 	_part(root, {
 		Name     = "BarnWall",
 		Size     = Vector3.new(25, 14, 18),

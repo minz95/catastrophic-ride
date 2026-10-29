@@ -205,17 +205,49 @@ local function face(bot, pos)
 	end
 end
 
--- Nearest free item (not taken, not in a contest).
-local function nearestItem(bot, items, contests)
-	local best, bestD, bestId
+local RARITY_VALUE = { Common = 1, Uncommon = 2, Rare = 4, Epic = 8 }
+
+-- The free item (not taken, not in a contest, not given up on) worth the
+-- walk: rarer ones are worth GREED studs more per rarity point, and one
+-- another bot is already heading for and nearer to is left to it (bots
+-- used to file after the same nearest item and fight over it).
+local function nearestItem(bot, items, contests, now)
+	local best, bestD, bestId, bestScore
 	local pos = bot.root.Position
+	local greed = Constants.BOTS.FARM.GREED
 	for id, it in pairs(items) do
-		if not it.taken and not contests[id] and it.part and it.part.Parent and not bot.skip[id] then
+		if not it.taken and not contests[id] and it.part and it.part.Parent and now >= (bot.skip[id] or 0) then
 			local d = flat(it.part.Position - pos).Magnitude
-			if not bestD or d < bestD then best, bestD, bestId = it, d, id end
+			local claimed = false
+			for _, other in ipairs(FarmBots.list) do
+				if other ~= bot and other.targetId == id and other.root
+					and flat(it.part.Position - other.root.Position).Magnitude < d then
+					claimed = true
+				end
+			end
+			local score = (RARITY_VALUE[it.rarity] or 1) * greed - d - (claimed and 1000 or 0)
+			if not bestScore or score > bestScore then best, bestD, bestId, bestScore = it, d, id, score end
 		end
 	end
 	return bestId, best, bestD
+end
+
+-- The root part (and the proxy) of player or bot `id`.
+local function rootOf(id)
+	local a = id and SessionManager.actorById(id)
+	return a and a.Character and a.Character:FindFirstChild("HumanoidRootPart"), a
+end
+
+-- Face `r` and throw a punch at it (the server checks reach and facing).
+local function swingAt(bot, r, targetId, why)
+	face(bot, r.Position)
+	-- one swing per punch cooldown (it thinks 4 times a second)
+	local t = os.clock()
+	if t < (bot.nextSwing or 0) then return "wait" end
+	bot.nextSwing = t + Constants.FIGHT.COOLDOWN + 0.1
+	local res = _api.punch(bot.proxy, targetId)
+	Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "punch", why = why, result = res })
+	return res
 end
 
 local function nearestHuman(bot, range)
@@ -272,9 +304,16 @@ local function think(bot, dt, now)
 	if not data or not bot.root or not bot.root.Parent then return end
 	local items, contests = _api.items()
 
-	-- grabbed: tap to defend now and then
-	if data._stealWindow and _rng:NextNumber() < F.DEFEND then
-		_api.defend(bot.proxy)
+	-- grabbed: punch the thief off (FIGHT.BREAKS_GRAB) or tap to defend
+	if data._stealWindow then
+		local r = rootOf(data._stealWindow.thief)
+		if r and _api.punch and flat(r.Position - bot.root.Position).Magnitude <= Constants.FIGHT.RANGE
+			and _rng:NextNumber() < F.BREAK_GRAB then
+			swingAt(bot, r, data._stealWindow.thief, "grab")
+			return
+		elseif _rng:NextNumber() < F.DEFEND then
+			_api.defend(bot.proxy)
+		end
 	end
 
 	-- a contest someone started with us
@@ -300,16 +339,50 @@ local function think(bot, dt, now)
 		bot.guardUntil = nil
 		bot.nextGuard = now + F.GUARD_REST
 	end
-	-- just hit, or a player squares up: raise the guard now and then
 	local lastHit = bot.seenHit
 	bot.seenHit = data._lastHitAt
+	local hitNow = data._lastHitAt ~= nil and data._lastHitAt ~= lastHit   -- a new hit since the last think
+	-- hit or robbed: go after whoever did it for a while
+	if hitNow and data._lastHitBy then
+		bot.revenge = { id = data._lastHitBy, untilT = now + F.REVENGE_FOR }
+	end
+	if data._robbedAt and data._robbedAt ~= bot.seenRobbed then
+		bot.seenRobbed = data._robbedAt
+		bot.revenge = { id = data._robbedBy, untilT = now + F.REVENGE_FOR }
+		bot.chase = nil
+	end
+	-- just hit, or a player squares up: raise the guard now and then
 	if now >= (bot.nextGuard or 0) and _api.guard then
-		local hitNow = data._lastHitAt ~= nil and data._lastHitAt ~= lastHit   -- a new hit since the last think
 		local chance = hitNow and F.GUARD_HIT or (threatened(bot) and F.GUARD_NEAR) or 0
 		if chance > 0 and _rng:NextNumber() < chance * (hitNow and 1 or dt) then
 			local r = threatened(bot)
 			if r then face(bot, r.Position) end
 			guard(bot, true, now)
+			return
+		end
+	end
+
+	-- just hit by someone in reach: swing back at once, when it did not guard
+	if hitNow and _api.punch and _rng:NextNumber() < F.HIT_BACK then
+		local r = rootOf(data._lastHitBy)
+		if r and flat(r.Position - bot.root.Position).Magnitude <= Constants.FIGHT.RANGE then
+			swingAt(bot, r, data._lastHitBy, "hit back")
+			return
+		end
+	end
+
+	-- revenge: walk up to whoever hit or robbed it and punch (a knock-out
+	-- drops one of their items: maybe the stolen one)
+	if bot.revenge then
+		local rv = bot.revenge
+		local r = rootOf(rv.id)
+		if not r or now > rv.untilT or not _api.punch then
+			bot.revenge = nil
+		elseif flat(r.Position - bot.root.Position).Magnitude <= Constants.FIGHT.RANGE - 0.5 then
+			swingAt(bot, r, rv.id, "revenge")
+			return
+		else
+			walkTo(bot, r.Position, dt)
 			return
 		end
 	end
@@ -349,9 +422,7 @@ local function think(bot, dt, now)
 		bot.nextPunch = now + F.PUNCH_EVERY * _rng:NextNumber(0.6, 1.4)
 		local target = _rng:NextNumber() < F.PUNCH_CHANCE and nearestHuman(bot, Constants.FIGHT.RANGE)
 		if target then
-			face(bot, target.Position)
-			local res = _api.punch(bot.proxy)
-			Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "punch", result = res })
+			swingAt(bot, target, nil, "random")
 			return
 		end
 	end
@@ -372,17 +443,29 @@ local function think(bot, dt, now)
 		return
 	end
 
-	local id, item, d = nearestItem(bot, items, contests)
-	if not id then return end
+	local id, item, d = nearestItem(bot, items, contests, now)
+	if not id then bot.targetId = nil return end
+	if id ~= bot.targetId then
+		bot.targetId, bot.closest, bot.closerAt = id, d, now
+	elseif d < bot.closest - 1 then
+		bot.closest, bot.closerAt = d, now
+	end
 	if d <= Constants.PICKUP_RANGE - 2 then
 		local res = _api.pickup(bot.proxy, id)
 		Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "pickup", item = item.itemName, result = res })
 		if res == "contested" then
 			bot.contest, bot.presses = id, 0
 		elseif res ~= "ok" then
-			bot.skip[id] = true   -- e.g. full of better items: look elsewhere
+			bot.skip[id] = math.huge   -- e.g. full of better items: look elsewhere
 		end
+		bot.targetId = nil
+	elseif now - bot.closerAt > F.GIVE_UP then
+		-- not getting any closer (a crate, a wall, someone in the way): another item
+		bot.skip[id] = now + F.SKIP_FOR
+		bot.targetId = nil
+		Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "give_up", item = item.itemName })
 	else
+		if now - bot.closerAt > F.STUCK_AFTER and bot.hum then bot.hum.Jump = true end
 		walkTo(bot, item.part.Position, dt)
 	end
 end

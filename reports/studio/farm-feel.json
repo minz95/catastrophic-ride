@@ -1,0 +1,6711 @@
+{
+ "checks": [],
+ "commit": "a32c0ea",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-10-29T15:17:36.907Z,0.907728,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-29T15:17:37.046Z,1.046171,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-29T15:17:37.084Z,1.084077,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-29T15:17:37.866Z,1.866509,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-29T15:17:38.669Z,2.669145,6f37f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"33c22cd6-79aa-4794-a663-e059ad442d3d\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-10-29T15:18:37.868Z,61.868782,6f37f000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-29T15:18:53.789Z,77.789436,6f37f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"33c22cd6-79aa-4794-a663-e059ad442d3d\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-29T15:18:53.932Z,77.932404,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-10-29T15:18:53.932Z,77.932480,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '2'"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "durations": {
+   "CRAFTING": 25,
+   "FARMING": 45,
+   "RACING": 30,
+   "RESULTS": 3
+  },
+  "farmProfiles": [
+   "brawler"
+  ],
+  "fillBots": 4,
+  "lobbyDelay": 10,
+  "maxSeconds": 220,
+  "players": 1,
+  "shopUi": true,
+  "stopAfter": "CRAFTING"
+ },
+ "ranAt": "2026-10-30T00:18:54+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "expert",
+     "average",
+     "novice"
+    ],
+    "farmProfiles": [
+     "brawler"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 25,
+    "FARMING": 45,
+    "RACING": 30,
+    "RESULTS": 3
+   },
+   "fillBots": 4,
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 10,
+   "maxSeconds": 220,
+   "players": 1,
+   "rounds": 1,
+   "shopUi": true,
+   "stopAfter": "CRAFTING"
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "stopAfter CRAFTING",
+  "errors": [],
+  "harness": "match",
+  "rounds": [
+   {
+    "biome": "FOREST",
+    "craft": {
+     "-1": {
+      "auto": false,
+      "rejected": [],
+      "slots": [],
+      "stats": {
+       "acceleration": 11.1,
+       "boostDuration": 1.7000000000000002,
+       "floatability": 2,
+       "flyability": 5.25,
+       "speed": 23,
+       "stability": 31.779999999999998
+      }
+     }
+    },
+    "craftT0": 58.492,
+    "durationSeconds": 47.92094554170035,
+    "farm": {
+     "attempts": {
+      "denied: too late": 2,
+      "punched": 3
+     },
+     "ledgerMismatches": [],
+     "players": {
+      "-1": {
+       "attempts": [],
+       "contestsLost": 7,
+       "contestsWon": 0,
+       "defencesTried": 0,
+       "inventory": 0,
+       "ledger": 0,
+       "pickups": 0,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100001": {
+       "attempts": {
+        "punched": 1
+       },
+       "contestsLost": 2,
+       "contestsWon": 2,
+       "defencesTried": 0,
+       "drops": 5,
+       "ledger": 1,
+       "pickups": 6,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100002": {
+       "attempts": {
+        "denied: too late": 1
+       },
+       "contestsLost": 0,
+       "contestsWon": 5,
+       "defencesTried": 0,
+       "drops": 3,
+       "ledger": 5,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      },
+      "-100003": {
+       "attempts": {
+        "denied: too late": 1,
+        "punched": 2
+       },
+       "contestsLost": 0,
+       "contestsWon": 2,
+       "defencesTried": 0,
+       "drops": 1,
+       "ledger": 7,
+       "pickups": 8,
+       "robbed": 0,
+       "stolen": 0
+      }
+     },
+     "punches": {
+      "blocked": 17,
+      "hit": 65,
+      "immune": 50,
+      "knockout": 9
+     }
+    },
+    "finishOrder": [],
+    "inventories": {
+     "-1": []
+    },
+    "players": [
+     {
+      "boostDuration": 1.7000000000000002,
+      "driver": "expert",
+      "farm": "brawler",
+      "name": "Player1",
+      "slots": [],
+      "speed": 23,
+      "userId": -1
+     }
+    ],
+    "raceStartedAt": 62.91825137496926,
+    "round": 1,
+    "startedAt": 16.00967154162936,
+    "t0": 13.475
+   }
+  ],
+  "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: denied: too late=2, punched=3\n    -100003: picked 8, contests 2/2, stole 0, robbed 0, defences 0, items nil\n    -100001: picked 6, contests 2/4, stole 0, robbed 0, defences 0, items nil\n    -100002: picked 8, contests 5/5, stole 0, robbed 0, defences 0, items nil\n    -1: picked 0, contests 0/7, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: bot_craft=1 bot_farm=105 bot_farmfx=47 bot_guard=8 bot_hud=23 bot_joined=1 bot_punch=72 bot_ready=1 bot_screen=2 bot_shop_open=2 bot_shop_ui=106 bot_showroom_spin=1 bot_sound=47 bot_spin_fx=1 contest_result=9 craft=1 craft_preview=2 farm_bot=3 harness_crafting=1 harness_round=1 item_drop=9 item_dropped_world=9 item_pickup=22 item_wave=3 phase=3 punch=141 race_bot=3 race_sample=2 race_start=1 server_perf=30 steal_attempt=5 vehicle_spawn=1",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 45.4,
+     "kind": "server_perf",
+     "memMb": 2142,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2
+    },
+    {
+     "driver": "expert",
+     "farm": "brawler",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 3.338,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "expert",
+      "farm": "brawler"
+     },
+     "kind": "bot_ready",
+     "t": 3.549,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2150,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 519.5,
+     "t": 4.015
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.7118930000578985,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 4.499,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.8355585417011753,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 4.582,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.886264333385043,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.632,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.8862802083604038,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.632,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.886329833418131,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 4.632,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.8863380000693724,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 4.632,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_jump_land.mp3",
+      "looped": false,
+      "name": "Landing",
+      "path": "Workspace.Player1.HumanoidRootPart.Landing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.6805584584362805,
+      "volume": 1
+     },
+     "kind": "bot_sound",
+     "t": 5.415,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.7159890417242423,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 5.448,
+     "userId": -1
+    },
+    {
+     "data": {
+      "phase": "LOBBY",
+      "t": 3.9150103750871494
+     },
+     "kind": "bot_shop_open",
+     "t": 5.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 5.965,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.9,
+     "kind": "server_perf",
+     "memMb": 2187,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 8.8,
+     "t": 6.016
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 6.466,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 6.981,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 7.498,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 7.998,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2180,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 187,
+     "t": 8.031
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 8.515,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 9.031,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 9.548,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2181,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 3.4,
+     "t": 10.032
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 10.048,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 10.564,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 11.081,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 11.581,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2181,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.7,
+     "t": 12.048
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 12.098,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 12.599,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Waiting for players",
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 13.114,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "FARMING",
+     "round": 1,
+     "t": 13.382
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Rusty",
+     "t": 13.415,
+     "userId": -100001
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Duckie",
+     "t": 13.417,
+     "userId": -100002
+    },
+    {
+     "biome": "FOREST",
+     "kind": "farm_bot",
+     "name": "Turbo Tom",
+     "t": 13.42,
+     "userId": -100003
+    },
+    {
+     "count": 36,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 13.42,
+     "wave": 0
+    },
+    {
+     "kind": "harness_round",
+     "round": 1,
+     "t": 13.475
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 44.7789261341095,
+      "open": true,
+      "phase": "LOBBY"
+     },
+     "kind": "bot_shop_ui",
+     "t": 13.614,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 11.940323583432473,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 13.665,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 11.940355000086129,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 13.665,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Ambience",
+      "id": "rbxassetid://139767023947424",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 11.940486916690134,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 13.665,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Ambience",
+      "id": "rbxassetid://139767023947424",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 11.940496125025675,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 13.665,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 12.013793583377264,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 13.748,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Skateboard",
+     "itemId": "24",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 13.898,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Skateboard",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 13.898,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 13.914,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 12.213892000028864,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 13.948,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 54.3,
+     "kind": "server_perf",
+     "memMb": 2281,
+     "phase": "FARMING",
+     "physicsFps": 57.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 77.9,
+     "t": 14.053
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 44.26585006713867,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 14.132,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://1843599021",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 12.747494000010192,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 14.481,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://1843599021",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 12.747515916707925,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 14.481,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 43.764338970184326,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 14.632,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 43.26409602165222,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 15.131,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:42"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 42.78064799308777
+     },
+     "kind": "bot_hud",
+     "t": 15.614,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 42.74816703796387,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 15.648,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Microwave",
+     "itemId": "33",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 15.732,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Microwave",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 15.732,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 15.764,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2235,
+     "phase": "FARMING",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 57.9,
+     "t": 16.064
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 42.24770212173462,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 16.148,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Microwave",
+     "itemId": "1",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 16.248,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Microwave",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 16.248,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 16.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 41.73072791099548,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 16.664,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Treadmill",
+     "itemId": "16",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 16.749,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Treadmill",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 16.749,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 16.764,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9120729007",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.082091125077568,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 16.814,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9120729007",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.082119208411314,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 16.814,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 16.814,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113534108",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.097684750100598,
+      "volume": 0.800000011920929
+     },
+     "kind": "bot_sound",
+     "t": 16.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113534108",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.09771650005132,
+      "volume": 0.800000011920929
+     },
+     "kind": "bot_sound",
+     "t": 16.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 16.831,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Propeller Hat",
+     "itemId": "4",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 17.015,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Propeller Hat",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 17.015,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.031,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 41.214229106903076,
+      "notice": "The round started: grab items!  (B: shop)",
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 17.181,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 118,
+      "result": "hit",
+      "turned": 75,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.231,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 17.265,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 17.265,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113534108",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.58017754170578,
+      "volume": 0.800000011920929
+     },
+     "kind": "bot_sound",
+     "t": 17.315,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 118,
+      "turned": 84,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.331,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.646936083445325,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 17.381,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.663367666769773,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 17.398,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9120729007",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.66490887501277,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 17.398,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 17.398,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113534108",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 15.696794541669078,
+      "volume": 0.800000011920929
+     },
+     "kind": "bot_sound",
+     "t": 17.431,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 17.431,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 17.515,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.548,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:40"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 40.76398301124573
+     },
+     "kind": "bot_hud",
+     "t": 17.631,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 40.697530031204224,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 17.698,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -100002,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "hit",
+      "turned": 119,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.715,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Alarm Clock",
+     "itemId": "20",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 17.781,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Alarm Clock",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 17.781,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.832,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "hit",
+      "turned": 39,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.832,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 34,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 17.915,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9120729007",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 16.231972291716374,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 17.965,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 17.965,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9119075972",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 16.28013737499714,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 18.015,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9119075972",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 16.280159750021994,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 18.015,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 18.015,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Rubber Duck",
+     "itemId": "3",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 18.031,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Rubber Duck",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 18.031,
+     "userId": -100001
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2237,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 81.9,
+     "t": 18.065
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 18.082,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 40.18040204048157,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 18.214,
+     "userId": -1
+    },
+    {
+     "act": "pickup",
+     "item": "Fan",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 18.298,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "blocked",
+      "turned": 10,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 18.414,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 10,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 18.481,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 18.514,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9119075972",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 16.8142117500538,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 18.548,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 18.548,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 39.66483402252197,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 18.731,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "blocked",
+      "turned": 16,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 18.964,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 28,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.031,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 19.097,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9119075972",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 17.379995666677132,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 19.115,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 19.115,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 39.16529297828674,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 19.231,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "blocked",
+      "turned": 28,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.514,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 33,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 19.614,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:38"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 38.74866008758545
+     },
+     "kind": "bot_hud",
+     "t": 19.647,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 19.664,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 19.681,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 38.665112018585205,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 19.731,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "blocked",
+      "turned": 25,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.081,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2235,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 37.2,
+     "t": 20.081
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 26,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.181,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 38.149121046066284,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 20.248,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 20.331,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 20.381,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.581,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 37.64884901046753,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 20.748,
+     "userId": -1
+    },
+    {
+     "data": {
+      "attacker": -1,
+      "drawn": true,
+      "joint": "CFrame",
+      "posed": 119,
+      "result": "blocked",
+      "turned": 29,
+      "what": "punch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.781,
+     "userId": -1
+    },
+    {
+     "itemId": "6",
+     "kind": "contest_result",
+     "loser": -100001,
+     "presses": {
+      "-100001": 11,
+      "-100002": 12
+     },
+     "t": 20.815,
+     "winner": -100002
+    },
+    {
+     "inventory": 2,
+     "item": "Fan",
+     "itemId": "6",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 20.816,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 34,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "bow": -55,
+      "drawn": true,
+      "what": "pickup"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.864,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 20.865,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 20.865,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "inventory": 1,
+     "item": "Fan",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 20.898,
+     "userId": -100002
+    },
+    {
+     "item": "Fan",
+     "itemId": "37",
+     "kind": "item_dropped_world",
+     "parts": 62,
+     "t": 20.9,
+     "userId": -100002,
+     "x": 10,
+     "z": 839
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Fan",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 20.9,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "arc": 6.9,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 20.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113263968",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 19.21433404169511,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 20.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113263968",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 19.214351875009015,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 20.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 20.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 19.330334416707046,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 21.064,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 37.148293018341064,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 21.248,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": false,
+      "joint": "CFrame",
+      "posed": 119,
+      "turned": 45,
+      "what": "ownPunch"
+     },
+     "kind": "bot_farmfx",
+     "t": 21.414,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 21.465,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 21.514,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 19.796578208333813,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 21.531,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 21.648,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 21.648,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:36"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 36.73197913169861
+     },
+     "kind": "bot_hud",
+     "t": 21.665,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 36.631974935531616,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 21.765,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 20.0807880833745,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 21.814,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 22.031,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 22.047,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2237,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 39,
+     "t": 22.098
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 36.11573004722595,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 22.281,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 22.432,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 22.432,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 22.481,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.514,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 22.598,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 22.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 22.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 35.598413944244385,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 22.798,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 23.165,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 23.215,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 23.215,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 23.215,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 35.082242012023926,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 23.314,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:34"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 34.71538209915161
+     },
+     "kind": "bot_hud",
+     "t": 23.681,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 23.731,
+     "victim": -100002
+    },
+    {
+     "inventory": 4,
+     "item": "Propeller Hat",
+     "itemId": "36",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 23.749,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Propeller Hat",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 23.749,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 23.764,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 34.58205604553223,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 23.814,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 24.015,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 24.015,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2236,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 43.2,
+     "t": 24.114
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 24.297,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 24.331,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 34.06231093406677,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 24.331,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 24.781,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 24.781,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "grab"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "grab"
+     },
+     "kind": "bot_farmfx",
+     "t": 24.831,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 33.561444997787476,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 24.831,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 24.881,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 24.914,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 25.048,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 25.048,
+     "userId": -100003,
+     "why": "grab"
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "punched",
+     "t": 25.065,
+     "thief": -100001,
+     "victim": -100003
+    },
+    {
+     "act": "steal",
+     "kind": "bot_farm",
+     "result": "punched",
+     "t": 25.065,
+     "userId": -100001,
+     "victim": -100003
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "punched",
+      "what": "grabEnd"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.115,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 25.315,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Fan",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 25.315,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.348,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 33.04511094093323,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 25.348,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 25.464,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 25.498,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 25.565,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 25.565,
+     "userId": -100001,
+     "why": "grab"
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.597,
+     "userId": -1
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "punched",
+     "t": 25.615,
+     "thief": -100003,
+     "victim": -100001
+    },
+    {
+     "act": "steal",
+     "kind": "bot_farm",
+     "result": "punched",
+     "t": 25.615,
+     "userId": -100003,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "punched",
+      "what": "grabEnd"
+     },
+     "kind": "bot_farmfx",
+     "t": 25.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:32"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 32.71199297904968
+     },
+     "kind": "bot_hud",
+     "t": 25.681,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 32.529151916503906,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 25.865,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.031,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 26.064,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.098,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 26.098,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2236,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 37.5,
+     "t": 26.131
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 26.348,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 26.348,
+     "userId": -100001,
+     "why": "hit back"
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 26.348,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 26.364,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 32.028151988983154,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 26.364,
+     "userId": -1
+    },
+    {
+     "inventory": 0,
+     "item": "Microwave",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 26.598,
+     "userId": -100002
+    },
+    {
+     "item": "Microwave",
+     "itemId": "38",
+     "kind": "item_dropped_world",
+     "parts": 30,
+     "t": 26.599,
+     "userId": -100002,
+     "x": 10,
+     "z": 839
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Microwave",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 26.599,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "arc": 6.8,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 26.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113263968",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 24.91377208335325,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 26.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9113263968",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 24.91380570840556,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 26.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 26.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 31.512386083602905,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 26.88,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 27.131,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "blocked",
+     "t": 27.131,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 27.181,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 27.198,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 30.99650812149048,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 27.397,
+     "userId": -1
+    },
+    {
+     "inventory": 3,
+     "item": "Propeller Hat",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 27.648,
+     "userId": -100001
+    },
+    {
+     "item": "Propeller Hat",
+     "itemId": "39",
+     "kind": "item_dropped_world",
+     "parts": 18,
+     "t": 27.648,
+     "userId": -100001,
+     "x": 2,
+     "z": 873
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "item": "Propeller Hat",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 27.648,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "knockout",
+     "t": 27.648,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "guard"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.681,
+     "userId": -1
+    },
+    {
+     "data": {
+      "arc": 6.9,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.681,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:30"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 30.711386919021606
+     },
+     "kind": "bot_hud",
+     "t": 27.681,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 27.747,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 27.781,
+     "userId": -1
+    },
+    {
+     "itemId": "37",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100002": 11
+     },
+     "t": 27.831,
+     "winner": -100002
+    },
+    {
+     "inventory": 1,
+     "item": "Fan",
+     "itemId": "37",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 27.831,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9125397583",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 26.113592000096105,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 27.848,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9125397583",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 26.11361316672992,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 27.848,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 30.495867013931274,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 27.898,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Alarm Clock",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 27.898,
+     "userId": -100003
+    },
+    {
+     "item": "Alarm Clock",
+     "itemId": "40",
+     "kind": "item_dropped_world",
+     "parts": 54,
+     "t": 27.899,
+     "userId": -100003,
+     "x": 1,
+     "z": 864
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "item": "Alarm Clock",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 27.899,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "knockout",
+     "t": 27.899,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 27.899,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 27.899,
+     "userId": -100002,
+     "why": "hit back"
+    },
+    {
+     "data": {
+      "arc": 6.9,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 27.947,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2244,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 87.3,
+     "t": 28.131
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 28.297,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 28.314,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 29.99571990966797,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 28.397,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 28.415,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 28.415,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 28.681,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 28.681,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 28.681,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 28.681,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 29.495450019836426,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 28.897,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 29.114,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 29.164,
+     "userId": -1
+    },
+    {
+     "count": 6,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 29.184,
+     "wave": 1
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 29.198,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 29.198,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 29.23,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 28.98056197166443,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 29.414,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 29.448,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 29.448,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 29.448,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 29.448,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 29.68,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:28"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 28.696764945983887
+     },
+     "kind": "bot_hud",
+     "t": 29.697,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 29.714,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 28.479996919631958,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 29.914,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 29.981,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 29.981,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2245,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 48.9,
+     "t": 30.148
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 30.23,
+     "victim": -100002
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 30.231,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 30.231,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.231,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 30.231,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 30.247,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 27.963597059249878,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 30.43,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 30.731,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 30.731,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.781,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 30.814,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 27.463475942611694,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 30.93,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 30.998,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 30.998,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 30.998,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 30.998,
+     "userId": -100002,
+     "why": "hit back"
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 31.347,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 31.364,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 26.946900129318237,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 31.448,
+     "userId": -1
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 31.531,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 31.531,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:26"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 26.680259943008423
+     },
+     "kind": "bot_hud",
+     "t": 31.714,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 31.798,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 31.798,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 31.798,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 31.798,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "inventory": 0,
+     "item": "Fan",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 31.897,
+     "userId": -100002
+    },
+    {
+     "item": "Fan",
+     "itemId": "47",
+     "kind": "item_dropped_world",
+     "parts": 62,
+     "t": 31.899,
+     "userId": -100002,
+     "x": 11,
+     "z": 839
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Fan",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 31.899,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "arc": 6.8,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 31.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 31.948,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 26.445430040359497,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 31.948,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 32.064,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Propeller Hat",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 32.064,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2246,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 57.9,
+     "t": 32.164
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 25.93084692955017,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 32.464,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 32.598,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 32.647,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 25.413115978240967,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 32.981,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 33.148,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 33.198,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 33.347,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 33.347,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 33.364,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 24.896815061569214,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 33.497,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:24"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 24.663902044296265
+     },
+     "kind": "bot_hud",
+     "t": 33.731,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 33.731,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 33.747,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 24.380815982818604,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 34.014,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 34.131,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 34.131,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2246,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 47.5,
+     "t": 34.164
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 34.297,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 34.314,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 23.866219997406006,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 34.531,
+     "userId": -1
+    },
+    {
+     "itemId": "39",
+     "kind": "contest_result",
+     "loser": -100001,
+     "presses": {
+      "-100001": 11,
+      "-100003": 11
+     },
+     "t": 34.581,
+     "winner": -100003
+    },
+    {
+     "inventory": 3,
+     "item": "Propeller Hat",
+     "itemId": "39",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 34.581,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Microwave",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 34.648,
+     "userId": -100001
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 34.898,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 34.898,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 23.36610698699951,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 35.03,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 35.097,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 35.113,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 22.86576008796692,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 35.53,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 35.647,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 35.68,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 35.681,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 35.681,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:22"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 22.665220022201538
+     },
+     "kind": "bot_hud",
+     "t": 35.731,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 22.34937596321106,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 36.047,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2247,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 46.3,
+     "t": 36.181
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.214,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 36.247,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.464,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 36.464,
+     "userId": -100002,
+     "why": "hit back"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 21.832426071166992,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 36.564,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 36.897,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 36.913,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 21.31625199317932,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 37.08,
+     "userId": -1
+    },
+    {
+     "itemId": "38",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100001": 11
+     },
+     "t": 37.164,
+     "winner": -100001
+    },
+    {
+     "inventory": 4,
+     "item": "Microwave",
+     "itemId": "38",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 37.164,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9125397583",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 35.47953129175585,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 37.214,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9125397583",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "FARMING",
+      "shopOpen": false,
+      "t": 35.47957475006115,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 37.214,
+     "userId": -1
+    },
+    {
+     "act": "pickup",
+     "item": "Fan",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 37.264,
+     "userId": -100001
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 37.264,
+     "userId": -100002
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 37.447,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 37.481,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 20.816060066223145,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 37.58,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:20"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 20.650012016296387
+     },
+     "kind": "bot_hud",
+     "t": 37.747,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 38.014,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 38.064,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 20.299849033355713,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 38.097,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2248,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 46.5,
+     "t": 38.181
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.531,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 38.531,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 38.564,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 19.79956293106079,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 38.597,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100002
+     },
+     "kind": "bot_punch",
+     "t": 38.613,
+     "userId": -1
+    },
+    {
+     "inventory": 4,
+     "item": "Bathtub",
+     "itemId": "44",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 38.781,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Bathtub",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 38.781,
+     "userId": -100003
+    },
+    {
+     "inventory": 5,
+     "item": "Cactus",
+     "itemId": "8",
+     "kind": "item_pickup",
+     "rarity": "Uncommon",
+     "t": 39.047,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Cactus",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 39.047,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 19.2986159324646,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 39.097,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.13,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 39.164,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.547,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 39.547,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 18.780158042907715,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 39.613,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.697,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 39.713,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:18"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 18.647489070892334
+     },
+     "kind": "bot_hud",
+     "t": 39.747,
+     "userId": -1
+    },
+    {
+     "itemId": "47",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100001": 11
+     },
+     "t": 39.78,
+     "winner": -100001
+    },
+    {
+     "inventory": 5,
+     "item": "Fan",
+     "itemId": "47",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 39.781,
+     "userId": -100001
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 39.814,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 39.814,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 39.83,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 18.263736963272095,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 40.13,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2248,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 64,
+     "t": 40.197
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 40.331,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "blocked",
+     "t": 40.331,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "inventory": 4,
+     "item": "Microwave",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 40.363,
+     "userId": -100001
+    },
+    {
+     "item": "Microwave",
+     "itemId": "48",
+     "kind": "item_dropped_world",
+     "parts": 30,
+     "t": 40.364,
+     "userId": -100001,
+     "x": 13,
+     "z": 836
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Microwave",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 40.364,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "arc": 6.8,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 40.414,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 40.414,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 40.598,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 40.598,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 17.74738311767578,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 40.647,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 40.931,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 40.947,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.131,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 41.131,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 17.23011302947998,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 41.164,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.397,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 41.397,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 41.48,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 41.498,
+     "userId": -1
+    },
+    {
+     "act": "pickup",
+     "item": "Microwave",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 41.664,
+     "userId": -100003
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 16.713927030563354,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 41.68,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:16"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 16.631232023239136
+     },
+     "kind": "bot_hud",
+     "t": 41.763,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 41.914,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 41.914,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 42.064,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 42.08,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.18,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 42.18,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 16.19754695892334,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 42.197,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 43.7,
+     "t": 42.197
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 42.63,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 42.647,
+     "userId": -1
+    },
+    {
+     "count": 6,
+     "kind": "item_wave",
+     "players": 4,
+     "t": 42.683,
+     "wave": 2
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 15.697371006011963,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 42.697,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 42.698,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 42.698,
+     "userId": -100002,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "name": "itemWave",
+      "seconds": 2.5
+     },
+     "kind": "bot_screen",
+     "t": 42.73,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 42.731,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 42.964,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "blocked",
+     "t": 42.964,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 43.18,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 43.196,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 15.181030988693237,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 43.213,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 14.664199113845825,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 43.73,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 43.731,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 43.731,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 43.746,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:14"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 14.630450010299683
+     },
+     "kind": "bot_hud",
+     "t": 43.764,
+     "userId": -1
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 43.78,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 43.78,
+     "userId": -1
+    },
+    {
+     "itemId": "48",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100003": 11
+     },
+     "t": 44.164,
+     "winner": -100003
+    },
+    {
+     "inventory": 6,
+     "item": "Microwave",
+     "itemId": "48",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 44.165,
+     "userId": -100003
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2251,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 55.9,
+     "t": 44.214
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 14.16401195526123,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 44.23,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 44.297,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 44.331,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 44.514,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 44.514,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 13.647452116012573,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 44.747,
+     "userId": -1
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "grab"
+     },
+     "kind": "bot_farmfx",
+     "t": 44.796,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 44.863,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 44.897,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 13.1306791305542,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 45.264,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 45.281,
+     "userId": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "what": "swat"
+     },
+     "kind": "bot_farmfx",
+     "t": 45.314,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 45.43,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 45.463,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.531,
+     "victim": -100003
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 45.531,
+     "userId": -100001,
+     "why": "grab"
+    },
+    {
+     "attacker": -100003,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 45.531,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 45.531,
+     "userId": -100003,
+     "why": "hit back"
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "punched",
+     "t": 45.564,
+     "thief": -100003,
+     "victim": -100001
+    },
+    {
+     "act": "steal",
+     "kind": "bot_farm",
+     "result": "punched",
+     "t": 45.564,
+     "userId": -100003,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "drawn": true,
+      "result": "punched",
+      "what": "grabEnd"
+     },
+     "kind": "bot_farmfx",
+     "t": 45.614,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 12.61388897895813,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 45.78,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:12"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 12.61387014389038
+     },
+     "kind": "bot_hud",
+     "t": 45.78,
+     "userId": -1
+    },
+    {
+     "inventory": 1,
+     "item": "Balloon Bunch",
+     "itemId": "54",
+     "kind": "item_pickup",
+     "rarity": "Epic",
+     "t": 45.781,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Balloon Bunch",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 45.781,
+     "userId": -100002
+    },
+    {
+     "inventory": 3,
+     "item": "Rubber Duck",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 46.013,
+     "userId": -100001
+    },
+    {
+     "item": "Rubber Duck",
+     "itemId": "55",
+     "kind": "item_dropped_world",
+     "parts": 24,
+     "t": 46.014,
+     "userId": -100001,
+     "x": 15,
+     "z": 839
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Rubber Duck",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 46.014,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "arc": 6.8,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 46.064,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 46.064,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 61.5,
+     "t": 46.23
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 12.097748041152954,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 46.296,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 46.313,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 46.313,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 46.313,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 46.313,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 46.596,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 46.63,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 11.580672025680542,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 46.813,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.081,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 47.081,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 47.081,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 47.081,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 47.164,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 47.197,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 11.064836978912354,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 47.33,
+     "userId": -1
+    },
+    {
+     "inventory": 2,
+     "item": "Umbrella",
+     "itemId": "49",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 47.347,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Umbrella",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 47.347,
+     "userId": -100002
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 47.73,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 47.747,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:10"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 10.597577095031738
+     },
+     "kind": "bot_hud",
+     "t": 47.797,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 10.563902139663696,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 47.83,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 47.864,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 47.864,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 47.864,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 47.864,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2248,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 48.4,
+     "t": 48.247
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 48.296,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 48.313,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 10.047485113143921,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 48.347,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 48.663,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 48.663,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 48.663,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 48.663,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 48.863,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 9.530025005340576,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 48.863,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 48.88,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 9.013701915740967,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 49.38,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 49.447,
+     "victim": -100001
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 49.447,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 49.447,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -100003,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 49.447,
+     "victim": -100001
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "immune",
+     "t": 49.447,
+     "userId": -100003,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 49.463,
+     "userId": -1
+    },
+    {
+     "act": "pickup",
+     "item": "Rubber Duck",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 49.714,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:08"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 8.58019495010376
+     },
+     "kind": "bot_hud",
+     "t": 49.813,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 8.49601697921753,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 49.897,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.013,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 50.046,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.214,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 50.214,
+     "userId": -100001,
+     "why": "hit back"
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2248,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 48.4,
+     "t": 50.247
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 7.980024099349976,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 50.413,
+     "userId": -1
+    },
+    {
+     "inventory": 7,
+     "item": "Suitcase",
+     "itemId": "53",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 50.464,
+     "userId": -100003
+    },
+    {
+     "act": "pickup",
+     "item": "Suitcase",
+     "kind": "bot_farm",
+     "result": "ok",
+     "t": 50.464,
+     "userId": -100003
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.58,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 50.63,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 7.463347911834717,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 50.93,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 50.98,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 50.98,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "inventory": 2,
+     "item": "Fan",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 51.146,
+     "userId": -100001
+    },
+    {
+     "item": "Fan",
+     "itemId": "56",
+     "kind": "item_dropped_world",
+     "parts": 62,
+     "t": 51.148,
+     "userId": -100001,
+     "x": 11,
+     "z": 836
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Fan",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 51.148,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "arc": 6.8,
+      "drawn": true,
+      "what": "drop"
+     },
+     "kind": "bot_farmfx",
+     "t": 51.196,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 51.196,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 6.946496963500977,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 51.446,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 51.714,
+     "victim": -100001
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 51.747,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 51.747,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 51.764,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 51.764,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:06"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 6.578607082366943
+     },
+     "kind": "bot_hud",
+     "t": 51.813,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 6.430344104766846,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 51.963,
+     "userId": -1
+    },
+    {
+     "itemId": "55",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100002": 11
+     },
+     "t": 52.23,
+     "winner": -100002
+    },
+    {
+     "inventory": 3,
+     "item": "Rubber Duck",
+     "itemId": "55",
+     "kind": "item_pickup",
+     "rarity": "Rare",
+     "t": 52.23,
+     "userId": -100002
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 51.3,
+     "t": 52.263
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 52.28,
+     "victim": -100001
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 52.28,
+     "userId": -100001
+    },
+    {
+     "act": "pickup",
+     "item": "Fan",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 52.28,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 52.313,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 5.913331985473633,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 52.479,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 52.863,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 52.88,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 5.3973939418792725,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 52.997,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 53.446,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 53.48,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 4.896359920501709,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 53.497,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 53.563,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 53.563,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:04"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 4.564113140106201
+     },
+     "kind": "bot_hud",
+     "t": 53.829,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 4.375033140182495,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 54.013,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 54.129,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 54.146,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 46.6,
+     "t": 54.28
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 54.347,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 54.347,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too late",
+     "t": 54.347,
+     "thief": -100003,
+     "victim": -100002
+    },
+    {
+     "act": "steal",
+     "kind": "bot_farm",
+     "result": "denied: too late",
+     "t": 54.347,
+     "userId": -100003,
+     "victim": -100002
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 3.8645260334014893,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 54.529,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 54.696,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 54.713,
+     "userId": -1
+    },
+    {
+     "itemId": "56",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100002": 11
+     },
+     "t": 54.796,
+     "winner": -100002
+    },
+    {
+     "inventory": 4,
+     "item": "Fan",
+     "itemId": "56",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 54.797,
+     "userId": -100002
+    },
+    {
+     "act": "pickup",
+     "item": "Alarm Clock",
+     "kind": "bot_farm",
+     "result": "contested",
+     "t": 54.864,
+     "userId": -100002
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 3.3489530086517334,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 55.046,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.13,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 55.13,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "attacker": -1,
+     "hits": 1,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.263,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 55.28,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 2.8477470874786377,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 55.546,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.83,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:02"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 2.5639050006866455
+     },
+     "kind": "bot_hud",
+     "t": 55.83,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "hit",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 55.863,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 55.896,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 55.896,
+     "userId": -100001,
+     "why": "hit back"
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 55.929,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 2.3314199447631836,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 56.063,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2249,
+     "phase": "FARMING",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 45.8,
+     "t": 56.297
+    },
+    {
+     "inventory": 1,
+     "item": "Microwave",
+     "kind": "item_drop",
+     "reason": "knocked_out",
+     "t": 56.363,
+     "userId": -100001
+    },
+    {
+     "item": "Microwave",
+     "itemId": "57",
+     "kind": "item_dropped_world",
+     "parts": 30,
+     "t": 56.364,
+     "userId": -100001,
+     "x": 12,
+     "z": 836
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "item": "Microwave",
+     "kind": "punch",
+     "result": "knockout",
+     "t": 56.364,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "knockout",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 56.413,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 1.8142499923706055,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 56.58,
+     "userId": -1
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 56.68,
+     "userId": -100001
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 56.93,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 56.963,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 1.2983081340789795,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 57.096,
+     "userId": -1
+    },
+    {
+     "itemId": "5",
+     "kind": "contest_result",
+     "loser": -1,
+     "presses": {
+      "-1": 0,
+      "-100002": 11
+     },
+     "t": 57.38,
+     "winner": -100002
+    },
+    {
+     "inventory": 5,
+     "item": "Alarm Clock",
+     "itemId": "5",
+     "kind": "item_pickup",
+     "rarity": "Common",
+     "t": 57.38,
+     "userId": -100002
+    },
+    {
+     "act": "guard",
+     "kind": "bot_farm",
+     "t": 57.447,
+     "userId": -100003
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "blocked",
+     "t": 57.479,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "blocked",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 57.512,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 0.7809591293334961,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 57.613,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "FARMING  0:00"
+       }
+      ],
+      "phase": "FARMING",
+      "serverLeft": 0.5485761165618896
+     },
+     "kind": "bot_hud",
+     "t": 57.846,
+     "userId": -1
+    },
+    {
+     "attacker": -100001,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 57.963,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 57.963,
+     "userId": -100001,
+     "why": "revenge"
+    },
+    {
+     "kind": "steal_attempt",
+     "result": "denied: too late",
+     "t": 57.963,
+     "thief": -100002,
+     "victim": -100001
+    },
+    {
+     "act": "steal",
+     "kind": "bot_farm",
+     "result": "denied: too late",
+     "t": 57.963,
+     "userId": -100002,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "after": 2
+     },
+     "kind": "bot_guard",
+     "t": 57.98,
+     "userId": -1
+    },
+    {
+     "attacker": -1,
+     "hits": 0,
+     "kind": "punch",
+     "result": "immune",
+     "t": 58.046,
+     "victim": -100001
+    },
+    {
+     "data": {
+      "result": "immune",
+      "victim": -100001
+     },
+     "kind": "bot_punch",
+     "t": 58.08,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Round starts in 0:44",
+      "left": 0.2648160457611084,
+      "open": false,
+      "phase": "FARMING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 58.129,
+     "userId": -1
+    },
+    {
+     "attacker": -100002,
+     "hits": 2,
+     "kind": "punch",
+     "result": "hit",
+     "t": 58.23,
+     "victim": -1
+    },
+    {
+     "act": "punch",
+     "kind": "bot_farm",
+     "result": "hit",
+     "t": 58.23,
+     "userId": -100002,
+     "why": "random"
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2250,
+     "phase": "FARMING",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 48.1,
+     "t": 58.313
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "CRAFTING",
+     "round": 1,
+     "t": 58.48
+    },
+    {
+     "kind": "craft_preview",
+     "t": 58.482,
+     "userId": -1
+    },
+    {
+     "kind": "harness_crafting",
+     "t": 58.492
+    },
+    {
+     "data": {
+      "groups": 4,
+      "turned": 0
+     },
+     "kind": "bot_showroom_spin",
+     "t": 58.596,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://83000834000142",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "CRAFTING",
+      "shopOpen": false,
+      "t": 57.66306020843331,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 59.396,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://83000834000142",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "CRAFTING",
+      "shopOpen": false,
+      "t": 57.663082291721366,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 59.396,
+     "userId": -1
+    },
+    {
+     "data": {
+      "phase": "CRAFTING",
+      "t": 57.92822958342731
+     },
+     "kind": "bot_shop_open",
+     "t": 59.663,
+     "userId": -1
+    },
+    {
+     "data": {
+      "guis": [
+       {
+        "shown": true,
+        "text": "0:23"
+       }
+      ],
+      "phase": "CRAFTING",
+      "serverLeft": 23.63186812400818
+     },
+     "kind": "bot_hud",
+     "t": 59.863,
+     "userId": -1
+    },
+    {
+     "data": {
+      "clock": "Car is built in 0:23: your slots are kept, empty ones auto-filled",
+      "left": 23.514672994613647,
+      "open": true,
+      "phase": "CRAFTING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 59.979,
+     "userId": -1
+    },
+    {
+     "kind": "craft_preview",
+     "t": 60.331,
+     "userId": -1
+    },
+    {
+     "auto": false,
+     "kind": "craft",
+     "rejected": [],
+     "slots": [],
+     "stats": {
+      "acceleration": 11.1,
+      "boostDuration": 1.7000000000000002,
+      "floatability": 2,
+      "flyability": 5.25,
+      "speed": 23,
+      "stability": 31.779999999999998
+     },
+     "t": 60.331,
+     "userId": -1
+    },
+    {
+     "biome": "FOREST",
+     "kind": "phase",
+     "phase": "RACING",
+     "round": 1,
+     "t": 60.332
+    },
+    {
+     "farmed": true,
+     "id": -100001,
+     "kind": "race_bot",
+     "maxSpeed": 68.68949890136719,
+     "name": "Rusty",
+     "profile": "average",
+     "slots": {
+      "ENGINE": "Propeller Hat"
+     },
+     "t": 60.351
+    },
+    {
+     "farmed": true,
+     "id": -100002,
+     "kind": "race_bot",
+     "maxSpeed": 68.04027557373047,
+     "name": "Duckie",
+     "profile": "novice",
+     "slots": {
+      "BODY": "Rubber Duck",
+      "ENGINE": "Fan",
+      "HEAD": "Alarm Clock",
+      "MOBILITY": "Umbrella",
+      "SPECIAL": "Balloon Bunch"
+     },
+     "t": 60.36
+    },
+    {
+     "farmed": true,
+     "id": -100003,
+     "kind": "race_bot",
+     "maxSpeed": 69.42340850830078,
+     "name": "Turbo Tom",
+     "profile": "expert",
+     "slots": {
+      "BODY": "Skateboard",
+      "ENGINE": "Treadmill",
+      "HEAD": "Bathtub",
+      "MOBILITY": "Propeller Hat",
+      "SPECIAL": "Cactus",
+      "TAIL": "Microwave"
+     },
+     "t": 60.366
+    },
+    {
+     "biome": "FOREST",
+     "kind": "race_start",
+     "length": 7851.701008891116,
+     "racers": [
+      -1
+     ],
+     "round": 1,
+     "t": 60.384,
+     "timeout": 240
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.15318298339844,
+     "progress": 10,
+     "speed": 0,
+     "t": 60.384,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "heartbeatHz": 58.3,
+     "kind": "server_perf",
+     "memMb": 2254,
+     "phase": "RACING",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 3.8,
+     "t": 60.385
+    },
+    {
+     "data": {
+      "clock": "Car is built in 0:00: your slots are kept, empty ones auto-filled",
+      "open": true,
+      "phase": "CRAFTING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 60.48,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Ambience",
+      "id": "rbxassetid://139767023947424",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "RACING",
+      "shopOpen": false,
+      "t": 58.81006908335257,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 60.546,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Ambience",
+      "id": "rbxassetid://139767023947424",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "RACING",
+      "shopOpen": false,
+      "t": 58.81008008343633,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 60.546,
+     "userId": -1
+    },
+    {
+     "data": {
+      "inventory": [],
+      "result": "ok",
+      "slots": []
+     },
+     "kind": "bot_craft",
+     "t": 60.546,
+     "userId": -1
+    },
+    {
+     "at": {
+      "x": -14,
+      "y": 2,
+      "z": 590
+     },
+     "kind": "vehicle_spawn",
+     "mass": {
+      "m": null,
+      "t": "numeric",
+      "v": "inf"
+     },
+     "maxSpeed": 68.15318298339844,
+     "seated": true,
+     "t": 60.546,
+     "torque": 44.400001525878906,
+     "turnSpeed": 2.1767001152038574,
+     "userId": -1
+    },
+    {
+     "data": {
+      "hubs": 4,
+      "modes": "wheel",
+      "turns": 0
+     },
+     "kind": "bot_spin_fx",
+     "t": 60.762,
+     "userId": -1
+    },
+    {
+     "kind": "race_sample",
+     "maxSpeed": 68.15318298339844,
+     "progress": 10,
+     "speed": 0,
+     "t": 60.896,
+     "userId": -1,
+     "x": -14,
+     "y": 2,
+     "z": 590
+    },
+    {
+     "data": {
+      "clock": "Car is built in 0:00: your slots are kept, empty ones auto-filled",
+      "open": false,
+      "phase": "RACING"
+     },
+     "kind": "bot_shop_ui",
+     "t": 60.996,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://1847415881",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "RACING",
+      "shopOpen": false,
+      "t": 59.61169245839119,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 61.346,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://1847415881",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "RACING",
+      "shopOpen": false,
+      "t": 59.61171508335974,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 61.346,
+     "userId": -1
+    }
+   ],
+   "samplesTotal": 2
+  },
+  "timedOut": false
+ },
+ "scenario": "farm-feel",
+ "studioExit": 0,
+ "summary": "Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0\n  round 1 (FOREST): 0 finished of 1\n    steal attempts: denied: too late=2, punched=3\n    -100003: picked 8, contests 2/2, stole 0, robbed 0, defences 0, items nil\n    -100001: picked 6, contests 2/4, stole 0, robbed 0, defences 0, items nil\n    -100002: picked 8, contests 5/5, stole 0, robbed 0, defences 0, items nil\n    -1: picked 0, contests 0/7, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0\n  events: bot_craft=1 bot_farm=105 bot_farmfx=47 bot_guard=8 bot_hud=23 bot_joined=1 bot_punch=72 bot_ready=1 bot_screen=2 bot_shop_open=2 bot_shop_ui=106 bot_showroom_spin=1 bot_sound=47 bot_spin_fx=1 contest_result=9 craft=1 craft_preview=2 farm_bot=3 harness_crafting=1 harness_round=1 item_drop=9 item_dropped_world=9 item_pickup=22 item_wave=3 phase=3 punch=141 race_bot=3 race_sample=2 race_start=1 server_perf=30 steal_attempt=5 vehicle_s\nfarm bots: 3 on the farm, 22 pickups, 69 punches thrown, 101 punches/steals on bots\nfarm bots: 3 steals tried (0 stolen), 9 guards\nspinning wheels / paddles / propellers: 1 cars (wheel), most turns 0\nbots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: \nserver: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 87 kbps; RACING heartbeat 58-58 Hz, physics 60-60 fps, send max 4 kbps; memory max 2281 MB",
+ "wallSeconds": 78.8
+}

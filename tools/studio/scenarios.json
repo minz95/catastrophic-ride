@@ -1554,6 +1554,42 @@
       }
     },
     {
+      "name": "farm-feel",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "fight",
+        "shop",
+        "sound"
+      ],
+      "_why": "playtest 2026-10-30: one brawler client among three farm bots on the smaller FOREST farm, opening the shop with B in the lobby and in CRAFTING. Every sound the client starts is reported (kind bot_sound: the shop must open silently); punches (aim reach, knock-back keeping victims in reach, 3 hits to a knock-out), bots hitting back / going after a thief / giving up on items they cannot reach, and the pick-up bow (farmfx pickup)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "fillBots": 4,
+        "stopAfter": "CRAFTING",
+        "lobbyDelay": 10,
+        "shopUi": true,
+        "durations": {
+          "FARMING": 45,
+          "CRAFTING": 25,
+          "RACING": 30,
+          "RESULTS": 3
+        },
+        "maxSeconds": 220,
+        "farmProfiles": [
+          "brawler"
+        ]
+      },
+      "checks": {
+        "allJoined": true,
+        "fightFx": [
+          "punch",
+          "pickup"
+        ]
+      }
+    },
+    {
       "name": "showroom",
       "kind": "match",
       "tags": [

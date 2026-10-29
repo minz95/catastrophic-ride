@@ -446,6 +446,21 @@ spot with its track section; the RESULTS report lists them per section.
   saw it): off-lane respawn. Punches got a wind-up, a hold, a flash and a
   view kick, bots are pushed when hit, items fly into the picker's hands,
   and ENGINE / SPECIAL / TAIL items are big enough to see.
+- **2026-10-30 — Punches that combo, bots that fight back, a smaller farm.**
+  Playtest: "punching while robbing barely works", "no pick-up motion",
+  "the bots are a bit dumb", "the farm can be smaller", then "the bots
+  punch fine, my own character does not". A hit pushed the victim 26
+  studs/s, out of the 6-stud reach, so the next punch missed: knock-back 14
+  (double on the knock-out), 3 hits to a knock-out, and the aimed target
+  counts within the client's reach. Punching a thief mid-grab breaks the
+  grab. The pick-up bow leant back (+32° about X): now -55° with a short
+  stop. Studio measured the player's own arm at 15-41° on screen for a
+  117° shoulder pose (a bot's: 116°): the avatar's Animate tracks are
+  faded out while a pose plays. Farm bots hit back, chase whoever hit or
+  robbed them, punch thieves off, prefer rarer items, split items between
+  them and give up on unreachable ones. Farms are about two thirds again.
+  The shop: a Studio run logged every sound a client started; none started
+  when the shop opened (lobby or crafting).
 
 ## Open questions (from the reports, not decided)
 

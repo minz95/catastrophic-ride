@@ -129,9 +129,11 @@ local POSE = {
 	kickWind  = A(R(-30), 0, 0),
 	kickR     = A(R(95), 0, 0),
 	leanBack  = A(R(-12), 0, 0),
-	bendDown  = A(R(32), 0, 0),      -- waist: bow to pick something up
-	reachDownR = A(R(40), R(-10), 0),
-	reachDownL = A(R(40), R(10), 0),
+	-- waist: a rotation about X tips the torso's up towards -Z (forward)
+	-- only when NEGATIVE; the old +32° leant back and no pick-up showed
+	bendDown  = A(R(-55), 0, 0),     -- waist: bow to pick something up
+	reachDownR = A(R(35), R(-12), 0),
+	reachDownL = A(R(35), R(12), 0),
 	liftR     = A(R(150), R(-10), 0), -- arms up: "got it!"
 	liftL     = A(R(150), R(10), 0),
 }
@@ -147,6 +149,12 @@ local function charOf(userId)
 		end
 	end
 	return nil, nil
+end
+
+-- A player's display name, or a farm bot's (its model is named after it).
+local function nameOf(userId)
+	local c, p = charOf(userId)
+	return (p and p.DisplayName) or (c and c.Name) or "Someone"
 end
 
 -- ─── Small looks ─────────────────────────────────────────────────────────────
@@ -351,10 +359,68 @@ end
 -- fist up), snap through, hold the arm out, come back.
 -- Playtest 2026-10-29: the old 0.16 s flick (no hold, one arm) did not read
 -- as a punch at all.
-local SWING = { WIND = 0.11, STRIKE = 0.07, HOLD = 0.13, BACK = 0.22 }
+local SWING = { WIND = 0.11, STRIKE = 0.08, HOLD = 0.18, BACK = 0.22 }
+
+-- While a pose plays on a character with the Animate script running (your
+-- own avatar), its idle / walk tracks are faded out and the joints' motors
+-- made strong, then put back. Studio 2026-10-30: on your own avatar the
+-- shoulder reached the punch pose (117°) but the arm moved only 15-41° on
+-- screen (a bot's arm: 116°); "the bots punch fine, mine does not".
+-- One quiet spell per character, put back only when the last pose that
+-- asked for it is over (Studio, second run: punches 0.45 s apart put the
+-- walk back mid-swing, and only the first punch of a flurry showed).
+local _quiet = setmetatable({}, { __mode = "k" })   -- [character] = { untilT, tracks, torques }
+local function quietAnim(character, seconds)
+	local q = _quiet[character]
+	if not q then
+		q = { untilT = 0, tracks = {}, torques = {} }
+		_quiet[character] = q
+	end
+	local hum = character:FindFirstChildOfClass("Humanoid")
+	local animator = hum and hum:FindFirstChildOfClass("Animator")
+	if animator and not q.conn then
+		-- a track started meanwhile (you start walking) stays quiet too
+		q.conn = animator.AnimationPlayed:Connect(function(t)
+			if q.tracks[t] == nil then
+				q.tracks[t] = 1
+				t:AdjustWeight(0.01, 0.05)
+			end
+		end)
+	end
+	if animator then
+		for _, t in ipairs(animator:GetPlayingAnimationTracks()) do
+			if q.tracks[t] == nil and t.WeightTarget > 0.05 then
+				q.tracks[t] = t.WeightTarget
+				t:AdjustWeight(0.01, 0.05)
+			end
+		end
+	end
+	for _, d in ipairs(character:GetDescendants()) do
+		if d:IsA("AnimationConstraint") and q.torques[d] == nil then
+			pcall(function()
+				q.torques[d] = d.MaxTorque
+				d.MaxTorque = math.huge
+			end)
+		end
+	end
+	q.untilT = math.max(q.untilT, os.clock() + seconds)
+	task.delay(seconds + 0.01, function()
+		if _quiet[character] ~= q or os.clock() < q.untilT then return end
+		_quiet[character] = nil
+		if q.conn then q.conn:Disconnect() end
+		for t, w in pairs(q.tracks) do
+			if t.IsPlaying then t:AdjustWeight(w, 0.15) end
+		end
+		for d, v in pairs(q.torques) do
+			pcall(function() d.MaxTorque = v end)
+		end
+	end)
+end
+
 local function swing(character)
 	local r, l, waist = joint(character, "right"), joint(character, "left"), joint(character, "waist")
 	if not r then return false end
+	quietAnim(character, SWING.WIND + SWING.STRIKE + SWING.HOLD + SWING.BACK)
 	tweenTo(r, POSE.windup, SWING.WIND)
 	tweenTo(waist, POSE.twistR, SWING.WIND)
 	tweenTo(l, POSE.guardL, SWING.WIND)
@@ -416,6 +482,7 @@ end
 local function kick(character)
 	local leg, waist = joint(character, "rightLeg"), joint(character, "waist")
 	if not leg then return false end
+	quietAnim(character, 0.5)
 	tweenTo(leg, POSE.kickWind, 0.07)
 	task.delay(0.07, function()
 		streak(character, { "RightFoot", "Right Leg" }, 0.4)
@@ -474,16 +541,24 @@ local function punchNow()
 	if LocalPlayer:GetAttribute("HarnessBot") then
 		-- Studio harness: our own swing (the F path) really posed the joint
 		local h = joint(c, isKick and "rightLeg" or "right")
-		local posedMax, t0, conn = 0, os.clock(), nil
+		-- and how far the arm really turned against the torso on screen
+		local arm = c:FindFirstChild(isKick and "RightUpperLeg" or "RightUpperArm") or c:FindFirstChild(isKick and "Right Leg" or "Right Arm")
+		local torso = c:FindFirstChild(isKick and "LowerTorso" or "UpperTorso") or c:FindFirstChild("Torso")
+		local rest = arm and torso and torso.CFrame:ToObjectSpace(arm.CFrame)
+		local posedMax, turned, t0, conn = 0, 0, os.clock(), nil
 		conn = RunService.Heartbeat:Connect(function()
 			if h then
 				local a, b = h.obj[h.prop], _base[h.obj]
 				posedMax = math.max(posedMax, math.deg(math.acos(math.clamp(a.UpVector:Dot(b.UpVector), -1, 1))))
 			end
-			if os.clock() - t0 > 0.4 then
+			if rest and arm.Parent and torso.Parent then
+				local now = torso.CFrame:ToObjectSpace(arm.CFrame)
+				turned = math.max(turned, math.deg(math.acos(math.clamp(now.UpVector:Dot(rest.UpVector), -1, 1))))
+			end
+			if os.clock() - t0 > 0.5 then
 				conn:Disconnect()
-				report("farmfx", { what = isKick and "ownKick" or "ownPunch", drawn = swung and posedMax > 60,
-					posed = math.floor(posedMax), joint = h and h.prop })
+				report("farmfx", { what = isKick and "ownKick" or "ownPunch", drawn = swung and posedMax > 60 and turned > 60,
+					posed = math.floor(posedMax), turned = math.floor(turned), joint = h and h.prop })
 			end
 		end)
 	end
@@ -583,8 +658,7 @@ local function onGrab(thiefId, victimId, info)
 		_wriggle[vChar] = os.clock() + window
 	end
 	if victim == LocalPlayer then
-		local thief = Players:GetPlayerByUserId(thiefId)
-		prompt(("⚠️ %s is stealing from you!  Mash E! (0/%d)"):format(thief and thief.DisplayName or "?",
+		prompt(("⚠️ %s is stealing from you!  Mash E or punch (F)! (0/%d)"):format(nameOf(thiefId),
 			Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
 		shake(0.02, 0.3)
 	end
@@ -600,11 +674,10 @@ local function onSwat(victimId, thiefId, info)
 		task.delay(0.1, function() release(r, 0.12) end)
 	end
 	if victim == LocalPlayer then
-		local thief = Players:GetPlayerByUserId(thiefId)
 		local n = info and info.presses or 0
 		local done = n >= Constants.STEAL_DEFEND_PRESSES
-		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash E! (%d/%d)"):format(
-			thief and thief.DisplayName or "?", n, Constants.STEAL_DEFEND_PRESSES),
+		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash E or punch (F)! (%d/%d)"):format(
+			nameOf(thiefId), n, Constants.STEAL_DEFEND_PRESSES),
 			done and Color3.fromRGB(120, 230, 140) or Color3.fromRGB(255, 210, 80), done and 1 or 0.8)
 	end
 	report("farmfx", { what = "swat", drawn = swatted })
@@ -622,6 +695,11 @@ local function onGrabEnd(thiefId, victimId, info)
 	if result == "stolen" then
 		if tChar then label(tChar, "😈 STOLEN!", Color3.fromRGB(255, 150, 60), 1.6) end
 		if vChar then label(vChar, "😱 ROBBED!", Color3.fromRGB(255, 110, 110), 1.6); flash(vChar, Color3.fromRGB(255, 120, 60), 0.4) end
+	elseif result == "punched" then
+		-- punched off mid-grab (FIGHT.BREAKS_GRAB)
+		if vChar then label(vChar, "👊 BROKE FREE!", Color3.fromRGB(120, 230, 140), 1.4); flash(vChar, Color3.fromRGB(120, 230, 140), 0.3) end
+		if tChar then label(tChar, "💫 LET GO!", Color3.fromRGB(230, 230, 240), 1.2) end
+		if victim == LocalPlayer then prompt("👊 You punched them off!", Color3.fromRGB(120, 230, 140), 1.2) end
 	elseif result == "escaped" then
 		if vChar then label(vChar, "💨 ESCAPED!", Color3.fromRGB(220, 220, 230), 1.4) end
 	elseif result == "defended" then
@@ -635,7 +713,7 @@ local function onGrabEnd(thiefId, victimId, info)
 			end
 		end
 	end
-	if victim == LocalPlayer and result ~= "defended" and result ~= "escaped" then
+	if victim == LocalPlayer and result ~= "defended" and result ~= "escaped" and result ~= "punched" then
 		prompt(result == "stolen" and "😱 An item was stolen!" or "", Color3.fromRGB(255, 120, 120), result == "stolen" and 1.5 or 0.01)
 	end
 	report("farmfx", { what = "grabEnd", result = result, drawn = tChar ~= nil })
@@ -751,28 +829,42 @@ end
 -- both arms up with the item's icon over the head, while the item itself
 -- flies into the hands (FarmingManager). Playtest 2026-10-29: items just
 -- vanished with no pick-up motion.
+local PICKUP = { BOW = 0.15, LOW = 0.2, RISE = 0.2, UP = 0.45, BACK = 0.25 }   -- s
+
 local function onPickup(userId, info)
-	local c = charOf(userId)
+	local c, p = charOf(userId)
 	if not c then return end
 	local r, l, waist = joint(c, "right"), joint(c, "left"), joint(c, "waist")
-	tweenTo(waist, POSE.bendDown, 0.12)
-	tweenTo(r, POSE.reachDownR, 0.12)
-	tweenTo(l, POSE.reachDownL, 0.12)
-	task.delay(0.2, function()
-		release(waist, 0.15)
-		tweenTo(r, POSE.liftR, 0.15, Enum.EasingStyle.Back)
-		tweenTo(l, POSE.liftL, 0.15, Enum.EasingStyle.Back)
+	quietAnim(c, PICKUP.BOW + PICKUP.LOW + PICKUP.RISE + PICKUP.UP)
+	tweenTo(waist, POSE.bendDown, PICKUP.BOW)
+	tweenTo(r, POSE.reachDownR, PICKUP.BOW)
+	tweenTo(l, POSE.reachDownL, PICKUP.BOW)
+	-- your own character stops for the bow (walking on, it hardly showed)
+	local hum = p == LocalPlayer and not _guarding[c] and c:FindFirstChildOfClass("Humanoid")
+	if hum and not hum:GetAttribute("WalkSpeedBeforePickup") then
+		hum:SetAttribute("WalkSpeedBeforePickup", hum.WalkSpeed)
+		hum.WalkSpeed = 0
+		task.delay(PICKUP.BOW + PICKUP.LOW, function()
+			local was = hum:GetAttribute("WalkSpeedBeforePickup")
+			hum:SetAttribute("WalkSpeedBeforePickup", nil)
+			if was and hum.WalkSpeed == 0 then hum.WalkSpeed = was end
+		end)
+	end
+	task.delay(PICKUP.BOW + PICKUP.LOW, function()
+		release(waist, PICKUP.RISE)
+		tweenTo(r, POSE.liftR, PICKUP.RISE, Enum.EasingStyle.Back)
+		tweenTo(l, POSE.liftL, PICKUP.RISE, Enum.EasingStyle.Back)
 		local cfg = info and info.item and ItemConfig[info.item]
 		label(c, (cfg and cfg.icon or "✨") .. " " .. tostring(info and info.item or ""),
 			Color3.fromRGB(255, 240, 160), 1.0, "pickup")
 		burst(c, Color3.fromRGB(255, 240, 150), 10)
-		task.delay(0.4, function()
+		task.delay(PICKUP.RISE + PICKUP.UP, function()
 			if _guarding[c] then return end
-			release(r, 0.25)
-			release(l, 0.25)
+			release(r, PICKUP.BACK)
+			release(l, PICKUP.BACK)
 		end)
 	end)
-	report("farmfx", { what = "pickup", drawn = waist ~= nil and r ~= nil })
+	report("farmfx", { what = "pickup", drawn = waist ~= nil and r ~= nil, bow = waist and -55 or nil })
 end
 RemoteEvents.ItemPickedUp.OnClientEvent:Connect(function(_itemId, userId, info)
 	local ok, err = pcall(onPickup, userId, info)
