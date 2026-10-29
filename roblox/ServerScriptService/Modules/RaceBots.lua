@@ -1,6 +1,6 @@
 -- RaceBots.lua
 -- Server-driven racers that fill an empty grid on live servers: with fewer
--- than Constants.BOTS.FILL_TO racers, bots in random builds take the free
+-- than this round's Modules/BotFill draw of racers, bots in random builds take the free
 -- grid slots and race with the same driver (Shared/Autopilot) and drive rule
 -- (Shared/VehicleController) as everyone else; the server owns their cars.
 -- RacingManager starts them, counts their finishes and lists them in the
@@ -139,15 +139,7 @@ end
 
 --- How many bots to add for `humans` racers (harness: args.fillBots).
 function RaceBots.wanted(humans, harness)
-	local B = Constants.BOTS
-	local fillTo
-	if harness then
-		fillTo = harness.fillBots
-		if type(fillTo) ~= "number" then return 0 end
-	else
-		fillTo = B.FILL_TO
-	end
-	return math.max(0, math.min(fillTo, Constants.MAX_PLAYERS) - humans)
+	return require(script.Parent.BotFill).wanted(humans, harness)
 end
 
 --- A random build: 8 random items placed like an auto craft.

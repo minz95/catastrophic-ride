@@ -268,6 +268,9 @@ local function _showToast(phase)
 	-- three of them used to pile up in the middle of the screen. H still
 	-- opens the full RACING guide.
 	if phase == "RACING" then guide = nil end
+	-- CRAFTING: no toast either; it lay over the crafting panel and the
+	-- showroom (Studio ui-layout 2026-10-30), which explain themselves
+	if phase == "CRAFTING" then guide = nil end
 	if not guide then
 		-- Phases without a guide (e.g. RESULTS, LOBBY) should clear any
 		-- lingering toast so it doesn't persist across phase changes.
@@ -288,8 +291,14 @@ local function _showToast(phase)
 	toastTip.Text    = guide.tip
 
 	_clearKeyRows()
-	for i, k in ipairs(_keysFor(guide)) do
-		_buildKeyRow(k.key, k.desc, i)
+	-- the key strip (bottom-left) already lists them on a keyboard: the
+	-- toast with every key again grew 360 px tall and covered the NEW card
+	-- and the inventory bar (Studio ui-layout 2026-10-30)
+	local stripShows = phase ~= "CRAFTING" and not (UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled)
+	if not stripShows then
+		for i, k in ipairs(_keysFor(guide)) do
+			_buildKeyRow(k.key, k.desc, i)
+		end
 	end
 
 	-- Animate in (slide down from top)

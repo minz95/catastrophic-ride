@@ -29,9 +29,11 @@ local function farm(fillBots)
 end
 
 R.describe("farm bots (live servers fill the farm)", function()
-	R.it("live rule: bots fill to BOTS.FILL_TO; harness sessions only with fillBots", function()
+	R.it("live rule: bots fill to this round's draw (BotFill); harness sessions only with fillBots", function()
 		local srv, FarmBots, _, C = farm(nil)
-		R.expect(FarmBots.wanted(1, nil)).toBe(C.BOTS.FILL_TO - 1)
+		local BotFill = srv.env.requirePath("ServerScriptService.Modules.BotFill")
+		R.expect(FarmBots.wanted(1, nil)).toBe(BotFill.current - 1)
+		R.expect(BotFill.current >= C.BOTS.FILL.MIN and BotFill.current <= C.BOTS.FILL.MAX).toBe(true)
 		R.expect(FarmBots.wanted(1, { harness = "match" })).toBe(0)
 		R.expect(#srv.SessionManager.bots()).toBe(0)
 	end)

@@ -533,6 +533,15 @@ def check(sc, report):
             out += check_shop_ui(c["shopUi"], events)
         if c.get("raceTricks"):
             out += check_race_tricks(events)
+        if c.get("uiOverlap"):
+            # the game's own screen elements must not overlap, at the bot's
+            # window or recomputed for other sizes (tools/studio/ui_overlap.py)
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import ui_overlap
+            if not any(e.get("kind") == "bot_ui" for e in events):
+                out.append(("fail", "no ui reports (uiDump)"))
+            for ph, a, b, where in ui_overlap.game_overlaps(report):
+                out.append(("fail", "%s: %s overlaps %s at %s" % (ph, a, b, ", ".join(where[:2]))))
         if c.get("abilities"):
             out += check_abilities(sc, events)
         perf = [e for e in events if e.get("kind") == "server_perf"]

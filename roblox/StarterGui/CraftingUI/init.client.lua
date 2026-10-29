@@ -48,8 +48,9 @@ local _pc = Instance.new("UICorner"); _pc.CornerRadius = UDim.new(0, 14); _pc.Pa
 -- ─── Title ────────────────────────────────────────────────────────────────────
 
 local title = Instance.new("TextLabel")
-title.Size                  = UDim2.new(1, 0, 0, 44)
-title.Position              = UDim2.new(0, 0, 0, 8)
+-- the middle only: ITEMS (left) and SHOP (right) buttons sit in the corners
+title.Size                  = UDim2.new(1, -240, 0, 44)
+title.Position              = UDim2.new(0, 120, 0, 8)
 title.BackgroundTransparency = 1
 title.Text                  = "⚙ CRAFTING"
 title.Font                  = Enum.Font.GothamBold
@@ -549,6 +550,11 @@ for i, row in ipairs(GUIDE_ROWS) do
 end
 
 local function _showGuide()
+	-- only with room right of the showroom (in a window under ~1180 px it
+	-- covered the car: Studio ui-layout 2026-10-30); the slots' own labels
+	-- and the info line say the same
+	local sr = screen:FindFirstChild("Showroom")
+	if sr and sr.AbsolutePosition.X + sr.AbsoluteSize.X + 196 > screen.AbsoluteSize.X then return end
 	guideBg.Position              = UDim2.new(1, 20, 0.5, -100)
 	guideBg.BackgroundTransparency = 0.15
 	for _, child in ipairs(guideBg:GetChildren()) do

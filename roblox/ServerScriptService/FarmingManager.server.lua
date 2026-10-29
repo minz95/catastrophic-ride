@@ -949,6 +949,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 		-- later in the phase (Constants.FARM_SUPPLY): with 100 items for 4
 		-- players every inventory was full 15–50 s into a 90 s phase.
 		local humans = #Players:GetPlayers()
+		-- this round's head count (players + bots; RaceBots reads the same draw)
+		require(ServerScriptService.Modules.BotFill).roll()
 		local n = humans + FarmBots.wanted(humans, GameManager.getHarness())
 		local first = _spawnItems(biome, Constants.farmSupply(n))
 		-- Bots fill an empty farm (live servers; harness `fillBots`)

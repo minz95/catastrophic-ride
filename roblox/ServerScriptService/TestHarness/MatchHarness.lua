@@ -180,6 +180,8 @@ function MatchHarness.start(args, endTest)
 		if args.ejectTest then player:SetAttribute("BotEjectTest", true) end
 		-- shop screen test: the bot opens the shop with B (BotDriver)
 		if args.shopUi then player:SetAttribute("BotShopUi", true) end
+		-- screen layout dumps (BotDriver, tools/studio/ui_overlap.py)
+		if args.uiDump then player:SetAttribute("BotUiDump", true) end
 		-- shop experiments: coins and a level for the bot, and what it buys
 		-- through ShopAction (BotDriver)
 		if args.shop and args.shop[joined] then

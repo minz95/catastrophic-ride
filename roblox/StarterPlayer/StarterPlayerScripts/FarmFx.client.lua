@@ -257,7 +257,7 @@ local function prompt(text, color, seconds)
 		local t = Instance.new("TextLabel")
 		t.Name = "Text"
 		t.AnchorPoint = Vector2.new(0.5, 0.5)
-		t.Position = UDim2.fromScale(0.5, 0.32)
+		t.Position = UDim2.fromScale(0.5, 0.48)   -- mid-screen; at 0.32 it sat on the effect words and the phase toast
 		t.Size = UDim2.new(0.7, 0, 0, 64)
 		t.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 		t.BackgroundTransparency = 0.25

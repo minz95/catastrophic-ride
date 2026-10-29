@@ -398,7 +398,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`,
   bottom-left, growing up; the SHOP / ITEMS buttons move up clear of it:
-  `Shared/SideButtons`),
+  `Shared/SideButtons`; the FARMING toast leaves the keys to the strip,
+  CRAFTING and RACING show no toast). Screen overlaps: `sim.py run
+  ui-layout` (a whole round; the bot client reports every visible
+  element's box, check `uiOverlap`) and `python3 tools/studio/ui_overlap.py`
+  (overlaps at that window and recomputed for 1920×1080 … 1024×640; Roblox's
+  top bar, chat and player list as approximate zones). Spots: NEW card
+  bottom-right (FARMING only), taunt line bottom-right over the
+  speedometer, steal warning mid-screen, E slot right of the boost bar,
+  ITEMS in the crafting panel's top-left (SHOP top-right),
   H / F1 opens all. RACING shows no guide toast: the keys are on the
   strip, the objective and tips in RacingClient's RACE START banner under
   the 3-2-1 (the three used to pile up mid-screen).
@@ -412,7 +420,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `CatchUp.graceFor(winner)`). The offline match sim uses the same rules
   (second pass + grace cut); compare with `lune run tools/catchup_compare.luau`.
 - Race bots (`Modules/RaceBots`): live servers fill the grid to
-  `Constants.BOTS.FILL_TO` with server-driven cars (Autopilot +
+  this round's head count (`Modules/BotFill`: drawn each FARMING between
+  `Constants.BOTS.FILL.MIN` and `MAX`, players + bots; FarmBots and RaceBots
+  read the same draw) with server-driven cars (Autopilot +
   VehicleController, hazards via `Shared/RoadHazards`, same catch-up).
   RacingManager counts them as racers; finishOrder entries have `bot = true`
   and a negative id (ProgressionManager pays only players, but bots take

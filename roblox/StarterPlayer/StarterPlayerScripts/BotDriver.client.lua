@@ -82,6 +82,85 @@ do
 	end
 end
 
+-- Screen layout (MatchHarness args.uiDump): every UI_EVERY s, each visible
+-- element at the top of a ScreenGui with where it is on screen (top-left
+-- of the whole window), the box of everything drawn inside it, and its
+-- UDim2 layout, so tools/studio/ui_overlap.py can find overlaps here and
+-- recompute them for other window sizes (playtest 2026-10-30: the SHOP
+-- button covered the key list). Report kind "ui".
+if LocalPlayer:GetAttribute("BotUiDump") then
+	local GuiService = game:GetService("GuiService")
+	local UI_EVERY = 2
+	-- visible, and drawn on the screen (a name tag in a showroom model is a
+	-- GuiObject too, under a BillboardGui: not part of the layout)
+	local function shown(g)
+		while g and g:IsA("GuiObject") do
+			if not g.Visible then return false end
+			g = g.Parent
+		end
+		return g ~= nil and g:IsA("ScreenGui")
+	end
+	local function drawn(g)
+		if g:IsA("TextLabel") or g:IsA("TextButton") or g:IsA("TextBox") then
+			if g.Text ~= "" and g.TextTransparency < 1 then return true end
+		end
+		if (g:IsA("ImageLabel") or g:IsA("ImageButton")) and g.Image ~= "" and g.ImageTransparency < 1 then return true end
+		if g:IsA("ViewportFrame") then return true end
+		return g.BackgroundTransparency < 0.95 and g.AbsoluteSize.X > 2 and g.AbsoluteSize.Y > 2
+	end
+	local function u(v) return { v.X.Scale, v.X.Offset, v.Y.Scale, v.Y.Offset } end
+	task.spawn(function()
+		local last = {}
+		while true do
+			task.wait(UI_EVERY)
+			local ph = ReplicatedStorage:GetAttribute("Phase") or "?"
+			local inset = GuiService:GetGuiInset()
+			local cam = workspace.CurrentCamera
+			local out = {}
+			for _, sg in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+				if sg:IsA("ScreenGui") and sg.Enabled then
+					local so = sg.AbsolutePosition
+					for _, top in ipairs(sg:GetChildren()) do
+						if top:IsA("GuiObject") and top.Visible and top.AbsoluteSize.X > 0 then
+							-- the box of everything drawn in it (clipped children aside)
+							local x0, y0, x1, y1
+							for _, g in ipairs({ top, table.unpack(top:GetDescendants()) }) do
+								if g:IsA("GuiObject") and shown(g) and drawn(g) then
+									local p, z = g.AbsolutePosition, g.AbsoluteSize
+									x0 = x0 and math.min(x0, p.X) or p.X
+									y0 = y0 and math.min(y0, p.Y) or p.Y
+									x1 = x1 and math.max(x1, p.X + z.X) or p.X + z.X
+									y1 = y1 and math.max(y1, p.Y + z.Y) or p.Y + z.Y
+								end
+							end
+							if x0 then
+								local p, z = top.AbsolutePosition, top.AbsoluteSize
+								table.insert(out, {
+									screen = sg.Name, name = top.Name, order = sg.DisplayOrder, ignoreInset = sg.IgnoreGuiInset,
+									-- whole-window pixels: AbsolutePosition leaves the top bar out
+									rect = { p.X, p.Y + inset.Y, z.X, z.Y },
+									box = { x0, y0 + inset.Y, x1 - x0, y1 - y0 },
+									pos = u(top.Position), size = u(top.Size), anchor = { top.AnchorPoint.X, top.AnchorPoint.Y },
+									auto = top.AutomaticSize ~= Enum.AutomaticSize.None,
+									screenOrigin = { so.X, so.Y + inset.Y },
+								})
+							end
+						end
+					end
+				end
+			end
+			table.sort(out, function(a, b) return a.screen .. a.name < b.screen .. b.name end)
+			local sig = ph
+			for _, e in ipairs(out) do sig ..= "|" .. e.screen .. e.name .. table.concat(e.rect, ",") end
+			if sig ~= last[ph] then
+				last[ph] = sig
+				report("ui", { phase = ph, view = cam and { cam.ViewportSize.X, cam.ViewportSize.Y }, inset = inset.Y,
+					elements = out })
+			end
+		end
+	end)
+end
+
 local farmProfile = BotBrain.PROFILES[LocalPlayer:GetAttribute("BotFarmProfile") or "casual"] or BotBrain.PROFILES.casual
 local driverName = LocalPlayer:GetAttribute("BotDriverProfile") or "average"
 local TRACKS = {

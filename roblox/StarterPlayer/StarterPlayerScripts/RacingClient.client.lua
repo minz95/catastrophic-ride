@@ -588,9 +588,16 @@ local function _showCountdown()
 
 	local label = Instance.new("TextLabel")
 	label.Name                   = "RaceCountdown"
-	label.Size                   = UDim2.new(0, 260, 0, 160)
-	label.AnchorPoint            = Vector2.new(0.5, 0.5)
-	label.Position               = UDim2.new(0.5, 0, 0.22, 0)
+	-- from under the checkpoint indicator (16..48) down to at most 27% of
+	-- the window, so the RACE START banner (40%) stays clear: centred on 22%
+	-- with a fixed 160 px it covered the indicator in a short window
+	-- (Studio ui-layout 2026-10-30)
+	label.Size                   = UDim2.new(0, 260, 0.27, 0)
+	label.AnchorPoint            = Vector2.new(0.5, 0)
+	label.Position               = UDim2.new(0.5, 0, 0, 56)
+	local cap = Instance.new("UISizeConstraint")
+	cap.MaxSize = Vector2.new(260, 160)
+	cap.Parent = label
 	label.BackgroundTransparency = 1
 	label.Font                   = Enum.Font.GothamBlack
 	label.TextScaled             = true

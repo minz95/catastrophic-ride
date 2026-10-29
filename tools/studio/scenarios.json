@@ -1554,6 +1554,35 @@
       }
     },
     {
+      "name": "ui-layout",
+      "kind": "match",
+      "tags": [
+        "ui"
+      ],
+      "_why": "playtest 2026-10-30 ('check nothing else overlaps on screen'): one client plays a whole round (lobby, farming, crafting, race, results) next to bots and reports every visible screen element's box every 2 s (BotDriver uiDump). tools/studio/ui_overlap.py lists overlaps at this window and recomputed for other window sizes",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "fillBots": 4,
+        "lobbyDelay": 6,
+        "uiDump": true,
+        "durations": {
+          "FARMING": 25,
+          "CRAFTING": 15,
+          "RACING": 90,
+          "RESULTS": 8
+        },
+        "maxSeconds": 260,
+        "farmProfiles": [
+          "casual"
+        ]
+      },
+      "checks": {
+        "allJoined": true,
+        "uiOverlap": true
+      }
+    },
+    {
       "name": "farm-feel",
       "kind": "match",
       "tags": [

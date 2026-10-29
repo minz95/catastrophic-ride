@@ -9,13 +9,27 @@ R.describe("how many bots", function()
 	local env = Loader.boot()
 	local RaceBots = env.requirePath("ServerScriptService.Modules.RaceBots")
 	local C = env.requirePath("ReplicatedStorage.Shared.Constants")
-	R.it("live: fill to BOTS.FILL_TO; none when the grid is full; harness only with fillBots", function()
-		R.expect(RaceBots.wanted(1, nil)).toBe(C.BOTS.FILL_TO - 1)
-		R.expect(RaceBots.wanted(C.BOTS.FILL_TO, nil)).toBe(0)
+	R.it("live: fill to this round's draw; none when the grid is full; harness only with fillBots", function()
+		local BotFill = env.requirePath("ServerScriptService.Modules.BotFill")
+		BotFill.current = 5
+		R.expect(RaceBots.wanted(1, nil)).toBe(4)
+		R.expect(RaceBots.wanted(5, nil)).toBe(0)
 		R.expect(RaceBots.wanted(9, nil)).toBe(0)
 		R.expect(RaceBots.wanted(1, { harness = "match" })).toBe(0)
 		R.expect(RaceBots.wanted(2, { fillBots = 6 })).toBe(4)
 		R.expect(RaceBots.wanted(9, { fillBots = 20 })).toBe(1)   -- never past MAX_PLAYERS
+	end)
+	R.it("each round draws between FILL.MIN and FILL.MAX (2026-10-30: always 3 bots for a lone player)", function()
+		local BotFill = env.requirePath("ServerScriptService.Modules.BotFill")
+		local seen = {}
+		for _ = 1, 200 do
+			local n = BotFill.roll()
+			R.expect(n >= C.BOTS.FILL.MIN and n <= C.BOTS.FILL.MAX).toBe(true)
+			seen[n] = true
+		end
+		for n = C.BOTS.FILL.MIN, C.BOTS.FILL.MAX do R.expect(seen[n]).toBe(true) end
+		R.expect(C.BOTS.FILL.MIN).toBeGreaterThan(3)   -- a round always has at least four
+		BotFill.current = nil
 	end)
 	R.it("random builds put core items in their own slots", function()
 		local ItemConfig = env.requirePath("ServerScriptService.Modules.ItemConfig")
