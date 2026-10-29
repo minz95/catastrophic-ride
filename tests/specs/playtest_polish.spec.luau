@@ -51,6 +51,21 @@ R.describe("playtest polish", function()
 		R.expect(up.Z).toBeLessThan(-0.6)
 	end)
 
+	R.it("SHOP / ITEMS buttons move up clear of the key list (playtest 2026-10-30: they hid Grab and Steal)", function()
+		local SB = env.requirePath("ReplicatedStorage.Shared.SideButtons")
+		-- tall window, short list: mid-height
+		R.expect(SB.centreY(900, 40, 700)).toBe(450)
+		-- short window, ten rows of keys: the button ends GAP over the list
+		local y = SB.centreY(500, 40, 160)
+		R.expect(y + 20).toBe(160 - SB.GAP)
+		-- never off the top
+		R.expect(SB.centreY(300, 40, 10)).toBe(SB.TOP_MIN + 20)
+		for _, ui in ipairs({ "ShopUI", "ItemGuideUI" }) do
+			local src = fs.readFile("roblox/StarterGui/" .. ui .. "/init.client.lua")
+			R.expect(src:find("SideButtons).keepClear(openBtn", 1, true) ~= nil).toBe(true)
+		end
+	end)
+
 	R.it("every music tryout candidate has an id and a title", function()
 		for slot, list in pairs(SoundConfig.TRY) do
 			R.expect(#list).toBeGreaterThan(2)

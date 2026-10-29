@@ -1590,6 +1590,42 @@
       }
     },
     {
+      "name": "farm-bots-steal",
+      "kind": "match",
+      "tags": [
+        "farm",
+        "bots",
+        "steal"
+      ],
+      "_why": "playtest 2026-10-30: 'two bots robbing each other both float up'. Four farm bots that steal every ~2 s from anyone within 80 studs (BOTS.FARM overrides) and one casual client; farm_bot_high logs any bot more than HIGH_LOG over the floor (its humanoid state, nearest bot), farm_rescue any flung",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "fillBots": 5,
+        "stopAfter": "CRAFTING",
+        "durations": {
+          "FARMING": 60,
+          "CRAFTING": 5,
+          "RACING": 30,
+          "RESULTS": 3
+        },
+        "maxSeconds": 200,
+        "farmProfiles": [
+          "casual"
+        ],
+        "farmBots": {
+          "STEAL_EVERY": 2,
+          "STEAL_CHANCE": 1,
+          "STEAL_CHASE": 80,
+          "CHASE_FOR": 8,
+          "KEEP_FREE": 3
+        }
+      },
+      "checks": {
+        "allJoined": true
+      }
+    },
+    {
       "name": "showroom",
       "kind": "match",
       "tags": [

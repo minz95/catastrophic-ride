@@ -97,6 +97,8 @@ openBtn.TextScaled       = true
 openBtn.Font             = Enum.Font.GothamBlack
 openBtn.Parent           = screen
 corner(openBtn, 10)
+-- clear of the key list (TutorialUI KeyStrip) on short windows
+require(ReplicatedStorage.Shared.SideButtons).keepClear(openBtn, screen, 136)
 
 -- ── Panel ───────────────────────────────────────────────────────────────────
 

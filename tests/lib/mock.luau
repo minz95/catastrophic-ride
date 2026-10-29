@@ -617,6 +617,16 @@ end
 function methods:MoveTo(pos)
 	rawProps(self).MoveTarget = pos
 end
+-- Humanoid states turned off (SetStateEnabled), keyed by the state's name.
+function methods:SetStateEnabled(state, on)
+	local props = rawProps(self)
+	props._statesOff = props._statesOff or {}
+	props._statesOff[tostring(state)] = not on or nil
+end
+function methods:GetStateEnabled(state)
+	local off = rawProps(self)._statesOff
+	return not (off and off[tostring(state)])
+end
 
 -- PVInstance / Model helpers.
 function methods:GetPivot()
