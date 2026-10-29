@@ -470,6 +470,19 @@ spot with its track section; the RESULTS report lists them per section.
   floor, none flung. The same run showed bots feuding (211 punches, 9
   pickups in a minute) and punching 7 of 9 thieves off: bots now chase
   only players who hit them, and break a grab less often.
+- **2026-10-30 — How many bots, and nothing on screen on top of
+  anything else.** A round's head count is drawn each FARMING between
+  `BOTS.FILL.MIN` (4) and `MAX` (6), players + bots (was always 4: a lone
+  player always met the same three). A Studio run reported every visible
+  element's box through a whole round (ui-layout); at a 915×537 window and
+  recomputed for larger ones: the FARMING toast repeated the key list and
+  grew 360 px tall over the NEW card and the inventory bar, the NEW card
+  sat on the steal warning and the effect words, the ITEMS button lay on
+  the crafting panel, the slot guide on the showroom in narrow windows,
+  the E slot on the boost bar and key hint at every size, the 3-2-1 on the
+  checkpoint indicator, the taunt line on the checkpoint toast or the
+  effect words. Each got its own spot. Not checked: Roblox's own chat
+  window and player list (CoreGui; approximate zones only).
 
 ## Open questions (from the reports, not decided)
 

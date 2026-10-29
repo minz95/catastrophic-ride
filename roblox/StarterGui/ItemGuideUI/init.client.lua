@@ -222,20 +222,53 @@ KeyInput.began(function(input, processed)
 end)
 
 -- Every phase but RACING (the keys are busy driving then).
+-- In CRAFTING the button goes into the crafting panel's top-left corner
+-- (SHOP takes the top-right; at mid-left it sat on the panel: Studio
+-- ui-layout 2026-10-30).
+local function _craftPanel()
+	for _, g in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+		if g.Name == "CraftingUI" and g:IsA("ScreenGui") then return g:FindFirstChild("Panel") end
+	end
+	return nil
+end
+
+local _hideCard   -- the NEW card (below) belongs to FARMING
+
 local function onPhase(phase)
+	if _hideCard and phase ~= Constants.PHASES.FARMING then _hideCard() end
 	openBtn.Visible = phase ~= Constants.PHASES.RACING
 	if not openBtn.Visible then panel.Visible = false end
+	local craftPanel = phase == Constants.PHASES.CRAFTING and _craftPanel()
+	if craftPanel then
+		openBtn.AnchorPoint = Vector2.new(0, 0)
+		openBtn.Position    = UDim2.new(0, 10, 0, 12)
+		openBtn.Size        = UDim2.new(0, 100, 0, 30)
+		openBtn.ZIndex      = 5
+		openBtn.Parent      = craftPanel
+	elseif openBtn.Parent ~= screen then
+		openBtn.Size   = UDim2.new(0, 120, 0, 40)
+		openBtn.ZIndex = 1
+		openBtn.Parent = screen   -- SideButtons places it again
+	end
 end
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(onPhase)
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	onPhase(phase)
+	-- the crafting panel may be drawn a moment after the phase starts
+	task.delay(1, function() if ReplicatedStorage:GetAttribute("Phase") == phase then onPhase(phase) end end)
+end)
 onPhase(ReplicatedStorage:GetAttribute("Phase"))
 
 -- ── "New item!" card on the first pickup of each item ──────────────────────
 
 local card = Instance.new("Frame")
 card.Name             = "NewItem"
-card.Size             = UDim2.new(0, 360, 0, 64)
-card.AnchorPoint      = Vector2.new(0.5, 0)
-card.Position         = UDim2.new(0.5, 0, 0, 96)
+-- bottom right, above the inventory bar's height: top centre is the
+-- phase toast's, the steal warning's and the effect words' (Studio
+-- ui-layout 2026-10-30: the card sat on all three)
+local CARD_AT = UDim2.new(1, -12, 1, -100)
+card.Size             = UDim2.new(0, 320, 0, 64)
+card.AnchorPoint      = Vector2.new(1, 1)
+card.Position         = CARD_AT
 card.BackgroundColor3 = PANEL
 card.BackgroundTransparency = 0.1
 card.Visible          = false
@@ -247,6 +280,8 @@ local cardTitle = label(card, "", UDim2.new(1, -70, 0, 22), UDim2.new(0, 62, 0, 
 local cardText = label(card, "", UDim2.new(1, -70, 0, 18), UDim2.new(0, 62, 0, 34), Enum.Font.GothamMedium)
 local _cardToken = 0
 
+_hideCard = function() card.Visible = false end
+
 local function showNew(name)
 	local cfg = ItemConfig[name]
 	if not cfg then return end
@@ -257,8 +292,8 @@ local function showNew(name)
 	_cardToken += 1
 	local token = _cardToken
 	card.Visible = true
-	card.Position = UDim2.new(0.5, 0, 0, 70)
-	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = UDim2.new(0.5, 0, 0, 96) }):Play()
+	card.Position = CARD_AT + UDim2.new(0, 40, 0, 0)
+	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = CARD_AT }):Play()
 	task.delay(4, function()
 		if token == _cardToken then card.Visible = false end
 	end)

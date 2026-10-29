@@ -1,6 +1,6 @@
 -- FarmBots.lua
 -- Server bots on the farm: on a live server with fewer than
--- Constants.BOTS.FILL_TO people (harness: `fillBots`), bots join at FARMING
+-- Constants.BOTS.FILL (Modules/BotFill) people (harness: `fillBots`), bots join at FARMING
 -- as NPC characters ("🤖 Rusty"), walk to items and pick them up through the
 -- same FarmingManager calls a player's client makes (pickup, contest
 -- presses, punch, guard, steal and steal defence). They are SessionManager bot proxies, so
@@ -35,14 +35,7 @@ local _rng = Random.new()
 
 --- How many bots for `humans` players (harness: args.fillBots).
 function FarmBots.wanted(humans, harness)
-	local fillTo
-	if harness then
-		fillTo = harness.fillBots
-		if type(fillTo) ~= "number" then return 0 end
-	else
-		fillTo = Constants.BOTS.FILL_TO
-	end
-	return math.max(0, math.min(fillTo, Constants.MAX_PLAYERS) - humans)
+	return require(script.Parent.BotFill).wanted(humans, harness)
 end
 
 --- The proxy for bot k (registered with SessionManager), made once a round.

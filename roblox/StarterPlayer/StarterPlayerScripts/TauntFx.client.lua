@@ -34,9 +34,12 @@ local function screenLine(name, emoji, text)
 		gui.DisplayOrder = 6
 		gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 		_line = Instance.new("TextLabel")
-		_line.AnchorPoint = Vector2.new(0.5, 0)
-		_line.Position = UDim2.new(0.5, 0, 0.13, 0)
-		_line.Size = UDim2.new(0, 360, 0, 40)
+		-- bottom right, over the speedometer: the top centre is the
+		-- checkpoint toast's and the effect words' (Studio ui-layout
+		-- 2026-10-30: it sat on both, depending on the window)
+		_line.AnchorPoint = Vector2.new(1, 1)
+		_line.Position = UDim2.new(1, -12, 1, -140)
+		_line.Size = UDim2.new(0, 320, 0, 36)
 		_line.BackgroundColor3 = Color3.new(1, 1, 1)
 		_line.BackgroundTransparency = 0.1
 		_line.TextColor3 = Color3.fromRGB(30, 30, 40)
