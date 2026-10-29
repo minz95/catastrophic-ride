@@ -533,11 +533,12 @@ Constants.BOTS = {
 		-- items and give up on ones they cannot reach
 		HIT_BACK = 0.6,     -- chance to swing back at once when hit by someone in reach
 		REVENGE_FOR = 4,    -- s a bot chases whoever hit or robbed it
-		BREAK_GRAB = 0.5,   -- chance per think to punch the one grabbing it
+		BREAK_GRAB = 0.12,  -- chance per think to punch the one grabbing it (0.5 broke 7 of 9 grabs: robbing a bot was hopeless)
 		GREED = 12,         -- studs a bot walks further per rarity point (BotBrain.RARITY_VALUE)
 		STUCK_AFTER = 1.2,  -- s without getting 1 stud closer: jump
 		GIVE_UP = 3.5,      -- s without getting closer: try another item
 		SKIP_FOR = 12,      -- s an item it gave up on is left alone
+		HIGH_LOG = 12,      -- root studs over the floor: telemetry farm_bot_high (standing 3, a jump tops out near 10)
 	},
 	-- RACING (Modules/RaceBots): bots fire their crafted abilities like a
 	-- player's E, a little less eagerly

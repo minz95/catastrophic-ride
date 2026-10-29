@@ -464,8 +464,22 @@ end
 
 -- ─── Enable / Disable ─────────────────────────────────────────────────────────
 
+-- No climbing on the farm: facing someone (a steal, a fight) the humanoid
+-- climbed their body and both rose (playtest 2026-10-30, Studio: the
+-- player's "Climbing" sound on the flat farm). Only the owner of a
+-- humanoid can turn its states off.
+local function _setClimb(on)
+	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if hum then pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, on) end) end
+end
+LocalPlayer.CharacterAdded:Connect(function(c)
+	c:WaitForChild("Humanoid", 5)
+	if _enabled then _setClimb(false) end
+end)
+
 function FarmingClient.enable()
 	_enabled = true
+	_setClimb(false)
 	if not _heartbeatConn then
 		_heartbeatConn = RunService.Heartbeat:Connect(function()
 			if _enabled then _tick() end
@@ -475,6 +489,7 @@ end
 
 function FarmingClient.disable()
 	_enabled = false
+	_setClimb(true)
 	_hidePrompt()
 	_hideTargetPrompt()
 	_eHoldStart, _eHoldTarget = nil, nil

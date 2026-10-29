@@ -396,7 +396,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   every sound a client starts is reported (`bot_sound`, with `shopOpen`).
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
-  hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`),
+  hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`,
+  bottom-left, growing up; the SHOP / ITEMS buttons move up clear of it:
+  `Shared/SideButtons`),
   H / F1 opens all. RACING shows no guide toast: the keys are on the
   strip, the objective and tips in RacingClient's RACE START banner under
   the 3-2-1 (the three used to pile up mid-screen).
@@ -420,8 +422,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `actors()` = players + bots, `actorById`, `isBot`): a table with UserId,
   Name, isBot, Character. They first farm as NPCs (`Modules/FarmBots`,
   collision group `FarmBot`: bots pass through each other, two that met
-  were flung ~30 up; they hit back, chase whoever hit or robbed them
-  (`REVENGE_FOR`), punch a thief off, weigh rarity (`GREED`), leave an item
+  were flung ~30 up; they cannot climb (`HumanoidStateType.Climbing` off;
+  players' too in FARMING, FarmingClient): two bots face to face in a
+  mutual steal climbed each other and rose together, collision groups or
+  not. Bots log `farm_bot_high` over `BOTS.FARM.HIGH_LOG`; Studio
+  `sim.py run farm-bots-steal` (bots robbing each other, overrides via the
+  harness arg `farmBots`). They hit back, chase a player who hit them or
+  anyone who robbed them (`REVENGE_FOR`; bot-on-bot hits only get a swing
+  back: feuds left them farming nothing), punch a thief off, weigh rarity (`GREED`), leave an item
   another bot is nearer to, and give up on one they get no closer to
   (`GIVE_UP`, telemetry `give_up`);
   `Constants.BOTS.FARM`) through FarmingManager's own pickup / contest /

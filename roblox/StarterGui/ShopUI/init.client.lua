@@ -484,6 +484,8 @@ local function toggle()
 	if panel.Visible then panel.Visible = false else open() end
 end
 openBtn.Activated:Connect(toggle)
+-- clear of the key list (TutorialUI KeyStrip) on short windows
+require(ReplicatedStorage.Shared.SideButtons).keepClear(openBtn, screen, 8)
 KeyInput.began(function(input, processed)
 	if processed then return end
 	if input.KeyCode == Enum.KeyCode.B then toggle() end

@@ -135,6 +135,15 @@ R.describe("farm bots (live servers fill the farm)", function()
 		B.STEAL_CHANCE, B.PUNCH_CHANCE = table.unpack(old)
 	end)
 
+	R.it("farm bots cannot climb (playtest 2026-10-30: two bots robbing each other climbed each other and rose)", function()
+		local srv = farm(3)
+		for _, b in ipairs(srv.SessionManager.bots()) do
+			local hum = b.Character:FindFirstChildOfClass("Humanoid")
+			R.expect(hum:GetStateEnabled(roblox.Enum.HumanoidStateType.Climbing)).toBe(false)
+		end
+		for _, ev in ipairs(srv.Telemetry.events("farm_bot")) do R.expect(ev.climb).toBe(false) end
+	end)
+
 	R.it("a player can rob a bot (the steal reaches the bot like a player)", function()
 		local srv, FarmBots, tick = farm(2)
 		local player = srv.players[1]

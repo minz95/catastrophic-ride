@@ -131,6 +131,12 @@ local function makeCharacter(proxy, at)
 			if p:IsA("BasePart") then p.CollisionGroup = FarmBots.GROUP end
 		end
 	end
+	-- no climbing: two bots face to face (a mutual steal) climbed each
+	-- other like a ladder and rose together (playtest 2026-10-30: "both
+	-- float up", after they no longer collided); the climb check does not
+	-- care about collision groups
+	if hum then pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Climbing, false) end) end
+	model:SetAttribute("NoCollideGroup", grouped)
 	model:PivotTo(CFrame.new(at))
 	model.Parent = workspace
 	if root then pcall(function() root:SetNetworkOwner(nil) end) end
@@ -304,6 +310,25 @@ local function think(bot, dt, now)
 	if not data or not bot.root or not bot.root.Parent then return end
 	local items, contests = _api.items()
 
+	-- off the floor: log what it was doing (FarmRescue puts it back once flung)
+	local over = bot.root.Position.Y - FarmBounds.get(bot.biome).floorY
+	if over > F.HIGH_LOG and now >= (bot.highLogAt or 0) then
+		bot.highLogAt = now + 1
+		local nearest
+		for _, other in ipairs(FarmBots.list) do
+			if other ~= bot and other.root then
+				local d = flat(other.root.Position - bot.root.Position).Magnitude
+				if not nearest or d < nearest then nearest = d end
+			end
+		end
+		Telemetry.record("farm_bot_high", {
+			userId = bot.proxy.UserId, over = math.floor(over * 10) / 10,
+			state = bot.hum and tostring(bot.hum:GetState()) or nil,
+			vy = math.floor(bot.root.AssemblyLinearVelocity.Y), nearestBot = nearest and math.floor(nearest * 10) / 10,
+			stealing = data._stealing ~= nil, grabbed = data._stealWindow ~= nil, chasing = bot.chase ~= nil,
+		})
+	end
+
 	-- grabbed: punch the thief off (FIGHT.BREAKS_GRAB) or tap to defend
 	if data._stealWindow then
 		local r = rootOf(data._stealWindow.thief)
@@ -342,8 +367,11 @@ local function think(bot, dt, now)
 	local lastHit = bot.seenHit
 	bot.seenHit = data._lastHitAt
 	local hitNow = data._lastHitAt ~= nil and data._lastHitAt ~= lastHit   -- a new hit since the last think
-	-- hit or robbed: go after whoever did it for a while
-	if hitNow and data._lastHitBy then
+	-- hit by a player, or robbed by anyone: go after them for a while. A
+	-- bot hit by a bot only swings back in reach (Studio 2026-10-30: bots
+	-- chasing each other for revenge threw 211 punches in a minute and
+	-- picked up 9 items)
+	if hitNow and data._lastHitBy and not SessionManager.isBot(SessionManager.actorById(data._lastHitBy)) then
 		bot.revenge = { id = data._lastHitBy, untilT = now + F.REVENGE_FOR }
 	end
 	if data._robbedAt and data._robbedAt ~= bot.seenRobbed then
@@ -482,6 +510,11 @@ function FarmBots.start(biome, api)
 		if (b.index or 0) > n then SessionManager.removeBot(b.UserId) end
 	end
 	if n == 0 then return {} end
+	-- harness: { farmBots = { STEAL_EVERY = 2, ... } } overrides BOTS.FARM
+	local h = GameManager.getHarness()
+	if h and type(h.farmBots) == "table" then
+		for key, v in pairs(h.farmBots) do Constants.BOTS.FARM[key] = v end
+	end
 	local items = api.items()
 	local taken = occupied(biome)
 	for k = 1, n do
@@ -499,7 +532,10 @@ function FarmBots.start(biome, api)
 			nextSteal = os.clock() + Constants.BOTS.FARM.STEAL_EVERY * _rng:NextNumber(0.5, 1.5),
 			nextGuard = 0, guardUntil = nil, chase = nil,
 		})
-		Telemetry.record("farm_bot", { userId = proxy.UserId, name = proxy.Name, biome = biome })
+		Telemetry.record("farm_bot", { userId = proxy.UserId, name = proxy.Name, biome = biome,
+			noCollideGroup = model:GetAttribute("NoCollideGroup"),
+			climb = hum and pcall(function() return hum:GetStateEnabled(Enum.HumanoidStateType.Climbing) end)
+				and hum:GetStateEnabled(Enum.HumanoidStateType.Climbing) or false })
 	end
 	local acc = 0
 	_conn = RunService.Heartbeat:Connect(function(dt)

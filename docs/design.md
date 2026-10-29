@@ -461,6 +461,15 @@ spot with its track section; the RESULTS report lists them per section.
   them and give up on unreachable ones. Farms are about two thirds again.
   The shop: a Studio run logged every sound a client started; none started
   when the shop opened (lobby or crafting).
+- **2026-10-30 — Bots that rose together climbed each other.** Bots no
+  longer collided after 2026-10-29, yet "two bots robbing each other both
+  float up" was still seen. Facing each other, a humanoid climbs the other
+  body (Studio heard the player's "Climbing" sound on the flat farm), and
+  the climb check ignores collision groups: climbing is off on the farm.
+  Studio farm-bots-steal (four bots robbing every ~2 s): no bot over the
+  floor, none flung. The same run showed bots feuding (211 punches, 9
+  pickups in a minute) and punching 7 of 9 thieves off: bots now chase
+  only players who hit them, and break a grab less often.
 
 ## Open questions (from the reports, not decided)
 
