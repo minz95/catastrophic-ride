@@ -43,11 +43,11 @@ local function top(p) return p.Position.Y + p.Size.Y / 2 end
 
 R.describe("farm bounds (Shared/FarmBounds, Maps/FarmKit, FarmRescue)", function()
 	for _, biome in ipairs({ "FOREST", "OCEAN", "SKY" }) do
-		R.it(biome .. ": the farm is about two thirds of its old span", function()
+		R.it(biome .. ": the farm is under half its old span (playtest 2026-10-30: smaller still)", function()
 			local _, _, b = farm(biome)
 			local sx, sz = 2 * b.halfX / OLD[biome][1], 2 * b.halfZ / OLD[biome][2]
-			R.expect(sx).toBeGreaterThan(0.55); R.expect(sx).toBeLessThan(0.75)
-			R.expect(sz).toBeGreaterThan(0.55); R.expect(sz).toBeLessThan(0.75)
+			R.expect(sx).toBeGreaterThan(0.38); R.expect(sx).toBeLessThan(0.5)
+			R.expect(sz).toBeGreaterThan(0.38); R.expect(sz).toBeLessThan(0.5)
 		end)
 
 		R.it(biome .. ": four solid, invisible walls close the farm, tall enough to never clear", function()

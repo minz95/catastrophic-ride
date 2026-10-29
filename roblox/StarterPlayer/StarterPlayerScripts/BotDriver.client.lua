@@ -44,6 +44,44 @@ ScriptContext.Error:Connect(function(message, trace, scriptInst)
 	})
 end)
 
+-- Every sound that starts on this client, with what screen was open
+-- (playtest 2026-10-30: "opening the shop still makes a very loud sound",
+-- with no sound left in the shop's own code). Report kind "sound".
+do
+	local seen, sent = setmetatable({}, { __mode = "k" }), {}
+	local function shopOpen()
+		for _, g in ipairs(LocalPlayer:FindFirstChildOfClass("PlayerGui") and LocalPlayer.PlayerGui:GetChildren() or {}) do
+			if g.Name == "ShopUI" and g:IsA("ScreenGui") then
+				local panel = g:FindFirstChild("Panel")
+				return panel ~= nil and panel.Visible
+			end
+		end
+		return false
+	end
+	local function started(s)
+		local key = s.SoundId .. "|" .. s:GetFullName()
+		sent[key] = (sent[key] or 0) + 1
+		if sent[key] > 4 then return end
+		report("sound", {
+			id = s.SoundId, name = s.Name, path = s:GetFullName(), volume = s.Volume,
+			group = s.SoundGroup and s.SoundGroup.Name or nil, looped = s.Looped,
+			phase = ReplicatedStorage:GetAttribute("Phase"), shopOpen = shopOpen(), t = os.clock(),
+		})
+	end
+	local function hook(d)
+		if not d:IsA("Sound") or seen[d] then return end
+		seen[d] = true
+		d.Played:Connect(function() started(d) end)
+		d:GetPropertyChangedSignal("Playing"):Connect(function() if d.Playing then started(d) end end)
+		if d.Playing then started(d) end
+	end
+	for _, root in ipairs({ workspace, game:GetService("SoundService"), LocalPlayer:WaitForChild("PlayerGui"),
+		ReplicatedStorage, game:GetService("Lighting") }) do
+		for _, d in ipairs(root:GetDescendants()) do hook(d) end
+		root.DescendantAdded:Connect(hook)
+	end
+end
+
 local farmProfile = BotBrain.PROFILES[LocalPlayer:GetAttribute("BotFarmProfile") or "casual"] or BotBrain.PROFILES.casual
 local driverName = LocalPlayer:GetAttribute("BotDriverProfile") or "average"
 local TRACKS = {
@@ -154,7 +192,10 @@ if LocalPlayer:GetAttribute("BotShopUi") then
 			if panel and not pressedIn[ph] and (ph == Constants.PHASES.LOBBY or ph == Constants.PHASES.CRAFTING) then
 				pressedIn[ph] = true
 				task.wait(1)
-				if not panel.Visible then KeyInput.press(Enum.KeyCode.B) end
+				if not panel.Visible then
+					report("shop_open", { phase = ph, t = os.clock() })
+					KeyInput.press(Enum.KeyCode.B)
+				end
 				task.wait(0.3)
 			end
 			if panel then

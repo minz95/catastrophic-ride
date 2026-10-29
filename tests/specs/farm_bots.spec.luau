@@ -81,6 +81,60 @@ R.describe("farm bots (live servers fill the farm)", function()
 		R.expect(#srv.Telemetry.events("item_dropped_world")).toBe(1)
 	end)
 
+	R.it("a punched bot hits back, and goes after whoever robbed it (playtest 2026-10-30: 'the bots are a bit dumb')", function()
+		local srv, FarmBots, tick, C = farm(2)
+		local B = C.BOTS.FARM
+		local old = { B.HIT_BACK, B.GUARD_HIT, B.GUARD_NEAR, B.STEAL_CHANCE, B.PUNCH_CHANCE }
+		B.HIT_BACK, B.GUARD_HIT, B.GUARD_NEAR, B.STEAL_CHANCE, B.PUNCH_CHANCE = 1, 0, 0, 0, 0
+		local player = srv.players[1]
+		local bot = srv.SessionManager.bots()[1]
+		local pr, br = player.Character.HumanoidRootPart, bot.Character.HumanoidRootPart
+		-- side by side along X (the bot turns with CFrame.lookAt, which flips Z in Lune)
+		pr.CFrame = CFrame.new(4, 3, 846) * CFrame.Angles(0, math.pi / 2, 0)   -- facing -X, at the bot
+		br.CFrame = CFrame.new(0, 3, 846)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, player, bot.UserId)).toBe("hit")
+		local back
+		for _ = 1, 8 do
+			pr.CFrame = CFrame.new(4, 3, 846) * CFrame.Angles(0, math.pi / 2, 0)
+			tick(0.25)
+			for _, ev in ipairs(srv.Telemetry.events("punch")) do
+				if ev.attacker == bot.UserId then back = ev end
+			end
+			if back then break end
+		end
+		R.expect(back ~= nil).toBe(true)
+		R.expect(back.victim).toBe(player.UserId)
+		-- robbed: the bot walks after the thief
+		local d = srv.SessionManager.getData(bot)
+		d._robbedBy, d._robbedAt = player.UserId, srv.mock.clock
+		pr.CFrame = CFrame.new(24, 3, 846)
+		local before = (br.Position - pr.Position).Magnitude
+		tick(1)
+		R.expect((br.Position - pr.Position).Magnitude).toBeLessThan(before - 5)
+		B.HIT_BACK, B.GUARD_HIT, B.GUARD_NEAR, B.STEAL_CHANCE, B.PUNCH_CHANCE = table.unpack(old)
+	end)
+
+	R.it("a bot that gets no closer to an item gives up on it", function()
+		local srv, FarmBots, tick, C = farm(2)
+		local B = C.BOTS.FARM
+		local old = { B.STEAL_CHANCE, B.PUNCH_CHANCE }
+		B.STEAL_CHANCE, B.PUNCH_CHANCE = 0, 0
+		local bot = FarmBots.list[1]
+		srv.SessionManager.getData(bot.proxy).inventory = {}
+		-- hold the bot in place (a crate in the way)
+		local at = bot.root.CFrame
+		for _ = 1, math.ceil((B.GIVE_UP + 1) / 0.25) do
+			bot.root.CFrame = at
+			tick(0.25)
+		end
+		local gaveUp = false
+		for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do
+			if ev.act == "give_up" and ev.userId == bot.proxy.UserId then gaveUp = true end
+		end
+		R.expect(gaveUp).toBe(true)
+		B.STEAL_CHANCE, B.PUNCH_CHANCE = table.unpack(old)
+	end)
+
 	R.it("a player can rob a bot (the steal reaches the bot like a player)", function()
 		local srv, FarmBots, tick = farm(2)
 		local player = srv.players[1]

@@ -705,7 +705,8 @@ local function _steal(thief, targetUserId)
 	_fireClient(RemoteEvents.StealAttempt, victim, thief.Name)
 	RemoteEvents.FarmAction:FireAllClients("grab", thief.UserId, victim.UserId, { window = Constants.STEAL_DEFEND_WINDOW })
 	local grabbedAt = tick()
-	task.wait(Constants.STEAL_DEFEND_WINDOW)
+	-- the window, cut short when the thief is punched off
+	while tick() < grabbedAt + Constants.STEAL_DEFEND_WINDOW and not window.broken do task.wait(0.05) end
 	victimData._stealWindow = nil
 	thiefData._stealing = nil
 
@@ -713,6 +714,12 @@ local function _steal(thief, targetUserId)
 	if (victimData._smokedAt or 0) >= grabbedAt then
 		thiefData.stealCooldownEnd = tick() + Constants.STEAL_DEFENDED_COOLDOWN
 		return attempt("escaped")
+	end
+
+	-- punched mid-grab (FIGHT.BREAKS_GRAB): the thief let go
+	if window.broken then
+		thiefData.stealCooldownEnd = tick() + Constants.STEAL_DEFENDED_COOLDOWN
+		return attempt("punched")
 	end
 
 	if FarmingRules.stealOutcome(window.presses, Constants.STEAL_DEFEND_PRESSES) == "defended" then
@@ -731,6 +738,7 @@ local function _steal(thief, targetUserId)
 
 	thiefData.stealCooldownEnd   = tick() + Constants.STEAL_COOLDOWN
 	victimData.stealInvincibleEnd = tick() + Constants.STEAL_INVINCIBLE
+	victimData._robbedBy, victimData._robbedAt = thief.UserId, tick()   -- FarmBots go after the thief
 
 	_fireClient(RemoteEvents.InventoryUpdated, thief,  thiefData.inventory)
 	_fireClient(RemoteEvents.InventoryUpdated, victim, victimData.inventory)
@@ -825,7 +833,10 @@ local function _punchTarget(attacker, aRoot, hintId)
 			local d = to.Magnitude
 			local facing = d > 1e-3 and look:Dot(to.Unit) or 1
 			local hinted = hintId ~= nil and other.UserId == hintId
-			local ok = FarmingRules.canPunch({ now = 0, distance = d, range = F.RANGE, facing = facing,
+			-- the hinted one within the client's own reach (RANGE + ASSIST_REACH):
+			-- it swung at someone it saw in reach, who stepped back meanwhile
+			local ok = FarmingRules.canPunch({ now = 0, distance = d,
+				range = hinted and (F.RANGE + F.ASSIST_REACH) or F.RANGE, facing = facing,
 				arc = hinted and F.ASSIST_ARC or F.ARC })
 			if ok and hinted then return other end
 			if ok and (not bestD or d < bestD) then best, bestD = other, d end
@@ -882,7 +893,9 @@ local function _punch(attacker, hintId)
 		needed = F.HITS_TO_DROP, items = #vData.inventory,
 	})
 	if result == "hit" or result == "knockout" then
-		vData._hits, vData._lastHitAt = hits, now
+		vData._hits, vData._lastHitAt, vData._lastHitBy = hits, now, attacker.UserId
+		-- a thief punched mid-grab lets go (FIGHT.BREAKS_GRAB): nothing taken
+		if F.BREAKS_GRAB and vData._stealing then vData._stealing.broken = attacker.UserId end
 	end
 	local dropped
 	if result == "knockout" then
@@ -890,7 +903,8 @@ local function _punch(attacker, hintId)
 		dropped = _dropItem(victim, math.random(#vData.inventory), "knocked_out")
 	end
 	local vRoot = _root(victim)
-	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK or Vector3.zero
+	local push = vRoot and _flatUnit(vRoot.Position - aRoot.Position) * F.KNOCKBACK
+		* (result == "knockout" and F.KO_KNOCKBACK or 1) or Vector3.zero
 	-- a farm bot is pushed here (a player's own client pushes them, FarmFx):
 	-- a hit must visibly land, not bounce off a statue
 	if vRoot and SessionManager.isBot(victim) and (result == "hit" or result == "knockout") then

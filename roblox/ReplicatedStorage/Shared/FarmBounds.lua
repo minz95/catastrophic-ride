@@ -14,6 +14,9 @@
 -- stale table (farm centres at Z 350–390; the farms are at 850 / 1850).
 -- Now each farm is about two thirds of that span, closed by invisible walls
 -- WALL_HEIGHT tall, and FarmRescue puts back anyone who still ends up off it.
+-- Playtest 2026-10-30 ("the square farm could be smaller still"): about
+-- two thirds again, under half the old span (100 × 130, 84 × 112, 88 × 108);
+-- with the same item count, items are about twice as dense.
 
 local FarmBounds = {}
 
@@ -36,18 +39,18 @@ local TRACKS = { FOREST = "ForestTrack", OCEAN = "OceanTrack", SKY = "SkyTrack" 
 -- keepOut = solid scenery items must not land in ({ x0, x1, z0, z1 }
 -- relative to the centre); spawn = marker grid (X offsets, Z offsets).
 local SPEC = {
-	-- was 220 × 320 (FarmGround), items over 160 × 288
-	FOREST = { half = { 75, 105 }, floorY = 1, itemHalf = { 66, 96 },
-		keepOut = { { -73, -44, 68, 92 } },                  -- the barn (BarnWall + roof)
-		spawn = { { -52, -26, 0, 26, 52 }, { -40, 30 } } },
-	-- was a 180 × 260 island (grass 160 × 230); the walls stand on the beach
-	OCEAN  = { half = { 60, 85 }, floorY = 5, itemHalf = { 46, 66 }, grass = { 50, 70 },
+	-- 2026-10-29: 150 × 210 (before: 220 × 320, items over 160 × 288)
+	FOREST = { half = { 50, 65 }, floorY = 1, itemHalf = { 42, 57 },
+		keepOut = { { -47, -20, 30, 50 } },                  -- the barn (BarnWall + roof)
+		spawn = { { -30, -15, 0, 15, 30 }, { -26, 20 } } },
+	-- 2026-10-29: 120 × 170 (before: a 180 × 260 island); the walls stand on the beach
+	OCEAN  = { half = { 42, 56 }, floorY = 5, itemHalf = { 32, 44 }, grass = { 35, 48 },
 		keepOut = {},
-		spawn = { { -36, -18, 0, 18, 36 }, { -35, 35 } } },
-	-- was a 200 × 240 platform with no rail
-	SKY    = { half = { 65, 80 }, floorY = 80, itemHalf = { 57, 72 },
+		spawn = { { -24, -12, 0, 12, 24 }, { -22, 22 } } },
+	-- 2026-10-29: 130 × 160 (before: a 200 × 240 platform with no rail)
+	SKY    = { half = { 44, 54 }, floorY = 80, itemHalf = { 37, 47 },
 		keepOut = {},
-		spawn = { { -48, -24, 0, 24, 48 }, { -35, 35 } } },
+		spawn = { { -28, -14, 0, 14, 28 }, { -22, 22 } } },
 }
 
 local _cache = {}

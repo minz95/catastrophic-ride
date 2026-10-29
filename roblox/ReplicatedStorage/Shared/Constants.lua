@@ -196,10 +196,11 @@ Constants.FIGHT = {
 	RANGE        = 6,     -- studs between root parts
 	ARC          = 0.35,  -- attacker must face the victim: dot(look, toVictim) >= this
 	COOLDOWN     = 0.45,  -- s between two punches of one player
-	HITS_TO_DROP = 4,
+	HITS_TO_DROP = 3,     -- (was 4: with each hit knocking the victim out of reach, a knock-out was a chase)
 	HIT_MEMORY   = 4,     -- s: hits older than this are forgotten
 	DROP_IMMUNE  = 4,     -- s after a knock-out
-	KNOCKBACK    = 26,    -- studs/s pushed away on a landed hit
+	KNOCKBACK    = 14,    -- studs/s pushed away on a landed hit (26 sent the victim out of RANGE: the next punch missed)
+	KO_KNOCKBACK = 2.0,   -- × KNOCKBACK on the knock-out hit (the big finish)
 	GUARD_MAX    = 3,     -- s a guard can be held before it drops
 	GUARD_SLOW   = 0.5,   -- walk speed × this while guarding
 	-- Aim help: the client names the player it turned to (nearest within
@@ -208,8 +209,11 @@ Constants.FIGHT = {
 	ASSIST_ARC   = 0.0,   -- dot(look, toVictim): 90° either side
 	ASSIST_REACH = 2,
 	LUNGE        = 16,    -- studs/s the puncher steps forward (own client)
-	BOT_KNOCKBACK = 1.0,  -- × KNOCKBACK for a farm bot that is hit (server pushes it)
-	KNOCK_UP     = 9,     -- studs/s up with a knock-back (players and bots): a hop, never a launch
+	BOT_KNOCKBACK = 0.7,  -- × KNOCKBACK for a farm bot that is hit (server pushes it; it stays in reach)
+	KNOCK_UP     = 6,     -- studs/s up with a knock-back (players and bots): a hop, never a launch
+	-- a landed punch on someone grabbing you (or anyone) breaks the grab:
+	-- nothing is taken (FarmingManager _steal, result "punched")
+	BREAKS_GRAB  = true,
 }
 
 -- ─── Rarity ───────────────────────────────────────────────────────────────────
@@ -524,6 +528,16 @@ Constants.BOTS = {
 		GUARD_NEAR = 0.25,
 		GUARD_HOLD = 1.2,
 		GUARD_REST = 3,     -- s before the next guard
+		-- playtest 2026-10-30 "the bots are a bit dumb": they now hit back,
+		-- go after whoever robbed them, punch a thief off, pick better
+		-- items and give up on ones they cannot reach
+		HIT_BACK = 0.6,     -- chance to swing back at once when hit by someone in reach
+		REVENGE_FOR = 4,    -- s a bot chases whoever hit or robbed it
+		BREAK_GRAB = 0.5,   -- chance per think to punch the one grabbing it
+		GREED = 12,         -- studs a bot walks further per rarity point (BotBrain.RARITY_VALUE)
+		STUCK_AFTER = 1.2,  -- s without getting 1 stud closer: jump
+		GIVE_UP = 3.5,      -- s without getting closer: try another item
+		SKIP_FOR = 12,      -- s an item it gave up on is left alone
 	},
 	-- RACING (Modules/RaceBots): bots fire their crafted abilities like a
 	-- player's E, a little less eagerly
