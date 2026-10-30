@@ -493,7 +493,7 @@ submitBtn.MouseButton1Click:Connect(function()
 		_submitted                 = true
 		_saveDraft()
 		SoundFx.play("CRAFT_COMPLETE")
-		submitBtn.Text             = "✓ Submitted"
+		submitBtn.Text             = "✅ Submitted"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
 	end
 end)
@@ -919,7 +919,7 @@ local function _onPhase(phase)
 		end
 		LocalPlayer:SetAttribute("CraftingOpen", round)
 		_selectedItem           = nil
-		submitBtn.Text          = _submitted and "✓ Submitted" or "Submit"
+		submitBtn.Text          = _submitted and "✅ Submitted" or "Submit"
 		submitBtn.BackgroundColor3 = _submitted and Color3.fromRGB(60, 60, 80) or Color3.fromRGB(60, 200, 80)
 		_showInfo(nil)
 		_refreshDisplay()

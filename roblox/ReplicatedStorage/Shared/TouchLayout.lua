@@ -27,17 +27,47 @@ TouchLayout.LAYOUT = {
 		{ text = "GUARD", key = Enum.KeyCode.G, col = 1, row = 2, color = Color3.fromRGB(70, 110, 200) },
 		{ text = "SMOKE", key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(90, 90, 100), gadget = true },
 	},
+	-- RESET and the taunt went to icons (ICONS): six buttons and the SKY
+	-- arrows covered the right half of the road.
 	RACING = {
 		{ text = "BOOST", key = Enum.KeyCode.F, col = 1, row = 1, color = Color3.fromRGB(60, 150, 240) },
 		{ text = "DRIFT", key = Enum.KeyCode.LeftShift, col = 2, row = 1, color = Color3.fromRGB(230, 160, 35) },
 		{ text = "ITEM",  key = Enum.KeyCode.E, col = 1, row = 2, color = Color3.fromRGB(170, 80, 220) },
-		{ text = "RESET", key = Enum.KeyCode.R, col = 3, row = 1, color = Color3.fromRGB(110, 110, 125), small = true },
 		{ text = "BOMB",  key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(220, 90, 40), attr = "RaceTrick" },
-		{ text = "😜",    key = Enum.KeyCode.Q, col = 3, row = 2, color = Color3.fromRGB(240, 200, 60), small = true },
-		{ text = "▲",     key = Enum.KeyCode.Space, col = 4, row = 2, color = Color3.fromRGB(80, 190, 230), biome = "SKY" },
-		{ text = "▼",     key = Enum.KeyCode.LeftControl, col = 4, row = 1, color = Color3.fromRGB(80, 140, 200), biome = "SKY" },
+		{ text = "▲",     key = Enum.KeyCode.Space, col = 3, row = 2, color = Color3.fromRGB(80, 190, 230), biome = "SKY" },
+		{ text = "▼",     key = Enum.KeyCode.LeftControl, col = 3, row = 1, color = Color3.fromRGB(80, 140, 200), biome = "SKY" },
 	},
 }
+
+-- Small round icons at the top of the screen, away from the thumbs: things
+-- pressed now and then. `right` = px from the right edge (FARMING: left of
+-- SideButtons' SHOP / ITEMS), `left` = px from the left edge (RACING: under
+-- Roblox's menu buttons, above where the thumbstick starts).
+TouchLayout.ICON_SIZE = 40
+TouchLayout.ICONS = {
+	FARMING = {
+		{ text = "😀", key = Enum.KeyCode.Q, right = 264, color = Color3.fromRGB(240, 200, 60) },
+	},
+	RACING = {
+		{ text = "🔄", key = Enum.KeyCode.R, left = 12, color = Color3.fromRGB(110, 110, 125) },
+		{ text = "😜", key = Enum.KeyCode.Q, left = 60, color = Color3.fromRGB(240, 200, 60) },
+	},
+}
+-- LOBBY: the emote too (EmoteUI works in every phase but RACING). Not in
+-- RESULTS: it lay on the reward box of a phone-sized results screen.
+TouchLayout.ICONS.LOBBY = TouchLayout.ICONS.FARMING
+
+--- Icon boxes { { b = entry, box = {x, y, w, h} } } for a phase on a w × h
+-- screen whose top bar is `top` px tall.
+function TouchLayout.icons(phase, w, h, top)
+	local out = {}
+	local n = TouchLayout.ICON_SIZE
+	for _, b in ipairs(TouchLayout.ICONS[phase] or {}) do
+		local x = b.right and (w - b.right - n) or b.left
+		table.insert(out, { b = b, box = { x, (top or 0) + 8, n, n } })
+	end
+	return out
+end
 
 -- Roblox's own touch controls (screen pixels, x, y, w, h; from its
 -- TouchJump / DynamicThumbstick): the jump button and the left part of the
@@ -124,10 +154,6 @@ function TouchLayout.bag(w, h, gridLeft)
 	local bh = 2 * cell + L.BAG_GAP + 2 * L.BAG_PAD
 	return { x = x, y = h - bh - 12, w = bw, h = bh, cell = cell }
 end
-
--- The emote icon (TouchControls), top right left of SHOP / ITEMS
--- (SideButtons: 8 and 136 px from the right edge, 120 wide).
-TouchLayout.EMOTE_RIGHT, TouchLayout.EMOTE_SIZE = 264, 40
 
 -- Left edge (screen px) of the touch buttons shown now, or nil when there
 -- are none (no touch screen, or a phase without buttons). Screens that would

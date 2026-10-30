@@ -70,6 +70,15 @@ function M.problems(w, h, case)
 	for _, rb in ipairs(r.buttons) do
 		if rb.visible then table.insert(shown, rb) end
 	end
+	for _, ic in ipairs(TouchLayout.icons(case.phase, w, h, M.INSET)) do
+		local n = ic.b.text
+		if overlap(ic.box, zones.thumbstick) then table.insert(bad, "icon " .. n .. " in the thumbstick area") end
+		if case.list and overlap(ic.box, case.list.box) then table.insert(bad, "icon " .. n .. " on the position list") end
+		for _, rb in ipairs(shown) do
+			if overlap(ic.box, rb.box) then table.insert(bad, "icon " .. n .. " on " .. rb.b.text) end
+		end
+		if ic.box[1] < 0 or ic.box[1] + ic.box[3] > w then table.insert(bad, "icon " .. n .. " off the screen") end
+	end
 	if case.phase == "FARMING" then
 		local b = TouchLayout.bag(w, h, r.frame[1])
 		local box = { b.x, b.y, b.w, b.h }

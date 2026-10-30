@@ -54,6 +54,16 @@ local _keys = {
 	F = false,   -- boost activation
 }
 
+-- A key let go while the game window was not focused never ends: on a Mac
+-- Cmd+Tab out of a SKY race left Ctrl (dive) held and the plane flew into
+-- the floor (Studio Device Simulator, 2026-10-30). Losing or regaining focus
+-- lets go of every key.
+local function _releaseAllKeys()
+	for k in pairs(_keys) do _keys[k] = false end
+end
+UserInputService.WindowFocusReleased:Connect(_releaseAllKeys)
+UserInputService.WindowFocused:Connect(_releaseAllKeys)
+
 local _suspParams = RaycastParams.new()
 
 _suspParams.IgnoreWater = true   -- OCEAN's Terrain water is not ground (TerrainPlan.WATER)
@@ -292,6 +302,8 @@ function _updateBoostHUD()
 		_boostLabel.Text = _boostGauge >= 1 and (InputHints.touchUI() and "BOOST READY" or ("BOOST  " .. InputHints.tag("boost"))) or "BOOST"
 	end
 end
+-- the boost label follows the device in use (key name or BOOST READY)
+InputHints.onChange(function() if _active then _updateBoostHUD() end end)
 
 function _showBoostReady()
 	_ensureBoostHUD()
@@ -465,7 +477,7 @@ local function _ensureCheckpointHUD()
 		lbl.Font           = Enum.Font.GothamBold
 		lbl.TextScaled     = true
 		lbl.TextStrokeTransparency = 0.5
-		lbl.Text           = "CP" .. i .. " ☐"
+		lbl.Text           = "CP" .. i .. " ⬜"
 		lbl.TextColor3     = CP_INACTIVE_COLOR
 		lbl.Parent         = frame
 		_cpLabels[i] = lbl
@@ -480,7 +492,7 @@ local function _updateCheckpointHUD()
 	for i = 1, 2 do
 		local lbl = _cpLabels[i]
 		if lbl then
-			lbl.Text       = "CP" .. i .. " " .. (_cpPassed[i] and "✓" or "☐")
+			lbl.Text       = "CP" .. i .. " " .. (_cpPassed[i] and "✅" or "⬜")
 			lbl.TextColor3 = _cpPassed[i] and CP_PASSED_COLOR or CP_INACTIVE_COLOR
 		end
 	end
@@ -517,7 +529,7 @@ local function _showCheckpointPassToast(cpIndex)
 		lbl.TextStrokeTransparency = 0.3
 		lbl.Parent                 = overlay
 	end
-	lbl.Text             = "CP " .. cpIndex .. " PASSED ✓"
+	lbl.Text             = "CP " .. cpIndex .. " PASSED ✅"
 	lbl.TextColor3       = CP_PASSED_COLOR
 	lbl.TextTransparency = 0
 	TweenService:Create(lbl, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {
@@ -991,6 +1003,7 @@ function RacingClient.enable()
 	_abilityIndex = 1
 	_updateBoostHUD()
 	_resetCheckpointHUD()
+	if _cpFrame then _cpFrame.Visible = true end
 
 	_lockJump(LocalPlayer.Character, true)
 
@@ -1017,6 +1030,9 @@ function RacingClient.disable()
 	_vehicle = nil
 	_seat    = nil
 	_hideDriftLabel()
+	-- "CP1 ⬜ CP2 ⬜" stayed on screen through results, the lobby and every
+	-- later phase (hidden behind the farming timer, plain in crafting)
+	if _cpFrame then _cpFrame.Visible = false end
 
 	_lockJump(LocalPlayer.Character, false)
 end

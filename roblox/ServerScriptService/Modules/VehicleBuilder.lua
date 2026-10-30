@@ -601,6 +601,9 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 	local seatSpec = design.seat
 	local seat = Instance.new("VehicleSeat")
 	seat.Name = "VehicleSeat"
+	-- Roblox's own "Speed" bar sat over our boost bar (Studio Device
+	-- Simulator, 2026-10-30): the HUD has its own speedometer
+	seat.HeadsUpDisplay = false
 	seat.Size = seatSpec.size
 	seat.CFrame = spawnCFrame * seatSpec.cf
 	if rideTop then

@@ -59,7 +59,7 @@ local function screenLine(name, emoji, text)
 	-- (no key list or open chat window there on a touch screen)
 	if TouchLayout.gridLeft(LocalPlayer:FindFirstChild("PlayerGui")) then
 		_line.AnchorPoint = Vector2.new(0, 0)
-		_line.Position = UDim2.new(0, 12, 0, 8)
+		_line.Position = UDim2.new(0, 12, 0, 8 + TouchLayout.ICON_SIZE + 8)   -- under the 🔄 / 😜 icons
 	else
 		_line.AnchorPoint = Vector2.new(1, 1)
 		_line.Position = UDim2.new(1, -12, 1, -140)

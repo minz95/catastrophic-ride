@@ -428,6 +428,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   follow its size). Since 2026-10-30 about 100 × 130, 84 × 112, 88 × 108.
   Studio `sim.py run farm-feel`: one brawler client and three farm bots;
   every sound a client starts is reported (`bot_sound`, with `shopOpen`).
+- Racing on a touch screen: BOOST, DRIFT, ITEM (BOMB with a trick, ▲ / ▼ on
+  SKY) on the right; reset 🔄 and taunt 😜 are icons top left
+  (`TouchLayout.ICONS`, above where the thumbstick starts). Keys held when
+  the window loses focus are let go (a Mac's Cmd reads as Ctrl: SKY's dive
+  stayed held). Race seats have `HeadsUpDisplay = false`.
+- Symbols on screen must be in Montserrat (Gotham) or Twemoji: "✕", "⟲",
+  newer emoji (🛟🪄🪣🪤🪵🫖) drew empty boxes; Studio's Noto CJK fallback
+  hides the problem. Spec `glyphs` (list in tests/glyphs.txt; add a symbol
+  with `python3 tools/glyph_check.py --write`, needs Studio installed).
 - Farming on a touch screen: only GRAB, PUNCH, GUARD (and SMOKE with a
   gadget) on the right; DROP is a double tap on a bag slot (FarmingUI: the
   slot turns red "Drop?"), EMOTE the 😀 icon top right (TouchControls), the

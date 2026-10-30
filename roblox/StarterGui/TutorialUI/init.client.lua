@@ -415,7 +415,7 @@ closeBtn.Size            = UDim2.new(0, 36, 0, 28)
 closeBtn.Position        = UDim2.new(1, -36, 0, 4)
 closeBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
 closeBtn.BorderSizePixel = 0
-closeBtn.Text            = "✕"
+closeBtn.Text            = "X"   -- "✕" is not in the Gotham fonts (an empty box on screen)
 closeBtn.TextScaled      = true
 closeBtn.Font            = Enum.Font.GothamBold
 closeBtn.TextColor3      = Color3.new(1, 1, 1)
@@ -621,8 +621,12 @@ local stripLayout = Instance.new("UIListLayout", strip)
 stripLayout.SortOrder = Enum.SortOrder.LayoutOrder
 stripLayout.Padding   = UDim.new(0, 2)
 
+-- Any touch screen: the key list is for keyboards (playtest 2026-10-30: "on
+-- a phone the farm doesn't need the big list of controls, that's for PC").
+-- Not only while touch is the last input: a mouse moving over Studio's
+-- device simulator flipped it back on.
 local function _touchOnly()
-	return require(ReplicatedStorage.Shared.InputHints).touchUI()
+	return UserInputService.TouchEnabled or require(ReplicatedStorage.Shared.InputHints).touchUI()
 end
 
 local function _showStrip(phase)

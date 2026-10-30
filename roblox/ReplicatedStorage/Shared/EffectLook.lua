@@ -48,7 +48,7 @@ EffectLook.CAR = {
 	fullBuoyancy   = { style = "lift",    color = YELLOW, label = "🐤 FLOAT!" },
 	softLanding    = { style = "lift",    color = YELLOW, label = "🐤 SOFT LANDING!" },
 	groundBounce   = { style = "lift",    color = YELLOW, label = "🐤 BOING!" },
-	lifeFloat      = { style = "lift",    color = ORANGE, label = "🛟 FLOAT!" },
+	lifeFloat      = { style = "lift",    color = ORANGE, label = "⭕ FLOAT!" },
 	kiteLift       = { style = "lift",    color = C(255, 120, 120), label = "🪁 LIFT OFF!" },
 	kiteGlide      = { style = "lift",    color = C(255, 120, 120), label = "🪁 GLIDE!" },
 	parachute      = { style = "lift",    color = BLUE,   label = "☂️ CANOPY" },
@@ -60,7 +60,7 @@ EffectLook.CAR = {
 	gustBlast      = { style = "wave",    color = SKY,    label = "🌬️ GUST!" },
 	microFreeze    = { style = "wave",    color = ICE,    label = "🧊 FREEZE!" },
 	bathSplash     = { style = "wave",    color = BLUE,   label = "🛁 SPLASH!" },
-	dropTrap       = { style = "drop",    color = YELLOW, label = "🪤 TRAP SET" },
+	dropTrap       = { style = "drop",    color = YELLOW, label = "⚠️ TRAP SET" },
 	stall          = { style = "stun",    color = GREY,   label = "💨 STALLED" },
 
 	-- ── abilities: what happens to the car that got hit ────────────────────

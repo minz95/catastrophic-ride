@@ -97,6 +97,7 @@ invLayout.FillDirectionMaxCells = 8
 invLayout.Parent         = invBg
 
 local TouchLayout = require(ReplicatedStorage.Shared.TouchLayout)
+local slots = {}   -- filled below
 local function _layoutBag()
 	local cam = workspace.CurrentCamera
 	local vp = cam and cam.ViewportSize
@@ -107,16 +108,21 @@ local function _layoutBag()
 		invLayout.FillDirectionMaxCells = 4
 		invBg.Size = UDim2.fromOffset(b.w, b.h)
 		invBg.Position = UDim2.fromOffset(b.x, b.y)
+		-- see-through: it sits on the ground just ahead of you (items there
+		-- were hidden behind it)
+		invBg.BackgroundTransparency = 0.55
+		for _, sl in ipairs(slots) do sl.BackgroundTransparency = 0.35 end
 	else
 		invLayout.CellSize = UDim2.fromOffset(54, 54)
 		invLayout.CellPadding = UDim2.fromOffset(4, 4)
 		invLayout.FillDirectionMaxCells = 8
+		invBg.BackgroundTransparency = 0.25
+		for _, sl in ipairs(slots) do sl.BackgroundTransparency = 0 end
 		invBg.Size = UDim2.new(0, 8 * 60 + 18, 0, 64)
 		invBg.Position = UDim2.new(0.5, -(8 * 60 + 18) / 2, 1, -82)
 	end
 end
 
-local slots = {}
 for i = 1, Constants.INVENTORY_SIZE do
 	local slot = Instance.new("Frame")
 	slot.Name              = "Slot" .. i

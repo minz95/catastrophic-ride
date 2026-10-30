@@ -129,7 +129,7 @@ local closeBtn = Instance.new("TextButton")
 closeBtn.Size             = UDim2.new(0, 32, 0, 32)
 closeBtn.Position         = UDim2.new(1, -44, 0, 10)
 closeBtn.BackgroundColor3 = Color3.fromRGB(80, 60, 90)
-closeBtn.Text             = "✕"
+closeBtn.Text             = "X"   -- "✕" is not in the Gotham fonts (an empty box on screen)
 closeBtn.TextColor3       = Color3.new(1, 1, 1)
 closeBtn.TextScaled       = true
 closeBtn.Font             = Enum.Font.GothamBold
@@ -174,7 +174,7 @@ local function row(name, order)
 	corner(f, 8)
 	local icon = label(f, cfg.icon or "❔", UDim2.new(0, 40, 0, 40), UDim2.new(0, 8, 0, 7), Enum.Font.GothamBold)
 	icon.TextXAlignment = Enum.TextXAlignment.Center
-	local title = name .. (_seen[name] and "  ✓" or "")
+	local title = name .. (_seen[name] and "  ✅" or "")
 	label(f, title, UDim2.new(0.5, -60, 0, 20), UDim2.new(0, 56, 0, 6), Enum.Font.GothamBlack,
 		RARITY_COLOUR[cfg.rarity] or Color3.new(1, 1, 1))
 	local tags = { cfg.rarity or "" }
