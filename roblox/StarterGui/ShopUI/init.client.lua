@@ -108,7 +108,10 @@ end
 local panel = Instance.new("Frame")
 panel.Name             = "Panel"
 panel.Size             = UDim2.new(0, 520, 0, 520)
-panel.Position         = UDim2.new(0.5, -260, 0.5, -260)
+-- centred: a UIScale shrinks about the AnchorPoint (with the old top-left
+-- anchor the title, coins and close button went off the top of a phone)
+panel.AnchorPoint      = Vector2.new(0.5, 0.5)
+panel.Position         = UDim2.new(0.5, 0, 0.5, 0)
 panel.BackgroundColor3 = PANEL
 panel.Visible          = false
 panel.Parent           = screen
@@ -116,16 +119,10 @@ corner(panel, 10)
 -- narrow (phone) screens: scale the whole panel down
 local scale = Instance.new("UIScale")
 scale.Parent = panel
-local function rescale()
-	local cam = workspace.CurrentCamera
-	local w = cam and cam.ViewportSize.X or 1000
-	local h = cam and cam.ViewportSize.Y or 800
-	scale.Scale = math.min(1, (w - 32) / 520, (h - 32) / 520)
-end
-rescale()
-if workspace.CurrentCamera then
-	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
-end
+local ScreenFit = require(ReplicatedStorage.Shared.ScreenFit)
+ScreenFit.watch(function()
+	scale.Scale = (ScreenFit.scale(520, 520, 12))
+end)
 
 label(panel, "SHOP", UDim2.new(0, 160, 0, 36), UDim2.new(0, 14, 0, 8), Enum.Font.GothamBlack, GOLD)
 local coinsLbl = label(panel, "", UDim2.new(0, 220, 0, 26), UDim2.new(1, -290, 0, 14), Enum.Font.GothamBold, GOLD)
@@ -266,9 +263,15 @@ local function preview(card, it)
 	return true
 end
 
+-- 20 times a second: every card's ViewportFrame redraws its whole vehicle
+-- when its camera moves, and every frame was heavy on a phone.
+local SPIN_STEP = 1 / 20
+local _spinAt = 0
 game:GetService("RunService").RenderStepped:Connect(function()
 	if not panel.Visible then return end
 	local t = os.clock()
+	if t - _spinAt < SPIN_STEP then return end
+	_spinAt = t
 	for _, sp in ipairs(_spinning) do
 		local a = t * 0.6 + sp.phase
 		local eye = sp.center + Vector3.new(math.sin(a) * sp.dist, sp.height, math.cos(a) * sp.dist)

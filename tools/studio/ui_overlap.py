@@ -4,6 +4,7 @@ reports kind "ui": every visible element at the top of a ScreenGui, its box
 on screen and its UDim2 layout).
 
     python3 tools/studio/ui_overlap.py [reports/studio/ui-layout.json]
+    python3 tools/studio/ui_overlap.py --phone [reports/studio/ui-layout.json]
 
 For every phase it lists pairs of elements whose drawn boxes overlap at the
 bot's window, then recomputes the layout for other window sizes (SIZES) and
@@ -12,6 +13,7 @@ are added as approximate zones. Elements that cover most of the screen
 (backdrops, the crafting panel) are reported apart, not paired.
 """
 import json
+import subprocess
 import sys
 
 SIZES = [(1920, 1080), (1366, 768), (1280, 720), (1024, 640)]
@@ -132,8 +134,67 @@ def collect(r):
     return found
 
 
+# --phone: the same layout on phone / tablet screens with the touch buttons
+# (tools/phone_layout.luau, the real Shared/TouchLayout) and Roblox's mobile
+# controls (jump button, the side where the thumbstick starts). The key strip
+# is not shown on touch-only devices (TutorialUI).
+PHONE_HIDDEN = {"KeyStrip"}
+
+
+def phone_cases():
+    out = subprocess.run(["lune", "run", "tools/phone_layout.luau", "--json"],
+                         capture_output=True, text=True, check=True).stdout
+    return json.loads(out[out.index("["):])
+
+
+def phone(r):
+    cases = phone_cases()
+    snaps = [(e.get("data") or {}) for e in r["telemetry"]["events"] if e.get("kind") == "bot_ui"]
+    inset = snaps[0].get("inset") or 0
+    found = {}
+    screens = {}
+    for c in cases:
+        screens.setdefault((c["screen"], c["w"], c["h"]), []).append(c)
+    for s in snaps:
+        els = [e for e in s["elements"] if e["screen"] not in IGNORE and e["name"] not in PHONE_HIDDEN]
+        for (sname, w, h), cs in screens.items():
+            cur = side_buttons([dict(e, box=relayout(e, w, h, inset, None)) for e in els if not scaled(e)], w, h)
+            z = cs[0]["zones"]
+            roblox = [
+                {"screen": "Roblox", "name": "TopBarButtons", "box": [0, 0, 260, inset or 58]},
+                {"screen": "Roblox", "name": "JumpButton", "box": z["jump"]},
+                {"screen": "Roblox", "name": "ThumbstickSide", "box": z["thumbstick"]},
+            ]
+            touch_sets = [c for c in cs if c["phase"] == s["phase"]] or [None]
+            for c in touch_sets:
+                touch = [{"screen": "Touch", "name": b["name"], "box": b["box"]} for b in (c["buttons"] if c else [])]
+                ps, full = pairs(cur + touch + roblox, w, h)
+                for a, b, o in ps:
+                    if a["screen"] == "Touch" and b["screen"] in ("Touch", "Roblox"):
+                        continue   # tests/specs/phone_layout checks these
+                    if b["screen"] == "Touch" and a["screen"] == "Roblox":
+                        continue
+                    key = (s["phase"], name(a), name(b))
+                    found.setdefault(key, set()).add("%s %dx%d" % (sname, w, h))
+                for f in full:
+                    found.setdefault((s["phase"], name(f), "(covers most of the screen)"), set()).add("%s %dx%d" % (sname, w, h))
+    order = ["LOBBY", "FARMING", "CRAFTING", "RACING", "RESULTS"]
+    for ph in order:
+        rows = sorted((a, b, sorted(v)) for (p, a, b), v in found.items() if p == ph)
+        if rows:
+            print("\n%s" % ph)
+            for a, b, where in rows:
+                print("  %-36s x %-36s %s" % (a, b, ", ".join(where[:3]) + (" …" if len(where) > 3 else "")))
+    if not found:
+        print("no overlaps on phones")
+    return 0
+
+
 def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else "reports/studio/ui-layout.json"
+    args = [a for a in sys.argv[1:] if a != "--phone"]
+    path = args[0] if args else "reports/studio/ui-layout.json"
+    if "--phone" in sys.argv:
+        return phone(json.load(open(path))["report"])
     r = json.load(open(path))["report"]
     snaps = [(e.get("data") or {}) for e in r["telemetry"]["events"] if e.get("kind") == "bot_ui"]
     if not snaps:

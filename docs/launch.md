@@ -137,8 +137,14 @@ experience → Data Stores, or `DataStore:RemoveAsync`).
 
 - Bots fill each round to 4–6 racers (drawn per round): they farm, punch, guard, steal, race and fire
   their abilities; they ride updrafts and jumps like players.
-- Gamepad and touch buttons are tested offline only (key mapping); try
-  them on a device before going public.
+- Gamepad and touch buttons are tested offline only (key mapping, and the
+  touch layout on seven phone / tablet screens: `lune run
+  tools/phone_layout.luau`, `python3 tools/studio/ui_overlap.py --phone`);
+  try them on a phone before going public: thumb reach, the stick, the
+  shop and crafting screens at their phone size.
+- Every client holds all three maps (~5 900 parts) and the shop previews
+  for all three biomes; OCEAN's terrain is painted when a round picks it
+  (a short hitch at FARMING start).
 - The finish grace (45 s after the winner) sometimes cuts off the slowest
   driver when the winner is very fast (Studio match-forest, 2026-10-23: a
   novice 170 studs short).

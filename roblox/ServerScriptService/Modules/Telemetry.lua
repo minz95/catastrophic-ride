@@ -35,6 +35,19 @@
 local Telemetry = {}
 
 Telemetry.CAPACITY = 20000
+-- A live server keeps only the last LIVE_CAPACITY events: nothing reads the
+-- log there (analytics listen through onRecord), and 20 000 events stayed
+-- in memory for the server's life (launch check 2026-10-30). Studio, test
+-- harness sessions and playtest-marker servers keep the full log.
+Telemetry.LIVE_CAPACITY = 2000
+do
+	local RunService = game:GetService("RunService")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local ok, harness = pcall(function() return require(script.Parent.HarnessConfig).get() end)
+	local live = not RunService:IsStudio() and not (ok and harness)
+		and ReplicatedStorage:GetAttribute("PlaytestMarkers") ~= true
+	if live then Telemetry.CAPACITY = Telemetry.LIVE_CAPACITY end
+end
 
 local _events   = table.create and table.create(64) or {}
 local _head     = 0      -- index of the most recent event

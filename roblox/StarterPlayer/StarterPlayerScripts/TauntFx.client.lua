@@ -12,6 +12,7 @@ local TweenService      = game:GetService("TweenService")
 local Debris            = game:GetService("Debris")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local TouchLayout  = require(ReplicatedStorage.Shared.TouchLayout)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local LocalPlayer  = Players.LocalPlayer
 
@@ -53,6 +54,15 @@ local function screenLine(name, emoji, text)
 		pad.PaddingLeft, pad.PaddingRight = UDim.new(0, 12), UDim.new(0, 12)
 		pad.PaddingTop, pad.PaddingBottom = UDim.new(0, 4), UDim.new(0, 4)
 		pad.Parent = _line
+	end
+	-- on a phone the bottom right is the touch buttons': top left instead
+	-- (no key list or open chat window there on a touch screen)
+	if TouchLayout.gridLeft(LocalPlayer:FindFirstChild("PlayerGui")) then
+		_line.AnchorPoint = Vector2.new(0, 0)
+		_line.Position = UDim2.new(0, 12, 0, 8)
+	else
+		_line.AnchorPoint = Vector2.new(1, 1)
+		_line.Position = UDim2.new(1, -12, 1, -140)
 	end
 	_line.Text = string.format("%s %s: %s", emoji, name, text)
 	_line.Visible = true

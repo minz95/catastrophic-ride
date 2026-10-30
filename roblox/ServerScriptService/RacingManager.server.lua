@@ -776,11 +776,16 @@ end
 
 -- ─── Position sync loop ───────────────────────────────────────────────────────
 
+-- One sync loop per race: a race that never reached RESULTS (a phase
+-- error goes back to LOBBY) left its loop running next to the next one's.
+local _syncGen = 0
 local function _startPositionSync()
+	_syncGen += 1
+	local gen = _syncGen
 	task.spawn(function()
 		local length = RaceProgress.trackLength(_biome)
 		local nextProgressLog = 0
-		while _active do
+		while _active and gen == _syncGen do
 			-- Fun metrics (RaceMetrics) read one progress sample per racer per second.
 			local logProgress = tick() - _startTick >= nextProgressLog
 			if logProgress then nextProgressLog += Constants.FUN.PROGRESS_EVERY end
@@ -1054,6 +1059,20 @@ end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
 
+-- The race is over (RESULTS, or LOBBY after a phase error): stop the loops,
+-- the GO hold and every car's speed multipliers.
+local function _endRace()
+	_active = false
+	RaceStart.reset()
+	for _, pdata in pairs(SessionManager.getAllData()) do
+		VehicleTuning.clear(_seatOf(pdata.vehicleModel))
+	end
+	_physState = {}
+	-- per-player maps that otherwise kept every visitor of the server
+	BoostGauge.reset()
+	_respawnCooldown, _manualRespawnCooldown = {}, {}
+end
+
 GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.RACING then
 		_active      = true
@@ -1158,13 +1177,10 @@ GameManager.onPhaseChanged(function(phase, biome)
 		RemoteEvents.RaceSeedBroadcast:FireAllClients(_raceSeed)
 
 	elseif phase == Constants.PHASES.RESULTS then
-		_active = false
-		RaceStart.reset()
-		for _, pdata in pairs(SessionManager.getAllData()) do
-			VehicleTuning.clear(_seatOf(pdata.vehicleModel))
-		end
-		_physState = {}
+		_endRace()
 	elseif phase == Constants.PHASES.LOBBY or phase == Constants.PHASES.FARMING then
+		-- a race that never reached RESULTS (phase error → LOBBY) ends here
+		if _active then _endRace() end
 		RaceBots.clear()   -- bot cars stay parked through RESULTS
 	end
 end)

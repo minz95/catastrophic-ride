@@ -41,33 +41,8 @@ screen.IgnoreGuiInset = true   -- same coordinates as the HUD (also IgnoreGuiIns
 screen.DisplayOrder   = 10
 screen.Parent         = PlayerGui
 
-local SIZE, GAP = 74, 12      -- full-size button and gap (scaled down on small screens)
-local MIN_SCALE = 0.55
-local TOP_BAR   = 60          -- Roblox's top bar buttons
-local MARGIN    = 24
-
--- col counts from the right edge, row from the bottom (1 = bottom-right,
--- under the right thumb).
-local LAYOUT = {
-	FARMING = {
-		{ text = "GRAB",  key = Enum.KeyCode.E, col = 1, row = 1, color = Color3.fromRGB(60, 170, 90) },
-		{ text = "PUNCH", key = Enum.KeyCode.F, col = 2, row = 1, color = Color3.fromRGB(210, 80, 60) },
-		{ text = "GUARD", key = Enum.KeyCode.G, col = 1, row = 2, color = Color3.fromRGB(70, 110, 200) },
-		{ text = "DROP",  key = Enum.KeyCode.X, col = 3, row = 1, color = Color3.fromRGB(110, 110, 125), small = true },
-		{ text = "EMOTE", key = Enum.KeyCode.Q, col = 3, row = 2, color = Color3.fromRGB(240, 200, 60), small = true },
-		{ text = "SMOKE", key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(90, 90, 100), gadget = true },
-	},
-	RACING = {
-		{ text = "BOOST", key = Enum.KeyCode.F, col = 1, row = 1, color = Color3.fromRGB(60, 150, 240) },
-		{ text = "DRIFT", key = Enum.KeyCode.LeftShift, col = 2, row = 1, color = Color3.fromRGB(230, 160, 35) },
-		{ text = "ITEM",  key = Enum.KeyCode.E, col = 1, row = 2, color = Color3.fromRGB(170, 80, 220) },
-		{ text = "RESET", key = Enum.KeyCode.R, col = 3, row = 1, color = Color3.fromRGB(110, 110, 125), small = true },
-		{ text = "BOMB",  key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(220, 90, 40), attr = "RaceTrick" },
-		{ text = "😜",    key = Enum.KeyCode.Q, col = 3, row = 2, color = Color3.fromRGB(240, 200, 60), small = true },
-		{ text = "▲",     key = Enum.KeyCode.Space, col = 4, row = 2, color = Color3.fromRGB(80, 190, 230), biome = "SKY" },
-		{ text = "▼",     key = Enum.KeyCode.LeftControl, col = 4, row = 1, color = Color3.fromRGB(80, 140, 200), biome = "SKY" },
-	},
-}
+local TouchLayout = require(ReplicatedStorage.Shared.TouchLayout)
+local LAYOUT = TouchLayout.LAYOUT   -- buttons per phase; where they go: TouchLayout.compute
 
 -- ─── Held keys: always let go ────────────────────────────────────────────────
 -- A finger that slides off a button, a phase change that hides it or a
@@ -181,40 +156,21 @@ end
 local function layout()
 	local cam = workspace.CurrentCamera
 	local vp = cam and cam.ViewportSize or Vector2.new(1024, 768)
-	-- Roblox's touch jump button: 70 px at (-95, -90) on a small screen
-	-- (shorter side <= 500), 120 px at (-170, -210) otherwise.
-	local small = math.min(vp.X, vp.Y) <= 500
-	local bottom = small and 100 or 220
 	for phase, set in pairs(_sets) do
-		local cols, rows = 1, 1
-		for _, e in ipairs(set.entries) do
-			if e.btn.Visible or not e.b.biome then
-				cols = math.max(cols, e.b.col)
-				rows = math.max(rows, e.b.row)
-			end
+		local list = nil
+		if phase == "RACING" then
+			local lb, ll = positionList()
+			if lb then list = { bottom = lb, left = ll } end
 		end
-		local gridW = cols * SIZE + (cols - 1) * GAP
-		local gridH = rows * SIZE + (rows - 1) * GAP
-		local right, top = MARGIN, TOP_BAR
-		local listBottom, listLeft = nil, nil
-		if phase == "RACING" then listBottom, listLeft = positionList() end
-		if listBottom then top = math.max(top, listBottom + 8) end
-		local scale = math.min(1, (vp.Y - bottom - top) / gridH, (vp.X * 0.5) / gridW)
-		if listBottom and scale < 0.75 then
-			-- too little room under the list: stand left of it instead
-			right = (vp.X - listLeft) + 12
-			top = TOP_BAR
-			scale = math.min(1, (vp.Y - bottom - top) / gridH, (vp.X - right - MARGIN) * 0.6 / gridW)
-		end
-		scale = math.max(MIN_SCALE, scale)
-		local s, g = SIZE * scale, GAP * scale
-		set.frame.Size = UDim2.fromOffset(gridW * scale, gridH * scale)
-		set.frame.Position = UDim2.new(1, -right, 1, -bottom)
-		for _, e in ipairs(set.entries) do
-			local bs = e.b.small and s * 0.75 or s
-			local inset = (s - bs) / 2
-			e.btn.Size = UDim2.fromOffset(bs, bs)
-			e.btn.Position = UDim2.new(1, -((e.b.col - 1) * (s + g) + inset), 1, -((e.b.row - 1) * (s + g) + inset))
+		local byEntry = {}
+		for _, e in ipairs(set.entries) do byEntry[e.b] = e.btn end
+		local r = TouchLayout.compute(vp.X, vp.Y, phase, function(b) return byEntry[b].Visible end, list)
+		set.frame.Size = UDim2.fromOffset(r.frame[3], r.frame[4])
+		set.frame.Position = UDim2.new(1, -r.framePos[1], 1, -r.framePos[2])
+		for _, rb in ipairs(r.buttons) do
+			local btn = byEntry[rb.b]
+			btn.Size = UDim2.fromOffset(rb.size, rb.size)
+			btn.Position = UDim2.new(1, -rb.offset[1], 1, -rb.offset[2])
 		end
 	end
 end
@@ -234,12 +190,24 @@ end
 
 -- ─── Phase ───────────────────────────────────────────────────────────────────
 
+-- The race buttons come at GO: before it nothing works, and on a phone
+-- they covered the RACE START banner (objective and tips).
+local function raceGone()
+	local goAt = ReplicatedStorage:GetAttribute("RaceGoAt")
+	return type(goAt) == "number" and workspace:GetServerTimeNow() >= goAt - 0.5
+end
+
+local function refreshVisible()
+	for name, set in pairs(_sets) do
+		set.frame.Visible = (name == _phase) and LocalPlayer:GetAttribute("Spectating") ~= true
+			and (name ~= "RACING" or raceGone())
+	end
+end
+
 local function onPhase(phase)
 	if phase ~= _phase then releaseAll() end
 	_phase = phase
-	for name, set in pairs(_sets) do
-		set.frame.Visible = (name == phase) and LocalPlayer:GetAttribute("Spectating") ~= true
-	end
+	refreshVisible()
 	if LocalPlayer:GetAttribute("Spectating") == true then releaseAll() end
 	relayoutIfChanged()
 end
@@ -250,10 +218,12 @@ end)
 onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)
 
 -- Viewport (rotation, resize) and the position list's height change now and
--- then: check twice a second, lay out only when something moved.
+-- then: check four times a second, lay out only when something moved (and
+-- show the race buttons at GO).
 task.spawn(function()
 	while screen.Parent do
 		relayoutIfChanged()
-		task.wait(0.5)
+		if _phase == "RACING" then refreshVisible() end
+		task.wait(0.25)
 	end
 end)

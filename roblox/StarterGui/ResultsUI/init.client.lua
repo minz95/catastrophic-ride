@@ -36,17 +36,36 @@ bg.BackgroundTransparency = 0.1
 bg.BorderSizePixel  = 0
 bg.Parent           = screen
 
+-- Everything sits on a 1000 × 700 stage scaled to the screen: laid out in
+-- fractions of the window, the reward box covered the title and the
+-- leaderboard ran off the bottom of a phone (launch check 2026-10-30).
+local STAGE_W, STAGE_H = 1000, 700
+local stage = Instance.new("Frame")
+stage.Name                   = "Stage"
+stage.AnchorPoint            = Vector2.new(0.5, 0.5)
+stage.Position               = UDim2.fromScale(0.5, 0.5)
+stage.Size                   = UDim2.fromOffset(STAGE_W, STAGE_H)
+stage.BackgroundTransparency = 1
+stage.Parent                 = bg
+local stageScale = Instance.new("UIScale")
+stageScale.Parent = stage
+require(ReplicatedStorage.Shared.ScreenFit).watch(function()
+	local cam = workspace.CurrentCamera
+	local vp = cam and cam.ViewportSize or Vector2.new(STAGE_W, STAGE_H)
+	stageScale.Scale = math.min(vp.X / STAGE_W, vp.Y / STAGE_H)
+end)
+
 -- ── Title ────────────────────────────────────────────────────────────────────
 local title = Instance.new("TextLabel")
 title.Name              = "Title"
-title.Size              = UDim2.new(0.6, 0, 0, 70)
-title.Position          = UDim2.new(0.2, 0, 0.04, 0)
+title.Size              = UDim2.new(0.6, 0, 0, 56)
+title.Position          = UDim2.new(0.2, 0, 0, 10)
 title.BackgroundTransparency = 1
 title.Text              = "RESULTS"
 title.TextColor3        = Color3.fromRGB(255, 220, 60)
 title.TextScaled        = true
 title.Font              = Enum.Font.GothamBlack
-title.Parent            = bg
+title.Parent            = stage
 
 -- ── Podium ───────────────────────────────────────────────────────────────────
 -- 3 podium stands at different heights: 2nd (left), 1st (center), 3rd (right)
@@ -65,7 +84,7 @@ for _, pd in ipairs(podiumData) do
 	stand.Position          = UDim2.new(pd.x, 0, 0.72 - pd.h, 0)
 	stand.BackgroundColor3  = pd.color
 	stand.BorderSizePixel   = 0
-	stand.Parent            = bg
+	stand.Parent            = stage
 
 	local standCorner = Instance.new("UICorner")
 	standCorner.CornerRadius = UDim.new(0, 6)
@@ -90,7 +109,7 @@ for _, pd in ipairs(podiumData) do
 	nameLbl.TextColor3      = Color3.new(1, 1, 1)
 	nameLbl.TextScaled      = true
 	nameLbl.Font            = Enum.Font.GothamBold
-	nameLbl.Parent          = bg
+	nameLbl.Parent          = stage
 
 	local timeLbl = Instance.new("TextLabel")
 	timeLbl.Name            = "TimeLbl"
@@ -101,7 +120,7 @@ for _, pd in ipairs(podiumData) do
 	timeLbl.TextColor3      = Color3.fromRGB(200, 200, 200)
 	timeLbl.TextScaled      = true
 	timeLbl.Font            = Enum.Font.Gotham
-	timeLbl.Parent          = bg
+	timeLbl.Parent          = stage
 
 	_podiumLabels[pd.rank] = { name = nameLbl, time = timeLbl }
 end
@@ -115,7 +134,7 @@ lbFrame.BackgroundColor3  = Color3.fromRGB(20, 20, 35)
 lbFrame.BackgroundTransparency = 0.3
 lbFrame.BorderSizePixel   = 0
 lbFrame.AutomaticSize     = Enum.AutomaticSize.Y
-lbFrame.Parent            = bg
+lbFrame.Parent            = stage
 
 local lbCorner = Instance.new("UICorner")
 lbCorner.CornerRadius     = UDim.new(0, 8)
@@ -138,25 +157,25 @@ lbPad.Parent              = lbFrame
 -- starts on its own (the old PLAY AGAIN button did nothing).
 local nextLbl = Instance.new("TextLabel")
 nextLbl.Name                   = "NextRound"
-nextLbl.Size                   = UDim2.new(0, 320, 0, 36)
-nextLbl.Position               = UDim2.new(0.5, -160, 0.9, 0)
+nextLbl.Size                   = UDim2.new(0, 420, 0, 24)
+nextLbl.Position               = UDim2.new(0.5, -210, 0, 66)   -- under the title
 nextLbl.BackgroundTransparency = 1
 nextLbl.Text                   = ""
 nextLbl.TextColor3             = Color3.fromRGB(220, 220, 235)
 nextLbl.TextScaled             = true
 nextLbl.Font                   = Enum.Font.GothamBold
-nextLbl.Parent                 = bg
+nextLbl.Parent                 = stage
 
 -- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
 local rewardFrame = Instance.new("Frame")
 rewardFrame.Name              = "Reward"
 rewardFrame.Size              = UDim2.new(0, 360, 0, 132)
-rewardFrame.Position          = UDim2.new(0.5, -180, 0.12, 0)
+rewardFrame.Position          = UDim2.new(0.5, -180, 0, 96)   -- under the clock, over the podium names
 rewardFrame.BackgroundColor3  = Color3.fromRGB(30, 26, 50)
 rewardFrame.BackgroundTransparency = 0.2
 rewardFrame.BorderSizePixel   = 0
 rewardFrame.Visible           = false
-rewardFrame.Parent            = bg
+rewardFrame.Parent            = stage
 local rewardCorner = Instance.new("UICorner")
 rewardCorner.CornerRadius = UDim.new(0, 8)
 rewardCorner.Parent       = rewardFrame
@@ -281,7 +300,8 @@ local function _populateResults(finishOrder)
 		-- Leaderboard row
 		local row = Instance.new("Frame")
 		row.Name              = "Row" .. rank
-		row.Size              = UDim2.new(1, 0, 0, 24)
+		-- rows get thinner past six racers, so the list stays on the stage
+		row.Size              = UDim2.new(1, 0, 0, math.min(24, math.floor(162 / #finishOrder) - 2))
 		row.BackgroundTransparency = (entry.userId == LocalPlayer.UserId) and 0.5 or 1
 		row.BackgroundColor3  = Color3.fromRGB(60, 80, 100)
 		row.BorderSizePixel   = 0

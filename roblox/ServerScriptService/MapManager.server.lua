@@ -113,24 +113,26 @@ GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.FARMING then
 		if not biome then return end
 		_currentBiome = biome
-		_hideAllMaps()
-		_showMap(biome)
+		-- the map with its farm area, every other map and the race track hidden
+		local folder = _getMapsFolder()
+		local mapModel = folder:FindFirstChild(MapVisibility.mapName(biome))
+		if not mapModel then
+			warn(string.format("[MapManager] Map model '%s' not found", MapVisibility.mapName(biome)))
+		end
+		MapVisibility.applyPhase(folder, mapModel, "FarmArea")
 		_applyLighting(biome)
 		TerrainPainter.paint(biome)
-		-- Show farm area only; hide race track during farming phase
-		_setSubVisible(biome, "FarmArea",  true)
-		_setSubVisible(biome, "RaceTrack", false)
 
 	elseif phase == Constants.PHASES.RACING then
 		if not _currentBiome then return end
 		-- Show race track; hide farm area during racing phase
-		_setSubVisible(_currentBiome, "FarmArea",  false)
-		_setSubVisible(_currentBiome, "RaceTrack", true)
+		local folder = _getMapsFolder()
+		MapVisibility.applyPhase(folder, folder:FindFirstChild(MapVisibility.mapName(_currentBiome)), "RaceTrack")
 
-	elseif phase == Constants.PHASES.RESULTS then
-		task.delay(Constants.PHASE_DURATION.RESULTS or 15, function()
-			_currentBiome = nil
-		end)
+	elseif phase == Constants.PHASES.LOBBY then
+		-- at LOBBY, not on a RESULTS-length timer: a shortened RESULTS let
+		-- that timer fire during the next FARMING (no track at RACING)
+		_currentBiome = nil
 	end
 end)
 

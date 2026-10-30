@@ -310,8 +310,17 @@ local function step(bot, biome, dt, overlap, startY, killY, leadS, hazards)
 	tryBoost(bot, speed, info, biome)
 
 	-- the same catch-up as the players (Shared/CatchUp)
-	local cu = leadS and CatchUp.mult(leadS - bot.s) or 1
-	if cu > 1 then VehicleTuning.set(seat, "MaxSpeed", "catchUp", cu) else VehicleTuning.remove(seat, "MaxSpeed", "catchUp") end
+	-- in steps of 0.005: a value that changed every frame re-set the seat's
+	-- MaxSpeed (replicated to every client) every frame for each bot
+	local cu = leadS and math.floor(CatchUp.mult(leadS - bot.s) * 200 + 0.5) / 200 or 1
+	if cu ~= bot.catchUp then
+		bot.catchUp = cu
+	elseif cu > 1 then
+		cu = nil   -- unchanged: nothing to write
+	end
+	if cu == nil then
+		-- keep
+	elseif cu > 1 then VehicleTuning.set(seat, "MaxSpeed", "catchUp", cu) else VehicleTuning.remove(seat, "MaxSpeed", "catchUp") end
 
 	local input = VehicleController.readKeys(keys)
 	local maxSpeed = seat.MaxSpeed

@@ -34,16 +34,16 @@ Cars by top speed: slowest = Microwave + Drill + Umbrella (top speed 62.1, turn 
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 6 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.29 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.35
+- Fastest car won 7 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.24 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.22
 
 | Group | Mean place (1 = best) |
 |---|---|
-| farming: sweaty | 3.28 |
-| farming: casual | 3.72 |
-| driving: expert | 1.71 |
-| driving: average | 3.29 |
+| farming: sweaty | 3.25 |
+| farming: casual | 3.75 |
+| driving: expert | 1.54 |
+| driving: average | 3.46 |
 | driving: novice | 5.50 |
 
 ## Fun metrics
@@ -52,27 +52,27 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.51 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.50 |  .. 0.70 | the fastest build should not always win |
+| ✓ | closeShare | 0.55 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.58 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 16.20 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 1.67 | 1.00 ..  | the lead changes at least once |
+| ✓ | finishSpread | 15.48 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.50 | 1.00 ..  | the lead changes at least once |
 | ✗ | racingShare | 0.32 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.29 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 98.78 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | speedPlaceCorr | -0.24 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 99.11 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 9.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 11.7. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 harbor launch | 6.2 | 1.2 | 0 | 0 | 0 |
-| S2 island arc | 10.2 | 1.9 | 0 | 0 | 2 |
-| S3 open channel | 9.1 | 1.9 | 0 | 0 | 2 |
-| S3b to the lighthouse | 1.6 | 0.1 | 0 | 0 | 0 |
-| S4 lighthouse spiral | 13.9 | 1.6 | 0 | 0 | 0 |
-| S5 water slide | 19.6 | 3.1 | 0 | 0 | 20 |
-| S6 reef hairpin | 21.7 | 4.9 | 9 | 0 | 38 |
-| S7 kelp channel | 22.2 | 4.2 | 3 | 0 | 20 |
+| S1 harbor launch | 6.2 | 1.1 | 0 | 0 | 0 |
+| S2 island arc | 10.3 | 2.2 | 1 | 0 | 1 |
+| S3 open channel | 9.1 | 2.1 | 0 | 0 | 3 |
+| S3b to the lighthouse | 1.6 | 0.2 | 0 | 0 | 0 |
+| S4 lighthouse spiral | 13.9 | 1.5 | 0 | 0 | 0 |
+| S5 water slide | 19.7 | 3.3 | 1 | 0 | 17 |
+| S6 reef hairpin | 21.8 | 4.9 | 8 | 0 | 22 |
+| S7 kelp channel | 21.9 | 3.6 | 2 | 0 | 17 |
 
 ## Geometry findings
 

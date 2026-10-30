@@ -254,7 +254,9 @@ end
 
 function GameManager.raceComplete(finishOrder)
 	if _currentPhase == Constants.PHASES.RACING then
-		_startResults(finishOrder)
+		-- guarded like every other phase start: _startResults cancels the
+		-- race timer first, so an error here left the server in RACING for good
+		_safely(_startResults, finishOrder)
 	end
 end
 

@@ -962,6 +962,35 @@ RemoteEvents.RequestPunch.OnServerInvoke = _punch
 
 _farmingStartTick = 0
 
+-- Farming is over (CRAFTING, or LOBBY after a phase error): fights stop,
+-- unclaimed items go.
+local function _endFarming()
+	_active = false
+	_contests = {}
+	FarmRescue.stop()
+	FarmBots.stop()
+	-- fights end with the phase: drop guards and hit counts
+	for _, p in ipairs(SessionManager.actors()) do
+		local d = SessionManager.getData(p)
+		if d then
+			d._hits, d._lastHitAt, d._knockImmuneEnd, d._punchCooldownEnd = nil, nil, nil, nil
+			if (d._guardUntil or 0) > 0 then _setGuard(p, d, false) end
+		end
+	end
+	-- Destroy any remaining unclaimed items
+	for _, item in pairs(_items) do
+		if not item.taken then
+			if item.model and item.model.Parent then
+				ItemVisualUpgrader.stopIdle(item.model)
+				item.model:Destroy()
+			elseif item.part and item.part.Parent then
+				item.part:Destroy()
+			end
+		end
+	end
+	_items = {}
+end
+
 GameManager.onPhaseChanged(function(phase, biome)
 	if phase == Constants.PHASES.FARMING then
 		_active = true
@@ -1009,32 +1038,11 @@ GameManager.onPhaseChanged(function(phase, biome)
 		end
 
 	elseif phase == Constants.PHASES.LOBBY then
+		-- farming that never reached CRAFTING (phase error → LOBBY) ends here
+		if _active then _endFarming() end
 		FarmRescue.stop()
 		FarmBots.clear()
 	elseif phase == Constants.PHASES.CRAFTING then
-		_active = false
-		_contests = {}
-		FarmRescue.stop()
-		FarmBots.stop()
-		-- fights end with the phase: drop guards and hit counts
-		for _, p in ipairs(SessionManager.actors()) do
-			local d = SessionManager.getData(p)
-			if d then
-				d._hits, d._lastHitAt, d._knockImmuneEnd, d._punchCooldownEnd = nil, nil, nil, nil
-				if (d._guardUntil or 0) > 0 then _setGuard(p, d, false) end
-			end
-		end
-		-- Destroy any remaining unclaimed items
-		for _, item in pairs(_items) do
-			if not item.taken then
-				if item.model and item.model.Parent then
-					ItemVisualUpgrader.stopIdle(item.model)
-					item.model:Destroy()
-				elseif item.part and item.part.Parent then
-					item.part:Destroy()
-				end
-			end
-		end
-		_items = {}
+		_endFarming()
 	end
 end)

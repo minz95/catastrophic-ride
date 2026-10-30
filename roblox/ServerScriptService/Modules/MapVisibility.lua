@@ -42,15 +42,24 @@ local function remember(desc)
 	end
 end
 
+-- Writes only what changes: a phase change touches ~14 000 parts and every
+-- write replicates (launch check 2026-10-30).
+local function set(desc, prop, v)
+	if desc[prop] ~= v then desc[prop] = v end
+end
+
 local function hide(desc)
 	remember(desc)
-	desc.Transparency = 1
-	desc.CanCollide   = false
-	desc.CanTouch     = false
-	desc.CanQuery     = false   -- only allowed once CanCollide is off
+	set(desc, "Transparency", 1)
+	set(desc, "CanCollide", false)
+	set(desc, "CanTouch", false)
+	set(desc, "CanQuery", false)   -- only allowed once CanCollide is off
 end
 
 local function restore(desc)
+	-- a part never hidden yet: what it has now is what was authored (the
+	-- one-pass applyPhase shows the live map without hiding it first)
+	remember(desc)
 	local storedT  = desc:GetAttribute("OriginalTransparency")
 	local storedCC = desc:GetAttribute("OriginalCanCollide")
 	if storedT == nil then storedT = 0 end
@@ -59,10 +68,17 @@ local function restore(desc)
 	if type(dim) == "number" then storedT = math.max(storedT, dim) end
 	local storedTouch = desc:GetAttribute("OriginalCanTouch")
 	local storedQuery = desc:GetAttribute("OriginalCanQuery")
-	desc.Transparency = storedT
-	desc.CanCollide   = storedCC
-	desc.CanTouch     = storedTouch ~= false
-	desc.CanQuery     = storedQuery ~= false
+	set(desc, "Transparency", storedT)
+	-- CanQuery false needs CanCollide false first; true goes first so a
+	-- solid part never has collision without queries for a moment
+	if storedQuery == false then
+		set(desc, "CanCollide", storedCC)
+		set(desc, "CanQuery", false)
+	else
+		set(desc, "CanQuery", true)
+		set(desc, "CanCollide", storedCC)
+	end
+	set(desc, "CanTouch", storedTouch ~= false)
 end
 
 --- Records each BasePart's authored Transparency / CanCollide once.
@@ -124,16 +140,52 @@ function MapVisibility.setSubVisible(mapModel, subName, visible)
 	end
 end
 
---- The state a map is in during the RACING phase, as MapManager drives it:
--- FARMING shows the whole map then hides RaceTrack; RACING shows RaceTrack
--- and hides FarmArea.
+local SUBS = { FarmArea = "RaceTrack", RaceTrack = "FarmArea" }   -- shown → hidden
+
+--- One phase's state in one pass (MapManager): every map but `mapModel`
+-- hidden, and in it the sub-model `showSub` ("FarmArea" in FARMING,
+-- "RaceTrack" in RACING) shown with the rest of the map and the other one
+-- hidden. Their labels (BillboardGui / SurfaceGui ignore the part's
+-- Transparency) follow; a hidden map's labels go off too (they stayed on
+-- and floated over the next biome). It used to hide all ~14 000 parts,
+-- show the map and toggle the sub-models: the live map's parts changed up
+-- to four times per phase.
+function MapVisibility.applyPhase(mapsFolder, mapModel, showSub)
+	local hiddenName = SUBS[showSub]
+	for _, child in ipairs(mapsFolder:GetChildren()) do
+		if child:IsA("Model") or child:IsA("Folder") then
+			local live = child == mapModel
+			child:SetAttribute("MapVisible", live)
+			local subs = {}
+			for name in pairs(SUBS) do
+				local sub = child:FindFirstChild(name)
+				if sub then subs[name] = sub end
+			end
+			local hiddenSub = live and hiddenName and subs[hiddenName] or nil
+			for _, desc in ipairs(child:GetDescendants()) do
+				if desc:IsA("BasePart") then
+					if live and not (hiddenSub and desc:IsDescendantOf(hiddenSub)) then
+						restore(desc)
+					else
+						hide(desc)
+					end
+				elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
+					local inSub = false
+					for _, sub in pairs(subs) do
+						if desc:IsDescendantOf(sub) then inSub = true break end
+					end
+					if inSub then
+						set(desc, "Enabled", live and not (hiddenSub and desc:IsDescendantOf(hiddenSub)))
+					end
+				end
+			end
+		end
+	end
+end
+
+--- The state a map is in during the RACING phase, as MapManager drives it.
 function MapVisibility.applyRacingState(mapsFolder, mapModel)
-	MapVisibility.hideAll(mapsFolder)
-	MapVisibility.show(mapModel)
-	MapVisibility.setSubVisible(mapModel, "FarmArea", true)
-	MapVisibility.setSubVisible(mapModel, "RaceTrack", false)
-	MapVisibility.setSubVisible(mapModel, "FarmArea", false)
-	MapVisibility.setSubVisible(mapModel, "RaceTrack", true)
+	MapVisibility.applyPhase(mapsFolder, mapModel, "RaceTrack")
 end
 
 return MapVisibility

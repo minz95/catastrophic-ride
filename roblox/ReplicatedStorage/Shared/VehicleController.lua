@@ -443,10 +443,14 @@ function VehicleController.apply(primary, cmd, opts)
 				end
 			end
 			primary:SetAttribute("AirT", air)
+			-- only real changes: a server bot's mover writes replicate to every
+			-- client, and X / Z do nothing here (MaxForce is Y only)
 			if target then
-				susp.Position = Vector3.new(primary.Position.X, target, primary.Position.Z)
-				susp.MaxForce = Vector3.new(0, 4e4, 0)
-			else
+				if math.abs(susp.Position.Y - target) > 0.01 or susp.MaxForce.Y == 0 then
+					susp.Position = Vector3.new(primary.Position.X, target, primary.Position.Z)
+				end
+				if susp.MaxForce.Y == 0 then susp.MaxForce = Vector3.new(0, 4e4, 0) end
+			elseif susp.MaxForce.Y ~= 0 then
 				susp.MaxForce = Vector3.zero
 			end
 		end
