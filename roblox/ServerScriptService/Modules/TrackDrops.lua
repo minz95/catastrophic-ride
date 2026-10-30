@@ -24,6 +24,7 @@ local ServerStorage     = game:GetService("ServerStorage")
 local Debris            = game:GetService("Debris")
 
 local ItemConfig = require(ReplicatedStorage.Shared.ItemConfig)
+local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local BiomeConfig = require(game:GetService("ServerScriptService").Modules.BiomeConfig)
 
 local TrackDrops = {}
@@ -148,6 +149,23 @@ local function label(parent, adornee, itemName, height)
 end
 
 --- Places `itemName`'s drop behind `vehicle`. See the header for opts.
+TrackDrops.LANE_INSET = 2   -- studs inside the lane edge
+
+--- `pos` moved sideways onto this round's lane when it lies past the edge.
+function TrackDrops.clampToLane(pos)
+	local biome = ReplicatedStorage:GetAttribute("Biome")
+	local ok, geo = pcall(function() return RaceProgress.geometry(biome) end)
+	if not ok or not geo then return pos end
+	local p = geo:project(pos.X, pos.Z, nil, nil, pos.Y)
+	if not p or not p.lateral then return pos end
+	local maxOff = geo.halfWidth - TrackDrops.LANE_INSET
+	if math.abs(p.lateral) <= maxOff then return pos end
+	local off = Vector3.new(pos.X - p.cx, 0, pos.Z - p.cz)
+	if off.Magnitude < 1e-3 then return pos end
+	local inside = off.Unit * maxOff
+	return Vector3.new(p.cx + inside.X, pos.Y, p.cz + inside.Z)
+end
+
 function TrackDrops.place(itemName, vehicle, opts)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return nil end
@@ -156,6 +174,10 @@ function TrackDrops.place(itemName, vehicle, opts)
 	look = look.Magnitude > 1e-3 and look.Unit or Vector3.new(0, 0, -1)
 	local behind = opts.behind or 6
 	local pos = primary.Position - look * behind
+	-- inside the lane: a car hugging the wall dropped its puddle past the
+	-- road's edge, over nothing (Studio match-forest 2026-10-30: a Gas Can
+	-- 21 studs off the centre line, OnGround false)
+	pos = TrackDrops.clampToLane(pos)
 	local f = folder()
 	local surface = groundY(pos, { vehicle, f })
 	local baseY = surface or (primary.Position.Y - primary.Size.Y * 0.5 - 0.2)

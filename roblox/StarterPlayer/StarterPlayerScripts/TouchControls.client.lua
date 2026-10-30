@@ -162,6 +162,16 @@ for phase, list in pairs(TouchLayout.ICONS) do
 				if not isPress(input) or _held[btn] then return end
 				_held[btn] = b.key
 				KeyInput.press(b.key)
+				-- let go when the touch ends anywhere (a finger slid off)
+				local conn
+				conn = input.Changed:Connect(function(prop)
+					if prop ~= "UserInputState" then return end
+					local st = input.UserInputState
+					if st == Enum.UserInputState.End or st == Enum.UserInputState.Cancel then
+						conn:Disconnect()
+						release(btn)
+					end
+				end)
 			end)
 			btn.InputEnded:Connect(function(input)
 				if isPress(input) then release(btn) end
@@ -271,7 +281,14 @@ onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)
 -- then: check four times a second, lay out only when something moved (and
 -- show the race buttons at GO).
 task.spawn(function()
+	local InputHints = require(ReplicatedStorage.Shared.InputHints)
 	while screen.Parent do
+		-- a touch-screen PC used with keyboard and mouse shows no buttons
+		local want = InputHints.touchUI()
+		if screen.Enabled ~= want then
+			screen.Enabled = want
+			if not want then releaseAll() end
+		end
 		relayoutIfChanged()
 		refreshVisible()
 		task.wait(0.25)
