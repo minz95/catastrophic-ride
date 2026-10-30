@@ -138,6 +138,34 @@ for phase, list in pairs(LAYOUT) do
 	_sets[phase] = { frame = frame, entries = entries }
 end
 
+-- ─── Emote icon (top right) ─────────────────────────────────────────────────
+-- Out of the button grid: the farm was covered in buttons. A tap presses Q,
+-- which opens / closes EmoteUI's menu (a touch toggles it).
+local emoteBtn = Instance.new("TextButton")
+emoteBtn.Name                   = "EmoteIcon"
+emoteBtn.AnchorPoint            = Vector2.new(0, 0)
+emoteBtn.Size                   = UDim2.fromOffset(TouchLayout.EMOTE_SIZE, TouchLayout.EMOTE_SIZE)
+emoteBtn.BackgroundColor3       = Color3.fromRGB(240, 200, 60)
+emoteBtn.BackgroundTransparency = 0.15
+emoteBtn.Text                   = "😀"
+emoteBtn.TextScaled             = true
+emoteBtn.Font                   = Enum.Font.GothamBlack
+emoteBtn.Visible                = false
+emoteBtn.Parent                 = screen
+do
+	local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(1, 0); c.Parent = emoteBtn
+end
+emoteBtn.InputBegan:Connect(function(input)
+	if isPress(input) then KeyInput.press(Enum.KeyCode.Q) end
+end)
+emoteBtn.InputEnded:Connect(function(input)
+	if isPress(input) then KeyInput.release(Enum.KeyCode.Q) end
+end)
+local function placeEmote()
+	local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
+	emoteBtn.Position = UDim2.new(1, -(TouchLayout.EMOTE_RIGHT + TouchLayout.EMOTE_SIZE), 0, top + 8)
+end
+
 -- ─── Layout from the viewport ────────────────────────────────────────────────
 
 -- Bottom of the HUD's race position list (screen pixels), nil when not shown.
@@ -202,6 +230,9 @@ local function refreshVisible()
 		set.frame.Visible = (name == _phase) and LocalPlayer:GetAttribute("Spectating") ~= true
 			and (name ~= "RACING" or raceGone())
 	end
+	-- emotes work everywhere but the race (Q is the taunt there) and crafting
+	emoteBtn.Visible = _phase ~= "RACING" and _phase ~= "CRAFTING"
+	placeEmote()
 end
 
 local function onPhase(phase)
@@ -223,7 +254,7 @@ onPhase(ReplicatedStorage:GetAttribute("Phase") or Constants.PHASES.LOBBY)
 task.spawn(function()
 	while screen.Parent do
 		relayoutIfChanged()
-		if _phase == "RACING" then refreshVisible() end
+		refreshVisible()
 		task.wait(0.25)
 	end
 end)

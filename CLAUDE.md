@@ -428,6 +428,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   follow its size). Since 2026-10-30 about 100 × 130, 84 × 112, 88 × 108.
   Studio `sim.py run farm-feel`: one brawler client and three farm bots;
   every sound a client starts is reported (`bot_sound`, with `shopOpen`).
+- Farming on a touch screen: only GRAB, PUNCH, GUARD (and SMOKE with a
+  gadget) on the right; DROP is a double tap on a bag slot (FarmingUI: the
+  slot turns red "Drop?"), EMOTE the 😀 icon top right (TouchControls), the
+  bag two rows of four between the thumbstick and the buttons
+  (`TouchLayout.bag`), no Controls button (playtest 2026-10-30: "the farm
+  is covered in buttons").
 - Farming keys: E grab, hold E steal (`Constants.STEAL_HOLD`, starts while
   held, label over the target), F / left click punch, hold G guard, X drop,
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`,

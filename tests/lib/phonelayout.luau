@@ -70,6 +70,16 @@ function M.problems(w, h, case)
 	for _, rb in ipairs(r.buttons) do
 		if rb.visible then table.insert(shown, rb) end
 	end
+	if case.phase == "FARMING" then
+		local b = TouchLayout.bag(w, h, r.frame[1])
+		local box = { b.x, b.y, b.w, b.h }
+		if b.cell < M.MIN_TOUCH then table.insert(bad, string.format("bag slots only %d px", b.cell)) end
+		if overlap(box, zones.thumbstick) then table.insert(bad, "bag in the thumbstick area") end
+		if overlap(box, zones.jump) then table.insert(bad, "bag on the jump button") end
+		for _, rb in ipairs(shown) do
+			if overlap(box, rb.box) then table.insert(bad, "bag on " .. rb.b.text) end
+		end
+	end
 	for i, rb in ipairs(shown) do
 		local x, y, bw, bh = table.unpack(rb.box)
 		local n = rb.b.text

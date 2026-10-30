@@ -93,7 +93,10 @@ R.describe("controls named for the device (Shared/InputHints)", function()
 		for text, key in src:gmatch('text = "([^"]+)",%s*key = Enum%.KeyCode%.(%w+)') do buttons[text] = key end
 		local bad = {}
 		for action, a in pairs(H.ACTIONS) do
-			local onScreen = action == "shop" or action == "guide" or action == "help"   -- their own screen buttons
+			-- their own screen buttons; drop is a double tap on a bag slot
+			-- (FarmingUI), emote the 😀 icon (TouchControls)
+			local onScreen = action == "shop" or action == "guide" or action == "help"
+				or action == "drop" or action == "emote"
 			if not onScreen and buttons[a.touch] ~= a.code then
 				table.insert(bad, action .. " → " .. tostring(a.touch))
 			end

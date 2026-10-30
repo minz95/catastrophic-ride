@@ -18,12 +18,13 @@ TouchLayout.MIN_TOUCH = 36                   -- px: a small button never shrinks
 TouchLayout.STICK_W   = 0.4                  -- share of the width where Roblox's thumbstick starts
 
 TouchLayout.LAYOUT = {
+	-- Four at most (playtest 2026-10-30: "the farm is covered in buttons").
+	-- DROP is a double tap on a bag slot (FarmingUI), EMOTE an icon at the
+	-- top right (TouchControls).
 	FARMING = {
 		{ text = "GRAB",  key = Enum.KeyCode.E, col = 1, row = 1, color = Color3.fromRGB(60, 170, 90) },
 		{ text = "PUNCH", key = Enum.KeyCode.F, col = 2, row = 1, color = Color3.fromRGB(210, 80, 60) },
 		{ text = "GUARD", key = Enum.KeyCode.G, col = 1, row = 2, color = Color3.fromRGB(70, 110, 200) },
-		{ text = "DROP",  key = Enum.KeyCode.X, col = 3, row = 1, color = Color3.fromRGB(110, 110, 125), small = true },
-		{ text = "EMOTE", key = Enum.KeyCode.Q, col = 3, row = 2, color = Color3.fromRGB(240, 200, 60), small = true },
 		{ text = "SMOKE", key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(90, 90, 100), gadget = true },
 	},
 	RACING = {
@@ -109,6 +110,24 @@ function TouchLayout.compute(w, h, phase, visible, list)
 	end
 	return out
 end
+
+-- The farm bag on a touch screen (FarmingUI): two rows of four between the
+-- thumbstick's side and the buttons (the one-row bar ran under both).
+-- Returns { x, y, w, h, cell } in screen pixels.
+TouchLayout.BAG_CELL, TouchLayout.BAG_GAP, TouchLayout.BAG_PAD = 40, 4, 6
+function TouchLayout.bag(w, h, gridLeft)
+	local L = TouchLayout
+	local x = w * L.STICK_W + 8
+	local room = (gridLeft or w) - 8 - x
+	local cell = math.min(L.BAG_CELL, math.floor((room - 2 * L.BAG_PAD - 3 * L.BAG_GAP) / 4))
+	local bw = 4 * cell + 3 * L.BAG_GAP + 2 * L.BAG_PAD
+	local bh = 2 * cell + L.BAG_GAP + 2 * L.BAG_PAD
+	return { x = x, y = h - bh - 12, w = bw, h = bh, cell = cell }
+end
+
+-- The emote icon (TouchControls), top right left of SHOP / ITEMS
+-- (SideButtons: 8 and 136 px from the right edge, 120 wide).
+TouchLayout.EMOTE_RIGHT, TouchLayout.EMOTE_SIZE = 264, 40
 
 -- Left edge (screen px) of the touch buttons shown now, or nil when there
 -- are none (no touch screen, or a phase without buttons). Screens that would

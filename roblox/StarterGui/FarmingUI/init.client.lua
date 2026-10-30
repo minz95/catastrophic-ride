@@ -83,17 +83,44 @@ invBg.Parent           = screen
 
 local _ic = Instance.new("UICorner"); _ic.CornerRadius = UDim.new(0, 10); _ic.Parent = invBg
 
-local invLayout = Instance.new("UIListLayout")
+-- One row of eight on a keyboard; on a touch screen two rows of four
+-- between the thumbstick's side and the buttons (Shared/TouchLayout.bag):
+-- the long bar ran under both (playtest 2026-10-30).
+local invLayout = Instance.new("UIGridLayout")
 invLayout.FillDirection  = Enum.FillDirection.Horizontal
-invLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 invLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-invLayout.Padding        = UDim.new(0, 4)
+invLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+invLayout.SortOrder      = Enum.SortOrder.LayoutOrder
+invLayout.CellPadding    = UDim2.fromOffset(4, 4)
+invLayout.CellSize       = UDim2.fromOffset(54, 54)
+invLayout.FillDirectionMaxCells = 8
 invLayout.Parent         = invBg
+
+local TouchLayout = require(ReplicatedStorage.Shared.TouchLayout)
+local function _layoutBag()
+	local cam = workspace.CurrentCamera
+	local vp = cam and cam.ViewportSize
+	if vp and InputHints.touchUI() then
+		local b = TouchLayout.bag(vp.X, vp.Y, TouchLayout.gridLeft(LocalPlayer.PlayerGui))
+		invLayout.CellSize = UDim2.fromOffset(b.cell, b.cell)
+		invLayout.CellPadding = UDim2.fromOffset(TouchLayout.BAG_GAP, TouchLayout.BAG_GAP)
+		invLayout.FillDirectionMaxCells = 4
+		invBg.Size = UDim2.fromOffset(b.w, b.h)
+		invBg.Position = UDim2.fromOffset(b.x, b.y)
+	else
+		invLayout.CellSize = UDim2.fromOffset(54, 54)
+		invLayout.CellPadding = UDim2.fromOffset(4, 4)
+		invLayout.FillDirectionMaxCells = 8
+		invBg.Size = UDim2.new(0, 8 * 60 + 18, 0, 64)
+		invBg.Position = UDim2.new(0.5, -(8 * 60 + 18) / 2, 1, -82)
+	end
+end
 
 local slots = {}
 for i = 1, Constants.INVENTORY_SIZE do
 	local slot = Instance.new("Frame")
 	slot.Name              = "Slot" .. i
+	slot.LayoutOrder       = i
 	slot.Size              = UDim2.new(0, 54, 0, 54)
 	slot.BackgroundColor3  = Color3.fromRGB(35, 35, 50)
 	slot.BorderSizePixel   = 0
@@ -122,6 +149,22 @@ for i = 1, Constants.INVENTORY_SIZE do
 	name.TextColor3        = Color3.fromRGB(180, 180, 180)
 	name.Parent            = slot
 
+	-- tap twice to drop this item (the touch screen's DROP button is gone;
+	-- a click works too)
+	local hit = Instance.new("TextButton")
+	hit.Name                   = "Hit"
+	hit.Size                   = UDim2.fromScale(1, 1)
+	hit.BackgroundTransparency = 1
+	hit.Text                   = ""
+	hit.ZIndex                 = 3
+	hit.Parent                 = slot
+	local stroke = Instance.new("UIStroke")
+	stroke.Name      = "Armed"
+	stroke.Color     = Color3.fromRGB(255, 90, 70)
+	stroke.Thickness = 2
+	stroke.Enabled   = false
+	stroke.Parent    = slot
+
 	slots[i] = slot
 end
 
@@ -136,7 +179,42 @@ local RARITY_COLOUR = {
 	Epic     = Color3.fromRGB(200, 100, 255),
 }
 
-local function _updateSlots(inventory)
+-- Tap a slot: it turns red ("Drop?"); tap it again within ARM_SECONDS to drop.
+local ARM_SECONDS = 2.5
+local _inventory = {}
+local _armed, _armedAt = nil, 0
+local _updateSlots
+local function _disarm()
+	if _armed and slots[_armed] then slots[_armed]:FindFirstChild("Armed").Enabled = false end
+	_armed = nil
+	_updateSlots(_inventory)
+end
+for i, slot in ipairs(slots) do
+	slot:FindFirstChild("Hit").Activated:Connect(function()
+		if not _inventory[i] then return end
+		if _armed == i and os.clock() - _armedAt < ARM_SECONDS then
+			_disarm()
+			task.spawn(function() RemoteEvents.RequestDrop:InvokeServer(i) end)
+			return
+		end
+		if _armed then _disarm() end
+		_armed, _armedAt = i, os.clock()
+		slot:FindFirstChild("Armed").Enabled = true
+		slot:FindFirstChild("ItemName").Text = "Drop?"
+		slot:FindFirstChild("ItemName").TextColor3 = Color3.fromRGB(255, 120, 100)
+		local at = _armedAt
+		task.delay(ARM_SECONDS, function()
+			if _armed == i and _armedAt == at then _disarm() end
+		end)
+	end)
+end
+
+_updateSlots = function(inventory)
+	_inventory = inventory or {}
+	if _armed and not _inventory[_armed] then
+		slots[_armed]:FindFirstChild("Armed").Enabled = false
+		_armed = nil
+	end
 	for i = 1, Constants.INVENTORY_SIZE do
 		local slot = slots[i]
 		local itemName = inventory[i]
@@ -155,7 +233,23 @@ local function _updateSlots(inventory)
 	end
 end
 
-RemoteEvents.InventoryUpdated.OnClientEvent:Connect(_updateSlots)
+RemoteEvents.InventoryUpdated.OnClientEvent:Connect(function(inv)
+	if _armed then
+		slots[_armed]:FindFirstChild("Armed").Enabled = false
+		_armed = nil
+	end
+	_updateSlots(inv)
+end)
+
+-- the bag's place follows the screen and the device in use
+_layoutBag()
+InputHints.onChange(_layoutBag)
+task.spawn(function()
+	while screen.Parent do
+		if screen.Enabled then _layoutBag() end
+		task.wait(0.5)
+	end
+end)
 
 -- ─── Timer countdown ─────────────────────────────────────────────────────────
 
