@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build screen ─────────────────────────────────────────────────────────────
@@ -32,20 +33,23 @@ screen.Parent         = LocalPlayer.PlayerGui
 
 -- ─── Phase-specific guide data ───────────────────────────────────────────────
 
+-- `key` is the keyboard text. On a gamepad or a phone the text comes from
+-- Shared/InputHints (`act`: the action, `how`: "hold" / "tap3"), or from
+-- `pad` / `touch` when given (false: no such control on that device).
 local PHASE_GUIDES = {
 	FARMING = {
 		title = "🌾  FARMING PHASE",
 		colour = Color3.fromRGB(80, 180, 60),
 		keys = {
-			{ key = "E",          short = "Grab",   desc = "Pick up an item (tap fast to win a tug-of-war)" },
-			{ key = "Hold E",     short = "Steal",  desc = "Next to a player: steal an item" },
-			{ key = "Tap E ×3",   short = "Defend", desc = "Someone is stealing from you: stop them" },
-			{ key = "F / Click",  short = "Punch",  desc = "Punch (4 hits knock an item loose)" },
-			{ key = "Hold G",     short = "Guard",  desc = "Block punches" },
-			{ key = "X",          short = "Drop",   desc = "Drop your oldest item" },
-			{ key = "Hold Q",     short = "Emote",  desc = "Emote menu" },
-			{ key = "B",          short = "Shop",   desc = "Shop: looks for this round's car" },
-			{ key = "J",          short = "Items",  desc = "Item guide: what every item does" },
+			{ key = "E",          act = "grab",   short = "Grab",   desc = "Pick up an item (tap fast to win a tug-of-war)" },
+			{ key = "Hold E",     act = "steal",  how = "hold", short = "Steal",  desc = "Next to a player: steal an item" },
+			{ key = "Tap E ×3",   act = "defend", how = "tap3", short = "Defend", desc = "Someone is stealing from you: stop them" },
+			{ key = "F / Click",  act = "punch",  short = "Punch",  desc = "Punch (4 hits knock an item loose)" },
+			{ key = "Hold G",     act = "guard",  how = "hold", short = "Guard",  desc = "Block punches" },
+			{ key = "X",          act = "drop",   short = "Drop",   desc = "Drop your oldest item" },
+			{ key = "Hold Q",     act = "emote",  short = "Emote",  desc = "Emote menu" },
+			{ key = "B",          act = "shop",   short = "Shop",   desc = "Shop: looks for this round's car" },
+			{ key = "J",          act = "guide",  short = "Items",  desc = "Item guide: what every item does" },
 		},
 		tip = "Grab the items with icons and names, or rob other players!\nRarity: grey (Common) < green (Uncommon) < blue (Rare) < purple (Epic)",
 	},
@@ -53,11 +57,11 @@ local PHASE_GUIDES = {
 		title = "🔧  CRAFTING PHASE",
 		colour = Color3.fromRGB(200, 140, 40),
 		keys = {
-			{ key = "Click & drag", short = "Place",  desc = "Put an inventory item in a slot" },
-			{ key = "Click a slot", short = "Remove", desc = "Remove its item" },
-			{ key = "COMBINE",      short = "Finish", desc = "Finish your vehicle (button)" },
-			{ key = "B",            short = "Shop",   desc = "Shop: the showroom shows a new look at once" },
-			{ key = "J",            short = "Items",  desc = "Item guide: what every item does" },
+			{ key = "Click item, slot", touch = "Tap item, slot", pad = "A: item, slot", short = "Place",  desc = "Pick an inventory item, then the slot it goes in" },
+			{ key = "Click a slot",     touch = "Tap a slot",     pad = "A on a slot",   short = "Remove", desc = "Remove its item" },
+			{ key = "Submit",           touch = "Submit",         pad = "Submit",        short = "Finish", desc = "Finish your vehicle (button)" },
+			{ key = "B",                act = "shop",  short = "Shop",   desc = "Shop: the showroom shows a new look at once" },
+			{ key = "J",                act = "guide", short = "Items",  desc = "Item guide: what every item does" },
 		},
 		tip = "BODY + ENGINE + SPECIAL are required!\nMOBILITY (wheels / sail / wings), HEAD and TAIL are optional.",
 	},
@@ -65,20 +69,40 @@ local PHASE_GUIDES = {
 		title = "🏎  RACING PHASE",
 		colour = Color3.fromRGB(60, 140, 255),
 		keys = {
-			{ key = "W / ↑",         short = "Gas",     desc = "Accelerate" },
-			{ key = "S / ↓",         short = "Brake",   desc = "Brake / reverse" },
-			{ key = "A D / ← →",     short = "Steer",   desc = "Steer" },
-			{ key = "Shift + steer", short = "Drift",   desc = "Drift (above half speed)" },
-			{ key = "F",             short = "Boost",   desc = "Boost (needs a full gauge)" },
-			{ key = "E",             short = "Ability", desc = "Use an item ability" },
-			{ key = "Space / Ctrl",  short = "Up/Down", desc = "Climb / dive (SKY)", biome = "SKY" },
-			{ key = "R",             short = "Reset",   desc = "Put the car back on the road" },
-			{ key = "T",             short = "Bomb",    desc = "Bounce Bomb: the car ahead hops (once a race)", attr = "RaceTrick" },
-			{ key = "Q",             short = "Taunt",   desc = "Taunt the others (more in the SHOP)" },
+			{ key = "W / ↑",         touch = "Stick up",    pad = "RT",         short = "Gas",     desc = "Accelerate" },
+			{ key = "S / ↓",         touch = "Stick down",  pad = "LT",         short = "Brake",   desc = "Brake / reverse" },
+			{ key = "A D / ← →",     touch = "Stick ← →",   pad = "Left stick", short = "Steer",   desc = "Steer" },
+			{ key = "Shift + steer", act = "drift", how = "hold", short = "Drift",   desc = "Drift (above half speed)" },
+			{ key = "F",             act = "boost", short = "Boost",   desc = "Boost (needs a full gauge)" },
+			{ key = "E",             act = "item",  short = "Ability", desc = "Use an item ability" },
+			{ key = "Space / Ctrl",  touch = "▲ / ▼", pad = "A / D-pad ←", short = "Up/Down", desc = "Climb / dive (SKY)", biome = "SKY" },
+			{ key = "R",             act = "reset", short = "Reset",   desc = "Put the car back on the road" },
+			{ key = "T",             act = "trick", short = "Bomb",    desc = "Bounce Bomb: the car ahead hops (once a race)", attr = "RaceTrick" },
+			{ key = "Q",             act = "taunt", short = "Taunt",   desc = "Taunt the others (more in the SHOP)" },
 		},
 		tip = "Release a long drift for a mini turbo!\nBoost pads (yellow) give extra speed.",
 	},
 }
+
+-- A guide row's control on this device (nil: not on this device).
+local function _keyText(k, mode)
+	mode = mode or InputHints.mode()
+	if mode == "keyboard" then return k.key end
+	if k[mode] ~= nil then return k[mode] or nil end
+	if not k.act then return nil end
+	local name = InputHints.key(k.act, mode)
+	if k.how == "hold" then return "Hold " .. name end
+	if k.how == "tap3" then return "Tap " .. name .. " ×3" end
+	return name
+end
+
+-- "[ H ] Controls" on a keyboard; H does nothing on a phone or a gamepad.
+local function _helpText(long)
+	if InputHints.mode() == "keyboard" then
+		return long and "[ H ] All controls  •  closes by itself" or "[ H ] Controls"
+	end
+	return long and "Controls button: all controls  •  closes by itself" or "Controls"
+end
 
 local function _biome()
 	return game:GetService("ReplicatedStorage"):GetAttribute("Biome")
@@ -89,7 +113,8 @@ local function _keysFor(guide)
 	local out = {}
 	for _, k in ipairs(guide.keys) do
 		if (not k.biome or k.biome == _biome())
-			and (not k.attr or game:GetService("Players").LocalPlayer:GetAttribute(k.attr) ~= nil) then
+			and (not k.attr or game:GetService("Players").LocalPlayer:GetAttribute(k.attr) ~= nil)
+			and _keyText(k) ~= nil then
 			table.insert(out, k)
 		end
 	end
@@ -186,7 +211,7 @@ toastTipPad.Parent        = toastTip
 local toastDismiss = Instance.new("TextLabel")
 toastDismiss.Size          = UDim2.new(1, 0, 0, 18)
 toastDismiss.BackgroundTransparency = 1
-toastDismiss.Text          = "[ H ] All controls  •  closes by itself"
+toastDismiss.Text          = _helpText(true)
 toastDismiss.TextScaled    = false
 toastDismiss.TextSize      = 10
 toastDismiss.Font          = Enum.Font.Gotham
@@ -297,7 +322,7 @@ local function _showToast(phase)
 	local stripShows = phase ~= "CRAFTING" and not (UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled)
 	if not stripShows then
 		for i, k in ipairs(_keysFor(guide)) do
-			_buildKeyRow(k.key, k.desc, i)
+			_buildKeyRow(_keyText(k), k.desc, i)
 		end
 	end
 
@@ -440,7 +465,7 @@ local function _buildSection(guidePhase, layoutOrder)
 		badge.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
 		badge.BackgroundTransparency = 0.2
 		badge.BorderSizePixel = 0
-		badge.Text           = k.key
+		badge.Text           = _keyText(k) or k.key
 		badge.TextScaled     = true
 		badge.Font           = Enum.Font.GothamBold
 		badge.TextColor3     = Color3.fromRGB(255, 220, 60)
@@ -530,7 +555,7 @@ hintBtn.Position         = UDim2.new(0, 8, 1, -36)
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0
-hintBtn.Text             = "[ H ] Controls"
+hintBtn.Text             = _helpText(false)
 hintBtn.TextScaled       = true
 hintBtn.Font             = Enum.Font.Gotham
 hintBtn.TextColor3       = Color3.fromRGB(180, 180, 220)
@@ -587,7 +612,7 @@ local function _showStrip(phase)
 		local key = Instance.new("TextLabel")
 		key.Size = UDim2.new(0, 92, 1, 0)
 		key.BackgroundTransparency = 1
-		key.Text = k.key
+		key.Text = _keyText(k)
 		key.TextScaled = true
 		key.Font = Enum.Font.GothamBold
 		key.TextColor3 = Color3.fromRGB(255, 220, 60)
@@ -615,12 +640,25 @@ game:GetService("Players").LocalPlayer:GetAttributeChangedSignal("RaceTrick"):Co
 	if phase then _showStrip(phase) end
 end)
 
+-- The server sends the phase again after every respawn (SessionManager),
+-- and this script restarts with the character: the same phase twice is that
+-- resend, not a new phase. LocalPlayer "TutorialToastPhase" outlives the
+-- restart, so the phase's toast shows once (it came back on every respawn).
+local _lastPhase = nil
 local function _onPhase(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	_showStrip(phase)
-	task.wait(0.5)   -- slight delay so other UIs settle first
-	_showToast(phase)
+	-- (Round, Phase): ReplicatedStorage "Round" counts the rounds (GameManager)
+	local key = phase .. "#" .. tostring(game:GetService("ReplicatedStorage"):GetAttribute("Round"))
+	local seen = LocalPlayer:GetAttribute("TutorialToastPhase") == key
+	LocalPlayer:SetAttribute("TutorialToastPhase", key)
+	if seen then return end
 	-- Close reference panel on phase change
 	if _panelOpen then _togglePanel() end
+	task.wait(0.5)   -- slight delay so other UIs settle first
+	if _lastPhase ~= phase then return end
+	_showToast(phase)
 end
 
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
@@ -628,3 +666,11 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
 -- Joined (or respawned) mid-phase: show that phase's key list now.
 local phaseNow = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
 if phaseNow then _showStrip(phaseNow) end
+
+-- Switched between keyboard, gamepad and touch: name the controls again.
+InputHints.onChange(function()
+	hintBtn.Text = _helpText(false)
+	toastDismiss.Text = _helpText(true)
+	local phase = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
+	if phase then _showStrip(phase) end
+end)

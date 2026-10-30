@@ -172,6 +172,11 @@ local function _onPlayerAdded(player)
 	-- after the character spawns) reliably receive the current phase.
 	-- Without this, clients miss PhaseChanged on first join if FARMING starts
 	-- before their character has loaded and connected event listeners.
+	-- Clients treat the same phase twice as this resend (never a new phase:
+	-- the round always moves on), so it does not restart music, toasts,
+	-- gauges or the crafting draft. The StarterGui scripts that restarted
+	-- with the character start empty: the bag goes with it (FarmingUI's
+	-- slots, CraftingUI's inventory).
 	player.CharacterAdded:Connect(function()
 		task.wait(0.5)  -- allow StarterGui LocalScripts to connect their OnClientEvent
 		local currentPhase = GameManager.getPhase()
@@ -179,6 +184,10 @@ local function _onPlayerAdded(player)
 		local currentBiome = GameManager.getBiome()
 		if currentBiome then
 			RemoteEvents.BiomeSelected:FireClient(player, currentBiome)
+		end
+		local data = PlayerData[player.UserId]
+		if data and data.inventory then
+			RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)
 		end
 	end)
 end

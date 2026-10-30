@@ -40,6 +40,16 @@ def overlap(a, b):
     return (ox, oy) if ox >= MIN_OVERLAP and oy >= MIN_OVERLAP else None
 
 
+def scaled(e):
+    """Drawn at another size than its UDim2 (a UIScale, e.g. the crafting
+    screen shrinking in small windows): its layout in another window cannot
+    be worked out from the dump, so it is checked at the run's window only."""
+    if e["auto"]:
+        return False
+    s, r = e["size"], e["rect"]
+    return s[0] == 0 and s[2] == 0 and (abs(s[1] - r[2]) > 2 or abs(s[3] - r[3]) > 2)
+
+
 def relayout(e, w, h, inset, view):
     """The element's box in a w × h window (from its UDim2 layout)."""
     sw, sh = w, h if e["ignoreInset"] else h - inset
@@ -112,7 +122,10 @@ def collect(r):
         els = [e for e in s["elements"] if e["screen"] not in IGNORE]
         for size in [tuple(view)] + SIZES:
             sw, sh = size
-            cur = els if size == tuple(view) else side_buttons([dict(e, box=relayout(e, sw, sh, inset, view)) for e in els], sw, sh)
+            if size == tuple(view):
+                cur = els
+            else:
+                cur = side_buttons([dict(e, box=relayout(e, sw, sh, inset, view)) for e in els if not scaled(e)], sw, sh)
             ps, _ = pairs(cur + core_zones(sw, sh, inset), sw, sh)
             for a, b, o in ps:
                 found.setdefault((s["phase"], name(a), name(b)), []).append("%dx%d (%dx%d px)" % (sw, sh, o[0], o[1]))

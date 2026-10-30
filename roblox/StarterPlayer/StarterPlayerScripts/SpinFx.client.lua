@@ -40,28 +40,53 @@ local function harnessReport()
 	end
 end
 
+-- Only hubs someone can see: in the world near the camera, or in a shown
+-- ViewportFrame (shop cards). The copies in ReplicatedStorage.ShopPreviews
+-- and PlayerGui.CraftPreview are never drawn (the showroom turns its own),
+-- and far cars are specks: every hub's C0 was written every frame.
+local FAR = 250            -- studs from the camera
+local RECHECK = 1          -- s between two looks at where a hub is
+
+local function placeOf(hub)
+	if hub:IsDescendantOf(workspace) then return "world", nil end
+	local vf = hub:FindFirstAncestorWhichIsA("ViewportFrame")
+	if vf then return "view", vf end
+	return "none", nil
+end
+
 RunService.RenderStepped:Connect(function(dt)
+	local cam = workspace.CurrentCamera
+	local camPos = cam and cam.CFrame.Position
+	local now = os.clock()
 	for _, hub in ipairs(CollectionService:GetTagged("Spin")) do
 		local m = hub:FindFirstChild("Spin")
 		local root = m and m:IsA("Motor6D") and m.Part0
 		if root then
 			local st = _state[hub]
 			if not st then
-				st = { base = m.C0, angle = 0, turned = 0 }
+				st = { base = m.C0, angle = 0, turned = 0, checkedAt = -math.huge }
 				_state[hub] = st
 			end
-			local forward = root.AssemblyLinearVelocity:Dot(root.CFrame.LookVector)
-			local rate
-			if hub:GetAttribute("SpinMode") == "prop" then
-				rate = (PROP_IDLE + math.abs(forward) * PROP_PER_SPEED) * (hub:GetAttribute("SpinDir") or 1)
-			else
-				-- rolling forward (-Z): the top moves forward, a negative turn about X
-				rate = -forward / math.max(hub:GetAttribute("SpinRadius") or 1, 0.1)
+			if now - st.checkedAt > RECHECK then
+				st.checkedAt = now
+				st.place, st.view = placeOf(hub)
 			end
-			st.angle = (st.angle + rate * dt) % (2 * math.pi)
-			st.turned += math.abs(rate * dt)
-			local turn = hub:GetAttribute("SpinAxis") == "Z" and CFrame.Angles(0, 0, st.angle) or CFrame.Angles(st.angle, 0, 0)
-			m.C0 = st.base * turn
+			local show = (st.place == "world" and (not camPos or (root.Position - camPos).Magnitude <= FAR))
+				or (st.place == "view" and st.view.Visible)
+			if show then
+				local forward = root.AssemblyLinearVelocity:Dot(root.CFrame.LookVector)
+				local rate
+				if hub:GetAttribute("SpinMode") == "prop" then
+					rate = (PROP_IDLE + math.abs(forward) * PROP_PER_SPEED) * (hub:GetAttribute("SpinDir") or 1)
+				else
+					-- rolling forward (-Z): the top moves forward, a negative turn about X
+					rate = -forward / math.max(hub:GetAttribute("SpinRadius") or 1, 0.1)
+				end
+				st.angle = (st.angle + rate * dt) % (2 * math.pi)
+				st.turned += math.abs(rate * dt)
+				local turn = hub:GetAttribute("SpinAxis") == "Z" and CFrame.Angles(0, 0, st.angle) or CFrame.Angles(st.angle, 0, 0)
+				m.C0 = st.base * turn
+			end
 		end
 	end
 	harnessReport()

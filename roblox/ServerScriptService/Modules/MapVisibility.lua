@@ -13,6 +13,13 @@
 --   * the authored values are recorded right before a part is first hidden,
 --     so the result no longer depends on whether cacheOriginals ran before or
 --     after the map builders.
+--   * a hidden part is also CanTouch / CanQuery false: all three maps stand
+--     in the place at once and FOREST and OCEAN share the start straight, so
+--     a hidden map's boost pads, drift corners and checkpoints fired under
+--     the live map, and drop rays (which ignore CanCollide) landed on its
+--     invisible floors (launch audit 2026-10-30).
+--   * a part with the attribute `Dimmed` (inactive boost pads) restores to
+--     at least that transparency.
 
 local MapVisibility = {}
 
@@ -27,12 +34,20 @@ local function remember(desc)
 	if desc:GetAttribute("OriginalCanCollide") == nil then
 		desc:SetAttribute("OriginalCanCollide", desc.CanCollide)
 	end
+	if desc:GetAttribute("OriginalCanTouch") == nil then
+		desc:SetAttribute("OriginalCanTouch", desc.CanTouch ~= false)
+	end
+	if desc:GetAttribute("OriginalCanQuery") == nil then
+		desc:SetAttribute("OriginalCanQuery", desc.CanQuery ~= false)
+	end
 end
 
 local function hide(desc)
 	remember(desc)
 	desc.Transparency = 1
 	desc.CanCollide   = false
+	desc.CanTouch     = false
+	desc.CanQuery     = false   -- only allowed once CanCollide is off
 end
 
 local function restore(desc)
@@ -40,8 +55,14 @@ local function restore(desc)
 	local storedCC = desc:GetAttribute("OriginalCanCollide")
 	if storedT == nil then storedT = 0 end
 	if storedCC == nil then storedCC = true end
+	local dim = desc:GetAttribute("Dimmed")
+	if type(dim) == "number" then storedT = math.max(storedT, dim) end
+	local storedTouch = desc:GetAttribute("OriginalCanTouch")
+	local storedQuery = desc:GetAttribute("OriginalCanQuery")
 	desc.Transparency = storedT
 	desc.CanCollide   = storedCC
+	desc.CanTouch     = storedTouch ~= false
+	desc.CanQuery     = storedQuery ~= false
 end
 
 --- Records each BasePart's authored Transparency / CanCollide once.

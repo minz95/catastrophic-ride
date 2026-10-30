@@ -1,5 +1,6 @@
 -- EmoteUI/init.client.lua
--- Q-hold radial emote menu with 3 emotes: Wave, Dance, Cheer.
+-- Q-hold radial emote menu with 3 emotes: Wave, Dance, Cheer (touch: the
+-- EMOTE button in TouchControls, gamepad: D-pad →, both open / close it).
 -- Resolves: Issue #15, #45
 
 local Players          = game:GetService("Players")
@@ -7,7 +8,10 @@ local UserInputService = game:GetService("UserInputService")
 local TweenService     = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local GuiService     = game:GetService("GuiService")
+
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)   -- keyboard, gamepad, touch buttons
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Emote definitions ────────────────────────────────────────────────────────
@@ -46,6 +50,7 @@ radial.Size              = UDim2.new(0, 240, 0, 240)
 radial.Position          = UDim2.new(0.5, -120, 0.5, -120)
 radial.BackgroundTransparency = 1
 radial.Visible           = false
+radial.ZIndex            = 2   -- over the overlay (which takes taps outside the emotes)
 radial.Parent            = screen
 
 -- Dark overlay when menu open
@@ -139,6 +144,11 @@ end
 
 local function _closeMenu(selectedEmote)
 	_menuOpen = false
+	pcall(function()
+		if GuiService.SelectedObject and GuiService.SelectedObject:IsDescendantOf(screen) then
+			GuiService.SelectedObject = nil
+		end
+	end)
 	TweenService:Create(overlay, TweenInfo.new(0.15), {
 		BackgroundTransparency = 1
 	}):Play()
@@ -152,19 +162,46 @@ local function _closeMenu(selectedEmote)
 end
 
 -- ─── Input handling ───────────────────────────────────────────────────────────
+-- Keys come through Shared/KeyInput (keyboard, gamepad D-pad →, the EMOTE
+-- touch button). Keyboard: hold Q, release over an emote. Touch and gamepad
+-- have no pointer to release over: a press opens the menu, which stays open
+-- until an emote is tapped / selected (gamepad A), the overlay is tapped or
+-- the button is pressed again.
 
 local _qDown     = false
 local _qHoldTime = 0
 local _holdConn  = nil
+local _toggleOpen = false   -- opened by a touch button / gamepad press
 
-UserInputService.InputBegan:Connect(function(input, processed)
+local function _isToggleInput(input)
+	local t = input.UserInputType
+	return t == Enum.UserInputType.Touch or (t and t.Name:match("^Gamepad") ~= nil)
+end
+
+KeyInput.began(function(input, processed)
 	if processed then return end
 	if input.KeyCode ~= Enum.KeyCode.Q then return end
 	-- in a race Q is the taunt (RacingClient), not this menu
 	if ReplicatedStorage:GetAttribute("Phase") == "RACING" then return end
+
+	if _isToggleInput(input) then
+		if _menuOpen then
+			_toggleOpen = false
+			_closeMenu(nil)
+		else
+			_toggleOpen = true
+			_openMenu()
+			if input.UserInputType ~= Enum.UserInputType.Touch then
+				pcall(function() GuiService.SelectedObject = _buttons[1] end)
+			end
+		end
+		return
+	end
+
 	_qDown     = true
 	_qHoldTime = 0
 
+	if _holdConn then _holdConn:Disconnect(); _holdConn = nil end
 	_holdConn = game:GetService("RunService").Heartbeat:Connect(function(dt)
 		if not _qDown then
 			if _holdConn then _holdConn:Disconnect(); _holdConn = nil end
@@ -178,10 +215,11 @@ UserInputService.InputBegan:Connect(function(input, processed)
 	end)
 end)
 
-UserInputService.InputEnded:Connect(function(input)
+KeyInput.ended(function(input)
 	if input.KeyCode ~= Enum.KeyCode.Q then return end
+	if _isToggleInput(input) then return end   -- stays open until something is picked
 	_qDown = false
-	if _menuOpen then
+	if _menuOpen and not _toggleOpen then
 		-- Check if mouse is hovering a button
 		local mousePos = UserInputService:GetMouseLocation()
 		local selected = nil
@@ -198,10 +236,21 @@ UserInputService.InputEnded:Connect(function(input)
 	end
 end)
 
+-- Tapping outside the emotes closes a menu opened by touch.
+overlay.Active = true
+overlay.InputBegan:Connect(function(input)
+	if _menuOpen and (input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1) then
+		_toggleOpen = false
+		_closeMenu(nil)
+	end
+end)
+
 -- Button clicks (for mouse users who don't hold Q)
 for i, btn in ipairs(_buttons) do
 	btn.Activated:Connect(function()
 		if _menuOpen then
+			_toggleOpen = false
 			_closeMenu(EMOTES[i])
 		end
 	end)

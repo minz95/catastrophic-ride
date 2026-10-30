@@ -9,7 +9,19 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Shop = require(ServerScriptService.Modules.Shop)
 
+-- A burst of 8, then 4 a second (an equip flood rebuilt hats and previews
+-- and queued saves for everyone on the server).
+local BURST, RATE = 8, 4
+local _bucket = setmetatable({}, { __mode = "k" })
+
 RemoteEvents.ShopAction.OnServerInvoke = function(player, action, id)
+	local now = os.clock()
+	local b = _bucket[player] or { n = BURST, t = now }
+	b.n = math.min(BURST, b.n + (now - b.t) * RATE)
+	b.t = now
+	_bucket[player] = b
+	if b.n < 1 then return { result = "denied: too fast" } end
+	b.n -= 1
 	local ok, res = pcall(Shop.handle, player, action, id)
 	if not ok then
 		warn("[ShopManager] " .. tostring(res))

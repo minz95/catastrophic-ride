@@ -66,6 +66,11 @@ R.describe("playtest polish", function()
 		end
 	end)
 
+	R.it("RemoteEvents waits for its instances only on a pure client (Studio edit mode is client and server: the sim host hung)", function()
+		local src = fs.readFile("roblox/ReplicatedStorage/RemoteEvents/init.lua")
+		R.expect(src:find("rs:IsClient() and not rs:IsServer()", 1, true) ~= nil).toBe(true)
+	end)
+
 	R.it("every music tryout candidate has an id and a title", function()
 		for slot, list in pairs(SoundConfig.TRY) do
 			R.expect(#list).toBeGreaterThan(2)

@@ -136,6 +136,86 @@ R.describe("PlayerStore (mock DataStore)", function()
 	end)
 end)
 
+R.describe("PlayerStore: server hops, rejoins and shutdown (launch audit 2026-10-30)", function()
+	local function boot()
+		local e = Loader.boot()
+		local Store = e.requirePath("ServerScriptService.Modules.PlayerStore")
+		return e, Store, e.mock
+	end
+
+	R.it("waits while another server still holds the record, then loads its last save", function()
+		local e, Store, Mock = boot()
+		Mock.dataStores[Store.STORE_NAME] = { u901 = { level = 3, coins = 10, _n = 4,
+			_lock = { job = "other-server", t = os.time() } } }
+		local p = Mock.addPlayer("Hopper", 901)
+		local rec
+		e.mock.task.spawn(function() rec = Store.load(p) end)
+		e.mock.advance(Store.LOCK_WAIT + 0.5)
+		R.expect(rec).toBe(nil)                       -- still waiting
+		-- the old server's last save lands and releases the lock
+		Mock.dataStores[Store.STORE_NAME].u901 = { level = 3, coins = 50, _n = 5 }
+		e.mock.advance(Store.LOCK_WAIT + 0.5)
+		R.expect(rec.coins).toBe(50)
+		R.expect(Store.isSaved(p)).toBe(true)
+		R.expect(Mock.dataStores[Store.STORE_NAME].u901._lock.job).toBe(Store.SESSION)
+	end)
+
+	R.it("takes a lock over after LOCK_TRIES (a crashed server never releases it)", function()
+		local e, Store, Mock = boot()
+		Mock.dataStores[Store.STORE_NAME] = { u902 = { level = 7, _n = 1, _lock = { job = "dead", t = os.time() } } }
+		local p = Mock.addPlayer("Waiting", 902)
+		local rec
+		e.mock.task.spawn(function() rec = Store.load(p) end)
+		e.mock.advance(Store.LOCK_TRIES * Store.LOCK_WAIT + 1)
+		R.expect(rec.level).toBe(7)
+		R.expect(Store.isSaved(p)).toBe(true)
+	end)
+
+	R.it("never writes over a record another server saved since (it stops saving)", function()
+		local e, Store, Mock = boot()
+		local p = Mock.addPlayer("Stale", 903)
+		local rec = Store.load(p)
+		rec.coins = 1
+		R.expect(Store.save(p)).toBe(true)
+		-- another server took the record over and saved more
+		local d = Mock.dataStores[Store.STORE_NAME].u903
+		d._n += 1; d.coins = 999; d._lock = { job = "newer", t = os.time() }
+		rec.coins = 2
+		R.expect(Store.save(p)).toBe(false)
+		R.expect(Store.isSaved(p)).toBe(false)
+		Store.release(p)
+		R.expect(Mock.dataStores[Store.STORE_NAME].u903.coins).toBe(999)
+	end)
+
+	R.it("leaving clears the lock; rejoining the same server waits for that save", function()
+		local e, Store, Mock = boot()
+		Store.start()
+		local p = Mock.addPlayer("Back", 904)
+		e.mock.advance(0.1)
+		Store.get(p).coins = 33
+		Mock.removePlayer(p)
+		R.expect(Mock.dataStores[Store.STORE_NAME].u904._lock).toBe(nil)
+		local p2 = Mock.addPlayer("Back", 904)
+		e.mock.advance(0.1)
+		R.expect(Store.get(p2).coins).toBe(33)
+		R.expect(Store.get(p)).toBe(nil)              -- the old Player object has no record
+		R.expect(Store.isSaved(p2)).toBe(true)
+	end)
+
+	R.it("shop clicks share one write; Studio never uses the live players' store", function()
+		local e, Store, Mock = boot()
+		R.expect(Store.STUDIO_STORE_NAME ~= Store.LIVE_STORE_NAME).toBe(true)
+		local src = require("@lune/fs").readFile("roblox/ServerScriptService/Modules/PlayerStore.lua")
+		R.expect(src:find("RunService:IsStudio() and PlayerStore.STUDIO_STORE_NAME", 1, true) ~= nil).toBe(true)
+		local p = Mock.addPlayer("Clicker", 905)
+		Store.load(p)
+		local n0 = Mock.dataStores[Store.STORE_NAME].u905._n
+		for _ = 1, 10 do Store.saveSoon(p) end
+		e.mock.advance(Store.SAVE_SOON + 0.5)
+		R.expect(Mock.dataStores[Store.STORE_NAME].u905._n).toBe(n0 + 1)
+	end)
+end)
+
 -- A 3-player race to RESULTS: player 2 wins, player 1 second, player 3 does
 -- not finish. Returns the server and the AnalyticsService calls (Analytics.sink).
 local function threeCarRace()

@@ -17,6 +17,7 @@ local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local LocalPlayer = Players.LocalPlayer
@@ -235,9 +236,27 @@ end
 local _boostBar   = nil
 local _boostLabel = nil
 
+-- The HUD ScreenGui. PlayerGui also holds the LocalScript named "HUD"
+-- (StarterGui copies it in), so FindFirstChild("HUD") could return the
+-- script and the bar was never found.
+local function _hudGui()
+	for _, g in ipairs(LocalPlayer.PlayerGui:GetChildren()) do
+		if g.Name == "HUD" and g:IsA("ScreenGui") then return g end
+	end
+	return nil
+end
+
+-- A cached HUD part that is still on screen. The HUD script rebuilds its
+-- ScreenGui after every LoadCharacter (each LOBBY, RaceSeat reloads), which
+-- destroys the old bar: look again then.
+local function _live(inst)
+	return inst ~= nil and inst.Parent ~= nil and inst:IsDescendantOf(LocalPlayer.PlayerGui)
+end
+
 local function _ensureBoostHUD()
-	if _boostBar then return end
-	local hud = LocalPlayer.PlayerGui:FindFirstChild("HUD")
+	if _live(_boostBar) then return end
+	_boostBar, _boostLabel = nil, nil
+	local hud = _hudGui()
 	if not hud then return end
 	local frame = hud:FindFirstChild("BoostBar")
 	if not frame then return end
@@ -246,18 +265,18 @@ local function _ensureBoostHUD()
 end
 
 function _updateBoostHUD()
-	if not _boostBar then _ensureBoostHUD() end
+	_ensureBoostHUD()
 	if not _boostBar then return end
 	TweenService:Create(_boostBar, TweenInfo.new(0.15), {
 		Size = UDim2.new(_boostGauge, 0, 1, 0)
 	}):Play()
 	if _boostLabel then
-		_boostLabel.Text = _boostGauge >= 1 and "BOOST  [F]" or "BOOST"
+		_boostLabel.Text = _boostGauge >= 1 and ("BOOST  " .. InputHints.tag("boost")) or "BOOST"
 	end
 end
 
 function _showBoostReady()
-	if not _boostBar then _ensureBoostHUD() end
+	_ensureBoostHUD()
 	if not _boostBar then return end
 	local frame = _boostBar.Parent
 	TweenService:Create(frame, TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
@@ -851,8 +870,9 @@ end
 local _speedLabel = nil
 
 local function _updateSpeedHUD()
-	if not _speedLabel then
-		local hud = LocalPlayer.PlayerGui:FindFirstChild("HUD")
+	if not _live(_speedLabel) then
+		_speedLabel = nil
+		local hud = _hudGui()
 		local sf  = hud and hud:FindFirstChild("Speedometer")
 		_speedLabel = sf and sf:FindFirstChild("Value")
 	end
@@ -936,6 +956,8 @@ end)
 -- ─── Enable / Disable ─────────────────────────────────────────────────────────
 
 function RacingClient.enable()
+	-- a client that started late missed BiomeSelected
+	_biome        = _biome or ReplicatedStorage:GetAttribute("Biome")
 	_active       = true
 	_boostActive  = false
 	_boostGauge   = 1
@@ -956,6 +978,8 @@ function RacingClient.enable()
 		_driveLoop(dt)
 		_updateCamera()
 		_updateSpeedHUD()
+		-- the HUD was rebuilt (respawn): draw the gauge on the new bar
+		if not _live(_boostBar) then _updateBoostHUD() end
 	end)
 end
 
@@ -973,11 +997,22 @@ end
 
 -- ─── Biome / Phase listeners ─────────────────────────────────────────────────
 
+_biome = ReplicatedStorage:GetAttribute("Biome")
 RemoteEvents.BiomeSelected.OnClientEvent:Connect(function(biome)
 	_biome = biome
 end)
+ReplicatedStorage:GetAttributeChangedSignal("Biome"):Connect(function()
+	_biome = ReplicatedStorage:GetAttribute("Biome") or _biome
+end)
 
+-- The server sends the phase again after every respawn (SessionManager,
+-- for StarterGui scripts that restart). The same phase twice is that resend,
+-- never a new phase (the round always moves on to another one): enabling
+-- again mid-race reset the gauge, the cooldowns and the checkpoint HUD.
+local _lastPhase = nil
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	if phase == Constants.PHASES.RACING then
 		RacingClient.enable()
 	else

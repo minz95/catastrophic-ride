@@ -28,6 +28,7 @@ local _submitted    = {}   -- { [userId] = true }
 local _drafts       = {}   -- { [userId] = slots } the arrangement so far (CraftDraft)
 local _totalPlayers = 0
 local _active       = false
+local _checkAllSubmitted   -- below
 
 -- ─── Validate and apply a craft submission ────────────────────────────────────
 
@@ -88,22 +89,57 @@ local function _processCraft(player, submitted, auto, draft)
 		player.Name, stats.speed, stats.acceleration))
 end
 
+-- A slot table from a client: at most a few keys (a table of 100 000 junk
+-- keys was walked, and warned about, once per key).
+local MAX_SLOT_KEYS = 12
+local function _slotsOk(slots)
+	if type(slots) ~= "table" then return false end
+	local n = 0
+	for k, v in pairs(slots) do
+		n += 1
+		if n > MAX_SLOT_KEYS or type(k) ~= "string" or #k > 32 then return false end
+		if v ~= nil and (type(v) ~= "string" or #v > 64) then return false end
+	end
+	return true
+end
+
+local function _sameSlots(a, b)
+	if not a or not b then return false end
+	for k, v in pairs(a) do if b[k] ~= v then return false end end
+	for k, v in pairs(b) do if a[k] ~= v then return false end end
+	return true
+end
+
+-- Who still has to submit: everyone here now (a player who left is not
+-- waited for; a late joiner counts).
+local function _everyoneSubmitted()
+	local count, total = 0, 0
+	for _, p in ipairs(Players:GetPlayers()) do
+		total += 1
+		if _submitted[p.UserId] then count += 1 end
+	end
+	return count, math.max(1, total)
+end
+
 -- ─── SubmitCraft RemoteFunction ───────────────────────────────────────────────
 
 RemoteEvents.SubmitCraft.OnServerInvoke = function(player, slots)
 	if not _active then return "denied: not crafting" end
 	if _submitted[player.UserId] then return "denied: already submitted" end
-	if type(slots) ~= "table" then return "denied: bad slots" end
+	if not _slotsOk(slots) then return "denied: bad slots" end
 
 	_processCraft(player, slots, false)
 	_submitted[player.UserId] = true
+	_checkAllSubmitted()
+	return "ok"
+end
 
-	-- Check if everyone has now submitted
-	local count = 0
-	for _ in pairs(_submitted) do count = count + 1 end
-	if count >= _totalPlayers then
+_checkAllSubmitted = function()
+	if not _active then return end
+	local count, total = _everyoneSubmitted()
+	if count >= total then
 		GameManager.allPlayersSubmittedCraft()
-	elseif count >= math.ceil(_totalPlayers * Constants.CRAFT_HURRY.SHARE) then
+	elseif count >= math.ceil(total * Constants.CRAFT_HURRY.SHARE) then
 		-- most players are ready: the rest get CRAFT_HURRY.SECONDS more, not
 		-- the whole phase (ready players used to wait up to 2 minutes)
 		if GameManager.shortenPhase(Constants.PHASES.CRAFTING, Constants.CRAFT_HURRY.SECONDS) then
@@ -114,9 +150,15 @@ RemoteEvents.SubmitCraft.OnServerInvoke = function(player, slots)
 			end
 		end
 	end
-
-	return "ok"
 end
+
+-- the last one still crafting left: the others need not wait the timer out
+Players.PlayerRemoving:Connect(function(player)
+	CraftPreview.clear(player)
+	if _active and not _submitted[player.UserId] then
+		task.defer(_checkAllSubmitted)
+	end
+end)
 
 -- ─── Draft: the arrangement so far ──────────────────────────────────────────
 -- The client sends its slots on every change. If the timer runs out before
@@ -124,10 +166,12 @@ end
 -- player used to lose every pick to the automatic craft).
 
 RemoteEvents.CraftDraft.OnServerEvent:Connect(function(player, slots)
-	if not _active or _submitted[player.UserId] or type(slots) ~= "table" then return end
+	if not _active or _submitted[player.UserId] or not _slotsOk(slots) then return end
 	local data = SessionManager.getData(player)
 	if not data then return end
 	local clean = CraftingRules.validate(slots, data.inventory, ItemConfig)
+	-- the same arrangement again: nothing to rebuild
+	if clean and _sameSlots(clean, _drafts[player.UserId]) then return end
 	_drafts[player.UserId] = clean
 	-- the showroom: what these slots build, turning on the crafting screen
 	if clean then CraftPreview.show(player, clean, GameManager.getBiome()) end

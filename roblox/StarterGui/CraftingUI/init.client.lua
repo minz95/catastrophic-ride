@@ -15,6 +15,7 @@ local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
 local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
+local HttpService  = game:GetService("HttpService")
 local LocalPlayer  = Players.LocalPlayer
 
 -- This script runs again after every respawn, but its ScreenGui
@@ -404,8 +405,19 @@ end
 -- After the player changes a slot: redraw, and tell the server the
 -- arrangement so far (CraftingManager keeps it if the timer runs out before
 -- Submit). Only on real changes, so a redraw never sends an empty draft.
+-- The draft lives on the LocalPlayer too (local attributes, not
+-- replicated): this script restarts with every respawn, and a respawn
+-- mid-CRAFTING emptied the slots and forgot a Submit.
+local function _saveDraft()
+	pcall(function()
+		LocalPlayer:SetAttribute("CraftDraftSlots", HttpService:JSONEncode(_assignments))
+		LocalPlayer:SetAttribute("CraftDraftSubmitted", _submitted or nil)
+	end)
+end
+
 _changed = function()
 	_refreshDisplay()
+	_saveDraft()
 	if screen.Enabled and not _submitted then
 		RemoteEvents.CraftDraft:FireServer(_assignments)
 		SoundFx.play("SLOT_ASSIGN")
@@ -463,6 +475,7 @@ submitBtn.MouseButton1Click:Connect(function()
 	end)
 	if ok and (result == "ok" or (type(result) == "string" and result:sub(1, 2) == "ok")) then
 		_submitted                 = true
+		_saveDraft()
 		SoundFx.play("CRAFT_COMPLETE")
 		submitBtn.Text             = "✓ Submitted"
 		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
@@ -592,6 +605,28 @@ showroom.BackgroundTransparency = 0.12
 showroom.BorderSizePixel       = 0
 showroom.Parent                = screen
 local _src = Instance.new("UICorner"); _src.CornerRadius = UDim.new(0, 14); _src.Parent = showroom
+
+-- ─── Fit the screen ───────────────────────────────────────────────────────────
+-- Panel + showroom are 810 × 476 px: on a phone (≈ 844 × 390) the title row
+-- and the Submit button were cut off. Both shrink together (a UIScale each,
+-- positions moved to match) to fit the viewport with 16 px to spare.
+local STAGE_W, STAGE_H = 810, 476
+local _panelScale = Instance.new("UIScale"); _panelScale.Parent = panel
+local _showScale  = Instance.new("UIScale"); _showScale.Parent = showroom
+local function rescale()
+	local cam = workspace.CurrentCamera
+	local w = cam and cam.ViewportSize.X or 1000
+	local h = cam and cam.ViewportSize.Y or 800
+	local k = math.max(0.3, math.min(1, (w - 32) / STAGE_W, (h - 32) / STAGE_H))
+	_panelScale.Scale = k
+	_showScale.Scale  = k
+	panel.Position    = UDim2.new(0.5, -405 * k, 0.5, -238 * k)
+	showroom.Position = UDim2.new(0.5, 105 * k, 0.5, -238 * k)
+end
+rescale()
+if workspace.CurrentCamera then
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
+end
 
 local showTitle = Instance.new("TextLabel")
 showTitle.Size                  = UDim2.new(1, -20, 0, 30)
@@ -843,20 +878,49 @@ end)
 
 -- ─── Phase gate ───────────────────────────────────────────────────────────────
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+-- The server sends the phase again after a respawn (SessionManager) and
+-- this script reads it at start: the same phase twice is that resend (a
+-- round always moves on to another phase). LocalPlayer "CraftingOpen" (the
+-- Round) says this CRAFTING phase was already entered by an earlier run of this script
+-- (before a respawn): then the saved draft comes back instead of a reset.
+local _lastPhase = nil
+local function _onPhase(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	if phase == Constants.PHASES.CRAFTING then
+		-- this round's CRAFTING (ReplicatedStorage "Round", GameManager)
+		local round = tostring(ReplicatedStorage:GetAttribute("Round"))
+		local resumed = LocalPlayer:GetAttribute("CraftingOpen") == round
 		_submitted              = false
 		_assignments            = {}
+		if resumed then
+			local ok, saved = pcall(function()
+				return HttpService:JSONDecode(LocalPlayer:GetAttribute("CraftDraftSlots") or "{}")
+			end)
+			if ok and type(saved) == "table" then _assignments = saved end
+			_submitted = LocalPlayer:GetAttribute("CraftDraftSubmitted") == true
+		end
+		LocalPlayer:SetAttribute("CraftingOpen", round)
 		_selectedItem           = nil
-		submitBtn.Text          = "Submit"
-		submitBtn.BackgroundColor3 = Color3.fromRGB(60, 200, 80)
+		submitBtn.Text          = _submitted and "✓ Submitted" or "Submit"
+		submitBtn.BackgroundColor3 = _submitted and Color3.fromRGB(60, 60, 80) or Color3.fromRGB(60, 200, 80)
 		_showInfo(nil)
 		_refreshDisplay()
 		screen.Enabled = true
 		_startTimer()
-		_showGuide()
+		if not resumed then _showGuide() end
 	else
+		LocalPlayer:SetAttribute("CraftingOpen", nil)
+		LocalPlayer:SetAttribute("CraftDraftSlots", nil)
+		LocalPlayer:SetAttribute("CraftDraftSubmitted", nil)
 		screen.Enabled = false
 		if _runConn then _runConn:Disconnect(); _runConn = nil end
 	end
-end)
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
+
+-- Started after the CRAFTING event went out (respawn, slow client): join it.
+-- The bag comes with the server's resend (SessionManager CharacterAdded).
+if ReplicatedStorage:GetAttribute("Phase") then
+	_onPhase(ReplicatedStorage:GetAttribute("Phase"))
+end

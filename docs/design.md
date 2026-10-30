@@ -484,6 +484,19 @@ spot with its track section; the RESULTS report lists them per section.
   effect words. Each got its own spot. Not checked: Roblox's own chat
   window and player list (CoreGui; approximate zones only).
 
+- 2026-10-30 (launch audit): four read-only audits (remotes, saves and
+  purchases, lifecycle, clients) before going public. Fixed: no session
+  lock (a server hop could write an old record over a newer one, Robux
+  coins included), BindToClose not waiting for the last player's save,
+  a same-server rejoin losing the record, receipts racing each other,
+  Studio writing to live records; client numbers trusted for contest
+  presses, defend taps, guard toggles, drift turbos and the finish (a
+  teleport through the checkpoints won); remote floods (equip, drafts,
+  drops, abilities); hidden maps' triggers live under the active one; a
+  finisher leaving ending the race for others; one error stopping the
+  round loop. Not done: a general speed / teleport check on characters
+  and cars (positions are the client's), server-side guard slow.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

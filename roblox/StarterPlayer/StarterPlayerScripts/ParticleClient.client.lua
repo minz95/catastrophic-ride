@@ -339,7 +339,10 @@ end)
 
 -- ─── Phase reset ─────────────────────────────────────────────────────────────
 
+local _lastPhase = nil   -- the same phase again is the server's resend after a respawn
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	local Constants = require(ReplicatedStorage.Shared.Constants)
 	if phase ~= Constants.PHASES.RACING then
 		_stopMudSplatter()

@@ -108,3 +108,39 @@ R.describe("Telemetry", function()
 		Telemetry.setDetailed(false)
 	end)
 end)
+
+-- Launch audit 2026-10-30: all three maps stand in the place; a hidden one's
+-- boost pads and checkpoints fired under the live map (FOREST and OCEAN share
+-- the start straight) and drop rays landed on its invisible floors.
+R.describe("MapVisibility: hidden maps do nothing", function()
+	R.it("a hidden part is not touchable or hit by rays; showing restores it, a Dimmed pad stays dim", function()
+		local e = Loader.boot()
+		local MV = e.requirePath("ServerScriptService.Modules.MapVisibility")
+		local Instance = e.mock.Instance
+		local maps = Instance.new("Folder")
+		local map = Instance.new("Model")
+		map.Name = "ForestMap"
+		map.Parent = maps
+		local pad = Instance.new("Part")
+		pad.Transparency = 0.2
+		pad.Parent = map
+		local sensor = Instance.new("Part")
+		sensor.Transparency = 1
+		sensor.CanCollide = false
+		sensor.CanTouch = true
+		sensor.CanQuery = false
+		sensor.Parent = map
+		MV.hideAll(maps)
+		R.expect(pad.CanTouch).toBe(false)
+		R.expect(pad.CanQuery).toBe(false)
+		R.expect(pad.CanCollide).toBe(false)
+		pad:SetAttribute("Dimmed", 0.75)
+		MV.show(map)
+		R.expect(pad.CanTouch).toBe(true)
+		R.expect(pad.CanQuery).toBe(true)
+		R.expect(pad.Transparency).toBe(0.75)
+		R.expect(sensor.CanTouch).toBe(true)
+		R.expect(sensor.CanQuery).toBe(false)
+		R.expect(sensor.CanCollide).toBe(false)
+	end)
+end)

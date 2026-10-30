@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)   -- "E" / "X" / "ITEM" by device
 local LocalPlayer  = Players.LocalPlayer
 
 -- ─── Build GUI ────────────────────────────────────────────────────────────────
@@ -33,7 +34,10 @@ keyHint.Name             = "KeyHint"
 keyHint.Size             = UDim2.new(0, 240, 0, 14)
 keyHint.Position         = UDim2.new(0.5, -120, 1, -38)
 keyHint.BackgroundTransparency = 1
-keyHint.Text             = "[ SHIFT = Drift  ·  F = Boost ]"
+local function _keyHintText()
+	return string.format("[ %s = Drift  ·  %s = Boost ]", InputHints.key("drift"):upper(), InputHints.key("boost"))
+end
+keyHint.Text             = _keyHintText()
 keyHint.TextColor3       = Color3.fromRGB(160, 160, 160)
 keyHint.TextScaled       = true
 keyHint.Font             = Enum.Font.Gotham
@@ -198,7 +202,7 @@ abilityKeyHint.Name             = "KeyHint"
 abilityKeyHint.Size             = UDim2.new(1, 0, 0.35, 0)
 abilityKeyHint.Position         = UDim2.new(0, 0, 0.65, 0)
 abilityKeyHint.BackgroundTransparency = 1
-abilityKeyHint.Text             = "[E]"
+abilityKeyHint.Text             = InputHints.tag("item")
 abilityKeyHint.TextColor3       = Color3.fromRGB(200, 200, 200)
 abilityKeyHint.TextScaled       = true
 abilityKeyHint.Font             = Enum.Font.Gotham
@@ -328,7 +332,7 @@ local function _updateAbilitySlot()
 	abilityIcon.Text = cfg and cfg.icon or "E"
 	local total = (item and _cooldownOf[item]) or 10
 	abilityCooldownOverlay.Size = UDim2.fromScale(1, math.clamp(wait / total, 0, 1))
-	abilityKeyHint.Text = wait > 0 and string.format("%.0f", math.ceil(wait)) or "[E]"
+	abilityKeyHint.Text = wait > 0 and string.format("%.0f", math.ceil(wait)) or InputHints.tag("item")
 end
 LocalPlayer:GetAttributeChangedSignal("AbilityNext"):Connect(_updateAbilitySlot)
 LocalPlayer:GetAttributeChangedSignal("AbilityWait"):Connect(_updateAbilitySlot)
@@ -372,7 +376,14 @@ end
 
 local _cachedBiome = nil
 
+InputHints.onChange(function() keyHint.Text = _keyHintText() end)
+
+-- the same phase twice is the server's resend after a respawn (this script
+-- may already have joined the race from the Phase attribute below)
+local _lastPhase = nil
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	local Constants = require(ReplicatedStorage.Shared.Constants)
 	if phase == Constants.PHASES.RACING then
 		_enableHUD(_cachedBiome)
@@ -395,8 +406,9 @@ end)
 -- This script starts again when the character respawns; mid-race the HUD
 -- comes back at once (RaceSeat puts the driver back in the car and sends
 -- VehicleSpawned again).
+_cachedBiome = ReplicatedStorage:GetAttribute("Biome")
 if ReplicatedStorage:GetAttribute("Phase") == "RACING" then
-	_cachedBiome = ReplicatedStorage:GetAttribute("Biome")
+	_lastPhase = "RACING"
 	_enableHUD(_cachedBiome)
 end
 

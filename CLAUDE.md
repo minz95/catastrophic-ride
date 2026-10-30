@@ -322,8 +322,36 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   record; `Shared/Progression` the rules (levels, coins, daily streak);
   `ProgressionManager` pays at RESULTS (`RemoteEvents.RewardGranted`,
   leaderstats). A failed load is never saved; bots, harness sessions and
-  Studio without API access stay in memory. Add record fields in
-  `Progression.newRecord` (migrate fills them in for old saves).
+  Studio without API access stay in memory; Studio with it uses its own
+  store (`STUDIO_STORE_NAME`), never live players' records. Loading claims
+  the record (`_lock`, waits for a server the player just left, takes a
+  dead lock over after `LOCK_TRIES`); every write bumps `_n` and a server
+  whose record another server wrote since stops saving. Writes for one
+  player run one at a time; shop clicks use `saveSoon` (one write per
+  `SAVE_SOON` s); BindToClose waits for saves still running. Coin packs
+  are granted one receipt at a time per player (buying is refused while one
+  is being saved). Add record fields in `Progression.newRecord` (migrate
+  fills them in for old saves).
+- Never trust a client number (launch audit 2026-10-30): contest presses
+  are held to `MAX_PRESS_RATE` a second, defend taps closer than
+  `DEFEND_GAP` count once, a guard rests `FIGHT.GUARD_REST` before the next,
+  drops wait `DROP_GAP`, drift turbos come a slide apart, never on SKY and
+  at most two per drift corner a race, slot tables over `MAX_SLOT_KEYS` are
+  refused, the same draft is not rebuilt, abilities and shop calls are
+  rate-limited (bucket), and a finish counts only with `FINISH_CREDIT` of
+  the road driven at a believable speed (RacingManager `_creditProgress`;
+  on in live servers, in harness sessions only with `finishCheck`).
+  Abilities are refused once the car finished.
+- Hidden maps are CanTouch / CanQuery false (`MapVisibility`): all three
+  maps stand in the place and a hidden one's pads and checkpoints fired
+  under the live map. Inactive boost pads carry `Dimmed` so a later
+  `show` keeps them dim; RacingManager takes only the live map's pads.
+- A phase start that errors goes back to the lobby (`GameManager
+  _safely`); race bots that fail to spawn do not skip the race set-up. A
+  finisher who leaves stays counted (the race used to end for those still
+  driving). Crafting waits only for players still here.
+  ReplicatedStorage attribute `Round` counts rounds (with `Phase`, a
+  client tells a new phase from a re-sent one).
 - Analytics (live servers only): `AnalyticsManager` turns Telemetry events
   (`Telemetry.onRecord`) into Roblox AnalyticsService events through
   `Modules/Analytics` (onboarding funnel, "Round" funnel, coins, levels,

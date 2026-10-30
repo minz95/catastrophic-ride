@@ -16,6 +16,10 @@ local ScriptContext     = game:GetService("ScriptContext")
 
 local LocalPlayer = Players.LocalPlayer
 
+-- Harness matches run only in Studio (StudioTestService): a live game never
+-- drives a player, whatever attribute it carries.
+if not game:GetService("RunService"):IsStudio() then return end
+
 if not LocalPlayer:GetAttribute("HarnessBot") then
 	LocalPlayer:GetAttributeChangedSignal("HarnessBot"):Wait()
 end

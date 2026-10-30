@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 local LocalPlayer  = Players.LocalPlayer
 
 -- This script runs again after every respawn, but its ScreenGui
@@ -55,7 +56,12 @@ phaseLabel.Name            = "PhaseLabel"
 phaseLabel.Size            = UDim2.new(1, 0, 0.5, 0)
 phaseLabel.Position        = UDim2.new(0, 0, 0.5, 0)
 phaseLabel.BackgroundTransparency = 1
-phaseLabel.Text            = "[E] Pick up  [Hold E] Steal  [F] Punch  [Hold G] Guard"
+local function _keyLine()
+	return string.format("%s Pick up  %s Steal  %s Punch  %s Guard",
+		InputHints.tag("grab"), InputHints.hold("steal"), InputHints.tag("punch"), InputHints.hold("guard"))
+end
+phaseLabel.Text            = _keyLine()
+InputHints.onChange(function() phaseLabel.Text = _keyLine() end)
 phaseLabel.Font            = Enum.Font.Gotham
 phaseLabel.TextScaled      = true
 phaseLabel.TextColor3      = Color3.fromRGB(200, 200, 200)
@@ -186,7 +192,14 @@ end
 
 -- ─── Phase gate ───────────────────────────────────────────────────────────────
 
+-- The server sends the phase again after a respawn (SessionManager); this
+-- script also reads it at start. The same phase twice is that resend (the
+-- round always moves on to another phase), not a new round: emptying the
+-- bar then lost the items on screen (the server sends the bag right after).
+local _lastPhase = nil
 local function _onPhase(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	if phase == Constants.PHASES.FARMING then
 		_updateSlots({})
 		screen.Enabled = true

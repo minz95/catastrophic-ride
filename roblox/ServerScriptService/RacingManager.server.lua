@@ -121,6 +121,8 @@ local function _once(part, key, signalName, fn)
 	part[signalName]:Connect(fn)
 end
 
+local _creditProgress   -- below (finish check)
+
 local function _flat(v)
 	return Vector3.new(v.X, 0, v.Z)
 end
@@ -171,7 +173,8 @@ local function _respawnVehicle(player, reason)
 	-- point, on a raised road too
 	VehicleController.resetRide(primary, (RaceProgress.roadRise(_biome, x, z, nil, y)))
 	task.wait(0.1)
-	primary.Anchored = false
+	-- before GO the car stays held on the grid (RaceStart lets it go)
+	if RaceStart.isGo() then primary.Anchored = false end
 	if ps then ps.cleanSince = tick() end
 
 	RemoteEvents.ScreenEffect:FireClient(player, "respawn", {})
@@ -417,6 +420,7 @@ CollectionService:GetInstanceAddedSignal("Obstacle"):Connect(_connectObstacle)
 -- placed BoostPads to be active. Inactive ones are dimmed.
 
 local _padCooldowns = {}   -- [part][userId] = expireTick
+local _driftCornerCount = 0   -- this race's DriftCorner zones (turbo cap)
 
 local function _connectBoostPad(part)
 	_once(part, "boostPad", "Touched", function(hit)
@@ -432,8 +436,21 @@ local function _connectBoostPad(part)
 	end)
 end
 
+-- The live biome's map (workspace.Maps.<Biome>Map); nil without one.
+local function _activeMap()
+	if not _biome then return nil end
+	local maps = workspace:FindFirstChild("Maps")
+	return maps and maps:FindFirstChild(_biome:sub(1, 1):upper() .. _biome:sub(2):lower() .. "Map")
+end
+
 local function _setupBoostPads()
-	local pads = CollectionService:GetTagged("BoostPad")
+	-- only the live map's pads: the hidden maps stand in the place too
+	-- (OCEAN's pad at (0, 500) sat in FOREST's lane)
+	local map = _activeMap()
+	local pads = {}
+	for _, part in ipairs(CollectionService:GetTagged("BoostPad")) do
+		if not map or part:IsDescendantOf(map) then table.insert(pads, part) end
+	end
 	table.sort(pads, function(a, b) return a:GetFullName() < b:GetFullName() end)
 	_activePads = {}
 	_padCooldowns = {}
@@ -452,12 +469,19 @@ local function _setupBoostPads()
 		_connectBoostPad(part)
 		local base = part:GetAttribute("OriginalTransparency") or 0
 		local ring = part.Parent and part.Parent:FindFirstChild(part.Name .. "Ring", true)
+		-- Dimmed: MapVisibility.restore keeps it (MapManager may show the
+		-- map after this runs)
 		if _activePads[part] then
+			part:SetAttribute("Dimmed", nil)
 			part.Transparency = base
-			if ring then ring.Transparency = ring:GetAttribute("OriginalTransparency") or 0 end
+			if ring then
+				ring:SetAttribute("Dimmed", nil)
+				ring.Transparency = ring:GetAttribute("OriginalTransparency") or 0
+			end
 		else
+			part:SetAttribute("Dimmed", 0.75)
 			part.Transparency = math.max(base, 0.75)
-			if ring then ring.Transparency = 0.9 end
+			if ring then ring:SetAttribute("Dimmed", 0.9); ring.Transparency = 0.9 end
 		end
 	end
 end
@@ -722,6 +746,34 @@ local function _updatePassives(ranked)
 	end
 end
 
+-- ─── Driven distance (finish check) ──────────────────────────────────────────
+-- Cars are moved by their driver's client, so a cheat can teleport one
+-- through the checkpoints and the finish (launch audit 2026-10-30). Each
+-- sync tick credits the progress made, up to what the fastest car could
+-- drive in that time; a finish counts only with FINISH_CREDIT of the road
+-- driven that way. Respawns go back, a lag spike loses a little credit.
+
+local FINISH_CREDIT = 0.7     -- share of the road from the grid that must be credited
+local CREDIT_SPEED  = 1.25    -- × the stacked top speed
+local CREDIT_SLACK  = 25      -- studs per tick on top (jumps, a sync late)
+
+_creditProgress = function(ps, progress, pdata)
+	local now = tick()
+	if ps.creditS and ps.creditT then
+		local d = progress - ps.creditS
+		if d > 0 then
+			local top = Constants.maxSpeedFor(_biome, (pdata and pdata.vehicleStats) or {}) * Constants.SPEED_STACK_MAX
+			ps.credit = (ps.credit or 0) + math.min(d, top * CREDIT_SPEED * (now - ps.creditT) + CREDIT_SLACK)
+		end
+	end
+	ps.creditS, ps.creditT = progress, now
+end
+
+local function _finishCheckOn()
+	local h = GameManager.getHarness()
+	return h == nil or h.finishCheck == true
+end
+
 -- ─── Position sync loop ───────────────────────────────────────────────────────
 
 local function _startPositionSync()
@@ -741,6 +793,7 @@ local function _startPositionSync()
 					-- When each car first leaves its grid spot (fair-start check).
 					local ps = _physState[player.UserId]
 					ps.gridS = ps.gridS or progress
+					_creditProgress(ps, progress, pdata)
 					if not ps.launched and progress - ps.gridS > 2 then
 						ps.launched = true
 						Telemetry.record("race_launch", { userId = player.UserId, afterGo = tick() - _startTick })
@@ -793,15 +846,26 @@ end
 
 local DRIFT_TURBO_GAP = 1.0   -- s between two turbos of one car (a drift + release takes longer)
 
+-- The slide time is the client's word, so the server bounds what it can
+-- buy (launch audit 2026-10-30: DriftTurbo(2, 99) every second kept a car
+-- at ×1.38 for the whole race): two releases are at least the slide the
+-- level needs apart, never on SKY (planes do not drift), and a race pays
+-- at most DRIFT_TURBOS_PER_CORNER per drift corner of the track (+ spare).
+local DRIFT_TURBOS_PER_CORNER = 2
+local DRIFT_TURBOS_SPARE = 4
+
 RemoteEvents.DriftTurbo.OnServerEvent:Connect(function(player, level, slid)
-	if not _active or not RaceStart.isGo() then return end
-	if type(level) ~= "number" or type(slid) ~= "number" then return end
+	if not _active or not RaceStart.isGo() or _biome == "SKY" then return end
+	if type(level) ~= "number" or type(slid) ~= "number" or slid ~= slid then return end
 	local tb = Constants.DRIVE.DRIFT_TURBO[level]
 	if not tb or slid < tb.time then return end
 	local ps = _physState[player.UserId]
 	if not ps then return end
 	local now = tick()
-	if now < (ps.driftTurboAt or 0) + DRIFT_TURBO_GAP then return end
+	if now < (ps.driftTurboAt or 0) + math.max(DRIFT_TURBO_GAP, tb.time) then return end
+	local cap = _driftCornerCount * DRIFT_TURBOS_PER_CORNER + DRIFT_TURBOS_SPARE
+	if (ps.driftTurbos or 0) >= cap then return end
+	ps.driftTurbos = (ps.driftTurbos or 0) + 1
 	ps.driftTurboAt = now
 	local pdata = SessionManager.getData(player)
 	local seat = _seatOf(pdata and pdata.vehicleModel)
@@ -878,6 +942,21 @@ local function _onFinishTouched(hit)
 	if CheckpointService.isActive() and not CheckpointService.hasCompleted(player) then
 		Telemetry.record("finish_rejected", { userId = player.UserId, reason = "checkpoints" })
 		return
+	end
+	if _finishCheckOn() then
+		local ps = _physState[player.UserId]
+		local _, car = _ownerOf(hit)
+		if ps then _creditProgress(ps, _progressFor(player, car), SessionManager.getData(player)) end
+		local need = (RaceProgress.trackLength(_biome) - ((ps and ps.gridS) or 0)) * FINISH_CREDIT
+		if not ps or (ps.credit or 0) < need then
+			local now = tick()
+			if now > (ps and ps.finishWarnAt or 0) then
+				if ps then ps.finishWarnAt = now + 5 end
+				Telemetry.record("finish_rejected", { userId = player.UserId, reason = "not driven",
+					credit = math.floor(ps and ps.credit or 0), need = math.floor(need) })
+			end
+			return
+		end
 	end
 
 	local elapsed = tick() - _startTick
@@ -1001,9 +1080,14 @@ GameManager.onPhaseChanged(function(phase, biome)
 		-- Empty grid slots → bots (Modules/RaceBots; live servers, or harness fillBots)
 		local nBots = RaceBots.wanted(_totalRacers, GameManager.getHarness())
 		if nBots > 0 then
-			local bots = RaceBots.spawn(biome, nBots, RaceGrid.cframes(biome), #Players:GetPlayers() + 1)
-			_totalRacers += #bots
-			RaceBots.run(biome)
+			-- a bot that fails to build must not skip the race's own set-up
+			-- below (finish line, checkpoints, boost pads)
+			local ok, err = pcall(function()
+				local bots = RaceBots.spawn(biome, nBots, RaceGrid.cframes(biome), #Players:GetPlayers() + 1)
+				_totalRacers += #bots
+				RaceBots.run(biome)
+			end)
+			if not ok then warn("[RacingManager] race bots: " .. tostring(err)) end
 		end
 		local raceRacers = _racers
 		task.delay(Constants.RACE_COUNTDOWN, function()
@@ -1039,7 +1123,12 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_raceSeed = math.random(1, 1000000)
 
 		_setupBoostPads()
-		for _, part in ipairs(CollectionService:GetTagged("DriftCorner")) do _connectDriftCorner(part) end
+		_driftCornerCount = 0
+		local liveMap = _activeMap()
+		for _, part in ipairs(CollectionService:GetTagged("DriftCorner")) do
+			_connectDriftCorner(part)
+			if not liveMap or part:IsDescendantOf(liveMap) then _driftCornerCount += 1 end
+		end
 		for _, part in ipairs(CollectionService:GetTagged("SlowZone")) do
 			_connectSpeedZone(part, "slowZone", Constants.SLOW_ZONE_MULT, nil)
 		end
@@ -1086,6 +1175,11 @@ Players.PlayerRemoving:Connect(function(player)
 	_physState[player.UserId] = nil
 	if not _racers[player.UserId] then return end   -- a spectator leaving changes nothing
 	_racers[player.UserId] = nil
+	-- a finisher stays in _finishOrder and in the count: dropping them
+	-- ended the race while others still drove (launch audit 2026-10-30)
+	for _, f in ipairs(_finishOrder) do
+		if f.userId == player.UserId then return end
+	end
 	_totalRacers = math.max(1, _totalRacers - 1)
 	if #_finishOrder >= _totalRacers then
 		_active = false

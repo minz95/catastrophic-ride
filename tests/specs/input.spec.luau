@@ -53,6 +53,8 @@ R.describe("KeyInput (keyboard + touch buttons)", function()
 	R.it("every touch button's key is one the clients handle", function()
 		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
 		local farming = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmingClient.client.lua")
+		-- FARMING's EMOTE (Q) opens EmoteUI's menu
+		local farming = farming .. fs.readFile("roblox/StarterGui/EmoteUI/init.client.lua")
 		local racing = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua")
 		local missing = {}
 		local section = nil
@@ -65,5 +67,134 @@ R.describe("KeyInput (keyboard + touch buttons)", function()
 			end
 		end
 		R.expect(missing).toBeEmpty("buttons whose key nothing handles")
+	end)
+end)
+
+-- Launch audit (2026-10-30): phones and gamepads read "Press E", the touch
+-- buttons ran off a 390-px phone screen, every respawn re-ran each client's
+-- phase entry (music restarted, inventory bar emptied, the race gauge reset).
+R.describe("controls named for the device (Shared/InputHints)", function()
+	R.it("each action is its key on a keyboard, its pad button on a gamepad, its button on a phone", function()
+		local env = Loader.boot()
+		local H = env.requirePath("ReplicatedStorage.Shared.InputHints")
+		R.expect(H.key("grab", "keyboard")).toBe("E")
+		R.expect(H.key("grab", "gamepad")).toBe("X")
+		R.expect(H.key("grab", "touch")).toBe("GRAB")
+		R.expect(H.hold("steal", "touch")).toBe("[Hold GRAB]")
+		R.expect(H.tag("boost", "gamepad")).toBe("[B]")
+		R.expect(H.key("climb", "gamepad")).toBe("A")
+	end)
+
+	R.it("every touch name is a TouchControls button that presses that action's key", function()
+		local env = Loader.boot()
+		local H = env.requirePath("ReplicatedStorage.Shared.InputHints")
+		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
+		local buttons = {}
+		for text, key in src:gmatch('text = "([^"]+)",%s*key = Enum%.KeyCode%.(%w+)') do buttons[text] = key end
+		local bad = {}
+		for action, a in pairs(H.ACTIONS) do
+			local onScreen = action == "shop" or action == "guide" or action == "help"   -- their own screen buttons
+			if not onScreen and buttons[a.touch] ~= a.code then
+				table.insert(bad, action .. " → " .. tostring(a.touch))
+			end
+		end
+		table.sort(bad)
+		R.expect(bad).toBeEmpty("touch names with no button for their key")
+	end)
+
+	R.it("the gamepad map gives SKY climb / dive and the emote / taunt key, each button once", function()
+		local env = Loader.boot()
+		local KeyInput = env.requirePath("ReplicatedStorage.Shared.KeyInput")
+		local seen = {}
+		for button, kc in pairs(KeyInput.GAMEPAD) do seen[kc.Name] = button end
+		R.expect(seen.Space ~= nil and seen.LeftControl ~= nil and seen.Q ~= nil).toBe(true)
+	end)
+
+	R.it("no keyboard-only control text in what a phone or gamepad player sees", function()
+		local bad = {}
+		local checks = {
+			["roblox/StarterPlayer/StarterPlayerScripts/FarmFx.client.lua"] = { "Mash E or punch (F)" },
+			["roblox/StarterPlayer/StarterPlayerScripts/FarmingClient.client.lua"] = { '"[E] Pick Up"', '"[Hold E] Steal' },
+			["roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua"] = { '"BOOST  [F]"' },
+			["roblox/StarterGui/FarmingUI/init.client.lua"] = { '"[E] Pick up' },
+			["roblox/StarterGui/HUD/init.client.lua"] = { '"[ SHIFT = Drift', '"[E]"' },
+			["roblox/StarterGui/ItemGuideUI/init.client.lua"] = { "press E in the race", '"E: "' },
+			["roblox/StarterGui/TutorialUI/init.client.lua"] = { 'hintBtn.Text             = "[ H ] Controls"', '"Click & drag"' },
+		}
+		for f, needles in pairs(checks) do
+			local src = fs.readFile(f)
+			for _, n in ipairs(needles) do
+				if src:find(n, 1, true) then table.insert(bad, f .. ": " .. n) end
+			end
+		end
+		table.sort(bad)
+		R.expect(bad).toBeEmpty("keyboard-only text")
+	end)
+end)
+
+R.describe("touch buttons", function()
+	local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
+	R.it("are laid out from the viewport (they ran off a 390-px phone screen)", function()
+		R.expect(src:find("ViewportSize", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("PositionTracker", 1, true) ~= nil).toBe(true)   -- not over the race position list
+		R.expect(src:find('WaitForChild("PlayerGui")', 1, true) ~= nil).toBe(true)
+	end)
+	R.it("let go of every held key on a touch's end, a cancel or a phase change (GUARD / DRIFT stayed held)", function()
+		R.expect(src:find("UserInputState.Cancel", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("if phase ~= _phase then releaseAll() end", 1, true) ~= nil).toBe(true)
+	end)
+	R.it("the emote menu opens from KeyInput (touch EMOTE button, gamepad), not the keyboard alone", function()
+		local emote = fs.readFile("roblox/StarterGui/EmoteUI/init.client.lua")
+		R.expect(emote:find("UserInputService.InputBegan", 1, true)).toBe(nil)
+		R.expect(emote:find("KeyInput.began", 1, true) ~= nil).toBe(true)
+	end)
+end)
+
+R.describe("client start-up and respawns", function()
+	R.it("a client never makes its own RemoteEvents (a local copy no server listens to)", function()
+		local src = fs.readFile("roblox/ReplicatedStorage/RemoteEvents/init.lua")
+		local clientPart = src:match("if IS_CLIENT then(.-)\nend\n")
+		R.expect(clientPart ~= nil).toBe(true)
+		R.expect(clientPart:find("Instance.new", 1, true)).toBe(nil)
+		R.expect(clientPart:find("WaitForChild", 1, true) ~= nil).toBe(true)
+	end)
+
+	R.it("phase entry runs once per phase: the respawn resend of the same phase is skipped", function()
+		local bad = {}
+		for _, f in ipairs({
+			"roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua",
+			"roblox/StarterPlayer/StarterPlayerScripts/SoundClient.client.lua",
+			"roblox/StarterPlayer/StarterPlayerScripts/EffectFx.client.lua",
+			"roblox/StarterGui/FarmingUI/init.client.lua",
+			"roblox/StarterGui/CraftingUI/init.client.lua",
+			"roblox/StarterGui/TutorialUI/init.client.lua",
+			"roblox/StarterGui/HUD/init.client.lua",
+		}) do
+			if not fs.readFile(f):find("if phase == _lastPhase then return end", 1, true) then table.insert(bad, f) end
+		end
+		R.expect(bad).toBeEmpty("clients that enter a phase again on every respawn")
+	end)
+
+	R.it("a respawn resends the bag, and the crafting screen joins a running CRAFTING with its draft", function()
+		local sm = fs.readFile("roblox/ServerScriptService/SessionManager.lua")
+		R.expect(sm:find("RemoteEvents.InventoryUpdated:FireClient(player, data.inventory)", 1, true) ~= nil).toBe(true)
+		local craft = fs.readFile("roblox/StarterGui/CraftingUI/init.client.lua")
+		R.expect(craft:find('_onPhase(ReplicatedStorage:GetAttribute("Phase"))', 1, true) ~= nil).toBe(true)
+		R.expect(craft:find("CraftDraftSlots", 1, true) ~= nil).toBe(true)
+		R.expect(craft:find("UIScale", 1, true) ~= nil).toBe(true)   -- 810 × 476 cut off on phones
+	end)
+
+	R.it("the boost bar finds the HUD ScreenGui (not the LocalScript named HUD) and again after a rebuild", function()
+		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua")
+		R.expect(src:find('PlayerGui:FindFirstChild("HUD")', 1, true)).toBe(nil)
+		R.expect(src:find('g.Name == "HUD" and g:IsA("ScreenGui")', 1, true) ~= nil).toBe(true)
+		R.expect(src:find("IsDescendantOf(LocalPlayer.PlayerGui)", 1, true) ~= nil).toBe(true)
+	end)
+
+	R.it("the harness bot driver and its debug prints stay out of live games", function()
+		local bot = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/BotDriver.client.lua")
+		R.expect(bot:find("IsStudio() then return end", 1, true) ~= nil).toBe(true)
+		local farming = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmingClient.client.lua")
+		R.expect(farming:find("print(", 1, true)).toBe(nil)
 	end)
 end)

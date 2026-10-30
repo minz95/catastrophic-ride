@@ -1001,6 +1001,7 @@ function M.reset()
 			GetAsync = function(_, key) fail("get"); return copy(data[key]) end,
 			SetAsync = function(_, key, v) fail("set"); data[key] = copy(v) end,
 			UpdateAsync = function(_, key, fn)
+				fail("get")
 				fail("set")
 				local nv = fn(copy(data[key]))
 				if nv ~= nil then data[key] = copy(nv) end

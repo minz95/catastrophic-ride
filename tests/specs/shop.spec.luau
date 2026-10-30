@@ -126,7 +126,7 @@ R.describe("Modules/Shop (server)", function()
 		R.expect(Shop.handle(p, "equip", "trail_fire").result).toBe("denied: not owned")
 		R.expect(Shop.handle(p, "hack", "x").result).toBe("denied: bad action")
 		R.expect(Shop.handle(p, "buy", 5).result).toBe("denied: bad id")
-		e.mock.advance(1)
+		e.mock.advance(Store.SAVE_SOON + 1)
 		R.expect(e.mock.dataStores[Store.STORE_NAME].u4242.owned.paint_sunset).toBe(true)
 	end)
 
@@ -159,6 +159,25 @@ R.describe("Modules/Shop (server)", function()
 		e.mock.dataStoreFail = nil
 		R.expect(Shop.processReceipt({ PlayerId = 4242, ProductId = 999, PurchaseId = "x2" })).toBe(D.NotProcessedYet)
 		R.expect(Shop.processReceipt({ PlayerId = 1, ProductId = 111, PurchaseId = "x3" })).toBe(D.NotProcessedYet)
+	end)
+
+	R.it("one receipt at a time: Roblox asking twice mid-save grants once; no spending the coins before they are saved", function()
+		local e, Store, Shop, p, rec, Products = boot()
+		local D = roblox.Enum.ProductPurchaseDecision
+		e.mock.dataStoreFail = "set"   -- the first save keeps failing for a while
+		local a, b
+		e.mock.task.spawn(function() a = Shop.processReceipt({ PlayerId = 4242, ProductId = 111, PurchaseId = "same" }) end)
+		e.mock.advance(0.5)
+		R.expect(Shop.handle(p, "buy", "paint_sunset").result).toBe("denied: busy")
+		e.mock.task.spawn(function() b = Shop.processReceipt({ PlayerId = 4242, ProductId = 111, PurchaseId = "same" }) end)
+		e.mock.advance(0.5)
+		R.expect(b).toBe(nil)                          -- waits for the first, not "granted" off an unsaved id
+		e.mock.dataStoreFail = nil
+		e.mock.advance(20)
+		R.expect(a).toBe(D.PurchaseGranted)            -- its retry got through
+		R.expect(b).toBe(D.PurchaseGranted)
+		R.expect(rec.coins).toBe(Products.COIN_PACKS[1].coins)
+		R.expect(e.mock.dataStores[Store.STORE_NAME].u4242.coins).toBe(Products.COIN_PACKS[1].coins)
 	end)
 
 	R.it("a record that failed to load gets no Robux grant (it could not be saved)", function()
@@ -257,7 +276,7 @@ R.describe("Shopping time", function()
 		R.expect(src:find("KeyCode.B", 1, true) ~= nil).toBe(true)
 		R.expect(src:find("KeyInput.began", 1, true) ~= nil).toBe(true)
 		local tutorial = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
-		local _, n = tutorial:gsub('key = "B",%s+short = "Shop"', "")
+		local _, n = tutorial:gsub('key = "B",%s+act = "shop",%s+short = "Shop"', "")
 		R.expect(n).toBe(2)   -- FARMING and CRAFTING
 	end)
 end)
