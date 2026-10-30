@@ -425,3 +425,94 @@ R.describe("SKY updrafts (real script)", function()
 		R.expect(model.PrimaryPart:GetAttribute("LiftOffset")).toBe(nil)
 	end)
 end)
+
+-- Launch audit 2026-10-30: cheats a client can send, and racers leaving.
+R.describe("race cheats and leavers (real script)", function()
+	local function race(n, harnessExtra)
+		local harness = { harness = "lune", biome = "FOREST", players = n, lobbyDelay = 0,
+			durations = { FARMING = 0.1, CRAFTING = 0.1, RACING = 600 } }
+		for k, v in pairs(harnessExtra or {}) do harness[k] = v end
+		local srv = Server.boot({
+			players = n,
+			scripts = {
+				"ServerScriptService.MapBuilders.ForestMapBuilder",
+				"ServerScriptService.GameBootstrap",
+				"ServerScriptService.RacingManager",
+			},
+			harness = harness,
+		})
+		local env = srv.env
+		local VehicleBuilder = env.requirePath("ServerScriptService.Modules.VehicleBuilder")
+		local VehicleStats = env.requirePath("ReplicatedStorage.Shared.VehicleStats")
+		local stats = VehicleStats.calculate(nil, nil, nil, "FOREST")
+		local cars = {}
+		for i, p in ipairs(srv.players) do
+			local model = VehicleBuilder.build(stats, "FOREST", CFrame.new(i * 7, 2, 590), {})
+			model.Parent = env.workspace
+			srv.SessionManager.setVehicle(p, model, stats)
+			cars[i] = model
+		end
+		srv.advance(0.5)
+		assert(srv.GameManager.getPhase() == "RACING")
+		srv.advance(env.requirePath("ReplicatedStorage.Shared.Constants").RACE_COUNTDOWN + 0.5)
+		local function tagged(tag) return srv.mock.CollectionService:GetTagged(tag)[1] end
+		local function finish(i)
+			for _, tag in ipairs({ "Checkpoint1", "Checkpoint2", "FinishLine" }) do
+				tagged(tag).Touched:Fire(cars[i].PrimaryPart)
+				srv.advance(0.1)
+			end
+		end
+		return srv, cars, finish
+	end
+
+	R.it("a car teleported through the checkpoints to the line does not finish; one driven there does", function()
+		local srv, cars, finish = race(2, { finishCheck = true })
+		finish(1)
+		R.expect(#srv.Telemetry.events("finish")).toBe(0)
+		local rej = srv.Telemetry.events("finish_rejected")
+		R.expect(rej[#rej].reason).toBe("not driven")
+		-- car 2 drives the road at a plausible 70 studs/s
+		local RaceProgress = srv.env.requirePath("ReplicatedStorage.Shared.RaceProgress")
+		local geo = RaceProgress.geometry("FOREST")
+		local s = 0
+		while s < geo.length do
+			s = math.min(geo.length, s + 70 * 0.25)
+			local x, z = geo:pointAt(s)
+			cars[2]:PivotTo(CFrame.new(x, geo:heightAt(s) + 2, z))
+			srv.advance(0.25)
+		end
+		finish(2)
+		local fin = srv.Telemetry.events("finish")
+		R.expect(#fin).toBe(1)
+		R.expect(fin[1].userId).toBe(srv.players[2].UserId)
+	end)
+
+	R.it("a winner who leaves does not end the race for those still driving", function()
+		local srv, cars, finish = race(3)
+		finish(1)
+		srv.mock.removePlayer(srv.players[1])
+		srv.advance(0.2)
+		finish(2)
+		R.expect(srv.GameManager.getPhase()).toBe("RACING")   -- player 3 still racing
+		finish(3)
+		srv.advance(0.2)
+		R.expect(srv.GameManager.getPhase()).toBe("RESULTS")
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("drift turbos: NaN refused, two releases a slide apart, a race pays a bounded number", function()
+		local srv = race(1)
+		local p = srv.players[1]
+		local fire = function(level, slid) srv.RemoteEvents.DriftTurbo.OnServerEvent:Fire(p, level, slid) end
+		fire(2, 0 / 0)
+		R.expect(#srv.Telemetry.events("drift_turbo")).toBe(0)
+		for _ = 1, 200 do
+			fire(2, 99)
+			srv.advance(1.5)
+		end
+		local n = #srv.Telemetry.events("drift_turbo")
+		local corners = #srv.mock.CollectionService:GetTagged("DriftCorner")
+		R.expect(n).toBeGreaterThan(0)
+		R.expect(n <= corners * 2 + 4).toBe(true)
+	end)
+end)

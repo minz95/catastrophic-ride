@@ -16,6 +16,7 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
 local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local LocalPlayer  = Players.LocalPlayer
 
@@ -123,7 +124,7 @@ rescale()
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
 
 label(panel, "📖 Item Guide", UDim2.new(0, 300, 0, 32), UDim2.new(0, 16, 0, 10), Enum.Font.GothamBlack, GOLD)
-label(panel, "Put items in Body, Engine or Special, then press E in the race to use their ability.",
+label(panel, "Put items in Body, Engine or Special, then press " .. InputHints.key("item") .. " in the race to use their ability.",
 	UDim2.new(1, -32, 0, 16), UDim2.new(0, 16, 0, 44), Enum.Font.Gotham, Color3.fromRGB(210, 210, 225))
 
 local closeBtn = Instance.new("TextButton")
@@ -175,7 +176,7 @@ local function row(name, order)
 	local tagLbl = label(f, table.concat(tags, "  ·  "), UDim2.new(0.5, -10, 0, 14), UDim2.new(0.5, 0, 0, 9),
 		Enum.Font.Gotham, Color3.fromRGB(170, 170, 190))
 	tagLbl.TextXAlignment = Enum.TextXAlignment.Right
-	label(f, "E: " .. (ItemBlurbs.ABILITY[name] or "no ability"), UDim2.new(1, -66, 0, 18), UDim2.new(0, 56, 0, 30),
+	label(f, InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability"), UDim2.new(1, -66, 0, 18), UDim2.new(0, 56, 0, 30),
 		Enum.Font.GothamMedium, Color3.fromRGB(235, 235, 245))
 end
 
@@ -288,7 +289,7 @@ local function showNew(name)
 	cardIcon.Text = cfg.icon or "❔"
 	cardTitle.Text = "NEW: " .. name .. "  (" .. (TAB_NAME[cfg.slotType] or "") .. ")"
 	cardTitle.TextColor3 = RARITY_COLOUR[cfg.rarity] or GOLD
-	cardText.Text = "E: " .. (ItemBlurbs.ABILITY[name] or "no ability") .. "   [J] all items"
+	cardText.Text = InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability") .. "   " .. InputHints.tag("guide") .. " all items"
 	_cardToken += 1
 	local token = _cardToken
 	card.Visible = true

@@ -524,6 +524,11 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(name, params)
 	report("screen", { name = name, seconds = seconds })
 end)
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function()
+-- a new phase only: the same phase again is the server's resend after a
+-- respawn (it cleared the effects on every car mid-race)
+local _lastPhase = nil
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	_cars = {}
 end)

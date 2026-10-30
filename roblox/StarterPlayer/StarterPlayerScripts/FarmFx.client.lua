@@ -31,6 +31,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local EffectLook   = require(ReplicatedStorage.Shared.EffectLook)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
+local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -257,8 +258,11 @@ local function prompt(text, color, seconds)
 		local t = Instance.new("TextLabel")
 		t.Name = "Text"
 		t.AnchorPoint = Vector2.new(0.5, 0.5)
-		t.Position = UDim2.fromScale(0.5, 0.48)   -- mid-screen; at 0.32 it sat on the effect words and the phase toast
-		t.Size = UDim2.new(0.7, 0, 0, 64)
+		-- below the middle, 380 px wide: at 0.32 it sat on the effect words and
+		-- the phase toast; 70 % wide at mid-height it covered the ITEMS button,
+		-- the key list and the toast in small windows (Studio ui-layout 2026-10-30)
+		t.Position = UDim2.fromScale(0.5, 0.56)
+		t.Size = UDim2.new(0, 380, 0, 56)
 		t.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 		t.BackgroundTransparency = 0.25
 		t.TextScaled = true
@@ -658,8 +662,8 @@ local function onGrab(thiefId, victimId, info)
 		_wriggle[vChar] = os.clock() + window
 	end
 	if victim == LocalPlayer then
-		prompt(("⚠️ %s is stealing from you!  Mash E or punch (F)! (0/%d)"):format(nameOf(thiefId),
-			Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
+		prompt(("⚠️ %s is stealing from you!  Mash %s or punch (%s)! (0/%d)"):format(nameOf(thiefId),
+			InputHints.key("defend"), InputHints.key("punch"), Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
 		shake(0.02, 0.3)
 	end
 	report("farmfx", { what = "grab", drawn = reached and vChar ~= nil })
@@ -676,8 +680,8 @@ local function onSwat(victimId, thiefId, info)
 	if victim == LocalPlayer then
 		local n = info and info.presses or 0
 		local done = n >= Constants.STEAL_DEFEND_PRESSES
-		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash E or punch (F)! (%d/%d)"):format(
-			nameOf(thiefId), n, Constants.STEAL_DEFEND_PRESSES),
+		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash %s or punch (%s)! (%d/%d)"):format(
+			nameOf(thiefId), InputHints.key("defend"), InputHints.key("punch"), n, Constants.STEAL_DEFEND_PRESSES),
 			done and Color3.fromRGB(120, 230, 140) or Color3.fromRGB(255, 210, 80), done and 1 or 0.8)
 	end
 	report("farmfx", { what = "swat", drawn = swatted })

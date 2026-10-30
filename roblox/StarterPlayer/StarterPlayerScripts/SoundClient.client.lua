@@ -19,6 +19,22 @@ local _ambiSounds   = {}   -- current ambience Sound list
 local _currentBiome = nil
 local _phase        = nil
 
+-- Phase handlers run once per phase. The server sends the phase again after
+-- every respawn (SessionManager, for StarterGui scripts that restart); the
+-- same phase twice is that resend, never a new phase (a round always moves
+-- on to another one). Handling it again replayed the transition sound,
+-- restarted the music and, mid-race, played GO again.
+local _lastPhase = nil
+local _phaseFns = {}
+local function _onNewPhase(fn)
+	table.insert(_phaseFns, fn)
+end
+RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
+	for _, fn in ipairs(_phaseFns) do task.spawn(fn, phase) end
+end)
+
 local _makeSound = SoundFx.make
 local _playSFX = SoundFx.play
 
@@ -115,7 +131,7 @@ local function _onPhaseChanged(phase)
 	end
 end
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhaseChanged)
+_onNewPhase(_onPhaseChanged)
 
 RemoteEvents.BiomeSelected.OnClientEvent:Connect(function(biome)
 	_currentBiome = biome
@@ -234,7 +250,7 @@ end)
 
 local _countdownConn = nil
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+_onNewPhase(function(phase)
 	if _countdownConn then _countdownConn:Disconnect(); _countdownConn = nil end
 
 	if phase == Constants.PHASES.RACING then
@@ -267,7 +283,7 @@ local TIMER_LOW_AT = 10
 local _timerWarned = false
 local _phaseSince  = 0
 
-RemoteEvents.PhaseChanged.OnClientEvent:Connect(function()
+_onNewPhase(function()
 	_timerWarned = false
 	_phaseSince  = os.clock()
 end)
@@ -387,7 +403,7 @@ if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 		if input.KeyCode == Enum.KeyCode.RightBracket then step(1)
 		elseif input.KeyCode == Enum.KeyCode.LeftBracket then step(-1) end
 	end)
-	RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	_onNewPhase(function(phase)
 		local slot = slotOf(phase)
 		local list = slot and SoundConfig.TRY[slot]
 		showLabel(list and string.format("♪ %s: [ / ] try %d tracks", slot, #list) or "")

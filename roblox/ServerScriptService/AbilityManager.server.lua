@@ -626,7 +626,7 @@ GameManager.onPhaseChanged(function(phase, biome)
 end)
 
 local function _handleAbilityRequest(player, itemName)
-	if type(itemName) ~= "string" then return "denied: bad item" end
+	if type(itemName) ~= "string" or #itemName > 64 then return "denied: bad item" end
 	local abilCfg = AbilityConfig.get(itemName, _biome)
 	if not abilCfg then return "denied: no config" end
 
@@ -650,6 +650,8 @@ local function _handleAbilityRequest(player, itemName)
 
 	local pdata = SessionManager.getData(player)
 	if not pdata then return "denied: no data" end
+	-- a parked finisher kept hitting the cars still racing
+	if pdata.finishTime then return "denied: finished" end
 
 	local itemCfg = ItemConfig[itemName]
 	if not itemCfg then return "denied: unknown item" end
@@ -704,10 +706,24 @@ end
 -- Telemetry wrapper: logs every ability request and its result, including
 -- each early "denied" return above. (OnServerInvoke is write-only in Roblox,
 -- so the handler is a local function wrapped here.)
+-- A burst of REQUEST_BURST, then REQUEST_RATE a second: spam only filled the log
+local REQUEST_BURST, REQUEST_RATE = 6, 8
+local _bucket = setmetatable({}, { __mode = "k" })
 local function _request(player, itemName)
-	local result = _handleAbilityRequest(player, itemName)
-	Telemetry.record("ability", { userId = player.UserId, item = itemName, result = result,
-		bot = SessionManager.isBot(player) or nil })
+	local now = tick()
+	local b = _bucket[player] or { n = REQUEST_BURST, t = now }
+	b.n = math.min(REQUEST_BURST, b.n + (now - b.t) * REQUEST_RATE)
+	b.t = now
+	_bucket[player] = b
+	if b.n < 1 then return "denied: too fast" end
+	b.n -= 1
+	local ok, result = pcall(_handleAbilityRequest, player, itemName)
+	if not ok then
+		warn("[AbilityManager] " .. tostring(result))
+		result = "denied: error"
+	end
+	Telemetry.record("ability", { userId = player.UserId, item = type(itemName) == "string" and itemName:sub(1, 64) or nil,
+		result = result, bot = SessionManager.isBot(player) or nil })
 	return result
 end
 RemoteEvents.RequestAbility.OnServerInvoke = _request

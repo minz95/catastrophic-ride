@@ -42,7 +42,7 @@ History → restore the previous version (publishing is reversible).
 | Max players per server | **10** | `Constants.MAX_PLAYERS` and the 10 character skins |
 | Genre | Racing (or Party & Casual) | |
 | Devices | Computer, Phone, Tablet, Console | touch buttons: `TouchControls`; gamepad: `KeyInput.GAMEPAD` |
-| Security → Enable Studio Access to API Services | On | saves (DataStore) work in Studio playtests |
+| Security → Enable Studio Access to API Services | On | saves (DataStore) work in Studio playtests; Studio uses its own store `PlayerProgress_studio`, so Studio play and test purchases never touch live players' records |
 | Maturity & compliance questionnaire | fill in (cartoon fighting: punches, no blood) | required before public |
 | Privacy | Private → Friends → Public | invite friends first, then open |
 | Private servers | On, free or 10 R$ | friends groups keep playing together |
@@ -122,9 +122,20 @@ A first-week rule of thumb for small Roblox games: D1 around 20 % or more and
 sessions over 10 minutes mean the loop works; worse, look at the funnel step
 where most players leave before adding content or ads.
 
+## Player data requests
+
+Roblox sends "Right to erasure" requests for a UserId: delete the key
+`u<UserId>` in the DataStore `PlayerProgress_v1` (Creator Dashboard → the
+experience → Data Stores, or `DataStore:RemoveAsync`).
+
 ## Known gaps
 
-- Bots fill the grid to 4: they farm, punch, guard, steal, race and fire
+- Positions are the client's (Roblox physics ownership): a cheat that moves
+  its own character or car is not caught in general. The finish needs most
+  of the road driven at a believable speed, and every farm action is
+  checked for range and rate, but there is no speed / teleport detector.
+
+- Bots fill each round to 4–6 racers (drawn per round): they farm, punch, guard, steal, race and fire
   their abilities; they ride updrafts and jumps like players.
 - Gamepad and touch buttons are tested offline only (key mapping); try
   them on a device before going public.

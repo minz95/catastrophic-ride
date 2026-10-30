@@ -73,7 +73,12 @@ local phaseHandlers = {
 
 local _currentBiome = nil
 
+-- the same phase twice is the server's resend after a respawn (a round
+-- always moves on to another phase), not a new phase
+local _lastPhase = nil
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
+	if phase == _lastPhase then return end
+	_lastPhase = phase
 	local handler = phaseHandlers[phase]
 	if handler then
 		handler(_currentBiome)

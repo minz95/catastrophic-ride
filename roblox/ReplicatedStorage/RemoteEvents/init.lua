@@ -1,6 +1,7 @@
 -- RemoteEvents/init.lua
--- Creates all RemoteEvent and RemoteFunction instances at runtime.
--- Require this module on both server and client to get the events table.
+-- Creates all RemoteEvent and RemoteFunction instances at runtime (server)
+-- and waits for them (client). Require this module on both server and
+-- client to get the events table.
 -- Resolves: Issue #5
 --
 -- Payload reference (inline documentation):
@@ -112,7 +113,40 @@ local FUNCTIONS = {
 
 local RemoteEvents = {}
 
--- Lazily create or retrieve each instance
+-- A pure client only: Studio's edit mode (and -task RunScript, the sim
+-- harness's host) is client AND server, and waiting there hung it forever.
+local IS_CLIENT = false
+pcall(function()
+	local rs = game:GetService("RunService")
+	IS_CLIENT = rs:IsClient() and not rs:IsServer()
+end)
+
+if IS_CLIENT then
+	-- Client: the server made every instance at boot; wait for them, never
+	-- create one. A copy made here on a slow device (before replication
+	-- arrived) is local only: the client would talk to an event no server
+	-- listens to, a dead session.
+	local WAIT = 30
+	local function await(parent, name)
+		local child = parent:WaitForChild(name, WAIT)
+		if not child then
+			warn(("[RemoteEvents] %s not replicated after %d s, still waiting"):format(name, WAIT))
+			child = parent:WaitForChild(name)
+		end
+		return child
+	end
+	local folder = await(ReplicatedStorage, "RemoteEvents")
+	for _, name in ipairs(EVENTS) do
+		RemoteEvents[name] = await(folder, name)
+	end
+	local funcFolder = await(ReplicatedStorage, "RemoteFunctions")
+	for _, name in ipairs(FUNCTIONS) do
+		RemoteEvents[name] = await(funcFolder, name)
+	end
+	return RemoteEvents
+end
+
+-- Server: create or retrieve each instance
 local folder = ReplicatedStorage:FindFirstChild("RemoteEvents")
 	or Instance.new("Folder", ReplicatedStorage)
 folder.Name = "RemoteEvents"

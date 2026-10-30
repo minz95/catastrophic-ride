@@ -17,6 +17,7 @@ local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
 
 local RECEIPTS_KEPT = 50
+local _receiptBusy = {}   -- userId → a coin pack is being granted
 
 local Shop = {}
 
@@ -41,20 +42,27 @@ function Shop.handle(player, action, id)
 	local rec = PlayerStore.get(player)
 	if not rec then return { result = "denied: loading" } end
 	local result = "ok"
+	if (action == "buy" or action == "equip") and (type(id) ~= "string" or #id > 64) then
+		return { result = "denied: bad id" }
+	end
 	if action == "buy" then
-		if type(id) ~= "string" then return { result = "denied: bad id" } end
+		-- a coin pack still being saved: its coins may yet be taken back
+		if _receiptBusy[player.UserId] then return { result = "denied: busy", state = Shop.state(rec) } end
 		result = Cosmetics.buy(rec, id)
 		if result == "ok" then
 			local it = Cosmetics.get(id)
 			Analytics.spend(player, "Coins", it.price, rec.coins, id)
 			coinsStat(player, rec)
-			task.spawn(PlayerStore.save, player)
+			PlayerStore.saveSoon(player)
 		end
 		Telemetry.record("shop", { userId = player.UserId, action = "buy", id = id, result = result, coins = rec.coins })
 	elseif action == "equip" then
-		if type(id) ~= "string" then return { result = "denied: bad id" } end
+		local it = Cosmetics.get(id)
+		if it and rec.equipped and rec.equipped[it.category] == id then
+			return { result = "ok", state = Shop.state(rec) }   -- already on: nothing to rebuild or save
+		end
 		result = Cosmetics.equip(rec, id)
-		if result == "ok" then task.spawn(PlayerStore.save, player) end
+		if result == "ok" then PlayerStore.saveSoon(player) end
 		Telemetry.record("shop", { userId = player.UserId, action = "equip", id = id, result = result })
 	elseif action ~= "state" then
 		result = "denied: bad action"
@@ -74,6 +82,20 @@ end
 -- holding the grant is saved (else Roblox retries later). Studio test
 -- purchases (memory-only records) are granted without saving.
 function Shop.processReceipt(info)
+	-- one receipt at a time per player: a second one (or Roblox asking again
+	-- for the same purchase) waits for the first to be saved or undone
+	local uid = info.PlayerId
+	local t0 = os.clock()
+	while _receiptBusy[uid] and os.clock() - t0 < 30 do task.wait(0.1) end
+	if _receiptBusy[uid] then return Enum.ProductPurchaseDecision.NotProcessedYet end
+	_receiptBusy[uid] = true
+	local ok, res = pcall(Shop._grant, info)
+	_receiptBusy[uid] = nil
+	if not ok then error(res, 0) end
+	return res
+end
+
+function Shop._grant(info)
 	local player = Players:GetPlayerByUserId(info.PlayerId)
 	local pack = Products.packFor(info.ProductId)
 	local rec = player and PlayerStore.get(player)
@@ -94,7 +116,8 @@ function Shop.processReceipt(info)
 	if saved and not PlayerStore.save(player) then
 		-- not stored: undo, Roblox calls again later
 		rec.coins -= pack.coins
-		table.remove(rec.receipts)
+		local at = table.find(rec.receipts, info.PurchaseId)
+		if at then table.remove(rec.receipts, at) end
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
 	coinsStat(player, rec)

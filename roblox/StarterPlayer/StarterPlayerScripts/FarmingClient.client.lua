@@ -3,8 +3,6 @@
 -- keys (F or left click punch, hold G guard, X drop). Animations and the defence prompt: FarmFx.
 -- Resolves: Issue #18, #64
 
-print("[FarmingClient] LocalScript started")
-
 local CollectionService = game:GetService("CollectionService")
 local Players           = game:GetService("Players")
 local UserInputService  = game:GetService("UserInputService")
@@ -16,6 +14,7 @@ local Constants    = require(ReplicatedStorage.Shared.Constants)
 local ItemScan     = require(ReplicatedStorage.Shared.ItemScan)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)   -- keyboard + touch buttons
+local InputHints   = require(ReplicatedStorage.Shared.InputHints) -- "E" / "X" / "GRAB" by device
 
 local LocalPlayer = Players.LocalPlayer
 local Camera      = workspace.CurrentCamera
@@ -54,7 +53,11 @@ local _stealGui       = nil   -- ScreenGui for steal prompt/defense
 RemoteEvents.InventoryUpdated.OnClientEvent:Connect(function(inventory)
 	_inventory = inventory
 	-- Update inventory HUD (implemented in UIManager / FarmingUI)
-	local inventoryBar = LocalPlayer.PlayerGui:FindFirstChild("FarmingUI")
+	-- the ScreenGui (PlayerGui also holds the LocalScript named FarmingUI)
+	local inventoryBar = nil
+	for _, g in ipairs(LocalPlayer:WaitForChild("PlayerGui"):GetChildren()) do
+		if g.Name == "FarmingUI" and g:IsA("ScreenGui") then inventoryBar = g; break end
+	end
 	if inventoryBar then
 		local bar = inventoryBar:FindFirstChild("InventoryBar")
 		if bar then
@@ -142,6 +145,8 @@ end
 local function _showPrompt(part)
 	if _promptGui and _promptGui.Parent then
 		_promptGui.Adornee = part
+		local l = _promptGui:FindFirstChildOfClass("TextLabel")
+		if l then l.Text = InputHints.tag("grab") .. " Pick Up" end   -- the device may have changed
 		return
 	end
 	_promptGui = Instance.new("BillboardGui")
@@ -154,7 +159,7 @@ local function _showPrompt(part)
 	local label = Instance.new("TextLabel")
 	label.Size            = UDim2.fromScale(1, 1)
 	label.BackgroundTransparency = 1
-	label.Text            = "[E] Pick Up"
+	label.Text            = InputHints.tag("grab") .. " Pick Up"
 	label.TextColor3      = Color3.new(1, 1, 1)
 	label.TextScaled      = true
 	label.Font            = Enum.Font.GothamBold
@@ -262,7 +267,7 @@ local function _showTargetPrompt(target)
 	local text = Instance.new("TextLabel")
 	text.Size = UDim2.new(1, 0, 0, 30)
 	text.BackgroundTransparency = 1
-	text.Text = "[Hold E] Steal   [F] Punch"
+	text.Text = InputHints.hold("steal") .. " Steal   " .. InputHints.tag("punch") .. " Punch"
 	text.TextColor3 = Color3.fromRGB(255, 225, 120)
 	text.TextStrokeTransparency = 0.2
 	text.TextScaled = true
@@ -402,20 +407,12 @@ end)
 
 RemoteEvents.ContestUpdate.OnClientEvent:Connect(function(itemId, p1, p2)
 	_contestItemId = itemId
-	-- TODO: update BillboardGui above the item with live press counts
-	-- For now just print (full UI in FarmingUI issue)
-	print(string.format("[Contest] %d vs %d", p1.count, p2.count))
 end)
 
 RemoteEvents.ContestResult.OnClientEvent:Connect(function(itemId, winnerUserId)
 	if _contestItemId == itemId then
 		_contestItemId  = nil
 		_contestPresses = 0
-		if winnerUserId == LocalPlayer.UserId then
-			print("[Contest] YOU WIN!")
-		else
-			print("[Contest] You lost.")
-		end
 	end
 end)
 
@@ -423,7 +420,6 @@ end)
 
 RemoteEvents.StealAttempt.OnClientEvent:Connect(function(thiefName)
 	-- Show defend UI
-	print(string.format("[Steal] %s is trying to steal from you! Press E x3!", thiefName))
 	-- TODO: proper ScreenGui overlay (Issue #44 / #64 UI)
 	local defendPresses = 0
 	local defended = false
@@ -504,13 +500,15 @@ end
 -- silently when file renames cause Rojo sync inconsistencies.
 
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
-	print("[FarmingClient] PhaseChanged received:", phase)
 	if phase == Constants.PHASES.FARMING then
 		FarmingClient.enable()
-		print("[FarmingClient] Enabled, scanning for items every heartbeat")
 	else
 		FarmingClient.disable()
 	end
 end)
+-- started after the FARMING event went out (slow client): join it
+if ReplicatedStorage:GetAttribute("Phase") == Constants.PHASES.FARMING then
+	FarmingClient.enable()
+end
 
 return FarmingClient

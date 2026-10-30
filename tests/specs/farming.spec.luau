@@ -72,6 +72,27 @@ R.describe("farming rules", function()
 		R.expect(#srv.SessionManager.getData(b).inventory).toBe(0)
 	end)
 
+	R.it("claiming 999 presses at once does not win a contest (launch audit 2026-10-30)", function()
+		local srv = farmServer(2)
+		local a, b = srv.players[1], srv.players[2]
+		local item
+		for _, d in ipairs(srv.env.workspace.Maps.ForestMap:GetDescendants()) do
+			if d.Name == "ItemId" then item = d break end
+		end
+		local pos = item.Parent.Position
+		a.Character.HumanoidRootPart.Position = pos + Vector3.new(2, 2, 0)
+		b.Character.HumanoidRootPart.Position = pos + Vector3.new(-2, 2, 0)
+		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPickup, a, item.Value)).toBe("contested")
+		srv.mock.invoke(srv.RemoteEvents.RequestContest, b, item.Value, 999)
+		for i = 1, 30 do
+			srv.advance(0.1)
+			srv.mock.invoke(srv.RemoteEvents.RequestContest, a, item.Value, i)
+		end
+		local results = srv.Telemetry.events("contest_result")
+		R.expect(#results).toBe(1)
+		R.expect(results[1].winner).toBe(a.UserId)
+	end)
+
 	R.it("a contest nobody presses in still ends when its time is up", function()
 		local srv = farmServer(2)
 		local a, b = srv.players[1], srv.players[2]
@@ -170,11 +191,40 @@ R.describe("steals with several players", function()
 		srv.advance(0.2)
 		for _ = 1, srv.env.requirePath("ReplicatedStorage.Shared.Constants").STEAL_DEFEND_PRESSES do
 			srv.mock.invoke(srv.RemoteEvents.DefendSteal, v2)
+			srv.advance(0.1)
 		end
 		srv.advance(1.3)
 		R.expect(inv(srv, v2)).toBe(2)
 		R.expect(attempts(srv, "defended")).toBe(1)
 		R.expect(attempts(srv, "stolen")).toBe(1)
+	end)
+
+	R.it("taps sent in one frame count once (launch audit: three at once always defended)", function()
+		local srv = setup(2)
+		local thief, v = srv.players[1], srv.players[2]
+		srv.mock.invoke(srv.RemoteEvents.RequestSteal, thief, v.UserId)
+		srv.advance(0.2)
+		for _ = 1, 20 do srv.mock.invoke(srv.RemoteEvents.DefendSteal, v) end
+		srv.advance(1.3)
+		R.expect(attempts(srv, "stolen")).toBe(1)
+	end)
+
+	R.it("a guard needs a rest before the next (launch audit: on / off floods kept a cheat guarded)", function()
+		local srv = setup(2)
+		local a = srv.players[1]
+		local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")
+		-- guard on, off, on at once: the second guard waits GUARD_REST
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(a, true)
+		srv.advance(0.05)
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(a, false)
+		srv.advance(0.05)
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(a, true)
+		srv.advance(0.05)
+		R.expect(a.Character:GetAttribute("Guarding")).toBe(nil)
+		srv.advance(C.FIGHT.GUARD_REST)
+		srv.RemoteEvents.SetGuard.OnServerEvent:Fire(a, true)
+		srv.advance(0.05)
+		R.expect(a.Character:GetAttribute("Guarding")).toBe(true)
 	end)
 
 	R.it("a thief cannot run two steals at once", function()

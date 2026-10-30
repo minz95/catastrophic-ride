@@ -202,6 +202,7 @@ Constants.FIGHT = {
 	KNOCKBACK    = 14,    -- studs/s pushed away on a landed hit (26 sent the victim out of RANGE: the next punch missed)
 	KO_KNOCKBACK = 2.0,   -- × KNOCKBACK on the knock-out hit (the big finish)
 	GUARD_MAX    = 3,     -- s a guard can be held before it drops
+	GUARD_REST   = 0.6,   -- s after a guard drops before the next (server)
 	GUARD_SLOW   = 0.5,   -- walk speed × this while guarding
 	-- Aim help: the client names the player it turned to (nearest within
 	-- RANGE + ASSIST_REACH, in front within ASSIST_ARC); the server takes it

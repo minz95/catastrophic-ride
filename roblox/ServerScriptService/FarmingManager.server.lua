@@ -2,7 +2,6 @@
 -- Item spawning, pickup authority, contest system, and inventory stealing.
 -- Resolves: Issue #16, #17, #19, #36, #39, #64
 
-print("[FarmingManager] Script started loading")
 
 local Players             = game:GetService("Players")
 local RunService          = game:GetService("RunService")
@@ -25,7 +24,6 @@ local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
 local FarmBots           = require(ServerScriptService.Modules.FarmBots)
 local FarmRescue         = require(ServerScriptService.Modules.FarmRescue)
 
-print("[FarmingManager] All requires succeeded")
 
 -- ─── State ────────────────────────────────────────────────────────────────────
 
@@ -76,9 +74,7 @@ end
 local function _spawnItems(biome, count, dist, keep)
 	if not keep then _items = {} end
 	count = count or Constants.ITEM_SPAWN_COUNT
-	print(string.format("[FarmingManager] _spawnItems called, biome=%s count=%d", tostring(biome), count))
 	local pool = _buildSpawnPool(dist)
-	print(string.format("[FarmingManager] Pool size: %d", #pool))
 	local mapCfg = require(ServerScriptService.Modules.BiomeConfig).get(biome)
 	-- Convert "FOREST" → "ForestMap" to match MapBuilder naming convention
 	local mapName  = biome:sub(1,1):upper() .. biome:sub(2):lower() .. "Map"
@@ -269,7 +265,6 @@ local function _spawnItems(biome, count, dist, keep)
 		}
 	end
 
-	print(string.format("[FarmingManager] Spawned %d items in %s", #usedPositions - already, biome))
 	return #usedPositions - already
 end
 
@@ -605,9 +600,16 @@ RemoteEvents.RequestPickup.OnServerInvoke = _requestPickup
 
 -- ─── RequestDrop handler (Q key — manual drop) ───────────────────────────────
 
+local DROP_GAP = 0.4   -- s between two drops (a drop / pick-up loop cloned models for everyone)
 RemoteEvents.RequestDrop.OnServerInvoke = function(player, slotIndex)
 	if not _active then return "denied: phase not active" end
-	if type(slotIndex) ~= "number" then return "denied: bad slot" end
+	if type(slotIndex) ~= "number" or slotIndex ~= slotIndex then return "denied: bad slot" end
+	local d = SessionManager.getData(player)
+	local now = tick()
+	if d then
+		if now < (d._dropAt or 0) + DROP_GAP then return "denied: too fast" end
+		d._dropAt = now
+	end
 	local dropped = _dropItem(player, slotIndex)
 	return dropped and "ok" or "denied: empty slot"
 end
@@ -635,12 +637,22 @@ end
 
 -- ─── RequestContest handler (press count updates) ─────────────────────────────
 
+-- The client reports its running count; the server holds it to what a
+-- fast human can mash (MAX_PRESS_RATE a second since the contest began) and
+-- never lets it go down (launch audit 2026-10-30: RequestContest(id, 999)
+-- won every contest).
+local MAX_PRESS_RATE = 15
 local function _contestPress(player, itemId, presses)
 	local contest = _contests[itemId]
-	if not contest or type(presses) ~= "number" then return end
+	if not contest or type(presses) ~= "number" or presses ~= presses then return end
 	if contest.players[1] ~= player and contest.players[2] ~= player then return end
 
-	contest.presses[player.UserId] = math.min(presses, 999)  -- sanity cap
+	local began = contest.endTick - Constants.CONTEST_DURATION
+	local cap = math.floor(math.max(0, tick() - began) * MAX_PRESS_RATE) + 1
+	local before = contest.presses[player.UserId] or 0
+	local now = math.clamp(math.floor(presses), before, math.max(before, cap))
+	if now == before and tick() < contest.endTick then return end
+	contest.presses[player.UserId] = now
 
 	-- Broadcast updated counts to both contestants
 	local p1, p2 = contest.players[1], contest.players[2]
@@ -729,6 +741,11 @@ local function _steal(thief, targetUserId)
 
 	-- Re-check what may have changed during the window
 	if not _active then return attempt("denied: farming ended") end
+	-- either one left meanwhile: their data table is gone, an item moved
+	-- into it would vanish
+	if SessionManager.getData(thief) ~= thiefData or SessionManager.getData(victim) ~= victimData then
+		return attempt("denied: left")
+	end
 	if #victimData.inventory == 0 then return attempt("denied: victim has nothing") end
 	if #thiefData.inventory >= Constants.INVENTORY_SIZE then return attempt("denied: thief is full") end
 
@@ -753,12 +770,21 @@ RemoteEvents.RequestSteal.OnServerInvoke = _steal
 
 -- One call per defence tap. Taps outside an open window do nothing (a tap
 -- sent "just in case" used to block the next steal whenever it came).
+-- Taps closer than DEFEND_GAP s apart count once (three in one frame always
+-- defended), and only the first few of a window are shown to everyone.
+local DEFEND_GAP = 0.07
+local DEFEND_SHOWN = 10
 local function _defend(player)
 	local data = SessionManager.getData(player)
 	local window = data and data._stealWindow
 	if window then
+		local now = tick()
+		if now - (window.lastTap or 0) < DEFEND_GAP then return window.presses end
+		window.lastTap = now
 		window.presses += 1
-		RemoteEvents.FarmAction:FireAllClients("swat", player.UserId, window.thief, { presses = window.presses })
+		if window.presses <= DEFEND_SHOWN then
+			RemoteEvents.FarmAction:FireAllClients("swat", player.UserId, window.thief, { presses = window.presses })
+		end
 		return window.presses
 	end
 	return 0
@@ -852,18 +878,26 @@ local function _setGuard(player, data, on)
 	RemoteEvents.FarmAction:FireAllClients("guard", player.UserId, nil, { on = on })
 end
 
+-- After a guard drops the next one waits F.GUARD_REST (an on / off flood
+-- kept a cheat guarded for good and flooded every client with "guard").
 local function _guard(player, on)
 	if not _active then return end
 	local data = SessionManager.getData(player)
 	if not data then return end
 	on = on == true
-	if on == ((data._guardUntil or 0) > tick()) then return end
+	local now = tick()
+	if on == ((data._guardUntil or 0) > now) then return end
+	if on and now < (data._guardRestEnd or 0) then return end
+	if not on then data._guardRestEnd = now + (F.GUARD_REST or 0.6) end
 	_setGuard(player, data, on)
 	if on then
 		-- a guard cannot be held forever
 		local untilT = data._guardUntil
 		task.delay(F.GUARD_MAX, function()
-			if data._guardUntil == untilT then _setGuard(player, data, false) end
+			if data._guardUntil == untilT then
+				data._guardRestEnd = tick() + (F.GUARD_REST or 0.6)
+				_setGuard(player, data, false)
+			end
 		end)
 	end
 end
@@ -928,23 +962,24 @@ RemoteEvents.RequestPunch.OnServerInvoke = _punch
 
 _farmingStartTick = 0
 
-print("[FarmingManager] Registering onPhaseChanged callback")
 GameManager.onPhaseChanged(function(phase, biome)
-	print(string.format("[FarmingManager] onPhaseChanged fired: phase=%s biome=%s", tostring(phase), tostring(biome)))
 	if phase == Constants.PHASES.FARMING then
 		_active = true
 		_farmingStartTick = tick()
 		_farmRound += 1
 		for _, p in ipairs(Players:GetPlayers()) do
 			local d = SessionManager.getData(p)
-			if d then d._gadgetUses, d._hiddenUntil, d._smokedAt = nil, nil, nil end
+			if d then
+				d._gadgetUses, d._hiddenUntil, d._smokedAt = nil, nil, nil
+				-- nothing of last round's fights carries over
+				d._stealWindow, d._stealing, d._guardUntil, d._guardRestEnd = nil, nil, nil, nil
+			end
 			-- which gadget button to show (TouchControls / FarmingClient)
 			local rec = PlayerStore.get(p)
 			local g = rec and Cosmetics.equipped(rec.equipped, "gadget")
 			p:SetAttribute("Gadget", g and g.gadget or nil)
 		end
 		local round = _farmRound
-		print("[FarmingManager] Starting FARMING phase, biome =", biome)
 		-- Item supply follows the player count, and waves of rarer items land
 		-- later in the phase (Constants.FARM_SUPPLY): with 100 items for 4
 		-- players every inventory was full 15–50 s into a 90 s phase.
@@ -972,9 +1007,6 @@ GameManager.onPhaseChanged(function(phase, biome)
 				RemoteEvents.ScreenEffect:FireAllClients("itemWave", { count = count, rare = wave.label })
 			end)
 		end
-		print("[FarmingManager] After spawn: total items registered =", (function()
-			local n = 0; for _ in pairs(_items) do n = n + 1 end; return n
-		end)())
 
 	elseif phase == Constants.PHASES.LOBBY then
 		FarmRescue.stop()

@@ -20,11 +20,12 @@ local Telemetry = require(ServerScriptService.Modules.Telemetry)
 local CraftPreview = {}
 
 CraftPreview.FOLDER = "CraftPreview"
-CraftPreview.GAP = 0.15   -- s between two builds for one player
+CraftPreview.GAP = 0.3    -- s between two builds for one player (a draft flood built all the time)
 
-local _pending = {}   -- [player] = { slots, biome }
-local _busy = {}
-local _shown = {}     -- [player] = { slots, biome } last asked for (refresh)
+-- weak keys: a player who left is not kept alive here
+local _pending = setmetatable({}, { __mode = "k" })   -- [player] = { slots, biome }
+local _busy = setmetatable({}, { __mode = "k" })
+local _shown = setmetatable({}, { __mode = "k" })     -- [player] = { slots, biome } last asked for (refresh)
 
 -- Physics movers and scripts have no place in a picture.
 local STRIP = { "BodyMover", "BodyGyro", "BodyPosition", "BodyVelocity", "BodyAngularVelocity", "BodyForce",
@@ -74,6 +75,8 @@ local function build(player, slots, biome)
 		folder.Name = CraftPreview.FOLDER
 		folder.Parent = gui
 	end
+	-- crafting ended (clear) while this was building: no stray preview
+	if not _shown[player] or not player.Parent then model:Destroy() return end
 	for _, old in ipairs(folder:GetChildren()) do old:Destroy() end
 	model.Parent = folder
 	Telemetry.record("craft_preview", { userId = player.UserId, body = slots.BODY, riding = model:GetAttribute("Riding") })

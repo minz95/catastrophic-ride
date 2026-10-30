@@ -91,9 +91,22 @@ local function _transition(newPhase, seconds)
 
 	-- Notify all clients. The attributes let a client script that starts late
 	-- (after the event went out) read the current phase and biome.
+	ReplicatedStorage:SetAttribute("Round", _round)
 	ReplicatedStorage:SetAttribute("Phase", newPhase)
 	ReplicatedStorage:SetAttribute("Biome", _currentBiome)
 	RemoteEvents.PhaseChanged:FireAllClients(newPhase)
+end
+
+-- A phase start that errors must not stop the round loop for the rest of the
+-- server's life: back to the lobby after a moment.
+local _startLobby   -- below
+local function _safely(fn, ...)
+	local ok, err = pcall(fn, ...)
+	if not ok then
+		warn("[GameManager] phase start failed: " .. tostring(err) .. " (back to the lobby)")
+		Telemetry.record("phase_error", { phase = _currentPhase, error = tostring(err):sub(1, 200) })
+		task.delay(3, function() _safely(_startLobby) end)
+	end
 end
 
 -- Phase timer: `fn` runs `seconds` from now (replacing the previous timer).
@@ -105,7 +118,7 @@ local function _schedule(seconds, fn)
 	_phaseEndsAt = workspace:GetServerTimeNow() + seconds
 	_phaseTimer = task.delay(seconds, function()
 		_phaseEnd = nil
-		fn()
+		_safely(fn)
 	end)
 end
 
@@ -131,7 +144,7 @@ end
 
 -- ─── Phase entry logic ────────────────────────────────────────────────────────
 
-local function _startLobby()
+_startLobby = function()
 	_transition(Constants.PHASES.LOBBY)
 
 	if _harness then
@@ -224,7 +237,7 @@ function _startResults(finishOrder)
 	RemoteEvents.RaceFinished:FireAllClients(finishOrder)
 
 	task.delay(resultsFor, function()
-		_startLobby()
+		_safely(_startLobby)
 	end)
 end
 
@@ -233,7 +246,7 @@ end
 
 function GameManager.allPlayersSubmittedCraft()
 	if _currentPhase == Constants.PHASES.CRAFTING then
-		_startRacing()
+		_safely(_startRacing)
 	end
 end
 
@@ -253,7 +266,7 @@ task.spawn(function()
 		print("[GameManager] Harness autoStart=false — game loop not started")
 		return
 	end
-	_startLobby()
+	_safely(_startLobby)
 end)
 
 return GameManager

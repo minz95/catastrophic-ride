@@ -6,7 +6,7 @@ local Players          = game:GetService("Players")
 local TweenService     = game:GetService("TweenService")
 
 local LocalPlayer  = Players.LocalPlayer
-local PlayerGui    = LocalPlayer.PlayerGui
+local PlayerGui    = LocalPlayer:WaitForChild("PlayerGui")
 
 local UIManager = {}
 
@@ -131,7 +131,11 @@ function UIManager.applyBiomeTheme(biome)
 	if not theme then return end
 
 	-- Apply to HUD boost bar
-	local hud = PlayerGui:FindFirstChild("HUD")
+	-- the ScreenGui, not the LocalScript also named "HUD" in PlayerGui
+	local hud = nil
+	for _, g in ipairs(PlayerGui:GetChildren()) do
+		if g.Name == "HUD" and g:IsA("ScreenGui") then hud = g; break end
+	end
 	if hud then
 		local boostFill = hud:FindFirstChild("BoostBar", true)
 		if boostFill then

@@ -19,7 +19,13 @@ KeyInput.GAMEPAD = {   -- by KeyCode name
 	ButtonL1 = Enum.KeyCode.LeftShift,  -- drift
 	ButtonY  = Enum.KeyCode.R,          -- reset car
 	DPadDown = Enum.KeyCode.X,          -- drop item
-	DPadUp   = Enum.KeyCode.T,          -- gadget
+	DPadUp   = Enum.KeyCode.T,          -- gadget / race trick
+	DPadRight = Enum.KeyCode.Q,         -- emote menu / taunt
+	-- SKY climb / dive (RacingClient reads Space / Ctrl). The triggers and
+	-- the left stick already drive the seat; A also jumps on foot, which
+	-- nothing here listens to as Space.
+	ButtonA  = Enum.KeyCode.Space,      -- climb (SKY)
+	DPadLeft = Enum.KeyCode.LeftControl, -- dive (SKY)
 }
 
 local _began, _ended = {}, {}
