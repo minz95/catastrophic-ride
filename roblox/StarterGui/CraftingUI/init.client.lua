@@ -122,12 +122,18 @@ infoLbl.TextYAlignment    = Enum.TextYAlignment.Top
 infoLbl.TextColor3        = Color3.fromRGB(220, 220, 235)
 infoLbl.Parent            = panel
 
-local _touchOnly = require(ReplicatedStorage.Shared.InputHints).touchOnly()
-local INFO_DEFAULT = _touchOnly and "Tap an item to see what it does" or "Point at an item to see what it does"
+-- Wording follows the device in use (InputHints.onChange below): fixed when
+-- the screen was built, it said "click" on a phone in Studio's simulator.
+local _InputHints = require(ReplicatedStorage.Shared.InputHints)
+local function _infoDefault()
+	return _InputHints.touchUI() and "Tap an item to see what it does" or "Point at an item to see what it does"
+end
+local _infoItem = nil
 local function _showInfo(itemName)
+	_infoItem = itemName
 	local cfg = itemName and ItemConfig[itemName]
 	if not cfg then
-		infoLbl.Text = INFO_DEFAULT
+		infoLbl.Text = _infoDefault()
 		infoLbl.TextColor3 = Color3.fromRGB(130, 130, 150)
 		return
 	end
@@ -159,8 +165,15 @@ local hintLbl = Instance.new("TextLabel")
 hintLbl.Size              = UDim2.new(1, -20, 0, 16)
 hintLbl.Position          = UDim2.new(0, 10, 0, 348)
 hintLbl.BackgroundTransparency = 1
-hintLbl.Text              = _touchOnly and "Tap an item, then a slot to place it | tap a slot (nothing picked) to clear it"
-	or "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
+local function _hintText()
+	return _InputHints.touchUI() and "Tap an item, then a slot to place it | tap a slot (nothing picked) to clear it"
+		or "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
+end
+hintLbl.Text              = _hintText()
+_InputHints.onChange(function()
+	hintLbl.Text = _hintText()
+	if not _infoItem then _showInfo(nil) end
+end)
 hintLbl.Font              = Enum.Font.Gotham
 hintLbl.TextScaled        = false
 hintLbl.TextSize          = 10
@@ -258,7 +271,7 @@ local _btc = Instance.new("UICorner"); _btc.CornerRadius = UDim.new(0, 10); _btc
 
 local emptyNote = Instance.new("TextLabel")
 emptyNote.Size              = UDim2.new(1, -20, 0, 18)
-emptyNote.Position          = UDim2.new(0, 10, 1, -38)
+emptyNote.Position          = UDim2.new(0, 10, 1, -86)   -- above Submit (it sat behind it)
 emptyNote.BackgroundTransparency = 1
 emptyNote.Text              = "No items → you get a basic junk vehicle"
 emptyNote.Font              = Enum.Font.Gotham

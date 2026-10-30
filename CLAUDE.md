@@ -459,8 +459,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   keeps scaled text ≥ 9 px. Landscape only (Rojo project).
 - Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
   (keyboard, gamepad map, on-screen `TouchControls` buttons), never
-  `UserInputService.InputBegan` directly. Touch / gamepad driving comes from
-  the seat's ThrottleFloat / SteerFloat (RacingClient). Live-server
+  `UserInputService.InputBegan` directly. Touch / gamepad steering comes
+  from Roblox's control module move vector (`GetMoveVector`, RacingClient
+  `_stickVector`; the seat's ThrottleFloat stayed 0 in a race and a phone
+  could not drive), gas / brake also from RT / LT (KeyInput). Layout
+  choices for thumbs use `InputHints.touchUI()` (touch-only, or a touch
+  screen in use). Try a phone in Studio: Test → Device Simulator, Play,
+  tap the screen once (the simulator reports a keyboard). Live-server
   switches and the store page: `docs/launch.md`.
 - Catch-up: `Shared/CatchUp` (RacingManager "catchUp" MaxSpeed multiplier
   for cars far behind the leader, never the leader; finish grace

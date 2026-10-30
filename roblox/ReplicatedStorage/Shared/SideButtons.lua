@@ -47,10 +47,10 @@ function SideButtons.touchSpot(x, w)
 end
 
 function SideButtons.keepClear(btn, screen, x)
-	local touchOnly = require(script.Parent.InputHints).touchOnly()
+	local InputHints = require(script.Parent.InputHints)
 	task.spawn(function()
 		while btn.Parent ~= nil or screen.Parent ~= nil do
-			if btn.Parent == screen and touchOnly then
+			if btn.Parent == screen and InputHints.touchUI() then
 				btn.AnchorPoint = Vector2.new(0, 0)
 				local w = btn.AbsoluteSize.X > 0 and btn.AbsoluteSize.X or 120
 				btn.Position = SideButtons.touchSpot(x, w)
