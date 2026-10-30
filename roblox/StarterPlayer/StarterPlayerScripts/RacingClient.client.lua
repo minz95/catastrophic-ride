@@ -151,9 +151,9 @@ end
 
 KeyInput.began(function(input, processed)
 	local k = KEY_MAP[input.KeyCode]
-	if k then _keys[k] = true end
-
+	-- typing W A S D in the chat box steered the car
 	if processed then return end
+	if k then _keys[k] = true end
 	if not _active then return end
 
 	-- F key: activate boost when gauge is full
@@ -716,20 +716,29 @@ local function _driveLoop(dt)
 	-- it did not: the stick walked the (seated) avatar and the car stood
 	-- still (Studio Device Simulator, iPhone XR, 2026-10-30). Its move vector
 	-- is read directly; the seat's floats stay as a fallback.
+	-- Each axis on its own: gas from a key or RT (KeyInput maps it to Up)
+	-- with steering from the stick, or the other way round (a pad player
+	-- holding RT could not steer: launch check 2026-10-30).
 	if not InputSource.isOverridden() and _seat then
 		local k = rawKeys
-		if not (k.W or k.A or k.S or k.D or k.Up or k.Down or k.Left or k.Right) then
+		local gasKey = k.W or k.S or k.Up or k.Down
+		local steerKey = k.A or k.D or k.Left or k.Right
+		if not (gasKey and steerKey) then
 			local th, st = _seat.ThrottleFloat, _seat.SteerFloat
 			if math.abs(th) <= 0.3 and math.abs(st) <= 0.3 then
 				local mv = _stickVector()
 				if mv then th, st = -mv.Z, mv.X end
 			end
-			if math.abs(th) > 0.3 or math.abs(st) > 0.3 then
-				rawKeys = table.clone(_keys)
-				rawKeys.W = th > 0.3
-				rawKeys.S = th < -0.3
-				rawKeys.A = st < -0.3   -- SteerFloat −1 is left
-				rawKeys.D = st > 0.3
+			if (not gasKey and math.abs(th) > 0.3) or (not steerKey and math.abs(st) > 0.3) then
+				rawKeys = table.clone(rawKeys)
+				if not gasKey then
+					rawKeys.W = th > 0.3
+					rawKeys.S = th < -0.3
+				end
+				if not steerKey then
+					rawKeys.A = st < -0.3   -- SteerFloat −1 is left
+					rawKeys.D = st > 0.3
+				end
 			end
 		end
 	end

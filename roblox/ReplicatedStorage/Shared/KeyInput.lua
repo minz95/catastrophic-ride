@@ -46,6 +46,7 @@ local function connect(list, signal, fn)
 			fn(input, processed)
 		end
 	end)
+	entry.real = real
 	return {
 		Disconnect = function()
 			real:Disconnect()
@@ -66,7 +67,14 @@ end
 local function fire(list, keyCode)
 	local input = { KeyCode = keyCode, UserInputType = Enum.UserInputType.Touch, Virtual = true }
 	for _, entry in ipairs(table.clone(list)) do
-		task.spawn(entry.fn, input, false)
+		-- a handler whose script was destroyed (StarterGui scripts run again
+		-- on every respawn) is dropped: one more ran per round on a phone
+		if entry.real and not entry.real.Connected then
+			local i = table.find(list, entry)
+			if i then table.remove(list, i) end
+		else
+			task.spawn(entry.fn, input, false)
+		end
 	end
 end
 

@@ -623,10 +623,10 @@ stripLayout.Padding   = UDim.new(0, 2)
 
 -- Any touch screen: the key list is for keyboards (playtest 2026-10-30: "on
 -- a phone the farm doesn't need the big list of controls, that's for PC").
--- Not only while touch is the last input: a mouse moving over Studio's
--- device simulator flipped it back on.
+-- touchUI: touch-only, or a touch screen in use (a touch laptop typing on
+-- its keyboard keeps the list).
 local function _touchOnly()
-	return UserInputService.TouchEnabled or require(ReplicatedStorage.Shared.InputHints).touchUI()
+	return require(ReplicatedStorage.Shared.InputHints).touchUI()
 end
 
 local function _showStrip(phase)
