@@ -38,10 +38,23 @@ end
 
 --- Keeps `btn` (left edge, x px in) clear of the key list while it is a
 -- child of `screen` (ShopUI moves its button into the crafting panel).
+-- On a phone (touch only) the left side is where a thumb lands to walk
+-- (Roblox starts its thumbstick there): a button there opened the shop
+-- instead. They go in a row at the top right (no player list on a phone),
+-- `x` px from the right edge.
+function SideButtons.touchSpot(x, w)
+	return UDim2.new(1, -(x + w), 0, SideButtons.TOP_MIN)
+end
+
 function SideButtons.keepClear(btn, screen, x)
+	local touchOnly = require(script.Parent.InputHints).touchOnly()
 	task.spawn(function()
 		while btn.Parent ~= nil or screen.Parent ~= nil do
-			if btn.Parent == screen then
+			if btn.Parent == screen and touchOnly then
+				btn.AnchorPoint = Vector2.new(0, 0)
+				local w = btn.AbsoluteSize.X > 0 and btn.AbsoluteSize.X or 120
+				btn.Position = SideButtons.touchSpot(x, w)
+			elseif btn.Parent == screen then
 				local s = strip()
 				local top = s and (s.AbsolutePosition.Y - screen.AbsolutePosition.Y) or nil
 				local h = btn.AbsoluteSize.Y > 0 and btn.AbsoluteSize.Y or 40

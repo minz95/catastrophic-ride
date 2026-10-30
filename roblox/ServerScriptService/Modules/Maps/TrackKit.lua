@@ -467,7 +467,7 @@ end
 -- the wall stands on Track.wallBaseY (default trackTop - 0.5).
 --
 -- Pillar fence instead of boxes: style.pillars = { size, spacing, colors,
--- material, transparency, yLo, yHi }. Pillars are packed at <= spacing so no
+-- material, transparency, yLo, yHi, length }. Pillars are packed at <= spacing so no
 -- gap opens; style.rail then adds a visual band per stretch (rail.collide
 -- = true to make it solid). SKY: one colour, see-through glass (until
 -- 2026-10-22 alternating neon colours: 60-stud stripes, hard on the eyes).
@@ -508,7 +508,11 @@ function TrackKit:buildWalls(root, style)
 			for _, run in ipairs(self:wallStretches(i, side, offset, reach)) do
 				local runLen = run[2] - run[1]
 				if pillars then
-					local count = math.max(1, math.ceil(runLen / pillars.spacing))
+					-- pillars.length: each piece that long along the run (still
+					-- touching, still upright at its own road height): SKY's
+					-- 2-stud pillars were ~8 000 see-through parts
+					local count = math.max(1, math.ceil(runLen / (pillars.length or pillars.spacing)))
+					local along_size = pillars.length and (runLen / count) or pillars.size
 					-- raised stretch: pillars stand on the road (not 26 studs
 					-- below it, in the lane of a lower layer); same top
 					local ph, pmid = h, midY
@@ -521,7 +525,7 @@ function TrackKit:buildWalls(root, style)
 						local along = run[1] + (k + 0.5) * runLen / count - len / 2
 						local p = TrackKit.part(root, {
 							Name = style.name .. i .. "_" .. slot .. (side > 0 and "R" or "L"),
-							Size = Vector3.new(pillars.size, ph, pillars.size),
+							Size = Vector3.new(pillars.size, ph, along_size),
 							Color = pillars.colors[(slot % #pillars.colors) + 1],
 							Material = pillars.material, Transparency = pillars.transparency or 0,
 							CanCollide = true, CastShadow = false,
@@ -606,31 +610,45 @@ function TrackKit:buildSlowZones(root, style)
 		local cf = self:segCF(i, self.top - 0.4 + h / 2)
 		local chunks = math.max(1, math.ceil(len / TrackKit.SZ_CHUNK))
 		local chunkLen = len / chunks
-		for c = 1, chunks do
-			local mid = -len / 2 + (c - 0.5) * chunkLen
-			-- none beside a raised road (they would hang in the air)
-			if self.geo:segHeight(i, mid + len / 2) - self.top > 2 then continue end
-			for _, side in ipairs({ -1, 1 }) do
-				local centre = cf * CFrame.new(side * offset, 0, mid)
+		-- tested chunk by chunk, built as one part per unbroken run of clear
+		-- chunks (one part per chunk was ~900 see-through slabs a map)
+		for _, side in ipairs({ -1, 1 }) do
+			local runFrom = nil
+			local function flush(lastC)
+				if not runFrom then return end
+				local from, to = -len / 2 + (runFrom - 1) * chunkLen, -len / 2 + lastC * chunkLen
+				local sz = TrackKit.part(root, {
+					Name = "SlowZone_" .. i .. "_" .. runFrom .. (side > 0 and "R" or "L"),
+					Size = Vector3.new(w, h, (to - from) + 0.5),
+					CFrame = cf * CFrame.new(side * offset, 0, (from + to) / 2),
+					Color = style.color, Material = style.material,
+					CanCollide = false, CastShadow = false,
+					Transparency = style.transparency or 0.6,
+				})
+				TrackKit.tag(sz, "SlowZone")
+				runFrom = nil
+			end
+			for c = 1, chunks do
+				local mid = -len / 2 + (c - 0.5) * chunkLen
 				local clear = true
-				for _, cu in ipairs({ -1, 1 }) do
-					for _, cv in ipairs({ -1, 1 }) do
-						local corner = centre * Vector3.new(cu * w / 2, 0, cv * chunkLen / 2)
-						if self:inLane(corner.X, corner.Z, 2) then clear = false end
+				-- none beside a raised road (they would hang in the air)
+				if self.geo:segHeight(i, mid + len / 2) - self.top > 2 then clear = false end
+				if clear then
+					local centre = cf * CFrame.new(side * offset, 0, mid)
+					for _, cu in ipairs({ -1, 1 }) do
+						for _, cv in ipairs({ -1, 1 }) do
+							local corner = centre * Vector3.new(cu * w / 2, 0, cv * chunkLen / 2)
+							if self:inLane(corner.X, corner.Z, 2) then clear = false end
+						end
 					end
 				end
 				if clear then
-					local sz = TrackKit.part(root, {
-						Name = "SlowZone_" .. i .. "_" .. c .. (side > 0 and "R" or "L"),
-						Size = Vector3.new(w, h, chunkLen + 0.5),
-						CFrame = centre,
-						Color = style.color, Material = style.material,
-						CanCollide = false, CastShadow = false,
-						Transparency = style.transparency or 0.6,
-					})
-					TrackKit.tag(sz, "SlowZone")
+					runFrom = runFrom or c
+				else
+					flush(c - 1)
 				end
 			end
+			flush(chunks)
 		end
 	end
 end

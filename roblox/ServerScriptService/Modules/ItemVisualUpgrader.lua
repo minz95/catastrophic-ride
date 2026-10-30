@@ -175,57 +175,11 @@ local function _upgradeReflectance(model, reflectance)
 	end
 end
 
--- ─── Idle float animation ────────────────────────────────────────────────────
-
-local function _addIdleFloat(primary, cfg)
-	-- BodyPosition drives the float. BodyPosition/BodyAngularVelocity are
-	-- deprecated in newer Studio but still functional; skip silently if they fail.
-	local bp, bav
-	pcall(function()
-		bp      = Instance.new("BodyPosition")
-		bp.Name = "IdleFloat"
-		bp.MaxForce = Vector3.new(0, 4000, 0)
-		bp.D    = 50
-		bp.P    = 1000
-		bp.Position = primary.Position
-		bp.Parent   = primary
-
-		bav     = Instance.new("BodyAngularVelocity")
-		bav.Name = "IdleRotate"
-		bav.AngularVelocity = Vector3.new(0, math.rad(cfg.rotSpeed), 0)
-		bav.MaxTorque = Vector3.new(0, 4000, 0)
-		bav.P   = 1000
-		bav.Parent = primary
-	end)
-
-	-- Sinusoidal float via Heartbeat (works even without BodyPosition)
-	local baseY  = primary.Position.Y
-	local ampl   = cfg.floatAmpl
-	local speed  = cfg.floatSpeed
-	local phase  = math.random() * math.pi * 2
-
-	local conn
-	conn = game:GetService("RunService").Heartbeat:Connect(function()
-		if not primary or not primary.Parent then
-			conn:Disconnect()
-			return
-		end
-		local newY = baseY + math.sin(tick() * speed * math.pi * 2 + phase) * ampl
-		if bp then
-			bp.Position = Vector3.new(primary.Position.X, newY, primary.Position.Z)
-		end
-	end)
-
-	return conn
-end
-
 -- ─── Main upgrade function ────────────────────────────────────────────────────
 
 -- Apply rarity visuals to an already-built item Model.
 -- `rarity`: "Common" | "Uncommon" | "Rare" | "Epic"
--- Returns: the heartbeat connection (caller can disconnect when item is picked up)
 function ItemVisualUpgrader.apply(model, rarity)
-	local cfg = RARITY_CONFIG[rarity] or RARITY_CONFIG.Common
 	local primary = model.PrimaryPart
 	if not primary then return end
 
@@ -235,10 +189,11 @@ function ItemVisualUpgrader.apply(model, rarity)
 	-- hard to read against FBX-imported geometry. Rarity is now signalled
 	-- only by the name-label colour rendered by FarmingClient.
 
-	-- Idle float + rotate keeps items feeling alive without colour highlight.
-	local floatConn = _addIdleFloat(primary, cfg)
-
-	return floatConn
+	-- No idle float: the item parts are anchored (FarmingManager), so the
+	-- BodyPosition did nothing, yet a Heartbeat per item wrote its target
+	-- every frame and replicated it to every client (~3000 writes a second
+	-- with 48 items; launch check 2026-10-30).
+	return nil
 end
 
 -- ─── Stop idle (call when item is picked up) ─────────────────────────────────

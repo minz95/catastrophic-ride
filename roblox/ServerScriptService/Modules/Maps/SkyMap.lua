@@ -191,7 +191,7 @@ local function _buildCorridor(root)
 	KIT:buildWalls(root, {
 		name = "SkyBarrier_",
 		pillars = {
-			size = Track.wallThickness, spacing = Track.wallThickness,
+			size = Track.wallThickness, spacing = Track.wallThickness, length = 16,
 			colors = { C.BARRIER }, material = Enum.Material.Glass, transparency = 0.85,
 			yLo = Track.wallYLo, yHi = Track.wallYHi,
 		},

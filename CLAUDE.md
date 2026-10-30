@@ -342,6 +342,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the road driven at a believable speed (RacingManager `_creditProgress`;
   on in live servers, in harness sessions only with `finishCheck`).
   Abilities are refused once the car finished.
+- A phase's map state is one pass (`MapVisibility.applyPhase`, writes only
+  what changes; labels in a hidden map's FarmArea / RaceTrack go off). Farm
+  items do not bob (anchored; the old per-item Heartbeat replicated a write
+  every frame). SKY's fence is 16-stud glass pieces and slow zones one part
+  per clear run (14 400 map parts → 5 900). Live servers keep only
+  `Telemetry.LIVE_CAPACITY` events.
 - Hidden maps are CanTouch / CanQuery false (`MapVisibility`): all three
   maps stand in the place and a hidden one's pads and checkpoints fired
   under the live map. Inactive boost pads carry `Dimmed` so a later
@@ -438,6 +444,19 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   H / F1 opens all. RACING shows no guide toast: the keys are on the
   strip, the objective and tips in RacingClient's RACE START banner under
   the 3-2-1 (the three used to pile up mid-screen).
+- Phones (no device needed): touch buttons are placed by the pure
+  `Shared/TouchLayout.compute` (TouchControls draws it; right half only,
+  over Roblox's jump button, under the race position list, never on the
+  thumbstick's left 40 %; race buttons only from GO). `lune run
+  tools/phone_layout.luau` checks seven phone / tablet screens (spec
+  `phone_layout`); `python3 tools/studio/ui_overlap.py --phone` lays the
+  saved ui-layout dump out on them with the buttons and Roblox's mobile
+  controls. Things in the bottom right (NEW card, steal warning) stand left
+  of `TouchLayout.gridLeft`; on touch-only devices SHOP / ITEMS / Controls
+  sit top right (`SideButtons`) and the taunt line top left. Panels fit
+  under the top bar with `Shared/ScreenFit` (a UIScale shrinks about the
+  AnchorPoint: anchor scaled panels at their centre); `keepReadable`
+  keeps scaled text ≥ 9 px. Landscape only (Rojo project).
 - Input: gameplay clients take keys through `Shared/KeyInput.began / ended`
   (keyboard, gamepad map, on-screen `TouchControls` buttons), never
   `UserInputService.InputBegan` directly. Touch / gamepad driving comes from

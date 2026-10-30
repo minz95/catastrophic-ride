@@ -12,7 +12,8 @@
     },
     "StarterGui": {
       "$className": "StarterGui",
-      "$path": "StarterGui"
+      "$path": "StarterGui",
+      "$properties": { "ScreenOrientation": "LandscapeSensor" }
     },
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",

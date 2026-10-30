@@ -319,8 +319,10 @@ local function _showToast(phase)
 	-- the key strip (bottom-left) already lists them on a keyboard: the
 	-- toast with every key again grew 360 px tall and covered the NEW card
 	-- and the inventory bar (Studio ui-layout 2026-10-30)
-	local stripShows = phase ~= "CRAFTING" and not (UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled)
-	if not stripShows then
+	-- On a phone the touch buttons carry their names (GRAB, PUNCH, ...): all
+	-- nine FARMING rows ran off a 375-px screen for 7 s. Only CRAFTING (no
+	-- strip, no buttons) lists its steps here.
+	if phase == "CRAFTING" then
 		for i, k in ipairs(_keysFor(guide)) do
 			_buildKeyRow(_keyText(k), k.desc, i)
 		end
@@ -357,15 +359,21 @@ end)
 
 -- ─── Full reference panel (F1 toggle) ────────────────────────────────────────
 
-local refPanel = Instance.new("Frame")
+-- Scrolls: all three phases' keys are ~800 px, taller than a phone (its
+-- title and ✕ were off the screen). As tall as its content, at most the
+-- room under the top bar.
+local refPanel = Instance.new("ScrollingFrame")
 refPanel.Name             = "ReferencePanel"
-refPanel.Size             = UDim2.new(0, 440, 0, 0)
+refPanel.Size             = UDim2.new(0, 440, 0, 300)
 refPanel.Position         = UDim2.new(1, -460, 0.5, 0)
 refPanel.AnchorPoint      = Vector2.new(0, 0.5)
 refPanel.BackgroundColor3 = Color3.fromRGB(12, 12, 22)
 refPanel.BackgroundTransparency = 0.05
 refPanel.BorderSizePixel  = 0
-refPanel.AutomaticSize    = Enum.AutomaticSize.Y
+refPanel.ScrollBarThickness = 6
+refPanel.ScrollingDirection = Enum.ScrollingDirection.Y
+refPanel.AutomaticCanvasSize = Enum.AutomaticSize.Y
+refPanel.CanvasSize       = UDim2.new(0, 0, 0, 0)
 refPanel.Visible          = false
 refPanel.Parent           = screen
 
@@ -517,6 +525,19 @@ _buildSection("FARMING",  2)
 _buildSection("CRAFTING", 3)
 _buildSection("RACING",   4)
 
+do
+	local ScreenFit = require(ReplicatedStorage.Shared.ScreenFit)
+	local function fit()
+		local w, h, top = ScreenFit.view()
+		local want = refLayout.AbsoluteContentSize.Y + 30   -- + padding
+		local width = math.min(440, w - 24)
+		refPanel.Size = UDim2.new(0, width, 0, math.min(want, h - top - 16))
+		refPanel.Position = UDim2.new(1, -(width + 12), 0, top + (h - top) / 2)
+	end
+	refLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(fit)
+	ScreenFit.watch(fit)
+end
+
 -- ─── F1 panel toggle ─────────────────────────────────────────────────────────
 
 local _panelOpen = false
@@ -552,6 +573,12 @@ local hintBtn = Instance.new("TextButton")
 hintBtn.Name             = "HintButton"
 hintBtn.Size             = UDim2.new(0, 120, 0, 28)
 hintBtn.Position         = UDim2.new(0, 8, 1, -36)
+if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+	-- phones: with SHOP / ITEMS at the top right, off the thumbstick's side
+	-- (SideButtons); this screen ignores the top bar's inset
+	local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
+	hintBtn.Position = UDim2.new(1, -(264 + 120), 0, top + 8 + 6)
+end
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0

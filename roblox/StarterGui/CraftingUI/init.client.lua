@@ -122,7 +122,8 @@ infoLbl.TextYAlignment    = Enum.TextYAlignment.Top
 infoLbl.TextColor3        = Color3.fromRGB(220, 220, 235)
 infoLbl.Parent            = panel
 
-local INFO_DEFAULT = "Point at an item to see what it does"
+local _touchOnly = require(ReplicatedStorage.Shared.InputHints).touchOnly()
+local INFO_DEFAULT = _touchOnly and "Tap an item to see what it does" or "Point at an item to see what it does"
 local function _showInfo(itemName)
 	local cfg = itemName and ItemConfig[itemName]
 	if not cfg then
@@ -140,8 +141,9 @@ _showInfo(nil)
 _sectionLabel("Vehicle slots", 212)
 
 local autoBtn = Instance.new("TextButton")
-autoBtn.Size              = UDim2.new(0, 90, 0, 20)
-autoBtn.Position          = UDim2.new(1, -100, 0, 212)
+-- 110 × 24: at 90 × 20 it was a 59 × 13 px target on a phone
+autoBtn.Size              = UDim2.new(0, 110, 0, 24)
+autoBtn.Position          = UDim2.new(1, -120, 0, 210)
 autoBtn.BackgroundColor3  = Color3.fromRGB(50, 80, 140)
 autoBtn.BorderSizePixel   = 0
 autoBtn.Text              = "Auto fill"
@@ -157,7 +159,8 @@ local hintLbl = Instance.new("TextLabel")
 hintLbl.Size              = UDim2.new(1, -20, 0, 16)
 hintLbl.Position          = UDim2.new(0, 10, 0, 348)
 hintLbl.BackgroundTransparency = 1
-hintLbl.Text              = "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
+hintLbl.Text              = _touchOnly and "Tap an item, then a slot to place it | tap a slot (nothing picked) to clear it"
+	or "Pick an item → click a slot to place it | click a slot (nothing picked) → clear it"
 hintLbl.Font              = Enum.Font.Gotham
 hintLbl.TextScaled        = false
 hintLbl.TextSize          = 10
@@ -613,20 +616,21 @@ local _src = Instance.new("UICorner"); _src.CornerRadius = UDim.new(0, 14); _src
 local STAGE_W, STAGE_H = 810, 476
 local _panelScale = Instance.new("UIScale"); _panelScale.Parent = panel
 local _showScale  = Instance.new("UIScale"); _showScale.Parent = showroom
-local function rescale()
-	local cam = workspace.CurrentCamera
-	local w = cam and cam.ViewportSize.X or 1000
-	local h = cam and cam.ViewportSize.Y or 800
-	local k = math.max(0.3, math.min(1, (w - 32) / STAGE_W, (h - 32) / STAGE_H))
+-- The screen ignores the top bar's inset, so the stage is centred in the
+-- room under it (centred on the whole screen, its ITEMS button sat under
+-- Roblox's menu buttons on a phone).
+local ScreenFit = require(ReplicatedStorage.Shared.ScreenFit)
+local _readable = ScreenFit.keepReadable(panel, function() return _panelScale.Scale end, 9)
+ScreenFit.watch(function()
+	local k, _, h, top = ScreenFit.scale(STAGE_W, STAGE_H, 8)
+	k = math.max(0.3, k)
 	_panelScale.Scale = k
+	_readable()
 	_showScale.Scale  = k
-	panel.Position    = UDim2.new(0.5, -405 * k, 0.5, -238 * k)
-	showroom.Position = UDim2.new(0.5, 105 * k, 0.5, -238 * k)
-end
-rescale()
-if workspace.CurrentCamera then
-	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
-end
+	local midY = top + (h - top) / 2
+	panel.Position    = UDim2.new(0.5, -405 * k, 0, midY - 238 * k)
+	showroom.Position = UDim2.new(0.5, 105 * k, 0, midY - 238 * k)
+end)
 
 local showTitle = Instance.new("TextLabel")
 showTitle.Size                  = UDim2.new(1, -20, 0, 30)

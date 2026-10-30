@@ -17,6 +17,7 @@ local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
 local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)
 local InputHints   = require(ReplicatedStorage.Shared.InputHints)
+local TouchLayout  = require(ReplicatedStorage.Shared.TouchLayout)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local LocalPlayer  = Players.LocalPlayer
 
@@ -114,14 +115,10 @@ panel.Parent           = screen
 corner(panel, 14)
 local scale = Instance.new("UIScale")
 scale.Parent = panel
-local function rescale()
-	local cam = workspace.CurrentCamera
-	local w = cam and cam.ViewportSize.X or 1000
-	local h = cam and cam.ViewportSize.Y or 800
-	scale.Scale = math.min(1, (w - 32) / 560, (h - 32) / 440)
-end
-rescale()
-workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
+local ScreenFit = require(ReplicatedStorage.Shared.ScreenFit)
+ScreenFit.watch(function()
+	scale.Scale = (ScreenFit.scale(560, 440, 12))   -- under the top bar
+end)
 
 label(panel, "📖 Item Guide", UDim2.new(0, 300, 0, 32), UDim2.new(0, 16, 0, 10), Enum.Font.GothamBlack, GOLD)
 label(panel, "Put items in Body, Engine or Special, then press " .. InputHints.key("item") .. " in the race to use their ability.",
@@ -156,7 +153,15 @@ layout.SortOrder = Enum.SortOrder.LayoutOrder
 layout.Parent = list
 
 local _tab = "BODY"
-local _seen = {}   -- items picked up this session (marked in the list)
+-- Items picked up this session (marked in the list, NEW card once). Kept on
+-- a LocalPlayer attribute: this script restarts on every respawn (each
+-- LOBBY reloads the character) and the card came back every round.
+local _seen = {}
+for name in string.gmatch(LocalPlayer:GetAttribute("SeenItems") or "", "[^\n]+") do _seen[name] = true end
+local function _markSeen(name)
+	_seen[name] = true
+	LocalPlayer:SetAttribute("SeenItems", ((LocalPlayer:GetAttribute("SeenItems") or "") .. name .. "\n"))
+end
 
 local function row(name, order)
 	local cfg = ItemConfig[name]
@@ -292,9 +297,14 @@ local function showNew(name)
 	cardText.Text = InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability") .. "   " .. InputHints.tag("guide") .. " all items"
 	_cardToken += 1
 	local token = _cardToken
+	-- on a phone the bottom right is the touch buttons' (the card lay over
+	-- GRAB / PUNCH): stand just left of them
+	local at = CARD_AT
+	local left = TouchLayout.gridLeft(LocalPlayer.PlayerGui)
+	if left then at = UDim2.new(0, left - 8, 1, -100) end
 	card.Visible = true
-	card.Position = CARD_AT + UDim2.new(0, 40, 0, 0)
-	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = CARD_AT }):Play()
+	card.Position = at + UDim2.new(0, 40, 0, 0)
+	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = at }):Play()
 	task.delay(4, function()
 		if token == _cardToken then card.Visible = false end
 	end)
@@ -303,7 +313,7 @@ end
 RemoteEvents.ItemPickedUp.OnClientEvent:Connect(function(_itemId, userId, info)
 	if userId ~= LocalPlayer.UserId or type(info) ~= "table" or type(info.item) ~= "string" then return end
 	if _seen[info.item] then return end
-	_seen[info.item] = true
+	_markSeen(info.item)
 	showNew(info.item)
 	if panel.Visible then redraw() end
 end)

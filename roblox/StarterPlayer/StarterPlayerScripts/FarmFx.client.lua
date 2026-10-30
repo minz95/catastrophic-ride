@@ -27,6 +27,7 @@ local Debris            = game:GetService("Debris")
 local CollectionService = game:GetService("CollectionService")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local TouchLayout = require(ReplicatedStorage.Shared.TouchLayout)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local ItemConfig   = require(ReplicatedStorage.Shared.ItemConfig)
 local EffectLook   = require(ReplicatedStorage.Shared.EffectLook)
@@ -275,6 +276,16 @@ local function prompt(text, color, seconds)
 	local t = _prompt.Text
 	t.Text = text
 	t.TextColor3 = color
+	-- on a phone, centred in the room left of the touch buttons (it sat
+	-- under PUNCH / DROP / EMOTE: tools/phone_layout, ui_overlap --phone)
+	local left = TouchLayout.gridLeft(pg)
+	if left then
+		t.Position = UDim2.new(0, left / 2, 0.56, 0)
+		t.Size = UDim2.new(0, math.min(380, left - 24), 0, 56)
+	else
+		t.Position = UDim2.fromScale(0.5, 0.56)
+		t.Size = UDim2.new(0, 380, 0, 56)
+	end
 	t.Visible = true
 	local token = {}
 	_prompt:SetAttribute("Token", tostring(token))
@@ -285,8 +296,8 @@ end
 
 -- ─── Guard pose and wriggle loops ────────────────────────────────────────────
 
-local _guarding = {}   -- [character] = true
-local _wriggle = {}    -- [character] = untilT
+local _guarding = setmetatable({}, { __mode = "k" })   -- [character] = true (weak: a character destroyed mid-guard goes)
+local _wriggle = setmetatable({}, { __mode = "k" })    -- [character] = untilT
 
 RunService.RenderStepped:Connect(function()
 	local now = os.clock()

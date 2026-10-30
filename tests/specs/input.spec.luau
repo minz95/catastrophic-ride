@@ -51,7 +51,7 @@ R.describe("KeyInput (keyboard + touch buttons)", function()
 	end)
 
 	R.it("every touch button's key is one the clients handle", function()
-		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
+		local src = fs.readFile("roblox/ReplicatedStorage/Shared/TouchLayout.lua")
 		local farming = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmingClient.client.lua")
 		-- FARMING's EMOTE (Q) opens EmoteUI's menu
 		local farming = farming .. fs.readFile("roblox/StarterGui/EmoteUI/init.client.lua")
@@ -88,7 +88,7 @@ R.describe("controls named for the device (Shared/InputHints)", function()
 	R.it("every touch name is a TouchControls button that presses that action's key", function()
 		local env = Loader.boot()
 		local H = env.requirePath("ReplicatedStorage.Shared.InputHints")
-		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
+		local src = fs.readFile("roblox/ReplicatedStorage/Shared/TouchLayout.lua")
 		local buttons = {}
 		for text, key in src:gmatch('text = "([^"]+)",%s*key = Enum%.KeyCode%.(%w+)') do buttons[text] = key end
 		local bad = {}

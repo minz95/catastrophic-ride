@@ -14,8 +14,16 @@ local LocalPlayer = Players.LocalPlayer
 local PROP_IDLE = 14       -- rad/s with the plane standing still
 local PROP_PER_SPEED = 0.4 -- rad/s more per stud/s forward
 
-local _state = {}   -- [hub] = { base = C0, angle, turned }
-CollectionService:GetInstanceRemovedSignal("Spin"):Connect(function(hub) _state[hub] = nil end)
+local _state = {}   -- [hub] = { motor, base = C0, angle, turned, place, view, checkedAt }
+-- The tagged hubs as a set kept by the tag's signals: GetTagged("Spin")
+-- every frame built a list of hundreds (most in the shop's hidden copies).
+local _hubs = {}
+for _, hub in ipairs(CollectionService:GetTagged("Spin")) do _hubs[hub] = true end
+CollectionService:GetInstanceAddedSignal("Spin"):Connect(function(hub) _hubs[hub] = true end)
+CollectionService:GetInstanceRemovedSignal("Spin"):Connect(function(hub)
+	_hubs[hub] = nil
+	_state[hub] = nil
+end)
 
 -- Harness bots report how far their own car's spinners turned.
 local _lastReport = 0
@@ -58,21 +66,25 @@ RunService.RenderStepped:Connect(function(dt)
 	local cam = workspace.CurrentCamera
 	local camPos = cam and cam.CFrame.Position
 	local now = os.clock()
-	for _, hub in ipairs(CollectionService:GetTagged("Spin")) do
-		local m = hub:FindFirstChild("Spin")
-		local root = m and m:IsA("Motor6D") and m.Part0
-		if root then
-			local st = _state[hub]
-			if not st then
-				st = { base = m.C0, angle = 0, turned = 0, checkedAt = -math.huge }
+	for hub in pairs(_hubs) do
+		local st = _state[hub]
+		if not st then
+			local m = hub:FindFirstChild("Spin")
+			if m and m:IsA("Motor6D") then
+				-- first looks spread over RECHECK so they do not all fall on one frame
+				st = { motor = m, base = m.C0, angle = 0, turned = 0, checkedAt = now - math.random() * RECHECK }
 				_state[hub] = st
 			end
+		end
+		if st then
 			if now - st.checkedAt > RECHECK then
 				st.checkedAt = now
 				st.place, st.view = placeOf(hub)
 			end
-			local show = (st.place == "world" and (not camPos or (root.Position - camPos).Magnitude <= FAR))
-				or (st.place == "view" and st.view.Visible)
+			local m = st.motor
+			local root = st.place ~= "none" and m.Parent and m.Part0
+			local show = root and ((st.place == "world" and (not camPos or (root.Position - camPos).Magnitude <= FAR))
+				or (st.place == "view" and st.view.Visible))
 			if show then
 				local forward = root.AssemblyLinearVelocity:Dot(root.CFrame.LookVector)
 				local rate
