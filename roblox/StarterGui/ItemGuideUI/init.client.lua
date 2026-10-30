@@ -302,7 +302,18 @@ local function showNew(name)
 	-- GRAB / PUNCH): stand just left of them
 	local at = CARD_AT
 	local left = TouchLayout.gridLeft(LocalPlayer.PlayerGui)
-	if left then at = UDim2.new(0, left - 8, 1, -100) end
+	if left then
+		-- and over the farm bag, which sits there on a touch screen
+		-- (TouchLayout.bag; the card lay on its top row)
+		local cam = workspace.CurrentCamera
+		local vp = cam and cam.ViewportSize
+		local lift = 100
+		if vp and InputHints.touchUI() then
+			local b = TouchLayout.bag(vp.X, vp.Y, left)
+			lift = math.max(lift, (vp.Y - b.y) + 8)
+		end
+		at = UDim2.new(0, left - 8, 1, -lift)
+	end
 	card.Visible = true
 	card.Position = at + UDim2.new(0, 40, 0, 0)
 	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = at }):Play()

@@ -575,16 +575,14 @@ hintBtn.Size             = UDim2.new(0, 120, 0, 28)
 -- phones (and a touch screen in use): with SHOP / ITEMS at the top right,
 -- off the thumbstick's side (SideButtons); this screen ignores the inset.
 -- Bottom left it sat on the thumbstick (Studio Device Simulator, iPhone XR).
+-- On a touch screen it is not shown at all: the panel lists keys, and the
+-- buttons carry their names (its top-right spot is the emote icon's).
 local function _placeHint()
-	if require(ReplicatedStorage.Shared.InputHints).touchUI() then
-		local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
-		hintBtn.Position = UDim2.new(1, -(264 + 120), 0, top + 8 + 6)
-	else
-		hintBtn.Position = UDim2.new(0, 8, 1, -36)
-	end
+	hintBtn.Position = UDim2.new(0, 8, 1, -36)
+	hintBtn.Visible = not require(ReplicatedStorage.Shared.InputHints).touchUI()
+		and game:GetService("ReplicatedStorage"):GetAttribute("Phase") ~= "CRAFTING"
 end
-_placeHint()
-require(ReplicatedStorage.Shared.InputHints).onChange(_placeHint)
+require(ReplicatedStorage.Shared.InputHints).onChange(function() _placeHint() end)
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0
@@ -684,7 +682,7 @@ local function _onPhase(phase)
 	_showStrip(phase)
 	-- the crafting screen has its own help line; top right on a touch screen
 	-- the button stood between the crafting panel and the showroom
-	hintBtn.Visible = phase ~= "CRAFTING"
+	_placeHint()
 	-- (Round, Phase): ReplicatedStorage "Round" counts the rounds (GameManager)
 	local key = phase .. "#" .. tostring(game:GetService("ReplicatedStorage"):GetAttribute("Round"))
 	local seen = LocalPlayer:GetAttribute("TutorialToastPhase") == key
@@ -702,7 +700,7 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
 -- Joined (or respawned) mid-phase: show that phase's key list now.
 local phaseNow = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
 if phaseNow then _showStrip(phaseNow) end
-hintBtn.Visible = phaseNow ~= "CRAFTING"
+_placeHint()
 
 -- Switched between keyboard, gamepad and touch: name the controls again.
 InputHints.onChange(function()
