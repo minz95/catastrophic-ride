@@ -198,7 +198,7 @@ AbilityConfig["Magic Wand"] = {
 	selfSpeed = 1.3, push = 20,
 	animKey     = "wandCast",
 	sfxKey      = "wand_sparkle",
-	uiHint      = "🪄 Cast!",
+	uiHint      = "✨ Cast!",
 }
 
 AbilityConfig["Trophy"] = {
@@ -313,7 +313,7 @@ AbilityConfig["Kettle"] = {
 	hitSpeed = 0.8, hitFor = 1.5,
 	animKey     = "kettleSteam",
 	sfxKey      = "kettle_hiss",
-	uiHint      = "🫖 Steam!",
+	uiHint      = "☕ Steam!",
 }
 
 AbilityConfig["Cup Noodle"] = {
@@ -420,7 +420,7 @@ AbilityConfig["Log"] = {
 	effectKey   = "logObstacle",  -- rolling log; contact → bounce + speed penalty
 	animKey     = "logRoll",
 	sfxKey      = "log_thud",
-	uiHint      = "🪵 Drop!",
+	uiHint      = "🌲 Drop!",
 	biomeEffect = { SKY = { cooldown = 7 } },   -- the wide Sky lane is easy to dodge
 }
 
@@ -502,7 +502,7 @@ AbilityConfig["Barrel"] = {
 	selfSpeed = 1.1, victimPush = 45, radius = 8,
 	animKey     = "barrelSpin",
 	sfxKey      = "barrel_roll",
-	uiHint      = "🪣 Roll!",
+	uiHint      = "🛢️ Roll!",
 }
 
 AbilityConfig["Suitcase"] = {
@@ -536,7 +536,7 @@ AbilityConfig["Life Preserver"] = {
 	selfSpeed = 1.15,   -- glides while lifted
 	animKey     = "lifeRingThrow",
 	sfxKey      = "splash_ring",
-	uiHint      = "🛟 Float!",
+	uiHint      = "⭕ Float!",
 	-- balance: the longer SKY race (corkscrew) gave the Uncommons more uses;
 	-- a Rare must stay ahead
 	biomeEffect = { SKY = { selfSpeed = 1.2 } },

@@ -723,7 +723,7 @@ function _submitCraft()
 
 	if result == "ok" then
 		_submitted = true
-		_combineBtn.Text             = "SUBMITTED ✓"
+		_combineBtn.Text             = "SUBMITTED ✅"
 		_combineBtn.BackgroundColor3 = Color3.fromRGB(60, 120, 60)
 		_combineBtn.Active           = false
 

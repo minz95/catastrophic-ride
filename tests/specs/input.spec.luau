@@ -156,6 +156,34 @@ R.describe("driving with a stick (Studio Device Simulator, iPhone XR, 2026-10-30
 	end)
 end)
 
+R.describe("race on a phone (Studio Device Simulator, 2026-10-30)", function()
+	R.it("reset and taunt are icons at the top left, not buttons over the road", function()
+		local env = Loader.boot()
+		local T = env.requirePath("ReplicatedStorage.Shared.TouchLayout")
+		local keys = {}
+		for _, b in ipairs(T.LAYOUT.RACING) do keys[b.key.Name] = true end
+		R.expect(keys.R).toBe(nil)
+		R.expect(keys.Q).toBe(nil)
+		local icons = {}
+		for _, b in ipairs(T.ICONS.RACING) do icons[b.key.Name] = true end
+		R.expect(icons.R and icons.Q).toBe(true)
+		R.expect(T.ICONS.RESULTS).toBe(nil)   -- it lay on the reward box
+	end)
+	R.it("keys are let go when the window loses focus (Cmd+Tab left SKY's dive held)", function()
+		local rc = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/RacingClient.client.lua")
+		R.expect(rc:find("WindowFocusReleased:Connect(_releaseAllKeys)", 1, true) ~= nil).toBe(true)
+		R.expect(rc:find("if _cpFrame then _cpFrame.Visible = false end", 1, true) ~= nil).toBe(true)
+	end)
+	R.it("race seats hide Roblox's own speed bar", function()
+		local vb = fs.readFile("roblox/ServerScriptService/Modules/VehicleBuilder.lua")
+		R.expect(vb:find("seat.HeadsUpDisplay = false", 1, true) ~= nil).toBe(true)
+	end)
+	R.it("no key list on a touch screen (it is for keyboards)", function()
+		local tut = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
+		R.expect(tut:find("return UserInputService.TouchEnabled or", 1, true) ~= nil).toBe(true)
+	end)
+end)
+
 R.describe("touch buttons", function()
 	local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/TouchControls.client.lua")
 	R.it("are laid out from the viewport (they ran off a 390-px phone screen)", function()

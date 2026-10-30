@@ -138,32 +138,52 @@ for phase, list in pairs(LAYOUT) do
 	_sets[phase] = { frame = frame, entries = entries }
 end
 
--- ─── Emote icon (top right) ─────────────────────────────────────────────────
--- Out of the button grid: the farm was covered in buttons. A tap presses Q,
--- which opens / closes EmoteUI's menu (a touch toggles it).
-local emoteBtn = Instance.new("TextButton")
-emoteBtn.Name                   = "EmoteIcon"
-emoteBtn.AnchorPoint            = Vector2.new(0, 0)
-emoteBtn.Size                   = UDim2.fromOffset(TouchLayout.EMOTE_SIZE, TouchLayout.EMOTE_SIZE)
-emoteBtn.BackgroundColor3       = Color3.fromRGB(240, 200, 60)
-emoteBtn.BackgroundTransparency = 0.15
-emoteBtn.Text                   = "😀"
-emoteBtn.TextScaled             = true
-emoteBtn.Font                   = Enum.Font.GothamBlack
-emoteBtn.Visible                = false
-emoteBtn.Parent                 = screen
-do
-	local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(1, 0); c.Parent = emoteBtn
+-- ─── Icons (TouchLayout.ICONS) ──────────────────────────────────────────────
+-- Out of the button grid: things pressed now and then (emote, taunt, reset).
+-- A tap presses the key like a grid button (a touch toggles EmoteUI's menu).
+local _icons = {}   -- phase → { {btn, entry} }
+for phase, list in pairs(TouchLayout.ICONS) do
+	if not _icons[phase] then
+		_icons[phase] = {}
+		for _, b in ipairs(list) do
+			local btn = Instance.new("TextButton")
+			btn.Name                   = "Icon_" .. phase .. "_" .. b.key.Name
+			btn.Size                   = UDim2.fromOffset(TouchLayout.ICON_SIZE, TouchLayout.ICON_SIZE)
+			btn.BackgroundColor3       = b.color
+			btn.BackgroundTransparency = 0.15
+			btn.Text                   = b.text
+			btn.TextScaled             = true
+			btn.TextColor3             = Color3.new(1, 1, 1)
+			btn.Font                   = Enum.Font.GothamBlack
+			btn.Visible                = false
+			btn.Parent                 = screen
+			local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(1, 0); c.Parent = btn
+			btn.InputBegan:Connect(function(input)
+				if not isPress(input) or _held[btn] then return end
+				_held[btn] = b.key
+				KeyInput.press(b.key)
+			end)
+			btn.InputEnded:Connect(function(input)
+				if isPress(input) then release(btn) end
+			end)
+			table.insert(_icons[phase], { btn = btn, b = b })
+		end
+	end
 end
-emoteBtn.InputBegan:Connect(function(input)
-	if isPress(input) then KeyInput.press(Enum.KeyCode.Q) end
-end)
-emoteBtn.InputEnded:Connect(function(input)
-	if isPress(input) then KeyInput.release(Enum.KeyCode.Q) end
-end)
-local function placeEmote()
+local function placeIcons(phase, show)
+	local cam = workspace.CurrentCamera
+	local vp = cam and cam.ViewportSize or Vector2.new(1024, 768)
 	local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
-	emoteBtn.Position = UDim2.new(1, -(TouchLayout.EMOTE_RIGHT + TouchLayout.EMOTE_SIZE), 0, top + 8)
+	for name, list in pairs(_icons) do
+		local on = show and name == phase
+		local boxes = on and TouchLayout.icons(name, vp.X, vp.Y, top) or {}
+		for i, e in ipairs(list) do
+			e.btn.Visible = on
+			if not on then release(e.btn) end
+			local box = boxes[i]
+			if box then e.btn.Position = UDim2.fromOffset(box.box[1], box.box[2]) end
+		end
+	end
 end
 
 -- ─── Layout from the viewport ────────────────────────────────────────────────
@@ -230,9 +250,8 @@ local function refreshVisible()
 		set.frame.Visible = (name == _phase) and LocalPlayer:GetAttribute("Spectating") ~= true
 			and (name ~= "RACING" or raceGone())
 	end
-	-- emotes work everywhere but the race (Q is the taunt there) and crafting
-	emoteBtn.Visible = _phase ~= "RACING" and _phase ~= "CRAFTING"
-	placeEmote()
+	local spectating = LocalPlayer:GetAttribute("Spectating") == true
+	placeIcons(_phase, not (spectating and _phase == "RACING") and (_phase ~= "RACING" or raceGone()))
 end
 
 local function onPhase(phase)

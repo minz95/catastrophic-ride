@@ -3,7 +3,7 @@
 -- everyone (RemoteEvents.FarmAction from FarmingManager):
 --   punch    the attacker's right arm swings, the torso twists; a landed hit
 --            makes the victim flinch (red flash, stars, pushed back) and
---            shows the hit count above the head (●●○○); a knock-out pops
+--            shows the hit count above the head (🔴🔴⚪⚪); a knock-out pops
 --            the dropped item's name; a blocked punch flashes blue.
 --   guard    both arms up in front while G is held (and walking slows).
 --   grab     a steal opens: the thief reaches with both arms, the victim
@@ -223,7 +223,7 @@ end
 
 local function pips(hits, needed)
 	local s = ""
-	for i = 1, needed do s ..= (i <= hits) and "●" or "○" end
+	for i = 1, needed do s ..= (i <= hits) and "🔴" or "⚪" end
 	return s
 end
 

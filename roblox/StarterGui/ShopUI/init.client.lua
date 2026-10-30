@@ -157,7 +157,7 @@ local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -2
 
 -- tabs
 local TABS = { "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "coins" }
-local TAB_TITLES = { ride = "★ Rides", paint = "Paint", trail = "Trail", hat = "🎩 Hats", taunt = "😜 Taunts",
+local TAB_TITLES = { ride = "⭐ Rides", paint = "Paint", trail = "Trail", hat = "🎩 Hats", taunt = "😜 Taunts",
 	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
@@ -262,7 +262,7 @@ local function preview(card, it)
 	})
 	if it.category == "ride" and not it.body then return true end
 	if it.category == "ride" then
-		label(vp, "★", UDim2.new(0, 22, 0, 22), UDim2.new(0, 4, 0, 2), Enum.Font.GothamBlack, GOLD)
+		label(vp, "⭐", UDim2.new(0, 22, 0, 22), UDim2.new(0, 4, 0, 2), Enum.Font.GothamBlack, GOLD)
 	end
 	return true
 end
@@ -331,7 +331,7 @@ local function swatch(card, it)
 			ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 80, 255)),
 		})
 		g.Parent = s
-		label(s, "★", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
+		label(s, "⭐", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
 		return
 	end
 	if it.category == "paint" or it.category == "ride" then
@@ -355,7 +355,7 @@ local function swatch(card, it)
 	end
 	g.Parent = s
 	if it.category == "ride" then
-		label(s, "★", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
+		label(s, "⭐", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBlack, Color3.new(1, 1, 1))
 	end
 	if it.category == "paint" and not it.body then
 		label(s, "biome", UDim2.fromScale(1, 1), UDim2.new(), Enum.Font.GothamBold, Color3.new(1, 1, 1))

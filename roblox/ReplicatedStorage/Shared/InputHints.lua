@@ -30,7 +30,7 @@ InputHints.ACTIONS = {
 	boost  = { key = "F",     code = "F",           touch = "BOOST" },
 	item   = { key = "E",     code = "E",           touch = "ITEM" },
 	drift  = { key = "Shift", code = "LeftShift",   touch = "DRIFT" },
-	reset  = { key = "R",     code = "R",           touch = "RESET" },
+	reset  = { key = "R",     code = "R",           touch = "🔄" },
 	trick  = { key = "T",     code = "T",           touch = "BOMB" },
 	taunt  = { key = "Q",     code = "Q",           touch = "😜" },
 	climb  = { key = "Space", code = "Space",       touch = "▲" },

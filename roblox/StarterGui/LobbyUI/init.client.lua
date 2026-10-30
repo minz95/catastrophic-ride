@@ -158,7 +158,7 @@ local function _buildPlayerList()
 		local nameLbl = Instance.new("TextLabel")
 		nameLbl.Size          = UDim2.fromScale(1, 1)
 		nameLbl.BackgroundTransparency = 1
-		nameLbl.Text          = (player == LocalPlayer and "★ " or "  ") .. player.Name
+		nameLbl.Text          = (player == LocalPlayer and "⭐ " or "  ") .. player.Name
 		nameLbl.TextColor3    = Color3.new(1, 1, 1)
 		nameLbl.TextScaled    = true
 		nameLbl.Font          = Enum.Font.Gotham

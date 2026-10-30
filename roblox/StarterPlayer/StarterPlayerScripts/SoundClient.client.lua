@@ -394,7 +394,7 @@ if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 		_tryIndex[slot] = i
 		local t = list[i]
 		_playBGM({ id = "rbxassetid://" .. t.id, volume = t.volume or 0.5, looped = true })
-		local text = string.format("♪ %s %d/%d  %s   [ / ] switch", slot, i, #list, t.title)
+		local text = string.format("🎵 %s %d/%d  %s   [ / ] switch", slot, i, #list, t.title)
 		showLabel(text)
 		print(string.format("[MusicTry] %s %d/%d %s %s", slot, i, #list, t.title, t.id))
 	end
@@ -406,7 +406,7 @@ if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 	_onNewPhase(function(phase)
 		local slot = slotOf(phase)
 		local list = slot and SoundConfig.TRY[slot]
-		showLabel(list and string.format("♪ %s: [ / ] try %d tracks", slot, #list) or "")
+		showLabel(list and string.format("🎵 %s: [ / ] try %d tracks", slot, #list) or "")
 	end)
-	task.defer(function() showLabel("♪ [ / ] try other music") end)
+	task.defer(function() showLabel("🎵 [ / ] try other music") end)
 end
