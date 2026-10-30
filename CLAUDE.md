@@ -471,7 +471,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Constants.BOTS.FILL.MIN` and `MAX`, players + bots; FarmBots and RaceBots
   read the same draw) with server-driven cars (Autopilot +
   VehicleController, hazards via `Shared/RoadHazards`, same catch-up).
-  RacingManager counts them as racers; finishOrder entries have `bot = true`
+  RacingManager counts them as racers and puts them in the live standings
+  (`PlayerPositionSync`, raceRank, the lead bonus: without them a lone
+  player read "#1" all race); grid slots are drawn again each round
+  (`RaceGrid.order`: players always took the front-left ones and won
+  nearly every bot race). On a phone-sized screen the HUD list shows the
+  top three and you. finishOrder entries have `bot = true`
   and a negative id (ProgressionManager pays only players, but bots take
   places). Harness sessions get bots only with `fillBots`. Grid slots:
   `Modules/RaceGrid`.
@@ -540,6 +545,10 @@ footage every 2 s, `tools/video/cuts.json` is the edit (explainer 16:9, ad
 16:9, reel 9:16), `cut.py build` writes `reports/video/*.mp4` (git-ignored,
 silent: add music where you post). Needs ffmpeg (`pip install
 imageio-ffmpeg`) and Pillow.
+
+A full server (10 players, `Constants.MAX_PLAYERS`; Studio's multiplayer
+test stops at 8) is checked offline by `tests/specs/full_server` (three
+rounds per biome with every server script).
 
 ## What the tests cannot tell you
 

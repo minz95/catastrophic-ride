@@ -220,10 +220,25 @@ local function _getRankColor(rank)
 	end
 end
 
+local COMPACT_ROWS = 4
 local function _updatePositionTracker(data)
-	-- data: array of { userId, progress, rank }
+	-- data: array of { userId, progress, rank, name?, bot? } (race bots too)
 	-- Sort by rank
 	table.sort(data, function(a, b) return a.rank < b.rank end)
+	-- A phone shows the top three and you (ten rows ran down a 375-px screen
+	-- and pushed the touch buttons into the middle: tools/phone_layout)
+	local cam = workspace.CurrentCamera
+	local vp = cam and cam.ViewportSize
+	if vp and math.min(vp.X, vp.Y) <= 500 and #data > COMPACT_ROWS then
+		local short = {}
+		for i = 1, COMPACT_ROWS - 1 do table.insert(short, data[i]) end
+		local me = nil
+		for i = COMPACT_ROWS, #data do
+			if data[i].userId == LocalPlayer.UserId then me = data[i] end
+		end
+		table.insert(short, me or data[COMPACT_ROWS])
+		data = short
+	end
 
 	-- Reuse or create rows
 	for i, entry in ipairs(data) do
@@ -257,8 +272,9 @@ local function _updatePositionTracker(data)
 			_posRows[i] = row
 		end
 
-		local player = game:GetService("Players"):GetPlayerByUserId(entry.userId)
-		local name   = player and player.Name or ("User" .. entry.userId)
+		row.Visible = true   -- hidden rows came back blank when the field grew
+		local player = not entry.bot and game:GetService("Players"):GetPlayerByUserId(entry.userId)
+		local name   = (player and player.Name) or (entry.bot and ("🤖 " .. tostring(entry.name))) or entry.name or ("User" .. entry.userId)
 		local color  = _getRankColor(entry.rank)
 
 		-- Highlight local player
