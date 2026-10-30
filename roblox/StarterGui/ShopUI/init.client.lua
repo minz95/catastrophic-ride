@@ -67,7 +67,11 @@ openBtn.Size             = UDim2.new(0, 120, 0, 40)
 openBtn.AnchorPoint      = Vector2.new(0, 0.5)
 openBtn.Position         = UDim2.new(0, 8, 0.5, 0)
 openBtn.BackgroundColor3 = Color3.fromRGB(230, 160, 30)
-openBtn.Text             = (UserInputService.KeyboardEnabled and "SHOP [B]") or "SHOP"
+local function _openText()
+	return require(ReplicatedStorage.Shared.InputHints).touchUI() and "SHOP" or "SHOP [B]"
+end
+openBtn.Text             = _openText()
+require(ReplicatedStorage.Shared.InputHints).onChange(function() openBtn.Text = _openText() end)
 openBtn.TextColor3       = Color3.new(1, 1, 1)
 openBtn.TextScaled       = true
 openBtn.Font             = Enum.Font.GothamBlack

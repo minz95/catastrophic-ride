@@ -74,6 +74,14 @@ function InputHints.touchOnly()
 	return UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 end
 
+--- Lay the screen out for thumbs: a touch-only device, or a touch screen
+-- the player is using right now (a tablet with a keyboard; Studio's Device
+-- Simulator reports a keyboard too, and SHOP / ITEMS / Controls stayed on
+-- the thumbstick there: launch check 2026-10-30).
+function InputHints.touchUI()
+	return InputHints.touchOnly() or (UserInputService.TouchEnabled and InputHints.mode() == "touch")
+end
+
 --- The control's name on this device ("E", "X", "GRAB").
 function InputHints.key(action, mode)
 	local a = InputHints.ACTIONS[action]

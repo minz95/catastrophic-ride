@@ -21,9 +21,13 @@ KeyInput.GAMEPAD = {   -- by KeyCode name
 	DPadDown = Enum.KeyCode.X,          -- drop item
 	DPadUp   = Enum.KeyCode.T,          -- gadget / race trick
 	DPadRight = Enum.KeyCode.Q,         -- emote menu / taunt
-	-- SKY climb / dive (RacingClient reads Space / Ctrl). The triggers and
-	-- the left stick already drive the seat; A also jumps on foot, which
-	-- nothing here listens to as Space.
+	-- gas / brake on the triggers (they relied on the seat's ThrottleFloat,
+	-- which Roblox's control module never wrote in a race); the left stick
+	-- steers through RacingClient's move vector.
+	ButtonR2 = Enum.KeyCode.Up,
+	ButtonL2 = Enum.KeyCode.Down,
+	-- SKY climb / dive (RacingClient reads Space / Ctrl); A also jumps on
+	-- foot, which nothing here listens to as Space.
 	ButtonA  = Enum.KeyCode.Space,      -- climb (SKY)
 	DPadLeft = Enum.KeyCode.LeftControl, -- dive (SKY)
 }

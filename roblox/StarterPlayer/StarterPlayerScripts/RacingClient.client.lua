@@ -63,6 +63,23 @@ _suspParams.FilterType = Enum.RaycastFilterType.Exclude
 -- 2026-10-22: cars rode on them 10 studs above the road) are skipped.
 _suspParams.RespectCanCollide = true
 
+-- Roblox's control module (PlayerModule): the thumbstick / left stick as a
+-- camera-relative move vector (X right, Z back), or nil.
+local _controls = nil
+local function _stickVector()
+	if _controls == nil then
+		local ok, c = pcall(function()
+			local ps = LocalPlayer:FindFirstChild("PlayerScripts")
+			local pm = ps and ps:FindFirstChild("PlayerModule")
+			return pm and require(pm):GetControls()
+		end)
+		_controls = (ok and c) or false
+	end
+	if not _controls then return nil end
+	local ok, v = pcall(function() return _controls:GetMoveVector() end)
+	return (ok and typeof(v) == "Vector3" and v.Magnitude > 0.05) and v or nil
+end
+
 local KEY_MAP = {
 	[Enum.KeyCode.W]           = "W",
 	[Enum.KeyCode.A]           = "A",
@@ -271,7 +288,8 @@ function _updateBoostHUD()
 		Size = UDim2.new(_boostGauge, 0, 1, 0)
 	}):Play()
 	if _boostLabel then
-		_boostLabel.Text = _boostGauge >= 1 and ("BOOST  " .. InputHints.tag("boost")) or "BOOST"
+		-- "BOOST  [BOOST]" on a touch screen: the button is named BOOST
+		_boostLabel.Text = _boostGauge >= 1 and (InputHints.touchUI() and "BOOST READY" or ("BOOST  " .. InputHints.tag("boost"))) or "BOOST"
 	end
 end
 
@@ -680,12 +698,20 @@ local function _driveLoop(dt)
 
 	-- Keyboard state, or a harness bot's synthetic keys (InputSource override).
 	local rawKeys = InputSource.read(_keys)
-	-- Touch thumbstick / gamepad: Roblox's control module writes the seat's
-	-- ThrottleFloat / SteerFloat; drive from them when no drive key is down.
+	-- Touch thumbstick / gamepad stick: drive from Roblox's control module
+	-- when no drive key is down. It wrote the seat's ThrottleFloat /
+	-- SteerFloat only when its vehicle mode noticed the seat, and in a race
+	-- it did not: the stick walked the (seated) avatar and the car stood
+	-- still (Studio Device Simulator, iPhone XR, 2026-10-30). Its move vector
+	-- is read directly; the seat's floats stay as a fallback.
 	if not InputSource.isOverridden() and _seat then
 		local k = rawKeys
 		if not (k.W or k.A or k.S or k.D or k.Up or k.Down or k.Left or k.Right) then
 			local th, st = _seat.ThrottleFloat, _seat.SteerFloat
+			if math.abs(th) <= 0.3 and math.abs(st) <= 0.3 then
+				local mv = _stickVector()
+				if mv then th, st = -mv.Z, mv.X end
+			end
 			if math.abs(th) > 0.3 or math.abs(st) > 0.3 then
 				rawKeys = table.clone(_keys)
 				rawKeys.W = th > 0.3

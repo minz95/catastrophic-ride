@@ -572,13 +572,19 @@ end)
 local hintBtn = Instance.new("TextButton")
 hintBtn.Name             = "HintButton"
 hintBtn.Size             = UDim2.new(0, 120, 0, 28)
-hintBtn.Position         = UDim2.new(0, 8, 1, -36)
-if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-	-- phones: with SHOP / ITEMS at the top right, off the thumbstick's side
-	-- (SideButtons); this screen ignores the top bar's inset
-	local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
-	hintBtn.Position = UDim2.new(1, -(264 + 120), 0, top + 8 + 6)
+-- phones (and a touch screen in use): with SHOP / ITEMS at the top right,
+-- off the thumbstick's side (SideButtons); this screen ignores the inset.
+-- Bottom left it sat on the thumbstick (Studio Device Simulator, iPhone XR).
+local function _placeHint()
+	if require(ReplicatedStorage.Shared.InputHints).touchUI() then
+		local _, _, top = require(ReplicatedStorage.Shared.ScreenFit).view()
+		hintBtn.Position = UDim2.new(1, -(264 + 120), 0, top + 8 + 6)
+	else
+		hintBtn.Position = UDim2.new(0, 8, 1, -36)
+	end
 end
+_placeHint()
+require(ReplicatedStorage.Shared.InputHints).onChange(_placeHint)
 hintBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 hintBtn.BackgroundTransparency = 0.3
 hintBtn.BorderSizePixel  = 0
@@ -618,7 +624,7 @@ stripLayout.SortOrder = Enum.SortOrder.LayoutOrder
 stripLayout.Padding   = UDim.new(0, 2)
 
 local function _touchOnly()
-	return UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+	return require(ReplicatedStorage.Shared.InputHints).touchUI()
 end
 
 local function _showStrip(phase)
@@ -676,6 +682,9 @@ local function _onPhase(phase)
 	if phase == _lastPhase then return end
 	_lastPhase = phase
 	_showStrip(phase)
+	-- the crafting screen has its own help line; top right on a touch screen
+	-- the button stood between the crafting panel and the showroom
+	hintBtn.Visible = phase ~= "CRAFTING"
 	-- (Round, Phase): ReplicatedStorage "Round" counts the rounds (GameManager)
 	local key = phase .. "#" .. tostring(game:GetService("ReplicatedStorage"):GetAttribute("Round"))
 	local seen = LocalPlayer:GetAttribute("TutorialToastPhase") == key
@@ -693,6 +702,7 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(_onPhase)
 -- Joined (or respawned) mid-phase: show that phase's key list now.
 local phaseNow = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
 if phaseNow then _showStrip(phaseNow) end
+hintBtn.Visible = phaseNow ~= "CRAFTING"
 
 -- Switched between keyboard, gamepad and touch: name the controls again.
 InputHints.onChange(function()

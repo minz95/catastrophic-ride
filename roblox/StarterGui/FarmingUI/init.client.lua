@@ -57,6 +57,9 @@ phaseLabel.Size            = UDim2.new(1, 0, 0.5, 0)
 phaseLabel.Position        = UDim2.new(0, 0, 0.5, 0)
 phaseLabel.BackgroundTransparency = 1
 local function _keyLine()
+	-- on a touch screen the buttons are named: the four-part line wrapped
+	-- into two tiny lines under the timer (Studio Device Simulator)
+	if InputHints.touchUI() then return "Hold GRAB next to someone to steal" end
 	return string.format("%s Pick up  %s Steal  %s Punch  %s Guard",
 		InputHints.tag("grab"), InputHints.hold("steal"), InputHints.tag("punch"), InputHints.hold("guard"))
 end

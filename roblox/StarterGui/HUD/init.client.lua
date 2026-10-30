@@ -35,6 +35,7 @@ keyHint.Size             = UDim2.new(0, 240, 0, 14)
 keyHint.Position         = UDim2.new(0.5, -120, 1, -38)
 keyHint.BackgroundTransparency = 1
 local function _keyHintText()
+	if InputHints.touchUI() then return "" end   -- the buttons say it
 	return string.format("[ %s = Drift  ·  %s = Boost ]", InputHints.key("drift"):upper(), InputHints.key("boost"))
 end
 keyHint.Text             = _keyHintText()
