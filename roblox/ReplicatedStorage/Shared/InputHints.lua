@@ -101,16 +101,27 @@ function InputHints.hold(action, mode)
 end
 
 --- fn(mode) whenever the player switches between keyboard, gamepad and touch.
+-- Also checked twice a second: in Studio's Device Simulator the signal did
+-- not follow the taps, and the Controls button stayed on a phone screen
+-- while the polled SHOP / ITEMS buttons had moved (2026-10-30).
+-- The layout question (touchUI) is checked too, not only the key names.
 function InputHints.onChange(fn)
-	local last = InputHints.mode()
+	local last = InputHints.mode() .. tostring(InputHints.touchUI())
+	local function check()
+		local key = InputHints.mode() .. tostring(InputHints.touchUI())
+		if key ~= last then
+			last = key
+			fn(InputHints.mode())
+		end
+	end
 	local ok, conn = pcall(function()
-		return UserInputService.LastInputTypeChanged:Connect(function()
-			local m = InputHints.mode()
-			if m ~= last then
-				last = m
-				fn(m)
-			end
-		end)
+		return UserInputService.LastInputTypeChanged:Connect(check)
+	end)
+	task.spawn(function()
+		while true do
+			task.wait(0.5)
+			check()
+		end
 	end)
 	return ok and conn or nil
 end

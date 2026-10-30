@@ -558,6 +558,12 @@ in the Rojo project; the legacy chat scripts errored in Studio clients).
 A published place ignores a leftover `HarnessArgs` attribute
 (`HarnessConfig`, lobby spec).
 
+Mobile cuts (`mobile-reel` 9:16, `mobile-ad` 16:9 in cuts.json) use takes
+`mobile-take1..4`: whole rounds played by touch in Studio's Device Simulator
+(iPhone XR) and recorded with `screencapture -v` in 20 s pieces (folder
+with take.json, as sim.py writes). Recording them needs Studio frontmost and
+the screen unlocked; never send modifier keys while doing it.
+
 Trailer videos: `python3 tools/studio/sim.py run record-forest` (also
 `record-ocean`, `record-sky`; one at a time, screen unlocked) records the bot
 client's window in 10 s pieces; `python3 tools/video/cut.py sheets` shows the
