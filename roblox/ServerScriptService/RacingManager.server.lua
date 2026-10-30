@@ -676,7 +676,7 @@ local function _ensureRacer(player)
 end
 
 -- Lead bonus (Racing Flag), momentum (Flower) and slipstream (Toilet Paper).
-local function _updatePassives(ranked)
+local function _updatePassives(ranked, field)
 	local now = tick()
 	local leadS = ranked[1] and ranked[1].progress
 	local botS = RaceBots.bestProgress()
@@ -698,7 +698,7 @@ local function _updatePassives(ranked)
 
 		local lead = ps.head and ps.head.leadSpeedBonus
 		if lead then
-			local leading = rank == 1 and #ranked > 1
+			local leading = (entry.rank or rank) == 1 and (field or #ranked) > 1
 			if leading and not ps.leadShown then
 				EffectFx.play("leadFlag", player, nil, nil, { text = string.format("+%d%%", math.floor(lead * 100 + 0.5)) })
 			end
@@ -829,15 +829,24 @@ local function _startPositionSync()
 				local f = finishedAt[e.userId or e.player.UserId]
 				return f and (1e9 - f) or e.progress
 			end
+			-- race bots are in the standings too: without them a lone player
+			-- read "#1" all race and a player behind a bot got the lead bonus
+			for _, bot in ipairs(RaceBots.list) do
+				table.insert(data, { userId = bot.id, name = bot.name, bot = true,
+					progress = math.floor(bot.s or 0), rank = 0 })
+			end
 			table.sort(data, function(a, b) return key(a) > key(b) end)
 			table.sort(ranked, function(a, b) return key(a) > key(b) end)
+			local rankOf = {}
 			for rank, entry in ipairs(data) do
 				entry.rank = rank
 				entry.length = length
-				local player = Players:GetPlayerByUserId(entry.userId)
+				rankOf[entry.userId] = rank
+				local player = not entry.bot and Players:GetPlayerByUserId(entry.userId)
 				if player then SessionManager.setRaceProgress(player, entry.progress, rank) end
 			end
-			_updatePassives(ranked)
+			for _, e in ipairs(ranked) do e.rank = rankOf[e.player.UserId] end
+			_updatePassives(ranked, #data)
 			RemoteEvents.PlayerPositionSync:FireAllClients(data)
 			task.wait(Constants.POSITION_SYNC_RATE)
 		end

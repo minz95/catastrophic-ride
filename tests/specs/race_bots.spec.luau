@@ -122,6 +122,42 @@ R.describe("bots in a race", function()
 		R.expect(rewards[1].place).toBe(2)
 	end)
 
+	R.it("the live standings (HUD list, lead bonus) count the bots: a lone player behind a bot is 2nd", function()
+		local srv, cars, RaceBots, C, tick, cross = race(1, 4)
+		tick(C.RACE_COUNTDOWN + 0.5)
+		cross(RaceBots.list[1].model)   -- a bot finishes first
+		tick(1.5)
+		local calls = rawget(srv.RemoteEvents.PlayerPositionSync, "_calls")
+		local data = calls[#calls].args[1]
+		R.expect(#data).toBe(4)   -- the player and three bots (the player alone read "#1" all race)
+		local me
+		for _, e in ipairs(data) do
+			if e.userId == srv.players[1].UserId then me = e end
+			if e.bot then R.expect(type(e.name)).toBe("string") end
+		end
+		R.expect(me.rank > 1).toBe(true)
+		R.expect(srv.SessionManager.getData(srv.players[1]).raceRank > 1).toBe(true)
+	end)
+
+	R.it("grid slots are drawn again each round: players do not always take the front-left ones", function()
+		local env = Loader.boot()
+		local RaceGrid = env.requirePath("ServerScriptService.Modules.RaceGrid")
+		local C = env.requirePath("ReplicatedStorage.Shared.Constants")
+		local firsts = {}
+		for round = 1, 30 do
+			local o = RaceGrid.order(round)
+			local seen = {}
+			for _, i in ipairs(o) do seen[i] = true end
+			local n = 0
+			for _ in pairs(seen) do n += 1 end
+			R.expect(n).toBe(C.MAX_PLAYERS)   -- every slot once
+			firsts[o[1]] = true
+		end
+		local kinds = 0
+		for _ in pairs(firsts) do kinds += 1 end
+		R.expect(kinds >= 4).toBe(true)
+	end)
+
 	R.it("bots that do not finish are DNF in the standings, and leave with the next round", function()
 		local srv, cars, RaceBots, C, tick, cross = race(1, 3)
 		tick(C.RACE_COUNTDOWN + 0.5)

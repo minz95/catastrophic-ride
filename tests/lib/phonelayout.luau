@@ -23,7 +23,8 @@ M.MIN_TOUCH = TouchLayout.MIN_TOUCH   -- px: smaller is hard to hit with a thumb
 
 -- The HUD's race position list (HUD PositionTracker, IgnoreGuiInset: 160
 -- wide at (1, -180), 20 down, rows of 20 + 2, 6 px padding) for n racers.
-function M.positionList(w, n)
+function M.positionList(w, n, h)
+	if h and math.min(w, h) <= 500 then n = math.min(n, 4) end   -- HUD COMPACT_ROWS on a phone
 	local hgt = n * 22 + 10
 	return { left = w - 180, bottom = 20 + hgt, box = { w - 180, 20, 160, hgt } }
 end
@@ -38,10 +39,10 @@ function M.cases(w, h)
 	end
 	for _, biome in ipairs({ "FOREST", "SKY" }) do
 		for _, trick in ipairs({ false, true }) do
-			for _, n in ipairs({ 0, 6 }) do
+			for _, n in ipairs({ 0, 6, 10 }) do
 				table.insert(out, {
-					phase = "RACING", list = n > 0 and M.positionList(w, n) or nil,
-					label = string.format("RACING %s%s%s", biome, trick and " + trick" or "", n > 0 and " + list" or ""),
+					phase = "RACING", list = n > 0 and M.positionList(w, n, h) or nil,
+					label = string.format("RACING %s%s%s", biome, trick and " + trick" or "", n > 0 and (" + list of " .. n) or ""),
 					vis = function(b)
 						return (not b.biome or b.biome == biome) and (b.attr ~= "RaceTrick" or trick)
 					end,
