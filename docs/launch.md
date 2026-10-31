@@ -22,8 +22,8 @@ already done in this repository.
 4. **you** File → **Publish to Roblox** (Alt+P). Keep the place **Private**.
 5. **you** Creator Dashboard: the settings in section 1 (max players 10,
    devices, genre), the **Maturity questionnaire**, the store page (section
-   3: title, description, `assets/store/icon.png`, the five
-   `assets/store/*.png` thumbnails).
+   3: name, description, `assets/store/final/icon.png` and the five
+   `thumb_*.png`).
 6. **you** Optional: the three coin packs (section 2), ids into
    `Shared/Products.lua`, sync, publish again.
 7. **you** Join the live game from the Roblox app (not Studio) with a
@@ -65,41 +65,91 @@ and the Smoke Bomb (one escape per round); nothing sold changes speed.
 
 ## 3. Store page
 
-**Title:** Catastrophic Ride
+Everything below is ready to paste. Creator Dashboard → the experience →
+**Configure → Basic Info** (name, description, genre), **Places → the
+place → Configure → Access** (devices, max players), **Monetization →
+Private Servers**, **Localization**, **Audience → Maturity & Compliance**.
 
-**Description (English, paste as is):**
+**Name:** Catastrophic Ride (the place is still called "대재앙": rename it)
+
+**Description** (English, 885 of 1 000 characters, paste as is):
 
 > Grab junk. Build a ride. Race your friends!
 >
-> Run around the farm and grab everything you can: barrels, bathtubs,
-> rubber ducks, rockets. Punch, guard and steal to keep the best stuff. Then
-> bolt your loot onto a car, a boat or a plane and race across the Forest,
-> the Ocean and the Sky. Every item gives your ride its own trick: press E
-> (or ITEM) to use it.
+> Run around the farm and grab everything you can: bathtubs, rubber ducks, rockets, a red sofa. Punch, guard and steal to keep the best stuff. Then bolt your loot onto a car, a boat or a plane and race through the Forest, the Ocean and the Sky. Every item gives your ride its own trick!
 >
-> - 3 worlds: drive the forest, sail the ocean, fly through the clouds
-> - 39 items, each with its own ability: ride a pizza, roll on rubber-duck
->   wheels, wear a cactus as a hat
-> - Watch your ride turn on the showroom stand while you build it
-> - Steal, punch and guard while you farm
-> - Fly off jump ramps and spring over a broken bridge, drift for
->   mini-turbos, ride updrafts in the sky, dodge falling logs
-> - Level up, keep your daily streak, unlock paints, trails and special rides
->   like the Rainbow Comet and the Golden Legend
+> 🌲 3 worlds: drive the forest, sail the ocean, fly through the clouds
+> 🛁 39 items: ride a pizza, roll on rubber-duck wheels, wear a cactus as a hat
+> 👊 Punch, guard and steal while you farm
+> 🏁 Jump ramps, spring over a broken bridge, drift for turbo, ride updrafts
+> 🎩 Level up and unlock paints, trails, hats, taunts and special rides
+> 🤖 Nobody online? Bots join, so every round is a race
 >
 > PC: WASD drive · Shift drift · F boost · E item / grab · F punch · G guard
-> Phone: thumbstick to drive, buttons on the right
-> Gamepad: triggers / stick drive · X item / grab · B boost / punch · L1 drift · R1 guard
+> Phone: thumbstick + buttons on the right
+> Gamepad: triggers + stick · X item · B boost · L1 drift
 
-**Icon** (512 × 512, no text needed) and **thumbnails** (1920 × 1080):
-`assets/store/` (`icon.png`, `1_grid`, `2_ramp_jump`, `3_gap_jump`,
-`4_ocean`, `5_sky`), taken from the real maps by `python3
-tools/studio/sim.py run promo` (TestHarness/Promo: the race lighting,
-varied builds and riders, cars frozen mid-jump). Re-run it after visual
-changes; the screen must be awake and unlocked, and a bigger Studio view
-(close the Output / Explorer panels) gives sharper pictures. A crafting
-screen or farm brawl picture needs a play client: Studio Test → Clients and
-Servers, then View → Screenshot.
+**Korean description** (optional: Localization → Korean → add the
+translation; other languages: turn on automatic translation):
+
+> 잡동사니를 줍고, 탈것을 만들고, 친구들과 레이스!
+>
+> 농장을 뛰어다니며 욕조, 고무오리, 로켓, 빨간 소파까지 닥치는 대로 주우세요. 주먹, 막기, 뺏기로 좋은 아이템을 지키세요. 그다음 모은 걸 자동차, 배, 비행기에 붙여서 숲, 바다, 하늘을 달리세요. 아이템마다 탈것에 특별한 기술이 생겨요!
+>
+> 🌲 3개의 월드: 숲을 달리고, 바다를 항해하고, 구름 사이를 날아요
+> 🛁 39개의 아이템: 피자를 타고, 고무오리 바퀴로 달리고, 선인장을 모자로 써요
+> 👊 파밍하면서 주먹, 막기, 뺏기
+> 🏁 점프대, 끊어진 다리 뛰어넘기, 드리프트 터보, 상승 기류
+> 🎩 레벨업하고 페인트, 트레일, 모자, 도발, 특별 탈것 잠금 해제
+> 🤖 접속자가 없어도 봇이 들어와서 언제나 레이스
+>
+> PC: WASD 운전 · Shift 드리프트 · F 부스트 · E 아이템/줍기 · F 주먹 · G 막기
+> 폰: 왼쪽 스틱 + 오른쪽 버튼
+> 게임패드: 트리거 + 스틱 · X 아이템 · B 부스트 · L1 드리프트
+
+**Icon and thumbnails** (upload these, in this order):
+`assets/store/final/icon.png` (512 × 512) and `thumb_1.png` … `thumb_5.png`
+(1920 × 1080): the title card first, then ramps, the gap jump, the ocean,
+the sky. `python3 tools/store_art.py` draws them (game logo in Luckiest Guy,
+captions in Montserrat Black, fonts from the Studio install) over the raw
+shots in `assets/store/*.png`, which `python3 tools/studio/sim.py run promo`
+takes from the real maps (TestHarness/Promo: the race lighting, varied
+builds and riders, cars frozen mid-jump). Re-run both after visual changes;
+the screen must be awake and unlocked, Studio's **Device Simulator off**
+(Test menu: with it on the shots came out as a small phone), and a bigger
+Studio view gives sharper pictures. Videos for social posts: `reports/video/`
+(`tools/video/cut.py build`).
+
+| Field | Value |
+|---|---|
+| Genre / subgenre | Sports & Racing → Racing (or Party & Casual) |
+| Devices | Computer, Phone, Tablet, Console (VR off) |
+| Max players | 10 |
+| Private servers | On, free (friend groups) |
+| Allow copying | Off |
+| Chat | On (TextChatService, Roblox filters it) |
+| Voice chat | Off (not needed) |
+
+**Maturity & Compliance questionnaire** (what this game has; the answers
+decide the content label, most likely Mild):
+
+| Question | Answer |
+|---|---|
+| Violence | Yes, mild: cartoon punches and kicks between blocky avatars, knock-backs, cars bumping; no weapons, no death, no injury shown |
+| Blood / gore | No |
+| Strong language | No |
+| Crude humour | No (taunts are "Blehhh", "Too Easy", emoji; no toilet humour) |
+| Fear / horror | No |
+| Romance | No |
+| Alcohol, drugs, tobacco | No |
+| Gambling / random paid items | No (coin packs give a fixed amount; the shop sells chosen items) |
+| Real-money trading | No |
+| Free-form user creation | No (players build from fixed items) |
+| Social hangout | No |
+| Text chat | Yes (Roblox default chat) |
+| Voice chat | No |
+| Political / religious content | No |
+| Ads, sponsored content | No |
 
 ## 4. Before going public
 
