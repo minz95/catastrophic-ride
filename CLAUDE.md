@@ -553,7 +553,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 `docs/launch.md` is the release-day runbook (sync with Rojo into the
 published place, publish, Creator Dashboard settings, store page). Store
 pictures: `python3 tools/studio/sim.py run promo` (TestHarness/Promo, real
-maps and lighting) → `assets/store/`. Chat is the new TextChatService (set
+maps and lighting; Device Simulator off) → `assets/store/`, then
+`python3 tools/store_art.py` adds the logo and captions → `assets/store/final/`
+(what gets uploaded). Chat is the new TextChatService (set
 in the Rojo project; the legacy chat scripts errored in Studio clients).
 A published place ignores a leftover `HarnessArgs` attribute
 (`HarnessConfig`, lobby spec).
