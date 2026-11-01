@@ -123,6 +123,13 @@ statusLabel.TextScaled      = true
 statusLabel.Font            = Enum.Font.Gotham
 statusLabel.Parent          = bg
 
+-- ── Invite friends (Shared/Invite), at the foot of the player list ─────────
+-- (inside it: beside it ran off a phone's screen or over the list)
+local INVITE_H = 40
+scrollFrame.Size = UDim2.new(1, -10, 1, -35 - INVITE_H - 8)
+require(ReplicatedStorage.Shared.Invite).button(listFrame,
+	UDim2.new(0, 8, 1, -INVITE_H - 6), UDim2.new(1, -16, 0, INVITE_H), true)
+
 -- ─── Player row builder ───────────────────────────────────────────────────────
 
 -- "Players: 2 / 10  ·  Starting in 0:08" (PhaseEndsAt, GameManager's lobby clock)

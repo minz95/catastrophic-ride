@@ -78,6 +78,17 @@ Constants.LOBBY = { MAX_WAIT = 25, FILL_SECONDS = 15 }
 -- either way); it closes when a round starts (FARMING) and for RACING.
 Constants.SHOP = { WARN_AT = 10, CRAFT_CLOSE_AT = 12, NOTICE_SECONDS = 4 }
 
+-- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────
+-- A friend who joins through your invite for the first time (never played
+-- a round) pays you COINS, for up to MAX_REWARDED friends.
+Constants.INVITE = {
+	COINS = 100,
+	MAX_REWARDED = 20,
+	PROMPT = "Come race me in Catastrophic Ride!",
+	REPORT_GAP = 2,      -- s between two InviteSent reports a player may send
+	MAX_REPORT = 50,     -- friends counted in one report
+}
+
 -- ─── Inventory ────────────────────────────────────────────────────────────────
 Constants.INVENTORY_SIZE       = 8
 Constants.STEAL_DISABLE_BEFORE = 5   -- seconds before CRAFTING that stealing locks

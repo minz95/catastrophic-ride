@@ -97,5 +97,11 @@ Telemetry.onRecord(function(kind, e)
 		if (e.levelsGained or 0) > 0 then Analytics.levelReached(p, e.level) end
 		if e.returnDay then Analytics.custom(p, "ReturnDay", e.returnDay) end
 		Analytics.custom(p, "RoundPlace", e.place or 0)
+	elseif kind == "invite_sent" then
+		local p = byId(e.userId)
+		if p then Analytics.custom(p, "InvitesSent", e.count or 0) end
+	elseif kind == "referral" then
+		local p = byId(e.userId)
+		if p then Analytics.custom(p, "FriendJoined", e.coins or 0) end
 	end
 end)

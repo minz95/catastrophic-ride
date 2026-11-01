@@ -46,6 +46,8 @@
 --   ShopUpdated         → server→client (state: table) -- coins changed outside the shop screen (Robux pack)
 --   Taunt               → client→server () -- show my equipped taunt (RACING, Constants.TAUNT)
 --   TauntShown          → server→client (userId, part: BasePart, emoji, text, name) -- draw it over that car (TauntFx)
+--   InviteSent          → client→server (count: number) -- friends picked in Roblox's invite prompt
+--   InviteReward        → server→client (friendName: string, coins: number) -- a friend you invited joined
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --
 -- RemoteFunctions (server-authoritative):
@@ -93,6 +95,8 @@ local EVENTS = {
 	"ShopUpdated",
 	"Taunt",
 	"TauntShown",
+	"InviteSent",
+	"InviteReward",
 }
 
 local FUNCTIONS = {
