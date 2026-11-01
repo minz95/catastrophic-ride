@@ -166,6 +166,12 @@ nextLbl.TextScaled             = true
 nextLbl.Font                   = Enum.Font.GothamBold
 nextLbl.Parent                 = stage
 
+-- ── Invite friends (Shared/Invite): left of the podium ─────────────────────
+-- Right after a race is when a player wants a rematch with friends. Not at
+-- the top: on a phone SHOP / ITEMS sit top right, Roblox's buttons top left.
+require(ReplicatedStorage.Shared.Invite).button(stage,
+	UDim2.new(0, 12, 0, 300), UDim2.new(0, 172, 0, 46))
+
 -- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
 local rewardFrame = Instance.new("Frame")
 rewardFrame.Name              = "Reward"

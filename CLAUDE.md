@@ -368,6 +368,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   which Telemetry event earns which) and `BadgeManager` (live servers only);
   pictures `assets/badges/` from `tools/store_art.py`. A new badge: a line in
   `Badges.LIST`, a rule in `Badges.forEvent`, a picture in `BADGES`.
+- Friend invites: `Shared/Invite` (INVITE FRIENDS on the lobby list and the
+  results screen, Roblox's invite prompt, hidden where invites are not
+  allowed) and `InviteManager` + `Modules/Referral`: a friend who joins
+  through the invite (join data `ReferredByPlayerId`) and never played a
+  round pays the inviter `Constants.INVITE.COINS` (once per friend, record
+  `referred`, up to MAX_REWARDED). Telemetry `invite_sent` / `referral`.
 - Shop: looks only (`Shared/Cosmetics`: paints recolour VehicleDesign's
   body / accent roles, trails hang on the chassis; no mass or collision).
   `Modules/Shop` buys / equips over the saved record and grants Robux coin

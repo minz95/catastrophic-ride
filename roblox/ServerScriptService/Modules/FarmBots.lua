@@ -164,7 +164,13 @@ local function farmSpot(biome, items, taken)
 		local at = Vector3.new(x, y, z)
 		if clear(at) and FarmBounds.itemSpotOk(biome, x, z) then return at end
 	end
-	local p = FarmBounds.randomItemSpot(biome, function() return _rng:NextNumber() end)
+	-- crowded round the items: anywhere on the item area, still apart (the
+	-- old last resort skipped the gap and now and then two bots overlapped)
+	local p
+	for _ = 1, 80 do
+		p = FarmBounds.randomItemSpot(biome, function() return _rng:NextNumber() end)
+		if clear(p) then break end
+	end
 	return Vector3.new(p.X, y, p.Z)
 end
 

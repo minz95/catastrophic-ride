@@ -25,6 +25,7 @@ function Progression.newRecord()
 		owned = {},      -- cosmetics: { [id] = true }
 		equipped = {},   -- cosmetics: { [category] = id }
 		receipts = {},   -- last Robux PurchaseIds granted (Modules/Shop)
+		referred = {},   -- friends whose first visit paid an invite bonus: { ["<userId>"] = true }
 	}
 end
 

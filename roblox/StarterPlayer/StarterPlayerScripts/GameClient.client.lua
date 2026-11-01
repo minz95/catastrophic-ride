@@ -11,6 +11,9 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 
 local LocalPlayer = Players.LocalPlayer
 
+-- "Friend joined! +100 coins" when someone you invited arrives
+require(ReplicatedStorage.Shared.Invite).watchRewards()
+
 -- Lazy-load sub-modules (they may not all exist yet during dev)
 local function safeRequire(path)
 	local ok, mod = pcall(require, path)
