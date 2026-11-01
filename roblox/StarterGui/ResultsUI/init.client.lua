@@ -172,6 +172,93 @@ nextLbl.Parent                 = stage
 require(ReplicatedStorage.Shared.Invite).button(stage,
 	UDim2.new(0, 12, 0, 300), UDim2.new(0, 172, 0, 46))
 
+-- ── Today's challenges (Shared/DailyChallenge), right of the podium ──────────
+-- Mirrors the invite button on the left. Filled from GetChallenges when the
+-- screen opens and from ChallengeUpdate when one is done.
+local chFrame = Instance.new("Frame")
+chFrame.Name                   = "Challenges"
+chFrame.Size                   = UDim2.new(0, 196, 0, 196)
+chFrame.Position               = UDim2.new(0, 796, 0, 240)
+chFrame.BackgroundColor3       = Color3.fromRGB(30, 26, 50)
+chFrame.BackgroundTransparency = 0.2
+chFrame.BorderSizePixel        = 0
+chFrame.Visible                = false
+chFrame.Parent                 = stage
+local chCorner = Instance.new("UICorner")
+chCorner.CornerRadius = UDim.new(0, 8)
+chCorner.Parent = chFrame
+local chTitle = Instance.new("TextLabel")
+chTitle.Name                   = "Title"
+chTitle.Size                   = UDim2.new(1, -12, 0, 20)
+chTitle.Position               = UDim2.new(0, 6, 0, 4)
+chTitle.BackgroundTransparency = 1
+chTitle.Text                   = "TODAY'S CHALLENGES"
+chTitle.TextColor3             = Color3.fromRGB(255, 220, 60)
+chTitle.TextScaled             = true
+chTitle.Font                   = Enum.Font.GothamBlack
+chTitle.Parent                 = chFrame
+local chRows = {}
+for i = 1, 3 do
+	local row = Instance.new("TextLabel")
+	row.Name                   = "Row" .. i
+	row.Size                   = UDim2.new(1, -12, 0, 44)
+	row.Position               = UDim2.new(0, 6, 0, 28 + (i - 1) * 48)
+	row.BackgroundTransparency = 1
+	row.TextWrapped            = true
+	row.TextScaled             = true
+	row.TextXAlignment         = Enum.TextXAlignment.Left
+	row.Font                   = Enum.Font.GothamBold
+	row.TextColor3             = Color3.new(1, 1, 1)
+	row.Text                   = ""
+	row.Parent                 = chFrame
+	chRows[i] = row
+end
+local chBonus = Instance.new("TextLabel")
+chBonus.Name                   = "Bonus"
+chBonus.Size                   = UDim2.new(1, -12, 0, 16)
+chBonus.Position               = UDim2.new(0, 6, 1, -20)
+chBonus.BackgroundTransparency = 1
+chBonus.TextScaled             = true
+chBonus.Font                   = Enum.Font.Gotham
+chBonus.TextColor3             = Color3.fromRGB(170, 240, 170)
+chBonus.Parent                 = chFrame
+
+local function _showChallenges(view)
+	if type(view) ~= "table" or type(view.list) ~= "table" then return end
+	for i, row in ipairs(chRows) do
+		local c = view.list[i]
+		if c then
+			row.Text = c.done
+				and string.format("✅ %s  (+%d)", c.text, c.coins)
+				or string.format("%s  %d/%d  (+%d)", c.text, c.progress, c.goal, c.coins)
+			row.TextColor3 = c.done and Color3.fromRGB(140, 230, 140) or Color3.new(1, 1, 1)
+		else
+			row.Text = ""
+		end
+	end
+	chBonus.Text = view.bonus and "All done! Come back tomorrow"
+		or string.format("All three: +%d bonus", view.allBonus or 0)
+	chFrame.Visible = true
+end
+
+local function _fetchChallenges()
+	local ok, view = pcall(function() return RemoteEvents.GetChallenges:InvokeServer() end)
+	if ok then _showChallenges(view) end
+end
+
+RemoteEvents.ChallengeUpdate.OnClientEvent:Connect(function(view, paid)
+	_showChallenges(view)
+	for _, p in ipairs(type(paid) == "table" and paid or {}) do
+		pcall(function()
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = p.key == "all" and "All challenges done!" or "Challenge done!",
+				Text = string.format("%s  +%d coins", tostring(p.text), tonumber(p.coins) or 0),
+				Duration = 5,
+			})
+		end)
+	end
+end)
+
 -- ── Reward (ProgressionManager → RewardGranted) ──────────────────────────────
 local rewardFrame = Instance.new("Frame")
 rewardFrame.Name              = "Reward"
@@ -365,6 +452,7 @@ RemoteEvents.RewardGranted.OnClientEvent:Connect(_showReward)
 RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	if phase == Constants.PHASES.RESULTS then
 		_animateIn()
+		task.spawn(_fetchChallenges)
 	elseif phase == Constants.PHASES.LOBBY then
 		screen.Enabled = false
 		rewardFrame.Visible = false

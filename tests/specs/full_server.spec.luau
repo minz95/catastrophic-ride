@@ -24,6 +24,7 @@ local SCRIPTS = {
 	"ServerScriptService.AnalyticsManager",
 	"ServerScriptService.BadgeManager",
 	"ServerScriptService.InviteManager",
+	"ServerScriptService.ChallengeManager",
 }
 
 local function run(n, biome, rounds, fillBots)
@@ -31,7 +32,7 @@ local function run(n, biome, rounds, fillBots)
 		players = n,
 		scripts = SCRIPTS,
 		quiet = true,
-		harness = { harness = "lune", biome = biome, players = n, lobbyDelay = 0, fillBots = fillBots,
+		harness = { harness = "lune", biome = biome, players = n, lobbyDelay = 0, fillBots = fillBots, weather = "random",
 			durations = { FARMING = 6, CRAFTING = 2, RACING = 120, RESULTS = 2 } },
 	})
 	local C = srv.env.requirePath("ReplicatedStorage.Shared.Constants")

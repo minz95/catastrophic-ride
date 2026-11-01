@@ -1770,6 +1770,24 @@
       "checks": {}
     },
     {
+      "name": "promo-weather",
+      "kind": "promo",
+      "tags": [
+        "store"
+      ],
+      "_why": "each promo scene under each of its biome's weathers (Shared/Weather: night forest, rainy forest, stormy / sunset sea, sunset / thunder sky): lighting, water and headlights. Written to reports/weather/ (git-ignored), not the store pictures. Rain and lightning are client effects (WeatherFx) and do not show here.",
+      "opts": {
+        "hold": 2,
+        "weather": true,
+        "only": [
+          "1_grid",
+          "4_ocean",
+          "5_sky"
+        ]
+      },
+      "checks": {}
+    },
+    {
       "name": "record-forest",
       "kind": "match",
       "tags": [

@@ -161,14 +161,20 @@ local function scenes()
 	return list
 end
 
-local function showBiome(biome)
+local Weather = require(ReplicatedStorage.Shared.Weather)
+
+local function showBiome(biome, weather)
 	local maps = workspace:FindFirstChild("Maps")
 	local map = maps and maps:FindFirstChild(MapVisibility.mapName(biome))
 	if map then MapVisibility.applyRacingState(maps, map) end
-	for prop, value in pairs(LightingPresets[biome] or {}) do
+	for prop, value in pairs(Weather.lighting(LightingPresets[biome], biome, weather or Weather.CLEAR)) do
 		pcall(function() Lighting[prop] = value end)
 	end
 	pcall(function() require(ServerScriptService.Modules.TerrainPainter).paint(biome) end)
+	pcall(function()
+		require(ServerScriptService.Modules.TerrainPainter).waterLook(biome, Weather.look(biome, weather))
+	end)
+	Weather.applySky(Lighting, workspace:FindFirstChildOfClass("Terrain"), biome, weather)
 	-- floating labels (checkpoints) stay off the pictures
 	if map then
 		for _, d in ipairs(map:GetDescendants()) do
@@ -199,13 +205,44 @@ function Promo.run(args)
 	end)
 	local report = { shots = {}, errors = {} }
 	local n = 0
+	-- args.weather: every scene again under each of its biome's weathers
+	-- (shot "weather_<scene>_<weather>"; WeatherFx's headlights added here,
+	-- as no client runs)
+	local list = {}
 	for _, sc in ipairs(scenes()) do
 		if not args.only or table.find(args.only, sc.name) then
-			showBiome(sc.biome)
+			if args.weather then
+				for w in pairs(Weather.CHOICES[sc.biome] or {}) do
+					if w ~= Weather.CLEAR then
+						table.insert(list, setmetatable({ name = "weather_" .. sc.name .. "_" .. w, weather = w,
+							headlights = (Weather.look(sc.biome, w).fx or {}).headlights }, { __index = sc }))
+					end
+				end
+			else
+				table.insert(list, sc)
+			end
+		end
+	end
+	for _, sc in ipairs(list) do
+		do
+			showBiome(sc.biome, sc.weather)
 			local folder = Instance.new("Folder")
 			folder.Name = "Promo_" .. sc.name
 			folder.Parent = workspace
 			local ok, camCF = pcall(sc.setup, folder)
+			if ok and camCF and sc.headlights then
+				for _, d in ipairs(folder:GetDescendants()) do
+					if d:IsA("BasePart") and d.Name == "Chassis" then
+						local spot = Instance.new("SpotLight")
+						spot.Face, spot.Range, spot.Angle, spot.Brightness = Enum.NormalId.Front, 60, 70, 2.2
+						spot.Color, spot.Shadows = Color3.fromRGB(255, 240, 200), false
+						spot.Parent = d
+						local glow = Instance.new("PointLight")
+						glow.Range, glow.Brightness, glow.Color = 10, 0.5, Color3.fromRGB(255, 230, 190)
+						glow.Parent = d
+					end
+				end
+			end
 			if ok and camCF then
 				task.wait(1.2)   -- riders settle into their seats
 				for _, c in ipairs(folder:GetChildren()) do

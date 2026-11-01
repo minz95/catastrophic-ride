@@ -188,7 +188,10 @@ def run_gallery_studio(cmd, token, t0, timeout, sheet="gallery"):
     return proc.returncode
 
 
-def store_image(path, name, icon=False):
+WEATHER_DIR = os.path.join(ROOT, "reports", "weather")
+
+
+def store_image(path, name, icon=False, out_dir=None):
     """A store picture from a full-resolution screenshot: the Studio view,
     cropped to 16:9 (or a centred square for the icon) and resized to
     1920 x 1080 (512 x 512). Returns the written path or None."""
@@ -207,8 +210,8 @@ def store_image(path, name, icon=False):
         else:
             cw, ch = w, int(w * 9 / 16)
         box = ((w - cw) // 2, (h - ch) // 2, (w - cw) // 2 + cw, (h - ch) // 2 + ch)
-        size, out = (1920, 1080), os.path.join(STORE_DIR, name + ".png")
-    os.makedirs(STORE_DIR, exist_ok=True)
+        size, out = (1920, 1080), os.path.join(out_dir or STORE_DIR, name + ".png")
+    os.makedirs(out_dir or STORE_DIR, exist_ok=True)
     view.crop(box).resize(size, Image.LANCZOS).save(out)
     return out
 
@@ -232,7 +235,9 @@ def run_promo_studio(cmd, token, t0, timeout):
                 taken.add(name)
                 raw = os.path.join(GALLERY_DIR, "promo_" + name + ".png")
                 subprocess.run(["screencapture", "-x", raw])
-                out = store_image(raw, name, icon=(name == "icon"))
+                # weather looks (promo-weather) are checks, not store pictures
+                out = store_image(raw, name, icon=(name == "icon"),
+                                  out_dir=WEATHER_DIR if name.startswith("weather_") else None)
                 print("  shot %s → %s" % (name, os.path.relpath(out, ROOT) if out else "(no Studio view found: screen asleep or locked?)"), flush=True)
     if proc.poll() is None:
         proc.terminate()

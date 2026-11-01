@@ -14,6 +14,7 @@ local BiomeConfig  = require(ServerScriptService.Modules.BiomeConfig)
 local GameManager  = require(ServerScriptService.GameManager)
 local MapVisibility = require(ServerScriptService.Modules.MapVisibility)
 local TerrainPainter = require(ServerScriptService.Modules.TerrainPainter)
+local Weather      = require(ReplicatedStorage.Shared.Weather)
 
 -- ─── Map folder convention ────────────────────────────────────────────────────
 -- Each map lives under workspace.Maps.<BiomeName>Map as a Model.
@@ -29,12 +30,18 @@ local _mapsFolder     = nil
 
 local LIGHTING_PRESETS = require(ServerScriptService.Modules.LightingPresets)
 
+-- The biome's preset with this round's weather (Shared/Weather) over it;
+-- the water look too (a storm's dark, high waves). Every property is set
+-- each round, so a night never stays for the next one.
 local function _applyLighting(biome)
 	local preset = LIGHTING_PRESETS[biome]
 	if not preset then return end
-	for prop, value in pairs(preset) do
+	local weather = GameManager.getWeather and GameManager.getWeather() or Weather.CLEAR
+	for prop, value in pairs(Weather.lighting(preset, biome, weather)) do
 		pcall(function() Lighting[prop] = value end)
 	end
+	TerrainPainter.waterLook(biome, Weather.look(biome, weather))
+	Weather.applySky(Lighting, workspace:FindFirstChildOfClass("Terrain"), biome, weather)
 end
 
 -- ─── Map visibility helpers ───────────────────────────────────────────────────
@@ -120,8 +127,8 @@ GameManager.onPhaseChanged(function(phase, biome)
 			warn(string.format("[MapManager] Map model '%s' not found", MapVisibility.mapName(biome)))
 		end
 		MapVisibility.applyPhase(folder, mapModel, "FarmArea")
-		_applyLighting(biome)
 		TerrainPainter.paint(biome)
+		_applyLighting(biome)   -- after the paint: it sets the weather's water look
 
 	elseif phase == Constants.PHASES.RACING then
 		if not _currentBiome then return end

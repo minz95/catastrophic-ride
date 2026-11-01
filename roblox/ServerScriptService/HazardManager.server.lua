@@ -22,6 +22,7 @@ local BiomeConfig    = require(ServerScriptService.Modules.BiomeConfig)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 local HazardPlan     = require(ReplicatedStorage.Shared.HazardPlan)
 local HazardLook     = require(ServerScriptService.Modules.HazardLook)
+local Weather        = require(ReplicatedStorage.Shared.Weather)
 
 local H = Constants.HAZARDS
 
@@ -199,7 +200,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 	local id = _raceId
 	if phase == Constants.PHASES.RACING then
 		local cfg = biome and BiomeConfig[biome]
-		for _, hz in ipairs((cfg and cfg.hazards) or {}) do
+		-- this round's weather may change them (a storm: bigger floods, gusts)
+		local list = Weather.hazards((cfg and cfg.hazards) or {}, biome, GameManager.getWeather())
+		for _, hz in ipairs(list) do
 			if RUNNERS[hz.type] then
 				task.spawn(_loop, hz, biome, id)
 			end

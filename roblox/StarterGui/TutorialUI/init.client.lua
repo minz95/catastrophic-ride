@@ -314,6 +314,13 @@ local function _showToast(phase)
 	toastTitle.Text  = guide.title
 	toastTitle.TextColor3 = guide.colour
 	toastTip.Text    = guide.tip
+	-- this round's weather (Shared/Weather) on the first line, from FARMING
+	local W = require(ReplicatedStorage.Shared.Weather)
+	local wlook = phase == "FARMING" and W.look(ReplicatedStorage:GetAttribute("Biome"), ReplicatedStorage:GetAttribute("Weather"))
+	if wlook then
+		toastTip.Text = W.title(ReplicatedStorage:GetAttribute("Biome"), ReplicatedStorage:GetAttribute("Weather"))
+			.. ": " .. wlook.tip .. "\n" .. guide.tip
+	end
 
 	_clearKeyRows()
 	-- the key strip (bottom-left) already lists them on a keyboard: the
