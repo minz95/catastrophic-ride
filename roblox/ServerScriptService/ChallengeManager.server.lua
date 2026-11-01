@@ -14,6 +14,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local GameManager = require(ServerScriptService.GameManager)
 local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
+local Shop = require(ServerScriptService.Modules.Shop)
 
 local function today() return Progression.dayOf(os.time()) end
 
@@ -33,6 +34,8 @@ Telemetry.onRecord(function(kind, e)
 				if c then c.Value = rec.coins end
 				PlayerStore.saveSoon(player)
 				RemoteEvents.ChallengeUpdate:FireClient(player, DailyChallenge.view(rec, day), paid)
+				-- an open shop screen shows the new coins (it read them when it opened)
+				RemoteEvents.ShopUpdated:FireClient(player, Shop.state(rec))
 				for _, p in ipairs(paid) do
 					-- task.defer: this runs inside Telemetry.record's loop
 					task.defer(Telemetry.record, "challenge", { userId = x.userId, key = p.key, coins = p.coins, totalCoins = rec.coins })

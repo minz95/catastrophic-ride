@@ -1583,6 +1583,36 @@
       }
     },
     {
+      "name": "ui-weather",
+      "kind": "match",
+      "tags": [
+        "ui"
+      ],
+      "_why": "ui-layout on a stormy sea (Shared/Weather): the client runs WeatherFx (rain, lightning) through a whole round; client errors fail it; the results screen's TODAY'S CHALLENGES panel and INVITE button are in the layout dump (tools/studio/ui_overlap.py)",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 1,
+        "fillBots": 4,
+        "lobbyDelay": 6,
+        "uiDump": true,
+        "durations": {
+          "FARMING": 25,
+          "CRAFTING": 15,
+          "RACING": 90,
+          "RESULTS": 8
+        },
+        "maxSeconds": 260,
+        "farmProfiles": [
+          "casual"
+        ],
+        "weather": "storm"
+      },
+      "checks": {
+        "allJoined": true,
+        "uiOverlap": true
+      }
+    },
+    {
       "name": "farm-feel",
       "kind": "match",
       "tags": [

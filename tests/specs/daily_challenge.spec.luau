@@ -153,4 +153,53 @@ R.describe("Daily challenges", function()
 		R.expect(res:find("GetChallenges:InvokeServer", 1, true) ~= nil).toBe(true)
 		R.expect(res:find("ChallengeUpdate.OnClientEvent", 1, true) ~= nil).toBe(true)
 	end)
+
+	R.it("notices wait for the race to end (a popup over the phone's BOOST / DRIFT buttons)", function()
+		local Notice = env.requirePath("ReplicatedStorage.Shared.Notice")
+		R.expect(Notice.holds("RACING")).toBe(true)
+		R.expect(Notice.holds("RESULTS")).toBe(false)
+		R.expect(Notice.holds("FARMING")).toBe(false)
+		for _, f in ipairs({ "roblox/StarterGui/ResultsUI/init.client.lua", "roblox/ReplicatedStorage/Shared/Invite.lua" }) do
+			local src = fs.readFile(f)
+			R.expect(src:find("SendNotification", 1, true)).toBe(nil)
+			R.expect(src:find("Notice).show(", 1, true) ~= nil or src:find("Notice.show(", 1, true) ~= nil).toBe(true)
+		end
+	end)
+end)
+
+R.describe("Daily challenges: the shop screen", function()
+	R.it("a challenge's coins reach an open shop screen (ShopUpdated)", function()
+		local srv = Server.boot({
+			players = 1,
+			scripts = { "ServerScriptService.GameBootstrap", "ServerScriptService.ProgressionManager",
+				"ServerScriptService.ChallengeManager" },
+			harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 0, durations = { FARMING = 30 } },
+		})
+		srv.advance(1)
+		local e = srv.env
+		local D = e.requirePath("ReplicatedStorage.Shared.DailyChallenge")
+		local P = e.requirePath("ReplicatedStorage.Shared.Progression")
+		local RE = e.requirePath("ReplicatedStorage.RemoteEvents")
+		local Tel = e.requirePath("ServerScriptService.Modules.Telemetry")
+		P.dayOf = function() return 20000 end
+		local keys = D.forDay(20000)
+		-- feed the events of today's first challenge until it is done
+		local c = D.get(keys[1])
+		local uid = srv.players[1].UserId
+		local kinds = {
+			finish = { "finish", { userId = uid, place = 2 } }, win = { "finish", { userId = uid, place = 1 } },
+			podium = { "finish", { userId = uid, place = 3 } }, turbo = { "drift_turbo", { userId = uid } },
+			steal = { "steal", { thief = uid } }, pickup = { "item_pickup", { userId = uid } },
+			ability = { "ability", { userId = uid, result = "ok" } }, boost = { "boost", { userId = uid } },
+			knockout = { "punch", { attacker = uid, result = "knockout" } },
+		}
+		local k = kinds[c.ev]
+		srv.GameManager.getBiome = function() return c.biome or "FOREST" end
+		srv.GameManager.getWeather = function() return c.wild and "storm" or "clear" end
+		for _ = 1, c.goal do Tel.record(k[1], table.clone(k[2])) end
+		srv.advance(0.1)
+		local calls = rawget(RE.ShopUpdated, "_calls") or {}
+		R.expect(#calls > 0).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
 end)

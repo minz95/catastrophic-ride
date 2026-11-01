@@ -381,7 +381,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   skybox ignores fog, so overcast weathers also set haze and clouds
   (`Weather.applySky`: an Atmosphere and Terrain Clouds, made while the
   weather lasts). The FARMING toast names it. Look: `sim.py run
-  promo-weather` (lighting only, `reports/weather/`).
+  promo-weather` (lighting only, `reports/weather/`); a whole round in a
+  storm with the client's WeatherFx: `sim.py run ui-weather`. Gusts per
+  weather on real drivers: `lune run tools/gust_sim.luau OCEAN|SKY`.
+- Soak: `lune run tools/soak.luau [rounds] [players] [seed]` runs one
+  server for many rounds with every server script (random biome and
+  weather, bots, an invited friend, the day turning over) and checks
+  lighting reset, haze / clouds, storm hazards, the coin ledger, challenge
+  state, errors and warnings (`Mock.warnings`). Run it after touching the
+  round loop, weather, rewards or challenges.
+- Corner notices (`Shared/Notice`, "Challenge done!", "Friend joined!")
+  wait while RACING: on a phone the popup covers BOOST / DRIFT.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

@@ -249,13 +249,10 @@ end
 RemoteEvents.ChallengeUpdate.OnClientEvent:Connect(function(view, paid)
 	_showChallenges(view)
 	for _, p in ipairs(type(paid) == "table" and paid or {}) do
-		pcall(function()
-			game:GetService("StarterGui"):SetCore("SendNotification", {
-				Title = p.key == "all" and "All challenges done!" or "Challenge done!",
-				Text = string.format("%s  +%d coins", tostring(p.text), tonumber(p.coins) or 0),
-				Duration = 5,
-			})
-		end)
+		-- held while racing (Shared/Notice: a popup over the touch buttons)
+		require(ReplicatedStorage.Shared.Notice).show(
+			p.key == "all" and "All challenges done!" or "Challenge done!",
+			string.format("%s  +%d coins", tostring(p.text), tonumber(p.coins) or 0), 5)
 	end
 end)
 
