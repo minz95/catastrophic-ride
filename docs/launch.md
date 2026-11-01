@@ -40,7 +40,7 @@ History → restore the previous version (publishing is reversible).
 | Setting | Value | Why |
 |---|---|---|
 | Workspace → StreamingEnabled | **Off** | Rojo sets it too; with it on, item models looked broken and players froze after teleports |
-| Max players per server | **10** | `Constants.MAX_PLAYERS` and the 10 character skins |
+| Max players per server | **10** | `Constants.MAX_PLAYERS` and the 10 character skins (the default is 50: players past 10 only watch) |
 | Genre | Racing (or Party & Casual) | |
 | Devices | Computer, Phone, Tablet, Console | touch buttons: `TouchControls`; gamepad: `KeyInput.GAMEPAD` |
 | Security → Enable Studio Access to API Services | On | saves (DataStore) work in Studio playtests; Studio uses its own store `PlayerProgress_studio`, so Studio play and test purchases never touch live players' records |
@@ -220,3 +220,8 @@ experience → Data Stores, or `DataStore:RemoveAsync`).
 - The finish grace (45 s after the winner) sometimes cuts off the slowest
   driver when the winner is very fast (Studio match-forest, 2026-10-23: a
   novice 170 studs short).
+
+## Is the live game up to date?
+
+`python3 tools/live_check.py` compares the live game's last update with the
+last merge on main and checks the server size (exit 1 when either is off).
