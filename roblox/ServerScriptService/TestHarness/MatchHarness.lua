@@ -263,8 +263,10 @@ function MatchHarness.start(args, endTest)
 			table.insert(report.rounds, current)
 			current = nil
 			if #report.rounds >= wantRounds then
-				-- a moment for what happens at RESULTS (rewards) to be logged
-				task.delay(1, function() finish("rounds complete") end)
+				-- a moment for what happens at RESULTS (rewards) to be logged;
+				-- a layout dump (every 2 s on the client) needs the results
+				-- screen up long enough to be taken (ui-weather missed it)
+				task.delay(args.uiDump and 5 or 1, function() finish("rounds complete") end)
 			end
 		end
 	end)

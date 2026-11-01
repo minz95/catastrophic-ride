@@ -522,9 +522,17 @@ end
 
 -- HEAD / TAIL passives of a rear-end contact. Adjusts the victim's side of
 -- the physical hit (`hit`, may be nil) instead of adding its own mover.
+-- A racer's crafted slots (players and race bots: both keep vehicleStats).
+local function _slotsOf(actor)
+	local ps = _physState[actor.UserId]
+	if ps and ps.slots then return ps.slots end
+	local d = SessionManager.getData(actor)
+	return d and d.vehicleStats and d.vehicleStats.slotAssignments
+end
+
 local function _rearEndPassives(attacker, victim, aVeh, vVeh, hitAttacker, hitVictim)
 	local aps, vps = _physState[attacker.UserId], _physState[victim.UserId]
-	local fx = Passives.contactEffects(aps and aps.slots, vps and vps.slots)
+	local fx = Passives.contactEffects(_slotsOf(attacker), _slotsOf(victim))
 	local now = tick()
 	if aps then aps.cleanSince = now end
 	if vps then vps.cleanSince = now end
@@ -589,6 +597,19 @@ local function _onBotContact(ownerA, vehicleA, bot)
 	if (_impactCooldown[key] or 0) > now then return end
 	_impactCooldown[key] = now + Constants.IMPACT.PAIR_COOLDOWN
 	local impact = CarImpact.resolve(_body(vehicleA), _body(bot.model))
+	-- HEAD / TAIL passives work against bots too (most live races are one
+	-- player and bots: a Shopping Cart or Cactus did nothing there)
+	if (_contactCooldown[key] or 0) <= now and bot.proxy then
+		local who = Passives.rearEnd(_carPose(vehicleA), _carPose(bot.model))
+		if who then
+			_contactCooldown[key] = now + P.CONTACT_COOLDOWN
+			if who == "a" then
+				_rearEndPassives(ownerA, bot.proxy, vehicleA, bot.model, impact and impact.a, impact and impact.b)
+			else
+				_rearEndPassives(bot.proxy, ownerA, bot.model, vehicleA, impact and impact.b, impact and impact.a)
+			end
+		end
+	end
 	if not impact then return end
 	RemoteEvents.CarImpact:FireClient(ownerA, impact.a.dvx, impact.a.dvz, impact.a.spin, impact.strength, b)
 	RaceBots.knock(bot.id, impact.b.dvx, impact.b.dvz, impact.b.spin)
@@ -675,6 +696,8 @@ local function _ensureRacer(player)
 	return ps
 end
 
+local _botSlipUntil = {}   -- ["player:bot"] = tick until the slipstream label shows again
+
 -- Lead bonus (Racing Flag), momentum (Flower) and slipstream (Toilet Paper).
 local function _updatePassives(ranked, field)
 	local now = tick()
@@ -740,6 +763,18 @@ local function _updatePassives(ranked, field)
 						VehicleTuning.set(_seatOf(ov), "MaxSpeed", "slipstream_" .. player.UserId,
 							1 - slip, P.LEAD_PERIOD * 1.5)
 					end
+				end
+			end
+			-- race bots right behind are slowed too
+			for _, bot in ipairs(RaceBots.list) do
+				if bot.primary and bot.primary.Parent and bot.seat and bot.proxy
+					and Passives.isDirectlyBehind(leader, _carPose(bot.model)) then
+					local key = player.UserId .. ":" .. bot.id
+					if (_botSlipUntil[key] or 0) < now then
+						EffectFx.play("slipstream", bot.proxy, P.LEAD_PERIOD * 1.5, player)
+					end
+					_botSlipUntil[key] = now + P.LEAD_PERIOD * 2
+					VehicleTuning.set(bot.seat, "MaxSpeed", "slipstream_" .. player.UserId, 1 - slip, P.LEAD_PERIOD * 1.5)
 				end
 			end
 		end
@@ -1113,6 +1148,12 @@ GameManager.onPhaseChanged(function(phase, biome)
 			local ok, err = pcall(function()
 				local bots = RaceBots.spawn(biome, nBots, RaceGrid.cframes(biome), #Players:GetPlayers() + 1)
 				_totalRacers += #bots
+				for _, bot in ipairs(bots) do
+					if bot.proxy then RaceEffects.reset(bot.proxy) end   -- last race's flags
+					-- Rubber Duck HEAD: a bot's first hit of the race is ignored too
+					local head = Passives.forSlots(bot.slots)
+					if head.absorbOneHit and bot.proxy then RaceEffects.grant(bot.proxy, "absorb") end
+				end
 				RaceBots.run(biome)
 			end)
 			if not ok then warn("[RacingManager] race bots: " .. tostring(err)) end

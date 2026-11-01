@@ -218,13 +218,16 @@ GameManager.onPhaseChanged(function(phase, biome)
 			for i, player in ipairs(Players:GetPlayers()) do
 				local data = SessionManager.getData(player)
 				if not data then continue end
+				-- More players than grid slots (a server size over MAX_PLAYERS):
+				-- the rest watch this race (no car at GO = spectator).
+				if not spawnGrid[i] then continue end
 
 				local stats = data.vehicleStats or VehicleStats.calculate(nil, nil, nil, biome)
 				local rec = PlayerStore.get(player)
 				local model = VehicleBuilder.build(
 					stats,
 					biome,
-					spawnGrid[i] or CFrame.new(i * 6, 2, 0),
+					spawnGrid[i],
 					stats.slotAssignments,
 					Cosmetics.look(rec and rec.equipped)
 				)

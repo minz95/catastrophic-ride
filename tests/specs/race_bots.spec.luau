@@ -251,6 +251,11 @@ R.describe("a player's car meeting a bot's", function()
 		local srv, cars, RaceBots, C, tick = race(1, 2)
 		tick(C.RACE_COUNTDOWN + 0.5)
 		local bot = RaceBots.list[1]
+		-- no HEAD / TAIL passives on this bot (a Balloon Bunch TAIL or Rubber
+		-- Duck HEAD from its random build would absorb the hit)
+		bot.slots = {}
+		srv.SessionManager.getData(bot.proxy).vehicleStats.slotAssignments = {}
+		srv.env.requirePath("ServerScriptService.Modules.RaceEffects").reset(bot.proxy)
 		local mine = cars[1].PrimaryPart
 		local Vector3 = require("@lune/roblox").Vector3
 		mine.CFrame = CFrame.new(0, 2, 400)

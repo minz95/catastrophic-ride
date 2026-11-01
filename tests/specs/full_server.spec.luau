@@ -118,4 +118,15 @@ R.describe("a full server: 10 players", function()
 		R.expect(#bots).toBe(0)
 		R.expect(out.errors).toBeEmpty("server errors")
 	end)
+	R.it("more players than MAX_PLAYERS (a dashboard server size over 10): no errors, extras still get a round", function()
+		local out = run(12, "OCEAN", 2)
+		R.expect(out.errors).toBeEmpty("server errors")
+		R.expect(#out.phaseErrors).toBe(0)
+		for _, info in ipairs(out.rounds) do
+			R.expect(info.raced).toBe(true)
+			R.expect(info.results).toBe(true)
+			R.expect(info.cars).toBe(10)   -- ten grid slots; the rest watch
+			R.expect(info.closest > 5).toBe(true)
+		end
+	end)
 end)

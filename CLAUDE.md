@@ -262,6 +262,16 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   items, stats or abilities run `lune run tools/balance.luau` and keep
   `Constants.BALANCE_TARGETS` green. Speed buffs stack to `SPEED_STACK_MAX`.
 - Shoves (abilities, obstacles) go to the driver as a `CarImpact` knock.
+- Every item in every slot it fits, every biome: `tests/specs/item_slots`
+  (E abilities with their biome variant land where AbilityConfig says and
+  draw a style the EffectFx client has; HEAD / TAIL passives vs a player and
+  vs a race bot; MOBILITY bonus). HEAD / TAIL contact passives and the
+  Toilet Paper slipstream also work against race bots (RacingManager
+  `_onBotContact`, `_slotsOf`): most live races are one player and bots,
+  and a Shopping Cart or Cactus did nothing there.
+- A server over `MAX_PLAYERS` (the dashboard's server size must be 10):
+  players past the 10 grid slots get no car and watch (CraftingManager);
+  they used to get a car off the track.
 - Jumps (FOREST): `VehicleController` flies the car an arcade arc
   (`Constants.DRIVE.JUMP`: up at VY under a lighter GRAVITY, attribute
   "AirT") when the ground under it drops MIN_DROP at once at speed (a

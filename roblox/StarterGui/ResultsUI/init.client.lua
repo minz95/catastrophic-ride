@@ -169,8 +169,10 @@ nextLbl.Parent                 = stage
 -- ── Invite friends (Shared/Invite): left of the podium ─────────────────────
 -- Right after a race is when a player wants a rematch with friends. Not at
 -- the top: on a phone SHOP / ITEMS sit top right, Roblox's buttons top left.
+-- Below the mid-height SHOP / ITEMS of a PC (at stage Y 300 it went under
+-- Roblox's chat window in a 1024 × 640 window).
 require(ReplicatedStorage.Shared.Invite).button(stage,
-	UDim2.new(0, 12, 0, 300), UDim2.new(0, 172, 0, 46))
+	UDim2.new(0, 12, 0, 440), UDim2.new(0, 172, 0, 46))
 
 -- ── Today's challenges (Shared/DailyChallenge), right of the podium ──────────
 -- Mirrors the invite button on the left. Filled from GetChallenges when the
