@@ -22,6 +22,7 @@ local SCRIPTS = {
 	"ServerScriptService.ProgressionManager",
 	"ServerScriptService.ShopManager",
 	"ServerScriptService.AnalyticsManager",
+	"ServerScriptService.BadgeManager",
 }
 
 local function run(n, biome, rounds, fillBots)

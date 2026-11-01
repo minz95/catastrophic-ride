@@ -123,15 +123,18 @@ R.describe("farm bots (live servers fill the farm)", function()
 		B.STEAL_CHANCE, B.PUNCH_CHANCE = 0, 0
 		local bot = FarmBots.list[1]
 		srv.SessionManager.getData(bot.proxy).inventory = {}
-		-- hold the bot in place (a crate in the way)
+		-- hold the bot in place (a crate in the way). A new item spawning
+		-- can change its target and start the wait again (CI flaked on
+		-- GIVE_UP + 1 s), so wait up to a few GIVE_UPs for the give-up.
 		local at = bot.root.CFrame
-		for _ = 1, math.ceil((B.GIVE_UP + 1) / 0.25) do
+		local gaveUp = false
+		for _ = 1, math.ceil((B.GIVE_UP * 4) / 0.25) do
 			bot.root.CFrame = at
 			tick(0.25)
-		end
-		local gaveUp = false
-		for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do
-			if ev.act == "give_up" and ev.userId == bot.proxy.UserId then gaveUp = true end
+			for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do
+				if ev.act == "give_up" and ev.userId == bot.proxy.UserId then gaveUp = true end
+			end
+			if gaveUp then break end
 		end
 		R.expect(gaveUp).toBe(true)
 		B.STEAL_CHANCE, B.PUNCH_CHANCE = table.unpack(old)
