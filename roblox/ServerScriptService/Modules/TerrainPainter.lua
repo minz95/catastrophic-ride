@@ -57,4 +57,18 @@ function TerrainPainter.paint(biome, force)
 	return #ops + #water
 end
 
+--- Sets the water look for `biome`: TerrainPlan's, with a weather's
+-- `water` changes over it (Shared/Weather). No-op without water.
+function TerrainPainter.waterLook(biome, weatherLook)
+	local t = terrain()
+	local cfg = TerrainPlan.WATER[biome]
+	local look = cfg and cfg.look
+	if not t or not look then return end
+	local all = table.clone(look)
+	for k, v in pairs(weatherLook and weatherLook.water or {}) do all[k] = v end
+	for prop, value in pairs(all) do
+		pcall(function() t[prop] = value end)
+	end
+end
+
 return TerrainPainter

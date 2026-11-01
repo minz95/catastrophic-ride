@@ -1583,6 +1583,36 @@
       }
     },
     {
+      "name": "ui-weather",
+      "kind": "match",
+      "tags": [
+        "ui"
+      ],
+      "_why": "ui-layout on a stormy sea (Shared/Weather): the client runs WeatherFx (rain, lightning) through a whole round; client errors fail it; the results screen's TODAY'S CHALLENGES panel and INVITE button are in the layout dump (tools/studio/ui_overlap.py)",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 1,
+        "fillBots": 4,
+        "lobbyDelay": 6,
+        "uiDump": true,
+        "durations": {
+          "FARMING": 25,
+          "CRAFTING": 15,
+          "RACING": 90,
+          "RESULTS": 8
+        },
+        "maxSeconds": 260,
+        "farmProfiles": [
+          "casual"
+        ],
+        "weather": "storm"
+      },
+      "checks": {
+        "allJoined": true,
+        "uiOverlap": true
+      }
+    },
+    {
       "name": "farm-feel",
       "kind": "match",
       "tags": [
@@ -1766,6 +1796,24 @@
       "_why": "store-page pictures from the real maps (TestHarness/Promo): start grid, a ramp jump, the gap jump, boats, planes round the sky corkscrew, and the icon; written to assets/store/ (1920 x 1080, icon 512 x 512, the Studio view only). The screen must be awake and unlocked; a bigger Studio view gives sharper pictures",
       "opts": {
         "hold": 2
+      },
+      "checks": {}
+    },
+    {
+      "name": "promo-weather",
+      "kind": "promo",
+      "tags": [
+        "store"
+      ],
+      "_why": "each promo scene under each of its biome's weathers (Shared/Weather: night forest, rainy forest, stormy / sunset sea, sunset / thunder sky): lighting, water and headlights. Written to reports/weather/ (git-ignored), not the store pictures. Rain and lightning are client effects (WeatherFx) and do not show here.",
+      "opts": {
+        "hold": 2,
+        "weather": true,
+        "only": [
+          "1_grid",
+          "4_ocean",
+          "5_sky"
+        ]
       },
       "checks": {}
     },

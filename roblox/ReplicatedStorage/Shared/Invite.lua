@@ -93,13 +93,8 @@ end
 --- "Friend joined" notice for InviteReward (call once per client).
 function Invite.watchRewards()
 	RemoteEvents.InviteReward.OnClientEvent:Connect(function(name, coins)
-		pcall(function()
-			game:GetService("StarterGui"):SetCore("SendNotification", {
-				Title = "Friend joined!",
-				Text = string.format("%s joined: +%d coins", tostring(name), tonumber(coins) or 0),
-				Duration = 6,
-			})
-		end)
+		require(script.Parent.Notice).show("Friend joined!",
+			string.format("%s joined: +%d coins", tostring(name), tonumber(coins) or 0), 6)
 	end)
 end
 

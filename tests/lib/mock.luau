@@ -914,6 +914,7 @@ function M.reset()
 	M.clock = 0
 	M._timers = {}
 	M.errors = {}
+	M.warnings = {}   -- every warn() a script made (soak runs check them)
 	local game = makeInstance("DataModel", "Game")
 	M.CollectionService = newCollectionService()
 	M.CollectionService.Parent = game
@@ -1035,6 +1036,10 @@ function M.environment(scriptInstance, requireFn)
 		Random = Random,
 		task = M.task,
 		warn = function(...)
+			local parts = {}
+			for i = 1, select("#", ...) do parts[i] = tostring((select(i, ...))) end
+			M.warnings = M.warnings or {}
+			table.insert(M.warnings, table.concat(parts, " "))
 			if M.quiet then
 				return
 			end

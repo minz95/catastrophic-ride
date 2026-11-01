@@ -186,6 +186,7 @@ function Runner.runMatch(opts)
 		ejectTest = opts.ejectTest, -- bots jump and die mid-race (BotDriver, Modules/RaceSeat)
 		shopUi = opts.shopUi,       -- bots open the shop screen with B (BotDriver, sim.py shopUi)
 		uiDump = opts.uiDump,       -- bots report their screen layout (BotDriver "ui")
+		weather = opts.weather,     -- Shared/Weather key or "random" (default clear)
 		farmBots = opts.farmBots,   -- overrides of Constants.BOTS.FARM for the server farm bots (FarmBots.start)
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },

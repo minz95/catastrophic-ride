@@ -13,6 +13,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
 local Referral = require(ServerScriptService.Modules.Referral)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
+local Shop = require(ServerScriptService.Modules.Shop)
 
 PlayerStore.onLoaded(function(friend, friendRec)
 	local inviterId = Referral.referrerOf(friend)
@@ -26,6 +27,8 @@ PlayerStore.onLoaded(function(friend, friendRec)
 	local c = ls and ls:FindFirstChild("Coins")
 	if c then c.Value = rec.coins end
 	RemoteEvents.InviteReward:FireClient(inviter, friend.DisplayName or friend.Name, coins)
+	-- an open shop screen shows the new coins (it read them when it opened)
+	RemoteEvents.ShopUpdated:FireClient(inviter, Shop.state(rec))
 	task.spawn(PlayerStore.save, inviter)
 end)
 

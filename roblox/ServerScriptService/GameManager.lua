@@ -15,6 +15,7 @@ local RemoteEvents  = require(ReplicatedStorage.RemoteEvents)
 local BiomeConfig   = require(ServerScriptService.Modules.BiomeConfig)
 local HarnessConfig = require(ServerScriptService.Modules.HarnessConfig)
 local Telemetry     = require(ServerScriptService.Modules.Telemetry)
+local Weather       = require(ReplicatedStorage.Shared.Weather)
 
 local GameManager = {}
 
@@ -26,6 +27,7 @@ local _phaseTimer    = nil   -- active task.delay handle
 local _callbacks     = {}    -- registered via onPhaseChanged()
 local _harness       = nil   -- HarnessConfig.get() result; nil in normal play
 local _round         = 0
+local _weather       = Weather.CLEAR   -- this round's (Shared/Weather)
 
 -- ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -35,6 +37,11 @@ end
 
 function GameManager.getBiome()
 	return _currentBiome
+end
+
+--- This round's weather key (Shared/Weather; "clear" when none).
+function GameManager.getWeather()
+	return _weather
 end
 
 function GameManager.onPhaseChanged(callback)
@@ -82,7 +89,7 @@ local function _transition(newPhase, seconds)
 	_currentPhase = newPhase
 	ReplicatedStorage:SetAttribute("PhaseEndsAt", seconds and (workspace:GetServerTimeNow() + seconds) or nil)
 	print("[GameManager] Phase →", newPhase)
-	Telemetry.record("phase", { phase = newPhase, biome = _currentBiome, round = _round })
+	Telemetry.record("phase", { phase = newPhase, biome = _currentBiome, round = _round, weather = _weather })
 
 	-- Notify all registered server managers
 	for _, cb in ipairs(_callbacks) do
@@ -199,6 +206,15 @@ function _startFarming()
 	-- Pick biome once per round (a harness may force one)
 	_round += 1
 	_currentBiome = (_harness and _harness.biome) or BiomeConfig.random()
+	-- weather with it: live servers draw one; a harness gets clear weather
+	-- unless it names one ("random" draws as live)
+	local wanted = _harness and _harness.weather
+	if _harness and wanted ~= "random" then
+		_weather = Weather.look(_currentBiome, wanted) and wanted or Weather.CLEAR
+	else
+		_weather = Weather.pick(_currentBiome, math.random)
+	end
+	ReplicatedStorage:SetAttribute("Weather", _weather)
 	RemoteEvents.BiomeSelected:FireAllClients(_currentBiome)
 
 	local seconds = _duration("FARMING", Constants.PHASE_DURATION.FARMING)

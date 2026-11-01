@@ -368,6 +368,36 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   which Telemetry event earns which) and `BadgeManager` (live servers only);
   pictures `assets/badges/` from `tools/store_art.py`. A new badge: a line in
   `Badges.LIST`, a rule in `Badges.forEvent`, a picture in `BADGES`.
+- Weather: `Shared/Weather` draws one per round with the biome (GameManager
+  `getWeather`, ReplicatedStorage attribute `Weather`; harness sessions get
+  "clear" unless the harness arg `weather` names one or "random"). It sets
+  lighting over `LightingPresets` and the water look (MapManager,
+  `TerrainPainter.waterLook`), changes hazards (`Weather.hazards`: a stormy
+  sea floods more and adds gusts, thunder in the sky gusts more) and what
+  clients draw (`StarterPlayerScripts/WeatherFx`: rain, lightning flashes,
+  headlights on every `Vehicle_*` chassis, a lantern on your avatar at
+  night). A weather's lighting may only set properties its biome preset
+  sets (else a night stays for the next round; spec `weather`). The
+  skybox ignores fog, so overcast weathers also set haze and clouds
+  (`Weather.applySky`: an Atmosphere and Terrain Clouds, made while the
+  weather lasts). The FARMING toast names it. Look: `sim.py run
+  promo-weather` (lighting only, `reports/weather/`); a whole round in a
+  storm with the client's WeatherFx: `sim.py run ui-weather`. Gusts per
+  weather on real drivers: `lune run tools/gust_sim.luau OCEAN|SKY`.
+- Soak: `lune run tools/soak.luau [rounds] [players] [seed]` runs one
+  server for many rounds with every server script (random biome and
+  weather, bots, an invited friend, the day turning over) and checks
+  lighting reset, haze / clouds, storm hazards, the coin ledger, challenge
+  state, errors and warnings (`Mock.warnings`). Run it after touching the
+  round loop, weather, rewards or challenges.
+- Corner notices (`Shared/Notice`, "Challenge done!", "Friend joined!")
+  wait while RACING: on a phone the popup covers BOOST / DRIFT.
+- Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
+  the same everywhere, coins each and `ALL_BONUS`; progress in the record's
+  `challenges`), `ChallengeManager` counts Telemetry events
+  (`DailyChallenge.eventsOf`), pays and tells the player
+  (`ChallengeUpdate`); the results screen shows them (`GetChallenges`).
+  A new challenge: a `POOL` line, its event in `eventsOf`.
 - Friend invites: `Shared/Invite` (INVITE FRIENDS on the lobby list and the
   results screen, Roblox's invite prompt, hidden where invites are not
   allowed) and `InviteManager` + `Modules/Referral`: a friend who joins
