@@ -492,6 +492,21 @@ end
 
 local _screenToken = 0
 
+-- The text goes at 28 % of the height, or under TutorialUI's phase toast
+-- while that is up (the FARMING toast with this round's weather reached
+-- down to it in 1024 × 640 and 1280 × 720 windows: ui-weather).
+local TEXT_Y, TOAST_GAP = 0.28, 8
+local function placeText()
+	local y = 0
+	local tut = LocalPlayer.PlayerGui:FindFirstChild("TutorialUI")
+	local toast = tut and tut:IsA("ScreenGui") and tut.Enabled and tut:FindFirstChild("Toast")
+	if toast and toast.Visible and toast.AbsoluteSize.Y > 0 then
+		local bottom = toast.AbsolutePosition.Y + toast.AbsoluteSize.Y + TOAST_GAP   -- both screens ignore the top inset
+		y = math.max(0, bottom - _overlay.AbsoluteSize.Y * TEXT_Y)
+	end
+	_text.Position = UDim2.new(0.5, 0, TEXT_Y, math.floor(y))
+end
+
 local function shake(amount, seconds)
 	task.spawn(function()
 		local t = 0
@@ -512,6 +527,7 @@ RemoteEvents.ScreenEffect.OnClientEvent:Connect(function(name, params)
 	_tint.BackgroundColor3 = look.color
 	_tint.BackgroundTransparency = 1 - look.alpha
 	_text.Text = look.text or ""
+	placeText()
 	_text.TextColor3 = look.color:Lerp(Color3.new(1, 1, 1), 0.5)
 	_text.TextTransparency = 0
 	_text.TextStrokeTransparency = 0.1
