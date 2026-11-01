@@ -25,7 +25,8 @@ already done in this repository.
    3: name, description, `assets/store/final/icon.png` and the five
    `thumb_*.png`).
 6. **you** Optional: the three coin packs (section 2), ids into
-   `Shared/Products.lua`, sync, publish again.
+   `Shared/Products.lua`, and the five badges (section 2b), ids into
+   `Modules/Badges.lua`; sync, publish again.
 7. **you** Join the live game from the Roblox app (not Studio) with a
    friend: a full round, then rejoin: Level / Coins kept (real DataStore).
    On a phone too.
@@ -62,6 +63,27 @@ hidden and cannot be bought):
 Coins buy looks (special rides, paints, trails), the Flying Kick (a look)
 and the Smoke Bomb (one escape per round); nothing sold changes speed.
 `reports/economy.md` shows how long each item takes to earn.
+
+## 2b. Badges (optional at launch)
+
+Creator Dashboard → the experience → **Engagement → Badges → Create a
+Badge**: picture, name and description from the table, then put each
+badge's id into `roblox/ServerScriptService/Modules/Badges.lua` (`id = 0`
+badges are off), sync, publish again. Five badges a day per experience are
+free (more cost Robux), so these five fit in one day.
+
+| key | picture | name | description | earned when |
+|---|---|---|---|---|
+| welcome | `assets/badges/welcome.png` | Welcome, Rider! | Joined Catastrophic Ride. Grab junk, build a ride, race! | joining |
+| first_finish | `assets/badges/first_finish.png` | Finish Line | Finished your first race. | a finish |
+| champion | `assets/badges/champion.png` | Champion | Won a race. | 1st place (bots count as racers) |
+| sticky | `assets/badges/sticky.png` | Sticky Fingers | Stole an item from another rider on the farm. | a steal |
+| level5 | `assets/badges/level5.png` | Level 5 | Reached level 5. | a reward at level 5+ |
+
+`BadgeManager` gives them from Telemetry events in live servers only (not
+in Studio or harness sessions), once per player per server, checking
+`UserHasBadgeAsync` first. Pictures: `python3 tools/store_art.py` (Twemoji,
+CC-BY 4.0, in `assets/badges/twemoji/`).
 
 ## 3. Store page
 

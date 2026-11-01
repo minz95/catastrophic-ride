@@ -5,7 +5,8 @@
   python3 tools/store_art.py              # → assets/store/final/
 
 Writes icon.png (512 x 512) and thumb_1..5.png (1920 x 1080) ready to upload
-on the Creator Dashboard. Fonts come from the Roblox Studio install (Luckiest
+on the Creator Dashboard, and the badge pictures assets/badges/<key>.png
+(512 x 512, Roblox shows them in a circle; keys as in Modules/Badges.lua). Fonts come from the Roblox Studio install (Luckiest
 Guy for the logo, Montserrat Black for captions, the game's own font), so
 Studio must be installed. Needs Pillow.
 """
@@ -184,7 +185,60 @@ def icon(shot):
     return im.convert("RGB")
 
 
+TWEMOJI = os.path.join(ROOT, "assets", "badges", "twemoji")   # CC-BY 4.0, see README there
+BADGES = [   # key, Twemoji code, word, colours (centre, edge)
+    ("welcome", "1f44b", "HI!", ((120, 210, 255), (30, 90, 200))),
+    ("first_finish", "1f3c1", "FINISH", ((140, 235, 140), (20, 130, 60))),
+    ("champion", "1f3c6", "WINNER", ((255, 225, 110), (220, 120, 20))),
+    ("sticky", "1f4b0", "STOLEN!", ((255, 160, 170), (190, 40, 70))),
+    ("level5", "2b50", "LEVEL 5", ((200, 160, 255), (95, 45, 175))),
+]
+
+
+def badge(emoji, word, colours):
+    s = 512
+    im = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    # radial gradient disc with a dark ring and a light inner ring
+    disc = Image.new("RGB", (s, s))
+    cx = cy = s / 2
+    px = disc.load()
+    (c0, c1) = colours
+    for y in range(s):
+        for x in range(s):
+            t = min(1.0, math.hypot(x - cx, y - cy * 0.85) / (s * 0.55))
+            px[x, y] = tuple(int(a + (b - a) * t) for a, b in zip(c0, c1))
+    m = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(m).ellipse((8, 8, s - 8, s - 8), fill=255)
+    ring = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(ring).ellipse((0, 0, s, s), fill=255)
+    im.paste(INK + (255,), (0, 0), ring)
+    im.paste(disc, (0, 0), m)
+    ImageDraw.Draw(im).ellipse((34, 34, s - 34, s - 34), outline=(255, 255, 255, 140), width=6)
+    e = Image.open(os.path.join(TWEMOJI, emoji + ".png")).convert("RGBA")
+    e = e.crop(e.getbbox()).resize((220, 220), Image.LANCZOS)
+    # dark outline round the picture
+    a = e.split()[3].point(lambda v: 255 if v > 40 else 0)
+    pad = 10
+    out = Image.new("RGBA", (e.width + pad * 2, e.height + pad * 2), (0, 0, 0, 0))
+    big = Image.new("L", out.size, 0)
+    big.paste(a, (pad, pad))
+    out.paste(INK + (255,), (0, 0), big.filter(ImageFilter.MaxFilter(13)).filter(ImageFilter.GaussianBlur(1)))
+    out.alpha_composite(e, (pad, pad))
+    e = out
+    im.alpha_composite(shadowed(e, blur=8, alpha=120, offset=(0, 8)), ((s - e.width) // 2, 56))
+    w = word_art([word], [74 if len(word) <= 6 else 62], fill=((255, 255, 255), (235, 235, 235)))
+    w = shadowed(w, blur=6, alpha=120, offset=(0, 4))
+    im.alpha_composite(w, ((s - w.width) // 2, 318))
+    return im
+
+
 def main():
+    bdir = os.path.join(ROOT, "assets", "badges")
+    os.makedirs(bdir, exist_ok=True)
+    for key, emoji, word, colours in BADGES:
+        path = os.path.join(bdir, key + ".png")
+        badge(emoji, word, colours).save(path, optimize=True)
+        print(os.path.relpath(path, ROOT))
     os.makedirs(OUT, exist_ok=True)
     for i, (name, caption, where) in enumerate(THUMBS, 1):
         shot = Image.open(os.path.join(STORE, name + ".png")).resize((1920, 1080), Image.LANCZOS)

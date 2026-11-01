@@ -364,6 +364,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `ReturnDay`). Retention itself is on the Creator Dashboard. A new step:
   record a Telemetry event, map it there; check engine names with
   `python3 tools/studio/sim.py run api-analytics`.
+- Badges: `Modules/Badges` (list, ids from the Creator Dashboard, 0 = off,
+  which Telemetry event earns which) and `BadgeManager` (live servers only);
+  pictures `assets/badges/` from `tools/store_art.py`. A new badge: a line in
+  `Badges.LIST`, a rule in `Badges.forEvent`, a picture in `BADGES`.
 - Shop: looks only (`Shared/Cosmetics`: paints recolour VehicleDesign's
   body / accent roles, trails hang on the chassis; no mass or collision).
   `Modules/Shop` buys / equips over the saved record and grants Robux coin
