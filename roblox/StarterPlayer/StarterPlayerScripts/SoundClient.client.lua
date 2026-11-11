@@ -324,6 +324,19 @@ local function _musicButton()
 	b.Name = "Button"
 	b.Size = UDim2.new(0, 36, 0, 36)
 	b.Position = UDim2.new(0, 112, 0, 4)
+	-- right of Roblox's own top-left buttons (GuiService.TopbarInset is the
+	-- free part of the top bar): at a fixed X 112 the newer, wider ☰ / chat
+	-- buttons covered it (Studio first-minute 2026-11-11), nobody could mute
+	local GuiService = game:GetService("GuiService")
+	local function place()
+		local ok, inset = pcall(function() return GuiService.TopbarInset end)
+		if ok and inset and inset.Max.X > inset.Min.X then
+			local h = inset.Max.Y - inset.Min.Y
+			b.Position = UDim2.new(0, inset.Min.X + 6, 0, inset.Min.Y + math.max(0, (h - 36) / 2))
+		end
+	end
+	place()
+	pcall(function() GuiService:GetPropertyChangedSignal("TopbarInset"):Connect(place) end)
 	b.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 	b.BackgroundTransparency = 0.35
 	b.TextScaled = true

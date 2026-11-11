@@ -288,15 +288,21 @@ end
 -- A few items right in front of every player (a whole car's worth, one
 -- more with a friend here), kept for them a while; their client points an
 -- arrow at them (StarterItems remote). First items used to be a walk away.
+-- Called again every STARTER.RETRY s while FARMING has MIN_LEFT s to go:
+-- a player whose character was still loading when the round started (a
+-- phone after the short solo lobby) or who joined mid-round (a friend
+-- through an invite) gets theirs once they stand on the farm.
+local _starterDone = {}   -- [UserId] = true: got this round's starter items
 local function _giveStarters(biome)
 	local mapModel = _mapModel(biome)
 	if not mapModel then return end
 	local zone = FarmBounds.get(biome)
 	local S = Constants.STARTER
 	for _, p in ipairs(Players:GetPlayers()) do
-		if p:GetAttribute("Spectating") then continue end
+		if _starterDone[p.UserId] or p:GetAttribute("Spectating") then continue end
 		local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
-		if not root then continue end
+		if not root or FarmBounds.offFarm(biome, root.Position) then continue end
+		_starterDone[p.UserId] = true
 		local rec = PlayerStore.get(p)
 		local firstRound = rec == nil or (rec.rounds or 0) == 0   -- no record yet: new too
 		local friend = FriendsHere.has(p)
@@ -1083,8 +1089,15 @@ GameManager.onPhaseChanged(function(phase, biome)
 		})
 
 		Telemetry.record("item_wave", { wave = 0, count = first, players = n })
+		_starterDone = {}
 		task.delay(Constants.STARTER.AFTER, function()
-			if _active and _farmRound == round then _giveStarters(biome) end
+			local S = Constants.STARTER
+			while _active and _farmRound == round do
+				_giveStarters(biome)
+				local endsAt = ReplicatedStorage:GetAttribute("PhaseEndsAt")
+				if endsAt and endsAt - workspace:GetServerTimeNow() < S.MIN_LEFT + S.RETRY then break end
+				task.wait(S.RETRY)
+			end
 		end)
 		local length = GameManager.phaseDuration(Constants.PHASES.FARMING) or Constants.PHASE_DURATION.FARMING
 		for w, wave in ipairs(Constants.FARM_SUPPLY.WAVES) do

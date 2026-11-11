@@ -264,6 +264,9 @@ end
 
 -- ─── Show toast ───────────────────────────────────────────────────────────────
 
+-- the toast slides in from and out to here: from Y 40 it passed over the
+-- phase timer (Y 14-60) on the way (Studio first-minute 2026-11-11)
+local TOAST_FROM_Y = 64
 local _toastTimer  = nil
 local _toastHideTimer = nil
 
@@ -278,7 +281,7 @@ local function _hideToast()
 	end
 	if not toastFrame.Visible then return end
 	TweenService:Create(toastFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-		Position = UDim2.new(0.5, -180, 0, 40)
+		Position = UDim2.new(0.5, -180, 0, TOAST_FROM_Y)
 	}):Play()
 	_toastHideTimer = task.delay(0.25, function()
 		toastFrame.Visible = false
@@ -336,7 +339,7 @@ local function _showToast(phase)
 	end
 
 	-- Animate in (slide down from top)
-	toastFrame.Position = UDim2.new(0.5, -180, 0, 40)
+	toastFrame.Position = UDim2.new(0.5, -180, 0, TOAST_FROM_Y)
 	toastFrame.Visible  = true
 	TweenService:Create(toastFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
 		Position = UDim2.new(0.5, -180, 0, 80)
