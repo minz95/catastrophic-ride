@@ -16,6 +16,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local Constants = require(ReplicatedStorage.Shared.Constants)
 local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
+local StarterItems = require(ReplicatedStorage.Shared.StarterItems)
 local SessionManager = require(ServerScriptService.SessionManager)
 local GameManager = require(ServerScriptService.GameManager)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
@@ -221,7 +222,9 @@ local function nearestItem(bot, items, contests, now)
 	local pos = bot.root.Position
 	local greed = Constants.BOTS.FARM.GREED
 	for id, it in pairs(items) do
-		if not it.taken and not contests[id] and it.part and it.part.Parent and now >= (bot.skip[id] or 0) then
+		-- a player's starter items are theirs for a while (Shared/StarterItems)
+		if not it.taken and not contests[id] and it.part and it.part.Parent and now >= (bot.skip[id] or 0)
+			and not StarterItems.heldFrom(it, bot.proxy and bot.proxy.UserId, os.clock()) then
 			local d = flat(it.part.Position - pos).Magnitude
 			local claimed = false
 			for _, other in ipairs(FarmBots.list) do

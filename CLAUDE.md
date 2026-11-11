@@ -468,6 +468,18 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   RACING) lists every item by slot with its `ItemBlurbs` line; the first
   pickup of an item in a session shows a NEW card (ItemPickedUp carries
   `item`). A new item needs its ItemBlurbs line (the guide shows it).
+- First minute (playbook 2026-11-11): when FARMING starts, each player
+  finds a whole car's worth of junk (BODY, ENGINE, SPECIAL) a few steps in
+  front (`Shared/StarterItems`, FarmingManager `_giveStarters`,
+  `Constants.STARTER`); a player's first round always has the Shopping
+  Cart; a Roblox friend in the server (`Modules/FriendsHere`) adds a Rare
+  bonus. They are kept for their player RESERVE s (others get "denied:
+  reserved", FarmBots skip them, no contest for the owner) and the client
+  points at them (`StarterArrow`, remote `StarterItems`). Every pickup
+  shows a face-down "???" card that turns over to the ability
+  (ItemGuideUI). The results screen's invite reads "MY RIDE VS YOURS?".
+  A lone player's lobby is `LOBBY.MAX_WAIT` (8 s); a second player sets
+  it to FILL_SECONDS once. Spec `starter_items`.
 - The farm of each biome is `Shared/FarmBounds` (centre from the track's
   `farm`, wall-to-wall size, floor Y, item area, spawn markers): the map
   builders, `Maps/FarmKit` (invisible walls in FarmArea), FarmingManager

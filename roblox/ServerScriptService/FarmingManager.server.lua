@@ -23,6 +23,8 @@ local Cosmetics          = require(ReplicatedStorage.Shared.Cosmetics)
 local PlayerStore        = require(ServerScriptService.Modules.PlayerStore)
 local FarmBots           = require(ServerScriptService.Modules.FarmBots)
 local FarmRescue         = require(ServerScriptService.Modules.FarmRescue)
+local FriendsHere        = require(ServerScriptService.Modules.FriendsHere)
+local StarterItems       = require(ReplicatedStorage.Shared.StarterItems)
 
 
 -- ─── State ────────────────────────────────────────────────────────────────────
@@ -65,6 +67,149 @@ local function _buildSpawnPool(dist)
 		pool[i], pool[j] = pool[j], pool[i]
 	end
 	return pool
+end
+
+-- One item model `entry` ({ name, rarity }) standing on the farm floor at
+-- `pos` (its bottom at pos.Y). Returns its item id, or nil.
+local function _placeItem(mapModel, entry, pos)
+	-- Clone pre-built model from ItemModelPreloader (Blender FBX or procedural)
+	local model
+	local buildOk, buildErr = pcall(function()
+		local itemModels = ServerStorage:FindFirstChild("ItemModels")
+		local prebuilt   = itemModels and itemModels:FindFirstChild(entry.name)
+		if prebuilt then
+			model        = prebuilt:Clone()
+			model.Parent = mapModel
+		else
+			-- Fallback: build procedurally (shouldn't happen if Preloader ran)
+			model = ItemModelBuilder.build(entry.name, mapModel)
+		end
+	end)
+	if not buildOk then
+		warn("[FarmingManager] Spawn error for '" .. entry.name .. "': " .. tostring(buildErr))
+		return nil
+	end
+	local primary = model and model.PrimaryPart
+	if not primary then
+		if model then model:Destroy() end
+		return nil
+	end
+
+	-- Position model: align the model's world-space AABB bottom with baseY,
+	-- X/Z centered on pos. Pure translation only — SetPrimaryPartCFrame /
+	-- PivotTo don't move FBX-imported nested parts.
+	--
+	-- IMPORTANT: anchor parts BEFORE translating. Preloader leaves parts
+	-- non-anchored with WeldConstraints; setting CFrame on an unanchored
+	-- welded part triggers weld snapping that cascades unpredictably across
+	-- the model, scattering parts thousands of studs apart. Once both ends
+	-- of every weld are anchored, welds become inert and per-part CFrame
+	-- translation moves each part exactly by deltaPos.
+	-- Compute the model's world-space AABB bottom Y by checking the 8
+	-- corners of each BasePart. The previous shortcut
+	-- `part.Position.Y - part.Size.Y * 0.5` is correct only for axis-
+	-- aligned parts; FBX-imported models often have rotated subparts
+	-- whose true world-space bottom is lower. Model:GetBoundingBox()
+	-- isn't usable either because its orientation depends on PrimaryPart.
+	--
+	-- The bug shows up most visibly in SKY, where the FarmPlatform is a
+	-- 9-stud-thick opaque rock slab from Y=71 to Y=80. Even a 0.5-stud
+	-- sink hides items inside the slab; FOREST/OCEAN use a thin Baseplate
+	-- so the same sink is still visible from above.
+	local minBottomY = math.huge
+	for _, part in ipairs(model:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.Anchored   = true
+			part.CanCollide = false
+			local cf  = part.CFrame
+			local hsx = part.Size.X * 0.5
+			local hsy = part.Size.Y * 0.5
+			local hsz = part.Size.Z * 0.5
+			for sx = -1, 1, 2 do
+				for sy = -1, 1, 2 do
+					for sz = -1, 1, 2 do
+						local corner = cf * Vector3.new(sx * hsx, sy * hsy, sz * hsz)
+						if corner.Y < minBottomY then minBottomY = corner.Y end
+					end
+				end
+			end
+		end
+	end
+	local deltaPos = Vector3.new(
+		pos.X - primary.Position.X,
+		pos.Y - minBottomY,
+		pos.Z - primary.Position.Z
+	)
+	for _, part in ipairs(model:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CFrame = part.CFrame + deltaPos
+		end
+	end
+
+	-- Metadata on PrimaryPart (for pickup detection)
+	local nameVal = Instance.new("StringValue")
+	nameVal.Name  = "ItemName"
+	nameVal.Value = entry.name
+	nameVal.Parent = primary
+
+	local rarityVal = Instance.new("StringValue")
+	rarityVal.Name  = "Rarity"
+	rarityVal.Value = entry.rarity
+	rarityVal.Parent = primary
+
+	-- Rarity visuals + idle float/rotate
+	local visualOk, visualErr = pcall(function()
+		ItemVisualUpgrader.apply(model, entry.rarity)
+	end)
+	if not visualOk then
+		warn("[FarmingManager] VisualUpgrader error for '" .. entry.name .. "': " .. tostring(visualErr))
+	end
+
+	-- Name label so players can identify items at a glance. Compact compared
+	-- to the earlier billboard (removed in 386ae87) — single line, rarity-coloured.
+	local cfg = ItemConfig[entry.name] or {}
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name           = "NameTag"
+	billboard.Size           = UDim2.new(0, 110, 0, 22)
+	billboard.StudsOffset    = Vector3.new(0, 2.4, 0)
+	billboard.AlwaysOnTop    = false
+	billboard.MaxDistance    = 35   -- only visible up close so distant items don't clutter
+	billboard.LightInfluence = 0
+	billboard.Parent         = primary
+
+	local nameLbl = Instance.new("TextLabel")
+	nameLbl.Size                    = UDim2.fromScale(1, 1)
+	nameLbl.BackgroundTransparency  = 1
+	nameLbl.Text                    = (cfg.icon and (cfg.icon .. " ") or "") .. entry.name
+	nameLbl.TextScaled              = true
+	nameLbl.Font                    = Enum.Font.GothamBold
+	nameLbl.TextStrokeTransparency  = 0.4
+	nameLbl.TextColor3              = ({
+		Common   = Color3.fromRGB(220, 220, 220),
+		Uncommon = Color3.fromRGB(110, 230, 110),
+		Rare     = Color3.fromRGB(120, 170, 255),
+		Epic     = Color3.fromRGB(210, 130, 255),
+	})[entry.rarity] or Color3.new(1, 1, 1)
+	nameLbl.Parent                  = billboard
+
+	-- Unique ID per item so _items keys never collide regardless of part name.
+	-- tostring(part) returns the part's Name which is identical for all items
+	-- built by the same builder (e.g. every barrel's primary is named "Body").
+	_itemCounter = _itemCounter + 1
+	local itemId = tostring(_itemCounter)
+	local idVal = Instance.new("StringValue")
+	idVal.Name   = "ItemId"
+	idVal.Value  = itemId
+	idVal.Parent = primary
+
+	_items[itemId] = {
+		part     = primary,
+		model    = model,
+		itemName = entry.name,
+		rarity   = entry.rarity,
+		taken    = false,
+	}
+	return itemId
 end
 
 -- ─── Spawn items ──────────────────────────────────────────────────────────────
@@ -126,146 +271,54 @@ local function _spawnItems(biome, count, dist, keep)
 
 		table.insert(usedPositions, pos)
 
-		-- Clone pre-built model from ItemModelPreloader (Blender FBX or procedural)
-		local model
-		local buildOk, buildErr = pcall(function()
-			local itemModels = ServerStorage:FindFirstChild("ItemModels")
-			local prebuilt   = itemModels and itemModels:FindFirstChild(entry.name)
-			if prebuilt then
-				model        = prebuilt:Clone()
-				model.Parent = mapModel
-			else
-				-- Fallback: build procedurally (shouldn't happen if Preloader ran)
-				model = ItemModelBuilder.build(entry.name, mapModel)
-			end
-		end)
-		if not buildOk then
-			warn("[FarmingManager] Spawn error for '" .. entry.name .. "': " .. tostring(buildErr))
-			continue
-		end
-		local primary = model and model.PrimaryPart
-		if not primary then
-			if model then model:Destroy() end
-			continue
-		end
-
-		-- Position model: align the model's world-space AABB bottom with baseY,
-		-- X/Z centered on pos. Pure translation only — SetPrimaryPartCFrame /
-		-- PivotTo don't move FBX-imported nested parts.
-		--
-		-- IMPORTANT: anchor parts BEFORE translating. Preloader leaves parts
-		-- non-anchored with WeldConstraints; setting CFrame on an unanchored
-		-- welded part triggers weld snapping that cascades unpredictably across
-		-- the model, scattering parts thousands of studs apart. Once both ends
-		-- of every weld are anchored, welds become inert and per-part CFrame
-		-- translation moves each part exactly by deltaPos.
-		-- Compute the model's world-space AABB bottom Y by checking the 8
-		-- corners of each BasePart. The previous shortcut
-		-- `part.Position.Y - part.Size.Y * 0.5` is correct only for axis-
-		-- aligned parts; FBX-imported models often have rotated subparts
-		-- whose true world-space bottom is lower. Model:GetBoundingBox()
-		-- isn't usable either because its orientation depends on PrimaryPart.
-		--
-		-- The bug shows up most visibly in SKY, where the FarmPlatform is a
-		-- 9-stud-thick opaque rock slab from Y=71 to Y=80. Even a 0.5-stud
-		-- sink hides items inside the slab; FOREST/OCEAN use a thin Baseplate
-		-- so the same sink is still visible from above.
-		local minBottomY = math.huge
-		for _, part in ipairs(model:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.Anchored   = true
-				part.CanCollide = false
-				local cf  = part.CFrame
-				local hsx = part.Size.X * 0.5
-				local hsy = part.Size.Y * 0.5
-				local hsz = part.Size.Z * 0.5
-				for sx = -1, 1, 2 do
-					for sy = -1, 1, 2 do
-						for sz = -1, 1, 2 do
-							local corner = cf * Vector3.new(sx * hsx, sy * hsy, sz * hsz)
-							if corner.Y < minBottomY then minBottomY = corner.Y end
-						end
-					end
-				end
-			end
-		end
-		local deltaPos = Vector3.new(
-			pos.X - primary.Position.X,
-			pos.Y - minBottomY,
-			pos.Z - primary.Position.Z
-		)
-		for _, part in ipairs(model:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.CFrame = part.CFrame + deltaPos
-			end
-		end
-
-		-- Metadata on PrimaryPart (for pickup detection)
-		local nameVal = Instance.new("StringValue")
-		nameVal.Name  = "ItemName"
-		nameVal.Value = entry.name
-		nameVal.Parent = primary
-
-		local rarityVal = Instance.new("StringValue")
-		rarityVal.Name  = "Rarity"
-		rarityVal.Value = entry.rarity
-		rarityVal.Parent = primary
-
-		-- Rarity visuals + idle float/rotate
-		local visualOk, visualErr = pcall(function()
-			ItemVisualUpgrader.apply(model, entry.rarity)
-		end)
-		if not visualOk then
-			warn("[FarmingManager] VisualUpgrader error for '" .. entry.name .. "': " .. tostring(visualErr))
-		end
-
-		-- Name label so players can identify items at a glance. Compact compared
-		-- to the earlier billboard (removed in 386ae87) — single line, rarity-coloured.
-		local cfg = ItemConfig[entry.name] or {}
-		local billboard = Instance.new("BillboardGui")
-		billboard.Name           = "NameTag"
-		billboard.Size           = UDim2.new(0, 110, 0, 22)
-		billboard.StudsOffset    = Vector3.new(0, 2.4, 0)
-		billboard.AlwaysOnTop    = false
-		billboard.MaxDistance    = 35   -- only visible up close so distant items don't clutter
-		billboard.LightInfluence = 0
-		billboard.Parent         = primary
-
-		local nameLbl = Instance.new("TextLabel")
-		nameLbl.Size                    = UDim2.fromScale(1, 1)
-		nameLbl.BackgroundTransparency  = 1
-		nameLbl.Text                    = (cfg.icon and (cfg.icon .. " ") or "") .. entry.name
-		nameLbl.TextScaled              = true
-		nameLbl.Font                    = Enum.Font.GothamBold
-		nameLbl.TextStrokeTransparency  = 0.4
-		nameLbl.TextColor3              = ({
-			Common   = Color3.fromRGB(220, 220, 220),
-			Uncommon = Color3.fromRGB(110, 230, 110),
-			Rare     = Color3.fromRGB(120, 170, 255),
-			Epic     = Color3.fromRGB(210, 130, 255),
-		})[entry.rarity] or Color3.new(1, 1, 1)
-		nameLbl.Parent                  = billboard
-
-		-- Unique ID per item so _items keys never collide regardless of part name.
-		-- tostring(part) returns the part's Name which is identical for all items
-		-- built by the same builder (e.g. every barrel's primary is named "Body").
-		_itemCounter = _itemCounter + 1
-		local itemId = tostring(_itemCounter)
-		local idVal = Instance.new("StringValue")
-		idVal.Name   = "ItemId"
-		idVal.Value  = itemId
-		idVal.Parent = primary
-
-		_items[itemId] = {
-			part     = primary,
-			model    = model,
-			itemName = entry.name,
-			rarity   = entry.rarity,
-			taken    = false,
-		}
+		if not _placeItem(mapModel, entry, pos) then continue end
 	end
 
 	return #usedPositions - already
+end
+
+-- ─── Starter junk (Shared/StarterItems) ──────────────────────────────────────
+
+local function _mapModel(biome)
+	local mapName = biome:sub(1, 1):upper() .. biome:sub(2):lower() .. "Map"
+	local maps = game.Workspace:FindFirstChild("Maps")
+	return maps and maps:FindFirstChild(mapName)
+end
+
+-- A few items right in front of every player (a whole car's worth, one
+-- more with a friend here), kept for them a while; their client points an
+-- arrow at them (StarterItems remote). First items used to be a walk away.
+local function _giveStarters(biome)
+	local mapModel = _mapModel(biome)
+	if not mapModel then return end
+	local zone = FarmBounds.get(biome)
+	local S = Constants.STARTER
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p:GetAttribute("Spectating") then continue end
+		local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+		if not root then continue end
+		local rec = PlayerStore.get(p)
+		local firstRound = rec == nil or (rec.rounds or 0) == 0   -- no record yet: new too
+		local friend = FriendsHere.has(p)
+		local list = StarterItems.pick(ItemConfig, firstRound, friend)
+		local spots = StarterItems.spots(root.Position, root.CFrame.LookVector, #list, function(x, z)
+			return FarmBounds.itemSpotOk(biome, x, z)
+		end)
+		local sent = {}
+		for i, entry in ipairs(list) do
+			local at = spots[i]
+			if not at then break end
+			local id = _placeItem(mapModel, entry, Vector3.new(at.X, zone.floorY, at.Z))
+			local it = id and _items[id]
+			if it then
+				it.reservedFor, it.reservedUntil, it.starter = p.UserId, os.clock() + S.RESERVE, true
+				it.part:SetAttribute("StarterFor", p.UserId)
+				table.insert(sent, { itemId = id, item = entry.name, bonus = entry.bonus })
+			end
+		end
+		Telemetry.record("starter_items", { userId = p.UserId, count = #sent, friend = friend, first = firstRound })
+		_fireClient(RemoteEvents.StarterItems, p, sent, friend)
+	end
 end
 
 -- ─── Rarity rank (lower = weaker) ────────────────────────────────────────────
@@ -516,6 +569,8 @@ local function _requestPickup(player, itemId)
 	local item = _items[itemId]
 	if not item            then return "denied: item not found" end
 	if item.taken          then return "denied: already taken" end
+	-- someone's starter item, still kept for them (Shared/StarterItems)
+	if StarterItems.heldFrom(item, player.UserId, os.clock()) then return "denied: reserved" end
 	-- A running contest locks the item for its two players (a third player
 	-- used to take it once they had walked away).
 	if _contests[itemId]   then return "contested" end
@@ -555,8 +610,10 @@ local function _requestPickup(player, itemId)
 	end
 
 	-- Check if another player (or bot) is also in range → start contest
+	-- (not over your own starter item while it is kept for you)
+	local mine = item.reservedFor == player.UserId and os.clock() < (item.reservedUntil or 0)
 	for _, otherPlayer in ipairs(SessionManager.actors()) do
-		if otherPlayer == player then continue end
+		if otherPlayer == player or mine then continue end
 		local otherChar = otherPlayer.Character
 		local otherRoot = otherChar and otherChar:FindFirstChild("HumanoidRootPart")
 		if not otherRoot then continue end
@@ -1026,6 +1083,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 		})
 
 		Telemetry.record("item_wave", { wave = 0, count = first, players = n })
+		task.delay(Constants.STARTER.AFTER, function()
+			if _active and _farmRound == round then _giveStarters(biome) end
+		end)
 		local length = GameManager.phaseDuration(Constants.PHASES.FARMING) or Constants.PHASE_DURATION.FARMING
 		for w, wave in ipairs(Constants.FARM_SUPPLY.WAVES) do
 			task.delay(length * wave.at, function()

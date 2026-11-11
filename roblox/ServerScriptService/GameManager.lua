@@ -178,20 +178,24 @@ _startLobby = function()
 		return
 	end
 
-	-- Live: count down LOBBY.MAX_WAIT (PhaseEndsAt, shown in the lobby);
-	-- once MIN_TO_START players are in, at most LOBBY.FILL_SECONDS remain.
-	-- Nobody here: wait without a clock.
+	-- Live: a lone player counts down LOBBY.MAX_WAIT (PhaseEndsAt, shown in
+	-- the lobby); when the MIN_TO_START-th player arrives the clock is set
+	-- to LOBBY.FILL_SECONDS once (longer than a lone player's wait: time to
+	-- load in and shop), then only shortens. Nobody here: no clock.
 	local L = Constants.LOBBY
 	local endsAt = nil
+	local filled = false
 	while true do
 		local n = #Players:GetPlayers()
 		local now = workspace:GetServerTimeNow()
 		if n == 0 then
-			endsAt = nil
+			endsAt, filled = nil, false
 			ReplicatedStorage:SetAttribute("PhaseEndsAt", nil)
 		else
-			local target = now + (n >= Constants.MIN_TO_START and L.FILL_SECONDS or L.MAX_WAIT)
-			if not endsAt or target < endsAt then
+			local group = n >= Constants.MIN_TO_START
+			local target = now + (group and L.FILL_SECONDS or L.MAX_WAIT)
+			if not endsAt or target < endsAt or (group and not filled) then
+				filled = filled or group
 				endsAt = target
 				ReplicatedStorage:SetAttribute("PhaseEndsAt", endsAt)
 			end

@@ -171,8 +171,10 @@ nextLbl.Parent                 = stage
 -- the top: on a phone SHOP / ITEMS sit top right, Roblox's buttons top left.
 -- Below the mid-height SHOP / ITEMS of a PC (at stage Y 300 it went under
 -- Roblox's chat window in a 1024 × 640 window).
-require(ReplicatedStorage.Shared.Invite).button(stage,
-	UDim2.new(0, 12, 0, 440), UDim2.new(0, 172, 0, 46))
+-- Worded as a challenge ("my ride vs yours"): a friend who comes along
+-- also gets a bonus junk item (Shared/StarterItems).
+local Invite = require(ReplicatedStorage.Shared.Invite)
+Invite.button(stage, UDim2.new(0, 12, 0, 440), UDim2.new(0, 172, 0, 46), false, Invite.RESULTS_TEXT)
 
 -- ── Today's challenges (Shared/DailyChallenge), right of the podium ──────────
 -- Mirrors the invite button on the left. Filled from GetChallenges when the

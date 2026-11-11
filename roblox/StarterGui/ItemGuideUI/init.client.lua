@@ -265,7 +265,11 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 end)
 onPhase(ReplicatedStorage:GetAttribute("Phase"))
 
--- ── "New item!" card on the first pickup of each item ──────────────────────
+-- ── Pickup card: "???" flips over to show what the item does ─────────────
+-- Every pickup shows a card face down ("???"), which turns over a moment
+-- later to the item and its E ability (playbook 2026-11-11: make the
+-- discovery visible). The first pickup of an item this session says NEW
+-- and stays longer.
 
 local card = Instance.new("Frame")
 card.Name             = "NewItem"
@@ -276,26 +280,59 @@ local CARD_AT = UDim2.new(1, -12, 1, -100)
 card.Size             = UDim2.new(0, 320, 0, 64)
 card.AnchorPoint      = Vector2.new(1, 1)
 card.Position         = CARD_AT
-card.BackgroundColor3 = PANEL
-card.BackgroundTransparency = 0.1
+card.BackgroundTransparency = 1
 card.Visible          = false
 card.Parent           = screen
-corner(card, 10)
-local cardIcon = label(card, "", UDim2.new(0, 44, 0, 44), UDim2.new(0, 10, 0, 10), Enum.Font.GothamBold)
+-- the face turns (its width shrinks to 0 and grows back about the middle)
+local face = Instance.new("Frame")
+face.Name             = "Face"
+face.AnchorPoint      = Vector2.new(0.5, 0.5)
+face.Position         = UDim2.fromScale(0.5, 0.5)
+face.Size             = UDim2.fromScale(1, 1)
+face.BackgroundColor3 = PANEL
+face.BackgroundTransparency = 0.1
+face.ClipsDescendants = true
+face.Parent           = card
+corner(face, 10)
+local faceStroke = Instance.new("UIStroke")
+faceStroke.Thickness = 2
+faceStroke.Color     = GOLD
+faceStroke.Parent    = face
+local cardIcon = label(face, "", UDim2.new(0, 44, 0, 44), UDim2.new(0, 10, 0, 10), Enum.Font.GothamBold)
 cardIcon.TextXAlignment = Enum.TextXAlignment.Center
-local cardTitle = label(card, "", UDim2.new(1, -70, 0, 22), UDim2.new(0, 62, 0, 8), Enum.Font.GothamBlack, GOLD)
-local cardText = label(card, "", UDim2.new(1, -70, 0, 18), UDim2.new(0, 62, 0, 34), Enum.Font.GothamMedium)
+local cardTitle = label(face, "", UDim2.new(1, -70, 0, 22), UDim2.new(0, 62, 0, 8), Enum.Font.GothamBlack, GOLD)
+local cardText = label(face, "", UDim2.new(1, -70, 0, 18), UDim2.new(0, 62, 0, 34), Enum.Font.GothamMedium)
 local _cardToken = 0
 
-_hideCard = function() card.Visible = false end
+local REVEAL_AFTER = 0.45   -- s face down
+local TURN = 0.14           -- s for each half of the turn
+local SHOW_NEW, SHOW_AGAIN = 4, 2.6
 
-local function showNew(name)
-	local cfg = ItemConfig[name]
-	if not cfg then return end
+_hideCard = function() card.Visible = false; _cardToken += 1 end
+
+local function faceDown()
+	cardIcon.Text = "❔"
+	cardTitle.Text = "???"
+	cardTitle.TextColor3 = GOLD
+	cardText.Text = "What does it do?"
+	face.BackgroundColor3 = Color3.fromRGB(70, 50, 20)
+	faceStroke.Color = GOLD
+end
+
+local function faceUp(name, cfg, isNew)
 	cardIcon.Text = cfg.icon or "❔"
-	cardTitle.Text = "NEW: " .. name .. "  (" .. (TAB_NAME[cfg.slotType] or "") .. ")"
+	cardTitle.Text = (isNew and "NEW: " or "") .. name .. "  (" .. (TAB_NAME[cfg.slotType] or "") .. ")"
 	cardTitle.TextColor3 = RARITY_COLOUR[cfg.rarity] or GOLD
 	cardText.Text = InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability") .. "   " .. InputHints.tag("guide") .. " all items"
+	face.BackgroundColor3 = PANEL
+	faceStroke.Color = RARITY_COLOUR[cfg.rarity] or GOLD
+end
+
+local function showCard(name, isNew)
+	local cfg = ItemConfig[name]
+	if not cfg then return end
+	faceDown()
+	face.Size = UDim2.fromScale(1, 1)
 	_cardToken += 1
 	local token = _cardToken
 	-- on a phone the bottom right is the touch buttons' (the card lay over
@@ -317,15 +354,26 @@ local function showNew(name)
 	card.Visible = true
 	card.Position = at + UDim2.new(0, 40, 0, 0)
 	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = at }):Play()
-	task.delay(4, function()
+	task.delay(REVEAL_AFTER, function()
+		if token ~= _cardToken then return end
+		local shut = TweenService:Create(face, TweenInfo.new(TURN, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+			{ Size = UDim2.fromScale(0, 1) })
+		shut:Play()
+		shut.Completed:Wait()
+		if token ~= _cardToken then return end
+		faceUp(name, cfg, isNew)
+		TweenService:Create(face, TweenInfo.new(TURN + 0.06, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+			{ Size = UDim2.fromScale(1, 1) }):Play()
+	end)
+	task.delay(REVEAL_AFTER + (isNew and SHOW_NEW or SHOW_AGAIN), function()
 		if token == _cardToken then card.Visible = false end
 	end)
 end
 
 RemoteEvents.ItemPickedUp.OnClientEvent:Connect(function(_itemId, userId, info)
 	if userId ~= LocalPlayer.UserId or type(info) ~= "table" or type(info.item) ~= "string" then return end
-	if _seen[info.item] then return end
-	_markSeen(info.item)
-	showNew(info.item)
-	if panel.Visible then redraw() end
+	local isNew = not _seen[info.item]
+	if isNew then _markSeen(info.item) end
+	showCard(info.item, isNew)
+	if isNew and panel.Visible then redraw() end
 end)

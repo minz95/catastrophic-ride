@@ -48,6 +48,7 @@
 --   TauntShown          → server→client (userId, part: BasePart, emoji, text, name) -- draw it over that car (TauntFx)
 --   InviteSent          → client→server (count: number) -- friends picked in Roblox's invite prompt
 --   InviteReward        → server→client (friendName: string, coins: number) -- a friend you invited joined
+--   StarterItems        → server→client (list: { itemId, item, bonus }[], friendBonus: bool) -- FARMING: your starter junk (Shared/StarterItems)
 --   ChallengeUpdate     → server→client (view: table, paid: { key, text, coins }[]) -- a daily challenge done (Shared/DailyChallenge)
 --   GetChallenges       → () → DailyChallenge.view or nil   (RemoteFunction; ResultsUI)
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
@@ -100,6 +101,7 @@ local EVENTS = {
 	"InviteSent",
 	"InviteReward",
 	"ChallengeUpdate",
+	"StarterItems",
 }
 
 local FUNCTIONS = {
