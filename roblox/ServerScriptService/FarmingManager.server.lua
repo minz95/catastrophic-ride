@@ -544,6 +544,8 @@ local function _giveItem(player, itemId)
 
 	item.taken = true
 	table.insert(data.inventory, item.itemName)
+	-- a Rare / Epic marks its holder for a while (RareMark; bots go for them)
+	if Constants.RARE_MARK.RARITIES[item.rarity] then data._rareAt = tick() end
 
 	-- Stop the idle animation; the item flies into the picker's hands
 	-- (playtest 2026-10-29: items just vanished, no pick-up motion), then goes.
@@ -815,6 +817,10 @@ local function _steal(thief, targetUserId)
 	local idx = math.random(#victimData.inventory)
 	local stolenItem = table.remove(victimData.inventory, idx)
 	table.insert(thiefData.inventory, stolenItem)
+	local stolenCfg = ItemConfig[stolenItem]
+	if stolenCfg and Constants.RARE_MARK.RARITIES[stolenCfg.rarity] then
+		thiefData._rareAt, victimData._rareAt = tick(), nil   -- the mark goes with it
+	end
 
 	thiefData.stealCooldownEnd   = tick() + Constants.STEAL_COOLDOWN
 	victimData.stealInvincibleEnd = tick() + Constants.STEAL_INVINCIBLE
@@ -826,7 +832,7 @@ local function _steal(thief, targetUserId)
 		thief = thief.UserId, victim = victim.UserId, item = stolenItem,
 		thiefInventory = #thiefData.inventory,
 	})
-	RemoteEvents.ItemStolen:FireAllClients(thief.Name, victim.Name, stolenItem)
+	RemoteEvents.ItemStolen:FireAllClients(thief.Name, victim.Name, stolenItem, thief.UserId, victim.UserId)
 	return attempt("stolen")
 end
 RemoteEvents.RequestSteal.OnServerInvoke = _steal

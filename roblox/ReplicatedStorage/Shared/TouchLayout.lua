@@ -53,9 +53,10 @@ TouchLayout.ICONS = {
 		{ text = "😜", key = Enum.KeyCode.Q, left = 60, color = Color3.fromRGB(240, 200, 60) },
 	},
 }
--- LOBBY: the emote too (EmoteUI works in every phase but RACING). Not in
--- RESULTS: it lay on the reward box of a phone-sized results screen.
-TouchLayout.ICONS.LOBBY = TouchLayout.ICONS.FARMING
+-- Not in the LOBBY (2026-11-12: it sat on the title of the new lobby
+-- screen) nor in RESULTS (it lay on the reward box of a phone-sized
+-- results screen).
+TouchLayout.ICONS.LOBBY = {}
 
 --- Icon boxes { { b = entry, box = {x, y, w, h} } } for a phase on a w × h
 -- screen whose top bar is `top` px tall.

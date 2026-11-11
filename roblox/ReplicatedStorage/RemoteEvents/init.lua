@@ -12,7 +12,7 @@
 --   ContestUpdate       → (itemId: string, p1: {userId,count}, p2: {userId,count})
 --   ContestResult       → (itemId: string, winnerUserId: number)
 --   StealAttempt        → (thiefName: string)                -- fires to victim only
---   ItemStolen          → (thiefName: string, victimName: string, itemName: string)
+--   ItemStolen          → (thiefName: string, victimName: string, itemName: string, thiefId, victimId)
 --   VehicleSpawned      → (userId: number, vehicleModel: Model)
 --   PlayerPositionSync  → ({userId: number, progress: number, rank: number}[])
 --   AbilityActivated    → (userId: number, itemName: string, targetIds: number[], effectKey: string,

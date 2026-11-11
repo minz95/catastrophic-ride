@@ -692,59 +692,10 @@ local _shown, _centre, _dist = nil, Vector3.zero, 12
 local _angle = math.rad(35)
 local _dragging, _dragX = false, 0
 
--- Bends a joint by `rot` around the joint (Motor6D, or the AnimationConstraint
--- some avatars use; see FarmFx).
-local function _bend(char, jointName, rot)
-	local j = char:FindFirstChild(jointName, true)
-	local obj, prop
-	if j and j:IsA("Motor6D") then obj, prop = j, "C0"
-	elseif j and j:IsA("AnimationConstraint") and j.Attachment0 then obj, prop = j.Attachment0, "CFrame"
-	else return end
-	local c0 = obj[prop]
-	local pos = c0.Position
-	obj[prop] = CFrame.new(pos) * rot * (c0 - pos)
-end
-
--- A still copy of the player's avatar, sitting on `seat`.
-local function _rider(seat, parent)
-	local char = LocalPlayer.Character
-	if not char then return end
-	local was = char.Archivable
-	char.Archivable = true
-	local ok, copy = pcall(function() return char:Clone() end)
-	char.Archivable = was
-	if not ok or not copy then return end
-	for _, d in ipairs(copy:GetDescendants()) do
-		if d:IsA("BaseScript") or d:IsA("ForceField") or d:IsA("Sound") then d:Destroy() end
-	end
-	local root = copy:FindFirstChild("HumanoidRootPart")
-	if not root then copy:Destroy() return end
-	root.Anchored = true
-	local hum = copy:FindFirstChildOfClass("Humanoid")
-	if hum then hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
-	local q = math.pi / 2
-	_bend(copy, "LeftHip", CFrame.Angles(q, 0, 0))
-	_bend(copy, "RightHip", CFrame.Angles(q, 0, 0))
-	_bend(copy, "LeftKnee", CFrame.Angles(-q, 0, 0))
-	_bend(copy, "RightKnee", CFrame.Angles(-q, 0, 0))
-	_bend(copy, "LeftShoulder", CFrame.Angles(q * 0.6, 0, 0))
-	_bend(copy, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
-	copy:PivotTo(seat.CFrame * CFrame.new(0, seat.Size.Y / 2 + root.Size.Y / 2, 0))
-	copy.Parent = parent
-	return copy
-end
-
--- The HEAD item is worn as a hat (VehicleBuilder.wearHat): onto the copy's head.
-local function _wearHat(vehicle, rider)
-	local head = rider and rider:FindFirstChild("Head")
-	if not head then return end
-	for _, c in ipairs(vehicle:GetChildren()) do
-		if c:IsA("Model") and c:GetAttribute("Hat") and c.PrimaryPart then
-			local base = c.PrimaryPart.Size.Y / 2
-			c:PivotTo(head.CFrame * CFrame.new(0, head.Size.Y / 2 - (c:GetAttribute("HatSink") or 0) + base, 0))
-		end
-	end
-end
+-- The avatar copy on the seat and its hat: Shared/SeatedCopy (the lobby uses it too).
+local SeatedCopy = require(ReplicatedStorage.Shared.SeatedCopy)
+local function _rider(seat, parent) return SeatedCopy.rider(seat, parent, LocalPlayer.Character) end
+local _wearHat = SeatedCopy.wearHat
 
 -- Spinning MOBILITY items (wheels, paddle wheels, propellers) turn in the
 -- showroom as if driving gently: the parts tagged SpinHub by CraftPreview.

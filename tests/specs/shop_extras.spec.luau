@@ -175,6 +175,27 @@ R.describe("shop pictures (Modules/ShopPreview)", function()
 		end)
 	end
 
+	R.it("the lobby line-up: a junk ride per biome, still, with its crafted items on it (2026-11-12)", function()
+		local folder = ShopPreview.buildShowcase(0)
+		R.expect(folder.Name).toBe(ShopPreview.SHOWCASE_FOLDER)
+		R.expect(folder.Parent.Name).toBe("ReplicatedStorage")
+		for k, b in ipairs(ShopPreview.SHOWCASE) do
+			local m = folder:FindFirstChild(k .. "_" .. b.biome)
+			R.expect(m ~= nil).toBe(true)
+			R.expect(m:FindFirstChildWhichIsA("VehicleSeat", true) ~= nil).toBe(true)   -- your avatar sits on it
+			for _, d in ipairs(m:GetDescendants()) do
+				R.expect(not ((d:IsA("BasePart") and not d.Anchored) or d:IsA("BaseScript") or d:IsA("BodyMover"))).toBe(true)
+			end
+		end
+		local fs = require("@lune/fs")
+		local lobby = fs.readFile("roblox/StarterGui/LobbyUI/init.client.lua")
+		R.expect(lobby:find('"LobbyShowcase"', 1, true) ~= nil).toBe(true)
+		R.expect(lobby:find("SeatedCopy.rider(", 1, true) ~= nil).toBe(true)
+		R.expect(lobby:find("Waiting for players", 1, true)).toBe(nil)   -- the round starts by itself
+		local shopMgr = fs.readFile("roblox/ServerScriptService/ShopManager.server.lua")
+		R.expect(shopMgr:find("buildShowcase()", 1, true) ~= nil).toBe(true)
+	end)
+
 	R.it("a trail shows as a ribbon in its colours behind the vehicle; a ride in its body colour", function()
 		local fire = Cosmetics.get("trail_fire")
 		local m = ShopPreview.buildOne(fire, "FOREST")

@@ -217,11 +217,9 @@ local function _floorArrow(root, idx, x, z, yaw, y)
 		Name = "WayArrowShaft_" .. idx, Size = Vector3.new(2.4, 0.6, 14), CFrame = cf,
 		Color = C.ARROW, Material = MAT.NEON, CanCollide = false, CastShadow = false, Transparency = 0.15,
 	})
-	local head = _wedge(root, {
-		Name = "WayArrowHead_" .. idx, Size = Vector3.new(5, 0.6, 5),
-		Color = C.ARROW, Material = MAT.NEON, CanCollide = false, CastShadow = false, Transparency = 0.15,
-	})
-	head.CFrame = cf * CFrame.new(0, 0, -9.5) * CFrame.Angles(-math.pi / 2, 0, 0)
+	-- the head: a chevron (a wedge laid flat read as a square from above)
+	TrackKit.chevron(root, "WayArrowHead_" .. idx, cf * CFrame.new(0, 0, -10), 6, 2.4, 0.6,
+		{ Color = C.ARROW, Material = MAT.NEON, Transparency = 0.15 })
 end
 
 local function _buildWayfindingArrows(root)
@@ -336,12 +334,35 @@ end
 local function _buildUpdraftZones(root)
 	for i, uz in ipairs(Track.updraftZones) do
 		local baseY = SKY_BASE_Y - 18 + KIT:riseAt(uz[1], uz[2])   -- on the dive too
+		-- a round column of moving air with wind streaks rising through it
+		-- (playtest 2026-11-12: the old glowing square box read as a bug)
+		local at = Vector3.new(uz[1], baseY, uz[2])
 		_part(root, {
-			Name = "UpdraftVisual_" .. i, Size = Vector3.new(14, 55, 14),
-			Position = Vector3.new(uz[1], baseY, uz[2]),
-			Color = C.UPDRAFT, Material = MAT.NEON,
-			CanCollide = false, Transparency = 0.72, CastShadow = false,
+			Name = "UpdraftVisual_" .. i, Shape = Enum.PartType.Cylinder,
+			Size = Vector3.new(55, 15, 15),
+			CFrame = CFrame.new(at) * CFrame.Angles(0, 0, math.pi / 2),
+			Color = C.UPDRAFT, Material = Enum.Material.ForceField,
+			CanCollide = false, CanQuery = false, CanTouch = false, CastShadow = false,
 		})
+		local vent = _part(root, {
+			Name = "UpdraftVent_" .. i, Size = Vector3.new(12, 0.2, 12),
+			Position = at - Vector3.new(0, 26, 0),
+			CanCollide = false, CanQuery = false, CanTouch = false, Transparency = 1,
+		})
+		local wind = Instance.new("ParticleEmitter")
+		wind.Name = "UpdraftWind"
+		wind.EmissionDirection = Enum.NormalId.Top
+		wind.Orientation = Enum.ParticleOrientation.VelocityParallel
+		wind.Speed = NumberRange.new(34, 46)
+		wind.Lifetime = NumberRange.new(1.1, 1.4)
+		wind.Rate = 26
+		wind.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.5), NumberSequenceKeypoint.new(1, 0.15) })
+		wind.Squash = NumberSequence.new(-3)
+		wind.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.9),
+			NumberSequenceKeypoint.new(0.3, 0.35), NumberSequenceKeypoint.new(1, 1) })
+		wind.Color = ColorSequence.new(Color3.fromRGB(235, 248, 255))
+		wind.LightEmission = 0.4
+		wind.Parent = vent
 		local trigger = _part(root, {
 			Name = "UpdraftZone_" .. i, Size = Vector3.new(18, 70, 18),
 			Position = Vector3.new(uz[1], baseY, uz[2]),

@@ -39,8 +39,9 @@ local C = {
 	DRIFT_GLOW  = Color3.fromRGB(40,  220, 255),
 	REEF        = Color3.fromRGB(95,  75,  55),
 	REEF_TOP    = Color3.fromRGB(220, 60,  60),
-	FLUME       = Color3.fromRGB(235, 245, 250),
-	FLUME_POST  = Color3.fromRGB(200, 210, 220),
+	FLUME       = Color3.fromRGB(150, 185, 205),   -- was near-white: glared with the neon lane on it
+	FLUME_FLOOR = Color3.fromRGB(40,  110, 165),
+	FLUME_POST  = Color3.fromRGB(165, 180, 195),
 	LIGHT_RED   = Color3.fromRGB(210, 45,  45),
 	LIGHT_WHITE = Color3.fromRGB(245, 245, 240),
 	LAMP        = Color3.fromRGB(255, 230, 120),
@@ -109,7 +110,7 @@ local function _buildChannel(root)
 	strips.Parent = root
 	KIT:buildSurface(strips, {
 		name = "LaneStrip", jointName = "LaneStripJoint", thickness = 0.15, overlap = 2,
-		color = C.LANE, material = MAT.NEON, physics = false,
+		color = C.LANE, material = MAT.PLASTIC, physics = false,
 	})
 	for _, d in ipairs(strips:GetChildren()) do
 		if d:IsA("BasePart") and d.Position.Y < WATER_Y + 1 then
@@ -119,7 +120,10 @@ local function _buildChannel(root)
 		else
 			d.CanCollide = false
 			d.CastShadow = false
-			d.Transparency = 0.6
+			-- water on a blue trough, not neon on white (playtest 2026-11-12:
+			-- the raised stretches were a glaring white)
+			d.Transparency = 0.35
+			d.Reflectance = 0.15
 			d.Parent = root
 		end
 	end
@@ -138,7 +142,7 @@ local function _buildChannel(root)
 				Name = "FlumeFloor_" .. i,
 				Size = Vector3.new(LANE_W + Track.wallThickness * 2, 1, KIT:segLen3(i) + 2),
 				CFrame = KIT:segCF(i, WATER_Y - 1.2),
-				Color = C.FLUME, Material = MAT.PLASTIC, CanCollide = false,
+				Color = C.FLUME_FLOOR, Material = MAT.PLASTIC, CanCollide = false,
 			})
 		end
 	end
@@ -290,7 +294,7 @@ local function _buildTriggers(root)
 				Name = "WakeRing_" .. i, Size = Vector3.new(LANE_W - 4, 0.3, 42),
 				CFrame = cf * CFrame.new(0, 0.3, 0),
 				Color = C.DRIFT_GLOW, Material = MAT.NEON,
-				CanCollide = false, CastShadow = false, Transparency = 0.5,
+				CanCollide = false, CastShadow = false, Transparency = 0.72,
 			})
 		end,
 	})

@@ -54,6 +54,22 @@ function TrackKit.wedge(parent, props)
 	return p
 end
 
+--- A flat chevron (^ pointing along `cf`'s LookVector, tip at `cf`): two
+-- bars of `len` studs meeting at 90 degrees. Reads as "this way" from any
+-- height; a wedge laid flat looked like a plain square from above
+-- (playtest 2026-11-12: "floating yellow squares, a bug?").
+function TrackKit.chevron(parent, name, cf, len, width, thick, props)
+	local a = math.rad(45)
+	for k, side in ipairs({ -1, 1 }) do
+		local dir = Vector3.new(side * math.sin(a), 0, math.cos(a))   -- back from the tip
+		local p = TrackKit.part(parent, props)
+		p.Name = name .. (k == 1 and "L" or "R")
+		p.Size = Vector3.new(width, thick, len)
+		p.CFrame = cf * CFrame.new(dir * (len / 2 - width * 0.35)) * CFrame.Angles(0, side * a, 0)
+		p.CanCollide, p.CastShadow = false, false
+	end
+end
+
 function TrackKit.tag(part, tagName)
 	CollectionService:AddTag(part, tagName)
 end
@@ -744,12 +760,13 @@ function TrackKit:buildBoostPads(root, style)
 			CanCollide = false, CastShadow = false,
 		})
 		TrackKit.tag(pad, "BoostPad")
-		local arrow = TrackKit.wedge(root, {
-			Name = "BoostArrow_" .. i, Size = Vector3.new(5, 0.4, 5),
-			Color = style.arrowColor or Color3.fromRGB(255, 240, 80), Material = Enum.Material.Neon,
-			CanCollide = false, CastShadow = false,
-		})
-		arrow.CFrame = cf * CFrame.new(0, 0.2, -(ps[3] / 2 + 1)) * CFrame.Angles(0, math.pi, 0)
+		-- two chevrons on the pad, pointing the way to go ("»")
+		local arrowProps = { Color = style.arrowColor or Color3.fromRGB(255, 240, 80), Material = Enum.Material.Neon }
+		local len = math.min(ps[1], ps[3]) * 0.45
+		for k = 1, 2 do
+			TrackKit.chevron(root, "BoostArrow_" .. i .. "_" .. k,
+				cf * CFrame.new(0, ps[2] / 2 + 0.05, -ps[3] / 2 + 1 + (k - 1) * len * 0.75), len, 0.9, 0.2, arrowProps)
+		end
 		if style.ringColor then
 			TrackKit.part(root, {
 				Name = "BoostRing_" .. i, Size = Vector3.new(ps[1] + 4, 0.2, ps[3] + 4),

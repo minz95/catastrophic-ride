@@ -149,6 +149,63 @@ function ShopPreview.build(biome, pause)
 	return folder
 end
 
+-- The lobby's line-up (LobbyUI): a junk ride per biome, the first thing a
+-- new player sees (2026-11-12: the lobby was a dark panel with an empty
+-- list, "Biome: ?" and "Waiting for players", and people left in a second).
+ShopPreview.SHOWCASE_FOLDER = "LobbyShowcase"
+ShopPreview.SHOWCASE = {
+	{ biome = "FOREST", slots = { BODY = "Shopping Cart", ENGINE = "Rocket", MOBILITY = "Alarm Clock", HEAD = "Flower" },
+		look = { ride = "ride_flame" } },
+	{ biome = "OCEAN", slots = { BODY = "Bathtub", ENGINE = "Fan", MOBILITY = "Rubber Duck", HEAD = "Propeller Hat" },
+		look = { paint = "paint_sunset" } },
+	{ biome = "SKY", slots = { BODY = "Red Sofa", ENGINE = "Hair Dryer", MOBILITY = "Life Preserver", HEAD = "Cactus" },
+		look = { paint = "paint_lime" } },
+}
+
+--- Builds the lobby line-up into ReplicatedStorage.LobbyShowcase (models
+-- "1_FOREST", "2_OCEAN", "3_SKY"), once the item models are ready.
+function ShopPreview.buildShowcase(waitFor)
+	local ServerStorage = game:GetService("ServerStorage")
+	local t0 = os.clock()
+	while os.clock() - t0 < (waitFor or 20) do
+		local f = ServerStorage:FindFirstChild("ItemModels")
+		if f and f:GetAttribute("Ready") then break end
+		task.wait(0.25)
+	end
+	local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
+	local ItemConfig = require(ServerScriptService.Modules.ItemConfig)
+	local folder = Instance.new("Folder")
+	folder.Name = ShopPreview.SHOWCASE_FOLDER .. "_building"
+	for k, b in ipairs(ShopPreview.SHOWCASE) do
+		local ok, model = pcall(function()
+			local sl = b.slots
+			local stats = VehicleStats.calculate(sl.BODY and ItemConfig[sl.BODY], sl.ENGINE and ItemConfig[sl.ENGINE],
+				sl.SPECIAL and ItemConfig[sl.SPECIAL], b.biome)
+			stats = VehicleStats.applyMobility(stats, sl.MOBILITY and ItemConfig[sl.MOBILITY], b.biome)
+			return VehicleBuilder.build(stats, b.biome, CFrame.new(), sl, Cosmetics.look(b.look))
+		end)
+		if ok and model then
+			for _, d in ipairs(model:GetDescendants()) do
+				local strip = false
+				for _, cls in ipairs(STRIP) do
+					if d:IsA(cls) then strip = true break end
+				end
+				if strip then d:Destroy() elseif d:IsA("BasePart") then d.Anchored = true end
+			end
+			model.Name = k .. "_" .. b.biome
+			model:SetAttribute("Biome", b.biome)
+			model.Parent = folder
+		else
+			warn("[ShopPreview] showcase " .. b.biome .. ": " .. tostring(model))
+		end
+	end
+	local old = ReplicatedStorage:FindFirstChild(ShopPreview.SHOWCASE_FOLDER)
+	if old then old:Destroy() end
+	folder.Name = ShopPreview.SHOWCASE_FOLDER
+	folder.Parent = ReplicatedStorage
+	return folder
+end
+
 --- All biomes, one after the other, without a hitch (ShopManager at boot).
 function ShopPreview.buildAll()
 	for _, biome in ipairs(Constants.BIOMES) do

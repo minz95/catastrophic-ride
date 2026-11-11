@@ -49,9 +49,9 @@ local function startRain(amount)
 	e.Speed = NumberRange.new(95, 120)
 	e.Lifetime = NumberRange.new(0.7, 0.9)
 	e.Rate = RAIN_RATE * amount * (InputHints.touchUI() and PHONE or 1)
-	e.Size = NumberSequence.new(0.09)
+	e.Size = NumberSequence.new(0.14)   -- 0.09 was hard to see: a storm read as lightning alone
 	e.Squash = NumberSequence.new(-2.5)   -- thin streaks
-	e.Transparency = NumberSequence.new(0.35)
+	e.Transparency = NumberSequence.new(0.15)
 	e.Color = ColorSequence.new(Color3.fromRGB(205, 218, 235))
 	e.LightEmission = 0.2
 	e.Parent = p
