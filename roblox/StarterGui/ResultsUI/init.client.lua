@@ -174,7 +174,15 @@ nextLbl.Parent                 = stage
 -- Worded as a challenge ("my ride vs yours"): a friend who comes along
 -- also gets a bonus junk item (Shared/StarterItems).
 local Invite = require(ReplicatedStorage.Shared.Invite)
-Invite.button(stage, UDim2.new(0, 12, 0, 440), UDim2.new(0, 172, 0, 46), false, Invite.RESULTS_TEXT)
+-- 200 × 62 with a 22-high hint: at 172 × 46 the two-line text and the coin
+-- hint were ~6 px on an iPhone XR (Device Simulator 2026-11-11). The
+-- 2nd-place stand starts at stage X 220.
+local inviteBtn = Invite.button(stage, UDim2.new(0, 12, 0, 436), UDim2.new(0, 200, 0, 62), false, Invite.RESULTS_TEXT)
+local inviteHint = inviteBtn:FindFirstChild("Hint")
+if inviteHint then
+	inviteHint.Size = UDim2.new(1, 0, 0, 22)
+	inviteHint.Position = UDim2.new(0, 0, 1, 6)
+end
 
 -- ── Today's challenges (Shared/DailyChallenge), right of the podium ──────────
 -- Mirrors the invite button on the left. Filled from GetChallenges when the
