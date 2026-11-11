@@ -489,6 +489,31 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (ItemGuideUI). The results screen's invite reads "MY RIDE VS YOURS?".
   A lone player's lobby is `LOBBY.MAX_WAIT` (8 s); a second player sets
   it to FILL_SECONDS once. Spec `starter_items`.
+- Rare loot (playtest 2026-11-12): picking up or stealing a Rare / Epic
+  marks its holder for everyone (`StarterPlayerScripts/RareMark`: icon +
+  arrow over the head, a short glow; `Constants.RARE_MARK`), the server
+  keeps `data._rareAt` and farm bots within `BOTS.FARM.RARE_CHASE` go for
+  them. Bots talk in chat bubbles (`Shared/BotTalk`, FarmBots `say` →
+  FarmAction "say" → FarmFx `DisplayBubble`; `BOTS.FARM.TALK` keeps it to
+  one line on the farm at a time). Spec `rare_mark`.
+- The lobby is the first screen (2026-11-12, players left within a
+  second of a dark panel saying "waiting"): LobbyUI turns a junk ride per
+  biome (`ShopPreview.buildShowcase` → `ReplicatedStorage.LobbyShowcase`,
+  built first at boot) with a copy of your avatar on the middle one
+  (`Shared/SeatedCopy`, the crafting showroom's too), rolls the next track
+  like a roulette until BiomeSelected, and counts down to the round.
+  Someone who joins during a race watches it (`SpectateCam`: behind a car,
+  click / tap for the next one).
+- Aimed abilities ("nearest") take the nearest car within
+  `ABILITY_REACH.NEAR`, else the car ahead within AHEAD (a leader was never
+  hit: Studio, 51 bot abilities, none on the leading player); race bots
+  fire them with a car that far.
+- Arrows on the road are chevrons (`TrackKit.chevron`): a wedge laid flat
+  reads as a square from above (SKY's "floating yellow squares"). SKY's
+  updrafts are a ForceField cylinder with rising wind (particles follow
+  `MapVisibility`). Storms are dusk-dark with thick haze and heavier rain
+  (a storm used to be a blue sky with lightning). OCEAN's raised flume is
+  water on a blue trough (it was neon on white: glare).
 - The farm of each biome is `Shared/FarmBounds` (centre from the track's
   `farm`, wall-to-wall size, floor Y, item area, spawn markers): the map
   builders, `Maps/FarmKit` (invisible walls in FarmArea), FarmingManager

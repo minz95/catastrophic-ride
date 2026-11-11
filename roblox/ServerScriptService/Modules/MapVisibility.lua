@@ -131,7 +131,7 @@ function MapVisibility.setSubVisible(mapModel, subName, visible)
 			else
 				hide(desc)
 			end
-		elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
+		elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") or desc:IsA("ParticleEmitter") then
 			-- GUIs ignore the Part.Transparency of their adornee, so the
 			-- transparency loop above won't hide their text. Without this
 			-- branch the floating checkpoint labels stayed visible all phases.
@@ -169,6 +169,9 @@ function MapVisibility.applyPhase(mapsFolder, mapModel, showSub)
 					else
 						hide(desc)
 					end
+				elseif desc:IsA("ParticleEmitter") then
+					-- particles ignore their part's Transparency (SKY's updraft wind)
+					set(desc, "Enabled", live and not (hiddenSub and desc:IsDescendantOf(hiddenSub)))
 				elseif desc:IsA("BillboardGui") or desc:IsA("SurfaceGui") then
 					local inSub = false
 					for _, sub in pairs(subs) do

@@ -127,7 +127,9 @@ local function tryAbility(bot, biome, pos, speed)
 		local item = items[((bot.abilityTurn - 1 + k) % #items) + 1].item
 		local cfg = AbilityConfig.get(item, biome)
 		local aimed = cfg and (cfg.targetType == "nearest" or cfg.targetType == "random_enemy" or cfg.targetType == "all_in_radius")
-		if cfg and (not aimed or carNear(bot, pos, R.TARGET_RANGE)) then
+		-- "nearest" also reaches the car ahead (Constants.ABILITY_REACH)
+		local reach = cfg and cfg.targetType == "nearest" and Constants.ABILITY_REACH.AHEAD or R.TARGET_RANGE
+		if cfg and (not aimed or carNear(bot, pos, reach)) then
 			local res = _useAbility(bot.proxy, item)
 			if res == "ok" then
 				Telemetry.record("bot_ability", { userId = bot.id, item = item, aimed = aimed or nil })

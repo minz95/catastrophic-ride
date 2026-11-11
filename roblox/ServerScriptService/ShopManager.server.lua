@@ -39,8 +39,15 @@ MarketplaceService.ProcessReceipt = function(info)
 	return res
 end
 
--- The shop's pictures (Modules/ShopPreview): every look on each biome's
+-- The lobby's line-up first (the first screen a player sees), then the
+-- shop's pictures (Modules/ShopPreview): every look on each biome's
 -- vehicle, built once, a little at a time, after the server is up.
+task.spawn(function()
+	local ok, err = pcall(function()
+		require(game:GetService("ServerScriptService").Modules.ShopPreview).buildShowcase()
+	end)
+	if not ok then warn("[ShopManager] showcase: " .. tostring(err)) end
+end)
 task.delay(3, function()
 	local ok, err = pcall(function()
 		require(game:GetService("ServerScriptService").Modules.ShopPreview).buildAll()

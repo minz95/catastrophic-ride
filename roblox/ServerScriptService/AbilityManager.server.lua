@@ -156,6 +156,8 @@ local function _nearestEnemy(player, radius)
 	return best
 end
 
+local _carAhead   -- below (the Bounce Bomb's target too)
+
 local function _allInRadius(player, radius)
 	local pdata   = SessionManager.getData(player)
 	local vehicle = pdata and pdata.vehicleModel
@@ -670,7 +672,11 @@ local function _handleAbilityRequest(player, itemName)
 	-- Determine target
 	local target = nil
 	if abilCfg.targetType == "nearest" then
-		target = _nearestEnemy(player, 60)
+		-- nobody near: the car ahead, further up the road (Studio
+		-- 2026-11-12: a player 50 studs in front was never hit by anyone;
+		-- 51 bot abilities, none on the leading player)
+		target = _nearestEnemy(player, Constants.ABILITY_REACH.NEAR)
+			or _carAhead(player, Constants.ABILITY_REACH.AHEAD)
 	elseif abilCfg.targetType == "random_enemy" then
 		local enemies = _allInRadius(player, 9999)  -- all players
 		if #enemies > 0 then target = enemies[math.random(#enemies)] end
@@ -748,7 +754,7 @@ local function _equipped(player, category)
 end
 
 --- The nearest car in front of `player`'s car within `range` studs.
-local function _carAhead(player, range)
+_carAhead = function(player, range)
 	local vehicle = _getVehicle(player)
 	local primary = vehicle and vehicle.PrimaryPart
 	if not primary then return nil end

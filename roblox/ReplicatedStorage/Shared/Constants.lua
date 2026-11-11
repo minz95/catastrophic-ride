@@ -501,6 +501,16 @@ Constants.SKY_GRAVITY_MULT                 = 1.2  -- outside updraft zones
 -- (RaceProgress.offLane): boats and bots that slipped out onto the open sea.
 Constants.OFF_LANE = { MARGIN = 8, SECONDS = 1.5 }
 
+-- Aimed abilities ("nearest"): the nearest car within NEAR studs, else the
+-- nearest car in front within AHEAD (a leader could not be touched)
+Constants.ABILITY_REACH = { NEAR = 60, AHEAD = 180 }
+
+-- Rare loot marks its holder (StarterPlayerScripts/RareMark): whoever picks
+-- up (or steals) a Rare / Epic item gets an arrow over the head for SECONDS,
+-- with a glow for GLOW s, so the others know whom to rob (playtest
+-- 2026-11-12). Icon and arrow only: no more floating words.
+Constants.RARE_MARK = { SECONDS = 6, GLOW = 1.2, RARITIES = { Rare = true, Epic = true } }
+
 Constants.UPDRAFT = { LIFT = 12, DURATION = 2.5, FLY_REF = 20, MIN_SCALE = 0.7, MAX_SCALE = 1.3 }
 
 -- ─── Progression (saved: Modules/PlayerStore, rules: Shared/Progression) ──────
@@ -562,6 +572,14 @@ Constants.BOTS = {
 		GIVE_UP = 3.5,      -- s without getting closer: try another item
 		SKIP_FOR = 12,      -- s an item it gave up on is left alone
 		HIGH_LOG = 12,      -- root studs over the floor: telemetry farm_bot_high (standing 3, a jump tops out near 10)
+		-- someone just got a Rare / Epic (RARE_MARK): a bot this close may
+		-- go for them (one look a second)
+		RARE_CHASE = 45,
+		RARE_CHASE_CHANCE = 0.5,
+		-- bots talk (Shared/BotTalk, chat bubbles): one line per bot per GAP
+		-- s, one line on the whole farm per ANY_GAP s; IDLE = chance a
+		-- second of a line out of nothing
+		TALK = { GAP = 8, ANY_GAP = 2, IDLE = 0.01 },
 	},
 	-- RACING (Modules/RaceBots): bots fire their crafted abilities like a
 	-- player's E, a little less eagerly

@@ -316,7 +316,7 @@ InstanceMeta.__newindex = function(inst, key, value)
 		props.CFrame = CFrame.new(value) * cf.Rotation
 		return
 	end
-	if key == "Orientation" then
+	if key == "Orientation" and typeof(value) == "Vector3" then   -- a part's; a ParticleEmitter's is an enum
 		local pos = (props.CFrame or CFrame.new()).Position
 		props.CFrame = CFrame.new(pos)
 			* CFrame.fromOrientation(math.rad(value.X), math.rad(value.Y), math.rad(value.Z))

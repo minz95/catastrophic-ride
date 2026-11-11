@@ -17,6 +17,8 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Constants = require(ReplicatedStorage.Shared.Constants)
 local FarmBounds = require(ReplicatedStorage.Shared.FarmBounds)
 local StarterItems = require(ReplicatedStorage.Shared.StarterItems)
+local BotTalk = require(ReplicatedStorage.Shared.BotTalk)
+local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local SessionManager = require(ServerScriptService.SessionManager)
 local GameManager = require(ServerScriptService.GameManager)
 local Telemetry = require(ServerScriptService.Modules.Telemetry)
@@ -33,6 +35,19 @@ FarmBots.paused = false      -- specs: bots stand still
 local _conn = nil
 local _api = nil
 local _rng = Random.new()
+local _talkGate = {}   -- BotTalk.may: one line on the farm at a time
+
+-- A chat bubble over the bot (FarmFx draws FarmAction "say"), when it may
+-- talk now (Constants.BOTS.FARM.TALK). Returns the line said, or nil.
+local function say(bot, event, now)
+	if not BotTalk.may(bot, _talkGate, now, Constants.BOTS.FARM.TALK) then return nil end
+	local text = BotTalk.line(event, function(n) return _rng:NextInteger(1, n) end)
+	if not text then return nil end
+	RemoteEvents.FarmAction:FireAllClients("say", bot.proxy.UserId, nil, { text = text })
+	Telemetry.record("bot_say", { userId = bot.proxy.UserId, event = event, text = text })
+	return text
+end
+FarmBots.say = say   -- specs
 
 --- How many bots for `humans` players (harness: args.fillBots).
 function FarmBots.wanted(humans, harness)
@@ -271,12 +286,13 @@ local function nearestHuman(bot, range)
 end
 
 -- Someone (not the bot) with items to rob within `range`, nearest first.
-local function stealTarget(bot, range)
+local function stealTarget(bot, range, markedOnly)
 	local best, bestD
 	local now = tick()
 	for _, other in ipairs(SessionManager.actors()) do
 		local od = other ~= bot.proxy and SessionManager.getData(other)
 		local r = od and #od.inventory > 0 and other.Character and other.Character:FindFirstChild("HumanoidRootPart")
+		if r and markedOnly and not (od._rareAt and now - od._rareAt <= Constants.RARE_MARK.SECONDS) then r = nil end
 		if r and now >= (od.stealInvincibleEnd or 0) and now >= (od._hiddenUntil or 0) and not od._stealWindow then
 			local d = flat(r.Position - bot.root.Position).Magnitude
 			if d <= range and (not bestD or d < bestD) then best, bestD = other, d end
@@ -375,11 +391,13 @@ local function think(bot, dt, now)
 	-- picked up 9 items)
 	if hitNow and data._lastHitBy and not SessionManager.isBot(SessionManager.actorById(data._lastHitBy)) then
 		bot.revenge = { id = data._lastHitBy, untilT = now + F.REVENGE_FOR }
+		say(bot, "hit", now)
 	end
 	if data._robbedAt and data._robbedAt ~= bot.seenRobbed then
 		bot.seenRobbed = data._robbedAt
 		bot.revenge = { id = data._robbedBy, untilT = now + F.REVENGE_FOR }
 		bot.chase = nil
+		say(bot, "robbed", now)
 	end
 	-- just hit, or a player squares up: raise the guard now and then
 	if now >= (bot.nextGuard or 0) and _api.guard then
@@ -431,10 +449,22 @@ local function think(bot, dt, now)
 			task.spawn(function()
 				local res = _api.steal(bot.proxy, victimId)
 				Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "steal", victim = victimId, result = res })
+				if res == "stolen" then say(bot, "stolen", os.clock())
+				elseif res == "defended" then say(bot, "defended", os.clock()) end
 			end)
 			return
 		else
 			walkTo(bot, r.Position, dt)
+			return
+		end
+	end
+	-- someone near just got a Rare / Epic (marked for all, RareMark): go for it
+	if _api.steal and now >= (bot.nextRareLook or 0) and not data._stealing and #data.inventory < Constants.INVENTORY_SIZE then
+		bot.nextRareLook = now + 1
+		local victim = stealTarget(bot, F.RARE_CHASE, true)
+		if victim and _rng:NextNumber() < F.RARE_CHASE_CHANCE then
+			bot.chase = { victim = victim, untilT = now + F.CHASE_FOR }
+			say(bot, "rare_chase", now)
 			return
 		end
 	end
@@ -443,6 +473,7 @@ local function think(bot, dt, now)
 		local victim = _rng:NextNumber() < F.STEAL_CHANCE and stealTarget(bot, F.STEAL_CHASE)
 		if victim then
 			bot.chase = { victim = victim, untilT = now + F.CHASE_FOR }
+			if _rng:NextNumber() < 0.5 then say(bot, "steal", now) end
 			return
 		end
 	end
@@ -483,6 +514,7 @@ local function think(bot, dt, now)
 	if d <= Constants.PICKUP_RANGE - 2 then
 		local res = _api.pickup(bot.proxy, id)
 		Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "pickup", item = item.itemName, result = res })
+		if res == "ok" and Constants.RARE_MARK.RARITIES[item.rarity] then say(bot, "rare_got", now) end
 		if res == "contested" then
 			bot.contest, bot.presses = id, 0
 		elseif res ~= "ok" then
@@ -496,6 +528,7 @@ local function think(bot, dt, now)
 		Telemetry.record("bot_farm", { userId = bot.proxy.UserId, act = "give_up", item = item.itemName })
 	else
 		if now - bot.closerAt > F.STUCK_AFTER and bot.hum then bot.hum.Jump = true end
+		if _rng:NextNumber() < F.TALK.IDLE * dt then say(bot, "idle", now) end
 		walkTo(bot, item.part.Position, dt)
 	end
 end

@@ -904,6 +904,16 @@ RemoteEvents.FarmAction.OnClientEvent:Connect(function(kind, actorId, targetId, 
 			onSmoke(actorId, info)
 		elseif kind == "drop" then
 			onDrop(actorId, info)
+		elseif kind == "say" then
+			-- a farm bot talks (FarmBots / Shared/BotTalk): a chat bubble,
+			-- the same small one players' chat makes
+			local c = charOf(actorId)
+			local head = c and (c:FindFirstChild("Head") or c:FindFirstChild("HumanoidRootPart"))
+			local text = type(info) == "table" and type(info.text) == "string" and info.text
+			if head and text then
+				game:GetService("TextChatService"):DisplayBubble(head, text)
+			end
+			report("farmfx", { what = "say", drawn = head ~= nil })
 		end
 	end)
 	if not ok then report("farmfx", { what = kind, error = tostring(err) }) end
