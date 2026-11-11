@@ -479,7 +479,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   reserved", FarmBots skip them, no contest for the owner) and the client
   points at them (`StarterArrow`, remote `StarterItems`). A player not on
   the farm yet (character still loading, joined mid-round) gets theirs on a
-  retry every STARTER.RETRY s while MIN_LEFT s remain. Every pickup
+  retry every STARTER.RETRY s while MIN_LEFT s remain. The client turns
+  you and the camera to them (after the teleport the camera often faced
+  you and they lay under the bag); the default camera ignores a CFrame set
+  while it runs (back a second later), so it is set while Scriptable for
+  one frame. Every pickup
   shows a face-down "???" card that turns over to the ability
   (ItemGuideUI). The results screen's invite reads "MY RIDE VS YOURS?".
   A lone player's lobby is `LOBBY.MAX_WAIT` (8 s); a second player sets

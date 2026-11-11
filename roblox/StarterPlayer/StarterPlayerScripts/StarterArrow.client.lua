@@ -21,6 +21,7 @@ local SPEED  = 5       -- radians a second
 -- studs over the item: low, so it stays under the FARMING toast at the top
 -- of the screen (Studio first-minute: at 5 it hid behind the toast)
 local HEIGHT = 3
+local TURN_BACK, TURN_UP = 14, 7   -- camera behind / over you when it turns to them
 
 local _parts = {}      -- [itemId] = primary part of a starter item still out
 local _bonus = {}      -- [itemId] = true for the friend bonus item
@@ -75,6 +76,35 @@ local function findPart(itemId)
 	return nil
 end
 
+-- Turn you and the camera toward your starter items: the server puts them
+-- in front of your avatar, but after the teleport to the farm the camera
+-- often looked at your face, and the items lay behind it under the bag
+-- (Studio Device Simulator, iPhone XR, 2026-11-11). Your own character is
+-- yours to move on this client; the camera is turned as below.
+local function faceStarters()
+	local root = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+	local cam = workspace.CurrentCamera
+	if not root or not cam then return end
+	local sum, n = Vector3.zero, 0
+	for _, part in pairs(_parts) do
+		if part.Parent then sum += part.Position; n += 1 end
+	end
+	if n == 0 then return end
+	local centre = sum / n
+	local flat = Vector3.new(centre.X - root.Position.X, 0, centre.Z - root.Position.Z)
+	if flat.Magnitude < 1 then return end
+	local dir = flat.Unit
+	root.CFrame = CFrame.lookAt(root.Position, root.Position + dir)
+	-- the default camera keeps its own yaw: a CFrame set while it runs was
+	-- back where it was a second later. Hand it over for a frame and back:
+	-- it starts again from the CFrame it finds.
+	if cam.CameraType ~= Enum.CameraType.Custom then return end
+	cam.CameraType = Enum.CameraType.Scriptable
+	cam.CFrame = CFrame.lookAt(root.Position - dir * TURN_BACK + Vector3.new(0, TURN_UP, 0), centre)
+	RunService.RenderStepped:Wait()
+	cam.CameraType = Enum.CameraType.Custom
+end
+
 RemoteEvents.StarterItems.OnClientEvent:Connect(function(list, friendBonus)
 	clear()
 	if type(list) ~= "table" then return end
@@ -93,6 +123,7 @@ RemoteEvents.StarterItems.OnClientEvent:Connect(function(list, friendBonus)
 			task.delay(0.5, take, e)
 		end
 	end
+	task.delay(0.7, faceStarters)   -- after the late models (above) arrived
 	if friendBonus then
 		Notice.show("Friend bonus!", "A friend is here: +1 rare junk next to you", 6)
 	end
