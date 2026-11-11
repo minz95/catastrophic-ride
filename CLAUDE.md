@@ -318,7 +318,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `python3 tools/studio/sim.py run sounds` (`--set search=[…]` searches
   the Creator Store). Every sound plays through a SoundGroup
   (`SoundConfig.GROUPS`: Music, Ambience, Effects); music stays well under
-  the effects and the 🎵 button (SoundClient) mutes it. In a Studio
+  the effects and the 🎵 button (SoundClient) mutes it; it stands at
+  `GuiService.TopbarInset` (at a fixed X 112 Roblox's newer ☰ / chat
+  buttons covered it). In a Studio
   playtest `[` / `]` switch the music through `SoundConfig.TRY` (the
   phase's candidates; Output prints `[MusicTry] …`) so a person can pick
   by ear; live games never run it. No bangs: GO is a high countdown beep,
@@ -475,7 +477,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Cart; a Roblox friend in the server (`Modules/FriendsHere`) adds a Rare
   bonus. They are kept for their player RESERVE s (others get "denied:
   reserved", FarmBots skip them, no contest for the owner) and the client
-  points at them (`StarterArrow`, remote `StarterItems`). Every pickup
+  points at them (`StarterArrow`, remote `StarterItems`). A player not on
+  the farm yet (character still loading, joined mid-round) gets theirs on a
+  retry every STARTER.RETRY s while MIN_LEFT s remain. Every pickup
   shows a face-down "???" card that turns over to the ability
   (ItemGuideUI). The results screen's invite reads "MY RIDE VS YOURS?".
   A lone player's lobby is `LOBBY.MAX_WAIT` (8 s); a second player sets

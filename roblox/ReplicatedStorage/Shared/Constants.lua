@@ -94,8 +94,10 @@ Constants.INVITE = {
 -- When FARMING starts, BODY + ENGINE + SPECIAL items wait DIST studs in
 -- front of each player, SPREAD apart (one more, rarer, with a Roblox
 -- friend in the server), kept for that player RESERVE s. AFTER: s after
--- the phase starts (players are moved to the farm spawns 0.5 s in).
-Constants.STARTER = { DIST = 10, SPREAD = 7, RESERVE = 25, AFTER = 1.2 }
+-- the phase starts (players are moved to the farm spawns 0.5 s in). A
+-- player not on the farm yet (still loading, joined mid-round) is tried
+-- again every RETRY s while MIN_LEFT s of FARMING remain.
+Constants.STARTER = { DIST = 10, SPREAD = 7, RESERVE = 25, AFTER = 1.2, RETRY = 1, MIN_LEFT = 15 }
 
 -- ─── Inventory ────────────────────────────────────────────────────────────────
 Constants.INVENTORY_SIZE       = 8

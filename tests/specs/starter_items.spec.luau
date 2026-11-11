@@ -167,6 +167,45 @@ R.describe("starter junk in a real FARMING phase (FarmingManager)", function()
 		end
 	end)
 
+	R.it("a player not on the farm yet (still loading) gets theirs once there; a mid-round joiner too", function()
+		local srv = farm(1)
+		local a = srv.players[1]
+		-- late joiner: arrives 5 s into FARMING, off the farm at first
+		srv.mock.addPlayer("Late", 4004, Vector3.new(0, 300, 0))
+		srv.advance(2)
+		local late
+		for _, p in ipairs(srv.env.game:GetService("Players"):GetPlayers()) do
+			if p.UserId == 4004 then late = p end
+		end
+		R.expect(#startersOf(srv, late)).toBe(0)
+		-- now standing on the farm: the next retry gives them
+		local zone = FarmBounds.get("FOREST")
+		late.Character.HumanoidRootPart.Position = Vector3.new(zone.cx, zone.floorY + 3, zone.cz)
+		srv.advance(C.STARTER.RETRY + 0.5)
+		R.expect(#startersOf(srv, late)).toBe(3)
+		-- and nobody gets a second set
+		srv.advance(5)
+		R.expect(#startersOf(srv, a)).toBe(3)
+		R.expect(#startersOf(srv, late)).toBe(3)
+		R.expect(#srv.Telemetry.events("starter_items")).toBe(2)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("no starter items in the last MIN_LEFT s of FARMING", function()
+		local srv = farm(1)
+		srv.advance(60 - C.STARTER.MIN_LEFT)
+		srv.mock.addPlayer("VeryLate", 5005, Vector3.new(0, 300, 0))
+		srv.advance(1)
+		local p
+		for _, q in ipairs(srv.env.game:GetService("Players"):GetPlayers()) do
+			if q.UserId == 5005 then p = q end
+		end
+		local zone = FarmBounds.get("FOREST")
+		p.Character.HumanoidRootPart.Position = Vector3.new(zone.cx, zone.floorY + 3, zone.cz)
+		srv.advance(3)
+		R.expect(#startersOf(srv, p)).toBe(0)
+	end)
+
 	R.it("farm bots leave a player's starter items while they are kept", function()
 		local src = fs.readFile("roblox/ServerScriptService/Modules/FarmBots.lua")
 		R.expect(src:find("StarterItems.heldFrom(it,", 1, true) ~= nil).toBe(true)
@@ -186,6 +225,19 @@ R.describe("friends and the first look (client sources)", function()
 		R.expect(src:find('cardTitle.Text = "???"', 1, true) ~= nil).toBe(true)
 		R.expect(src:find("UDim2.fromScale(0, 1)", 1, true) ~= nil).toBe(true)   -- the turn
 		R.expect(src:find("showCard(info.item, isNew)", 1, true) ~= nil).toBe(true)  -- every pickup
+	end)
+
+	R.it("the music button stands right of Roblox's top-left buttons (TopbarInset), not under them", function()
+		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/SoundClient.client.lua")
+		R.expect(src:find("GuiService.TopbarInset", 1, true) ~= nil).toBe(true)
+		R.expect(src:find('GetPropertyChangedSignal("TopbarInset")', 1, true) ~= nil).toBe(true)
+	end)
+
+	R.it("the phase toast slides in under the phase timer (which ends at Y 60), not over it", function()
+		local src = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
+		local y = tonumber(src:match("local TOAST_FROM_Y = (%d+)"))
+		R.expect(y ~= nil and y > 60).toBe(true)
+		R.expect(src:find("-180, 0, 40)", 1, true)).toBe(nil)
 	end)
 
 	R.it("the client arrow follows the server's StarterItems event", function()
