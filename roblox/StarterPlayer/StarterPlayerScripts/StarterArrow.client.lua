@@ -18,6 +18,9 @@ local LocalPlayer = Players.LocalPlayer
 local ARROW_NAME = "StarterArrow"
 local BOUNCE = 0.8     -- studs up and down
 local SPEED  = 5       -- radians a second
+-- studs over the item: low, so it stays under the FARMING toast at the top
+-- of the screen (Studio first-minute: at 5 it hid behind the toast)
+local HEIGHT = 3
 
 local _parts = {}      -- [itemId] = primary part of a starter item still out
 local _bonus = {}      -- [itemId] = true for the friend bonus item
@@ -28,7 +31,7 @@ local _arrowOn = nil   -- part it hangs on
 local function makeArrow()
 	local gui = Instance.new("BillboardGui")
 	gui.Name           = ARROW_NAME
-	gui.Size           = UDim2.new(0, 120, 0, 110)
+	gui.Size           = UDim2.new(0, 110, 0, 96)
 	gui.AlwaysOnTop    = true
 	gui.LightInfluence = 0
 	gui.MaxDistance    = 200
@@ -44,7 +47,7 @@ local function makeArrow()
 	tip.Parent                 = gui
 	local arrow = Instance.new("TextLabel")
 	arrow.Name                   = "Arrow"
-	arrow.Size                   = UDim2.new(1, 0, 0, 80)
+	arrow.Size                   = UDim2.new(1, 0, 0, 68)
 	arrow.Position               = UDim2.new(0, 0, 0, 28)
 	arrow.BackgroundTransparency = 1
 	arrow.Text                   = "▼"
@@ -123,5 +126,5 @@ RunService.RenderStepped:Connect(function()
 		_arrow.Parent = best
 		_arrow.Tip.Text = _bonus[bestId] and "FRIEND BONUS!" or "GRAB ME!"
 	end
-	_arrow.StudsOffset = Vector3.new(0, 5 + math.sin(os.clock() * SPEED) * BOUNCE, 0)
+	_arrow.StudsOffset = Vector3.new(0, HEIGHT + math.sin(os.clock() * SPEED) * BOUNCE, 0)
 end)

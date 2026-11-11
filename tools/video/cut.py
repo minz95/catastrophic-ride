@@ -5,6 +5,9 @@
   python3 tools/video/cut.py sheets              # contact sheets of every take (pick moments)
   python3 tools/video/cut.py build               # every cut in tools/video/cuts.json
   python3 tools/video/cut.py build reel          # one cut
+  python3 tools/video/cut.py build --clean reel  # no captions on the video;
+      reel-clean.mp4 + reel.srt (the captions with their times, for CapCut:
+      import the subtitles, restyle them, read them out with its TTS)
 
 Footage: reports/video/raw/<take>/ (NNN.mov pieces + take.json, written
 by sim.py's "record" mode: the bot client's window only, never the desktop).
@@ -203,11 +206,11 @@ def card_image(size, seg, path):
 
 # ── Segments ───────────────────────────────────────────────────────────────────
 
-def segment(cut, seg, k, size, work, takes):
+def segment(cut, seg, k, size, work, takes, clean=False):
     W, H = size
     out = os.path.join(work, "seg_%02d.mp4" % k)
     ov = os.path.join(work, "ov_%02d.png" % k)
-    overlay(size, seg, ov)
+    overlay(size, {} if clean else seg, ov)
     dur = seg["dur"]
     fade = min(0.25, dur / 4)
     tail = "fade=t=in:st=0:d=%.2f,fade=t=out:st=%.2f:d=%.2f" % (fade, dur - fade, fade)
@@ -247,7 +250,25 @@ def segment(cut, seg, k, size, work, takes):
     return out
 
 
-def build(names):
+def _srt_time(t):
+    ms = int(round(t * 1000))
+    return "%02d:%02d:%02d,%03d" % (ms // 3600000, ms // 60000 % 60, ms // 1000 % 60, ms % 1000)
+
+
+def srt(cut):
+    """The cut's captions as SubRip text: one cue per segment that has any
+    (tag, title, sub: one line each), timed by the segment durations."""
+    out, t, n = [], 0.0, 0
+    for seg in cut["segments"]:
+        lines = [seg[k].replace("\n", " ") for k in ("tag", "title", "sub") if seg.get(k)]
+        if lines:
+            n += 1
+            out.append("%d\n%s --> %s\n%s\n" % (n, _srt_time(t), _srt_time(t + seg["dur"]), "\n".join(lines)))
+        t += seg["dur"]
+    return "\n".join(out)
+
+
+def build(names, clean=False):
     cuts = json.load(open(CUTS))["cuts"]
     takes = {}
     for name, cut in cuts.items():
@@ -255,13 +276,16 @@ def build(names):
             continue
         size = SIZES[cut["format"]]
         work = tempfile.mkdtemp(prefix="cut-%s-" % name)
-        segs = [segment(name, seg, k, size, work, takes) for k, seg in enumerate(cut["segments"])]
+        segs = [segment(name, seg, k, size, work, takes, clean) for k, seg in enumerate(cut["segments"])]
         lst = os.path.join(work, "list.txt")
         with open(lst, "w") as f:
             for s in segs:
                 f.write("file '%s'\n" % s)
-        out = os.path.join(OUT, name + ".mp4")
+        out = os.path.join(OUT, name + ("-clean" if clean else "") + ".mp4")
         os.makedirs(OUT, exist_ok=True)
+        if clean:
+            with open(os.path.join(OUT, name + ".srt"), "w", encoding="utf-8") as f:
+                f.write(srt(cut))
         run(["-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", "-movflags", "+faststart", out])
         print("%s  %.1f s  %dx%d" % (os.path.relpath(out, ROOT), duration(out), size[0], size[1]))
 
@@ -273,4 +297,5 @@ if __name__ == "__main__":
     if sys.argv[1] == "sheets":
         sheets()
     else:
-        build(sys.argv[2:])
+        args = sys.argv[2:]
+        build([a for a in args if a != "--clean"], clean="--clean" in args)
