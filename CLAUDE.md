@@ -322,7 +322,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `GuiService.TopbarInset` (at a fixed X 112 Roblox's newer ☰ / chat
   buttons covered it). In a Studio
   playtest `[` / `]` switch the music through `SoundConfig.TRY` (the
-  phase's candidates; Output prints `[MusicTry] …`) so a person can pick
+  phase's candidates; Output prints `[MusicTry] …`; the label shows only
+  after a press, it used to be in every trailer take) so a person can pick
   by ear; live games never run it. No bangs: GO is a high countdown beep,
   a bump a soft pop at most every `SoundConfig.COLLISION_GAP` s. Two user
   uploads were the bangs heard everywhere (258057783 is an "Explosion",

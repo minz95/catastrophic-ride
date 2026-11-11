@@ -361,19 +361,22 @@ task.spawn(_musicButton)
 -- ─── Music tryout (Studio playtests only) ────────────────────────────────────
 -- The tracks are picked by title (nobody here can listen), so in a Studio
 -- playtest [ and ] switch the playing music through SoundConfig.TRY for
--- the current phase. A label under the 🎵 button names the track, and the
--- Output prints "[MusicTry] RACING 3/8 <title> <id>": tell which ones fit
--- and they go into SoundConfig.BGM. Live games never run this.
+-- the current phase. After the first press a label under the 🎵 button
+-- names the track (never before: it showed in every trailer recording), and
+-- the Output prints "[MusicTry] RACING 3/8 <title> <id>": tell which ones
+-- fit and they go into SoundConfig.BGM. Live games never run this.
 
 if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 	local KeyInput = require(ReplicatedStorage.Shared.KeyInput)
 	local _tryIndex = {}   -- [slot] = index in SoundConfig.TRY[slot]
 	local label
+	local pressed = false   -- the label appears only once someone tries a track
 	local function slotOf(phase)
 		if phase == Constants.PHASES.RESULTS then return nil end
 		return phase
 	end
 	local function showLabel(text)
+		if not pressed then return end
 		local pg = LocalPlayer:FindFirstChild("PlayerGui")
 		if not pg then return end
 		local gui = pg:FindFirstChild("MusicTry")
@@ -403,6 +406,7 @@ if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 		local slot = slotOf(_phase)
 		local list = slot and SoundConfig.TRY[slot]
 		if not list or #list == 0 then return end
+		pressed = true
 		local i = (((_tryIndex[slot] or 1) - 1 + delta) % #list) + 1
 		_tryIndex[slot] = i
 		local t = list[i]
@@ -421,5 +425,5 @@ if game:GetService("RunService"):IsStudio() and SoundConfig.TRY then
 		local list = slot and SoundConfig.TRY[slot]
 		showLabel(list and string.format("🎵 %s: [ / ] try %d tracks", slot, #list) or "")
 	end)
-	task.defer(function() showLabel("🎵 [ / ] try other music") end)
+	print("[MusicTry] press [ or ] to try other music")
 end

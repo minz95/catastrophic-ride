@@ -1,5 +1,11 @@
 {
- "_doc": "Edit lists for tools/video/cut.py. format 16x9 | 9x16. A segment is a card (store picture or colour, with text) or footage: take (reports/video/raw/<take>), t (seconds into the take's joined file; `cut.py sheets` labels every 2 s), dur, speed (>1 = faster, <1 = slow motion), fit (blur: the whole view, a blurred copy fills the frame, the default; fill: crop to the frame), zoom (with blur: >1 crops into the middle of the view), shift (with blur: move the view down, share of the height), y (top of the text, share of the height). Text: tag (step label), title (big), sub (smaller line), color (tag colour; title colour on a card).",
+ "_doc": "Edit lists for tools/video/cut.py. format 16x9 | 9x16. A segment is a card (store picture or colour, with text) or footage: take (reports/video/raw/<take>), t (seconds into the take's joined file; `cut.py sheets` labels every 2 s), dur, speed (>1 = faster, <1 = slow motion), fit (blur: the whole view, a blurred copy fills the frame, the default; fill: crop to the frame), zoom (with blur: >1 crops into the middle of the view), shift (with blur: move the view down, share of the height), y (top of the text, share of the height). Text: tag (step label), title (big), sub (smaller line), color (tag colour; title colour on a card). takes: fixes per take (mask: [x, y, w, h] boxes in the joined file's pixels blurred away; top: share of the height cut off).",
+ "takes": {
+  "_why": "mobile takes show Studio's music tryout label (since 2026-11-12 it shows only after a [ / ] press); the 2026-11-12 record takes caught Studio's toolbar over the view",
+  "mobile-take1": {"mask": [[430, 174, 875, 58]]},
+  "mobile-take2": {"mask": [[430, 174, 875, 58]]},
+  "record-forest": {"top": 0.09}
+ },
  "cuts": {
   "explainer": {
    "_why": "how a round goes, phase by phase, with the keys (16:9, ~55 s): store page, YouTube, a Discord or group post",
@@ -14,7 +20,7 @@
      "color": "#FFD23C"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 19,
      "dur": 3,
      "tag": "STEP 1 · FARM",
@@ -23,7 +29,7 @@
      "color": "#7CE04C"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 14.5,
      "dur": 2,
      "tag": "STEP 1 · FARM",
@@ -31,7 +37,7 @@
      "color": "#7CE04C"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 16.3,
      "dur": 2.5,
      "tag": "STEP 1 · FARM",
@@ -40,7 +46,7 @@
      "color": "#7CE04C"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 10,
      "dur": 2.5,
      "tag": "STEP 1 · FARM",
@@ -49,7 +55,7 @@
      "color": "#7CE04C"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 43.5,
      "dur": 3.5,
      "tag": "STEP 2 · CRAFT",
@@ -66,7 +72,7 @@
      "color": "#FFB020"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 57.3,
      "dur": 2.2,
      "tag": "STEP 3 · RACE",
@@ -74,7 +80,7 @@
      "color": "#4CA8FF"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 59.5,
      "dur": 3,
      "tag": "STEP 3 · RACE",
@@ -83,7 +89,7 @@
      "color": "#4CA8FF"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 101,
      "dur": 2.5,
      "tag": "STEP 3 · RACE",
@@ -92,7 +98,7 @@
      "color": "#4CA8FF"
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 136.5,
      "dur": 3,
      "tag": "OCEAN",
@@ -100,7 +106,7 @@
      "color": "#4CE0FF"
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 142.5,
      "dur": 2,
      "tag": "OCEAN",
@@ -108,7 +114,7 @@
      "color": "#4CE0FF"
     },
     {
-     "take": "record-sky",
+     "take": "record-sky-1111",
      "t": 58,
      "dur": 2,
      "tag": "SKY",
@@ -117,7 +123,7 @@
      "color": "#FFFFFF"
     },
     {
-     "take": "record-sky",
+     "take": "record-sky-1111",
      "t": 85.3,
      "dur": 2.5,
      "tag": "SKY",
@@ -139,35 +145,35 @@
    "format": "16x9",
    "segments": [
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 59.5,
      "dur": 2,
      "title": "JUNK. RIDES. CHAOS.",
      "y": 0.5
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 16.3,
      "dur": 2,
      "title": "STEAL",
      "y": 0.5
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 44,
      "dur": 2,
      "title": "BUILD",
      "y": 0.5
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 57.3,
      "dur": 1.8,
      "title": "RACE",
      "y": 0.5
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 101,
      "dur": 1.8,
      "title": "DRIFT",
@@ -181,21 +187,21 @@
      "y": 0.5
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 137,
      "dur": 1.8,
      "title": "SAIL",
      "y": 0.5
     },
     {
-     "take": "record-sky",
+     "take": "record-sky-1111",
      "t": 85.3,
      "dur": 1.8,
      "title": "FLY",
      "y": 0.5
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 142.5,
      "dur": 1.8,
      "title": "BLAST",
@@ -216,7 +222,7 @@
    "format": "9x16",
    "segments": [
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 59.5,
      "dur": 2.2,
      "zoom": 1.7,
@@ -225,7 +231,7 @@
     },
     {
      "take": "record-forest",
-     "t": 19,
+     "t": 29.3,
      "dur": 2,
      "title": "Grab stuff",
      "sub": "on the farm",
@@ -233,14 +239,14 @@
     },
     {
      "take": "record-forest",
-     "t": 16.3,
+     "t": 9.8,
      "dur": 2.2,
      "title": "STEAL it",
      "sub": "from other players",
      "zoom": 1.6
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 44,
      "dur": 2.4,
      "title": "BUILD",
@@ -249,7 +255,7 @@
      "cx": 0.85
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 57.3,
      "dur": 2,
      "zoom": 1.7,
@@ -257,14 +263,14 @@
      "sub": "everyone together"
     },
     {
-     "take": "record-forest",
+     "take": "record-forest-1026",
      "t": 101,
      "dur": 1.8,
      "zoom": 1.7,
      "title": "DRIFT"
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 137,
      "dur": 2,
      "zoom": 1.7,
@@ -272,13 +278,13 @@
     },
     {
      "take": "record-sky",
-     "t": 106.5,
+     "t": 97.5,
      "dur": 2,
      "zoom": 1.7,
      "title": "FLY"
     },
     {
-     "take": "record-ocean",
+     "take": "record-ocean-1026",
      "t": 142.5,
      "dur": 1.8,
      "zoom": 1.7,

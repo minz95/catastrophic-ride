@@ -5,9 +5,10 @@
   python3 tools/video/cut.py sheets              # contact sheets of every take (pick moments)
   python3 tools/video/cut.py build               # every cut in tools/video/cuts.json
   python3 tools/video/cut.py build reel          # one cut
-  python3 tools/video/cut.py build --clean reel  # no captions on the video;
-      reel-clean.mp4 + reel.srt (the captions with their times, for CapCut:
-      import the subtitles, restyle them, read them out with its TTS)
+  python3 tools/video/cut.py build --clean reel  # reel-clean.mp4 keeps the
+      big words (tag, title) and the end card, drops the small lines (sub);
+      reel.srt has every line with its times, for CapCut: import the
+      subtitles, restyle them, read them out with its TTS
 
 Footage: reports/video/raw/<take>/ (NNN.mov pieces + take.json, written
 by sim.py's "record" mode: the bot client's window only, never the desktop).
@@ -206,11 +207,33 @@ def card_image(size, seg, path):
 
 # ── Segments ───────────────────────────────────────────────────────────────────
 
-def segment(cut, seg, k, size, work, takes, clean=False):
+def clean_text(seg):
+    """What the clean cut still draws: the big words (tag, title) and a
+    card's text (the game's name); the small lines go to the .srt only.
+    Without the big words the reel read as plain footage (2026-11-12)."""
+    if seg.get("card"):
+        return seg
+    return {k: v for k, v in seg.items() if k != "sub"}
+
+
+def take_fix(fix):
+    """Filters for a take's own flaws (cuts.json "takes"): mask = boxes
+    [x, y, w, h] in the joined file's pixels blurred away (Studio's music
+    tryout label), top = share of the height cut off (Studio's toolbar
+    caught over the view)."""
+    vf = []
+    for x, y, w, h in fix.get("mask", []):
+        vf.append("delogo=x=%d:y=%d:w=%d:h=%d" % (x, y, w, h))
+    if fix.get("top"):
+        vf.append("crop=iw:ih*%.4f:0:ih*%.4f" % (1 - fix["top"], fix["top"]))
+    return "".join(f + "," for f in vf)
+
+
+def segment(cut, seg, k, size, work, takes, clean=False, fixes=None):
     W, H = size
     out = os.path.join(work, "seg_%02d.mp4" % k)
     ov = os.path.join(work, "ov_%02d.png" % k)
-    overlay(size, {} if clean else seg, ov)
+    overlay(size, clean_text(seg) if clean else seg, ov)
     dur = seg["dur"]
     fade = min(0.25, dur / 4)
     tail = "fade=t=in:st=0:d=%.2f,fade=t=out:st=%.2f:d=%.2f" % (fade, dur - fade, fade)
@@ -244,7 +267,8 @@ def segment(cut, seg, k, size, work, takes, clean=False):
         cx, cy = seg.get("cx", 0.5), seg.get("cy", 0.5)
         vf = ("scale=%d:%d:force_original_aspect_ratio=increase:flags=lanczos,scale=iw*%.3f:ih*%.3f,"
               "crop=%d:%d:(iw-%d)*%.3f:(ih-%d)*%.3f" % (W, H, zoom, zoom, W, H, W, cx, H, cy))
-    fc = "[0:v]setpts=PTS/%.3f,%s[base];[base][1:v]overlay=0:0,%s,format=yuv420p[v]" % (speed, vf, tail)
+    fix = take_fix((fixes or {}).get(seg["take"], {}))
+    fc = "[0:v]%ssetpts=PTS/%.3f,%s[base];[base][1:v]overlay=0:0,%s,format=yuv420p[v]" % (fix, speed, vf, tail)
     run(["-ss", "%.2f" % start, "-t", "%.2f" % src_dur, "-i", joined, "-i", ov, "-filter_complex", fc,
          "-map", "[v]", "-r", str(FPS), "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-t", "%.2f" % dur, out])
     return out
@@ -269,14 +293,15 @@ def srt(cut):
 
 
 def build(names, clean=False):
-    cuts = json.load(open(CUTS))["cuts"]
+    data = json.load(open(CUTS))
+    cuts, fixes = data["cuts"], data.get("takes", {})
     takes = {}
     for name, cut in cuts.items():
         if names and name not in names:
             continue
         size = SIZES[cut["format"]]
         work = tempfile.mkdtemp(prefix="cut-%s-" % name)
-        segs = [segment(name, seg, k, size, work, takes, clean) for k, seg in enumerate(cut["segments"])]
+        segs = [segment(name, seg, k, size, work, takes, clean, fixes) for k, seg in enumerate(cut["segments"])]
         lst = os.path.join(work, "list.txt")
         with open(lst, "w") as f:
             for s in segs:
