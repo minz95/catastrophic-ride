@@ -680,7 +680,11 @@ R.describe("idle time", function()
 		local start = itemCount(srv)
 		R.expect(start).toBe(C.farmSupply(4))
 		srv.advance(60 * C.FARM_SUPPLY.WAVES[1].at + 0.5)
-		R.expect(itemCount(srv)).toBe(start + math.ceil(4 * C.FARM_SUPPLY.WAVES[1].perPlayer))
+		-- plus each player's starter junk (Shared/StarterItems), out since STARTER.AFTER
+		local starters = 0
+		for _, e in ipairs(srv.Telemetry.events("starter_items")) do starters += e.count end
+		R.expect(starters).toBe(4 * 3)
+		R.expect(itemCount(srv)).toBe(start + starters + math.ceil(4 * C.FARM_SUPPLY.WAVES[1].perPlayer))
 		R.expect(screenCalls(srv, "itemWave")).toBe(1)
 		srv.advance(60 * (C.FARM_SUPPLY.WAVES[2].at - C.FARM_SUPPLY.WAVES[1].at))
 		R.expect(screenCalls(srv, "itemWave")).toBe(2)

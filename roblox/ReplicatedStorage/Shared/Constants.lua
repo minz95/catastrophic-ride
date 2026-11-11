@@ -67,10 +67,11 @@ Constants.MAX_PLAYERS    = 10
 Constants.SKIN_COUNT     = 10   -- must match ServerStorage/CharacterSkins count
 Constants.MIN_TO_START   = 2    -- with this many players the lobby counts down LOBBY.FILL_SECONDS
 Constants.SOLO_TEST_MODE = false -- true: start 5 s after the first player, print the balance audit (local testing only)
--- Live lobby: a lone player starts after MAX_WAIT s; once MIN_TO_START are
--- in, the countdown drops to FILL_SECONDS (time for friends to load in and
--- to shop; 8 s was too short for either).
-Constants.LOBBY = { MAX_WAIT = 25, FILL_SECONDS = 15 }
+-- Live lobby: a lone player starts after MAX_WAIT s (bots fill the round;
+-- 25 s of an empty lobby every round was a reason to leave); once
+-- MIN_TO_START are in, the countdown is FILL_SECONDS (time for friends to
+-- load in and to shop), set once when the second player arrives.
+Constants.LOBBY = { MAX_WAIT = 8, FILL_SECONDS = 15 }
 
 -- The shop screen (ShopUI, rules in Shared/ShopTiming) shows the phase
 -- clock; under WARN_AT s it turns red. In CRAFTING it closes itself once at
@@ -84,10 +85,17 @@ Constants.SHOP = { WARN_AT = 10, CRAFT_CLOSE_AT = 12, NOTICE_SECONDS = 4 }
 Constants.INVITE = {
 	COINS = 100,
 	MAX_REWARDED = 20,
-	PROMPT = "Come race me in Catastrophic Ride!",
+	PROMPT = "My junk ride vs yours: come race me in Catastrophic Ride!",
 	REPORT_GAP = 2,      -- s between two InviteSent reports a player may send
 	MAX_REPORT = 50,     -- friends counted in one report
 }
+
+-- ─── Starter junk (Shared/StarterItems, FarmingManager) ─────────────────
+-- When FARMING starts, BODY + ENGINE + SPECIAL items wait DIST studs in
+-- front of each player, SPREAD apart (one more, rarer, with a Roblox
+-- friend in the server), kept for that player RESERVE s. AFTER: s after
+-- the phase starts (players are moved to the farm spawns 0.5 s in).
+Constants.STARTER = { DIST = 10, SPREAD = 7, RESERVE = 25, AFTER = 1.2 }
 
 -- ─── Inventory ────────────────────────────────────────────────────────────────
 Constants.INVENTORY_SIZE       = 8

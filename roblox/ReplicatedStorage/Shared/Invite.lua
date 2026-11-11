@@ -15,6 +15,8 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Invite = {}
 
 Invite.TEXT = "👥 INVITE FRIENDS"
+-- the results screen: right after a race, a rematch is the reason to ask
+Invite.RESULTS_TEXT = "🏎 MY RIDE VS YOURS?"
 Invite.HINT = string.format("+%d coins for each new friend who joins", Constants.INVITE.COINS)
 
 local _canSend = nil   -- nil: not asked yet
@@ -48,14 +50,15 @@ end
 
 --- A green button in `parent` at `position` (`size` the button), with the
 -- coin hint under it unless `noHint` (then the hint is on the button's
--- second line). Starts hidden; shows once invites are allowed.
-function Invite.button(parent, position, size, noHint)
+-- second line). `text` replaces Invite.TEXT. Starts hidden; shows once
+-- invites are allowed.
+function Invite.button(parent, position, size, noHint, text)
 	local btn = Instance.new("TextButton")
 	btn.Name             = "Invite"
 	btn.Size             = size
 	btn.Position         = position
 	btn.BackgroundColor3 = Color3.fromRGB(60, 170, 90)
-	btn.Text             = Invite.TEXT
+	btn.Text             = text or Invite.TEXT
 	btn.TextColor3       = Color3.new(1, 1, 1)
 	btn.TextScaled       = true
 	btn.Font             = Enum.Font.GothamBlack
@@ -80,7 +83,7 @@ function Invite.button(parent, position, size, noHint)
 	hint.Parent                 = btn
 	if noHint then
 		hint.Visible = false
-		btn.Text = Invite.TEXT .. string.format("  (+%d each)", Constants.INVITE.COINS)
+		btn.Text = (text or Invite.TEXT) .. string.format("  (+%d each)", Constants.INVITE.COINS)
 	end
 	btn.Activated:Connect(Invite.prompt)
 	listen()
