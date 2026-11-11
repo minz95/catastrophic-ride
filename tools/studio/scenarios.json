@@ -1613,6 +1613,39 @@
       }
     },
     {
+      "name": "first-minute",
+      "kind": "match",
+      "tags": [
+        "ui",
+        "farm"
+      ],
+      "_why": "playbook 2026-11-11: the first minute of a round from a real client. Starter junk in front of the player with the bouncing GRAB ME! arrow (StarterArrow), the face-down ??? card turning over on each pickup (ItemGuideUI), next to farm bots; screenshots of the first seconds of FARMING go to reports/vehicles/studio/ (whole screen, git-ignored), cropped sheets to reports/vehicles/gallery/",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "fillBots": 4,
+        "stopAfter": "CRAFTING",
+        "lobbyDelay": 6,
+        "uiDump": true,
+        "durations": {
+          "FARMING": 25,
+          "CRAFTING": 10,
+          "RACING": 30,
+          "RESULTS": 3
+        },
+        "maxSeconds": 150
+      },
+      "shots": {
+        "after": "Phase → FARMING",
+        "delay": 1,
+        "count": 8,
+        "gap": 2
+      },
+      "checks": {
+        "allJoined": true
+      }
+    },
+    {
       "name": "farm-feel",
       "kind": "match",
       "tags": [
