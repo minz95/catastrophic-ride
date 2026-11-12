@@ -508,6 +508,22 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `ABILITY_REACH.NEAR`, else the car ahead within AHEAD (a leader was never
   hit: Studio, 51 bot abilities, none on the leading player); race bots
   fire them with a car that far.
+- Item boxes (2026-11-12, "obstacles too predictable", "the agent still
+  wins"): every race lays ROWS rows of "?" boxes at new spots
+  (`Shared/BoxPlan`: clear of the grid, finish, ramps, pads, tight corners
+  and checkpoint gates; `Modules/MysteryBoxes`, started by RacingManager).
+  Driving through one gives a power drawn with the odds of your place
+  (`Constants.MYSTERY_BOX.ODDS`: no bomb or zap for the leader), one held at
+  a time, used with T before the shop trick (AbilityManager `POWERS`:
+  rocket, bomb, oil, shield, zap); race bots use theirs after BOT_USE s.
+  Player attributes `BoxPower` (HUD slot left of the boost bar) and `TKey`
+  (the T touch button's label, the key strip's row). Boxes spin on the
+  clients (`MysteryBoxFx`). Telemetry `box_rows` / `box_pick` / `box_use`;
+  `tools/soak.luau` prints the counts (the mock does not drive cars, so
+  pickups show only in Studio: `sim.py run bots-forest`). Spec `mystery_box`.
+- Free Creator Store models: `python3 tools/model_search.py "<words>" --sheet
+  out.png` lists only free, script-free, verified-creator meshes with a
+  contact sheet. Nothing goes into the game without the user's approval.
 - Arrows on the road are chevrons (`TrackKit.chevron`): a wedge laid flat
   reads as a square from above (SKY's "floating yellow squares"). SKY's
   updrafts are a ForceField cylinder with rising wind (particles follow

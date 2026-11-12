@@ -354,6 +354,75 @@ end
 LocalPlayer:GetAttributeChangedSignal("AbilityNext"):Connect(_updateAbilitySlot)
 LocalPlayer:GetAttributeChangedSignal("AbilityWait"):Connect(_updateAbilitySlot)
 
+-- ── Item box slot (left of the boost bar, the ability slot's mirror) ──────
+-- LocalPlayer "BoxPower" (Modules/MysteryBoxes): a short roulette of the
+-- powers, then the one you got, with the key that uses it.
+local BOX = require(ReplicatedStorage.Shared.Constants).MYSTERY_BOX
+local boxFrame = Instance.new("Frame")
+boxFrame.Name             = "BoxSlot"
+boxFrame.Size             = UDim2.new(0, 60, 0, 60)
+boxFrame.Position         = UDim2.new(0.5, -190, 1, -80)
+boxFrame.BackgroundColor3 = Color3.fromRGB(60, 40, 90)
+boxFrame.BorderSizePixel  = 0
+boxFrame.Visible          = false
+boxFrame.Parent           = screenGui
+local boxCorner = Instance.new("UICorner")
+boxCorner.CornerRadius = UDim.new(0, 8)
+boxCorner.Parent = boxFrame
+local boxStroke = Instance.new("UIStroke")
+boxStroke.Color = Color3.fromRGB(255, 220, 90)
+boxStroke.Thickness = 2
+boxStroke.Parent = boxFrame
+local boxIcon = Instance.new("TextLabel")
+boxIcon.Name                   = "Icon"
+boxIcon.Size                   = UDim2.new(1, 0, 0.65, 0)
+boxIcon.BackgroundTransparency = 1
+boxIcon.TextScaled             = true
+boxIcon.Font                   = Enum.Font.GothamBold
+boxIcon.TextColor3             = Color3.new(1, 1, 1)
+boxIcon.Text                   = "?"
+boxIcon.Parent                 = boxFrame
+local boxKey = Instance.new("TextLabel")
+boxKey.Name                   = "KeyHint"
+boxKey.Size                   = UDim2.new(1, 0, 0.35, 0)
+boxKey.Position               = UDim2.new(0, 0, 0.65, 0)
+boxKey.BackgroundTransparency = 1
+boxKey.TextScaled             = true
+boxKey.Font                   = Enum.Font.Gotham
+boxKey.TextColor3             = Color3.fromRGB(230, 220, 255)
+boxKey.Parent                 = boxFrame
+
+local _boxRoll = 0
+local function _updateBoxSlot()
+	local power = LocalPlayer:GetAttribute("BoxPower")
+	local cfg = power and BOX.POWERS[power]
+	_boxRoll += 1
+	local roll = _boxRoll
+	boxFrame.Visible = cfg ~= nil
+	if not cfg then return end
+	boxKey.Text = InputHints.tag("trick")
+	local icons = {}
+	for _, p in pairs(BOX.POWERS) do table.insert(icons, p.icon) end
+	task.spawn(function()
+		local t0 = os.clock()
+		local i = 0
+		while os.clock() - t0 < BOX.ROLL and roll == _boxRoll do
+			i += 1
+			boxIcon.Text = icons[(i % #icons) + 1]
+			task.wait(0.07)
+		end
+		if roll ~= _boxRoll then return end
+		boxIcon.Text = cfg.icon
+		boxFrame.Size = UDim2.new(0, 72, 0, 72)
+		boxFrame.Position = UDim2.new(0.5, -196, 1, -86)
+		TweenService:Create(boxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Back), {
+			Size = UDim2.new(0, 60, 0, 60), Position = UDim2.new(0.5, -190, 1, -80),
+		}):Play()
+	end)
+end
+LocalPlayer:GetAttributeChangedSignal("BoxPower"):Connect(_updateBoxSlot)
+_updateBoxSlot()
+
 -- ─── Phase / enable handling ──────────────────────────────────────────────────
 
 local _vehicle = nil

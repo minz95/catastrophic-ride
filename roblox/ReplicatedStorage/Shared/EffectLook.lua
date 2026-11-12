@@ -90,6 +90,11 @@ EffectLook.CAR = {
 	bump           = { style = "hit",     color = YELLOW, label = "💥" },
 	miniTurbo      = { style = "boost",   color = C(80, 190, 255), label = "🔵 MINI TURBO" },
 	superTurbo     = { style = "boost",   color = ORANGE, label = "🔥 SUPER TURBO" },
+	-- item box powers (Modules/MysteryBoxes)
+	boxRocket      = { style = "boost",   color = ORANGE, label = "🚀 ROCKET!" },
+	boxShield      = { style = "shield",  color = BLUE,   label = "🛡 SHIELD" },
+	boxZap         = { style = "aura",    color = YELLOW, label = "⚡ ZAP!" },
+	zapped         = { style = "stun",    color = YELLOW, label = "⚡ ZAPPED!", beam = true },
 }
 
 -- Size of the floating effect words ("STOLEN!", "RAM!") in pixels, over a
@@ -118,6 +123,7 @@ EffectLook.SCREEN = {
 	itemWave      = { color = YELLOW, alpha = 0.12, text = "✨ NEW ITEMS DROPPED! Rare items more likely", seconds = 2.5 },
 	finishGrace   = { color = YELLOW, alpha = 0.1,  text = "🏁 WINNER IN! Reach the finish before time runs out!", seconds = 3 },
 	craftHurry    = { color = YELLOW, alpha = 0.1,  text = "⏳ Others are ready! Race starts soon", seconds = 2.5 },
+	zapped        = { color = YELLOW, alpha = 0.3,  text = "⚡ ZAPPED!", shake = 0.04, seconds = 1 },
 }
 
 EffectLook.FALLBACK = { style = "hit", color = YELLOW, label = "!" }

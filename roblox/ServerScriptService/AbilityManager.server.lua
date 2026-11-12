@@ -25,6 +25,7 @@ local VehicleLift    = require(ServerScriptService.Modules.VehicleLift)
 local AbilitySlots   = require(ReplicatedStorage.Shared.AbilitySlots)
 local TrackDrops     = require(ServerScriptService.Modules.TrackDrops)
 local RaceBots       = require(ServerScriptService.Modules.RaceBots)
+local MysteryBoxes   = require(ServerScriptService.Modules.MysteryBoxes)
 local CollectionService = game:GetService("CollectionService")
 
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
@@ -777,16 +778,14 @@ end
 
 local TRICKS = {}
 
--- Bounce Bomb: the car ahead hops and loses a moment (shields block it).
-TRICKS.bomb = function(player, cfg)
-	local target = _carAhead(player, cfg.RANGE)
-	if not target then return "denied: no car ahead" end
+-- A bomb on `target`: it hops and loses a moment (shields block it).
+local function _bombHit(player, target, lift, liftFor, slow, slowFor)
 	if _hurts(target) then
 		local vehicle = _getVehicle(target)
-		EffectFx.play("bombHit", target, cfg.LIFT_FOR, player)
-		VehicleLift.set(vehicle, "bomb", cfg.LIFT, cfg.LIFT_FOR)
-		_applySpeedMult(vehicle, cfg.SLOW, cfg.SLOW_FOR, "bomb")
-		_screen(target, "bombed", { duration = cfg.LIFT_FOR + 0.3 })
+		EffectFx.play("bombHit", target, liftFor, player)
+		VehicleLift.set(vehicle, "bomb", lift, liftFor)
+		_applySpeedMult(vehicle, slow, slowFor, "bomb")
+		_screen(target, "bombed", { duration = liftFor + 0.3 })
 		local primary = vehicle and vehicle.PrimaryPart
 		if primary then
 			-- the bang itself: an Explosion with no push and no damage
@@ -799,14 +798,100 @@ TRICKS.bomb = function(player, cfg)
 			boom.Parent = workspace
 		end
 	end
+end
+
+-- Bounce Bomb: the car ahead hops and loses a moment (shields block it).
+TRICKS.bomb = function(player, cfg)
+	local target = _carAhead(player, cfg.RANGE)
+	if not target then return "denied: no car ahead" end
+	_bombHit(player, target, cfg.LIFT, cfg.LIFT_FOR, cfg.SLOW, cfg.SLOW_FOR)
 	Telemetry.record("race_trick", { userId = player.UserId, trick = "bomb", target = target.UserId,
 		bot = SessionManager.isBot(target) or nil })
 	return "ok"
 end
 
+-- ─── Item box powers (Modules/MysteryBoxes, Constants.MYSTERY_BOX) ─────────
+-- T uses the held power first, the shop trick when none is held.
+
+local BOX = Constants.MYSTERY_BOX.POWERS
+local POWERS = {}
+
+POWERS.rocket = function(player)
+	local cfg = BOX.rocket
+	local vehicle = _getVehicle(player)
+	EffectFx.play("boxRocket", player, cfg.seconds)
+	_applySpeedMult(vehicle, cfg.speed, cfg.seconds, "boxRocket")
+	local primary = vehicle and vehicle.PrimaryPart
+	if primary then _impulse(vehicle, primary.CFrame.LookVector, cfg.push) end
+	return "ok"
+end
+
+POWERS.bomb = function(player)
+	local cfg = BOX.bomb
+	local target = _carAhead(player, cfg.range)
+	if not target then return "denied: no car ahead" end
+	_bombHit(player, target, cfg.lift, cfg.liftFor, cfg.slow, cfg.slowFor)
+	return "ok"
+end
+
+POWERS.oil = function(player)
+	local cfg = BOX.oil
+	EFFECTS.slipperyPuddle(player, nil, {
+		effectKey = "slipperyPuddle", radius = cfg.radius, duration = cfg.lasts - 6,
+		hitSpeed = cfg.hitSpeed, hitFor = cfg.hitFor,
+	}, "Gas Can")
+	return "ok"
+end
+
+POWERS.shield = function(player)
+	local cfg = BOX.shield
+	EffectFx.play("boxShield", player, cfg.seconds)
+	RaceEffects.grant(player, "shield", cfg.seconds)   -- blocks the next hit
+	return "ok"
+end
+
+-- every car ahead slows for a moment (the back of the field gets it most)
+POWERS.zap = function(player)
+	local cfg = BOX.zap
+	local mine = MysteryBoxes.progressOf(player) or 0
+	EffectFx.play("boxZap", player, nil)
+	for _, other in ipairs(SessionManager.actors()) do
+		local s = other ~= player and MysteryBoxes.progressOf(other)
+		local od = s and s > mine and SessionManager.getData(other)
+		if od and not od.finishTime and _targetable(other) and _hurts(other) then
+			EffectFx.play("zapped", other, cfg.seconds, player)
+			_applySpeedMult(_getVehicle(other), cfg.slow, cfg.seconds, "boxZap")
+			_screen(other, "zapped", { duration = cfg.seconds })
+		end
+	end
+	return "ok"
+end
+
+MysteryBoxes.setUser(function(player, power)
+	if GameManager.getPhase() ~= Constants.PHASES.RACING then return "denied: not racing" end
+	if not RaceStart.isGo() then return "denied: countdown" end
+	local pdata = SessionManager.getData(player)
+	if not pdata or not pdata.vehicleModel then return "denied: no vehicle" end
+	if pdata.finishTime then return "denied: finished" end
+	local fn = POWERS[power]
+	if not fn then return "denied: unknown power" end
+	return fn(player)
+end)
+
+-- What the T key / touch button shows: the held power, else the trick.
+local function _tKey(player)
+	if SessionManager.isBot(player) then return end
+	local power = MysteryBoxes.held(player)
+	local label = power and BOX[power] and BOX[power].icon
+	if not label and player:GetAttribute("RaceTrick") then label = "BOMB" end
+	player:SetAttribute("TKey", label)
+end
+MysteryBoxes.onChange(_tKey)
+
 local function _useRaceTrick(player)
 	if GameManager.getPhase() ~= Constants.PHASES.RACING then return "denied: not racing" end
 	if not RaceStart.isGo() then return "denied: countdown" end
+	if MysteryBoxes.held(player) then return MysteryBoxes.use(player) end
 	local item = _equipped(player, "trick")
 	local cfg = item and Constants.RACE_TRICKS[item.trick]
 	if not cfg or not TRICKS[item.trick] then return "denied: no trick" end
@@ -900,5 +985,6 @@ GameManager.onPhaseChanged(function(phase)
 		local cfg = item and Constants.RACE_TRICKS[item.trick]
 		p:SetAttribute("RaceTrick", cfg and item.trick or nil)
 		p:SetAttribute("RaceTrickLeft", cfg and cfg.USES or nil)
+		_tKey(p)
 	end
 end)
