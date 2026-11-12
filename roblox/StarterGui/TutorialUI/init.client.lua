@@ -77,7 +77,7 @@ local PHASE_GUIDES = {
 			{ key = "E",             act = "item",  short = "Ability", desc = "Use an item ability" },
 			{ key = "Space / Ctrl",  touch = "▲ / ▼", pad = "A / D-pad ←", short = "Up/Down", desc = "Climb / dive (SKY)", biome = "SKY" },
 			{ key = "R",             act = "reset", short = "Reset",   desc = "Put the car back on the road" },
-			{ key = "T",             act = "trick", short = "Bomb",    desc = "Bounce Bomb: the car ahead hops (once a race)", attr = "RaceTrick" },
+			{ key = "T",             act = "trick", short = "Use box", desc = "Use what an item box gave you (or your Bounce Bomb)", attr = "TKey" },
 			{ key = "Q",             act = "taunt", short = "Taunt",   desc = "Taunt the others (more in the SHOP)" },
 		},
 		tip = "Release a long drift for a mini turbo!\nBoost pads (yellow) give extra speed.",
@@ -679,8 +679,9 @@ end
 
 -- ─── Phase listener ───────────────────────────────────────────────────────────
 
--- the race trick key shows once the server says one is equipped
-game:GetService("Players").LocalPlayer:GetAttributeChangedSignal("RaceTrick"):Connect(function()
+-- the T key shows once the server says there is something to use (an item
+-- box power or the shop's race trick)
+game:GetService("Players").LocalPlayer:GetAttributeChangedSignal("TKey"):Connect(function()
 	local phase = game:GetService("ReplicatedStorage"):GetAttribute("Phase")
 	if phase then _showStrip(phase) end
 end)

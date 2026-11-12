@@ -205,6 +205,21 @@ print(("soak: %d rounds, %d players + friend, seed %d"):format(ROUNDS, PLAYERS, 
 print("weathers: " .. table.concat(seen, ", "))
 print(("challenges paid: %d, referrals: %d, finishes: %d"):format(#srv.Telemetry.events("challenge"),
 	#srv.Telemetry.events("referral"), #srv.Telemetry.events("finish")))
+do
+	-- item boxes: laid out every race, taken and used by players and bots
+	local picks, botPicks, uses, ok = 0, 0, 0, 0
+	for _, ev in ipairs(srv.Telemetry.events("box_pick")) do
+		picks += 1
+		if ev.bot then botPicks += 1 end
+	end
+	for _, ev in ipairs(srv.Telemetry.events("box_use")) do
+		uses += 1
+		if ev.result == "ok" then ok += 1 end
+	end
+	print(("item boxes: %d races laid out, %d taken (%d by bots), %d used (%d ok)"):format(
+		#srv.Telemetry.events("box_rows"), picks, botPicks, uses, ok))
+	if #srv.Telemetry.events("box_rows") == 0 then table.insert(problems, "no item boxes laid out") end
+end
 if #problems == 0 then
 	print("OK: no problems")
 else

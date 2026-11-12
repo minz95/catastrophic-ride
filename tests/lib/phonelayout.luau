@@ -44,7 +44,7 @@ function M.cases(w, h)
 					phase = "RACING", list = n > 0 and M.positionList(w, n, h) or nil,
 					label = string.format("RACING %s%s%s", biome, trick and " + trick" or "", n > 0 and (" + list of " .. n) or ""),
 					vis = function(b)
-						return (not b.biome or b.biome == biome) and (b.attr ~= "RaceTrick" or trick)
+						return (not b.biome or b.biome == biome) and (b.attr ~= "TKey" or trick)
 					end,
 				})
 			end

@@ -33,7 +33,8 @@ TouchLayout.LAYOUT = {
 		{ text = "BOOST", key = Enum.KeyCode.F, col = 1, row = 1, color = Color3.fromRGB(60, 150, 240) },
 		{ text = "DRIFT", key = Enum.KeyCode.LeftShift, col = 2, row = 1, color = Color3.fromRGB(230, 160, 35) },
 		{ text = "ITEM",  key = Enum.KeyCode.E, col = 1, row = 2, color = Color3.fromRGB(170, 80, 220) },
-		{ text = "BOMB",  key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(220, 90, 40), attr = "RaceTrick" },
+		-- T: the item box power held (its icon) or the shop's Bounce Bomb
+		{ text = "BOMB",  key = Enum.KeyCode.T, col = 2, row = 2, color = Color3.fromRGB(220, 90, 40), attr = "TKey", textAttr = true },
 		{ text = "▲",     key = Enum.KeyCode.Space, col = 3, row = 2, color = Color3.fromRGB(80, 190, 230), biome = "SKY" },
 		{ text = "▼",     key = Enum.KeyCode.LeftControl, col = 3, row = 1, color = Color3.fromRGB(80, 140, 200), biome = "SKY" },
 	},

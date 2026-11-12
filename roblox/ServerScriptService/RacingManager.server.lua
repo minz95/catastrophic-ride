@@ -38,6 +38,7 @@ local RaceEffects       = require(ServerScriptService.Modules.RaceEffects)
 local RaceStart         = require(ServerScriptService.Modules.RaceStart)
 local RaceSeat          = require(ServerScriptService.Modules.RaceSeat)
 local BoostGauge        = require(ServerScriptService.Modules.BoostGauge)
+local MysteryBoxes      = require(ServerScriptService.Modules.MysteryBoxes)
 
 local P = Constants.PASSIVES
 
@@ -1114,6 +1115,7 @@ local function _endRace()
 	_physState = {}
 	-- per-player maps that otherwise kept every visitor of the server
 	BoostGauge.reset()
+	MysteryBoxes.stop()
 	_respawnCooldown, _manualRespawnCooldown = {}, {}
 end
 
@@ -1192,6 +1194,9 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_raceSeed = math.random(1, 1000000)
 
 		_setupBoostPads()
+		-- item boxes at new spots every race (Shared/BoxPlan)
+		local okBoxes, errBoxes = pcall(MysteryBoxes.start, biome, _raceSeed)
+		if not okBoxes then warn("[RacingManager] item boxes: " .. tostring(errBoxes)) end
 		_driftCornerCount = 0
 		local liveMap = _activeMap()
 		for _, part in ipairs(CollectionService:GetTagged("DriftCorner")) do

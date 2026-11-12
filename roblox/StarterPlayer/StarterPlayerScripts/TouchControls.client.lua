@@ -99,6 +99,11 @@ for phase, list in pairs(LAYOUT) do
 			local attr = (b.gadget and "Gadget") or b.attr
 			local on = biomeOk(b) and (not attr or LocalPlayer:GetAttribute(attr) ~= nil)
 			btn.Visible = on
+			-- the label follows the attribute (T: the item box power's icon)
+			if b.textAttr then
+				local v = attr and LocalPlayer:GetAttribute(attr)
+				btn.Text = type(v) == "string" and v or b.text
+			end
 			if not on then release(btn) end
 		end
 		local attr = (b.gadget and "Gadget") or b.attr

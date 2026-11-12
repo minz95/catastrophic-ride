@@ -169,8 +169,9 @@ KeyInput.began(function(input, processed)
 		RemoteEvents.RequestRespawn:InvokeServer()
 	end
 
-	-- T: the shop's race trick (Bounce Bomb), once a race; Q: taunt
-	if input.KeyCode == Enum.KeyCode.T and LocalPlayer:GetAttribute("RaceTrick") then
+	-- T: the item box power held, else the shop's race trick (Bounce Bomb,
+	-- once a race); Q: taunt
+	if input.KeyCode == Enum.KeyCode.T and LocalPlayer:GetAttribute("TKey") then
 		task.spawn(_useRaceTrick)
 	end
 	if input.KeyCode == Enum.KeyCode.Q then

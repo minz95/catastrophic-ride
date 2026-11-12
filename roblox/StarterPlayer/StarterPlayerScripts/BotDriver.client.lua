@@ -305,7 +305,12 @@ local function raceTricks()
 	local t0 = os.clock()
 	while phase == Constants.PHASES.RACING and os.clock() - t0 < 300 do
 		task.wait(1.5)
-		if not bombed and LocalPlayer:GetAttribute("RaceTrick") then
+		-- an item box power goes first (T uses it before the trick)
+		local power = LocalPlayer:GetAttribute("BoxPower")
+		if power then
+			local ok, r = pcall(function() return RemoteEvents.UseRaceTrick:InvokeServer() end)
+			report("box_use", { power = power, result = ok and r or tostring(r) })
+		elseif not bombed and LocalPlayer:GetAttribute("RaceTrick") then
 			local ok, r = pcall(function() return RemoteEvents.UseRaceTrick:InvokeServer() end)
 			report("race_trick", { result = ok and r or tostring(r) })
 			bombed = ok and r == "ok"

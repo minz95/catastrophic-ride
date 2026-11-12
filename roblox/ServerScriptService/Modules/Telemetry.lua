@@ -28,6 +28,9 @@
 --   checkpoint       CheckpointService      { userId, index }
 --   finish           RacingManager          { userId, time, place }
 --   ability          AbilityManager         { userId, item, result }
+--   box_rows         Modules/MysteryBoxes   { biome, rows, boxes }  (item boxes laid out for a race)
+--   box_pick         Modules/MysteryBoxes   { userId, power, ahead, bot }
+--   box_use          Modules/MysteryBoxes   { userId, power, result, bot }
 --   reward           ProgressionManager     { userId, place, xp, coins, daily, level, levelsGained, saved }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
 --                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)

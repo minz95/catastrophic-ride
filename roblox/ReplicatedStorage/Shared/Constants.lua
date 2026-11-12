@@ -612,6 +612,38 @@ Constants.RACE_TRICKS = {
 	bomb = { USES = 1, RANGE = 80, LIFT = 7, LIFT_FOR = 0.7, SLOW = 0.7, SLOW_FOR = 1.5 },
 }
 
+-- Item boxes on the race track (2026-11-12: "obstacles are too predictable",
+-- "the agent still wins easily"). Each race draws ROWS rows of PER_ROW boxes
+-- at new spots (Shared/BoxPlan); driving through one gives a random power
+-- (one held at a time, used with T), the odds by place: the leader gets
+-- defence, the back of the field the strong ones (ODDS: share of the field
+-- ahead of you, 0 = leader … 1 = last). A taken box comes back after RESPAWN s.
+Constants.MYSTERY_BOX = {
+	ROWS = 4, PER_ROW = 3, SIZE = 4,
+	START_CLEAR = 220,  -- studs of road after the grid without boxes
+	FINISH_CLEAR = 160, -- … and before the finish
+	KEEP_CLEAR = 30,    -- studs from a ramp, pad, gap or tight corner
+	LATERAL = 0.62,     -- share of the half width the outer boxes stand at
+	FLOAT = { FOREST = 3, OCEAN = 3, SKY = 5 },   -- box centre over the road / water
+	REACH = 5.5, REACH_Y = 10,   -- pickup: studs from the car's centre (flat, up/down)
+	RESPAWN = 5, CHECK = 0.1, ROLL = 1.2,   -- s: box back, pickup check, the HUD's roulette
+	BOT_USE = { 1, 4 },  -- s a race bot holds a power before using it
+	POWERS = {
+		rocket = { icon = "🚀", name = "Rocket", speed = 1.45, seconds = 2.5, push = 30 },
+		bomb   = { icon = "💣", name = "Bomb", range = 180, lift = 7, liftFor = 0.7, slow = 0.6, slowFor = 1.8 },
+		oil    = { icon = "🛢", name = "Oil", radius = 5, hitSpeed = 0.45, hitFor = 1.6, lasts = 14 },
+		shield = { icon = "🛡", name = "Shield", seconds = 10 },
+		zap    = { icon = "⚡", name = "Zap", slow = 0.55, seconds = 2 },
+	},
+	ODDS = {   -- { up to this share of the field ahead, weights }
+		-- no bomb up front: the leader has nobody ahead and held it all race
+		-- (Studio bots-forest 2026-11-12: 15 "no car ahead", no box taken after)
+		{ 0.34, { oil = 45, shield = 35, rocket = 20 } },
+		{ 0.67, { bomb = 35, rocket = 25, oil = 20, shield = 15, zap = 5 } },
+		{ 1.00, { rocket = 35, bomb = 30, zap = 25, shield = 5, oil = 5 } },
+	},
+}
+
 -- Taunts (shop "taunt", key Q in RACING): a bubble over the car for
 -- SECONDS, at most one per COOLDOWN s.
 -- Race bots taunt too: every BOT_EVERY s a bot just ahead of a player
