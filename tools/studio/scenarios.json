@@ -1884,6 +1884,19 @@
       "checks": {}
     },
     {
+      "name": "promo-rides",
+      "kind": "promo",
+      "tags": [
+        "video"
+      ],
+      "_why": "close-ups of Creator Store items ridden on their maps (piano car, toilet boat, bicycle plane, hot dog off a ramp) for the Korean TTS reel: TestHarness/Promo scenes with reel = true, written to reports/video/stills/ (git-ignored), never the store pictures. The screen must be awake and unlocked",
+      "opts": {
+        "hold": 2,
+        "reel": true
+      },
+      "checks": {}
+    },
+    {
       "name": "record-forest",
       "kind": "match",
       "tags": [
@@ -1914,6 +1927,53 @@
           "RESULTS": 25
         },
         "maxSeconds": 520
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "record-forest-store",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage of a Creator Store item ridden (Piano) for the Korean TTS reel: record-forest with the filmer's car crafted from loadouts. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
+        "farmProfiles": [
+          "filmer"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 15,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520,
+        "loadouts": [
+          [
+            {
+              "BODY": "Piano",
+              "ENGINE": "Electric Guitar",
+              "SPECIAL": "Hot Dog"
+            }
+          ]
+        ]
       },
       "record": {
         "delay": 15,
@@ -1960,6 +2020,53 @@
       "checks": {}
     },
     {
+      "name": "record-ocean-store",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage of a Creator Store item ridden (Toilet) for the Korean TTS reel: record-ocean with the filmer's car crafted from loadouts. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "OCEAN",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
+        "farmProfiles": [
+          "slow"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 12,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520,
+        "loadouts": [
+          [
+            {
+              "BODY": "Toilet",
+              "ENGINE": "Boombox",
+              "SPECIAL": "Watermelon"
+            }
+          ]
+        ]
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
       "name": "record-sky",
       "kind": "match",
       "tags": [
@@ -1990,6 +2097,53 @@
           "RESULTS": 25
         },
         "maxSeconds": 520
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "record-sky-store",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage of a Creator Store item ridden (Bicycle) for the Korean TTS reel: record-sky with the filmer's car crafted from loadouts. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "SKY",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
+        "farmProfiles": [
+          "filmer"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 15,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520,
+        "loadouts": [
+          [
+            {
+              "BODY": "Bicycle",
+              "ENGINE": "Lawn Mower",
+              "SPECIAL": "Teddy Bear"
+            }
+          ]
+        ]
       },
       "record": {
         "delay": 15,

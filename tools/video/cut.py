@@ -35,6 +35,8 @@ CUTS = os.path.join(os.path.dirname(__file__), "cuts.json")
 FPS = 30
 FONT = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
 FONT_BODY = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+# Korean cuts ("lang": "ko"): Apple SD Gothic Neo Bold (face 6 of the .ttc)
+FONT_KO = ("/System/Library/Fonts/AppleSDGothicNeo.ttc", 6)
 SIZES = {"16x9": (1920, 1080), "9x16": (1080, 1920)}
 
 
@@ -133,15 +135,56 @@ def sheets(step=2.0, per_sheet=48):
 
 # ── Overlays ───────────────────────────────────────────────────────────────────
 
-def _fit_font(draw, text, path, size, max_w):
+def _truetype(path, size):
     from PIL import ImageFont
+    if isinstance(path, tuple):
+        return ImageFont.truetype(path[0], size, index=path[1])
+    return ImageFont.truetype(path, size)
+
+
+def _fit_font(draw, text, path, size, max_w):
     while size > 18:
-        font = ImageFont.truetype(path, size)
+        font = _truetype(path, size)
         w = max(draw.textlength(line, font=font) for line in text.split("\n"))
         if w <= max_w:
             return font
         size -= 4
-    return ImageFont.truetype(path, size)
+    return _truetype(path, size)
+
+
+def overlay_ko(size, seg, path):
+    """Korean TTS reel (9x16, "lang": "ko"): a small spaced label ("MAP 01 ·
+    FOREST") over a big title in the dark band above the footage, and the
+    spoken line ("say") in big outlined letters under it, as short-form
+    reels caption their voice-over. The clean build leaves "say" out: CapCut
+    reads it from the .srt and draws its own captions."""
+    from PIL import Image, ImageDraw
+    W, H = size
+    im = Image.new("RGBA", size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    y = int(H * seg.get("y", 0.1))
+    if seg.get("head"):
+        font = _truetype(FONT_KO, int(W * 0.03))
+        text = " ".join(seg["head"])          # letter-spaced
+        tw = d.textlength(text, font=font)
+        d.text(((W - tw) / 2, y), text, font=font, fill=seg.get("headColor", "#C8A45A"))
+        y += int(font.size * 1.9)
+    if seg.get("title"):
+        font = _fit_font(d, seg["title"], FONT_KO, int(W * 0.095), W * 0.9)
+        for line in seg["title"].split("\n"):
+            tw = d.textlength(line, font=font)
+            d.text(((W - tw) / 2, y), line, font=font, fill=seg.get("color", "#FFFFFF"),
+                   stroke_width=max(3, font.size // 14), stroke_fill=(0, 0, 0))
+            y += int(font.size * 1.2)
+    if seg.get("say"):
+        font = _fit_font(d, seg["say"], FONT_KO, int(W * 0.075), W * 0.9)
+        y = int(H * seg.get("sayY", 0.7))
+        for line in seg["say"].split("\n"):
+            tw = d.textlength(line, font=font)
+            d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF",
+                   stroke_width=max(5, font.size // 9), stroke_fill=(0, 0, 0))
+            y += int(font.size * 1.2)
+    im.save(path)
 
 
 def overlay(size, seg, path):
@@ -188,11 +231,25 @@ def card_image(size, seg, path):
     the edges so the text reads."""
     from PIL import Image, ImageDraw, ImageFilter
     W, H = size
+    if seg.get("image") and seg.get("fit") == "black":
+        # the picture in the middle of a black frame, `zoom` × the width (sides
+        # cut round cx), as the footage of a Korean reel sits
+        src = Image.open(os.path.join(ROOT, seg["image"])).convert("RGB")
+        w = int(W * seg.get("zoom", 1.0))
+        src = src.resize((w, int(src.size[1] * w / src.size[0])), Image.LANCZOS)
+        x = int((w - W) * seg.get("cx", 0.5))
+        src = src.crop((x, 0, x + W, src.size[1]))
+        im = Image.new("RGB", size, (0, 0, 0))
+        im.paste(src, (0, (H - src.size[1]) // 2 + int(H * seg.get("shift", 0))))
+        im.save(path)
+        return
     if seg.get("image"):
         src = Image.open(os.path.join(ROOT, seg["image"])).convert("RGB")
         k = max(W / src.size[0], H / src.size[1])
         src = src.resize((int(src.size[0] * k) + 1, int(src.size[1] * k) + 1), Image.LANCZOS)
-        x, y = (src.size[0] - W) // 2, (src.size[1] - H) // 2
+        # cx / cy: centre of the crop (0..1), the subject of a 16:9 still in a 9:16 cut
+        x = int((src.size[0] - W) * seg.get("cx", 0.5))
+        y = int((src.size[1] - H) * seg.get("cy", 0.5))
         im = src.crop((x, y, x + W, y + H))
     else:
         im = Image.new("RGB", size, seg.get("bg", "#1C1830"))
@@ -229,11 +286,14 @@ def take_fix(fix):
     return "".join(f + "," for f in vf)
 
 
-def segment(cut, seg, k, size, work, takes, clean=False, fixes=None):
+def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
     W, H = size
     out = os.path.join(work, "seg_%02d.mp4" % k)
     ov = os.path.join(work, "ov_%02d.png" % k)
-    overlay(size, clean_text(seg) if clean else seg, ov)
+    if lang == "ko":
+        overlay_ko(size, {k2: v for k2, v in seg.items() if k2 != "say"} if clean else seg, ov)
+    else:
+        overlay(size, clean_text(seg) if clean else seg, ov)
     dur = seg["dur"]
     fade = min(0.25, dur / 4)
     tail = "fade=t=in:st=0:d=%.2f,fade=t=out:st=%.2f:d=%.2f" % (fade, dur - fade, fade)
@@ -255,7 +315,13 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None):
     speed = seg.get("speed", 1.0)
     src_dur = dur * speed
     zoom = seg.get("zoom", 1.0)
-    if seg.get("fit", "blur") == "blur":
+    if seg.get("fit") == "black":
+        # the footage in the middle of a black frame (titles above, words below)
+        fg_w = int(W * zoom) // 2 * 2
+        shift = seg.get("shift", 0)
+        vf = ("scale=%d:-2:flags=lanczos,crop=min(iw\\,%d):min(ih\\,%d),pad=%d:%d:(ow-iw)/2:(oh-ih)/2+%d:black"
+              % (fg_w, W, H, W, H, int(H * shift)))
+    elif seg.get("fit", "blur") == "blur":
         # the whole view (all of the game's UI), a blurred copy fills the rest
         fg_w = int(W * zoom) // 2 * 2
         shift = seg.get("shift", 0.08 if H > W else 0)
@@ -283,8 +349,10 @@ def srt(cut):
     """The cut's captions as SubRip text: one cue per segment that has any
     (tag, title, sub: one line each), timed by the segment durations."""
     out, t, n = [], 0.0, 0
+    # a voice-over cut: only the spoken lines (CapCut reads every cue)
+    keys = ("say",) if any(s.get("say") for s in cut["segments"]) else ("tag", "title", "sub")
     for seg in cut["segments"]:
-        lines = [seg[k].replace("\n", " ") for k in ("tag", "title", "sub") if seg.get(k)]
+        lines = [seg[k].replace("\n", " ") for k in keys if seg.get(k)]
         if lines:
             n += 1
             out.append("%d\n%s --> %s\n%s\n" % (n, _srt_time(t), _srt_time(t + seg["dur"]), "\n".join(lines)))
@@ -301,7 +369,8 @@ def build(names, clean=False):
             continue
         size = SIZES[cut["format"]]
         work = tempfile.mkdtemp(prefix="cut-%s-" % name)
-        segs = [segment(name, seg, k, size, work, takes, clean, fixes) for k, seg in enumerate(cut["segments"])]
+        segs = [segment(name, seg, k, size, work, takes, clean, fixes, cut.get("lang"))
+                for k, seg in enumerate(cut["segments"])]
         lst = os.path.join(work, "list.txt")
         with open(lst, "w") as f:
             for s in segs:

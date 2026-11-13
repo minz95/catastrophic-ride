@@ -706,6 +706,14 @@ Mobile cuts (`mobile-reel` 9:16, `mobile-ad` 16:9 in cuts.json) use takes
 with take.json, as sim.py writes). Recording them needs Studio frontmost and
 the screen unlocked; never send modifier keys while doing it.
 
+Korean voice-over reel (`kr-reel` in cuts.json, `"lang": "ko"`): a label and
+title above the footage, the spoken line (`say`) under it; `cut.py build
+--clean kr-reel` drops `say` and writes `kr-reel.srt` for CapCut's
+text-to-speech. Its ridden-item close-ups come from `sim.py run promo-rides`
+(Promo scenes with `reel = true`, → `reports/video/stills/`, never the store
+pictures); `record-<biome>-store` records a match with the filmer's car
+fixed by `loadouts` (the race camera is behind the car: the item hardly shows).
+
 Trailer videos: `python3 tools/studio/sim.py run record-forest` (also
 `record-ocean`, `record-sky`; one at a time, screen unlocked) records the bot
 client's window in 10 s pieces; `python3 tools/video/cut.py sheets` shows the
