@@ -196,6 +196,21 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   need more than the lane and every plane hit the fence).
 - Track data `obstacleBand` is the body height band above `trackTop` that
   collides: boats ride over the 1-stud dock, flyers hover at Y 84.
+- SKY height (playtest 2026-11-13: planes left over the fence): the climb a
+  player adds is held within `Constants.SKY_CLIMB` of cruise height
+  (VehicleController, attribute `ClimbApplied`, reset by `resetRide`). The
+  hover's BodyPosition beats the invisible lid (Studio: planes went 200 up),
+  so the band, not the lid, keeps them in; the fence now reaches into the lid
+  (`SkyTrack.wallYHi`), and a player found over it is respawned at once
+  (`RaceProgress.overLid`, reason `over_lid`). Studio `escape-sky` adds
+  climb cases (gas and climb held into the fence; checks `maxAbove`).
+- Stuck players: a car gaining under `Constants.STUCK.MIN_GAIN` in
+  `SECONDS` after GO is put back on the road (`RaceProgress.stuckStep`,
+  RacingManager, reason `stuck`); before, only bots had this and phone
+  players never found the reset icon.
+- Touch driving: the gas is automatic and the thumbstick steers in
+  proportion; pulled back past `TOUCH_DRIVE.BRAKE_PULL` it brakes
+  (`Shared/TouchDrive`, RacingClient; only when no drive key is down).
 - Off the lane: a race car more than `Constants.OFF_LANE.MARGIN` studs
   outside its lane for `SECONDS` is respawned (`RaceProgress.offLane` /
   `offLaneStep`, players in RacingManager, bots in RaceBots, reason
@@ -233,7 +248,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   pure rules in `FarmingRules.canPunch` / `punch`; knock-outs drop through
   `_dropItem` (reason "knocked_out"). Every fight or steal step is
   broadcast as `RemoteEvents.FarmAction` and drawn by `FarmFx` for all.
-  Your own punch swings at once: FarmingClient turns you to the nearest
+  The punch is a jab (2026-11-13, the
+  old straight-arm arc read as "waving the arm"): elbows fold with the fists
+  up, then the right arm shoots straight out at shoulder height as the elbow
+  opens and the shoulder pushes forward (`JAB_OUT`; R6 has no elbow, the
+  shoulder push carries it). Your own punch swings at once: FarmingClient turns you to the nearest
   target in reach, sets the LocalPlayer attribute `PunchAt` (FarmFx swings,
   whooshes, lunges) and sends that target as RequestPunch's aim hint
   (taken within RANGE and `FIGHT.ASSIST_ARC`). The echo then draws only

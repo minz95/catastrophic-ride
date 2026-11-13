@@ -281,6 +281,7 @@ function RaceSim.runOne(opts)
 	local riseSeg = nil   -- segment hint for the road height (OCEAN / SKY ride height)
 	local t = 0
 	local s0 = nil        -- progress at the first step (opts.holdW measures from here)
+	local fenceParams = nil   -- opts.climbOut: ray filter of the SKY fence pieces
 	local steps = math.floor(seconds / dt)
 
 	local function respawn(reason, s)
@@ -332,6 +333,32 @@ function RaceSim.runOne(opts)
 				keys = { W = true }
 			elseif not res.holdGain then
 				res.holdGain = math.floor(info.s - s0)
+			end
+		end
+		-- opts.climbOut (SKY): nose into the fence with gas and climb held the
+		-- whole time; the car must never get outside the lane
+		-- (res.maxOutside, studs past the lane edge; playtest 2026-11-13)
+		if opts.climbOut then
+			keys = { W = true, Space = true }
+			res.maxOutside = res.maxOutside or 0
+			local above = pos.Y - geo:heightAt(info.s)
+			if above > (res.maxAbove or 0) then res.maxAbove = round(above, 1) end
+			-- outside = a fence piece between the car and the centerline
+			-- (corner pockets stand further out than the lane edge)
+			if not fenceParams then
+				fenceParams = RaycastParams.new()
+				local fence = {}
+				for _, d in ipairs(opts.map:GetDescendants()) do
+					if d:IsA("BasePart") and string.sub(d.Name, 1, 11) == "SkyBarrier_" then table.insert(fence, d) end
+				end
+				fenceParams.FilterType = Enum.RaycastFilterType.Include
+				fenceParams.FilterDescendantsInstances = fence
+			end
+			local cx, cz = geo:pointAt(info.s)
+			local to = Vector3.new(cx, pos.Y, cz) - pos
+			if to.Magnitude > 1 and workspace:Raycast(pos, to, fenceParams) then
+				local beyond = RaceProgress.offLane(biome, pos.X, pos.Z, nil, pos.Y) or 0
+				if beyond > res.maxOutside then res.maxOutside = round(math.max(beyond, 0.1), 1) end
 			end
 		end
 		if opts.stopAt and not res.reached and info.s >= opts.stopAt then
@@ -550,6 +577,19 @@ function RaceSim.escapeCases(biome, track)
 		add(string.format("backwards@%d", s), s, 0, 180)
 		s += RaceSim.ESCAPE_SPACING
 	end
+	-- SKY: climb into the fence (gas and climb held): never over or through it
+	if biome == "SKY" then
+		local c = 300
+		while c < geo.length do
+			for _, side in ipairs({ -1, 1 }) do
+				if c + RaceSim.ESCAPE_GAIN <= geo.length - 20 then
+					table.insert(cases, { label = string.format("climb-%s@%d", side < 0 and "left" or "right", c),
+						spawn = { s = c, lateral = side * edge, yawOffset = -side * 70 }, climbOut = true })
+				end
+			end
+			c += 1000
+		end
+	end
 	for _, key in ipairs({ "jumpRamps", "mudZones", "driftCorners" }) do
 		for i, f in ipairs(track[key] or {}) do
 			local p = geo:project(f[1], f[2])
@@ -615,7 +655,7 @@ function RaceSim.run(opts)
 		cases = RaceSim.escapeCases(biome, track)
 		for _, c in ipairs(cases) do
 			c.stopAt = c.spawn.s + RaceSim.ESCAPE_GAIN
-			c.seconds = opts.seconds or RaceSim.ESCAPE_SECONDS
+			c.seconds = c.climbOut and 10 or (opts.seconds or RaceSim.ESCAPE_SECONDS)
 		end
 	end
 	if cases then

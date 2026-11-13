@@ -69,8 +69,8 @@ local PHASE_GUIDES = {
 		title = "🏎  RACING PHASE",
 		colour = Color3.fromRGB(60, 140, 255),
 		keys = {
-			{ key = "W / ↑",         touch = "Stick up",    pad = "RT",         short = "Gas",     desc = "Accelerate" },
-			{ key = "S / ↓",         touch = "Stick down",  pad = "LT",         short = "Brake",   desc = "Brake / reverse" },
+			{ key = "W / ↑",         touch = "Automatic", pad = "RT",         short = "Gas",     desc = "Accelerate" },
+			{ key = "S / ↓",         touch = "Pull stick back", pad = "LT",         short = "Brake",   desc = "Brake / reverse" },
 			{ key = "A D / ← →",     touch = "Stick ← →",   pad = "Left stick", short = "Steer",   desc = "Steer" },
 			{ key = "Shift + steer", act = "drift", how = "hold", short = "Drift",   desc = "Drift (above half speed)" },
 			{ key = "F",             act = "boost", short = "Boost",   desc = "Boost (needs a full gauge)" },

@@ -312,8 +312,10 @@
         ]
       },
       "checks": {
-        "stuck": 0
-      }
+        "stuck": 0,
+        "maxAbove": 38
+      },
+      "_why": "cars dropped where drivers get stuck must drive on; SKY adds climb cases: gas and climb held nose into the fence (playtest 2026-11-13: planes went through the lid and over the fence). Checks: none outside the fence, none higher than maxAbove over the road (lid at 40)"
     },
     {
       "name": "escape-forest-novice",

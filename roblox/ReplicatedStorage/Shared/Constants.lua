@@ -501,6 +501,26 @@ Constants.SKY_GRAVITY_MULT                 = 1.2  -- outside updraft zones
 -- (RaceProgress.offLane): boats and bots that slipped out onto the open sea.
 Constants.OFF_LANE = { MARGIN = 8, SECONDS = 1.5 }
 
+-- SKY height control (Space / Ctrl, ▲ / ▼): the climb a player adds is held
+-- within MIN .. MAX studs of the cruise height (VehicleController, chassis
+-- attribute "ClimbApplied"). Unbounded, a plane climbed over the fence
+-- (playtest 2026-11-13). Lifts (updrafts, abilities) come on top and stay
+-- under the lid (SkyTrack.ceilingY).
+Constants.SKY_CLIMB = { MIN = -2, MAX = 16 }
+
+-- A racer pinned in place (against a wall, under a ledge) for SECONDS,
+-- gaining under MIN_GAIN studs of progress, is put back on the road
+-- (RacingManager, reason "stuck"); race bots have BOTS.RACE.STUCK_RESPAWN.
+-- Players had only the reset key, and on a phone nobody found it.
+Constants.STUCK = { SECONDS = 4, MIN_GAIN = 6 }
+
+-- Touch driving (RacingClient, Shared/TouchDrive): the gas is on by itself
+-- and the thumbstick only steers, in proportion; pull it back past
+-- BRAKE_PULL to brake / reverse. One stick for both meant pushing it
+-- diagonally to turn and the car slowed on every sideways push
+-- (playtest 2026-11-13: "mobile controls are just hard").
+Constants.TOUCH_DRIVE = { AUTO_GAS = true, BRAKE_PULL = 0.6, DEADZONE = 0.12, FULL_AT = 0.8 }
+
 -- Aimed abilities ("nearest"): the nearest car within NEAR studs, else the
 -- nearest car in front within AHEAD (a leader could not be touched)
 Constants.ABILITY_REACH = { NEAR = 60, AHEAD = 180 }

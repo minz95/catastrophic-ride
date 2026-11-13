@@ -237,7 +237,7 @@ R.describe("SKY cloud corkscrew", function()
 	end)
 
 	R.it("where it passes over itself, the lower layer's fence and lid stay under the upper road", function()
-		-- lower layer: pillars to +34 (wallYHi), lid at ceilingY - trackTop
+		-- lower layer: pillars to +42 (wallYHi), lid at ceilingY - trackTop
 		-- (+40, 2 thick); upper layer: body band from +2
 		local lid = Sky.ceilingY - Sky.trackTop + 2
 		local half, worst, passes = Sky.width / 2, math.huge, 0
@@ -253,9 +253,12 @@ R.describe("SKY cloud corkscrew", function()
 			end
 		end
 		R.expect(passes).toBeGreaterThan(0)
-		-- the upper body band (+2) clears the lower lid (+42), and the upper
-		-- fence (from 2 under its road) clears the lower fence (+34)
-		R.expect(worst).toBeGreaterThan(math.max(lid - Sky.obstacleBand[1], Sky.wallYHi - Sky.trackTop + 2))
+		-- the upper body band (+2) clears the lower lid (+42), and the lower
+		-- fence (up into its lid since 2026-11-13, +42) stays under the upper
+		-- road; the upper fence's foot (2 under its road) only reaches into
+		-- the lower lid, not the lower lane
+		R.expect(Sky.wallYHi - Sky.trackTop <= lid).toBe(true)
+		R.expect(worst).toBeGreaterThan(math.max(lid - Sky.obstacleBand[1], Sky.wallYHi - Sky.trackTop))
 	end)
 
 	R.it("a simulated flyer goes round the corkscrew without jumping a layer", function()

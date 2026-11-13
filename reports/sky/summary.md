@@ -10,40 +10,40 @@ Each car drives alone with the shared Autopilot. "Authored" restores every part'
 
 | Map | Car | Top speed | Driver | Result | Respawns | Wall hits |
 |---|---|---|---|---|---|---|
-| authored | slowest | 85.7 | expert | 86.9 s | 0 | 0 |
-| live code | slowest | 85.7 | expert | 86.9 s | 0 | 0 |
-| authored | slowest | 85.7 | average | 87.6 s | 0 | 0 |
-| live code | slowest | 85.7 | average | 87.6 s | 0 | 0 |
-| authored | slowest | 85.7 | novice | 110.4 s | 0 | 13 |
-| live code | slowest | 85.7 | novice | 110.4 s | 0 | 13 |
-| authored | p50 | 86.6 | expert | 85.5 s | 0 | 0 |
-| live code | p50 | 86.6 | expert | 85.5 s | 0 | 0 |
-| authored | p50 | 86.6 | average | 86.2 s | 0 | 0 |
-| live code | p50 | 86.6 | average | 86.2 s | 0 | 0 |
-| authored | p50 | 86.6 | novice | 117.3 s | 0 | 10 |
-| live code | p50 | 86.6 | novice | 117.3 s | 0 | 10 |
-| authored | fastest | 88.3 | expert | 82.8 s | 0 | 0 |
-| live code | fastest | 88.3 | expert | 82.8 s | 0 | 0 |
-| authored | fastest | 88.3 | average | 83.5 s | 0 | 0 |
-| live code | fastest | 88.3 | average | 83.5 s | 0 | 0 |
-| authored | fastest | 88.3 | novice | 104.9 s | 0 | 12 |
-| live code | fastest | 88.3 | novice | 104.9 s | 0 | 12 |
+| authored | slowest | 85.7 | expert | 86.4 s | 0 | 0 |
+| live code | slowest | 85.7 | expert | 86.4 s | 0 | 0 |
+| authored | slowest | 85.7 | average | 87.1 s | 0 | 0 |
+| live code | slowest | 85.7 | average | 87.1 s | 0 | 0 |
+| authored | slowest | 85.7 | novice | 108.3 s | 0 | 12 |
+| live code | slowest | 85.7 | novice | 108.3 s | 0 | 12 |
+| authored | p50 | 86.6 | expert | 84.7 s | 0 | 0 |
+| live code | p50 | 86.6 | expert | 84.7 s | 0 | 0 |
+| authored | p50 | 86.6 | average | 86.1 s | 0 | 0 |
+| live code | p50 | 86.6 | average | 86.1 s | 0 | 0 |
+| authored | p50 | 86.6 | novice | 111.5 s | 0 | 12 |
+| live code | p50 | 86.6 | novice | 111.5 s | 0 | 12 |
+| authored | fastest | 88.3 | expert | 83.3 s | 0 | 0 |
+| live code | fastest | 88.3 | expert | 83.3 s | 0 | 0 |
+| authored | fastest | 88.3 | average | 83.9 s | 0 | 0 |
+| live code | fastest | 88.3 | average | 83.9 s | 0 | 0 |
+| authored | fastest | 88.3 | novice | 105.3 s | 0 | 11 |
+| live code | fastest | 88.3 | novice | 105.3 s | 0 | 11 |
 
-Cars by top speed: slowest = Microwave + Hair Dryer + Pizza (top speed 85.7, turn 1.56 rad/s); p50 = Microwave + Kettle + Magnet (top speed 86.6, turn 1.54 rad/s); fastest = Kite + Cup Noodle + Trophy + Kite (top speed 88.3, turn 1.76 rad/s).
+Cars by top speed: slowest = Refrigerator + Compass + Trophy (top speed 85.7, turn 1.56 rad/s); p50 = Bathtub + Rocket + Rubber Duck + Alarm Clock (top speed 86.6, turn 1.60 rad/s); fastest = Kite + Cup Noodle + Umbrella + Kite (top speed 88.3, turn 1.76 rad/s).
 
 ## Simulated matches (12 × 6 bots, authored map)
 
 - Finish rate within 240 s: 100%
-- Fastest car won 7 of 12 matches that had a finisher
-- Rank correlation, top speed vs place: -0.16 (−1 = faster always places better)
-- Rank correlation, rarity points collected vs place: -0.36
+- Fastest car won 4 of 12 matches that had a finisher
+- Rank correlation, top speed vs place: -0.23 (−1 = faster always places better)
+- Rank correlation, rarity points collected vs place: -0.32
 
 | Group | Mean place (1 = best) |
 |---|---|
 | farming: sweaty | 3.28 |
 | farming: casual | 3.72 |
-| driving: expert | 1.96 |
-| driving: average | 3.04 |
+| driving: expert | 2.00 |
+| driving: average | 3.00 |
 | driving: novice | 5.50 |
 
 ## Fun metrics
@@ -52,26 +52,26 @@ Each simulated match is scored with `Shared/RaceMetrics` (the same code scores r
 
 | | Metric | Value | Target | Why |
 |---|---|---|---|---|
-| ✓ | closeShare | 0.59 | 0.25 ..  | the top two race each other a quarter of the time |
-| ✓ | fastestWinRate | 0.58 |  .. 0.70 | the fastest build should not always win |
+| ✓ | closeShare | 0.53 | 0.25 ..  | the top two race each other a quarter of the time |
+| ✓ | fastestWinRate | 0.33 |  .. 0.70 | the fastest build should not always win |
 | ✓ | finishRate | 1.00 | 0.90 ..  | almost everyone finishes |
-| ✓ | finishSpread | 25.36 |  .. 45.00 | nobody waits long for the last car |
-| ✓ | leadChanges | 2.00 | 1.00 ..  | the lead changes at least once |
+| ✓ | finishSpread | 24.79 |  .. 45.00 | nobody waits long for the last car |
+| ✓ | leadChanges | 1.58 | 1.00 ..  | the lead changes at least once |
 | ✗ | racingShare | 0.31 | 0.35 ..  | share of a round spent racing (vs farming / crafting / results) |
-| ✓ | speedPlaceCorr | -0.16 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
-| ✓ | winnerTime | 84.03 | 60.00 .. 120.00 | a race should take about 90 s |
+| ✓ | speedPlaceCorr | -0.23 | -0.60 .. 0.10 | the build helps a little; it must not decide the race |
+| ✓ | winnerTime | 84.07 | 60.00 .. 120.00 | a race should take about 90 s |
 
-Overtakes per match: 10.1. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
+Overtakes per match: 10.6. Per section (mean over matches; "decided" = matches whose largest time spread between bots was in that section):
 
 | Section | Mean time (s) | Spread between bots (s) | Decided | Respawns | Wall hits |
 |---|---|---|---|---|---|
-| S1 launch tunnel | 8.7 | 2.8 | 0 | 0 | 28 |
-| S2 cloud bend A | 16.4 | 4.3 | 0 | 0 | 52 |
-| S3 crossover | 7.5 | 3.4 | 0 | 0 | 37 |
-| S4 cloud bend B | 20.7 | 6.8 | 5 | 0 | 104 |
-| S5 crystal canyon | 16.5 | 7.5 | 7 | 0 | 135 |
-| S6 cloud corkscrew | 16.6 | 3.0 | 0 | 0 | 94 |
-| S7 dive | 6.0 | 1.4 | 0 | 0 | 30 |
+| S1 launch tunnel | 8.7 | 2.8 | 0 | 0 | 33 |
+| S2 cloud bend A | 16.4 | 3.6 | 0 | 0 | 57 |
+| S3 crossover | 7.5 | 3.3 | 0 | 0 | 52 |
+| S4 cloud bend B | 20.7 | 6.8 | 6 | 0 | 115 |
+| S5 crystal canyon | 16.5 | 7.4 | 6 | 0 | 149 |
+| S6 cloud corkscrew | 16.6 | 2.9 | 0 | 0 | 100 |
+| S7 dive | 6.1 | 1.4 | 0 | 0 | 28 |
 
 ## Geometry findings
 

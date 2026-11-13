@@ -27,7 +27,8 @@
 --     server). Nothing writes VehicleSeat.TurnSpeed on the client.
 --   * Hits (Shared/CarImpact via the server): VehicleController.knock adds a
 --     velocity change and a spin; the sideways part and the spin fade out.
---   * SKY altitude moves ALTITUDE_RATE studs per second of real frame time.
+--   * SKY altitude moves ALTITUDE_RATE studs per second of real frame time,
+--     within Constants.SKY_CLIMB of the cruise height.
 --   * Lift abilities: the chassis attribute "LiftOffset" (server, studs) is
 --     added to the hover / suspension target, eased at ABILITY_LIFT.RATE.
 
@@ -288,6 +289,7 @@ function VehicleController.resetRide(primary, rise)
 		if bp then bp.Position = primary.Position end
 	end
 	primary:SetAttribute("RoadRiseApplied", rise or 0)
+	primary:SetAttribute("ClimbApplied", nil)   -- back at cruise height
 	-- a jump in progress ends with the move (no launch from the old spot)
 	primary:SetAttribute("AirT", nil)
 	primary:SetAttribute("AirMin", nil)
@@ -329,7 +331,12 @@ function VehicleController.apply(primary, cmd, opts)
 	if hover then
 		local dy = liftStep + riseStep
 		if cmd.climb ~= 0 then
-			dy += cmd.climb * VehicleController.ALTITUDE_RATE * dt
+			-- held within Constants.SKY_CLIMB of the cruise height
+			local C = Constants.SKY_CLIMB
+			local had = primary:GetAttribute("ClimbApplied") or 0
+			local now = math.clamp(had + cmd.climb * VehicleController.ALTITUDE_RATE * dt, C.MIN, C.MAX)
+			if now ~= had then primary:SetAttribute("ClimbApplied", now) end
+			dy += now - had
 		end
 		if dy ~= 0 then
 			hover.Position = hover.Position + Vector3.new(0, dy, 0)

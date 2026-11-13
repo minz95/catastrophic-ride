@@ -58,6 +58,8 @@ local JOINTS = {
 	left  = { "LeftShoulder", "Left Shoulder" },
 	waist = { "Waist", "RootJoint" },
 	rightLeg = { "RightHip", "Right Hip" },
+	rightElbow = { "RightElbow" },   -- R15 only (R6 arms are one piece)
+	leftElbow  = { "LeftElbow" },
 }
 
 -- A joint handle is the object and CFrame property that place the limb in
@@ -95,16 +97,18 @@ end
 
 -- The joint's rest CFrame rotated by `rot` around the joint, in the parent
 -- part's axes (parent space: -Z forward, Y up, X right).
-local function posed(h, rot)
+-- `offset` (optional) moves the joint too, in the same axes: a shoulder
+-- pulled back (+Z) or pushed forward (-Z) for a jab.
+local function posed(h, rot, offset)
 	local c0 = _base[h.obj]
 	local p = c0.Position
-	return CFrame.new(p) * rot * (c0 - p)
+	return CFrame.new(p + (offset or Vector3.zero)) * rot * (c0 - p)
 end
 
-local function tweenTo(h, rot, seconds, style)
+local function tweenTo(h, rot, seconds, style, offset)
 	if not h then return false end
 	TweenService:Create(h.obj, TweenInfo.new(seconds, style or Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-		{ [h.prop] = posed(h, rot) }):Play()
+		{ [h.prop] = posed(h, rot, offset) }):Play()
 	return true
 end
 
@@ -120,6 +124,15 @@ local R = math.rad
 local POSE = {
 	windup    = A(R(-50), R(-15), 0),
 	punchR    = A(R(105), R(22), 0),
+	-- the jab (2026-11-13; the old windup → punchR swept the straight arm
+	-- through a big vertical arc and read as "waving the arm"):
+	-- cocked = upper arm forward-down, forearm folded up, fist by the chin;
+	-- out = the arm straight out at shoulder height towards the middle
+	jabCock   = A(R(55), R(8), 0),
+	jabOut    = A(R(90), R(14), 0),
+	elbowFold = A(R(120), 0, 0),
+	elbowGuard = A(R(105), 0, 0),
+	straight  = CFrame.new(),
 	twistR    = A(0, R(20), 0),
 	guardR    = A(R(75), R(35), R(15)),
 	guardL    = A(R(75), R(-35), R(-15)),
@@ -319,10 +332,14 @@ local function setGuard(character, player, on)
 		_guarding[character] = true
 		tweenTo(r, POSE.guardR, 0.12)
 		tweenTo(l, POSE.guardL, 0.12)
+		tweenTo(joint(character, "rightElbow"), POSE.elbowGuard, 0.12)   -- fists up by the face
+		tweenTo(joint(character, "leftElbow"), POSE.elbowGuard, 0.12)
 	else
 		_guarding[character] = nil
 		release(r, 0.15)
 		release(l, 0.15)
+		release(joint(character, "rightElbow"), 0.15)
+		release(joint(character, "leftElbow"), 0.15)
 	end
 	if player == LocalPlayer then
 		local hum = character:FindFirstChildOfClass("Humanoid")
@@ -374,7 +391,10 @@ end
 -- fist up), snap through, hold the arm out, come back.
 -- Playtest 2026-10-29: the old 0.16 s flick (no hold, one arm) did not read
 -- as a punch at all.
-local SWING = { WIND = 0.11, STRIKE = 0.08, HOLD = 0.18, BACK = 0.22 }
+local SWING = { WIND = 0.11, STRIKE = 0.07, HOLD = 0.16, BACK = 0.22 }
+-- shoulder pulled back on the wind-up, pushed out on the jab (studs; R6
+-- arms have no elbow, so this carries the punch there)
+local JAB_BACK, JAB_OUT = Vector3.new(0, 0, 0.35), Vector3.new(0, 0.1, -0.7)
 
 -- While a pose plays on a character with the Animate script running (your
 -- own avatar), its idle / walk tracks are faded out and the joints' motors
@@ -432,23 +452,34 @@ local function quietAnim(character, seconds)
 	end)
 end
 
+-- A jab: fists up (elbows folded, body turned away), then the right arm
+-- shoots straight out at shoulder height as the elbow opens and the body
+-- turns into it, held a moment, then back. Without elbows (R6) the
+-- shoulder itself is pulled back and pushed out.
 local function swing(character)
 	local r, l, waist = joint(character, "right"), joint(character, "left"), joint(character, "waist")
 	if not r then return false end
+	local re, le = joint(character, "rightElbow"), joint(character, "leftElbow")
 	quietAnim(character, SWING.WIND + SWING.STRIKE + SWING.HOLD + SWING.BACK)
-	tweenTo(r, POSE.windup, SWING.WIND)
+	tweenTo(r, re and POSE.jabCock or A(R(80), R(8), 0), SWING.WIND, nil, JAB_BACK)
+	tweenTo(re, POSE.elbowFold, SWING.WIND)
 	tweenTo(waist, POSE.twistR, SWING.WIND)
 	tweenTo(l, POSE.guardL, SWING.WIND)
+	tweenTo(le, POSE.elbowGuard, SWING.WIND)
 	task.delay(SWING.WIND, function()
 		streak(character, { "RightHand", "Right Arm" }, 0.4)
-		tweenTo(r, POSE.punchR, SWING.STRIKE, Enum.EasingStyle.Back)
+		tweenTo(r, POSE.jabOut, SWING.STRIKE, Enum.EasingStyle.Back, JAB_OUT)
+		tweenTo(re, POSE.straight, SWING.STRIKE, Enum.EasingStyle.Back)
 		tweenTo(waist, POSE.twistL, SWING.STRIKE, Enum.EasingStyle.Back)
 		task.delay(SWING.STRIKE + SWING.HOLD, function()
 			if _guarding[character] then
 				tweenTo(r, POSE.guardR, 0.15)
+				tweenTo(re, POSE.elbowGuard, 0.15)
 			else
 				release(r, SWING.BACK)
 				release(l, SWING.BACK)
+				release(re, SWING.BACK)
+				release(le, SWING.BACK)
 			end
 			release(waist, SWING.BACK)
 		end)

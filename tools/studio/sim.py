@@ -483,6 +483,17 @@ def check(sc, report):
         if not res:
             return [("fail", "no cars in report")]
         if sc["kind"] in ("escape", "vehicles"):
+            climbs = [r for r in res if r.get("maxOutside") is not None or str(r.get("label", "")).startswith("climb-")]
+            out_of = [r for r in climbs if (r.get("maxOutside") or 0) > c.get("maxOutside", 0)]
+            if out_of:
+                out.append(("fail", "%d climbed out of the lane: %s" % (len(out_of), ", ".join(
+                    "%s %.1f out, %.1f up" % (r.get("label"), r.get("maxOutside") or 0, r.get("maxAbove") or 0)
+                    for r in out_of[:8]))))
+            high = [r for r in climbs if (r.get("maxAbove") or 0) > c.get("maxAbove", 1e9)]
+            if high:
+                out.append(("fail", "%d climbed through the lid: %s" % (len(high), ", ".join(
+                    "%s %.0f up" % (r.get("label"), r.get("maxAbove") or 0) for r in high[:8]))))
+            res = [r for r in res if r not in climbs]
             stuck = [r for r in res if not r.get("reached")]
             respawned = [r for r in res if r.get("reached") and r.get("respawns")]
             if len(stuck) > c.get("stuck", 0):

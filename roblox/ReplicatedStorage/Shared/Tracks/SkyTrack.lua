@@ -21,7 +21,9 @@ Track.obstacleBand = { 2, 8 }
 -- wallHeight size the start apron's walls. Invisible ceiling above.
 Track.wallThickness    = 2
 Track.wallYLo          = 54
-Track.wallYHi          = 114
+Track.wallYHi          = 122    -- up into the lid (ceilingY): at 114 a 6-stud gap
+                                -- under it let a climbing plane over the fence
+                                -- or wedged it there (playtest 2026-11-13)
 Track.wallBaseY        = Track.wallYLo
 Track.wallHeight       = Track.wallYHi - Track.wallYLo
 Track.wallRailY        = 0      -- rail from trackTop + wallRailY ...

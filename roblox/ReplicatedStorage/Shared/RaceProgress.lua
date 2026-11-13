@@ -65,6 +65,7 @@ function RaceProgress.geometry(biome)
 	_geo[biome] = TrackGeometry.new(data.nodes, data.width, data.trackTop)
 	_geo[biome].trackTop = data.trackTop
 	_geo[biome].gaps = _geo[biome]:gapIntervals(data.gapJumps)
+	_geo[biome].lid = data.ceilingY and (data.ceilingY - data.trackTop) or nil
 	return _geo[biome]
 end
 
@@ -94,6 +95,33 @@ function RaceProgress.offLaneStep(state, beyond, dt)
 		end
 	else
 		state.offFor = 0
+	end
+	return false
+end
+
+--- True when a car at height y over progress s is above the track's lid
+-- (SKY: ceilingY - trackTop over the road). Studio 2026-11-13: the hover's
+-- BodyPosition pushed planes through the invisible lid and over the fence.
+function RaceProgress.overLid(biome, s, y)
+	local geo = RaceProgress.geometry(biome)
+	if not (geo and geo.lid and s and y) then return false end
+	return y > geo:heightAt(s) + geo.lid + 2
+end
+
+--- Stuck check, one call per frame: true once the car gained under
+-- Constants.STUCK.MIN_GAIN studs of progress `s` in STUCK.SECONDS (state
+-- is the caller's per-car table; the window restarts after a true).
+function RaceProgress.stuckStep(state, s, dt)
+	local S = Constants.STUCK
+	if not s then return false end
+	if state.stuckFrom == nil or s - state.stuckFrom >= S.MIN_GAIN then
+		state.stuckFrom, state.stuckFor = s, 0
+		return false
+	end
+	state.stuckFor = (state.stuckFor or 0) + dt
+	if state.stuckFor >= S.SECONDS then
+		state.stuckFrom, state.stuckFor = nil, 0
+		return true
 	end
 	return false
 end

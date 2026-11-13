@@ -2,16 +2,16 @@
   "biome": "FOREST",
   "fun": {
     "aggregate": {
-      "closeShare": 0.4046867877641029,
-      "fastestWinRate": 0.3333333333333333,
+      "closeShare": 0.44525021982903185,
+      "fastestWinRate": 0.08333333333333333,
       "finishRate": 1,
-      "finishSpread": 25.24861111111113,
-      "gap12": 1.2361111111110408,
-      "lastTime": 129.4236111111065,
-      "leadChanges": 2,
-      "overtakes": 13.916666666666666,
+      "finishSpread": 24.90555555555518,
+      "gap12": 1.0472222222221628,
+      "lastTime": 129.1569444444394,
+      "leadChanges": 2.4166666666666665,
+      "overtakes": 13.166666666666666,
       "races": 12,
-      "racingShare": 0.3503393048480096,
+      "racingShare": 0.3498700116255794,
       "sections": [
         {
           "deciding": 0,
@@ -20,112 +20,112 @@
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 6.324244238932676,
+          "meanTime": 6.256773079461108,
           "name": "S1 start straight",
           "respawns": 0,
-          "spread": 1.1884256947083771
+          "spread": 1.353147723997564
         },
         {
           "deciding": 0,
-          "hits": 12,
+          "hits": 19,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.043736084875418,
+          "meanTime": 9.006413229727011,
           "name": "S2 outcrop corner",
           "respawns": 0,
-          "spread": 1.167939702525921
+          "spread": 1.1624489015343478
         },
         {
           "deciding": 0,
-          "hits": 62,
+          "hits": 63,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 20.04288734563659,
+          "meanTime": 19.991104761433558,
           "name": "S3 trestle climb",
           "respawns": 0,
-          "spread": 1.8197313334155778
+          "spread": 1.9869493796586537
         },
         {
           "deciding": 0,
-          "hits": 114,
+          "hits": 120,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 11.892790002064885,
+          "meanTime": 11.939580069766942,
           "name": "S4 giant tree spiral",
           "respawns": 0,
-          "spread": 3.0692119907886277
+          "spread": 3.416623322381938
         },
         {
           "deciding": 0,
-          "hits": 64,
+          "hits": 78,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 9.92374491933084,
+          "meanTime": 9.950476889299066,
           "name": "S4b tree run-out",
           "respawns": 0,
-          "spread": 3.1851884956170724
+          "spread": 3.127085722693986
         },
         {
           "deciding": 0,
-          "hits": 107,
+          "hits": 101,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 10.625614298602658,
+          "meanTime": 10.682005410364276,
           "name": "S5 mud hook",
           "respawns": 0,
-          "spread": 3.463344137560864
+          "spread": 3.9026202649531583
         },
         {
-          "deciding": 6,
-          "hits": 344,
+          "deciding": 8,
+          "hits": 320,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 24.180019300362336,
+          "meanTime": 24.084081134590065,
           "name": "S6 pine switchbacks",
           "respawns": 0,
-          "spread": 7.582152731491878
+          "spread": 7.361944690353428
         },
         {
-          "deciding": 6,
-          "hits": 266,
+          "deciding": 4,
+          "hits": 282,
           "markers": {
             "bad": 0,
             "fun": 0
           },
-          "meanTime": 22.361408254634124,
+          "meanTime": 22.28308394387155,
           "name": "S7 ridge chicane",
           "respawns": 0,
-          "spread": 7.5407753155328505
+          "spread": 7.014359464663934
         }
       ],
-      "speedPlaceCorr": -0.15820953115956016,
-      "winnerTime": 104.17499999999536
+      "speedPlaceCorr": -0.12502411730657914,
+      "winnerTime": 104.25138888888426
     },
     "verdicts": [
       {
         "key": "closeShare",
         "min": 0.25,
         "ok": true,
-        "value": 0.4046867877641029,
+        "value": 0.44525021982903185,
         "why": "the top two race each other a quarter of the time"
       },
       {
         "key": "fastestWinRate",
         "max": 0.7,
         "ok": true,
-        "value": 0.3333333333333333,
+        "value": 0.08333333333333333,
         "why": "the fastest build should not always win"
       },
       {
@@ -139,21 +139,21 @@
         "key": "finishSpread",
         "max": 45,
         "ok": true,
-        "value": 25.24861111111113,
+        "value": 24.90555555555518,
         "why": "nobody waits long for the last car"
       },
       {
         "key": "leadChanges",
         "min": 1,
         "ok": true,
-        "value": 2,
+        "value": 2.4166666666666665,
         "why": "the lead changes at least once"
       },
       {
         "key": "racingShare",
         "min": 0.35,
-        "ok": true,
-        "value": 0.3503393048480096,
+        "ok": false,
+        "value": 0.3498700116255794,
         "why": "share of a round spent racing (vs farming / crafting / results)"
       },
       {
@@ -161,7 +161,7 @@
         "max": 0.1,
         "min": -0.6,
         "ok": true,
-        "value": -0.15820953115956016,
+        "value": -0.12502411730657914,
         "why": "the build helps a little; it must not decide the race"
       },
       {
@@ -169,7 +169,7 @@
         "max": 120,
         "min": 60,
         "ok": true,
-        "value": 104.17499999999536,
+        "value": 104.25138888888426,
         "why": "a race should take about 90 s"
       }
     ]
@@ -185,7 +185,7 @@
   "matches": {
     "bots": 72,
     "count": 12,
-    "fastestCarWins": 4,
+    "fastestCarWins": 1,
     "finishRate": 1,
     "matchesWithFinisher": 12,
     "meanPlaceByDriver": {
@@ -194,227 +194,227 @@
       "novice": 5.5
     },
     "meanPlaceByFarmProfile": {
-      "casual": 3.5833333333333335,
-      "sweaty": 3.4166666666666665
+      "casual": 3.638888888888889,
+      "sweaty": 3.361111111111111
     },
-    "spearmanRarityVsPlace": -0.35249855296160515,
-    "spearmanTopSpeedVsPlace": -0.15820953115956016
+    "spearmanRarityVsPlace": -0.28870023795742483,
+    "spearmanTopSpeedVsPlace": -0.12502411730657914
   },
   "raceRuns": [
     {
       "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.965,
+      "progress": 7698,
+      "respawns": 0,
+      "time": 107.23333333332853,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "expert",
+      "finished": true,
+      "impacts": 0,
+      "maxSpeed": 67.965,
+      "progress": 7698,
+      "respawns": 0,
+      "time": 107.23333333332853,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "average",
+      "finished": true,
+      "impacts": 6,
+      "maxSpeed": 67.965,
+      "progress": 7699,
+      "respawns": 0,
+      "time": 112.84999999999488,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "average",
+      "finished": true,
+      "impacts": 6,
+      "maxSpeed": 67.965,
+      "progress": 7699,
+      "respawns": 0,
+      "time": 112.84999999999488,
+      "world": "live code"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 18,
+      "maxSpeed": 67.965,
+      "progress": 7699,
+      "respawns": 0,
+      "time": 129.03333333332816,
+      "world": "authored"
+    },
+    {
+      "car": "slowest",
+      "carBuild": "Microwave + Magnifying Glass + Toilet Paper",
+      "driver": "novice",
+      "finished": true,
+      "impacts": 18,
+      "maxSpeed": 67.965,
+      "progress": 7699,
+      "respawns": 0,
+      "time": 129.03333333332816,
+      "world": "live code"
+    },
+    {
+      "car": "p50",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "expert",
       "finished": true,
       "impacts": 1,
-      "maxSpeed": 67.965,
-      "progress": 7698,
+      "maxSpeed": 68.70194223004808,
+      "progress": 7699,
       "respawns": 0,
-      "time": 105.64999999999529,
+      "time": 105.06666666666199,
       "world": "authored"
     },
     {
-      "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "car": "p50",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "expert",
       "finished": true,
       "impacts": 1,
-      "maxSpeed": 67.965,
-      "progress": 7698,
+      "maxSpeed": 68.70194223004808,
+      "progress": 7699,
       "respawns": 0,
-      "time": 105.64999999999529,
+      "time": 105.06666666666199,
       "world": "live code"
     },
     {
-      "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "car": "p50",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "average",
       "finished": true,
-      "impacts": 2,
-      "maxSpeed": 67.965,
+      "impacts": 5,
+      "maxSpeed": 68.70194223004808,
       "progress": 7699,
       "respawns": 0,
-      "time": 111.31666666666163,
+      "time": 110.98333333332832,
       "world": "authored"
     },
     {
-      "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
+      "car": "p50",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "average",
       "finished": true,
-      "impacts": 2,
-      "maxSpeed": 67.965,
+      "impacts": 5,
+      "maxSpeed": 68.70194223004808,
       "progress": 7699,
       "respawns": 0,
-      "time": 111.31666666666163,
-      "world": "live code"
-    },
-    {
-      "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 21,
-      "maxSpeed": 67.965,
-      "progress": 7699,
-      "respawns": 0,
-      "time": 128.13333333332744,
-      "world": "authored"
-    },
-    {
-      "car": "slowest",
-      "carBuild": "Microwave + Magnifying Glass + Trophy",
-      "driver": "novice",
-      "finished": true,
-      "impacts": 21,
-      "maxSpeed": 67.965,
-      "progress": 7699,
-      "respawns": 0,
-      "time": 128.13333333332744,
+      "time": 110.98333333332832,
       "world": "live code"
     },
     {
       "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
-      "driver": "expert",
-      "finished": true,
-      "impacts": 1,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7698,
-      "respawns": 0,
-      "time": 104.66666666666201,
-      "world": "authored"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
-      "driver": "expert",
-      "finished": true,
-      "impacts": 1,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7698,
-      "respawns": 0,
-      "time": 104.66666666666201,
-      "world": "live code"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
-      "driver": "average",
-      "finished": true,
-      "impacts": 4,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7698,
-      "respawns": 0,
-      "time": 110.76666666666166,
-      "world": "authored"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
-      "driver": "average",
-      "finished": true,
-      "impacts": 4,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7698,
-      "respawns": 0,
-      "time": 110.76666666666166,
-      "world": "live code"
-    },
-    {
-      "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "novice",
       "finished": true,
-      "impacts": 20,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7699,
+      "impacts": 30,
+      "maxSpeed": 68.70194223004808,
+      "progress": 7698,
       "respawns": 0,
-      "time": 127.31666666666072,
+      "time": 129.78333333332876,
       "world": "authored"
     },
     {
       "car": "p50",
-      "carBuild": "Red Sofa + Drill + Umbrella",
+      "carBuild": "Washing Machine + Fire Extinguisher + Watermelon + Alarm Clock",
       "driver": "novice",
       "finished": true,
-      "impacts": 20,
-      "maxSpeed": 68.7411868309327,
-      "progress": 7699,
+      "impacts": 30,
+      "maxSpeed": 68.70194223004808,
+      "progress": 7698,
       "respawns": 0,
-      "time": 127.31666666666072,
+      "time": 129.78333333332876,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
       "maxSpeed": 70.035,
       "progress": 7699,
       "respawns": 0,
-      "time": 102.28333333332881,
+      "time": 102.44999999999547,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "expert",
       "finished": true,
       "impacts": 0,
       "maxSpeed": 70.035,
       "progress": 7699,
       "respawns": 0,
-      "time": 102.28333333332881,
+      "time": 102.44999999999547,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "average",
       "finished": true,
       "impacts": 9,
       "maxSpeed": 70.035,
-      "progress": 7699,
+      "progress": 7698,
       "respawns": 0,
-      "time": 108.2666666666618,
+      "time": 108.4666666666618,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "average",
       "finished": true,
       "impacts": 9,
       "maxSpeed": 70.035,
-      "progress": 7699,
+      "progress": 7698,
       "respawns": 0,
-      "time": 108.2666666666618,
+      "time": 108.4666666666618,
       "world": "live code"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "novice",
       "finished": true,
-      "impacts": 25,
+      "impacts": 23,
       "maxSpeed": 70.035,
       "progress": 7699,
       "respawns": 0,
-      "time": 126.0666666666608,
+      "time": 125.29999999999417,
       "world": "authored"
     },
     {
       "car": "fastest",
-      "carBuild": "Barrel + Rocket + Toilet Paper + Log",
+      "carBuild": "Trash Can + Rocket + Gas Can + Log",
       "driver": "novice",
       "finished": true,
-      "impacts": 25,
+      "impacts": 23,
       "maxSpeed": 70.035,
       "progress": 7699,
       "respawns": 0,
-      "time": 126.0666666666608,
+      "time": 125.29999999999417,
       "world": "live code"
     }
   ],
