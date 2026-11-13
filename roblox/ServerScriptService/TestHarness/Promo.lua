@@ -47,6 +47,15 @@ local BUILDS = {
 	{ { BODY = "Toilet Paper", ENGINE = "Treadmill", MOBILITY = "Barrel", HEAD = "Magic Wand" }, { ride = "ride_gold" }, Color3.fromRGB(30, 40, 90) },
 }
 
+-- Hero shots for the Korean reel (args.reel; never in the store pictures):
+-- the Creator Store items ridden, close up on their own map.
+local REEL_BUILDS = {
+	piano = { { BODY = "Piano", ENGINE = "Electric Guitar", MOBILITY = "Alarm Clock", HEAD = "Propeller Hat" }, { paint = "paint_sunset" }, Color3.fromRGB(230, 60, 60) },
+	toilet = { { BODY = "Toilet", ENGINE = "Boombox", MOBILITY = "Rubber Duck", HEAD = "Rubber Duck" }, {}, Color3.fromRGB(60, 140, 230) },
+	bicycle = { { BODY = "Bicycle", ENGINE = "Lawn Mower", MOBILITY = "Fan", HEAD = "Trophy" }, { ride = "ride_neon" }, Color3.fromRGB(250, 200, 40) },
+	hotdog = { { BODY = "Hot Dog", ENGINE = "Rocket", MOBILITY = "Pizza", HEAD = "Cactus" }, { ride = "ride_flame" }, Color3.fromRGB(150, 70, 220) },
+}
+
 local function geometry(biome)
 	return RaceProgress.geometry(biome)
 end
@@ -71,7 +80,7 @@ end
 
 -- A parked vehicle with its rider: build k of BUILDS at `cf` (the chassis).
 local function place(folder, biome, k, cf)
-	local b = BUILDS[((k - 1) % #BUILDS) + 1]
+	local b = type(k) == "string" and REEL_BUILDS[k] or BUILDS[((k - 1) % #BUILDS) + 1]
 	local equipped = {}
 	for cat, id in pairs(b[2]) do equipped[cat] = id end
 	local ok, model = pcall(VehicleBuilder.build, statsFor(b[1], biome), biome, cf, b[1], Cosmetics.look(equipped))
@@ -158,6 +167,25 @@ local function scenes()
 		local eye = cf * CFrame.new(-5.5, 2.2, -8.5)   -- front quarter, a little above: the rider's face
 		return CFrame.lookAt(eye.Position, (cf * CFrame.new(0, 1.3, 0.5)).Position)
 	end })
+
+	-- Reel close-ups (args.reel): the ridden item from the front quarter, a
+	-- second car behind for depth.
+	local function hero(name, biome, s, build, other, up, tilt)
+		table.insert(list, { name = name, biome = biome, reel = true, setup = function(folder)
+			local ride = RIDE[biome] + (up or 0)
+			place(folder, biome, build, frameAt(biome, s, 0, ride) * CFrame.Angles(math.rad(tilt or 0), 0, 0))
+			place(folder, biome, other, frameAt(biome, s - 16, 6, RIDE[biome]))
+			local target = frameAt(biome, s, 0, ride + 1.2).Position
+			return CFrame.lookAt(frameAt(biome, s + 9, -6.5, ride + 2.2).Position, target)
+		end })
+	end
+	local sky = geometry("SKY")
+	local n26 = TRACKS.SKY.nodes[26]
+	local r = F.jumpRamps[#F.jumpRamps]
+	hero("reel_piano", "FOREST", 150, "piano", 3)
+	hero("reel_toilet", "OCEAN", 160, "toilet", 2)
+	hero("reel_bicycle", "SKY", sky:progressAt(n26[1], n26[2], nil, nil, n26[3]), "bicycle", 4)
+	hero("reel_hotdog", "FOREST", geoF:progressAt(r[1], r[2]) + F.jumpRampSize[3] / 2 + 10, "hotdog", 5, 6, 8)
 	return list
 end
 
@@ -210,7 +238,7 @@ function Promo.run(args)
 	-- as no client runs)
 	local list = {}
 	for _, sc in ipairs(scenes()) do
-		if not args.only or table.find(args.only, sc.name) then
+		if (not args.only or table.find(args.only, sc.name)) and (sc.reel or false) == (args.reel or false) then
 			if args.weather then
 				for w in pairs(Weather.CHOICES[sc.biome] or {}) do
 					if w ~= Weather.CLEAR then
