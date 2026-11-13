@@ -1892,7 +1892,8 @@
       "_why": "close-ups of Creator Store items ridden on their maps (piano car, toilet boat, bicycle plane, hot dog off a ramp) for the Korean TTS reel: TestHarness/Promo scenes with reel = true, written to reports/video/stills/ (git-ignored), never the store pictures. The screen must be awake and unlocked",
       "opts": {
         "hold": 2,
-        "reel": true
+        "reel": true,
+        "quality": 21
       },
       "checks": {}
     },

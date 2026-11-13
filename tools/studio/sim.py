@@ -137,6 +137,14 @@ local Runner = require(game.ServerScriptService.TestHarness.Runner)
 print("SIM_RUN __TOKEN__")
 task.wait(8) -- let the freshly opened place settle (sessions started at once end empty)
 local opts = HttpService:JSONDecode([==[__OPTS__]==])
+-- opts.quality: render at this graphics level for pictures and footage
+-- (Studio's "Automatic" drops it under a harness's load)
+if opts.quality then
+	local okq, err = pcall(function()
+		settings().Rendering.QualityLevel = Enum.QualityLevel["Level" .. string.format("%02d", opts.quality)]
+	end)
+	print("SIM_QUALITY", okq, okq and tostring(settings().Rendering.QualityLevel) or tostring(err))
+end
 local keepSamples = __SAMPLES__
 local t0 = os.clock()
 local ok, summary, json = pcall(function() return Runner.__FN__(opts) end)

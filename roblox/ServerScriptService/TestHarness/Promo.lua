@@ -51,7 +51,7 @@ local BUILDS = {
 -- the Creator Store items ridden, close up on their own map.
 local REEL_BUILDS = {
 	piano = { { BODY = "Piano", ENGINE = "Electric Guitar", MOBILITY = "Alarm Clock", HEAD = "Propeller Hat" }, { paint = "paint_sunset" }, Color3.fromRGB(230, 60, 60) },
-	toilet = { { BODY = "Toilet", ENGINE = "Boombox", MOBILITY = "Rubber Duck", HEAD = "Rubber Duck" }, {}, Color3.fromRGB(60, 140, 230) },
+	toilet = { { BODY = "Toilet", ENGINE = "Boombox", HEAD = "Toilet Paper" }, {}, Color3.fromRGB(60, 140, 230) },
 	bicycle = { { BODY = "Bicycle", ENGINE = "Lawn Mower", MOBILITY = "Fan", HEAD = "Trophy" }, { ride = "ride_neon" }, Color3.fromRGB(250, 200, 40) },
 	hotdog = { { BODY = "Hot Dog", ENGINE = "Rocket", MOBILITY = "Pizza", HEAD = "Cactus" }, { ride = "ride_flame" }, Color3.fromRGB(150, 70, 220) },
 }
@@ -170,20 +170,36 @@ local function scenes()
 
 	-- Reel close-ups (args.reel): the ridden item from the front quarter, a
 	-- second car behind for depth.
-	local function hero(name, biome, s, build, other, up, tilt)
+	-- cam = { ahead, left, up } of the camera from the hero (default front quarter)
+	local function hero(name, biome, s, build, other, up, tilt, cam)
+		cam = cam or { 9, -6.5, 2.2 }
 		table.insert(list, { name = name, biome = biome, reel = true, setup = function(folder)
 			local ride = RIDE[biome] + (up or 0)
 			place(folder, biome, build, frameAt(biome, s, 0, ride) * CFrame.Angles(math.rad(tilt or 0), 0, 0))
-			place(folder, biome, other, frameAt(biome, s - 16, 6, RIDE[biome]))
+			if other then place(folder, biome, other, frameAt(biome, s - 16, 6, RIDE[biome])) end
 			local target = frameAt(biome, s, 0, ride + 1.2).Position
-			return CFrame.lookAt(frameAt(biome, s + 9, -6.5, ride + 2.2).Position, target)
+			return CFrame.lookAt(frameAt(biome, s + cam[1], cam[2], ride + cam[3]).Position, target)
 		end })
 	end
 	local sky = geometry("SKY")
 	local n26 = TRACKS.SKY.nodes[26]
 	local r = F.jumpRamps[#F.jumpRamps]
 	hero("reel_piano", "FOREST", 150, "piano", 3)
-	hero("reel_toilet", "OCEAN", 160, "toilet", 2)
+	hero("reel_toilet", "FOREST", 150, "toilet", 1, 0, 0, { 6, -5, 1.6 })
+	hero("reel_toilet_boat", "OCEAN", 160, "toilet", nil, 0, 0, { 4, -7, 1.4 })
+	-- the squad: four friends on the grid, seen from just ahead
+	table.insert(list, { name = "reel_squad", biome = "FOREST", reel = true, setup = function(folder)
+		local cfs = RaceGrid.cframes("FOREST")
+		local sum = Vector3.zero
+		for k, b in ipairs({ "piano", "toilet", "hotdog", "bicycle" }) do
+			local cf = cfs[k] * CFrame.new(0, RIDE.FOREST - 0.8, 0)
+			place(folder, "FOREST", b, cf)
+			sum += cf.Position
+		end
+		local centre = sum / 4
+		local eye = centre + cfs[1].LookVector * 15 + Vector3.new(0, 3, 0)
+		return CFrame.lookAt(eye, centre + Vector3.new(0, 2, 0))
+	end })
 	hero("reel_bicycle", "SKY", sky:progressAt(n26[1], n26[2], nil, nil, n26[3]), "bicycle", 4)
 	hero("reel_hotdog", "FOREST", geoF:progressAt(r[1], r[2]) + F.jumpRampSize[3] / 2 + 10, "hotdog", 5, 6, 8)
 	return list
