@@ -28,6 +28,16 @@ local RaceBots       = require(ServerScriptService.Modules.RaceBots)
 local MysteryBoxes   = require(ServerScriptService.Modules.MysteryBoxes)
 local CollectionService = game:GetService("CollectionService")
 
+-- Each item's ability kind, cooldown and hint for the crafting screen
+-- (Shared/AbilityKind; AbilityConfig itself stays on the server).
+do
+	local AbilityKind = require(ReplicatedStorage.Shared.AbilityKind)
+	local info = ReplicatedStorage:FindFirstChild(AbilityKind.VALUE_NAME) or Instance.new("StringValue")
+	info.Name = AbilityKind.VALUE_NAME
+	info.Value = game:GetService("HttpService"):JSONEncode(AbilityKind.table(AbilityConfig))
+	info.Parent = ReplicatedStorage
+end
+
 -- ─── Per-player cooldown store ────────────────────────────────────────────────
 -- _cooldowns[userId][itemName] = expireTick
 

@@ -1574,7 +1574,7 @@
         ]
       },
       "shots": {
-        "after": "phase=CRAFTING",
+        "after": "Phase → CRAFTING",
         "delay": 4,
         "count": 5,
         "gap": 5
@@ -1774,7 +1774,7 @@
         ]
       },
       "shots": {
-        "after": "phase=CRAFTING",
+        "after": "Phase → CRAFTING",
         "delay": 3,
         "count": 4,
         "gap": 5
