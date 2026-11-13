@@ -18,6 +18,7 @@ local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local InputHints   = require(ReplicatedStorage.Shared.InputHints)
+local TouchDrive   = require(ReplicatedStorage.Shared.TouchDrive)
 local InputSource  = require(script.Parent:WaitForChild("Modules"):WaitForChild("InputSource"))
 
 local LocalPlayer = Players.LocalPlayer
@@ -711,6 +712,8 @@ local function _driveLoop(dt)
 
 	-- Keyboard state, or a harness bot's synthetic keys (InputSource override).
 	local rawKeys = InputSource.read(_keys)
+	local driveKey = rawKeys.W or rawKeys.S or rawKeys.Up or rawKeys.Down
+		or rawKeys.A or rawKeys.D or rawKeys.Left or rawKeys.Right
 	-- Touch thumbstick / gamepad stick: drive from Roblox's control module
 	-- when no drive key is down. It wrote the seat's ThrottleFloat /
 	-- SteerFloat only when its vehicle mode noticed the seat, and in a race
@@ -744,6 +747,15 @@ local function _driveLoop(dt)
 		end
 	end
 	local input = VehicleController.readKeys(rawKeys)
+	-- Touch screens: the gas is on by itself and the stick steers in
+	-- proportion (Shared/TouchDrive). Keys, a gamepad or a harness bot drive
+	-- as before.
+	if not InputSource.isOverridden() and InputHints.touchUI() and not driveKey then
+		local mv = _stickVector()
+		local throttle, steer, back = TouchDrive.map(mv and mv.X, mv and mv.Z)
+		input.throttle = back and VehicleController.REVERSE_THROTTLE or throttle
+		input.steer = steer
+	end
 	-- A bot presses E through the same path as the keyboard's InputBegan.
 	if InputSource.isOverridden() then
 		local e = rawKeys.E == true

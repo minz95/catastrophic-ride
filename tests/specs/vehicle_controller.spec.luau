@@ -409,4 +409,24 @@ R.describe("VehicleController ride height on a raised road", function()
 		VC.apply(p, idle, { biome = "SKY", altitudeDt = 1 / 60, roadRise = 6 })
 		R.expect(hover.Position.Y).toBeNear(90, 1e-6)
 	end)
+
+	-- playtest 2026-11-13: holding climb took a plane over the fence
+	R.it("a SKY flyer climbs and dives only within Constants.SKY_CLIMB of its cruise height", function()
+		local C = env.requirePath("ReplicatedStorage.Shared.Constants").SKY_CLIMB
+		local p = boat("SKY")
+		local hover = p:FindFirstChild("HoverPosition")
+		local y0 = hover.Position.Y
+		local up = { forwardSpeed = 0, yawRate = 0, climb = 1, knockX = 0, knockZ = 0 }
+		for _ = 1, 60 * 10 do VC.apply(p, up, { biome = "SKY", altitudeDt = 1 / 60 }) end
+		R.expect(hover.Position.Y).toBeNear(y0 + C.MAX, 1e-2)
+		local down = { forwardSpeed = 0, yawRate = 0, climb = -1, knockX = 0, knockZ = 0 }
+		for _ = 1, 60 * 10 do VC.apply(p, down, { biome = "SKY", altitudeDt = 1 / 60 }) end
+		R.expect(hover.Position.Y).toBeNear(y0 + C.MIN, 1e-2)
+		-- the road rising still carries it up (the band is about the road)
+		VC.apply(p, idle, { biome = "SKY", altitudeDt = 1 / 60, roadRise = 10 })
+		R.expect(hover.Position.Y).toBeNear(y0 + C.MIN + 10, 1e-2)
+		-- a respawn starts at cruise height with the whole climb free again
+		VC.resetRide(p, 0)
+		R.expect(p:GetAttribute("ClimbApplied")).toBe(nil)
+	end)
 end)
