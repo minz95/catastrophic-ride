@@ -273,6 +273,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   into the picker's hands (`PICKUP_FLY`, FarmingManager) and every client
   draws a bow-and-lift (FarmFx `onPickup`). The equipped move's style reaches the client as the
   player attribute `MoveStyle` (ShopHat.refresh).
+- Crafting screen info (playtest 2026-11-14: "I can't tell how strong my
+  car is or what it does"): under the showroom a grade (S / A / B / C, the
+  build's place among every BODY × ENGINE × SPECIAL in the biome) and four
+  bars from the race's own numbers (`Shared/RideRating`: maxSpeedFor,
+  torqueFor, turnSpeedFor, boost s); the item under the pointer or picked
+  shows its change in green / red first. Under the slots, the E abilities in
+  E order with their kind (`Shared/AbilityKind`: SPEED / ATTACK / TRAP /
+  SHIELD; AbilityManager publishes kind, cooldown and hint as JSON in
+  ReplicatedStorage `AbilityInfo`, as AbilityConfig is server only).
 - Crafting slots: the screen places an item only where
   `CraftingRules.fits` (else `CraftingRules.whyNot` on the info line);
   picking an item lights the slots it fits.

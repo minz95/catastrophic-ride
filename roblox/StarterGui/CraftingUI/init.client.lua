@@ -16,6 +16,9 @@ local ItemBlurbs   = require(ReplicatedStorage.Shared.ItemBlurbs)
 local CraftingRules = require(ReplicatedStorage.Shared.CraftingRules)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local HttpService  = game:GetService("HttpService")
+local RideRating   = require(ReplicatedStorage.Shared.RideRating)
+local AbilityKind  = require(ReplicatedStorage.Shared.AbilityKind)
+local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
 local LocalPlayer  = Players.LocalPlayer
 
 -- This script runs again after every respawn, but its ScreenGui
@@ -129,16 +132,22 @@ local function _infoDefault()
 	return _InputHints.touchUI() and "Tap an item to see what it does" or "Point at an item to see what it does"
 end
 local _infoItem = nil
+local _refreshRating   -- the showroom's stat card (defined with it, below)
 local function _showInfo(itemName)
 	_infoItem = itemName
 	local cfg = itemName and ItemConfig[itemName]
 	if not cfg then
 		infoLbl.Text = _infoDefault()
 		infoLbl.TextColor3 = Color3.fromRGB(130, 130, 150)
+		if _refreshRating then _refreshRating() end
 		return
 	end
-	infoLbl.Text = string.format("%s %s (%s)  ·  %s", cfg.icon or "", itemName, cfg.rarity or "", ItemBlurbs.line(itemName, cfg))
+	local a = AbilityKind.info(ReplicatedStorage, HttpService)[itemName]
+	local kind = a and AbilityKind.KINDS[a.kind]
+	infoLbl.Text = string.format("%s%s %s (%s)  ·  %s", kind and ("[" .. kind.label .. "] ") or "", cfg.icon or "",
+		itemName, cfg.rarity or "", ItemBlurbs.line(itemName, cfg))
 	infoLbl.TextColor3 = Color3.fromRGB(220, 220, 235)
+	if _refreshRating then _refreshRating() end
 end
 _showInfo(nil)
 
@@ -163,7 +172,7 @@ local _abc = Instance.new("UICorner"); _abc.CornerRadius = UDim.new(0, 6); _abc.
 -- hint below slots
 local hintLbl = Instance.new("TextLabel")
 hintLbl.Size              = UDim2.new(1, -20, 0, 16)
-hintLbl.Position          = UDim2.new(0, 10, 0, 348)
+hintLbl.Position          = UDim2.new(0, 10, 0, 318)
 hintLbl.BackgroundTransparency = 1
 local function _hintText()
 	return _InputHints.touchUI() and "Tap an item, then a slot to place it | tap a slot (nothing picked) to clear it"
@@ -184,7 +193,7 @@ hintLbl.Parent            = panel
 
 local slotsFrame = Instance.new("Frame")
 slotsFrame.Name              = "Slots"
-slotsFrame.Size              = UDim2.new(1, -20, 0, 94)
+slotsFrame.Size              = UDim2.new(1, -20, 0, 80)
 slotsFrame.Position          = UDim2.new(0, 10, 0, 236)
 slotsFrame.BackgroundTransparency = 1
 slotsFrame.ClipsDescendants  = true
@@ -253,6 +262,69 @@ for _, slotName in ipairs(SLOT_ORDER) do
 
 	slotBtns[slotName]     = btn
 	slotItemLbls[slotName] = itemLbl
+end
+
+-- ─── E abilities of this build ─────────────────────────────────────────────────
+-- Playtest 2026-11-14: a player could not tell what the car would do in the
+-- race. One row per equipped ability item (E cycles them in this order), with
+-- its kind (SPEED / ATTACK / TRAP / SHIELD) and what it does.
+
+local powersFrame = Instance.new("Frame")
+powersFrame.Name                  = "Powers"
+powersFrame.Size                  = UDim2.new(1, -20, 0, 70)
+powersFrame.Position              = UDim2.new(0, 10, 0, 336)
+powersFrame.BackgroundTransparency = 1
+powersFrame.Parent                = panel
+
+local powersTitle = Instance.new("TextLabel")
+powersTitle.Size                  = UDim2.new(1, 0, 0, 16)
+powersTitle.BackgroundTransparency = 1
+powersTitle.Font                  = Enum.Font.GothamBold
+powersTitle.TextSize              = 11
+powersTitle.TextXAlignment        = Enum.TextXAlignment.Left
+powersTitle.TextColor3            = Color3.fromRGB(255, 200, 60)
+powersTitle.Parent                = powersFrame
+
+local powerRows = {}
+for i = 1, 3 do
+	local chip = Instance.new("TextLabel")
+	chip.Size                  = UDim2.new(0, 50, 0, 15)
+	chip.Position              = UDim2.new(0, 0, 0, 18 + (i - 1) * 17)
+	chip.Font                  = Enum.Font.GothamBold
+	chip.TextSize              = 9
+	chip.TextColor3            = Color3.fromRGB(20, 20, 30)
+	chip.BorderSizePixel       = 0
+	chip.Parent                = powersFrame
+	local _cc = Instance.new("UICorner"); _cc.CornerRadius = UDim.new(0, 4); _cc.Parent = chip
+	local line = Instance.new("TextLabel")
+	line.Size                  = UDim2.new(1, -56, 0, 15)
+	line.Position              = UDim2.new(0, 56, 0, 18 + (i - 1) * 17)
+	line.BackgroundTransparency = 1
+	line.Font                  = Enum.Font.Gotham
+	line.TextSize              = 11
+	line.TextTruncate          = Enum.TextTruncate.AtEnd
+	line.TextXAlignment        = Enum.TextXAlignment.Left
+	line.TextColor3            = Color3.fromRGB(225, 225, 240)
+	line.Parent                = powersFrame
+	powerRows[i] = { chip = chip, line = line }
+end
+
+local function _refreshPowers(slots)
+	local list = AbilitySlots.list(slots)
+	local info = AbilityKind.info(ReplicatedStorage, HttpService)
+	powersTitle.Text = #list > 0 and ("In the race, " .. require(ReplicatedStorage.Shared.InputHints).key("item") .. " fires:")
+		or "No E ability yet: fill Body, Engine or Special"
+	for i, row in ipairs(powerRows) do
+		local e = list[i]
+		local kind = e and info[e.item] and AbilityKind.KINDS[info[e.item].kind]
+		row.chip.Visible = e ~= nil
+		row.line.Visible = e ~= nil
+		if e then
+			row.chip.Text = kind and kind.label or "?"
+			row.chip.BackgroundColor3 = kind and kind.color or Color3.fromRGB(150, 150, 160)
+			row.line.Text = string.format("%s: %s", e.item, ItemBlurbs.ABILITY[e.item] or "")
+		end
+	end
 end
 
 -- ─── Submit button ────────────────────────────────────────────────────────────
@@ -416,6 +488,8 @@ local function _refreshDisplay()
 	end
 
 	_refreshSlots()
+	_refreshPowers(_assignments)
+	if _refreshRating then _refreshRating() end
 end
 
 -- After the player changes a slot: redraw, and tell the server the
@@ -657,7 +731,7 @@ showTitle.Parent                = showroom
 
 local view = Instance.new("ViewportFrame")
 view.Name                  = "View"
-view.Size                  = UDim2.new(1, -20, 1, -96)
+view.Size                  = UDim2.new(1, -20, 1, -206)
 view.Position              = UDim2.new(0, 10, 0, 46)
 view.BackgroundColor3      = Color3.fromRGB(40, 46, 70)
 view.BorderSizePixel       = 0
@@ -686,6 +760,117 @@ showNote.TextSize              = 12
 showNote.TextWrapped           = true
 showNote.TextColor3            = Color3.fromRGB(200, 200, 220)
 showNote.Parent                = showroom
+
+-- ─── Stat card: how strong this build is (Shared/RideRating) ──────────────────
+-- A grade (S / A / B / C among every possible build in this biome) and four
+-- bars; the item under the pointer or picked shows its change (green more,
+-- red less) before it goes in.
+
+local card = Instance.new("Frame")
+card.Name                  = "Stats"
+card.Size                  = UDim2.new(1, -20, 0, 104)
+card.Position              = UDim2.new(0, 10, 1, -152)
+card.BackgroundTransparency = 1
+card.Parent                = showroom
+
+local gradeBox = Instance.new("TextLabel")
+gradeBox.Size              = UDim2.new(0, 62, 0, 62)
+gradeBox.Position          = UDim2.new(0, 0, 0, 6)
+gradeBox.BackgroundColor3  = Color3.fromRGB(40, 40, 64)
+gradeBox.Font              = Enum.Font.GothamBlack
+gradeBox.TextSize          = 40
+gradeBox.TextColor3        = Color3.fromRGB(255, 200, 60)
+gradeBox.Text              = "-"
+gradeBox.Parent            = card
+local _gbc = Instance.new("UICorner"); _gbc.CornerRadius = UDim.new(0, 10); _gbc.Parent = gradeBox
+
+local gradeNote = Instance.new("TextLabel")
+gradeNote.Size             = UDim2.new(0, 62, 0, 30)
+gradeNote.Position         = UDim2.new(0, 0, 0, 70)
+gradeNote.BackgroundTransparency = 1
+gradeNote.Font             = Enum.Font.GothamBold
+gradeNote.TextSize         = 10
+gradeNote.TextWrapped      = true
+gradeNote.TextColor3       = Color3.fromRGB(200, 200, 220)
+gradeNote.Text             = "RIDE GRADE"
+gradeNote.Parent           = card
+
+local GRADE_COLOUR = {
+	S = Color3.fromRGB(255, 120, 220), A = Color3.fromRGB(255, 200, 60),
+	B = Color3.fromRGB(120, 220, 120), C = Color3.fromRGB(170, 170, 190),
+}
+local C_BAR      = Color3.fromRGB(110, 170, 255)
+local C_UP       = Color3.fromRGB(90, 230, 110)
+local C_DOWN     = Color3.fromRGB(255, 90, 90)
+
+local bars = {}
+for i, b in ipairs(RideRating.BARS) do
+	local y = (i - 1) * 25
+	local lbl = Instance.new("TextLabel")
+	lbl.Size                  = UDim2.new(0, 82, 0, 22)
+	lbl.Position              = UDim2.new(0, 72, 0, y)
+	lbl.BackgroundTransparency = 1
+	lbl.Font                  = Enum.Font.GothamBold
+	lbl.TextSize              = 11
+	lbl.TextXAlignment        = Enum.TextXAlignment.Left
+	lbl.TextColor3            = Color3.fromRGB(210, 210, 228)
+	lbl.Text                  = b.label
+	lbl.Parent                = card
+	local bg = Instance.new("Frame")
+	bg.Size                   = UDim2.new(1, -160, 0, 10)
+	bg.Position               = UDim2.new(0, 156, 0, y + 6)
+	bg.BackgroundColor3       = Color3.fromRGB(36, 36, 56)
+	bg.BorderSizePixel        = 0
+	bg.ClipsDescendants       = true
+	bg.Parent                 = card
+	local _bgc = Instance.new("UICorner"); _bgc.CornerRadius = UDim.new(0, 5); _bgc.Parent = bg
+	local change = Instance.new("Frame")   -- the gained / lost part
+	change.BorderSizePixel    = 0
+	change.Size               = UDim2.new(0, 0, 1, 0)
+	change.Parent             = bg
+	local fill = Instance.new("Frame")
+	fill.BorderSizePixel      = 0
+	fill.BackgroundColor3     = C_BAR
+	fill.Size                 = UDim2.new(0, 0, 1, 0)
+	fill.ZIndex               = 2
+	fill.Parent               = bg
+	bars[b.key] = { fill = fill, change = change }
+end
+
+local function _biome()
+	return ReplicatedStorage:GetAttribute("Biome") or "FOREST"
+end
+
+_refreshRating = function()
+	local biome = _biome()
+	local ok, now = pcall(RideRating.rate, _assignments, biome)
+	if not ok then return end
+	-- the item under the pointer (or picked), as it would go in
+	local item = _infoItem or _selectedItem
+	local slot = item and RideRating.slotFor(item)
+	local after = nil
+	if slot and _assignments[slot] ~= item then
+		local ok2, r = pcall(RideRating.rate, RideRating.with(_assignments, item, slot), biome)
+		if ok2 then after = r end
+	end
+	for _, b in ipairs(RideRating.BARS) do
+		local bar = bars[b.key]
+		local v = now.bars[b.key]
+		local w = after and after.bars[b.key] or v
+		local lo, hi = math.min(v, w), math.max(v, w)
+		bar.fill.Size = UDim2.new(math.max(lo, 0.03), 0, 1, 0)
+		bar.change.Size = UDim2.new(hi, 0, 1, 0)
+		bar.change.BackgroundColor3 = (w >= v) and C_UP or C_DOWN
+		bar.change.Visible = math.abs(w - v) > 0.005
+	end
+	local g = after and after.grade or now.grade
+	gradeBox.Text = g
+	gradeBox.TextColor3 = GRADE_COLOUR[g] or GRADE_COLOUR.C
+	gradeNote.Text = (after and after.grade ~= now.grade) and (now.grade .. " → " .. after.grade .. " with " .. item)
+		or "RIDE GRADE"
+	gradeNote.TextColor3 = (after and after.grade ~= now.grade) and ((after.score > now.score) and C_UP or C_DOWN)
+		or Color3.fromRGB(200, 200, 220)
+end
 
 local KIND = { FOREST = "car", OCEAN = "boat", SKY = "plane" }
 local _shown, _centre, _dist = nil, Vector3.zero, 12
