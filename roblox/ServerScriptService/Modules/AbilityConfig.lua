@@ -556,6 +556,152 @@ AbilityConfig["Kite"] = {
 	},
 }
 
+-- ── Creator Store items (2026-11-13) ─────────────────────────────────────────
+-- Each reuses an effect a hand-made item already has (same handler, same
+-- look), with numbers for its rarity.
+
+AbilityConfig["Bicycle"] = {
+	cooldown = 16, duration = 2, targetType = "self",
+	effectKey = "redline", selfSpeed = 1.18, selfTurn = 0.5,
+	animKey = "v8Rev", sfxKey = "v8_roar", uiHint = "🚲 Pedal!",
+}
+
+AbilityConfig["Trash Can"] = {
+	cooldown = 15, duration = 2, targetType = "self",
+	effectKey = "disguise",
+	animKey = "boxDisguise", sfxKey = "cardboard_fold", uiHint = "🗑 Hide!",
+}
+
+AbilityConfig["Wheelbarrow"] = {
+	cooldown = 11, duration = 1, targetType = "self",
+	effectKey = "cartRam", selfSpeed = 1.1, push = 20, victimPush = 35, radius = 8,
+	animKey = "cartCharge", sfxKey = "cart_clang", uiHint = "🏗 Charge!",
+	biomeEffect = { SKY = { selfSpeed = 1.25 } },
+}
+
+AbilityConfig["Old Tire"] = {
+	cooldown = 15, duration = 3, targetType = "self",
+	effectKey = "lifeFloat", selfSpeed = 1.06,
+	animKey = "lifeRingThrow", sfxKey = "splash_ring", uiHint = "⭕ Float!",
+}
+
+AbilityConfig["Mattress"] = {
+	cooldown = 14, duration = 3, targetType = "self",
+	effectKey = "lockdown", selfSpeed = 1.08,
+	animKey = "suitcaseLock", sfxKey = "sofa_flump", uiHint = "🛏 Soft!",
+	biomeEffect = { SKY = { selfSpeed = 1.1 } },
+}
+
+AbilityConfig["Office Chair"] = {
+	cooldown = 16, duration = 2, targetType = "self",
+	effectKey = "spinBurst", selfSpeed = 1.2, push = 18,
+	animKey = "topSpin", sfxKey = "top_spin", uiHint = "💺 Swivel!",
+}
+
+AbilityConfig["Old TV"] = {
+	cooldown = 14, duration = 2, targetType = "nearest",
+	effectKey = "steerDisable", victimTurn = 0.25, victimFor = 1.0,
+	animKey = "cameraFlash", sfxKey = "camera_flash", uiHint = "📼 Static!",
+	biomeEffect = { OCEAN = { victimTurn = 0.45 } },
+}
+
+AbilityConfig["Rocking Horse"] = {
+	cooldown = 12, duration = 2, targetType = "self",
+	effectKey = "skateSlide", selfSpeed = 1.15, selfTurn = 1.5,
+	animKey = "skateSlide", sfxKey = "skate_grind", uiHint = "🐴 Gallop!",
+}
+
+AbilityConfig["Toilet"] = {
+	cooldown = 18, duration = 1.5, targetType = "self",
+	effectKey = "reverseBoost", selfSpeed = 1.3, push = 25,
+	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "🚽 Flush!",
+}
+
+AbilityConfig["Washing Machine"] = {
+	cooldown = 15, duration = 1.5, targetType = "all_in_radius", radius = 12,
+	effectKey = "bathSplash", victimSpeed = 0.45, victimFor = 1.5,
+	animKey = "bathSplash", sfxKey = "bath_splash", uiHint = "🌀 Spin!",
+	biomeEffect = {
+		OCEAN = { radius = 14 },
+		SKY   = { radius = 15, victimFor = 2.0 },
+	},
+}
+
+AbilityConfig["Refrigerator"] = {
+	cooldown = 18, duration = 1, targetType = "all_in_radius", radius = 12,
+	effectKey = "microFreeze", victimSpeed = 0.3,
+	animKey = "microwavePulse", sfxKey = "microwave_ding", uiHint = "🧊 Freeze!",
+	biomeEffect = { SKY = { radius = 16, duration = 1.4 } },
+}
+
+AbilityConfig["Piano"] = {
+	cooldown = 15, duration = 3, targetType = "self",
+	effectKey = "sofaFortress", victimPush = 45, victimSpeed = 0.6, victimFor = 1.2, radius = 10,
+	animKey = "sofaSit", sfxKey = "sofa_flump", uiHint = "🎹 Crash!",
+	biomeEffect = { SKY = { radius = 15 } },
+}
+
+AbilityConfig["Toaster"] = {
+	cooldown = 15, duration = 3, targetType = "self",
+	effectKey = "rise", selfSpeed = 1.1,
+	animKey = "lanternGlow", sfxKey = "lantern_chime", uiHint = "🍞 Pop!",
+}
+
+AbilityConfig["Boombox"] = {
+	cooldown = 12, duration = 1.5, targetType = "all_in_radius", radius = 18,
+	effectKey = "gustBlast", victimSpeed = 0.7, victimPush = 45,
+	animKey = "fanSpin", sfxKey = "fan_whirr", uiHint = "📻 Bass!",
+}
+
+AbilityConfig["Lawn Mower"] = {
+	cooldown = 14, duration = 4, targetType = "self",
+	effectKey = "digMode", selfSpeed = 1.12,
+	animKey = "drillSpin", sfxKey = "drill_whirr", uiHint = "🌿 Mow!",
+}
+
+AbilityConfig["Electric Guitar"] = {
+	cooldown = 18, duration = 1, targetType = "all_in_radius", radius = 15,
+	effectKey = "windBlast", victimPush = 55, victimSpeed = 0.7, victimFor = 1.2,
+	animKey = "leafBlowerOn", sfxKey = "leafblower_blast", uiHint = "🎸 Riff!",
+}
+
+AbilityConfig["Fire Extinguisher"] = {
+	cooldown = 18, duration = 1.5, targetType = "self",
+	effectKey = "reverseBoost", selfSpeed = 1.25, push = 22,
+	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "💨 Foam!",
+}
+
+AbilityConfig["Hot Dog"] = {
+	cooldown = 12, duration = 2, targetType = "nearest",
+	effectKey = "noodleSnare", victimSpeed = 0.88,
+	animKey = "noodleThrow", sfxKey = "noodle_splat", uiHint = "🌭 Squirt!",
+}
+
+AbilityConfig["Traffic Cone"] = {
+	cooldown = 12, duration = 1.5, targetType = "track_drop",
+	effectKey = "cactusObstacle",
+	animKey = "throwCactus", sfxKey = "cactus_thud", uiHint = "🚧 Drop!",
+}
+
+AbilityConfig["Watermelon"] = {
+	cooldown = 14, duration = 2.5, targetType = "track_drop",
+	effectKey = "slipperyPuddle", hitSpeed = 0.65, hitFor = 1.6,
+	animKey = "throwPizza", sfxKey = "pizza_splat", uiHint = "🍉 Smash!",
+}
+
+AbilityConfig["Teddy Bear"] = {
+	cooldown = 20, duration = 2, targetType = "self",
+	effectKey = "bloomCleanse", selfSpeed = 1.12,
+	animKey = "flowerBloom", sfxKey = "flower_chime", uiHint = "🐻 Hug!",
+}
+
+AbilityConfig["Bowling Ball"] = {
+	cooldown = 9, duration = nil, targetType = "track_drop",
+	effectKey = "logObstacle",
+	animKey = "logRoll", sfxKey = "log_thud", uiHint = "🎳 Strike!",
+	biomeEffect = { SKY = { cooldown = 7 } },
+}
+
 -- ─── Public helpers ───────────────────────────────────────────────────────────
 
 --- Returns the resolved ability entry for an item in a given biome.

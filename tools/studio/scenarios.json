@@ -1485,6 +1485,37 @@
       }
     },
     {
+      "name": "gallery-store",
+      "kind": "gallery",
+      "tags": [
+        "vehicles"
+      ],
+      "_why": "the Creator Store items (Shared/StoreModels) ridden as car, boat and plane with an avatar seated: do they face forward, sit on the chassis, carry the rider? fit.gap > 0.1 floats",
+      "opts": {
+        "hold": 1.2,
+        "only": [
+          "Bicycle",
+          "Trash Can",
+          "Wheelbarrow",
+          "Old Tire",
+          "Mattress",
+          "Office Chair",
+          "Old TV",
+          "Rocking Horse",
+          "Toilet",
+          "Washing Machine",
+          "Refrigerator",
+          "Piano",
+          "Hot Dog",
+          "Watermelon",
+          "Teddy Bear"
+        ]
+      },
+      "checks": {
+        "loose": 0
+      }
+    },
+    {
       "name": "race-tricks",
       "kind": "match",
       "tags": [

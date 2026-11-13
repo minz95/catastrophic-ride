@@ -31,7 +31,7 @@ ItemTypes.SlotType = {
 -- Wind Turbine was added in #89 then removed: never modeled, dropped from roster
 
 ItemTypes.ALL = {
-	-- ── BODY (13) ─────────────────────────────────────────────────────────────
+	-- ── BODY (25) ─────────────────────────────────────────────────────────────
 	{ name = "Backpack",      slotType = "BODY" },
 	{ name = "Bamboo Raft",   slotType = "BODY" },
 	{ name = "Barrel",        slotType = "BODY" },
@@ -45,8 +45,21 @@ ItemTypes.ALL = {
 	{ name = "Shopping Cart", slotType = "BODY" },
 	{ name = "Skateboard",    slotType = "BODY" },
 	{ name = "Suitcase",      slotType = "BODY" },
+	-- Creator Store models (Shared/StoreModels, 2026-11-13)
+	{ name = "Bicycle",         slotType = "BODY" },
+	{ name = "Mattress",        slotType = "BODY" },
+	{ name = "Office Chair",    slotType = "BODY" },
+	{ name = "Old Tire",        slotType = "BODY" },
+	{ name = "Old TV",          slotType = "BODY" },
+	{ name = "Piano",           slotType = "BODY" },
+	{ name = "Refrigerator",    slotType = "BODY" },
+	{ name = "Rocking Horse",   slotType = "BODY" },
+	{ name = "Toilet",          slotType = "BODY" },
+	{ name = "Trash Can",       slotType = "BODY" },
+	{ name = "Washing Machine", slotType = "BODY" },
+	{ name = "Wheelbarrow",     slotType = "BODY" },
 
-	-- ── ENGINE (12) ───────────────────────────────────────────────────────────
+	-- ── ENGINE (17) ───────────────────────────────────────────────────────────
 	{ name = "Cup Noodle",    slotType = "ENGINE" },
 	{ name = "Fan",           slotType = "ENGINE" },
 	{ name = "Flower",        slotType = "ENGINE" },
@@ -59,8 +72,13 @@ ItemTypes.ALL = {
 	{ name = "Treadmill",     slotType = "ENGINE" },
 	{ name = "Magnifying Glass", slotType = "ENGINE" },
 	{ name = "Drill",         slotType = "ENGINE" },
+	{ name = "Boombox",           slotType = "ENGINE" },
+	{ name = "Electric Guitar",   slotType = "ENGINE" },
+	{ name = "Fire Extinguisher", slotType = "ENGINE" },
+	{ name = "Lawn Mower",        slotType = "ENGINE" },
+	{ name = "Toaster",           slotType = "ENGINE" },
 
-	-- ── SPECIAL (14) ──────────────────────────────────────────────────────────
+	-- ── SPECIAL (19) ──────────────────────────────────────────────────────────
 	{ name = "Balloon Bunch", slotType = "SPECIAL" },
 	{ name = "Camera",        slotType = "SPECIAL" },
 	{ name = "Cactus",        slotType = "SPECIAL" },
@@ -75,6 +93,11 @@ ItemTypes.ALL = {
 	{ name = "Soda Bottle",   slotType = "SPECIAL" },
 	{ name = "Toilet Paper",  slotType = "SPECIAL" },
 	{ name = "Umbrella",      slotType = "SPECIAL" },
+	{ name = "Bowling Ball",  slotType = "SPECIAL" },
+	{ name = "Hot Dog",       slotType = "SPECIAL" },
+	{ name = "Teddy Bear",    slotType = "SPECIAL" },
+	{ name = "Traffic Cone",  slotType = "SPECIAL" },
+	{ name = "Watermelon",    slotType = "SPECIAL" },
 }
 
 -- ─── Lookup helpers ───────────────────────────────────────────────────────────

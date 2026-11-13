@@ -50,6 +50,29 @@ local MeshAssetIds = {
 	["Toilet Paper"]   = "",   -- assets/items/Toilet Paper.fbx
 	["Trophy"]         = "",   -- assets/items/Trophy.fbx
 	["Umbrella"]       = "",   -- assets/items/Umbrella.fbx
+	-- ── Creator Store models (Shared/StoreModels; mesh ids in Modules/StoreModelData) ──
+	["Bicycle"] = "",
+	["Trash Can"] = "",
+	["Wheelbarrow"] = "",
+	["Old Tire"] = "",
+	["Mattress"] = "",
+	["Office Chair"] = "",
+	["Old TV"] = "",
+	["Rocking Horse"] = "",
+	["Toilet"] = "",
+	["Washing Machine"] = "",
+	["Refrigerator"] = "",
+	["Piano"] = "",
+	["Toaster"] = "",
+	["Boombox"] = "",
+	["Lawn Mower"] = "",
+	["Electric Guitar"] = "",
+	["Fire Extinguisher"] = "",
+	["Hot Dog"] = "",
+	["Traffic Cone"] = "",
+	["Watermelon"] = "",
+	["Teddy Bear"] = "",
+	["Bowling Ball"] = "",
 }
 
 return MeshAssetIds

@@ -27,6 +27,18 @@ ItemBlurbs.ABILITY = {
 	["Red Sofa"]       = "Nothing can hurt you; racers next to you bounce off",
 	["Microwave"]      = "Freezes every racer near you",
 	["Bathtub"]        = "Splashes and slows every racer near you",
+	["Bicycle"]         = "Pedal flat out: much faster, but you can't steer",
+	["Trash Can"]       = "Hide in the bin: rivals' abilities and bumps can't touch you",
+	["Wheelbarrow"]     = "Charge forward and shove racers you hit",
+	["Old Tire"]        = "Float up and roll along faster",
+	["Mattress"]        = "Soft landing: absorbs the next hit, small boost",
+	["Office Chair"]    = "Swivel spin: a big boost in a slightly random direction",
+	["Old TV"]          = "Static: the nearest racer can't steer for a moment",
+	["Rocking Horse"]   = "Gallop: faster, but twitchy steering",
+	["Toilet"]          = "Flush! Blasts you forward",
+	["Washing Machine"] = "Spin cycle: soaks and slows every racer near you",
+	["Refrigerator"]    = "Cold blast: freezes every racer near you",
+	["Piano"]           = "Too heavy to stop: nothing can hurt you; racers next to you bounce off",
 	-- ENGINE
 	["Fan"]              = "Gust that pushes back and slows racers near you",
 	["Flower"]           = "Shakes off every slowdown and protects you briefly",
@@ -40,6 +52,11 @@ ItemBlurbs.ABILITY = {
 	["Rocket"]           = "Rocket burst forward",
 	["Cup Noodle"]       = "Snares the nearest racer and slows them",
 	["Kettle"]           = "Leaves a steam cloud behind you",
+	["Toaster"]           = "Pop! Jumps you up with a small boost",
+	["Boombox"]           = "Bass drop: pushes back and slows racers near you",
+	["Lawn Mower"]        = "Mows through: mud and off-track slowdowns don't affect you",
+	["Electric Guitar"]   = "Power chord: blasts racers near you aside",
+	["Fire Extinguisher"] = "Foam blast forward",
 	-- SPECIAL
 	["Gas Can"]       = "Drops a slick behind you",
 	["Pizza"]         = "Drops a slippery puddle behind you",
@@ -55,6 +72,11 @@ ItemBlurbs.ABILITY = {
 	["Trophy"]        = "Rally: a speed boost",
 	["Balloon Bunch"] = "Rise up with a boost",
 	["Soda Bottle"]   = "Fizz blast forward",
+	["Hot Dog"]       = "Mustard squirt: slows the nearest racer",
+	["Traffic Cone"]  = "Drops a cone on the track behind you",
+	["Watermelon"]    = "Smashes a slippery mess behind you",
+	["Teddy Bear"]    = "Big hug: shakes off every slowdown and protects you briefly",
+	["Bowling Ball"]  = "Rolls a bowling ball onto the track behind you",
 }
 
 --- "Body: weight and grip · E: Rolls sideways …" for an item, or "" if unknown.

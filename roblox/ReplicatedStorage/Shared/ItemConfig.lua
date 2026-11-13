@@ -402,6 +402,40 @@ ItemConfig["Soda Bottle"] = {
 	ride       = { weight = 3, grip = 0.35 },
 }
 
+-- ─── Creator Store items (2026-11-13) ────────────────────────────────────────
+-- Free models approved by the user (Shared/StoreModels); stats sit inside
+-- the ranges of the hand-made items of the same rarity.
+
+ItemConfig["Bicycle"]         = { slotType = "BODY", rarity = R.COMMON,   weight = 2,  grip = 0.45, icon = "🚲", shape = "store", mobilityAffinity = { FOREST = true } }
+ItemConfig["Trash Can"]       = { slotType = "BODY", rarity = R.COMMON,   weight = 4,  grip = 0.35, icon = "🗑", shape = "store", mobilityAffinity = {} }
+ItemConfig["Wheelbarrow"]     = { slotType = "BODY", rarity = R.COMMON,   weight = 4,  grip = 0.40, icon = "🏗", shape = "store", mobilityAffinity = {} }
+ItemConfig["Old Tire"]        = { slotType = "BODY", rarity = R.COMMON,   weight = 3,  grip = 0.40, icon = "⭕", shape = "store",
+	biomeBonus = { OCEAN = 1.10 }, mobilityAffinity = { OCEAN = true } }
+ItemConfig["Mattress"]        = { slotType = "BODY", rarity = R.UNCOMMON, weight = 3,  grip = 0.45, icon = "🛏", shape = "store", mobilityAffinity = {} }
+ItemConfig["Office Chair"]    = { slotType = "BODY", rarity = R.UNCOMMON, weight = 3,  grip = 0.35, icon = "💺", shape = "store", mobilityAffinity = {} }
+ItemConfig["Old TV"]          = { slotType = "BODY", rarity = R.UNCOMMON, weight = 6,  grip = 0.55, icon = "📼", shape = "store", mobilityAffinity = {} }
+ItemConfig["Rocking Horse"]   = { slotType = "BODY", rarity = R.UNCOMMON, weight = 4,  grip = 0.50, icon = "🐴", shape = "store", mobilityAffinity = {} }
+ItemConfig["Toilet"]          = { slotType = "BODY", rarity = R.RARE,     weight = 6,  grip = 0.70, icon = "🚽", shape = "store", mobilityAffinity = {} }
+ItemConfig["Washing Machine"] = { slotType = "BODY", rarity = R.RARE,     weight = 7,  grip = 0.75, icon = "🌀", shape = "store", mobilityAffinity = {} }
+ItemConfig["Refrigerator"]    = { slotType = "BODY", rarity = R.EPIC,     weight = 9,  grip = 0.85, icon = "🧊", shape = "store", mobilityAffinity = {} }
+ItemConfig["Piano"]           = { slotType = "BODY", rarity = R.EPIC,     weight = 9,  grip = 0.80, icon = "🎹", shape = "store", mobilityAffinity = {} }
+
+ItemConfig["Toaster"]           = { slotType = "ENGINE", rarity = R.COMMON,   power = 11, icon = "🍞", shape = "store" }
+ItemConfig["Boombox"]           = { slotType = "ENGINE", rarity = R.UNCOMMON, power = 17, icon = "📻", shape = "store" }
+ItemConfig["Lawn Mower"]        = { slotType = "ENGINE", rarity = R.UNCOMMON, power = 18, icon = "🌿", shape = "store",
+	biomeBonus = { FOREST = 1.20 } }
+ItemConfig["Electric Guitar"]   = { slotType = "ENGINE", rarity = R.RARE,     power = 23, icon = "🎸", shape = "store" }
+ItemConfig["Fire Extinguisher"] = { slotType = "ENGINE", rarity = R.RARE,     power = 24, icon = "💨", shape = "store" }
+
+ItemConfig["Hot Dog"]      = { slotType = "SPECIAL", rarity = R.COMMON,   boost = 12, icon = "🌭", shape = "store",
+	ride = { weight = 2, grip = 0.35 } }
+ItemConfig["Traffic Cone"] = { slotType = "SPECIAL", rarity = R.COMMON,   boost = 12, icon = "🚧", shape = "store" }
+ItemConfig["Watermelon"]   = { slotType = "SPECIAL", rarity = R.UNCOMMON, boost = 25, icon = "🍉", shape = "store",
+	ride = { weight = 3, grip = 0.35 } }
+ItemConfig["Teddy Bear"]   = { slotType = "SPECIAL", rarity = R.UNCOMMON, boost = 28, icon = "🐻", shape = "store",
+	ride = { weight = 3, grip = 0.45 } }
+ItemConfig["Bowling Ball"] = { slotType = "SPECIAL", rarity = R.RARE,     boost = 45, icon = "🎳", shape = "store" }
+
 -- ─── Rarity spawn pool ────────────────────────────────────────────────────────
 -- Precomputed list used by FarmingManager to build weighted spawn table.
 ItemConfig._byRarity = { Common = {}, Uncommon = {}, Rare = {}, Epic = {} }

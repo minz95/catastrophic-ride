@@ -524,6 +524,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
 - Free Creator Store models: `python3 tools/model_search.py "<words>" --sheet
   out.png` lists only free, script-free, verified-creator meshes with a
   contact sheet. Nothing goes into the game without the user's approval.
+  Approved ones are items (2026-11-13: 22, e.g. Piano, Toilet, Hot Dog):
+  `Shared/StoreModels` (name → asset id, creator), then `python3
+  tools/studio/store_models.py` reads them in Studio into
+  `Modules/StoreModelData` (mesh / texture ids, plain parts, colours),
+  which ItemModelPreloader builds like ItemMeshData. It refuses models
+  with scripts, unions (not rebuildable from data: the first washing
+  machine, TV and piano were mostly unions) or a mesh that will not load at
+  run time (`--check NAME=ID` tries candidates). Their abilities reuse
+  existing effects (AbilityConfig). Look: `sim.py run gallery-store`.
 - Arrows on the road are chevrons (`TrackKit.chevron`): a wedge laid flat
   reads as a square from above (SKY's "floating yellow squares"). SKY's
   updrafts are a ForceField cylinder with rising wind (particles follow
