@@ -8,6 +8,9 @@
 --      built with AssetService:CreateMeshPartAsync, so a Rojo-built place or
 --      a fresh one shows the real models too (refresh the data with
 --      `python3 tools/studio/item_meshes.py` after re-importing in Studio);
+--   2b. Modules/StoreModelData: free Creator Store models approved as items
+--      (Shared/StoreModels, `python3 tools/studio/store_models.py`), built the
+--      same way, with their colours, materials and plain parts;
 --   3. ItemModelBuilder: procedural parts (offline tests, or a mesh that
 --      failed to load).
 -- Every model is scaled so its longest side is TARGET_MAX studs, welded to its
@@ -30,6 +33,7 @@ folder.Parent = ServerStorage
 local ItemTypes        = require(game.ReplicatedStorage.Shared.ItemTypes)
 local ItemModelBuilder = require(ServerScriptService.Modules.ItemModelBuilder)
 local ItemMeshData     = require(ServerScriptService.Modules.ItemMeshData)
+local StoreModelData   = require(ServerScriptService.Modules.StoreModelData)
 
 local TARGET_MAX = 4
 
@@ -48,7 +52,7 @@ end
 
 -- A Model from ItemMeshData (nil when a mesh cannot be loaded here).
 local function fromData(name)
-	local list = ItemMeshData[name]
+	local list = ItemMeshData[name] or StoreModelData[name]
 	if not list then return nil end
 	local okSvc, AssetService = pcall(game.GetService, game, "AssetService")
 	if not okSvc or not AssetService or not AssetService.CreateMeshPartAsync then return nil end
@@ -58,10 +62,22 @@ local function fromData(name)
 	local done = Instance.new("BindableEvent")
 	for i, d in ipairs(list) do
 		task.spawn(function()
-			local ok, part = pcall(function() return AssetService:CreateMeshPartAsync(d.mesh) end)
+			local ok, part
+			if d.mesh then
+				ok, part = pcall(function() return AssetService:CreateMeshPartAsync(d.mesh) end)
+			else
+				ok, part = pcall(function()
+					local p = Instance.new("Part")
+					p.Shape = Enum.PartType[d.shape] or Enum.PartType.Block
+					return p
+				end)
+			end
 			if ok and part then
 				part.Name = d.n
-				pcall(function() part.TextureID = d.tex end)
+				if d.tex then pcall(function() part.TextureID = d.tex end) end
+				if d.col then part.Color = Color3.fromRGB(d.col[1], d.col[2], d.col[3]) end
+				if d.mat then pcall(function() part.Material = Enum.Material[d.mat] end) end
+				if d.tr then part.Transparency = d.tr end
 				part.Size = Vector3.new(d.s[1], d.s[2], d.s[3])
 				local pos = Vector3.new(d.p[1], d.p[2], d.p[3])
 				local r = d.rot

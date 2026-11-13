@@ -73,12 +73,20 @@ R.describe("items", function()
 		R.expect(bad).toBeEmpty("ItemTypes / ItemConfig mismatches")
 	end)
 
-	R.it("every item has an FBX model in assets/items", function()
+	R.it("every item has a model: an FBX in assets/items or an approved Creator Store model", function()
+		local StoreModels = env.requirePath("ReplicatedStorage.Shared.StoreModels")
+		local StoreModelData = env.requirePath("ServerScriptService.Modules.StoreModelData")
 		local missing = {}
 		for _, name in ipairs(sortedKeys(items)) do
-			if not fs.isFile("assets/items/" .. name .. ".fbx") then table.insert(missing, name) end
+			local store = StoreModels[name] and StoreModelData[name] and #StoreModelData[name] > 0
+			if not fs.isFile("assets/items/" .. name .. ".fbx") and not store then table.insert(missing, name) end
 		end
-		R.expect(missing).toBeEmpty("items without assets/items/<name>.fbx")
+		R.expect(missing).toBeEmpty("items without assets/items/<name>.fbx or StoreModelData")
+		local orphans = {}
+		for name in pairs(StoreModels) do
+			if not items[name] then table.insert(orphans, name) end
+		end
+		R.expect(orphans).toBeEmpty("StoreModels entries with no item")
 	end)
 
 	R.it("MeshAssetIds lists exactly the current items", function()
