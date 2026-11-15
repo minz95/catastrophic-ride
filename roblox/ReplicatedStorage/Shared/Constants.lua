@@ -51,6 +51,9 @@ Constants.FINISH_GRACE = 45
 -- novice 170 studs short with a flat 45 s. Shared/CatchUp.graceFor.
 Constants.FINISH_GRACE_SHARE = 0.5
 Constants.FINISH_GRACE_MAX   = 75
+-- s the race goes on once every player is in and only bots still drive
+-- (playtest 2026-11-15: a lone winner waited up to 75 s for bots)
+Constants.BOTS_LEFT_WRAPUP = 5
 -- Catch-up: a car GAP_START studs or more behind the leader gets up to
 -- +MAX top speed, full at GAP_FULL studs (Shared/CatchUp, RacingManager).
 -- The leader never gets it, so a build or a driver still wins on merit.

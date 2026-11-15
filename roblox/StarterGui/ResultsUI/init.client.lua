@@ -392,6 +392,8 @@ local function _populateResults(finishOrder)
 		local player = Players:GetPlayerByUserId(entry.userId)
 		local name   = player and player.Name or (entry.bot and ("🤖 " .. tostring(entry.name))) or entry.name or ("User" .. entry.userId)
 		local timeStr = _formatTime(entry.time)
+		-- a bot still driving when every player was in (BOTS_LEFT_WRAPUP) did not run out of time
+		if entry.bot and entry.time == nil then timeStr = "--" end
 
 		-- Podium (top 3)
 		if rank <= 3 and _podiumLabels[rank] then
