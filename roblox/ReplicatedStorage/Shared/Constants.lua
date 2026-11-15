@@ -74,7 +74,7 @@ Constants.SOLO_TEST_MODE = false -- true: start 5 s after the first player, prin
 -- 25 s of an empty lobby every round was a reason to leave); once
 -- MIN_TO_START are in, the countdown is FILL_SECONDS (time for friends to
 -- load in and to shop), set once when the second player arrives.
-Constants.LOBBY = { MAX_WAIT = 8, FILL_SECONDS = 15 }
+Constants.LOBBY = { MAX_WAIT = 10, FILL_SECONDS = 15 }
 
 -- The shop screen (ShopUI, rules in Shared/ShopTiming) shows the phase
 -- clock; under WARN_AT s it turns red. In CRAFTING it closes itself once at

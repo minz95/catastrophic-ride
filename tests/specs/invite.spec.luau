@@ -94,4 +94,20 @@ R.describe("Friend invites", function()
 		local client = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/GameClient.client.lua")
 		R.expect(client:find("watchRewards()", 1, true) ~= nil).toBe(true)
 	end)
+
+	R.it("FARMING has the button too, next to SHOP / ITEMS and clear of the phone's emote icon (playtest 2026-11-15)", function()
+		local src = fs.readFile("roblox/StarterGui/InviteUI/init.client.lua")
+		R.expect(src:find("Invite.button(slot", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("slot.Visible = phase == Constants.PHASES.FARMING", 1, true) ~= nil).toBe(true)
+		R.expect(src:find("keepClear(slot, screen, X, X_TOUCH)", 1, true) ~= nil).toBe(true)
+		local x = tonumber(src:match("local X, X_TOUCH = (%d+), %d+"))
+		local xTouch = tonumber(src:match("local X, X_TOUCH = %d+, (%d+)"))
+		local items = fs.readFile("roblox/StarterGui/ItemGuideUI/init.client.lua")
+		local itemsX = tonumber(items:match("keepClear%(openBtn, screen, (%d+)%)"))
+		R.expect(x >= itemsX + 120).toBe(true)   -- right of ITEMS (120 wide)
+		local TouchLayout = env.requirePath("ReplicatedStorage.Shared.TouchLayout")
+		for _, icon in ipairs(TouchLayout.ICONS.FARMING) do
+			if icon.right then R.expect(xTouch >= icon.right + TouchLayout.ICON_SIZE).toBe(true) end
+		end
+	end)
 end)
