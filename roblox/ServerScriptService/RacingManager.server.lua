@@ -981,7 +981,7 @@ end
 
 -- ─── Finish line ──────────────────────────────────────────────────────────────
 
-local _afterFinish   -- below
+local _afterFinish, _playersStillDriving   -- below
 
 local function _onFinishTouched(hit)
 	if not _active then return end
@@ -1030,6 +1030,17 @@ local function _onFinishTouched(hit)
 	_afterFinish(elapsed)
 end
 
+-- Players racing this round who have not finished (bots not counted).
+_playersStillDriving = function()
+	local done = {}
+	for _, f in ipairs(_finishOrder) do done[f.userId] = true end
+	local n = 0
+	for uid in pairs(_racers) do
+		if not done[uid] and Players:GetPlayerByUserId(uid) then n += 1 end
+	end
+	return n
+end
+
 -- After any finish (player or bot): tell everyone, end the race when all
 -- racers are in, start the grace after the winner.
 _afterFinish = function(elapsed)
@@ -1037,6 +1048,10 @@ _afterFinish = function(elapsed)
 	if #_finishOrder >= math.max(1, _totalRacers) then
 		_active = false
 		GameManager.raceComplete(_finishOrder)
+	elseif _playersStillDriving() == 0 then
+		-- every player is in, only bots drive: nobody waits long for them
+		-- (they are listed by how far they got)
+		GameManager.shortenPhase(Constants.PHASES.RACING, Constants.BOTS_LEFT_WRAPUP)
 	elseif #_finishOrder == 1 then
 		-- the winner is in: everyone else gets CatchUp.graceFor(winner) s
 		-- (FINISH_GRACE at least), not the full timeout

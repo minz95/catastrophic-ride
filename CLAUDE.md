@@ -638,7 +638,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   switches and the store page: `docs/launch.md`.
 - Catch-up: `Shared/CatchUp` (RacingManager "catchUp" MaxSpeed multiplier
   for cars far behind the leader, never the leader; finish grace
-  `CatchUp.graceFor(winner)`). The offline match sim uses the same rules
+  `CatchUp.graceFor(winner)`). Once every player is in and only bots
+  drive, the race ends `BOTS_LEFT_WRAPUP` s later (results show those bots
+  as "--"; a lone winner used to wait up to 75 s). The offline match sim uses the same rules
   (second pass + grace cut); compare with `lune run tools/catchup_compare.luau`.
 - Race bots (`Modules/RaceBots`): live servers fill the grid to
   this round's head count (`Modules/BotFill`: drawn each FARMING between
