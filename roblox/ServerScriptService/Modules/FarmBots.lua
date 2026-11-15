@@ -505,10 +505,11 @@ local function think(bot, dt, now)
 			local victim = _rng:NextNumber() < F.PROWL and stealTarget(bot, F.PROWL_RANGE)
 			local r = victim and victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
 			local around = r and r.Position or bot.root.Position
-			local spread = r and 6 or F.WANDER
-			-- a stroll goes where no other bot is (the best of a few tries)
+			local spread = r and F.PROWL_SPREAD or F.WANDER
+			-- a stroll, or a prowl round a player, goes where no other bot is
+			-- (the best of a few tries)
 			local bestG, bestGap
-			for _ = 1, r and 1 or F.SPREAD_TRIES do
+			for _ = 1, F.SPREAD_TRIES do
 				local g = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
 				local gx, gz = FarmBounds.clamp(bot.biome, g.X, g.Z)   -- not into a wall
 				g = Vector3.new(gx, g.Y, gz)

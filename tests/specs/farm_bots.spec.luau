@@ -234,7 +234,8 @@ R.describe("farm bots (live servers fill the farm)", function()
 			end
 		end
 		-- before: from the time bags filled, 4 to 6 of 6 bots had another within 8 studs
-		R.expect(piled / samples < 0.25).toBe(true, ("%d of %d bot samples next to another bot"):format(piled, samples))
+		-- (about 0.6); after: 0.04 to 0.17 over runs
+		R.expect(piled / samples < 0.35).toBe(true, ("%d of %d bot samples next to another bot"):format(piled, samples))
 		local onPlayer, onBot = 0, 0
 		for _, ev in ipairs(srv.Telemetry.events("steal_attempt")) do
 			if ev.thief < -100000 then

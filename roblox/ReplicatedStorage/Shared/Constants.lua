@@ -578,6 +578,7 @@ Constants.BOTS = {
 		KEEP_FREE = 1,      -- bag slots left free for a steal (a car takes 6 of 8)
 		PROWL = 0.5,        -- with that bag: chance a stroll heads for someone with items
 		PROWL_RANGE = 70,   -- studs
+		PROWL_SPREAD = 10,  -- studs round the player a prowling bot walks to
 		SPREAD_TRIES = 6,   -- spots tried for a stroll; it takes the one furthest from other bots
 		-- guard (G): raised when just hit (chance per hit) or when a player in
 		-- reach faces the bot (chance per second); held GUARD_HOLD s, still
