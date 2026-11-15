@@ -38,6 +38,7 @@ local SCRIPTS = {
 	"ServerScriptService.AnalyticsManager",
 	"ServerScriptService.BadgeManager",
 	"ServerScriptService.InviteManager",
+	"ServerScriptService.RideShowManager",
 	"ServerScriptService.ChallengeManager",
 }
 
@@ -172,7 +173,7 @@ for r = 1, ROUNDS do
 	end
 end
 
--- coins: start + rewards + challenges + invite bonus
+-- coins: start + rewards + challenges + invite bonus + ride show wins
 local function sum(kind, field, uid, key)
 	local t = 0
 	for _, ev in ipairs(srv.Telemetry.events(kind)) do
@@ -186,7 +187,7 @@ for _, p in ipairs(everyone) do
 	local rec = PlayerStore.get(p)
 	local uid = p.UserId
 	local expect = (startCoins[uid] or 0) + sum("reward", "coins", uid) + sum("reward", "daily", uid)
-		+ sum("challenge", "coins", uid) + sum("referral", "coins", uid)
+		+ sum("challenge", "coins", uid) + sum("referral", "coins", uid) + sum("ride_vote", "coins", uid)
 	if not rec then
 		table.insert(problems, p.Name .. ": no record")
 	elseif rec.coins ~= expect then

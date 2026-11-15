@@ -433,6 +433,18 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   round loop, weather, rewards or challenges.
 - Corner notices (`Shared/Notice`, "Challenge done!", "Friend joined!")
   wait while RACING: on a phone the popup covers BOOST / DRIFT.
+- Ride show (RESULTS, playtest 2026-11-15 "show off, compare, snapshot"):
+  with `RIDE_SHOW.MIN_PLAYERS` players who raced, `RideShowManager` sends
+  every player's ride (the parked car model and its slots, RemoteEvents
+  `RideShow` open / votes / closed) and `StarterGui/RideShowUI` lays them
+  side by side over the results for `SECONDS` (ride and driver via
+  `Shared/RideCard`, grade and bars from RideRating); everyone votes the
+  funniest but their own (`VoteRide`, `Shared/RideVote`), the winner gets
+  `COINS` (telemetry `ride_vote`, in the soak ledger). Counts cross the
+  remote as a list (sparse number keys do not). 📸 (`Shared/Snapshot`: a
+  full-screen card with the game's name, CaptureService screenshot, then
+  the share sheet or the gallery) is on the show and in the crafting
+  showroom.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

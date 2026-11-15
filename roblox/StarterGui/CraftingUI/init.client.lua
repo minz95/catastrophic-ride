@@ -720,7 +720,7 @@ ScreenFit.watch(function()
 end)
 
 local showTitle = Instance.new("TextLabel")
-showTitle.Size                  = UDim2.new(1, -20, 0, 30)
+showTitle.Size                  = UDim2.new(1, -82, 0, 30)
 showTitle.Position              = UDim2.new(0, 10, 0, 10)
 showTitle.BackgroundTransparency = 1
 showTitle.Text                  = "Your ride"
@@ -728,6 +728,21 @@ showTitle.Font                  = Enum.Font.GothamBold
 showTitle.TextScaled            = true
 showTitle.TextColor3            = Color3.fromRGB(255, 200, 60)
 showTitle.Parent                = showroom
+
+-- 📸 a picture of this ride to share (Shared/Snapshot; playtest 2026-11-15:
+-- "show the ride off, a snapshot must be easy")
+local Snapshot = require(ReplicatedStorage.Shared.Snapshot)
+local RideCard = require(ReplicatedStorage.Shared.RideCard)
+local _snapSource = nil   -- the latest CraftPreview model (set below)
+Snapshot.button(showroom, UDim2.fromOffset(62, 30), UDim2.new(1, -72, 0, 10), "📸", function()
+	if not _snapSource or not _snapSource.Parent then return end
+	local biome = ReplicatedStorage:GetAttribute("Biome") or "FOREST"
+	local ok, r = pcall(RideRating.rate, _assignments, biome)
+	Snapshot.card({ {
+		model = _snapSource, char = LocalPlayer.Character, name = LocalPlayer.DisplayName,
+		items = RideCard.items(_assignments), grade = ok and r and r.grade or nil,
+	} }, "MY JUNK RIDE")
+end)
 
 local view = Instance.new("ViewportFrame")
 view.Name                  = "View"
@@ -988,7 +1003,7 @@ local function _showWhenWhole(m)
 		if n >= want then break end
 		task.wait(0.05)
 	end
-	if _latest == m and m.Parent then _show(m) end
+	if _latest == m and m.Parent then _snapSource = m; _show(m) end
 end
 
 local function _watch(folder)

@@ -102,6 +102,8 @@ local EVENTS = {
 	"InviteReward",
 	"ChallengeUpdate",
 	"StarterItems",
+	"RideShow",
+	"VoteRide",
 }
 
 local FUNCTIONS = {

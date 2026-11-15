@@ -82,6 +82,12 @@ Constants.LOBBY = { MAX_WAIT = 10, FILL_SECONDS = 15 }
 -- either way); it closes when a round starts (FARMING) and for RACING.
 Constants.SHOP = { WARN_AT = 10, CRAFT_CLOSE_AT = 12, NOTICE_SECONDS = 4 }
 
+-- ─── Ride show (RESULTS, Modules/RideShowManager, StarterGui/RideShowUI) ──
+-- With MIN_PLAYERS or more players who raced, the results open with every
+-- player's ride side by side (grade and bars to compare) for SECONDS; each
+-- votes for the funniest one but their own, the winner gets COINS.
+Constants.RIDE_SHOW = { MIN_PLAYERS = 2, SECONDS = 12, COINS = 30, VOTE_GAP = 0.3, WINNER_SHOWN = 3 }
+
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────
 -- A friend who joins through your invite for the first time (never played
 -- a round) pays you COINS, for up to MAX_REWARDED friends.

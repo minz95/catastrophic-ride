@@ -24,6 +24,7 @@ local SCRIPTS = {
 	"ServerScriptService.AnalyticsManager",
 	"ServerScriptService.BadgeManager",
 	"ServerScriptService.InviteManager",
+	"ServerScriptService.RideShowManager",
 	"ServerScriptService.ChallengeManager",
 }
 
