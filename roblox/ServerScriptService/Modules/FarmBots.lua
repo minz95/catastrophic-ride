@@ -285,12 +285,22 @@ local function nearestHuman(bot, range)
 	return best
 end
 
--- Someone (not the bot) with items to rob within `range`, nearest first.
+-- Someone being chased by another bot already.
+local function chasedByOther(bot, victim)
+	for _, other in ipairs(FarmBots.list) do
+		if other ~= bot and other.chase and other.chase.victim == victim then return true end
+	end
+	return false
+end
+
+-- A player (not a bot) with items to rob within `range`, nearest first, one
+-- bot after each player at a time. Bots robbing and prowling round each
+-- other gathered them in a pile away from the player (playtest 2026-11-15).
 local function stealTarget(bot, range, markedOnly)
 	local best, bestD
 	local now = tick()
-	for _, other in ipairs(SessionManager.actors()) do
-		local od = other ~= bot.proxy and SessionManager.getData(other)
+	for _, other in ipairs(Players:GetPlayers()) do
+		local od = not chasedByOther(bot, other) and SessionManager.getData(other)
 		local r = od and #od.inventory > 0 and other.Character and other.Character:FindFirstChild("HumanoidRootPart")
 		if r and markedOnly and not (od._rareAt and now - od._rareAt <= Constants.RARE_MARK.SECONDS) then r = nil end
 		if r and now >= (od.stealInvincibleEnd or 0) and now >= (od._hiddenUntil or 0) and not od._stealWindow then
@@ -496,9 +506,19 @@ local function think(bot, dt, now)
 			local r = victim and victim.Character and victim.Character:FindFirstChild("HumanoidRootPart")
 			local around = r and r.Position or bot.root.Position
 			local spread = r and 6 or F.WANDER
-			local g = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
-			local gx, gz = FarmBounds.clamp(bot.biome, g.X, g.Z)   -- not into a wall
-			bot.goal = Vector3.new(gx, g.Y, gz)
+			-- a stroll goes where no other bot is (the best of a few tries)
+			local bestG, bestGap
+			for _ = 1, r and 1 or F.SPREAD_TRIES do
+				local g = around + Vector3.new(_rng:NextNumber(-spread, spread), 0, _rng:NextNumber(-spread, spread))
+				local gx, gz = FarmBounds.clamp(bot.biome, g.X, g.Z)   -- not into a wall
+				g = Vector3.new(gx, g.Y, gz)
+				local gap = math.huge
+				for _, other in ipairs(FarmBots.list) do
+					if other ~= bot and other.root then gap = math.min(gap, flat(other.root.Position - g).Magnitude) end
+				end
+				if not bestGap or gap > bestGap then bestG, bestGap = g, gap end
+			end
+			bot.goal = bestG
 		end
 		walkTo(bot, bot.goal, dt)
 		return

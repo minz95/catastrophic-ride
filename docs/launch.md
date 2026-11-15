@@ -16,7 +16,11 @@ already done in this repository.
    `bots-ocean`, `bots-sky`, `match-sky`) on the commit you publish.
 2. **you** Open the published place in Studio (Universe 9983801557, Place
    74883519312765). Run `rojo serve roblox` and press **Connect** in the Rojo
-   plugin; wait for the sync, then **Disconnect**.
+   plugin; wait for the sync, then **Disconnect**. After a change to the
+   Creator Store items (`Shared/StoreModels`, `Modules/StoreModelData`), run
+   in the command bar `require(game.ServerScriptService.Modules.StoreModelBake)()`:
+   live servers cannot load other creators' meshes from data (they showed as
+   grey cubes), so the models are saved in the place's ServerStorage.
 3. **you** Studio Test → Start (one player): play one round (farm, craft,
    race). Then Test → Clients and Servers with 2–4 players for one round.
 4. **you** File → **Publish to Roblox** (Alt+P). Keep the place **Private**.

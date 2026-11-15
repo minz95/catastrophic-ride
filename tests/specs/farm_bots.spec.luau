@@ -216,6 +216,36 @@ R.describe("farm bots (live servers fill the farm)", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 
+	R.it("bots spread over the farm and rob the player, not each other (playtest 2026-11-15: bots piled up together)", function()
+		local srv, FarmBots, tick, C = farm(7)
+		local bots = srv.SessionManager.bots()
+		local player = srv.players[1]
+		local pd = srv.SessionManager.getData(player)
+		local piled, samples = 0, 0
+		for _ = 1, 16 do   -- FARMING lasts 90 s here
+			pd.inventory = { "Kettle", "Log", "Pizza" }   -- always worth robbing
+			tick(5)
+			for _, a in ipairs(bots) do
+				local ra = a.Character.HumanoidRootPart.Position
+				samples += 1
+				for _, b in ipairs(bots) do
+					if a ~= b and (b.Character.HumanoidRootPart.Position - ra).Magnitude < 8 then piled += 1 break end
+				end
+			end
+		end
+		-- before: from the time bags filled, 4 to 6 of 6 bots had another within 8 studs
+		R.expect(piled / samples < 0.25).toBe(true, ("%d of %d bot samples next to another bot"):format(piled, samples))
+		local onPlayer, onBot = 0, 0
+		for _, ev in ipairs(srv.Telemetry.events("steal_attempt")) do
+			if ev.thief < -100000 then
+				if ev.victim == player.UserId then onPlayer += 1 else onBot += 1 end
+			end
+		end
+		R.expect(onPlayer).toBeGreaterThan(0)
+		R.expect(onBot).toBe(0)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
 	R.it("a bot that is hit raises its guard, and the next punch is blocked", function()
 		local srv, FarmBots, tick, C = farm(2)
 		local F = C.BOTS.FARM
