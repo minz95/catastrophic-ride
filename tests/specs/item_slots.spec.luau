@@ -340,6 +340,9 @@ R.describe("HEAD / TAIL passives", function()
 				local d = srv.SessionManager.getData(bot.proxy)
 				d.vehicleStats.slotAssignments = otherSlots
 				bot.slots = otherSlots
+				-- and only its passives: a Rubber Duck HEAD drawn for its own
+				-- build left an "absorb" that ate the first hit (CI flake)
+				srv.env.requirePath("ServerScriptService.Modules.RaceEffects").reset(bot.proxy)
 				other, otherWho = bot.model, bot.proxy
 			else
 				other, otherWho = car(srv.players[2], otherSlots, CFrame.new(0, 2, 540)), srv.players[2]
