@@ -34,6 +34,7 @@ local ItemTypes        = require(game.ReplicatedStorage.Shared.ItemTypes)
 local ItemModelBuilder = require(ServerScriptService.Modules.ItemModelBuilder)
 local ItemMeshData     = require(ServerScriptService.Modules.ItemMeshData)
 local StoreModelData   = require(ServerScriptService.Modules.StoreModelData)
+local ItemDataModel    = require(ServerScriptService.Modules.ItemDataModel)
 
 local TARGET_MAX = 4
 
@@ -50,56 +51,10 @@ local function imported(name)
 	return nil
 end
 
--- A Model from ItemMeshData (nil when a mesh cannot be loaded here).
+-- A Model from ItemMeshData / StoreModelData (nil when a mesh cannot be
+-- loaded here).
 local function fromData(name)
-	local list = ItemMeshData[name] or StoreModelData[name]
-	if not list then return nil end
-	local okSvc, AssetService = pcall(game.GetService, game, "AssetService")
-	if not okSvc or not AssetService or not AssetService.CreateMeshPartAsync then return nil end
-	local model = Instance.new("Model")
-	model.Name = name
-	local parts, failed, pending = {}, false, #list
-	local done = Instance.new("BindableEvent")
-	for i, d in ipairs(list) do
-		task.spawn(function()
-			local ok, part
-			if d.mesh then
-				ok, part = pcall(function() return AssetService:CreateMeshPartAsync(d.mesh) end)
-			else
-				ok, part = pcall(function()
-					local p = Instance.new("Part")
-					p.Shape = Enum.PartType[d.shape] or Enum.PartType.Block
-					return p
-				end)
-			end
-			if ok and part then
-				part.Name = d.n
-				if d.tex then pcall(function() part.TextureID = d.tex end) end
-				if d.col then part.Color = Color3.fromRGB(d.col[1], d.col[2], d.col[3]) end
-				if d.mat then pcall(function() part.Material = Enum.Material[d.mat] end) end
-				if d.tr then part.Transparency = d.tr end
-				part.Size = Vector3.new(d.s[1], d.s[2], d.s[3])
-				local pos = Vector3.new(d.p[1], d.p[2], d.p[3])
-				local r = d.rot
-				part.CFrame = r and CFrame.new(pos.X, pos.Y, pos.Z, r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9])
-					or CFrame.new(pos)
-				parts[i] = part
-			else
-				failed = true
-			end
-			pending -= 1
-			if pending == 0 then done:Fire() end
-		end)
-	end
-	if pending > 0 then done.Event:Wait() end
-	done:Destroy()
-	if failed then
-		for _, p in pairs(parts) do p:Destroy() end
-		model:Destroy()
-		return nil
-	end
-	for _, p in ipairs(parts) do p.Parent = model end
-	return model
+	return ItemDataModel.build(name, ItemMeshData[name] or StoreModelData[name])
 end
 
 -- Scale to TARGET_MAX around the bounding-box centre, set a PrimaryPart
@@ -147,6 +102,11 @@ local function finish(model, name)
 end
 
 local counts = { imported = 0, data = 0, procedural = 0 }
+local fallbacks = {}   -- items with a mesh that showed as a plain cube
+local canLoadMeshes = (function()
+	local ok, svc = pcall(game.GetService, game, "AssetService")
+	return ok and svc ~= nil and svc.CreateMeshPartAsync ~= nil
+end)()
 
 local function build(item)
 	local name = item.name
@@ -164,6 +124,8 @@ local function build(item)
 	end)
 	if ok then
 		counts.procedural += 1
+		-- (offline tests have no mesh API: every item is procedural there)
+		if (ItemMeshData[name] or StoreModelData[name]) and canLoadMeshes then table.insert(fallbacks, name) end
 	else
 		warn("[ItemModelPreloader] Failed to build " .. name .. ": " .. tostring(err))
 	end
@@ -184,3 +146,8 @@ folder:SetAttribute("Ready", true)
 
 print(string.format("[ItemModelPreloader] Ready: %d imported, %d from ItemMeshData, %d procedural",
 	counts.imported, counts.data, counts.procedural))
+if #fallbacks > 0 then
+	table.sort(fallbacks)
+	warn("[ItemModelPreloader] meshes not loaded, plain cubes: " .. table.concat(fallbacks, ", ")
+		.. " (Creator Store items: bake them into the place, Modules/StoreModelBake)")
+end

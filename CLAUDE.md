@@ -556,7 +556,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Shared/StoreModels` (name → asset id, creator), then `python3
   tools/studio/store_models.py` reads them in Studio into
   `Modules/StoreModelData` (mesh / texture ids, plain parts, colours),
-  which ItemModelPreloader builds like ItemMeshData. It refuses models
+  which ItemModelPreloader builds like ItemMeshData in Studio only: live
+  servers load with CreateMeshPartAsync only meshes the owner owns, so the
+  store items were grey cubes live (2026-11-15). Bake them into the published
+  place (command bar: `require(game.ServerScriptService.Modules.StoreModelBake)()`,
+  then publish; ServerStorage is not Rojo's); the preloader takes them first
+  and warns which meshed items fell back to cubes. It refuses models
   with scripts, unions (not rebuildable from data: the first washing
   machine, TV and piano were mostly unions) or a mesh that will not load at
   run time (`--check NAME=ID` tries candidates). Their abilities reuse
