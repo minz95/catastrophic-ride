@@ -46,14 +46,15 @@ function SideButtons.touchSpot(x, w)
 	return UDim2.new(1, -(x + w), 0, SideButtons.TOP_MIN)
 end
 
-function SideButtons.keepClear(btn, screen, x)
+-- `xTouch`: another x for the top-right row (default x).
+function SideButtons.keepClear(btn, screen, x, xTouch)
 	local InputHints = require(script.Parent.InputHints)
 	task.spawn(function()
 		while btn.Parent ~= nil or screen.Parent ~= nil do
 			if btn.Parent == screen and InputHints.touchUI() then
 				btn.AnchorPoint = Vector2.new(0, 0)
 				local w = btn.AbsoluteSize.X > 0 and btn.AbsoluteSize.X or 120
-				btn.Position = SideButtons.touchSpot(x, w)
+				btn.Position = SideButtons.touchSpot(xTouch or x, w)
 			elseif btn.Parent == screen then
 				local s = strip()
 				local top = s and (s.AbsolutePosition.Y - screen.AbsolutePosition.Y) or nil

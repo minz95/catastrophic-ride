@@ -439,8 +439,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (`DailyChallenge.eventsOf`), pays and tells the player
   (`ChallengeUpdate`); the results screen shows them (`GetChallenges`).
   A new challenge: a `POOL` line, its event in `eventsOf`.
-- Friend invites: `Shared/Invite` (INVITE FRIENDS on the lobby list and the
-  results screen, Roblox's invite prompt, hidden where invites are not
+- Friend invites: `Shared/Invite` (INVITE FRIENDS on the lobby list, the
+  results screen and while farming (`StarterGui/InviteUI`, next to SHOP /
+  ITEMS; on a phone left of the emote icon), Roblox's invite prompt, hidden where invites are not
   allowed) and `InviteManager` + `Modules/Referral`: a friend who joins
   through the invite (join data `ReferredByPlayerId`) and never played a
   round pays the inviter `Constants.INVITE.COINS` (once per friend, record
@@ -515,7 +516,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   one frame. Every pickup
   shows a face-down "???" card that turns over to the ability
   (ItemGuideUI). The results screen's invite reads "MY RIDE VS YOURS?".
-  A lone player's lobby is `LOBBY.MAX_WAIT` (8 s); a second player sets
+  A lone player's lobby is `LOBBY.MAX_WAIT` (10 s); a second player sets
   it to FILL_SECONDS once. Spec `starter_items`.
 - Rare loot (playtest 2026-11-12): picking up or stealing a Rare / Epic
   marks its holder for everyone (`StarterPlayerScripts/RareMark`: icon +
@@ -640,7 +641,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   for cars far behind the leader, never the leader; finish grace
   `CatchUp.graceFor(winner)`). Once every player is in and only bots
   drive, the race ends `BOTS_LEFT_WRAPUP` s later (results show those bots
-  as "--"; a lone winner used to wait up to 75 s). The offline match sim uses the same rules
+  as "--"; a lone winner used to wait up to 75 s). A finished player's
+  race clock reads "FINISHED #n · k still racing" (`Shared/RaceClockText`,
+  ReplicatedStorage `RacersLeft`). The offline match sim uses the same rules
   (second pass + grace cut); compare with `lune run tools/catchup_compare.luau`.
 - Race bots (`Modules/RaceBots`): live servers fill the grid to
   this round's head count (`Modules/BotFill`: drawn each FARMING between

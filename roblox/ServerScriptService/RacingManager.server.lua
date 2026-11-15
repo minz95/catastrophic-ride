@@ -1043,7 +1043,14 @@ end
 
 -- After any finish (player or bot): tell everyone, end the race when all
 -- racers are in, start the grace after the winner.
+-- How many racers (players and bots) are still driving, for the clock a
+-- finished player sees ("FINISHED #1 · 2 still racing", HUD).
+local function _publishLeft()
+	ReplicatedStorage:SetAttribute("RacersLeft", math.max(0, _totalRacers - #_finishOrder))
+end
+
 _afterFinish = function(elapsed)
+	_publishLeft()
 	RemoteEvents.RaceFinished:FireAllClients(_finishOrder)
 	if #_finishOrder >= math.max(1, _totalRacers) then
 		_active = false
@@ -1271,6 +1278,7 @@ Players.PlayerRemoving:Connect(function(player)
 		if f.userId == player.UserId then return end
 	end
 	_totalRacers = math.max(1, _totalRacers - 1)
+	_publishLeft()
 	if #_finishOrder >= _totalRacers then
 		_active = false
 		GameManager.raceComplete(_finishOrder)

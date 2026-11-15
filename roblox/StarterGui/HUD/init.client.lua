@@ -49,8 +49,11 @@ keyHint.Parent           = screenGui
 local PhaseClock = require(ReplicatedStorage.Shared.PhaseClock)
 local raceClock = Instance.new("TextLabel")
 raceClock.Name             = "RaceClock"
-raceClock.Size             = UDim2.new(0, 260, 0, 34)
-raceClock.Position         = UDim2.new(0.5, -130, 0, 64)
+-- half the screen wide, at most 460 px: on a phone it stays between the
+-- reset / taunt icons (top left) and the standings (right)
+raceClock.AnchorPoint      = Vector2.new(0.5, 0)
+raceClock.Size             = UDim2.new(0.5, 0, 0, 34)
+raceClock.Position         = UDim2.new(0.5, 0, 0, 64)
 raceClock.BackgroundTransparency = 1
 raceClock.TextColor3       = Color3.fromRGB(255, 220, 90)
 raceClock.TextStrokeTransparency = 0.3
@@ -58,12 +61,24 @@ raceClock.TextScaled       = true
 raceClock.Font             = Enum.Font.GothamBlack
 raceClock.Visible          = false
 raceClock.Parent           = screenGui
+local clockMax = Instance.new("UISizeConstraint")
+clockMax.MaxSize = Vector2.new(460, 34)
+clockMax.Parent  = raceClock
 
+local RaceClockText = require(ReplicatedStorage.Shared.RaceClockText)
+local _myPlace = nil   -- my finish place this race (RaceFinished), nil while driving
 local function _updateRaceClock()
 	local left = PhaseClock.remaining(nil)
 	raceClock.Visible = left ~= nil
-	if left then raceClock.Text = "🏁 TIME LEFT " .. PhaseClock.format(left) end
+	if left then
+		raceClock.Text = RaceClockText.text(_myPlace, ReplicatedStorage:GetAttribute("RacersLeft"), left)
+	end
 end
+RemoteEvents.RaceFinished.OnClientEvent:Connect(function(order)
+	for i, entry in ipairs(type(order) == "table" and order or {}) do
+		if entry.userId == LocalPlayer.UserId and not entry.dnf then _myPlace = i end
+	end
+end)
 
 -- ── Boost Bar ──────────────────────────────────────────────────────────────
 local boostBar = Instance.new("Frame")
@@ -472,6 +487,7 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	_lastPhase = phase
 	local Constants = require(ReplicatedStorage.Shared.Constants)
 	if phase == Constants.PHASES.RACING then
+		_myPlace = nil
 		_enableHUD(_cachedBiome)
 	elseif phase ~= Constants.PHASES.RACING then
 		_disableHUD()
