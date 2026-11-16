@@ -19,20 +19,28 @@ lune run tools/ugc_dump.luau                     # the game's hat parts → asse
 under the 4 000 triangle limit), `texture.png` and `preview.png`;
 `assets/ugc/report.json` lists triangles and size in studs.
 
-| Achievement | Hat | Accessory type |
-|---|---|---|
-| World Tour (win in all three biomes) | `hat_medal` World Tour Medal | Hat |
-| Royal Flush (win riding a Toilet) | `hat_plunger` Golden Plunger | Hat |
-| Funniest Ride (win the ride show vote) | `hat_jester` Jester Crown | Hat |
-| Crowd Favorite (win the vote 5 times) | `hat_trophy` Trophy Hat | Hat |
-| Master Thief (steal 20 items) | `hat_mask` Bandit Mask | Face |
-| Road Rookie (finish 10 races) | `ride_cart` Shopping Cart Ride-On | Waist |
-| Royal Flush | `ride_toilet` Toilet Ride-On (our own toilet, not the store model) | Waist |
-| Funniest Ride | `ride_duck` Rubber Duck Ride-On | Waist |
+Two kinds, for two wishes: **trophies** to show what you won (junk made
+precious: a crown of forks and bottle caps, a golden duck, a pot helmet)
+and **ride-ons** to play with (kids' ride-on toy cars worn round the waist).
 
-Ride-ons are kids' ride-on toy cars worn round the waist: the avatar stands
-in the cockpit and walks it around anywhere on Roblox. Their parts are data
-in `tools/ugc_rides.py` (origin at the waist, ~2.6 studs over the ground).
+| Achievement | Trophy (in game too) | Ride-on / extra | Accessory type |
+|---|---|---|---|
+| Road Rookie (finish 10 races) | – | `ride_cart` Shopping Cart Ride-On | Waist |
+| Road Warrior (finish 50 races) | `helmet_pot` Junk Racer Helmet (avatar item only) | – | Hat |
+| Speed Legend (win 10 races) | – | `ride_racer` Golden Racer Ride-On | Waist |
+| World Tour (win in all three biomes) | `hat_medal` World Tour Medal | – | Hat |
+| Royal Flush (win riding a Toilet) | `hat_plunger` Golden Plunger | `ride_toilet` Toilet Ride-On | Hat, Waist |
+| Funniest Ride (win the ride show vote) | `hat_junkcrown` Junk Crown | `ride_duck` Rubber Duck Ride-On | Hat, Waist |
+| Crowd Favorite (win the vote 5 times) | `hat_goldduck` Golden Duck | – | Hat |
+| Master Thief (steal 20 items) | `hat_mask` Bandit Mask | – | Face |
+| Brawler (knock out 10 rivals) | – | `belt_champion` Champion Belt | Waist |
+
+The hats are the game's own parts (`Shared/HatDesigns`); the helmet, the
+belt, the cart, toilet and racer ride-ons are modelled in
+`tools/ugc_custom.py`, the duck ride-on is parts in `tools/ugc_rides.py`.
+
+Ride-ons: the avatar stands in the cockpit and walks it around anywhere on
+Roblox (origin at the waist, ~2.6 studs over the ground).
 Only items we made can be uploaded: the Creator Store models in the game
 (Toilet, Rocking Horse, Piano, …) are other creators' work, which is why the
 toilet ride-on is a model of its own.

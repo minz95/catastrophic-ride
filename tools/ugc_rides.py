@@ -143,8 +143,7 @@ TOILET = (
     + wheels(1.45, (-1.25, 1.55), tyre=(30, 30, 35), hub=CHROME)
 )
 
+# The cart and the toilet are hand-modelled now (tools/ugc_custom.py).
 RIDES = [
-    {"id": "ride_cart", "name": "Shopping Cart Ride-On", "achievement": "races10", "parts": CART},
-    {"id": "ride_duck", "name": "Rubber Duck Ride-On", "achievement": "funniest", "parts": DUCK},
-    {"id": "ride_toilet", "name": "Toilet Ride-On", "achievement": "flush", "parts": TOILET},
+    {"id": "ride_duck", "name": "Rubber Duck Ride-On", "achievement": "funniest", "type": "Waist", "parts": DUCK},
 ]
