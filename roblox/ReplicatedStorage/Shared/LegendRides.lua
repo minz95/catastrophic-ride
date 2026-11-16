@@ -42,10 +42,18 @@ function LegendRides.canBuy(l, rec, userId, now, withCoins)
 end
 
 --- Puts listing `l` into the record (bought, or the winner's original).
-function LegendRides.give(rec, l, original)
+-- `serial`: which copy it is (1 … limit), shown as "#7/50" wherever it rides.
+function LegendRides.give(rec, l, original, serial)
 	rec.legend = rec.legend or {}
 	rec.legend[l.id] = { title = l.title, ownerName = l.ownerName, biome = l.biome, slots = l.slots,
-		look = l.look, original = original == true }
+		look = l.look, original = original == true, serial = serial, limit = l.limit }
+end
+
+--- The tag a ride carries: "⭐ ORIGINAL" or "#7/50".
+function LegendRides.tag(owned)
+	if owned.original then return "⭐ ORIGINAL" end
+	if owned.serial then return string.format("#%d/%d", owned.serial, owned.limit or Constants.LEGEND.LIMIT) end
+	return "LEGEND"
 end
 
 --- The listings still on sale, newest first, at most SHOWN.
@@ -95,7 +103,8 @@ function LegendRides.view(list, rec, userId, now)
 	end
 	local owned = {}
 	for id, r in pairs(rec.legend or {}) do
-		table.insert(owned, { id = id, title = r.title, ownerName = r.ownerName, original = r.original })
+		table.insert(owned, { id = id, title = r.title, ownerName = r.ownerName, original = r.original,
+			tag = LegendRides.tag(r) })
 	end
 	table.sort(owned, function(a, b) return a.id > b.id end)
 	return { listings = listings, owned = owned, on = rec.legendOn, coins = L.COINS }

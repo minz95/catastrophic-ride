@@ -85,7 +85,9 @@ function LegendShop.listWinner(e)
 end
 
 local function bought(player, rec, l, pay)
-	LegendRides.give(rec, l, false)
+	-- the copy's number: the sold count right after this sale was taken
+	local cur = LegendStore.find(l.id)
+	LegendRides.give(rec, l, false, cur and cur.sold or nil)
 	rec.legendOn = l.id   -- on at once: the point of buying it
 	payOwner(l)
 	Telemetry.record("legend_buy", { userId = player.UserId, id = l.id, pay = pay, result = "ok" })
@@ -213,6 +215,40 @@ function LegendShop.refresh(player)
 			w.Part0, w.Part1 = root, d
 			w.Parent = d
 		end
+	end
+	-- its tag where everyone sees it: "⭐ ORIGINAL" or "#7/50", and whose it was
+	local tagAt = seat or model:FindFirstChildWhichIsA("BasePart", true)
+	if tagAt then
+		local bb = Instance.new("BillboardGui")
+		bb.Name = "LegendTag"
+		bb.Size = UDim2.new(0, 150, 0, 34)
+		bb.StudsOffset = Vector3.new(0, -1.4, 0)
+		bb.MaxDistance = 70
+		bb.LightInfluence = 0
+		local list = Instance.new("UIListLayout")   -- the tag, then the name under it
+		list.SortOrder = Enum.SortOrder.LayoutOrder
+		list.Parent = bb
+		local t = Instance.new("TextLabel")
+		t.LayoutOrder = 1
+		t.Size = UDim2.fromScale(1, 0.6)
+		t.BackgroundTransparency = 1
+		t.Text = LegendRides.tag(ride)
+		t.TextColor3 = ride.original and Color3.fromRGB(255, 214, 60) or Color3.new(1, 1, 1)
+		t.TextStrokeTransparency = 0.3
+		t.TextScaled = true
+		t.Font = Enum.Font.GothamBlack
+		t.Parent = bb
+		local n = Instance.new("TextLabel")
+		n.Size = UDim2.fromScale(1, 0.4)
+		n.LayoutOrder = 2
+		n.BackgroundTransparency = 1
+		n.Text = tostring(ride.title)
+		n.TextColor3 = Color3.fromRGB(230, 230, 245)
+		n.TextStrokeTransparency = 0.4
+		n.TextScaled = true
+		n.Font = Enum.Font.GothamBold
+		n.Parent = bb
+		bb.Parent = tagAt   -- a BillboardGui in a part shows over that part
 	end
 	model.Name = LegendShop.WORN
 	model:SetAttribute("LegendId", id)

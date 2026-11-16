@@ -558,7 +558,7 @@ local function legendCard(l, order, owned)
 	label(card, l.title, UDim2.new(1, -12, 0, 18), UDim2.new(0, 6, 0, 88), Enum.Font.GothamBold, GOLD)
 	local line
 	if owned then
-		line = l.original and "Original: you won the vote" or ("Original by " .. tostring(l.ownerName))
+		line = l.original and "⭐ ORIGINAL: you won the vote" or (tostring(l.tag) .. "  ·  by " .. tostring(l.ownerName))
 	else
 		line = string.format("%d/%d sold  ·  %dd left", l.sold, l.limit, l.daysLeft)
 	end
