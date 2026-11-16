@@ -839,8 +839,8 @@
           "fit": "black",
           "zoom": 2.5,
           "head": "FARMING",
-          "title": "버블스 검거",
-          "say": "버블스 너 내 거 훔치지 마!!",
+          "title": "도둑 등장",
+          "say": "아 야 그거 내 거라고!!",
           "color": "#FFD23C"
         },
         {
@@ -871,8 +871,8 @@
           "fit": "black",
           "zoom": 2.5,
           "head": "FARMING",
-          "title": "덕키까지?",
-          "say": "덕키 너까지?? 변기는 안 돼!!"
+          "title": "또 털림?",
+          "say": "아 너까지?? 변기는 안 돼!!"
         },
         {
           "take": "record-bmat",
@@ -935,7 +935,7 @@
           "zoom": 2.5,
           "head": "RACE",
           "title": "RISE!",
-          "say": "풍선 누르면 붕 뜸ㅋㅋ"
+          "say": "아 미친ㅋㅋㅋ 떴어 떴어"
         },
         {
           "take": "record-bmat",
@@ -956,7 +956,7 @@
           "zoom": 2.5,
           "head": "RACE",
           "title": "NICE TRY?",
-          "say": "쟤 지금 나 놀린 거지?"
+          "say": "아 뭐야 왜 긁어ㅋㅋㅋ"
         },
         {
           "take": "record-bmat",
