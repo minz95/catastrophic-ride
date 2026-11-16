@@ -41,6 +41,7 @@ local SCRIPTS = {
 	"ServerScriptService.RideShowManager",
 	"ServerScriptService.ChallengeManager",
 	"ServerScriptService.AchievementManager",
+	"ServerScriptService.LegendManager",
 }
 
 local day = 20759

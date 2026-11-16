@@ -476,6 +476,21 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the lobby's left ("🏆 FUNNIEST RIDE", LobbyUI). Live servers share the
   latest winner through a DataStore (`HallOfFame_v1`, polled every POLL
   s); Studio and harness sessions keep it in memory.
+- Legend Rides (2026-11-17, "the vote winner's car in the shop, pricey;
+  others envy it, the winner got it free"): the ride show's winner
+  (RideShowManager → `Modules/LegendShop.listWinner`) puts their ride on
+  sale for `Constants.LEGEND` DAYS or LIMIT copies and owns the original.
+  Rules `Shared/LegendRides`; listings and sold counts are one DataStore key
+  shared by every server (`Modules/LegendStore`, UpdateAsync, so the last
+  copy is sold once; pictures built into `ReplicatedStorage.LegendRides`).
+  Bought with coins or the Robux product `Products.LEGEND` (the shop
+  remembers the picked listing; sold out by the time Roblox pays → its
+  price in coins). Every sale pays the owner ROYALTY coins (at once on the
+  same server, else `royalty_<userId>` in the store, claimed when they
+  are back: `LegendManager`). Owned rides (`rec.legend`, worn `rec.legendOn`)
+  ride round the avatar's waist outside races (a still copy at SCALE,
+  massless, seat disabled). Shop tab 🚗 Legend; notices `LegendUpdate`.
+  Spec `legend_rides`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

@@ -28,6 +28,8 @@ function Progression.newRecord()
 		challenges = nil, -- today's (Shared/DailyChallenge): { day, progress, done, bonus }
 		referred = {},   -- friends whose first visit paid an invite bonus: { ["<userId>"] = true }
 		achievements = nil, -- Shared/Achievements: { progress, done, seen }
+		legend = {},     -- Legend Rides owned (Shared/LegendRides): { [id] = { title, slots, … } }
+		legendOn = nil,  -- the Legend Ride worn, or nil
 	}
 end
 

@@ -33,6 +33,9 @@
 --   box_use          Modules/MysteryBoxes   { userId, power, result, bot }
 --   reward           ProgressionManager     { userId, place, xp, coins, daily, level, levelsGained, saved }
 --   achievement      AchievementManager     { userId, key, reward }
+--   legend_list      Modules/LegendShop     { userId, id, title }   (a vote winner's ride on sale)
+--   legend_buy       Modules/LegendShop     { userId, id, pay = "coins" | "robux", result }
+--   legend_royalty   Modules/LegendShop     { userId, id, coins, online }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
 --                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)
 

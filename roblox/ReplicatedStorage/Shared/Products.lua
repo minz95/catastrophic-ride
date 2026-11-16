@@ -12,6 +12,10 @@ Products.COIN_PACKS = {
 	{ key = "coins_large",  name = "Chest of Coins", coins = 2500, robux = 279, id = 0 },
 }
 
+-- One product buys a Legend Ride (Shared/LegendRides): the shop remembers
+-- which listing the player picked before it opens the prompt.
+Products.LEGEND = { key = "legend_ride", name = "Legend Ride", robux = 99, id = 0 }
+
 --- The pack sold under this developer product id, or nil.
 function Products.packFor(productId)
 	if not productId or productId == 0 then return nil end

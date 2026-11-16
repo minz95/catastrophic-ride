@@ -11,6 +11,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local Achievements = require(ReplicatedStorage.Shared.Achievements)
 local Cosmetics = require(ReplicatedStorage.Shared.Cosmetics)
+local LegendRides = require(ReplicatedStorage.Shared.LegendRides)
 local Products = require(ReplicatedStorage.Shared.Products)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Analytics = require(ServerScriptService.Modules.Analytics)
@@ -37,7 +38,9 @@ function Shop.state(rec)
 		table.insert(packs, { id = p.id, name = p.name, coins = p.coins, robux = p.robux })
 	end
 	return { coins = rec.coins, level = rec.level, owned = owned, equipped = rec.equipped or {}, packs = packs,
-		achievements = Achievements.view(rec) }
+		achievements = Achievements.view(rec),
+		legend = LegendRides.view(require(ServerScriptService.Modules.LegendStore).list(), rec, nil, os.time()),
+		legendRobux = Products.LEGEND.id ~= 0 and Products.LEGEND.robux or nil }
 end
 
 function Shop.handle(player, action, id)
@@ -46,6 +49,11 @@ function Shop.handle(player, action, id)
 	local result = "ok"
 	if (action == "buy" or action == "equip") and (type(id) ~= "string" or #id > 64) then
 		return { result = "denied: bad id" }
+	end
+	if type(action) == "string" and action:sub(1, 7) == "legend_" then
+		if _receiptBusy[player.UserId] then return { result = "denied: busy", state = Shop.state(rec) } end
+		local res = require(ServerScriptService.Modules.LegendShop).handle(player, rec, action, id)
+		return { result = res, state = Shop.state(rec) }
 	end
 	if action == "buy" then
 		-- a coin pack still being saved: its coins may yet be taken back
@@ -100,8 +108,9 @@ end
 function Shop._grant(info)
 	local player = Players:GetPlayerByUserId(info.PlayerId)
 	local pack = Products.packFor(info.ProductId)
+	local legend = Products.LEGEND.id ~= 0 and info.ProductId == Products.LEGEND.id
 	local rec = player and PlayerStore.get(player)
-	if not player or not pack or not rec then
+	if not player or not (pack or legend) or not rec then
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
 	rec.receipts = rec.receipts or {}
@@ -112,19 +121,25 @@ function Shop._grant(info)
 	if not saved and not RunService:IsStudio() then
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
-	rec.coins += pack.coins
+	local undoLegend
+	if legend then
+		undoLegend = require(ServerScriptService.Modules.LegendShop).grantRobux(player, rec)
+	else
+		rec.coins += pack.coins
+	end
 	table.insert(rec.receipts, info.PurchaseId)
 	while #rec.receipts > RECEIPTS_KEPT do table.remove(rec.receipts, 1) end
 	if saved and not PlayerStore.save(player) then
 		-- not stored: undo, Roblox calls again later
-		rec.coins -= pack.coins
+		if legend then undoLegend() else rec.coins -= pack.coins end
 		local at = table.find(rec.receipts, info.PurchaseId)
 		if at then table.remove(rec.receipts, at) end
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
 	coinsStat(player, rec)
-	Analytics.earn(player, "Coins", pack.coins, rec.coins, "IAP")
-	Telemetry.record("purchase", { userId = player.UserId, product = info.ProductId, coins = pack.coins, purchaseId = info.PurchaseId })
+	if pack then Analytics.earn(player, "Coins", pack.coins, rec.coins, "IAP") end
+	Telemetry.record("purchase", { userId = player.UserId, product = info.ProductId, coins = pack and pack.coins or 0,
+		legend = legend or nil, purchaseId = info.PurchaseId })
 	RemoteEvents.ShopUpdated:FireClient(player, Shop.state(rec))
 	return Enum.ProductPurchaseDecision.PurchaseGranted
 end

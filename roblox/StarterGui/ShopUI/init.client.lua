@@ -158,9 +158,9 @@ hint.TextXAlignment = Enum.TextXAlignment.Left
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
 
 -- tabs
-local TABS = { "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "coins", "awards" }
+local TABS = { "legend", "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "awards", "coins" }
 local TAB_TITLES = { ride = "⭐ Rides", paint = "Paint", trail = "Trail", hat = "🎩 Hats", taunt = "😜 Taunts",
-	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins", awards = "🏆 Awards" }
+	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins", awards = "🏆 Awards", legend = "🚗 Legend" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
 	paint  = "Looks only: your car drives the same. Shows on the car you craft.",
@@ -172,14 +172,15 @@ local TAB_HINTS = {
 	hat    = "On your avatar all game. Looks only.",
 	trick  = "Racing: press T (or BOMB) once a race: the car ahead hops and slows.",
 	awards = "Not for sale: reach a goal and its hat, trail or ride pose is yours.",
+	legend = "Rides that won the vote, few copies for a few days. Their winners got them free. Ride one round the farm.",
 }
 local tabBtns = {}
 for i, key in ipairs(TABS) do
 	local b = Instance.new("TextButton")
 	b.Name             = "Tab_" .. key
-	-- two rows of five
-	b.Size             = UDim2.new(0, 92, 0, 30)
-	b.Position         = UDim2.new(0, 14 + ((i - 1) % 5) * 99, 0, 98 + ((i - 1) // 5) * 34)
+	-- two rows of six
+	b.Size             = UDim2.new(0, 77, 0, 30)
+	b.Position         = UDim2.new(0, 14 + ((i - 1) % 6) * 83, 0, 98 + ((i - 1) // 6) * 34)
 	b.BackgroundColor3 = CARD
 	b.Text             = TAB_TITLES[key]
 	b.TextColor3       = Color3.new(1, 1, 1)
@@ -231,10 +232,8 @@ local function previewModel(it)
 	return folder and folder:FindFirstChild(it.id)
 end
 
-local function preview(card, it)
-	if it.category ~= "ride" and it.category ~= "paint" and it.category ~= "trail" and it.category ~= "hat" then return false end
-	local src = previewModel(it)
-	if not src then return false end
+-- A turning picture of model `src` at the top of `card`.
+local function spinView(card, src)
 	local vp = Instance.new("ViewportFrame")
 	vp.Name             = "Preview"
 	vp.Size             = UDim2.new(1, -12, 0, 80)
@@ -263,6 +262,14 @@ local function preview(card, it)
 		cam = cam, center = cf.Position, dist = radius / math.tan(math.rad(cam.FieldOfView * 0.5)) * 0.95,
 		height = radius * 0.45, hue = hue, phase = #_spinning * 0.7,
 	})
+	return vp
+end
+
+local function preview(card, it)
+	if it.category ~= "ride" and it.category ~= "paint" and it.category ~= "trail" and it.category ~= "hat" then return false end
+	local src = previewModel(it)
+	if not src then return false end
+	local vp = spinView(card, src)
 	if it.category == "ride" and not it.body then return true end
 	if it.category == "ride" then
 		label(vp, "⭐", UDim2.new(0, 22, 0, 22), UDim2.new(0, 4, 0, 2), Enum.Font.GothamBlack, GOLD)
@@ -382,11 +389,16 @@ local function act(action, id)
 		msgLbl.Text = ""
 		-- a buy or an equip clicks; opening the shop ("state") is silent
 		-- (playtest 2026-10-28: a loud sound every time the shop opened)
-		if action == "buy" then SoundFx.play("CRAFT_COMPLETE") elseif action == "equip" then SoundFx.play("SLOT_ASSIGN") end
+		if action == "buy" or action == "legend_buy" then SoundFx.play("CRAFT_COMPLETE")
+		elseif action == "equip" or action == "legend_ride" then SoundFx.play("SLOT_ASSIGN") end
 	elseif r == "denied: coins" then
 		msgLbl.Text = "Not enough coins: win races and come back daily for more"
 	elseif r:sub(1, 14) == "denied: level " then
 		msgLbl.Text = "Reach level " .. r:sub(15) .. " to buy this"
+	elseif r == "denied: sold out" then
+		msgLbl.Text = "Sold out: every copy is taken"
+	elseif r == "denied: ended" then
+		msgLbl.Text = "This one is no longer on sale"
 	elseif r == "denied: loading" then
 		msgLbl.Text = "Loading your coins..."
 	else
@@ -510,6 +522,72 @@ local function awardCard(a, order)
 	end
 end
 
+-- Legend Rides (server: Modules/LegendShop): on sale, then the ones you own.
+local function legendButton(card, text, colour, y, onClick)
+	local btn = Instance.new("TextButton")
+	btn.Size             = UDim2.new(0.5, -10, 0, 26)
+	btn.Position         = UDim2.new(y, y == 0 and 8 or 2, 1, -32)
+	btn.Text             = text
+	btn.TextScaled       = true
+	btn.Font             = Enum.Font.GothamBold
+	btn.TextColor3       = Color3.new(1, 1, 1)
+	btn.BackgroundColor3 = colour
+	btn.Parent           = card
+	corner(btn, 6)
+	if onClick then btn.Activated:Connect(onClick) else btn.AutoButtonColor = false end
+	return btn
+end
+
+local function legendCard(l, order, owned)
+	local card = Instance.new("Frame")
+	card.Name             = "Legend_" .. l.id
+	card.BackgroundColor3 = CARD
+	card.LayoutOrder      = order
+	card.Parent           = grid
+	corner(card)
+	local folder = ReplicatedStorage:FindFirstChild("LegendRides")
+	local src = folder and folder:FindFirstChild(l.id)
+	if src then
+		spinView(card, src)
+	else
+		local s = label(card, "🚗", UDim2.new(1, -12, 0, 80), UDim2.new(0, 6, 0, 6), Enum.Font.GothamBold)
+		s.BackgroundColor3 = Color3.fromRGB(70, 60, 110)
+		s.BackgroundTransparency = 0
+		corner(s, 6)
+	end
+	label(card, l.title, UDim2.new(1, -12, 0, 18), UDim2.new(0, 6, 0, 88), Enum.Font.GothamBold, GOLD)
+	local line
+	if owned then
+		line = l.original and "Original: you won the vote" or ("Original by " .. tostring(l.ownerName))
+	else
+		line = string.format("%d/%d sold  ·  %dd left", l.sold, l.limit, l.daysLeft)
+	end
+	label(card, line, UDim2.new(1, -12, 0, 14), UDim2.new(0, 6, 0, 106), Enum.Font.Gotham, Color3.fromRGB(200, 200, 220))
+	local lg = _state and _state.legend or {}
+	if owned then
+		if lg.on == l.id then
+			local b = legendButton(card, "Riding", Color3.fromRGB(60, 140, 80), 0, function() act("legend_ride", "") end)
+			b.Size = UDim2.new(1, -16, 0, 26)
+		else
+			local b = legendButton(card, "Ride it", Color3.fromRGB(70, 110, 200), 0, function() act("legend_ride", l.id) end)
+			b.Size = UDim2.new(1, -16, 0, 26)
+		end
+	elseif l.owned then
+		local b = legendButton(card, "Yours", Color3.fromRGB(60, 140, 80), 0)
+		b.Size = UDim2.new(1, -16, 0, 26)
+	else
+		local enough = ((_state and _state.coins) or 0) >= (lg.coins or 0)
+		local coinBtn = legendButton(card, "Buy " .. tostring(lg.coins), enough and Color3.fromRGB(220, 150, 30) or Color3.fromRGB(120, 95, 60),
+			0, function() act("legend_buy", l.id) end)
+		if _state and _state.legendRobux then
+			legendButton(card, "R$ " .. tostring(_state.legendRobux), Color3.fromRGB(40, 160, 90), 0.5,
+				function() act("legend_robux", l.id) end)
+		else
+			coinBtn.Size = UDim2.new(1, -16, 0, 26)
+		end
+	end
+end
+
 local function packCard(p, order)
 	local card = Instance.new("Frame")
 	card.Name             = "Pack" .. p.id
@@ -549,6 +627,21 @@ _redraw = function()
 		for i, p in ipairs(packs) do packCard(p, i) end
 		if #packs == 0 then
 			local l = label(grid, "Coin packs are coming soon. Earn coins by racing!", UDim2.new(1, 0, 0, 30), UDim2.new(), Enum.Font.GothamBold)
+			l.LayoutOrder = 1
+		end
+	elseif _tab == "legend" then
+		local lg = (_state and _state.legend) or { listings = {}, owned = {} }
+		local n = 0
+		for _, l in ipairs(lg.listings or {}) do
+			n += 1
+			legendCard(l, n, false)
+		end
+		for _, l in ipairs(lg.owned or {}) do
+			n += 1
+			legendCard(l, n, true)
+		end
+		if n == 0 then
+			local l = label(grid, "Win the ride show vote and your ride goes on sale here.", UDim2.new(1, 0, 0, 30), UDim2.new(), Enum.Font.GothamBold)
 			l.LayoutOrder = 1
 		end
 	elseif _tab == "awards" then
@@ -600,6 +693,20 @@ end
 RemoteEvents.ShopUpdated.OnClientEvent:Connect(function(state)
 	_state = state
 	if panel.Visible then _redraw() end
+end)
+
+-- Legend Rides news (Modules/LegendShop).
+RemoteEvents.LegendUpdate.OnClientEvent:Connect(function(m)
+	if type(m) ~= "table" then return end
+	if m.kind == "listed" then
+		SoundFx.play("CRAFT_COMPLETE")
+		Notice.show("🚗 Your ride is a Legend!", string.format("%s is on sale in the shop: %d copies, %d days. Yours is the original, free.",
+			tostring(m.title), m.limit or 0, m.days or 0), 10)
+	elseif m.kind == "royalty" then
+		Notice.show("🚗 Someone bought your ride!", string.format("%s: %d sold, +%d coins", tostring(m.title), m.sales or 1, m.coins or 0), 8)
+	elseif m.kind == "refund" then
+		Notice.show("🚗 Sold out", string.format("%s sold out first: you got %d coins instead", tostring(m.title), m.coins or 0), 8)
+	end
 end)
 
 -- An achievement done (AchievementManager): its reward is already on.

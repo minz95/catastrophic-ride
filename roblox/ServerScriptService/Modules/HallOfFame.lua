@@ -87,10 +87,10 @@ local function seatWinner(model, e)
 	return rider
 end
 
---- Builds entry `e` into ReplicatedStorage.HallOfFame (a Model with
--- attributes Name, UserId, Votes, Biome, At). Returns it, or nil.
-function HallOfFame.build(e)
-	if not e then return nil end
+--- A still copy of entry `e`'s ride (anchored, no scripts, movers or
+-- effects), built by the race's VehicleBuilder with its looks. nil on failure.
+-- Legend Rides (Modules/LegendStore) use it too: a listing has the same fields.
+function HallOfFame.buildStill(e)
 	local ok, model = pcall(function()
 		local VehicleBuilder = require(ServerScriptService.Modules.VehicleBuilder)
 		local ItemConfig = require(ServerScriptService.Modules.ItemConfig)
@@ -99,7 +99,7 @@ function HallOfFame.build(e)
 			sl.SPECIAL and ItemConfig[sl.SPECIAL], e.biome)
 		stats = VehicleStats.applyMobility(stats, sl.MOBILITY and ItemConfig[sl.MOBILITY], e.biome)
 		local equipped = {}
-		for cat, id in pairs(e.look) do equipped[cat] = id end
+		for cat, id in pairs(e.look or {}) do equipped[cat] = id end
 		return VehicleBuilder.build(stats, e.biome, CFrame.new(), sl, Cosmetics.look(equipped))
 	end)
 	if not ok or not model then
@@ -113,6 +113,15 @@ function HallOfFame.build(e)
 		end
 		if strip then d:Destroy() elseif d:IsA("BasePart") then d.Anchored = true end
 	end
+	return model
+end
+
+--- Builds entry `e` into ReplicatedStorage.HallOfFame (a Model with
+-- attributes Name, UserId, Votes, Biome, At). Returns it, or nil.
+function HallOfFame.build(e)
+	if not e then return nil end
+	local model = HallOfFame.buildStill(e)
+	if not model then return nil end
 	pcall(seatWinner, model, e)
 	model.Name = "Winner"
 	model:SetAttribute("Name", e.name)
