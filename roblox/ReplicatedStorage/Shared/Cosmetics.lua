@@ -8,9 +8,12 @@
 
 local Cosmetics = {}
 
-Cosmetics.CATEGORIES = { "ride", "paint", "trail", "hat", "move", "gadget", "trick", "taunt" }
+Cosmetics.CATEGORIES = { "ride", "paint", "trail", "hat", "move", "gadget", "trick", "taunt", "pose" }
 Cosmetics.TITLES = { ride = "Special Rides", paint = "Paint", trail = "Trail", hat = "Hats", move = "Moves",
-	gadget = "Gadgets", trick = "Race Tricks", taunt = "Taunts" }
+	gadget = "Gadgets", trick = "Race Tricks", taunt = "Taunts", pose = "Ride Poses" }
+
+-- Items with `achievement = key` are not sold: Shared/Achievements gives
+-- them (no price; the shop shows the goal instead).
 
 local C3 = Color3.fromRGB
 
@@ -51,6 +54,8 @@ Cosmetics.ITEMS = {
 		{ id = "trail_bubbles", name = "Bubbles",    price = 300, colors = { C3(120, 210, 255), C3(220, 245, 255) } },
 		{ id = "trail_fire",    name = "Fire",       price = 450, colors = { C3(255, 220, 60), C3(255, 70, 20) }, light = 0.6, minLevel = 4 },
 		{ id = "trail_rainbow", name = "Rainbow",    price = 900, rainbow = true, light = 0.4, minLevel = 7 },
+		{ id = "trail_gold",    name = "Legend Gold", achievement = "wins10",
+			colors = { C3(255, 240, 150), C3(255, 170, 20) }, light = 0.9 },
 	},
 	-- Moves (FARMING): how your punch looks. Same reach, cooldown and hits
 	-- (FarmingRules): a show, not an advantage.
@@ -95,6 +100,19 @@ Cosmetics.ITEMS = {
 		{ id = "hat_top",       name = "Top Hat",       price = 600, hat = "top", minLevel = 3 },
 		{ id = "hat_crown",     name = "Royal Crown",   price = 900, hat = "crown", minLevel = 5 },
 		{ id = "hat_halo",      name = "Halo",          price = 1200, hat = "halo", minLevel = 6 },
+		{ id = "hat_medal",     name = "World Tour Medal", achievement = "tour",      hat = "medal" },
+		{ id = "hat_plunger",   name = "Golden Plunger",   achievement = "flush",     hat = "plunger" },
+		{ id = "hat_jester",    name = "Jester Crown",     achievement = "funniest",  hat = "jester" },
+		{ id = "hat_trophy",    name = "Trophy Hat",       achievement = "funniest5", hat = "trophy" },
+		{ id = "hat_mask",      name = "Bandit Mask",      achievement = "thief",     hat = "mask" },
+	},
+	-- Ride poses: how your avatar sits on the ride (race, lobby, ride show).
+	-- Only from achievements. Joint angles: Shared/RidePoses.
+	pose = {
+		{ id = "pose_none",    name = "Hands on Wheel", price = 0 },
+		{ id = "pose_handsup", name = "Hands Up!",  achievement = "races10", pose = "handsup" },
+		{ id = "pose_lean",    name = "Cool Lean",  achievement = "races50", pose = "lean" },
+		{ id = "pose_flex",    name = "Flex",       achievement = "brawler", pose = "flex" },
 	},
 }
 
@@ -129,6 +147,7 @@ function Cosmetics.canBuy(rec, id)
 	local it = _byId[id]
 	if not it then return "denied: unknown item" end
 	if Cosmetics.owns(rec, id) then return "denied: owned" end
+	if it.achievement then return "denied: award" end
 	if (rec.level or 1) < (it.minLevel or 1) then return "denied: level " .. it.minLevel end
 	if (rec.coins or 0) < it.price then return "denied: coins" end
 	return "ok"
@@ -161,7 +180,7 @@ function Cosmetics.suggest(rec)
 	local best, cheapest
 	for _, cat in ipairs(Cosmetics.CATEGORIES) do
 		for _, it in ipairs(Cosmetics.ITEMS[cat]) do
-			if not Cosmetics.owns(probe, it.id) and probe.level >= (it.minLevel or 1) then
+			if not it.achievement and not Cosmetics.owns(probe, it.id) and probe.level >= (it.minLevel or 1) then
 				if probe.coins >= it.price then
 					if not best or it.price > best.price then best = it end
 				elseif not cheapest or it.price < cheapest.price then

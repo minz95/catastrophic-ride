@@ -32,6 +32,7 @@
 --   box_pick         Modules/MysteryBoxes   { userId, power, ahead, bot }
 --   box_use          Modules/MysteryBoxes   { userId, power, result, bot }
 --   reward           ProgressionManager     { userId, place, xp, coins, daily, level, levelsGained, saved }
+--   achievement      AchievementManager     { userId, key, reward }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
 --                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)
 

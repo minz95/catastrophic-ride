@@ -121,12 +121,16 @@ end
 
 --- `player`'s equipped hat on their current character. Also tells the
 -- player's own client how their punch looks (attribute MoveStyle, shop
--- "move"), so FarmFx can swing it the moment F is pressed.
+-- "move"), so FarmFx can swing it the moment F is pressed, and every
+-- client how they sit on their ride (attribute RidePose, shop "pose":
+-- RidePoseFx).
 function ShopHat.refresh(player)
 	local PlayerStore = require(ServerScriptService.Modules.PlayerStore)
 	local rec = PlayerStore.get(player)
 	local mv = rec and Cosmetics.equipped(rec.equipped, "move")
 	pcall(function() player:SetAttribute("MoveStyle", mv and mv.style or nil) end)
+	local pose = rec and Cosmetics.equipped(rec.equipped, "pose")
+	pcall(function() player:SetAttribute("RidePose", pose and pose.pose or nil) end)
 	local item = rec and Cosmetics.equipped(rec.equipped, "hat")
 	return ShopHat.wear(player.Character, item and item.id)
 end

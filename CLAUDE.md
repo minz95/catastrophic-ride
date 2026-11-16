@@ -469,12 +469,37 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   match through the show; `craftShow` gives a loadout bot its loadout's items
   and it builds them on the crafting screen item by item (attributes
   FilmLoadout, CraftPick / CraftPlace). `sim.py run record-bmat`.
+  Hall of fame: the vote's winner goes to `Modules/HallOfFame` (the ride
+  built still with the winner's own avatar from
+  `GetHumanoidDescriptionFromUserId`, their shop hat or crafted HEAD item
+  and ride pose) → `ReplicatedStorage.HallOfFame.Winner`, shown turning on
+  the lobby's left ("🏆 FUNNIEST RIDE", LobbyUI). Live servers share the
+  latest winner through a DataStore (`HallOfFame_v1`, polled every POLL
+  s); Studio and harness sessions keep it in memory.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events
   (`DailyChallenge.eventsOf`), pays and tells the player
   (`ChallengeUpdate`); the results screen shows them (`GetChallenges`).
   A new challenge: a `POOL` line, its event in `eventsOf`.
+- Achievements (2026-11-16, "something to show off, a reason to come
+  back"): `Shared/Achievements` (lifelong goals, progress in the record's
+  `achievements`), `AchievementManager` counts Telemetry events
+  (`Achievements.eventsOf`; a win's BODY from SessionManager for Royal
+  Flush). Each unlocks a look nobody can buy (Cosmetics items with
+  `achievement = key`: hats, a trail, ride poses) and puts it on, awards
+  its badge (`Badges` "ach_<key>", pictures from `tools/store_art.py`),
+  tells the player (`AchievementUpdate`, a corner notice) and, for each
+  avatar item the owner uploaded (`ugc = { { item, id } }`, id 0 = off:
+  achievement hats and ride-on toy cars, models from
+  `tools/ugc_models.py` in `assets/ugc/`, steps in `docs/ugc.md`), opens
+  Roblox's get-item prompt so it is worn outside the game too
+  (`AchievementAction` "ugc" again from the shop's 🏆 Awards tab).
+  Ride poses (`Shared/RidePoses`, player attribute `RidePose` from
+  ShopHat.refresh) are held on seated riders by
+  `StarterPlayerScripts/RidePoseFx` (Transform on Stepped, after the
+  Animator). A new achievement: a LIST line, its reward item, a badge
+  picture (spec `achievements`).
 - Friend invites: `Shared/Invite` (INVITE FRIENDS on the lobby list, the
   results screen and while farming (`StarterGui/InviteUI`, next to SHOP /
   ITEMS; on a phone left of the emote icon), Roblox's invite prompt, hidden where invites are not

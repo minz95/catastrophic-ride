@@ -288,7 +288,8 @@ R.describe("shop hats (Modules/ShopHat)", function()
 					table.insert(bad, it.id .. ": no design")
 				else
 					for _, p in ipairs(d) do
-						if p.pos.Y < -0.2 or p.pos.Y > 1.6 or math.abs(p.pos.X) > 1.2 or math.abs(p.pos.Z) > 1.2 then
+						-- (down to -0.8: a band round the forehead or eyes, worn on the head's surface)
+						if p.pos.Y < -0.8 or p.pos.Y > 1.6 or math.abs(p.pos.X) > 1.2 or math.abs(p.pos.Z) > 1.2 then
 							table.insert(bad, it.id .. ": part far off the head")
 						end
 					end

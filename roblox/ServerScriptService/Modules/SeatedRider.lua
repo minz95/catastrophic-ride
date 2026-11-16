@@ -48,7 +48,9 @@ end
 -- not change how its car handles or set off Touched handlers);
 -- opts.fallback: a minimal rig when an R15 avatar cannot be made;
 -- opts.still: a picture, not a driver (the lobby line-up, outside Workspace):
--- no Sit, the root anchored on the seat, the limbs posed by their joints.
+-- no Sit, the root anchored on the seat, the limbs posed by their joints;
+-- opts.description: a HumanoidDescription to build (a player's own look);
+-- opts.pose: a Shared/RidePoses name for the arms (still copies).
 -- Returns the character and the seat, or nil.
 function SeatedRider.seat(model, folder, shirt, opts)
 	opts = opts or {}
@@ -56,6 +58,9 @@ function SeatedRider.seat(model, folder, shirt, opts)
 	if not seat then return nil end
 	shirt = shirt or Color3.fromRGB(60, 140, 230)
 	local ok, char = pcall(function()
+		if opts.description then
+			return Players:CreateHumanoidModelFromDescription(opts.description, Enum.HumanoidRigType.R15)
+		end
 		local desc = Instance.new("HumanoidDescription")
 		desc.HeadColor = Color3.fromRGB(255, 220, 180)
 		desc.LeftArmColor, desc.RightArmColor = desc.HeadColor, desc.HeadColor
@@ -104,8 +109,15 @@ function SeatedRider.seat(model, folder, shirt, opts)
 	SeatedRider.bend(char, "RightHip", CFrame.Angles(q, 0, 0))
 	SeatedRider.bend(char, "LeftKnee", CFrame.Angles(-q, 0, 0))
 	SeatedRider.bend(char, "RightKnee", CFrame.Angles(-q, 0, 0))
-	SeatedRider.bend(char, "LeftShoulder", CFrame.Angles(q * 0.6, 0, 0))
-	SeatedRider.bend(char, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0))
+	local RidePoses = require(game:GetService("ReplicatedStorage").Shared.RidePoses)
+	local pose = RidePoses.get(opts.pose)
+	if not (pose and pose.left) then SeatedRider.bend(char, "LeftShoulder", CFrame.Angles(q * 0.6, 0, 0)) end
+	if not (pose and pose.right) then SeatedRider.bend(char, "RightShoulder", CFrame.Angles(q * 0.6, 0, 0)) end
+	for which, deg in pairs(pose or {}) do
+		for _, name in ipairs(RidePoses.JOINTS[which]) do
+			if SeatedRider.bend(char, name, CFrame.Angles(math.rad(deg[1]), math.rad(deg[2]), math.rad(deg[3]))) then break end
+		end
+	end
 	return char, seat
 end
 

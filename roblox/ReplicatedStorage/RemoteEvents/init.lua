@@ -51,6 +51,8 @@
 --   StarterItems        → server→client (list: { itemId, item, bonus }[], friendBonus: bool) -- FARMING: your starter junk (Shared/StarterItems)
 --   ChallengeUpdate     → server→client (view: table, paid: { key, text, coins }[]) -- a daily challenge done (Shared/DailyChallenge)
 --   GetChallenges       → () → DailyChallenge.view or nil   (RemoteFunction; ResultsUI)
+--   AchievementUpdate   → server→client ({ key, name, text, reward, category, ugc }) -- an achievement done (AchievementManager)
+--   AchievementAction   → ("state" | "ugc", key?) → { result, list? }  (RemoteFunction; ShopUI Awards tab)
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --
 -- RemoteFunctions (server-authoritative):
@@ -104,6 +106,7 @@ local EVENTS = {
 	"StarterItems",
 	"RideShow",
 	"VoteRide",
+	"AchievementUpdate",
 }
 
 local FUNCTIONS = {
@@ -121,6 +124,7 @@ local FUNCTIONS = {
 	"UseGadget",
 	"UseRaceTrick",
 	"GetChallenges",
+	"AchievementAction",
 }
 
 local RemoteEvents = {}

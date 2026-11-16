@@ -21,6 +21,16 @@ Badges.LIST = {
 		description = "Reached level 5." },
 }
 
+-- One per achievement (Shared/Achievements, its `badge` id), key "ach_<key>":
+-- AchievementManager awards it when the achievement is done.
+do
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local Achievements = require(ReplicatedStorage.Shared.Achievements)
+	for _, a in ipairs(Achievements.LIST) do
+		table.insert(Badges.LIST, { key = "ach_" .. a.key, name = a.name, id = a.badge, description = a.text .. "." })
+	end
+end
+
 Badges.LEVEL = 5   -- the "level5" badge
 
 Badges.enabled = false
