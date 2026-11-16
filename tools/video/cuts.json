@@ -805,6 +805,160 @@
           "color": "#FFD23C"
         }
       ]
+    },
+    "kr-discord": {
+      "_why": "Korean reel 2026-11-16, 'Discord voice chat with friends': one first-person voice talks to friends we never hear, over one real round (record-bmat: new rides only, the ride show with votes). Build --clean + .srt for CapCut TTS.",
+      "format": "9x16",
+      "lang": "ko",
+      "segments": [
+        {
+          "take": "record-bmat",
+          "t": 178,
+          "dur": 2.4,
+          "fit": "black",
+          "zoom": 1.35,
+          "head": "디코 켜고 친구들이랑",
+          "title": "쓰레기로 차 만들기ㅋㅋ",
+          "say": "아니 너네 차 꼴이 왜 그래ㅋㅋㅋ",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-bmat",
+          "t": 2,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "FARMING",
+          "title": "아무거나 주워",
+          "say": "야 빨리 아무거나 주워 아무거나"
+        },
+        {
+          "take": "record-bmat",
+          "t": 8,
+          "dur": 1.6,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "FARMING",
+          "title": "퍽",
+          "say": "아 왜 때려!! 내가 먼저 봤거든?",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-bmat",
+          "t": 10,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "FARMING",
+          "title": "털림",
+          "say": "방금 내 거 훔쳐간 사람 누구야"
+        },
+        {
+          "take": "record-bmat",
+          "t": 22,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "FARMING",
+          "title": "범인 검거",
+          "say": "터보톰 너지? 다 보여 이름 떠",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-bmat",
+          "t": 44,
+          "dur": 2.2,
+          "fit": "black",
+          "zoom": 2.6,
+          "head": "CRAFTING",
+          "title": "흔들목마 + 잔디깎이",
+          "say": "봐봐 흔들목마에 잔디깎이 달았어ㅋㅋ",
+          "cx": 0.63
+        },
+        {
+          "take": "record-bmat",
+          "t": 54,
+          "dur": 1.6,
+          "fit": "black",
+          "zoom": 2.2,
+          "head": "RACE",
+          "title": "간다",
+          "say": "간다 간다 간다"
+        },
+        {
+          "take": "record-bmat",
+          "t": 58,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "RACE",
+          "title": "NICE TRY?",
+          "say": "쟤 지금 나 놀린 거지? 나이스 트라이?",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-bmat",
+          "t": 92,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "RACE",
+          "title": "흔들목마 드리프트",
+          "say": "흔들목마 드리프트 미쳤다ㅋㅋㅋ"
+        },
+        {
+          "take": "record-bmat",
+          "t": 168,
+          "dur": 1.6,
+          "fit": "black",
+          "zoom": 2.5,
+          "head": "FINISH",
+          "title": "3등",
+          "say": "3등… 의자랑 냉장고한테 졌어"
+        },
+        {
+          "take": "record-bmat",
+          "t": 176,
+          "dur": 2.0,
+          "fit": "black",
+          "zoom": 1.35,
+          "head": "VOTE",
+          "title": "제일 웃긴 차 투표",
+          "say": "자 투표해 제일 웃긴 차"
+        },
+        {
+          "take": "record-bmat",
+          "t": 180.5,
+          "dur": 1.8,
+          "fit": "black",
+          "zoom": 2.4,
+          "head": "VOTE",
+          "title": "세탁기 + 수박",
+          "say": "난 세탁기. 수박 달린 거 뭔데ㅋㅋ",
+          "cx": 0.62
+        },
+        {
+          "take": "record-bmat",
+          "t": 184.3,
+          "dur": 2.4,
+          "fit": "black",
+          "zoom": 2.4,
+          "head": "RESULT",
+          "title": "흔들목마 1등",
+          "say": "내가 1등이라고? 누가 나 뽑았어ㅋㅋㅋ",
+          "color": "#FFD23C",
+          "cx": 0.85
+        },
+        {
+          "card": true,
+          "bg": "#1C1830",
+          "dur": 2.4,
+          "head": "ROBLOX · 무료",
+          "title": "Catastrophic\nRide",
+          "color": "#FFD23C",
+          "say": "너네도 친구 데려와서 해봐"
+        }
+      ]
     }
   }
 }

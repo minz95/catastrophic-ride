@@ -319,8 +319,10 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
         # the footage in the middle of a black frame (titles above, words below)
         fg_w = int(W * zoom) // 2 * 2
         shift = seg.get("shift", 0)
-        vf = ("scale=%d:-2:flags=lanczos,crop=min(iw\\,%d):min(ih\\,%d),pad=%d:%d:(ow-iw)/2:(oh-ih)/2+%d:black"
-              % (fg_w, W, H, W, H, int(H * shift)))
+        # cx: which part of a view wider than the frame stays (0 left .. 1 right)
+        cx = seg.get("cx", 0.5)
+        vf = ("scale=%d:-2:flags=lanczos,crop=min(iw\\,%d):min(ih\\,%d):(iw-min(iw\\,%d))*%.3f:(ih-min(ih\\,%d))/2,"
+              "pad=%d:%d:(ow-iw)/2:(oh-ih)/2+%d:black" % (fg_w, W, H, W, cx, H, W, H, int(H * shift)))
     elif seg.get("fit", "blur") == "blur":
         # the whole view (all of the game's UI), a blurred copy fills the rest
         fg_w = int(W * zoom) // 2 * 2
