@@ -323,9 +323,14 @@ end
 -- enough to close the outside of a turn for a wall whose outer face is `reach`
 -- studs out, and every stretch whose line lies inside the lane (the inside of
 -- a turn, or anywhere the track passes over itself) is dropped.
+-- `face` (optional): the lateral of the wall's side toward the lane. Then
+-- that side, not the wall line, must stay out of the lane, and each cut end
+-- is found exactly: a box cut where its middle line left the lane had its
+-- lane-side corner up to 1.5 studs into the next stretch at every bend, and
+-- cars hugging the wall caught on it (playtest 2026-11-16).
 -- Returns runs { {t0, t1}, ... } in studs from the segment's start node along
 -- its direction (t0 may be < 0 and t1 > len on the extensions).
-function TrackGeometry:boundaryRuns(i, lat, offset, reach, step)
+function TrackGeometry:boundaryRuns(i, lat, offset, reach, step, face)
 	step = step or 1
 	reach = reach or offset
 	local seg = self.segments[i]
@@ -341,21 +346,36 @@ function TrackGeometry:boundaryRuns(i, lat, offset, reach, step)
 	local t0 = -ext(self.segments[i - 1], seg)
 	local t1 = seg.len + ext(seg, self.segments[i + 1])
 	local rx, rz = -seg.dz * lat, seg.dx * lat
-	local runs, cur = {}, nil
-	local n = math.max(1, math.ceil((t1 - t0) / step))
-	for k = 0, n do
-		local t = t0 + (t1 - t0) * k / n
-		local px = seg.ax + seg.dx * t + rx * offset
-		local pz = seg.az + seg.dz * t + rz * offset
+	local side = face or offset
+	local need = face and half - 0.01 or half
+	local function clear(t)
+		local px = seg.ax + seg.dx * t + rx * side
+		local pz = seg.az + seg.dz * t + rz * side
 		-- only this layer of the road counts (a deck above or below is not "inside")
 		local y = self.hasHeights and self:segHeight(i, t) or nil
-		if self:project(px, pz, nil, nil, y).dist >= half then
+		return self:project(px, pz, nil, nil, y).dist >= need
+	end
+	-- the last clear t between a clear `good` and a blocked `bad`
+	local function edge(good, bad)
+		for _ = 1, 12 do
+			local mid = (good + bad) / 2
+			if clear(mid) then good = mid else bad = mid end
+		end
+		return good
+	end
+	local runs, cur = {}, nil
+	local n = math.max(1, math.ceil((t1 - t0) / step))
+	local dt = (t1 - t0) / n
+	for k = 0, n do
+		local t = t0 + dt * k
+		if clear(t) then
 			if cur then
 				cur[2] = t
 			else
-				cur = { t, t }
+				cur = { (face and k > 0) and edge(t, t - dt) or t, t }
 			end
 		elseif cur then
+			if face then cur[2] = edge(cur[2], t) end
 			table.insert(runs, cur)
 			cur = nil
 		end

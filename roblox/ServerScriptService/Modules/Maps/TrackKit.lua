@@ -197,7 +197,8 @@ end
 -- boundaryRuns minus doorways. Extensions past the nodes have no doorways.
 function TrackKit:wallStretches(i, side, offset, reach)
 	local segLen = self:segLen(i)
-	local runs = self.geo:boundaryRuns(i, -side, offset, reach)
+	-- the wall's lane side (half) must stay out of the lane, not just its middle
+	local runs = self.geo:boundaryRuns(i, -side, offset, reach, nil, self.half)
 	local solid = { { -math.huge, 0 } }
 	local arcStart = self.geo.segments[i].s0
 	for _, piece in ipairs(doorwayPieces(arcStart, segLen, self.track.wallGapInterval, self.track.wallGapHalfWidth)) do
