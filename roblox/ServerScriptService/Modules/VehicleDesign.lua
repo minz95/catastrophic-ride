@@ -60,7 +60,9 @@ VehicleDesign.MAX_LENGTH = 10
 -- which way the item faces instead of the best-fit turn (the model's -Z is
 -- the front), `tip` lays it on its side first (a roll rides like a log),
 -- `sink` lowers the seat by that share of the item's height (sit in the
--- tub, on the cushions), `stretch` overrides RIDE_STRETCH.
+-- tub, on the cushions), `stretch` overrides RIDE_STRETCH, `seatAt` puts the
+-- seat that share of the item's real length back from its front
+-- (fitRide, once the item is measured).
 VehicleDesign.RIDE_LOOK = {
 	["Red Sofa"]      = { yaw = 0, sink = 0.42, stretch = 2.2 },   -- backrest at the back
 	["Bathtub"]       = { sink = 0.4 },
@@ -71,6 +73,11 @@ VehicleDesign.RIDE_LOOK = {
 	-- the quarter turn that lays it along the vehicle put its head at the
 	-- back (Studio gallery 2026-10-29): the other quarter turn
 	["Rubber Duck"]   = { yaw = -90 },
+	-- taller than long: the best-fit turn laid it on its back and the rider
+	-- sat on its side (2026-11-16, "does it look like sitting on a toilet?")
+	-- and the seat over the bowl, the tank behind the rider
+	-- (moving the item back instead left the front axle off it)
+	["Toilet"]        = { yaw = 0, seatAt = 0.33 },
 }
 
 -- Playtest 2026-10-28: still too small next to the rider (and a plane's
@@ -581,7 +588,7 @@ function VehicleDesign.layout(biome, stats, slots)
 		local look = VehicleDesign.RIDE_LOOK[slots.BODY] or {}
 		d.mounts.BODY = { { cf = CF(0, ride.bottom + ride.box.Y / 2, ride.centreZ), box = ride.box, align = "bottom",
 			stretch = look.stretch or VehicleDesign.RIDE_STRETCH, orient = look.yaw == nil, yaw = look.yaw, tip = look.tip,
-			sink = look.sink } }
+			sink = look.sink, seatAt = look.seatAt } }
 		for slot, list in pairs(ride.mounts) do d.mounts[slot] = list end
 	end
 	-- HEAD: a hat over the seat (VehicleBuilder puts it on the real seat
@@ -663,7 +670,35 @@ VehicleDesign.showcase = showcase
 -- space), measured once VehicleBuilder has placed it.
 function VehicleDesign.fitRide(d, lo, hi)
 	if d.riding and d.ride.fit then d.ride.fit(d, lo, hi) end
+	-- RIDE_LOOK seatAt: the seat that share of the item's real length back
+	-- from its front (a toilet's bowl), and the hat over it
+	local body = d.riding and d.mounts.BODY and d.mounts.BODY[1]
+	if body and body.seatAt then
+		d.ride.seatZ = lo.Z + body.seatAt * (hi.Z - lo.Z)
+		for _, m in ipairs(d.mounts.HEAD or {}) do
+			local p = m.cf.Position
+			m.cf = CF(p.X, p.Y, d.ride.seatZ) * m.cf.Rotation
+		end
+	end
 	showcase(d)
+	-- ENGINE / SPECIAL on the ridden item stay within its measured length
+	-- (their boxes are shares of the vehicle's length: on a short item, a
+	-- toilet, the rocket hung in the air past its end; Studio 2026-11-16);
+	-- VehicleBuilder sets them on its real surface there (onItem)
+	if d.riding then
+		for _, slot in ipairs({ "ENGINE", "SPECIAL" }) do
+			for _, m in ipairs(d.mounts[slot] or {}) do
+				if m.onRide then
+					local p = m.cf.Position
+					local half = math.min(m.box.Z / 2, (hi.Z - lo.Z) / 4)
+					local z = math.clamp(p.Z, lo.Z + half, hi.Z - half)
+					local x = math.clamp(p.X, lo.X, hi.X)
+					m.cf = CF(x, p.Y, z) * m.cf.Rotation
+					m.onItem = true
+				end
+			end
+		end
+	end
 end
 
 -- How far a ridden item may be stretched beyond its own proportions along

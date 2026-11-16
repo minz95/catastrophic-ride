@@ -203,6 +203,31 @@ GameManager.onPhaseChanged(function(phase, biome)
 		_active       = true
 		_totalPlayers = #Players:GetPlayers()
 		for _, p in ipairs(Players:GetPlayers()) do CraftPreview.show(p, {}, biome) end
+		-- Studio filming (harness craftShow, nil live): a loadout bot holds its
+		-- loadout's items and is told the slots (attribute FilmLoadout), so
+		-- its crafting screen builds that ride on camera, item by item
+		local harness = GameManager.getHarness()
+		local loadouts = harness and harness.craftShow and harness.loadouts
+		if type(loadouts) == "table" and #loadouts > 0 then
+			local round = loadouts[((GameManager.getRound() - 1) % #loadouts) + 1]
+			for _, p in ipairs(Players:GetPlayers()) do
+				local lo = round and p:GetAttribute("BotIndex") and round[p:GetAttribute("BotIndex")]
+				local data = SessionManager.getData(p)
+				if type(lo) == "table" and data then
+					local inv = {}
+					for _, slot in ipairs({ "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }) do
+						if lo[slot] then table.insert(inv, lo[slot]) end
+					end
+					for _, item in ipairs(data.inventory) do
+						if #inv >= Constants.INVENTORY_SIZE then break end
+						if not table.find(inv, item) then table.insert(inv, item) end
+					end
+					data.inventory = inv
+					RemoteEvents.InventoryUpdated:FireClient(p, inv)
+					p:SetAttribute("FilmLoadout", game:GetService("HttpService"):JSONEncode(lo))
+				end
+			end
+		end
 
 	elseif phase == Constants.PHASES.RACING then
 		-- Auto-submit anyone who didn't manually submit

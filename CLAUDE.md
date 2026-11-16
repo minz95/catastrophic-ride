@@ -76,7 +76,15 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   nose; the old +90° rode them backwards); the spec checks Rocket and
   Soda Bottle.
   `VehicleDesign.RIDE_LOOK` fixes items that ride wrong by default (facing,
-  lying down, seat sunk into a tub or onto cushions). Some ENGINE / SPECIAL
+  lying down, seat sunk into a tub or onto cushions, `seatAt`: the seat a
+  share of the item's real length back from its front). The Toilet stands
+  (`yaw = 0`; the best-fit turn laid it on its back) with the seat over the
+  bowl (`seatAt`), the tank behind; the gallery report's `fit.profileZ` /
+  `profileX` (item top front → back, left → right) tells which end is tall.
+  On a ridden car, ENGINE / SPECIAL stay within the item's measured length
+  (`fitRide`) and sit on its real surface there (the rocket hung in the air
+  past a short toilet). An ability's floating word can be the item's own
+  (AbilityConfig `fxLabel`, `EffectFx.play` extra `label`: FLUSH!). Some ENGINE / SPECIAL
   items are rideable too (ItemConfig `ride` = weight and grip as a body;
   `CraftingRules.fits`). See every rideable item as car, boat and plane with
   an avatar seated: `python3 tools/studio/sim.py run gallery` (side and rear
@@ -451,7 +459,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   showroom. Filming (Studio records one client, a lone player gets no
   show): harness `rideShowBots` = n puts n race bots' rides in and they vote,
   `botLoadouts[k]` fixes race bot k's build; the bot client votes through
-  RideShowUI (LocalPlayer attribute `RideVoteFor`). `sim.py run record-bmat`.
+  RideShowUI (LocalPlayer attribute `RideVoteFor`); `resultsHold` keeps the
+  match through the show; `craftShow` gives a loadout bot its loadout's items
+  and it builds them on the crafting screen item by item (attributes
+  FilmLoadout, CraftPick / CraftPlace). `sim.py run record-bmat`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

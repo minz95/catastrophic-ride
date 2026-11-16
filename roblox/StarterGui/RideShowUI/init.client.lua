@@ -227,7 +227,8 @@ local function closed(data)
 		for _, e in ipairs(_entries) do if e.userId == id then table.insert(names, e.name) end end
 	end
 	_endsAt = nil
-	title.Text = #names > 0 and ("🏆 " .. table.concat(names, " & ") .. " wins!") or "No votes this time"
+	title.Text = #names > 0 and ("🏆 " .. table.concat(names, " & ") .. (#names > 1 and " win!" or " wins!"))
+		or "No votes this time"
 	sub.Text = #names > 0 and string.format("+%d coins  ·  📸 for a picture", data.coins or _coins) or ""
 	task.delay(Constants.RIDE_SHOW.WINNER_SHOWN, function() screen.Enabled = false end)
 end

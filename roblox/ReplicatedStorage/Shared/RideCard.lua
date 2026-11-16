@@ -63,6 +63,9 @@ function RideCard.view(parent, model, char)
 		if okR and rider then pcall(SeatedCopy.wearHat, copy, rider) end
 	end
 	local vcf, vsize = copy:GetBoundingBox()
+	-- framed on the ride and its rider, not the plinth (the plinth framed
+	-- the rides small in the ride show's cards, Studio take 2026-11-16)
+	local cf, size = world:GetBoundingBox()
 	local plinth = Instance.new("Part")
 	plinth.Shape    = Enum.PartType.Cylinder
 	plinth.Anchored = true
@@ -72,13 +75,12 @@ function RideCard.view(parent, model, char)
 	plinth.Color    = Color3.fromRGB(60, 62, 80)
 	plinth.Material = Enum.Material.SmoothPlastic
 	plinth.Parent   = world
-	local cf, size = world:GetBoundingBox()
 	local cam = Instance.new("Camera")
 	cam.FieldOfView = 40
 	cam.Parent = view
 	view.CurrentCamera = cam
 	local centre = cf.Position
-	local radius = math.max(size.Magnitude / 2, 3)
+	local radius = math.max(size.Magnitude / 2 * 0.8, 2.5)
 	local function frame()
 		local aspect = math.max(view.AbsoluteSize.X, 1) / math.max(view.AbsoluteSize.Y, 1)
 		local half = math.atan(math.tan(math.rad(cam.FieldOfView / 2)) * math.min(aspect, 1))

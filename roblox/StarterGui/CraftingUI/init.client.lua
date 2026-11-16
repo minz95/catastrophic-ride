@@ -545,6 +545,27 @@ for _, slotName in ipairs(SLOT_ORDER) do
 	end)
 end
 
+-- A harness bot client builds on camera like a player (BotDriver, filming):
+-- CraftPick = the item it picked (the info line and bars show the change),
+-- CraftPlace = the slot it then clicks.
+LocalPlayer:GetAttributeChangedSignal("CraftPick"):Connect(function()
+	local item = LocalPlayer:GetAttribute("CraftPick")
+	if _submitted or type(item) ~= "string" or not table.find(_currentInventory, item) then return end
+	_selectedItem = item
+	_showInfo(item)
+	_refreshDisplay()
+end)
+LocalPlayer:GetAttributeChangedSignal("CraftPlace"):Connect(function()
+	local slot = LocalPlayer:GetAttribute("CraftPlace")
+	if _submitted or not _selectedItem or type(slot) ~= "string" or not slotBtns[slot] then return end
+	if not CraftingRules.fits(slot, ItemConfig[_selectedItem]) then return end
+	local prevSlot = _slotOf(_selectedItem)
+	if prevSlot then _assignments[prevSlot] = nil end
+	_assignments[slot] = _selectedItem
+	_selectedItem = nil
+	_changed()
+end)
+
 -- ─── Auto-assign button ───────────────────────────────────────────────────────
 
 autoBtn.MouseButton1Click:Connect(function()
@@ -873,7 +894,10 @@ _refreshRating = function()
 	local item = _infoItem or _selectedItem
 	local slot = item and RideRating.slotFor(item)
 	local after = nil
-	if slot and _assignments[slot] ~= item then
+	-- not for an item already placed: on a touch screen (no MouseLeave) the
+	-- one just placed stayed "under the pointer", and a hat placed in Head
+	-- read as an Engine swap ("S → A with Propeller Hat", 2026-11-16)
+	if slot and not _slotOf(item) then
 		local ok2, r = pcall(RideRating.rate, RideRating.with(_assignments, item, slot), biome)
 		if ok2 then after = r end
 	end

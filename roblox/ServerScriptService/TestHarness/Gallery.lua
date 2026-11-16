@@ -113,7 +113,7 @@ local function fitOf(model, seat)
 	for _, h in ipairs(model:GetChildren()) do
 		if h:IsA("Model") and h:GetAttribute("Slot") == "BODY" then holder = h end
 	end
-	local gap
+	local gap, profileZ, profileX
 	if holder then
 		local parts = {}
 		for _, p in ipairs(holder:GetDescendants()) do
@@ -132,10 +132,31 @@ local function fitOf(model, seat)
 		table.sort(hits)
 		-- the highest surface under the rider holds them up
 		gap = hits[#hits] > -math.huge and r(seatBottom - hits[#hits]) or nil
+		-- the item's top along the vehicle (front -Z → back) and across it
+		-- (left → right), highest hit of a line of rays each: which end is
+		-- tall (a toilet's tank belongs behind the rider)
+		local function top(x, z)
+			local from = chassis.CFrame:PointToWorldSpace(Vector3.new(x, hi.Y + 4, z))
+			local hit = workspace:Raycast(from, Vector3.new(0, -(hi.Y - lo.Y) - 8, 0), params)
+			return hit and (chassis.CFrame:PointToObjectSpace(hit.Position).Y - lo.Y) or 0
+		end
+		profileZ, profileX = {}, {}
+		for k = 0, 6 do
+			local z = lo.Z + (hi.Z - lo.Z) * (k + 0.5) / 7
+			local x = lo.X + (hi.X - lo.X) * (k + 0.5) / 7
+			local bz, bx = 0, 0
+			for j = 0, 4 do
+				bz = math.max(bz, top(lo.X + (hi.X - lo.X) * (j + 0.5) / 5, z))
+				bx = math.max(bx, top(x, lo.Z + (hi.Z - lo.Z) * (j + 0.5) / 5))
+			end
+			table.insert(profileZ, r(bz))
+			table.insert(profileX, r(bx))
+		end
 		for _, p in ipairs(parts) do p.CanQuery = false end
 	end
 	return { sink = r(hi.Y - seatTop), over = r(math.max(overX, overZ)), itemH = r(hi.Y - lo.Y),
-		itemL = r(hi.Z - lo.Z), itemW = r(hi.X - lo.X), gap = gap }
+		itemL = r(hi.Z - lo.Z), itemW = r(hi.X - lo.X), gap = gap, profileZ = profileZ, profileX = profileX,
+		seatZ = r(s.Z), loZ = r(lo.Z), hiZ = r(hi.Z) }
 end
 
 -- Wheels, paddle wheels and propellers that do not touch what carries them

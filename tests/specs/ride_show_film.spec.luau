@@ -77,6 +77,47 @@ R.describe("filming the ride show (harness only)", function()
 		R.expect(#sent("open")).toBe(0)
 	end)
 
+	R.it("craftShow: a loadout bot holds its loadout's items at CRAFTING and is told the slots", function()
+		local lo = { BODY = "Toilet", ENGINE = "Rocket", SPECIAL = "Balloon Bunch", HEAD = "Propeller Hat" }
+		local srv = Server.boot({
+			players = 1,
+			scripts = { "ServerScriptService.MapBuilders.ForestMapBuilder", "ServerScriptService.GameBootstrap",
+				"ServerScriptService.CraftingManager" },
+			harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 0, craftShow = true,
+				loadouts = { { lo } }, durations = { FARMING = 0.2, CRAFTING = 30 } },
+		})
+		local p = srv.players[1]
+		p:SetAttribute("BotIndex", 1)
+		srv.SessionManager.getData(p).inventory = { "Log", "Fan" }
+		srv.advance(1)
+		R.expect(srv.GameManager.getPhase()).toBe("CRAFTING")
+		local inv = srv.SessionManager.getData(p).inventory
+		for _, item in ipairs({ "Toilet", "Rocket", "Balloon Bunch", "Propeller Hat", "Log", "Fan" }) do
+			R.expect(table.find(inv, item) ~= nil).toBe(true, item .. " not in the bag")
+		end
+		R.expect(type(p:GetAttribute("FilmLoadout"))).toBe("string")
+		-- without craftShow (ability experiments, live) the bag is left alone
+		local srv2 = Server.boot({
+			players = 1,
+			scripts = { "ServerScriptService.MapBuilders.ForestMapBuilder", "ServerScriptService.GameBootstrap",
+				"ServerScriptService.CraftingManager" },
+			harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 0,
+				loadouts = { { lo } }, durations = { FARMING = 0.2, CRAFTING = 30 } },
+		})
+		srv2.players[1]:SetAttribute("BotIndex", 1)
+		srv2.SessionManager.getData(srv2.players[1]).inventory = { "Log" }
+		srv2.advance(1)
+		R.expect(#srv2.SessionManager.getData(srv2.players[1]).inventory).toBe(1)
+		R.expect(srv2.players[1]:GetAttribute("FilmLoadout")).toBe(nil)
+		-- the bot client picks and places through the crafting screen
+		local driver = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/BotDriver.client.lua")
+		local ui = fs.readFile("roblox/StarterGui/CraftingUI/init.client.lua")
+		R.expect(driver:find('SetAttribute("CraftPick"', 1, true) ~= nil).toBe(true)
+		R.expect(driver:find('SetAttribute("CraftPlace"', 1, true) ~= nil).toBe(true)
+		R.expect(ui:find('GetAttributeChangedSignal("CraftPick")', 1, true) ~= nil).toBe(true)
+		R.expect(ui:find('GetAttributeChangedSignal("CraftPlace")', 1, true) ~= nil).toBe(true)
+	end)
+
 	R.it("the bot client votes through the screen, so a recording shows the button pressed", function()
 		local driver = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/BotDriver.client.lua")
 		local ui = fs.readFile("roblox/StarterGui/RideShowUI/init.client.lua")

@@ -482,7 +482,30 @@ end
 
 -- ─── CRAFTING ─────────────────────────────────────────────────────────────────
 
+-- Filming (server attribute FilmLoadout, harness craftShow): pick each item
+-- and place it through the crafting screen, a slot every few seconds, so the
+-- recording shows the ride being built and each item's change on the bars.
+local function craftOnCamera(json)
+	local ok, lo = pcall(function() return game:GetService("HttpService"):JSONDecode(json) end)
+	if not ok or type(lo) ~= "table" then return false end
+	task.wait(2)
+	for _, slot in ipairs({ "BODY", "ENGINE", "SPECIAL", "MOBILITY", "HEAD", "TAIL" }) do
+		if lo[slot] then
+			LocalPlayer:SetAttribute("CraftPick", lo[slot])
+			task.wait(1.8)
+			LocalPlayer:SetAttribute("CraftPlace", slot)
+			task.wait(2.2)
+			LocalPlayer:SetAttribute("CraftPick", nil)
+			LocalPlayer:SetAttribute("CraftPlace", nil)
+		end
+	end
+	report("craft", { result = "built on camera", slots = lo })
+	return true
+end
+
 local function craft()
+	local film = LocalPlayer:GetAttribute("FilmLoadout")
+	if type(film) == "string" and craftOnCamera(film) then return end
 	task.wait(1 + math.random())
 	local slots = BotBrain.chooseSlots(farmProfile, inventory, biome or "FOREST")
 	if farmProfile.crafter == "none" then return end
