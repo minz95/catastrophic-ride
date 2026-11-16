@@ -102,8 +102,8 @@ Cosmetics.ITEMS = {
 		{ id = "hat_halo",      name = "Halo",          price = 1200, hat = "halo", minLevel = 6 },
 		{ id = "hat_medal",     name = "World Tour Medal", achievement = "tour",      hat = "medal" },
 		{ id = "hat_plunger",   name = "Golden Plunger",   achievement = "flush",     hat = "plunger" },
-		{ id = "hat_jester",    name = "Jester Crown",     achievement = "funniest",  hat = "jester" },
-		{ id = "hat_trophy",    name = "Trophy Hat",       achievement = "funniest5", hat = "trophy" },
+		{ id = "hat_junkcrown", name = "Junk Crown",       achievement = "funniest",  hat = "junkcrown" },
+		{ id = "hat_goldduck",  name = "Golden Duck",      achievement = "funniest5", hat = "goldduck" },
 		{ id = "hat_mask",      name = "Bandit Mask",      achievement = "thief",     hat = "mask" },
 	},
 	-- Ride poses: how your avatar sits on the ride (race, lobby, ride show).

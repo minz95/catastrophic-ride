@@ -198,8 +198,8 @@ BADGES = [   # key, Twemoji code, word, colours (centre, edge)
     ("ach_wins10", "26a1", "LEGEND", ((255, 235, 120), (210, 130, 10))),
     ("ach_tour", "1f30d", "TOUR", ((140, 235, 200), (20, 120, 110))),
     ("ach_flush", "1f6bd", "FLUSH!", ((180, 225, 255), (60, 110, 200))),
-    ("ach_funniest", "1f0cf", "FUNNY!", ((255, 170, 230), (150, 40, 170))),
-    ("ach_funniest5", "1f389", "FAVORITE", ((255, 215, 130), (200, 70, 120))),
+    ("ach_funniest", "1f451", "FUNNY!", ((255, 170, 230), (150, 40, 170))),
+    ("ach_funniest5", "1f986", "FAVORITE", ((255, 215, 130), (200, 70, 120))),
     ("ach_thief", "1f977", "THIEF", ((170, 170, 190), (40, 40, 60))),
     ("ach_brawler", "1f94a", "BRAWLER", ((255, 150, 140), (170, 30, 40))),
 ]

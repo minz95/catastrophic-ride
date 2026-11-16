@@ -3,11 +3,11 @@
 Runs inside Blender (headless):
 
     lune run tools/ugc_dump.luau
-    /Applications/Blender.app/Contents/MacOS/Blender -b --python tools/ugc_models.py
+    /Applications/Blender.app/Contents/MacOS/Blender -b --python tools/ugc_models.py [-- id id …]
 
-Reads assets/ugc/designs.json (the game's own hat parts, Shared/HatDesigns)
-and the ride-on toy cars of tools/ugc_rides.py (waist accessories), and
-writes, per item, into assets/ugc/<id>/:
+Reads assets/ugc/designs.json (the game's own hat parts, Shared/HatDesigns),
+the part-built ride-on of tools/ugc_rides.py and the hand-modelled items of
+tools/ugc_custom.py, and writes, per item, into assets/ugc/<id>/:
   <id>.fbx      one mesh, one material, UVs on a colour palette (UGC rules:
                 a single mesh and texture; Roblox's FBX importer ignores
                 Blender's Base Color, so the colours live in the texture)
@@ -56,7 +56,7 @@ def part_verts(bm, part):
     before = set(bm.faces)
     shape = part["shape"]
     if shape == "ball":
-        bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=0.5)
+        bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=8, radius=0.5)
     elif shape == "cyl":
         bmesh.ops.create_cone(bm, cap_ends=True, segments=20, radius1=0.5, radius2=0.5, depth=1.0)
     else:
@@ -76,34 +76,66 @@ def part_verts(bm, part):
     return faces
 
 
-def build_hat(hat, kind="hat"):
-    clear_scene()
-    palette = []                     # (r, g, b) per cell
-    bm = bmesh.new()
-    uv = bm.loops.layers.uv.new("UVMap")
-    for part in hat["parts"]:
-        colour = finish_colour(part["color"], part["finish"])
+def parts_objects(parts):
+    """The game's part lists (HatDesigns fields, Roblox axes) as objects, one per part."""
+    objs = []
+    for part in parts:
+        bm = bmesh.new()
+        part_verts(bm, part)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        mesh = bpy.data.meshes.new("part")
+        bm.to_mesh(mesh)
+        bm.free()
+        o = bpy.data.objects.new("part", mesh)
+        bpy.context.collection.objects.link(o)
+        o["rgb"] = list(finish_colour(part["color"], part["finish"]))
+        objs.append(o)
+    return objs
+
+
+def join_with_palette(name, objs):
+    """Applies modifiers, points every face of an object at its colour's
+    palette cell, joins all into one mesh. Returns (object, palette)."""
+    palette = []
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in objs:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]
+    bpy.ops.object.convert(target="MESH")     # bakes bevel / solidify
+    for o in objs:
+        colour = tuple(int(c) for c in o["rgb"])
         if colour not in palette:
             palette.append(colour)
         k = palette.index(colour)
         cu = ((k % GRID) + 0.5) / GRID
         cv = 1 - ((k // GRID) + 0.5) / GRID
-        for f in part_verts(bm, part):
-            for loop in f.loops:
-                loop[uv].uv = (cu, cv)
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-    mesh = bpy.data.meshes.new(hat["id"])
-    bm.to_mesh(mesh)
-    bm.free()
-    obj = bpy.data.objects.new(hat["id"], mesh)
-    bpy.context.collection.objects.link(obj)
-    for poly in mesh.polygons:
-        poly.use_smooth = False
+        me = o.data
+        if not me.uv_layers:
+            me.uv_layers.new(name="UVMap")
+        for d in me.uv_layers.active.data:
+            d.uv = (cu, cv)
+        for poly in me.polygons:
+            poly.use_smooth = False
+    bpy.ops.object.join()
+    obj = bpy.context.active_object
+    obj.name = name
+    obj.data.name = name
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+    return obj, palette
+
+
+def build_item(item, kind, builder=None):
+    clear_scene()
+    objs = parts_objects(item["parts"]) if builder is None else None
+    if builder is not None:
+        builder()
+        objs = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    obj, palette = join_with_palette(item["id"], objs)
+    mesh = obj.data
 
     # the palette texture
     size = CELL * GRID
-    img = bpy.data.images.new(hat["id"] + "_texture", size, size, alpha=False)
+    img = bpy.data.images.new(item["id"] + "_texture", size, size, alpha=False)
     px = [0.0] * (size * size * 4)
     for k, (r, g, b) in enumerate(palette):
         cx, cy = (k % GRID) * CELL, (GRID - 1 - (k // GRID)) * CELL
@@ -112,35 +144,35 @@ def build_hat(hat, kind="hat"):
                 i = (y * size + x) * 4
                 px[i:i + 4] = [r / 255, g / 255, b / 255, 1.0]
     img.pixels = px
-    folder = os.path.join(OUT, hat["id"])
+    folder = os.path.join(OUT, item["id"])
     os.makedirs(folder, exist_ok=True)
-    tex_path = os.path.join(folder, "texture.png")
-    img.filepath_raw = tex_path
+    img.filepath_raw = os.path.join(folder, "texture.png")
     img.file_format = "PNG"
     img.save()
     img.pack()
 
-    mat = bpy.data.materials.new(hat["id"])
+    mat = bpy.data.materials.new(item["id"])
     mat.use_nodes = True
     bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
     node = mat.node_tree.nodes.new("ShaderNodeTexImage")
     node.image = img
     node.interpolation = "Closest"
     mat.node_tree.links.new(node.outputs["Color"], bsdf.inputs["Base Color"])
-    obj.data.materials.append(mat)
+    mesh.materials.clear()
+    mesh.materials.append(mat)
 
     tris = sum(len(p.vertices) - 2 for p in mesh.polygons)
     bpy.ops.object.select_all(action="DESELECT")
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
-    fbx = os.path.join(folder, hat["id"] + ".fbx")
+    fbx = os.path.join(folder, item["id"] + ".fbx")
     bpy.ops.export_scene.fbx(filepath=fbx, use_selection=True, object_types={"MESH"},
                              bake_space_transform=True, path_mode="COPY", embed_textures=True,
                              global_scale=1.0, apply_unit_scale=True)
     preview(obj, os.path.join(folder, "preview.png"), kind)
     dims = obj.dimensions
-    return {"id": hat["id"], "name": hat["name"], "kind": kind, "achievement": hat.get("achievement"),
-            "tris": tris, "colours": len(palette),
+    return {"id": item["id"], "name": item["name"], "kind": kind, "type": item.get("type"),
+            "achievement": item.get("achievement"), "tris": tris, "colours": len(palette),
             "size_studs": [round(dims.x, 2), round(dims.z, 2), round(dims.y, 2)]}
 
 
@@ -195,16 +227,29 @@ def main():
     with open(SRC) as f:
         designs = json.load(f)
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ugc_custom
     import ugc_rides
-    items = [(h, "hat") for h in designs["hats"]] + [(r, "ride") for r in ugc_rides.RIDES]
+    only = set(a for a in sys.argv[sys.argv.index("--") + 1:]) if "--" in sys.argv else None
+    items = [(h, "hat", None) for h in designs["hats"]]
+    items += [(r, "ride", None) for r in ugc_rides.RIDES]
+    items += [(c, c["kind"], ugc_custom.BUILDERS[c["id"]]) for c in ugc_custom.ITEMS]
     report = []
-    for hat, kind in items:
-        r = build_hat(hat, kind)
+    old = {}
+    path = os.path.join(OUT, "report.json")
+    if only and os.path.exists(path):
+        with open(path) as f:
+            old = {r["id"]: r for r in json.load(f)}
+    for item, kind, builder in items:
+        if only and item["id"] not in only:
+            if item["id"] in old:
+                report.append(old[item["id"]])
+            continue
+        r = build_item(item, kind, builder)
         if r["tris"] > MAX_TRIS:
             raise SystemExit("%s: %d triangles (limit %d)" % (r["id"], r["tris"], MAX_TRIS))
         report.append(r)
         print("UGC", json.dumps(r))
-    with open(os.path.join(OUT, "report.json"), "w") as f:
+    with open(path, "w") as f:
         json.dump(report, f, indent=2)
 
 

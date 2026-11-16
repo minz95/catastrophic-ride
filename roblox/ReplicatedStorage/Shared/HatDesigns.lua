@@ -109,26 +109,56 @@ HatDesigns.plunger = {
 	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0, 1.52, 0), color = C(255, 200, 40), material = "Foil" },
 }
 
--- Funniest Ride: a jester's hat, three floppy points with bells
-HatDesigns.jester = {
-	{ shape = "cyl", size = V(1.24, 0.3, 1.24), pos = V(0, 0.08, 0), color = C(255, 210, 40) },
-	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(-0.5, 0.55, 0), rot = V(0, 0, 40), color = C(150, 50, 200) },
-	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(0, 0.7, 0), color = C(230, 50, 60) },
-	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(0.5, 0.55, 0), rot = V(0, 0, -40), color = C(40, 180, 120) },
-	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(-0.86, 0.9, 0), color = C(255, 220, 60), material = "Foil" },
-	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0, 1.24, 0), color = C(255, 220, 60), material = "Foil" },
-	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0.86, 0.9, 0), color = C(255, 220, 60), material = "Foil" },
-}
+-- Funniest Ride: the Junk Crown (2026-11-17, "a crown made of junk, so
+-- everyone sees where it is from"): a gold band, forks for points,
+-- bottle caps for jewels and a rubber duck sitting on top.
+do
+	local GOLD, STEEL = C(255, 200, 40), C(200, 205, 215)
+	local parts = {}
+	local R = 0.6
+	local function at(deg, r, y)
+		local a = math.rad(deg)
+		return V(math.sin(a) * r, y, math.cos(a) * r)
+	end
+	-- the band
+	for i = 0, 11 do
+		local d = i * 30
+		table.insert(parts, { shape = "block", size = V(0.34, 0.32, 0.1), pos = at(d, R, 0.12), rot = V(0, d, 0),
+			color = GOLD, material = "Foil" })
+	end
+	-- forks as the crown's points, tines up
+	for _, d in ipairs({ 180, 108, 252, 36, 324 }) do
+		table.insert(parts, { shape = "block", size = V(0.08, 0.42, 0.05), pos = at(d, R, 0.48), rot = V(0, d, 0), color = STEEL, material = "Metal" })
+		table.insert(parts, { shape = "block", size = V(0.24, 0.08, 0.05), pos = at(d, R, 0.7), rot = V(0, d, 0), color = STEEL, material = "Metal" })
+		local side = math.rad(d + 90)
+		for k = -1, 1 do
+			local off = V(math.sin(side) * k * 0.09, 0, math.cos(side) * k * 0.09)
+			table.insert(parts, { shape = "block", size = V(0.04, 0.24, 0.04), pos = at(d, R, 0.86) + off, rot = V(0, d, 0), color = STEEL, material = "Metal" })
+		end
+	end
+	-- bottle caps on the band: red in front, blue and green beside it
+	for _, cap in ipairs({ { 180, C(220, 30, 45) }, { 144, C(40, 110, 230) }, { 216, C(40, 180, 90) } }) do
+		table.insert(parts, { shape = "cyl", size = V(0.2, 0.07, 0.2), pos = at(cap[1], R + 0.07, 0.12),
+			rot = V(90, 0, -cap[1]), color = cap[2] })
+	end
+	-- the rubber duck on top
+	local DUCK, BEAK = C(255, 214, 30), C(255, 130, 20)
+	table.insert(parts, { shape = "ball", size = V(0.5, 0.5, 0.5), pos = V(0, 0.4, 0.06), color = DUCK })
+	table.insert(parts, { shape = "ball", size = V(0.32, 0.32, 0.32), pos = V(0, 0.72, -0.12), color = DUCK })
+	table.insert(parts, { shape = "block", size = V(0.16, 0.06, 0.14), pos = V(0, 0.7, -0.33), color = BEAK })
+	table.insert(parts, { shape = "block", size = V(0.16, 0.12, 0.1), pos = V(0, 0.5, 0.32), rot = V(-35, 0, 0), color = DUCK })
+	HatDesigns.junkcrown = parts
+end
 
--- Crowd Favorite: a gold trophy cup on the head
-HatDesigns.trophy = {
-	{ shape = "block", size = V(0.8, 0.16, 0.8), pos = V(0, 0.08, 0), color = C(60, 40, 30), material = "Wood" },
-	{ shape = "cyl", size = V(0.22, 0.4, 0.22), pos = V(0, 0.36, 0), color = C(255, 200, 40), material = "Foil" },
-	{ shape = "cyl", size = V(0.5, 0.12, 0.5), pos = V(0, 0.6, 0), color = C(255, 200, 40), material = "Foil" },
-	{ shape = "cyl", size = V(0.86, 0.6, 0.86), pos = V(0, 0.96, 0), color = C(255, 200, 40), material = "Foil" },
-	{ shape = "block", size = V(0.12, 0.42, 0.12), pos = V(-0.52, 1.0, 0), color = C(255, 200, 40), material = "Foil" },
-	{ shape = "block", size = V(0.12, 0.42, 0.12), pos = V(0.52, 1.0, 0), color = C(255, 200, 40), material = "Foil" },
-	{ shape = "block", size = V(0.2, 0.2, 0.04), pos = V(0, 0.96, -0.44), rot = V(0, 0, 45), color = C(220, 40, 60), neon = true },
+-- Crowd Favorite: a golden rubber duck sitting on your head
+HatDesigns.goldduck = {
+	{ shape = "ball", size = V(0.9, 0.9, 0.9), pos = V(0, 0.36, 0.08), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "ball", size = V(0.56, 0.56, 0.56), pos = V(0, 0.92, -0.2), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "block", size = V(0.28, 0.1, 0.24), pos = V(0, 0.86, -0.54), color = C(255, 120, 20) },
+	{ shape = "block", size = V(0.24, 0.08, 0.2), pos = V(0, 0.78, -0.5), color = C(240, 100, 15) },
+	{ shape = "ball", size = V(0.1, 0.1, 0.1), pos = V(-0.17, 1.0, -0.43), color = C(20, 20, 25) },
+	{ shape = "ball", size = V(0.1, 0.1, 0.1), pos = V(0.17, 1.0, -0.43), color = C(20, 20, 25) },
+	{ shape = "block", size = V(0.3, 0.24, 0.16), pos = V(0, 0.6, 0.5), rot = V(-40, 0, 0), color = C(255, 200, 40), material = "Foil" },
 }
 
 -- Master Thief: a black bandit mask over the eyes, knot at the back
