@@ -632,6 +632,20 @@ local function _reportCamera()
 	_camSamples = {}
 end
 
+-- The ride show (RideShowManager): vote for someone else's ride a few seconds
+-- in, through the screen (RideShowUI), so recordings show it pressed.
+RemoteEvents.RideShow.OnClientEvent:Connect(function(kind, info)
+	if kind ~= "open" or type(info) ~= "table" then return end
+	local others = {}
+	for _, e in ipairs(info.entries or {}) do
+		if e.userId ~= LocalPlayer.UserId then table.insert(others, e.userId) end
+	end
+	if #others == 0 then return end
+	task.delay(4, function()
+		LocalPlayer:SetAttribute("RideVoteFor", others[math.random(#others)])   -- RideShowUI votes
+	end)
+end)
+
 RemoteEvents.VehicleSpawned.OnClientEvent:Connect(function(userId, model)
 	if userId ~= LocalPlayer.UserId then return end
 	_ejectTest(model)
