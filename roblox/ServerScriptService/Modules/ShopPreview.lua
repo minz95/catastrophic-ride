@@ -155,12 +155,32 @@ end
 ShopPreview.SHOWCASE_FOLDER = "LobbyShowcase"
 ShopPreview.SHOWCASE = {
 	{ biome = "FOREST", slots = { BODY = "Shopping Cart", ENGINE = "Rocket", MOBILITY = "Alarm Clock", HEAD = "Flower" },
-		look = { ride = "ride_flame" } },
+		look = { ride = "ride_flame" }, shirt = Color3.fromRGB(60, 140, 230) },
 	{ biome = "OCEAN", slots = { BODY = "Bathtub", ENGINE = "Fan", MOBILITY = "Rubber Duck", HEAD = "Propeller Hat" },
-		look = { paint = "paint_sunset" } },
+		look = { paint = "paint_sunset" }, shirt = Color3.fromRGB(230, 90, 70) },
 	{ biome = "SKY", slots = { BODY = "Red Sofa", ENGINE = "Hair Dryer", MOBILITY = "Life Preserver", HEAD = "Cactus" },
-		look = { paint = "paint_lime" } },
+		look = { paint = "paint_lime" }, shirt = Color3.fromRGB(150, 90, 210) },
 }
+
+-- A plain driver on a line-up ride with its HEAD item on (2026-11-16: the
+-- empty side rides showed the hat floating over the seat). The middle one's
+-- is swapped for your avatar on the client (LobbyUI seatMe).
+local function showcaseRider(model, shirt)
+	local SeatedRider = require(ServerScriptService.Modules.SeatedRider)
+	local rider = SeatedRider.seat(model, model, shirt, { still = true, fallback = true })
+	local head = rider and rider:FindFirstChild("Head")
+	for _, c in ipairs(model:GetChildren()) do
+		if c:IsA("Model") and c:GetAttribute("Hat") and c.PrimaryPart then
+			if head then
+				local base = c.PrimaryPart.Size.Y / 2
+				c:PivotTo(head.CFrame * CFrame.new(0, head.Size.Y / 2 - (c:GetAttribute("HatSink") or 0) + base, 0))
+			else
+				c:Destroy()   -- no head to wear it: better none than one in the air
+			end
+		end
+	end
+	return rider
+end
 
 --- Builds the lobby line-up into ReplicatedStorage.LobbyShowcase (models
 -- "1_FOREST", "2_OCEAN", "3_SKY"), once the item models are ready.
@@ -192,6 +212,7 @@ function ShopPreview.buildShowcase(waitFor)
 				end
 				if strip then d:Destroy() elseif d:IsA("BasePart") then d.Anchored = true end
 			end
+			showcaseRider(model, b.shirt)
 			model.Name = k .. "_" .. b.biome
 			model:SetAttribute("Biome", b.biome)
 			model.Parent = folder

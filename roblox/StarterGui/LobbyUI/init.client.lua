@@ -130,6 +130,8 @@ local function seatMe(group, vehicle)
 	local old = group:FindFirstChild("Me")
 	if old then old:Destroy() end
 	local rider = SeatedCopy.rider(seat, group, char)
+	local plain = rider and vehicle:FindFirstChild("Rider")   -- the server's stand-in driver
+	if plain then plain:Destroy() end
 	if rider then
 		rider.Name = "Me"
 		pcall(SeatedCopy.wearHat, vehicle, rider)
