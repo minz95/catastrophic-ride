@@ -19,6 +19,7 @@ local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
 local SeatedCopy   = require(ReplicatedStorage.Shared.SeatedCopy)
+local RidePoses    = require(ReplicatedStorage.Shared.RidePoses)
 local LocalPlayer  = Players.LocalPlayer
 
 local GOLD   = Color3.fromRGB(255, 214, 60)
@@ -135,6 +136,7 @@ local function seatMe(group, vehicle)
 	if rider then
 		rider.Name = "Me"
 		pcall(SeatedCopy.wearHat, vehicle, rider)
+		pcall(RidePoses.applyStill, rider, LocalPlayer:GetAttribute("RidePose"))
 	end
 end
 
@@ -334,6 +336,103 @@ Players.PlayerAdded:Connect(_buildPlayerList)
 Players.PlayerRemoving:Connect(function() task.defer(_buildPlayerList) end)
 _buildPlayerList()
 
+-- ── Hall of fame (server: Modules/HallOfFame): the latest ride show winner,
+-- their own avatar on their ride, on the left (the player list's mirror).
+local fameFrame = Instance.new("Frame")
+fameFrame.Name             = "HallOfFame"
+fameFrame.BackgroundColor3 = INK
+fameFrame.BackgroundTransparency = 0.35
+fameFrame.BorderSizePixel  = 0
+fameFrame.Visible          = false
+fameFrame.Parent           = bg
+corner(fameFrame, 10)
+
+local fameTitle = Instance.new("TextLabel")
+fameTitle.Name                   = "Title"
+fameTitle.Size                   = UDim2.new(1, -12, 0, 22)
+fameTitle.Position               = UDim2.new(0, 6, 0, 4)
+fameTitle.BackgroundTransparency = 1
+fameTitle.Text                   = "🏆 FUNNIEST RIDE"
+fameTitle.TextColor3             = GOLD
+fameTitle.TextScaled             = true
+fameTitle.Font                   = Enum.Font.GothamBlack
+fameTitle.Parent                 = fameFrame
+
+local fameView = Instance.new("ViewportFrame")
+fameView.Name                   = "Ride"
+fameView.Size                   = UDim2.new(1, -8, 1, -30 - 44)
+fameView.Position               = UDim2.new(0, 4, 0, 28)
+fameView.BackgroundTransparency = 1
+fameView.Ambient                = Color3.fromRGB(170, 170, 185)
+fameView.LightColor             = Color3.fromRGB(255, 250, 240)
+fameView.LightDirection         = Vector3.new(-1, -2, -0.8)
+fameView.Parent                 = fameFrame
+local fameCam = Instance.new("Camera")
+fameCam.FieldOfView = 34
+fameCam.Parent = fameView
+fameView.CurrentCamera = fameCam
+
+local fameName = Instance.new("TextLabel")
+fameName.Name                   = "Winner"
+fameName.Size                   = UDim2.new(1, -12, 0, 22)
+fameName.Position               = UDim2.new(0, 6, 1, -44)
+fameName.BackgroundTransparency = 1
+fameName.TextColor3             = WHITE
+fameName.TextScaled             = true
+fameName.Font                   = Enum.Font.GothamBold
+fameName.Parent                 = fameFrame
+
+local fameVotes = Instance.new("TextLabel")
+fameVotes.Name                   = "Votes"
+fameVotes.Size                   = UDim2.new(1, -12, 0, 16)
+fameVotes.Position               = UDim2.new(0, 6, 1, -21)
+fameVotes.BackgroundTransparency = 1
+fameVotes.TextColor3             = Color3.fromRGB(200, 200, 230)
+fameVotes.TextScaled             = true
+fameVotes.Font                   = Enum.Font.Gotham
+fameVotes.Parent                 = fameFrame
+
+local _fame = nil   -- { group, at } turning
+
+local function buildFame()
+	local folder = ReplicatedStorage:FindFirstChild("HallOfFame")
+	local src = folder and folder:FindFirstChild("Winner")
+	for _, c in ipairs(fameView:GetChildren()) do
+		if c:IsA("WorldModel") then c:Destroy() end
+	end
+	_fame = nil
+	fameFrame.Visible = src ~= nil
+	if not src then return end
+	local world = Instance.new("WorldModel")
+	world.Parent = fameView
+	local group = Instance.new("Model")
+	src:Clone().Parent = group
+	group.Parent = world
+	local cf, size = group:GetBoundingBox()
+	group:TranslateBy(Vector3.new(0, size.Y / 2, 0) - cf.Position)
+	group.WorldPivot = CFrame.new(0, size.Y / 2, 0)
+	_fame = { group = group, at = Vector3.new(0, size.Y / 2, 0) }
+	local r = math.max(size.X, size.Y, size.Z) / 2 + 1
+	local dist = r / math.tan(math.rad(fameCam.FieldOfView / 2)) + 2
+	local centre = Vector3.new(0, size.Y * 0.45, 0)
+	fameCam.CFrame = CFrame.lookAt(centre + Vector3.new(0, dist * 0.3, dist), centre)
+	fameName.Text = tostring(src:GetAttribute("Name") or "?")
+	local v = tonumber(src:GetAttribute("Votes")) or 0
+	fameVotes.Text = string.format("%d vote%s", v, v == 1 and "" or "s")
+end
+
+task.spawn(function()
+	local folder = ReplicatedStorage:WaitForChild("HallOfFame", 120)
+	if not folder then return end
+	pcall(buildFame)
+	folder.ChildAdded:Connect(function() task.defer(function() pcall(buildFame) end) end)
+end)
+
+RunService.RenderStepped:Connect(function()
+	if not screen.Enabled or not _fame or not _fame.group.Parent then return end
+	_fame.group:PivotTo(CFrame.new(_fame.at) * CFrame.Angles(0, os.clock() * 0.6, 0))
+end)
+
 -- ── Layout: from the screen's size (phones are ~400 px tall) ────────────────
 local function clamp(v, lo, hi) return math.max(lo, math.min(hi, v)) end
 local function layout()
@@ -360,6 +459,8 @@ local function layout()
 	view.Position = UDim2.new(0.5, 0, 0, viewTop)
 	listFrame.Size = UDim2.new(0, listW, 0, math.max(viewBottom - viewTop, 120))
 	listFrame.Position = UDim2.new(1, -12, 0, viewTop)
+	fameFrame.Size = listFrame.Size
+	fameFrame.Position = UDim2.new(0, 12, 0, viewTop)
 	task.defer(function() pcall(buildLineup) end)
 end
 screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)

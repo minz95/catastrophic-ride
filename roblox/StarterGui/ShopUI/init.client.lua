@@ -14,7 +14,9 @@ local Players            = game:GetService("Players")
 local ReplicatedStorage  = game:GetService("ReplicatedStorage")
 
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local Achievements = require(ReplicatedStorage.Shared.Achievements)
 local Cosmetics    = require(ReplicatedStorage.Shared.Cosmetics)
+local Notice       = require(ReplicatedStorage.Shared.Notice)
 local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
@@ -156,9 +158,9 @@ hint.TextXAlignment = Enum.TextXAlignment.Left
 local msgLbl = label(panel, "", UDim2.new(1, -28, 0, 20), UDim2.new(0, 14, 1, -28), Enum.Font.GothamBold, Color3.fromRGB(255, 140, 120))
 
 -- tabs
-local TABS = { "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "coins" }
+local TABS = { "ride", "paint", "trail", "hat", "taunt", "trick", "move", "gadget", "coins", "awards" }
 local TAB_TITLES = { ride = "⭐ Rides", paint = "Paint", trail = "Trail", hat = "🎩 Hats", taunt = "😜 Taunts",
-	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins" }
+	trick = "💣 Race", move = "Moves", gadget = "Gadgets", coins = "Coins", awards = "🏆 Awards" }
 local TAB_HINTS = {
 	ride   = "Special rides: your whole car, boat or plane becomes a show. Drives the same.",
 	paint  = "Looks only: your car drives the same. Shows on the car you craft.",
@@ -169,6 +171,7 @@ local TAB_HINTS = {
 	taunt  = "Racing: press Q (or 😜). Everyone sees it; the ones behind you get it on screen.",
 	hat    = "On your avatar all game. Looks only.",
 	trick  = "Racing: press T (or BOMB) once a race: the car ahead hops and slows.",
+	awards = "Not for sale: reach a goal and its hat, trail or ride pose is yours.",
 }
 local tabBtns = {}
 for i, key in ipairs(TABS) do
@@ -421,6 +424,14 @@ local function itemCard(it, order)
 		btn.Text = "Equip"
 		btn.BackgroundColor3 = Color3.fromRGB(70, 110, 200)
 		btn.Activated:Connect(function() act("equip", it.id) end)
+	elseif it.achievement then
+		local a = Achievements.get(it.achievement)
+		btn.Text = "🏆 " .. (a and a.name or "Award")
+		btn.BackgroundColor3 = Color3.fromRGB(110, 80, 150)
+		btn.Activated:Connect(function()
+			_tab = "awards"
+			_redraw()
+		end)
 	elseif level < (it.minLevel or 1) then
 		btn.Text = "Level " .. it.minLevel
 		btn.BackgroundColor3 = Color3.fromRGB(80, 80, 95)
@@ -430,6 +441,72 @@ local function itemCard(it, order)
 		local enough = ((_state and _state.coins) or 0) >= it.price
 		btn.BackgroundColor3 = enough and Color3.fromRGB(220, 150, 30) or Color3.fromRGB(120, 95, 60)
 		btn.Activated:Connect(function() act("buy", it.id) end)
+	end
+end
+
+-- Ride poses have no 3D picture: a symbol instead.
+local POSE_ICON = { handsup = "🙌", lean = "🛋", flex = "👊" }
+
+local function awardCard(a, order)
+	local it = Cosmetics.get(a.reward)
+	if not it then return end
+	local card = Instance.new("Frame")
+	card.Name             = "Award_" .. a.key
+	card.BackgroundColor3 = a.done and CARD or Color3.fromRGB(34, 32, 48)
+	card.LayoutOrder      = order
+	card.Parent           = grid
+	corner(card)
+	if it.category == "pose" then
+		local s = label(card, POSE_ICON[it.pose] or "🏆", UDim2.new(1, -12, 0, 80), UDim2.new(0, 6, 0, 6), Enum.Font.GothamBold)
+		s.BackgroundColor3 = Color3.fromRGB(70, 60, 110)
+		s.BackgroundTransparency = 0
+		corner(s, 6)
+	else
+		swatch(card, it)
+	end
+	label(card, a.name, UDim2.new(1, -12, 0, 18), UDim2.new(0, 6, 0, 88), Enum.Font.GothamBold, GOLD)
+	local goal = label(card, a.text .. (a.done and "" or string.format("  %d/%d", a.progress, a.goal)),
+		UDim2.new(1, -12, 0, 14), UDim2.new(0, 6, 0, 106), Enum.Font.Gotham, Color3.fromRGB(200, 200, 220))
+	goal.TextWrapped = true
+	local btn = Instance.new("TextButton")
+	btn.Size       = UDim2.new(1, -16, 0, 26)
+	btn.Position   = UDim2.new(0, 8, 1, -32)
+	btn.TextScaled = true
+	btn.Font       = Enum.Font.GothamBold
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Parent     = card
+	corner(btn, 6)
+	local equipped = _state and _state.equipped and _state.equipped[it.category]
+	if not a.done then
+		btn.Text = "Unlocks " .. it.name
+		btn.BackgroundColor3 = Color3.fromRGB(80, 80, 95)
+		btn.AutoButtonColor = false
+	elseif equipped == it.id then
+		btn.Text = "Equipped: " .. it.name
+		btn.BackgroundColor3 = Color3.fromRGB(60, 140, 80)
+		btn.AutoButtonColor = false
+	else
+		btn.Text = "Equip " .. it.name
+		btn.BackgroundColor3 = Color3.fromRGB(70, 110, 200)
+		btn.Activated:Connect(function() act("equip", it.id) end)
+	end
+	-- the same reward as a Roblox avatar item, worn everywhere (when uploaded)
+	if a.done and a.ugc then
+		local get = Instance.new("TextButton")
+		get.Name             = "GetAvatarItem"
+		get.Size             = UDim2.new(0, 84, 0, 22)
+		get.Position         = UDim2.new(1, -90, 0, 10)
+		get.Text             = "⭐ Avatar item"
+		get.TextScaled       = true
+		get.Font             = Enum.Font.GothamBold
+		get.TextColor3       = Color3.new(1, 1, 1)
+		get.BackgroundColor3 = Color3.fromRGB(40, 160, 90)
+		get.ZIndex           = 3
+		get.Parent           = card
+		corner(get, 6)
+		get.Activated:Connect(function()
+			pcall(function() RemoteEvents.AchievementAction:InvokeServer("ugc", a.key) end)
+		end)
 	end
 end
 
@@ -474,6 +551,9 @@ _redraw = function()
 			local l = label(grid, "Coin packs are coming soon. Earn coins by racing!", UDim2.new(1, 0, 0, 30), UDim2.new(), Enum.Font.GothamBold)
 			l.LayoutOrder = 1
 		end
+	elseif _tab == "awards" then
+		local list = (_state and _state.achievements) or Achievements.view({})
+		for i, a in ipairs(list) do awardCard(a, i) end
 	else
 		for i, it in ipairs(Cosmetics.ITEMS[_tab]) do itemCard(it, i) end
 	end
@@ -520,6 +600,13 @@ end
 RemoteEvents.ShopUpdated.OnClientEvent:Connect(function(state)
 	_state = state
 	if panel.Visible then _redraw() end
+end)
+
+-- An achievement done (AchievementManager): its reward is already on.
+RemoteEvents.AchievementUpdate.OnClientEvent:Connect(function(a)
+	if type(a) ~= "table" then return end
+	SoundFx.play("CRAFT_COMPLETE")
+	Notice.show("🏆 " .. tostring(a.name), tostring(a.text) .. (a.reward and (". New: " .. a.reward .. " (on now)") or ""), 8)
 end)
 
 -- Where the button sits: the left edge, mid-height, except in CRAFTING,

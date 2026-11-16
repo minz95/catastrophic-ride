@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
+local Achievements = require(ReplicatedStorage.Shared.Achievements)
 local Cosmetics = require(ReplicatedStorage.Shared.Cosmetics)
 local Products = require(ReplicatedStorage.Shared.Products)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
@@ -35,7 +36,8 @@ function Shop.state(rec)
 	for _, p in ipairs(Products.available()) do
 		table.insert(packs, { id = p.id, name = p.name, coins = p.coins, robux = p.robux })
 	end
-	return { coins = rec.coins, level = rec.level, owned = owned, equipped = rec.equipped or {}, packs = packs }
+	return { coins = rec.coins, level = rec.level, owned = owned, equipped = rec.equipped or {}, packs = packs,
+		achievements = Achievements.view(rec) }
 end
 
 function Shop.handle(player, action, id)
@@ -71,7 +73,7 @@ function Shop.handle(player, action, id)
 	if result == "ok" and action ~= "state" then
 		require(ServerScriptService.Modules.CraftPreview).refresh(player)
 		local it = Cosmetics.get(id)
-		if it and (it.category == "hat" or it.category == "move") then
+		if it and (it.category == "hat" or it.category == "move" or it.category == "pose") then
 			require(ServerScriptService.Modules.ShopHat).refresh(player)
 		end
 	end

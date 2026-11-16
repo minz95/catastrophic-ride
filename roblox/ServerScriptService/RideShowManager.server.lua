@@ -24,8 +24,11 @@ local PlayerStore    = require(ServerScriptService.Modules.PlayerStore)
 local Telemetry      = require(ServerScriptService.Modules.Telemetry)
 local Shop           = require(ServerScriptService.Modules.Shop)
 local HarnessConfig  = require(ServerScriptService.Modules.HarnessConfig)
+local HallOfFame     = require(ServerScriptService.Modules.HallOfFame)
 
 local S = Constants.RIDE_SHOW
+
+HallOfFame.start(HallOfFame.isLive())
 
 local _show = nil   -- { entries = { [userId] = true }, votes = {}, round = n }
 local _lastVote = {}
@@ -88,6 +91,15 @@ local function _close(show)
 	_show = nil
 	local winners, best = RideVote.winners(show.votes)
 	for _, id in ipairs(winners) do _pay(id, best) end
+	-- the lobby's hall of fame: the first winner's ride with them on it
+	local first = winners[1]
+	local e = first and show.byId and show.byId[first]
+	if e then
+		local p = Players:GetPlayerByUserId(first)
+		local rec = p and PlayerStore.get(p)
+		task.spawn(HallOfFame.record, HallOfFame.entry(first, e.name, GameManager.getBiome(), e.slots, best,
+			rec and rec.equipped or {}))
+	end
 	RemoteEvents.RideShow:FireAllClients("closed",
 		{ winners = winners, counts = _countList(show.votes), coins = S.COINS })
 end
@@ -99,8 +111,11 @@ GameManager.onPhaseChanged(function(phase)
 	end
 	local list = _entries()
 	if #list < S.MIN_PLAYERS then return end
-	local show = { entries = {}, votes = {} }
-	for _, e in ipairs(list) do show.entries[e.userId] = true end
+	local show = { entries = {}, votes = {}, byId = {} }
+	for _, e in ipairs(list) do
+		show.entries[e.userId] = true
+		show.byId[e.userId] = e
+	end
 	_show = show
 	local endsAt = workspace:GetServerTimeNow() + S.SECONDS
 	RemoteEvents.RideShow:FireAllClients("open", { entries = list, endsAt = endsAt, coins = S.COINS })

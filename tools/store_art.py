@@ -192,6 +192,16 @@ BADGES = [   # key, Twemoji code, word, colours (centre, edge)
     ("champion", "1f3c6", "WINNER", ((255, 225, 110), (220, 120, 20))),
     ("sticky", "1f4b0", "STOLEN!", ((255, 160, 170), (190, 40, 70))),
     ("level5", "2b50", "LEVEL 5", ((200, 160, 255), (95, 45, 175))),
+    # achievements (Shared/Achievements): "ach_<key>"
+    ("ach_races10", "1f6e3", "ROOKIE", ((140, 220, 255), (30, 110, 190))),
+    ("ach_races50", "1f3ce", "WARRIOR", ((255, 170, 120), (190, 60, 30))),
+    ("ach_wins10", "26a1", "LEGEND", ((255, 235, 120), (210, 130, 10))),
+    ("ach_tour", "1f30d", "TOUR", ((140, 235, 200), (20, 120, 110))),
+    ("ach_flush", "1f6bd", "FLUSH!", ((180, 225, 255), (60, 110, 200))),
+    ("ach_funniest", "1f0cf", "FUNNY!", ((255, 170, 230), (150, 40, 170))),
+    ("ach_funniest5", "1f389", "FAVORITE", ((255, 215, 130), (200, 70, 120))),
+    ("ach_thief", "1f977", "THIEF", ((170, 170, 190), (40, 40, 60))),
+    ("ach_brawler", "1f94a", "BRAWLER", ((255, 150, 140), (170, 30, 40))),
 ]
 
 

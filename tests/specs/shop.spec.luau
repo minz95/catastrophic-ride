@@ -31,7 +31,13 @@ R.describe("Cosmetics rules", function()
 				if seen[it.id] then table.insert(bad, "duplicate " .. it.id) end
 				seen[it.id] = true
 				if i > 1 then
-					if it.price <= 0 then table.insert(bad, it.id .. ": no price") end
+					if it.achievement then
+						local A = env.requirePath("ReplicatedStorage.Shared.Achievements")
+						local a = A.get(it.achievement)
+						if not a or a.reward ~= it.id then table.insert(bad, it.id .. ": no achievement gives it") end
+						if it.price then table.insert(bad, it.id .. ": an award has no price") end
+					elseif (it.price or 0) <= 0 then table.insert(bad, it.id .. ": no price") end
+					if cat == "pose" and not it.pose then table.insert(bad, it.id .. ": no pose") end
 					if cat == "paint" and not (it.body and it.accent) then table.insert(bad, it.id .. ": no colours") end
 					if cat == "trail" and not (it.colors or it.rainbow) then table.insert(bad, it.id .. ": no colours") end
 					if cat == "ride" and not (it.body and it.accent and it.fx and it.trail) then table.insert(bad, it.id .. ": incomplete ride") end

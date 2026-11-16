@@ -90,6 +90,54 @@ HatDesigns.crown = join({
 HatDesigns.halo = ring(14, 0.55, 0.6, V(0.27, 0.07, 0.09), C(255, 240, 150), nil)
 for _, p in ipairs(HatDesigns.halo) do p.neon = true end
 
+-- ── Achievement hats (Shared/Achievements; not sold) ──────────────────────────
+
+-- World Tour: a gold medal on a ribbon headband, on the forehead
+HatDesigns.medal = join(ring(12, 0.62, -0.25, V(0.34, 0.2, 0.06), C(40, 90, 220), nil), {
+	{ shape = "block", size = V(0.5, 0.2, 0.07), pos = V(0, -0.25, -0.64), color = C(220, 40, 60) },
+	{ shape = "cyl", size = V(0.62, 0.1, 0.62), pos = V(0, -0.02, -0.7), rot = V(90, 0, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "cyl", size = V(0.44, 0.11, 0.44), pos = V(0, -0.02, -0.72), rot = V(90, 0, 0), color = C(255, 230, 120), material = "Foil" },
+	{ shape = "block", size = V(0.14, 0.14, 0.04), pos = V(0, -0.02, -0.78), rot = V(0, 0, 45), color = C(220, 40, 60), neon = true },
+})
+
+-- Royal Flush: a golden plunger stuck on the head
+HatDesigns.plunger = {
+	{ shape = "cyl", size = V(1.0, 0.12, 1.0), pos = V(0, 0.04, 0), color = C(200, 30, 40) },
+	{ shape = "cyl", size = V(0.8, 0.2, 0.8), pos = V(0, 0.18, 0), color = C(200, 30, 40) },
+	{ shape = "cyl", size = V(0.5, 0.16, 0.5), pos = V(0, 0.34, 0), color = C(200, 30, 40) },
+	{ shape = "cyl", size = V(0.14, 1.1, 0.14), pos = V(0, 0.95, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0, 1.52, 0), color = C(255, 200, 40), material = "Foil" },
+}
+
+-- Funniest Ride: a jester's hat, three floppy points with bells
+HatDesigns.jester = {
+	{ shape = "cyl", size = V(1.24, 0.3, 1.24), pos = V(0, 0.08, 0), color = C(255, 210, 40) },
+	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(-0.5, 0.55, 0), rot = V(0, 0, 40), color = C(150, 50, 200) },
+	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(0, 0.7, 0), color = C(230, 50, 60) },
+	{ shape = "block", size = V(0.36, 0.9, 0.36), pos = V(0.5, 0.55, 0), rot = V(0, 0, -40), color = C(40, 180, 120) },
+	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(-0.86, 0.9, 0), color = C(255, 220, 60), material = "Foil" },
+	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0, 1.24, 0), color = C(255, 220, 60), material = "Foil" },
+	{ shape = "ball", size = V(0.24, 0.24, 0.24), pos = V(0.86, 0.9, 0), color = C(255, 220, 60), material = "Foil" },
+}
+
+-- Crowd Favorite: a gold trophy cup on the head
+HatDesigns.trophy = {
+	{ shape = "block", size = V(0.8, 0.16, 0.8), pos = V(0, 0.08, 0), color = C(60, 40, 30), material = "Wood" },
+	{ shape = "cyl", size = V(0.22, 0.4, 0.22), pos = V(0, 0.36, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "cyl", size = V(0.5, 0.12, 0.5), pos = V(0, 0.6, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "cyl", size = V(0.86, 0.6, 0.86), pos = V(0, 0.96, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "block", size = V(0.12, 0.42, 0.12), pos = V(-0.52, 1.0, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "block", size = V(0.12, 0.42, 0.12), pos = V(0.52, 1.0, 0), color = C(255, 200, 40), material = "Foil" },
+	{ shape = "block", size = V(0.2, 0.2, 0.04), pos = V(0, 0.96, -0.44), rot = V(0, 0, 45), color = C(220, 40, 60), neon = true },
+}
+
+-- Master Thief: a black bandit mask over the eyes, knot at the back
+HatDesigns.mask = join(ring(14, 0.63, -0.5, V(0.3, 0.26, 0.06), C(25, 25, 30), nil), {
+	{ shape = "block", size = V(0.12, 0.34, 0.3), pos = V(0, -0.58, 0.72), rot = V(30, 0, 0), color = C(25, 25, 30) },
+	{ shape = "block", size = V(0.24, 0.1, 0.05), pos = V(-0.24, -0.47, -0.67), color = C(240, 240, 240) },
+	{ shape = "block", size = V(0.24, 0.1, 0.05), pos = V(0.24, -0.47, -0.67), color = C(240, 240, 240) },
+})
+
 --- The parts of hat `id` (Cosmetics item field `hat`), or nil.
 function HatDesigns.get(id)
 	local d = HatDesigns[id]

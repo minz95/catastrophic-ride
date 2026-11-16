@@ -50,7 +50,7 @@ end
 local items = {}
 for _, cat in ipairs(Cosmetics.CATEGORIES) do
 	for i, it in ipairs(Cosmetics.ITEMS[cat]) do
-		if i > 1 then table.insert(items, it) end
+		if i > 1 and not it.achievement then table.insert(items, it) end
 	end
 end
 table.sort(items, function(a, b) return a.price < b.price end)

@@ -27,6 +27,7 @@ function Progression.newRecord()
 		receipts = {},   -- last Robux PurchaseIds granted (Modules/Shop)
 		challenges = nil, -- today's (Shared/DailyChallenge): { day, progress, done, bonus }
 		referred = {},   -- friends whose first visit paid an invite bonus: { ["<userId>"] = true }
+		achievements = nil, -- Shared/Achievements: { progress, done, seen }
 	}
 end
 
