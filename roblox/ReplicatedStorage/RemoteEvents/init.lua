@@ -53,6 +53,7 @@
 --   GetChallenges       → () → DailyChallenge.view or nil   (RemoteFunction; ResultsUI)
 --   AchievementUpdate   → server→client ({ key, name, text, reward, category, ugc }) -- an achievement done (AchievementManager)
 --   AchievementAction   → ("state" | "ugc", key?) → { result, list? }  (RemoteFunction; ShopUI Awards tab)
+--   LegendUpdate        → server→client ({ kind = "listed" | "royalty" | "refund", title, … }) -- Legend Rides (Modules/LegendShop)
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --
 -- RemoteFunctions (server-authoritative):
@@ -107,6 +108,7 @@ local EVENTS = {
 	"RideShow",
 	"VoteRide",
 	"AchievementUpdate",
+	"LegendUpdate",
 }
 
 local FUNCTIONS = {

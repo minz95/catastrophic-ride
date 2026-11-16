@@ -88,6 +88,16 @@ Constants.SHOP = { WARN_AT = 10, CRAFT_CLOSE_AT = 12, NOTICE_SECONDS = 4 }
 -- votes for the funniest one but their own, the winner gets COINS.
 Constants.RIDE_SHOW = { MIN_PLAYERS = 2, SECONDS = 12, COINS = 30, VOTE_GAP = 0.3, WINNER_SHOWN = 3 }
 
+-- Legend Rides (2026-11-17, "the winner's own car in the shop, pricey, and
+-- they got it for free"): a ride show winner's ride goes on sale for DAYS
+-- days or LIMIT copies, whichever ends first (Shared/LegendRides,
+-- Modules/LegendStore). COINS buys one (or the Robux product
+-- Products.LEGEND); each sale pays the original's owner ROYALTY coins.
+-- Owned rides are worn round the waist outside races at SCALE.
+-- SHOWN: listings in the shop at a time; POLL: s between store reads.
+Constants.LEGEND = { COINS = 2500, LIMIT = 50, DAYS = 7, ROYALTY = 250, SCALE = 0.5, SHOWN = 6, POLL = 60,
+	KEEP = 30 }
+
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────
 -- A friend who joins through your invite for the first time (never played
 -- a round) pays you COINS, for up to MAX_REWARDED friends.

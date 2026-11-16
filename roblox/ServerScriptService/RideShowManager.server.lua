@@ -97,8 +97,10 @@ local function _close(show)
 	if e then
 		local p = Players:GetPlayerByUserId(first)
 		local rec = p and PlayerStore.get(p)
-		task.spawn(HallOfFame.record, HallOfFame.entry(first, e.name, GameManager.getBiome(), e.slots, best,
-			rec and rec.equipped or {}))
+		local fame = HallOfFame.entry(first, e.name, GameManager.getBiome(), e.slots, best, rec and rec.equipped or {})
+		task.spawn(HallOfFame.record, fame)
+		-- and on sale in the shop as a Legend Ride, the original theirs
+		task.spawn(require(ServerScriptService.Modules.LegendShop).listWinner, fame)
 	end
 	RemoteEvents.RideShow:FireAllClients("closed",
 		{ winners = winners, counts = _countList(show.votes), coins = S.COINS })

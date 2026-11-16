@@ -27,6 +27,7 @@ local SCRIPTS = {
 	"ServerScriptService.RideShowManager",
 	"ServerScriptService.ChallengeManager",
 	"ServerScriptService.AchievementManager",
+	"ServerScriptService.LegendManager",
 }
 
 local function run(n, biome, rounds, fillBots)
