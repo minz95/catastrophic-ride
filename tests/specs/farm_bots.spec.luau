@@ -94,9 +94,15 @@ R.describe("farm bots (live servers fill the farm)", function()
 		-- side by side along X (the bot turns with CFrame.lookAt, which flips Z in Lune)
 		pr.CFrame = CFrame.new(4, 3, 846) * CFrame.Angles(0, math.pi / 2, 0)   -- facing -X, at the bot
 		br.CFrame = CFrame.new(0, 3, 846)
+		local entry
+		for _, b in ipairs(FarmBots.list) do if b.proxy == bot then entry = b end end
+		local d0 = srv.SessionManager.getData(bot)
+		-- what the bot was doing when hit (a rare CI failure: printed if it never hits back)
+		local was = string.format("contest=%s guard=%s grabbed=%s stealing=%s", tostring(entry and entry.contest),
+			tostring(entry and entry.guardUntil), tostring(d0._stealWindow ~= nil), tostring(d0._stealing ~= nil))
 		R.expect(srv.mock.invoke(srv.RemoteEvents.RequestPunch, player, bot.UserId)).toBe("hit")
 		local back
-		for _ = 1, 8 do
+		for _ = 1, 16 do
 			pr.CFrame = CFrame.new(4, 3, 846) * CFrame.Angles(0, math.pi / 2, 0)
 			tick(0.25)
 			for _, ev in ipairs(srv.Telemetry.events("punch")) do
@@ -104,7 +110,15 @@ R.describe("farm bots (live servers fill the farm)", function()
 			end
 			if back then break end
 		end
-		R.expect(back ~= nil).toBe(true)
+		if not back then
+			B.HIT_BACK, B.GUARD_HIT, B.GUARD_NEAR, B.STEAL_CHANCE, B.PUNCH_CHANCE = table.unpack(old)
+			local acts = {}
+			for _, ev in ipairs(srv.Telemetry.events("bot_farm")) do
+				if ev.userId == bot.UserId then table.insert(acts, tostring(ev.act) .. "/" .. tostring(ev.why) .. "/" .. tostring(ev.result)) end
+			end
+			error(string.format("no hit back; when hit: %s; now %.1f studs apart; bot did: %s", was,
+				(br.Position - pr.Position).Magnitude, table.concat(acts, ", ")))
+		end
 		R.expect(back.victim).toBe(player.UserId)
 		-- robbed: the bot walks after the thief
 		local d = srv.SessionManager.getData(bot)
