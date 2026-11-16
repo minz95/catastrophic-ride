@@ -1988,7 +1988,7 @@
       "tags": [
         "video"
       ],
-      "_why": "footage for the Korean 'Discord with friends' reel (2026-11-16): record-forest-store with new rides only (none from the earlier reels) for the filmer and the four race bots (botLoadouts), and the bots' rides in the ride show, where they and the filmer vote (rideShowBots). The screen must be awake and unlocked",
+      "_why": "footage for the Korean 'Discord with friends' reel (2026-11-16): record-forest-store with new rides only (none from the earlier reels) for the filmer and the four race bots (botLoadouts), and the bots' rides in the ride show, where they and the filmer vote (rideShowBots). The screen must be awake and unlocked; resultsHold keeps the match through the show (the first take ended 1 s into RESULTS)",
       "opts": {
         "biome": "FOREST",
         "players": 1,
@@ -2047,7 +2047,8 @@
             "SPECIAL": "Soda Bottle"
           }
         ],
-        "rideShowBots": 4
+        "rideShowBots": 4,
+        "resultsHold": 20
       },
       "record": {
         "delay": 15,

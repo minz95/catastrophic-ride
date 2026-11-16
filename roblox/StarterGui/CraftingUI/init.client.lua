@@ -744,21 +744,30 @@ Snapshot.button(showroom, UDim2.fromOffset(62, 30), UDim2.new(1, -72, 0, 10), "ð
 	} }, "MY JUNK RIDE")
 end)
 
+-- The gradient is on a backdrop behind the view: on the ViewportFrame itself
+-- a UIGradient tints the 3D picture and the ride came out dark (2026-11-16).
+local viewBack = Instance.new("Frame")
+viewBack.Name              = "ViewBack"
+viewBack.Size              = UDim2.new(1, -20, 1, -206)
+viewBack.Position          = UDim2.new(0, 10, 0, 46)
+viewBack.BackgroundColor3  = Color3.fromRGB(255, 255, 255)
+viewBack.BorderSizePixel   = 0
+viewBack.Parent            = showroom
+local _vc = Instance.new("UICorner"); _vc.CornerRadius = UDim.new(0, 10); _vc.Parent = viewBack
+local _vg = Instance.new("UIGradient")
+_vg.Color = ColorSequence.new(Color3.fromRGB(120, 140, 200), Color3.fromRGB(40, 40, 60))
+_vg.Rotation = 90
+_vg.Parent = viewBack
 local view = Instance.new("ViewportFrame")
 view.Name                  = "View"
 view.Size                  = UDim2.new(1, -20, 1, -206)
 view.Position              = UDim2.new(0, 10, 0, 46)
-view.BackgroundColor3      = Color3.fromRGB(40, 46, 70)
+view.BackgroundTransparency = 1
 view.BorderSizePixel       = 0
-view.Ambient               = Color3.fromRGB(150, 150, 165)
+view.Ambient               = Color3.fromRGB(170, 170, 185)
 view.LightColor            = Color3.fromRGB(255, 250, 240)
 view.LightDirection        = Vector3.new(-0.6, -1, -0.4)
 view.Parent                = showroom
-local _vc = Instance.new("UICorner"); _vc.CornerRadius = UDim.new(0, 10); _vc.Parent = view
-local _vg = Instance.new("UIGradient")
-_vg.Color = ColorSequence.new(Color3.fromRGB(120, 140, 200), Color3.fromRGB(40, 40, 60))
-_vg.Rotation = 90
-_vg.Parent = view
 
 local viewCam = Instance.new("Camera")
 viewCam.FieldOfView = 40

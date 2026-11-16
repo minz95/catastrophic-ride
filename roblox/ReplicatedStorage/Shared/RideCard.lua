@@ -20,7 +20,10 @@ local function strip(copy)
 end
 
 --- A ViewportFrame in `parent` showing `model` (and `char` riding it, when
--- given), seen from the front left. Returns the frame, or nil.
+-- given), seen from the front left, over a gradient backdrop. Returns the
+-- backdrop frame (the view is its child), or nil. The gradient sits on the
+-- backdrop, never on the view: a UIGradient on a ViewportFrame tints what it
+-- renders, and the rides came out nearly black (Studio take 2026-11-16).
 function RideCard.view(parent, model, char)
 	if not model then return nil end
 	local was = model.Archivable
@@ -29,19 +32,26 @@ function RideCard.view(parent, model, char)
 	model.Archivable = was
 	if not ok or not copy then return nil end
 	strip(copy)
-	local view = Instance.new("ViewportFrame")
-	view.Name             = "Ride"
-	view.Size             = UDim2.fromScale(1, 1)
-	view.BackgroundColor3 = Color3.fromRGB(40, 46, 70)
-	view.BorderSizePixel  = 0
-	view.Ambient          = Color3.fromRGB(150, 150, 165)
-	view.LightColor       = Color3.fromRGB(255, 250, 240)
-	view.LightDirection   = Vector3.new(-0.6, -1, -0.4)
-	view.Parent           = parent
+	local back = Instance.new("Frame")
+	back.Name             = "RideBack"
+	back.Size             = UDim2.fromScale(1, 1)
+	back.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	back.BorderSizePixel  = 0
+	back.ClipsDescendants = true
+	back.Parent           = parent
 	local grad = Instance.new("UIGradient")
 	grad.Color = ColorSequence.new(Color3.fromRGB(120, 140, 200), Color3.fromRGB(40, 40, 60))
 	grad.Rotation = 90
-	grad.Parent = view
+	grad.Parent = back
+	local view = Instance.new("ViewportFrame")
+	view.Name                   = "Ride"
+	view.Size                   = UDim2.fromScale(1, 1)
+	view.BackgroundTransparency = 1
+	view.BorderSizePixel        = 0
+	view.Ambient                = Color3.fromRGB(170, 170, 185)
+	view.LightColor             = Color3.fromRGB(255, 250, 240)
+	view.LightDirection         = Vector3.new(-0.6, -1, -0.4)
+	view.Parent                 = back
 	local world = Instance.new("WorldModel")
 	world.Parent = view
 	copy.Parent = world
@@ -79,7 +89,7 @@ function RideCard.view(parent, model, char)
 	end
 	frame()
 	view:GetPropertyChangedSignal("AbsoluteSize"):Connect(frame)
-	return view
+	return back
 end
 
 --- "Piano + Rocket + Pizza" from a slots table (BODY, ENGINE, SPECIAL first).

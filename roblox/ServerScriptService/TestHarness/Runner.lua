@@ -185,6 +185,7 @@ function Runner.runMatch(opts)
 		fillBots = opts.fillBots,   -- RaceBots fill the grid to this many racers
 		botLoadouts = opts.botLoadouts,   -- botLoadouts[k] = slots of race bot k (filming)
 		rideShowBots = opts.rideShowBots, -- this many race bots' rides join the ride show and vote (filming)
+		resultsHold = opts.resultsHold,   -- seconds of RESULTS before the match ends (filming the ride show)
 		ejectTest = opts.ejectTest, -- bots jump and die mid-race (BotDriver, Modules/RaceSeat)
 		shopUi = opts.shopUi,       -- bots open the shop screen with B (BotDriver, sim.py shopUi)
 		uiDump = opts.uiDump,       -- bots report their screen layout (BotDriver "ui")

@@ -85,6 +85,9 @@ R.describe("filming the ride show (harness only)", function()
 		local runner = fs.readFile("roblox/ServerScriptService/TestHarness/Runner.lua")
 		R.expect(runner:find("rideShowBots = opts.rideShowBots", 1, true) ~= nil).toBe(true)
 		R.expect(runner:find("botLoadouts = opts.botLoadouts", 1, true) ~= nil).toBe(true)
+		R.expect(runner:find("resultsHold = opts.resultsHold", 1, true) ~= nil).toBe(true)
+		local match = fs.readFile("roblox/ServerScriptService/TestHarness/MatchHarness.lua")
+		R.expect(match:find("args.resultsHold", 1, true) ~= nil).toBe(true)   -- the take reaches the show
 	end)
 end)
 
