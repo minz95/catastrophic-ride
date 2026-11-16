@@ -183,12 +183,25 @@ R.describe("shop pictures (Modules/ShopPreview)", function()
 			local m = folder:FindFirstChild(k .. "_" .. b.biome)
 			R.expect(m ~= nil).toBe(true)
 			R.expect(m:FindFirstChildWhichIsA("VehicleSeat", true) ~= nil).toBe(true)   -- your avatar sits on it
+			-- a driver wears the HEAD item (2026-11-16: empty rides had the hat in the air)
+			local rider = m:FindFirstChild("Rider")
+			R.expect(rider ~= nil).toBe(true, b.biome .. " has no driver")
+			R.expect(rider.HumanoidRootPart.Anchored).toBe(true)
 			for _, d in ipairs(m:GetDescendants()) do
-				R.expect(not ((d:IsA("BasePart") and not d.Anchored) or d:IsA("BaseScript") or d:IsA("BodyMover"))).toBe(true)
+				local still = d:IsA("BasePart") and (d.Anchored or d:IsDescendantOf(rider))   -- limbs hang on joints
+				R.expect(not ((d:IsA("BasePart") and not still) or d:IsA("BaseScript") or d:IsA("BodyMover"))).toBe(true)
+			end
+			for _, c in ipairs(m:GetChildren()) do
+				if c:IsA("Model") and c:GetAttribute("Hat") then
+					local above = c.PrimaryPart.Position.Y - rider.Head.Position.Y
+					local d = c.PrimaryPart.Position - rider.Head.Position
+					R.expect(above > 0 and above < 3 and math.abs(d.X) < 0.5 and math.abs(d.Z) < 0.5).toBe(true, b.biome .. " hat not on the head")
+				end
 			end
 		end
 		local fs = require("@lune/fs")
 		local lobby = fs.readFile("roblox/StarterGui/LobbyUI/init.client.lua")
+		R.expect(lobby:find('vehicle:FindFirstChild("Rider")', 1, true) ~= nil).toBe(true)   -- you replace the stand-in
 		R.expect(lobby:find('"LobbyShowcase"', 1, true) ~= nil).toBe(true)
 		R.expect(lobby:find("SeatedCopy.rider(", 1, true) ~= nil).toBe(true)
 		R.expect(lobby:find("Waiting for players", 1, true)).toBe(nil)   -- the round starts by itself

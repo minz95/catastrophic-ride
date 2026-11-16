@@ -46,7 +46,9 @@ end
 --- Seats a new avatar in `model`'s VehicleSeat, parented to `folder`.
 -- opts.passenger: massless, no collision or touch (a race bot's driver must
 -- not change how its car handles or set off Touched handlers);
--- opts.fallback: a minimal rig when an R15 avatar cannot be made.
+-- opts.fallback: a minimal rig when an R15 avatar cannot be made;
+-- opts.still: a picture, not a driver (the lobby line-up, outside Workspace):
+-- no Sit, the root anchored on the seat, the limbs posed by their joints.
 -- Returns the character and the seat, or nil.
 function SeatedRider.seat(model, folder, shirt, opts)
 	opts = opts or {}
@@ -76,9 +78,10 @@ function SeatedRider.seat(model, folder, shirt, opts)
 	end
 	local animate = char:FindFirstChild("Animate")
 	if animate then animate:Destroy() end
+	local root = char:FindFirstChild("HumanoidRootPart")
 	for _, p in ipairs(char:GetDescendants()) do
 		if p:IsA("BasePart") then
-			p.Anchored = false
+			p.Anchored = opts.still == true and p == root
 			if opts.passenger then
 				p.Massless = true
 				p.CanCollide = false
@@ -87,9 +90,14 @@ function SeatedRider.seat(model, folder, shirt, opts)
 			end
 		end
 	end
-	char:PivotTo(seat.CFrame * CFrame.new(0, 3, 0))
-	char.Parent = folder
-	seat:Sit(hum)
+	if opts.still and root then
+		char:PivotTo(seat.CFrame * CFrame.new(0, seat.Size.Y / 2 + root.Size.Y / 2, 0))
+		char.Parent = folder
+	else
+		char:PivotTo(seat.CFrame * CFrame.new(0, 3, 0))
+		char.Parent = folder
+		seat:Sit(hum)
+	end
 	-- the pose: thighs forward, shins down, hands on the knees
 	local q = math.pi / 2
 	SeatedRider.bend(char, "LeftHip", CFrame.Angles(q, 0, 0))
