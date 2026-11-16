@@ -104,6 +104,11 @@ R.describe("Legend Rides in a server", function()
 		R.expect(res.result).toBe("ok")
 		R.expect(bRec.coins).toBe(10)
 		R.expect(bRec.legend[l.id].original).toBe(false)
+		-- numbered: the first copy sold is #1/50, the winner's is the original
+		R.expect(bRec.legend[l.id].serial).toBe(1)
+		local LR = e.requirePath("ReplicatedStorage.Shared.LegendRides")
+		R.expect(LR.tag(bRec.legend[l.id])).toBe("#1/" .. C.LEGEND.LIMIT)
+		R.expect(LR.tag(oRec.legend[l.id])).toBe("⭐ ORIGINAL")
 		R.expect(bRec.legendOn).toBe(l.id)
 		R.expect(oRec.coins).toBe(C.LEGEND.ROYALTY)
 		R.expect(res.state.legend.listings[1].sold).toBe(1)
@@ -201,6 +206,9 @@ R.describe("Legend Rides in a server", function()
 			if d:IsA("VehicleSeat") and not d.Disabled then table.insert(bad, "seat on") end
 		end
 		R.expect(bad).toBeEmpty("worn ride parts")
+		local tag = worn:FindFirstChild("LegendTag", true)
+		R.expect(tag ~= nil).toBe(true)
+		R.expect(tag:FindFirstChildWhichIsA("TextLabel").Text).toBe("⭐ ORIGINAL")
 		local GM = e.requirePath("ServerScriptService.GameManager")
 		local real = GM.getPhase
 		GM.getPhase = function() return "RACING" end
