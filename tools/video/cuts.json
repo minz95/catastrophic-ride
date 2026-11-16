@@ -807,14 +807,14 @@
       ]
     },
     "kr-discord": {
-      "_why": "Korean reel 2026-11-16, 'Discord voice chat with friends': one first-person voice talks to friends we never hear, over one real round (record-bmat: the filmer is robbed on the farm, builds Toilet + Rocket + Balloon Bunch + Propeller Hat on camera, races, the ride show vote). Build --clean + .srt for CapCut TTS.",
+      "_why": "Korean reel 2026-11-16, 'Discord voice chat with friends': one first-person voice talks to friends we never hear, over one real round (record-bmat: the filmer is robbed and punched on the farm, builds Toilet + Rocket + Balloon Bunch + Propeller Hat on camera, races, the ride show vote). Build --clean + .srt for CapCut TTS.",
       "format": "9x16",
       "lang": "ko",
       "segments": [
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 184,
+          "t": 186,
           "dur": 2.4,
           "zoom": 1.7,
           "head": "디코 켜고 친구들이랑",
@@ -835,38 +835,18 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 10,
-          "dur": 1.6,
+          "t": 10.9,
+          "dur": 1.8,
           "zoom": 2.5,
           "head": "FARMING",
-          "title": "퍽",
-          "say": "아 누가 때렸어"
-        },
-        {
-          "take": "record-bmat",
-          "fit": "black",
-          "t": 11,
-          "dur": 1.6,
-          "zoom": 2.5,
-          "head": "FARMING",
-          "title": "DEFENDED",
-          "say": "어림없지ㅋㅋ 막았다",
+          "title": "도둑 등장",
+          "say": "야 그거 내 거라고!!",
           "color": "#FFD23C"
         },
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 15,
-          "dur": 1.8,
-          "zoom": 2.5,
-          "head": "FARMING",
-          "title": "도둑 등장",
-          "say": "야 그거 내 거라고!!"
-        },
-        {
-          "take": "record-bmat",
-          "fit": "black",
-          "t": 27,
+          "t": 11.9,
           "dur": 1.6,
           "zoom": 2.5,
           "head": "FARMING",
@@ -876,7 +856,17 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 43,
+          "t": 34.4,
+          "dur": 1.8,
+          "zoom": 2.5,
+          "head": "FARMING",
+          "title": "SMACK!",
+          "say": "맞으면 때려야지ㅋㅋ"
+        },
+        {
+          "take": "record-bmat",
+          "fit": "black",
+          "t": 44,
           "dur": 1.8,
           "zoom": 2.0,
           "head": "CRAFTING",
@@ -887,7 +877,7 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 46,
+          "t": 46.5,
           "dur": 1.6,
           "zoom": 2.0,
           "head": "CRAFTING",
@@ -919,17 +909,18 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 72,
+          "t": 73.6,
           "dur": 1.8,
           "zoom": 2.5,
           "head": "RACE",
-          "title": "BYE-BYE~",
-          "say": "출발하자마자 바이바이 박네ㅋㅋ"
+          "title": "RISE!",
+          "say": "아 미친ㅋㅋㅋ 떴어 떴어",
+          "color": "#FFD23C"
         },
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 78,
+          "t": 97.6,
           "dur": 1.8,
           "zoom": 2.5,
           "head": "RACE",
@@ -940,38 +931,28 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 86,
-          "dur": 1.8,
+          "t": 113.6,
+          "dur": 1.7,
           "zoom": 2.5,
           "head": "RACE",
-          "title": "BOOM!",
-          "say": "아 폭탄 맞았어;;"
+          "title": "TOO EASY~",
+          "say": "아 뭐야 왜 긁어ㅋㅋㅋ"
         },
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 108,
-          "dur": 1.6,
+          "t": 177.5,
+          "dur": 1.8,
           "zoom": 2.5,
-          "head": "RACE",
-          "title": "RISE!",
-          "say": "아 미친ㅋㅋㅋ 떴어 떴어",
+          "head": "FINISH",
+          "title": "1등",
+          "say": "변기로 1등 실화냐",
           "color": "#FFD23C"
         },
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 176,
-          "dur": 1.7,
-          "zoom": 2.5,
-          "head": "FINISH",
-          "title": "2등",
-          "say": "변기로 2등이면 잘한 거지"
-        },
-        {
-          "take": "record-bmat",
-          "fit": "black",
-          "t": 184,
+          "t": 186,
           "dur": 1.9,
           "zoom": 1.7,
           "head": "VOTE",
@@ -981,12 +962,12 @@
         {
           "take": "record-bmat",
           "fit": "black",
-          "t": 192,
+          "t": 195,
           "dur": 2.4,
           "zoom": 1.7,
           "head": "RESULT",
-          "title": "쇼핑카트 1등",
-          "say": "쇼핑카트가 1등?? 내 변기 왜 1표야",
+          "title": "목마 1등",
+          "say": "목마가 1등?? 내 변기 0표 실화야?",
           "color": "#FFD23C"
         },
         {
