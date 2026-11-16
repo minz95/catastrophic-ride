@@ -224,11 +224,15 @@ R.describe("friends and the first look (client sources)", function()
 		R.expect(inv:find("MY RIDE VS YOURS", 1, true) ~= nil).toBe(true)
 	end)
 
-	R.it("a pickup shows a face-down ??? card that turns over to the item's ability", function()
+	R.it("a pickup shows a small card: a new item face-down ??? turning over to its ability, a known one at once", function()
 		local src = fs.readFile("roblox/StarterGui/ItemGuideUI/init.client.lua")
 		R.expect(src:find('cardTitle.Text = "???"', 1, true) ~= nil).toBe(true)
 		R.expect(src:find("UDim2.fromScale(0, 1)", 1, true) ~= nil).toBe(true)   -- the turn
 		R.expect(src:find("showCard(info.item, isNew)", 1, true) ~= nil).toBe(true)  -- every pickup
+		R.expect(src:find("if isNew then faceDown() else faceUp(name, cfg, false) end", 1, true) ~= nil).toBe(true)
+		-- small, in its corner (playtest 2026-11-16: 320 × 64 took a corner of a small window)
+		local w, h = src:match("card%.Size%s*=%s*UDim2%.new%(0, (%d+), 0, (%d+)%)")
+		R.expect(tonumber(w) <= 240 and tonumber(h) <= 48).toBe(true, tostring(w) .. "x" .. tostring(h))
 	end)
 
 	R.it("the music button stands right of Roblox's top-left buttons (TopbarInset), not under them", function()
@@ -256,6 +260,11 @@ R.describe("friends and the first look (client sources)", function()
 		local fx = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmFx.client.lua")
 		R.expect(fx:find("An item was stolen", 1, true)).toBe(nil)
 		R.expect(fx:find('"😱 ROBBED!"', 1, true) ~= nil).toBe(true)
+		-- the steal warning is one short line; DEFENDED only over the head
+		local pw, ph = fx:match("local PROMPT_W, PROMPT_H = (%d+), (%d+)")
+		R.expect(tonumber(pw) <= 260 and tonumber(ph) <= 32).toBe(true)
+		R.expect(fx:find('prompt(done and "🛡️ DEFENDED!"', 1, true)).toBe(nil)
+		R.expect(fx:find("is stealing from you", 1, true)).toBe(nil)
 	end)
 
 	R.it("the client arrow follows the server's StarterItems event", function()

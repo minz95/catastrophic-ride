@@ -185,6 +185,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Modules/CameraController` leaves RACING alone: a second chase cam there
   aimed SKY along RightVector and the view sat ~45° off the plane. Studio
   bot matches report `camera` (camera vs nose angle).
+  It comes in front of any solid, opaque, anchored part between the car
+  and itself (`Shared/RaceCamera.unblock`; in a bend the outer wall filled
+  the screen, playtest 2026-11-16); glass, riders and other cars are
+  looked through.
 - Drift: one rule, `VehicleController.updateDrift`, for RacingClient,
   RaceSim and the offline sim. While sliding the car travels along
   `state.travelYaw`, so `actualForward` must be measured along
