@@ -438,7 +438,9 @@ RemoteEvents.EffectFx.OnClientEvent:Connect(function(key, userId, info)
 	local ok, drawn = pcall(STYLES[look.style] or STYLES.hit, model, primary, look, d, mine)
 	drawn = ok and drawn or {}
 	if look.label then
-		local text = info.text and (look.label .. " " .. info.text) or look.label
+		-- an item may bring its own word (a toilet's FLUSH!, not the soda's)
+		local base = type(info.label) == "string" and info.label or look.label
+		local text = info.text and (base .. " " .. info.text) or base
 		floatLabel(primary, text, look.color, mine)
 		table.insert(drawn, "label")
 	end

@@ -614,7 +614,7 @@ AbilityConfig["Rocking Horse"] = {
 AbilityConfig["Toilet"] = {
 	cooldown = 18, duration = 1.5, targetType = "self",
 	effectKey = "reverseBoost", selfSpeed = 1.3, push = 25,
-	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "🚽 Flush!",
+	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "🚽 Flush!", fxLabel = "🚽 FLUSH!",
 }
 
 AbilityConfig["Washing Machine"] = {
@@ -668,7 +668,7 @@ AbilityConfig["Electric Guitar"] = {
 AbilityConfig["Fire Extinguisher"] = {
 	cooldown = 18, duration = 1.5, targetType = "self",
 	effectKey = "reverseBoost", selfSpeed = 1.25, push = 22,
-	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "💨 Foam!",
+	animKey = "sodaExplosion", sfxKey = "soda_fizz", uiHint = "💨 Foam!", fxLabel = "💨 FOAM BLAST!",
 }
 
 AbilityConfig["Hot Dog"] = {

@@ -279,7 +279,7 @@ EFFECTS.rise           = EFFECTS.emergencyFloat   -- Balloon Bunch, Lantern
 EFFECTS.reverseBoost = function(activator, _, cfg)
 	local vehicle = _getVehicle(activator)
 	if not vehicle or not vehicle.PrimaryPart then return end
-	EffectFx.play(cfg.effectKey, activator, cfg.duration)
+	EffectFx.play(cfg.effectKey, activator, cfg.duration, nil, cfg.fxLabel and { label = cfg.fxLabel } or nil)
 	_impulse(vehicle, vehicle.PrimaryPart.CFrame.LookVector, cfg.push)
 	_applySpeedMult(vehicle, cfg.selfSpeed, cfg.duration, "sodaBlast")
 end

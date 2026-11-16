@@ -115,16 +115,19 @@ R.describe("farm bounds (Shared/FarmBounds, Maps/FarmKit, FarmRescue)", function
 			end
 			R.expect(items).toBeGreaterThan(5)
 			-- bots appear on the floor, inside the walls, apart from each other
+			-- (where they appeared: by the time this runs they have walked, and
+			-- two heading for one item were now and then nearer than BOT_GAP)
 			local roots = {}
 			for _, bot in ipairs(srv.SessionManager.bots()) do
 				local r = bot.Character.HumanoidRootPart
 				R.expect(FB.offFarm(biome, r.Position)).toBe(nil)
 				R.expect(math.abs(r.Position.Y - (b.floorY + FB.SPAWN_LIFT))).toBeLessThan(0.5)
+			end
+			for _, ev in ipairs(srv.Telemetry.events("farm_bot")) do
 				for _, o in ipairs(roots) do
-					R.expect((Vector3.new(o.X, 0, o.Z) - Vector3.new(r.Position.X, 0, r.Position.Z)).Magnitude)
-						.toBeGreaterThan(FB.BOT_GAP - 1e-6)
+					R.expect(Vector3.new(o.x - ev.x, 0, o.z - ev.z).Magnitude).toBeGreaterThan(FB.BOT_GAP - 0.15)
 				end
-				table.insert(roots, r.Position)
+				table.insert(roots, ev)
 			end
 			R.expect(#roots).toBe(3)
 			R.expect(srv.mock.errors).toBeEmpty("server errors")

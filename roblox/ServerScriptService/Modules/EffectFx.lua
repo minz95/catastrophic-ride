@@ -81,6 +81,7 @@ function EffectFx.play(key, player, duration, from, extra)
 		duration = duration,
 		from = from and from.UserId or nil,
 		text = extra and extra.text or nil,
+		label = extra and extra.label or nil,   -- the item's own word instead of the effect's
 	})
 	if Telemetry.detailed then
 		probe(key, player, duration, from)

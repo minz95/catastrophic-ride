@@ -113,7 +113,41 @@ R.describe("a ridden item is the vehicle (playtest: 'pasted on the default car')
 			end
 			-- Studio gallery: the duck's head looked back with a +90° turn
 			R.expect(VD.RIDE_LOOK["Rubber Duck"].yaw).toBe(-90)
+			-- 2026-11-16: the toilet (taller than long) was laid on its back and
+			-- the rider sat on its side; it stands, the seat over the bowl (a
+			-- third back from its front), the tank behind
+			if SS.ItemModels:FindFirstChild("Toilet") then
+				R.expect(dirOf("Toilet", roblox.Vector3.new(0, 1, 0), biome).Y).toBeGreaterThan(0.9)
+				local m = VB.build(VS.calculate(IC.Toilet, nil, nil, biome), biome, roblox.CFrame.new(), { BODY = "Toilet" })
+				local holder = m:FindFirstChild("Item_BODY_Toilet", true)
+				local lo, hi = math.huge, -math.huge
+				for _, p in ipairs(holder:GetDescendants()) do
+					if p:IsA("BasePart") then
+						local pr = Mock.props(p)
+						for _, sz in ipairs({ -1, 1 }) do
+							for _, sx in ipairs({ -1, 1 }) do
+								local z = (pr.CFrame * roblox.CFrame.new(sx * pr.Size.X / 2, 0, sz * pr.Size.Z / 2)).Position.Z
+								lo, hi = math.min(lo, z), math.max(hi, z)
+							end
+						end
+					end
+				end
+				local seat = m:FindFirstChildWhichIsA("VehicleSeat", true)
+				local at = (Mock.props(seat).CFrame.Position.Z - lo) / (hi - lo)
+				R.expect(math.abs(at - VD.RIDE_LOOK.Toilet.seatAt)).toBeLessThan(0.05)
+				-- the car's rocket and balloons ride on the toilet, not in the air past
+				-- its ends (a boat's ENGINE is an outboard motor off the stern)
+				local full = { BODY = "Toilet", ENGINE = "Rocket", SPECIAL = "Balloon Bunch" }
+				local m2 = VB.build(VS.calculate(IC.Toilet, IC.Rocket, IC["Balloon Bunch"], biome), biome, roblox.CFrame.new(), full)
+				local ilo, ihi = VB.boundsIn(m2, roblox.CFrame.new(), "BODY")
+				for _, slot in ipairs(biome == "FOREST" and { "ENGINE", "SPECIAL" } or {}) do
+					local h = m2:FindFirstChild("Item_" .. slot .. "_" .. full[slot], true)
+					local c = VB.bounds(h)
+					R.expect(c.Z > ilo.Z - 0.05 and c.Z < ihi.Z + 0.05).toBe(true, biome .. " " .. slot .. " off the toilet")
+				end
+			end
 		end
+		R.expect(VD.RIDE_LOOK.Toilet.yaw).toBe(0)
 	end)
 
 	R.it("a ridden plane's wings are grey and only a little wider than the item", function()

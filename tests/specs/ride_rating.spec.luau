@@ -77,6 +77,13 @@ R.describe("ride rating", function()
 	end)
 end)
 
+R.describe("crafting screen preview", function()
+	R.it("an item already in a slot is not previewed again (touch screens: the placed item stayed 'under the pointer')", function()
+		local src = require("@lune/fs").readFile("roblox/StarterGui/CraftingUI/init.client.lua")
+		R.expect(src:find("if slot and not _slotOf(item) then", 1, true) ~= nil).toBe(true)
+	end)
+end)
+
 R.describe("ability kinds", function()
 	R.it("the server publishes a kind and a blurb for every item with an ability", function()
 		local info = AbilityKind.info(env.game:GetService("ReplicatedStorage"), env.game:GetService("HttpService"))

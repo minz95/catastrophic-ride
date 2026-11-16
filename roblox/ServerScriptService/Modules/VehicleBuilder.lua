@@ -638,7 +638,20 @@ function VehicleBuilder.build(stats, biome, spawnCFrame, slots, look)
 		if itemName and not (slot == "BODY" and design.riding) then
 			for i, mount in ipairs(design.mounts[slot] or {}) do
 				local cf = mount.cf
-				if mount.onRide and rideTop then cf = CFrame.new(0, rideTop, 0) * cf end
+				if mount.onRide and rideTop then
+					-- on the ridden item as measured: within its length and on its
+					-- real surface there. The slot boxes are shares of the
+					-- vehicle's length, and on a short item (a toilet) the rocket
+					-- hung in the air past its end at the height of its tank
+					-- (Studio take 2026-11-16).
+					-- (VehicleDesign.fitRide keeps ENGINE / SPECIAL within it)
+					local p = cf.Position
+					local top = rideTop
+					if mount.onItem then
+						top = surfaceUnder(rideHolder, spawnCFrame, CFrame.new(p.X, rideTop, p.Z)) or rideTop
+					end
+					cf = CFrame.new(p.X, top + p.Y, p.Z) * cf.Rotation
+				end
 				if mount.hat then cf = spawnCFrame:ToObjectSpace(hatBaseCF(seat)) * CFrame.new(0, mount.box.Y / 2, 0) end
 				-- spinning copies hang on a hub (one per group: a paddle wheel)
 				local hub

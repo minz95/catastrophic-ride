@@ -589,6 +589,7 @@ function FarmBots.start(biome, api)
 			nextGuard = 0, guardUntil = nil, chase = nil,
 		})
 		Telemetry.record("farm_bot", { userId = proxy.UserId, name = proxy.Name, biome = biome,
+			x = math.floor(at.X * 10) / 10, z = math.floor(at.Z * 10) / 10,   -- where it appeared
 			noCollideGroup = model:GetAttribute("NoCollideGroup"),
 			climb = hum and pcall(function() return hum:GetStateEnabled(Enum.HumanoidStateType.Climbing) end)
 				and hum:GetStateEnabled(Enum.HumanoidStateType.Climbing) or false })
