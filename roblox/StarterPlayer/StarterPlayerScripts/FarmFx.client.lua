@@ -260,6 +260,9 @@ end
 
 -- ─── Defence prompt (the victim of a steal) ──────────────────────────────────
 
+-- one short line (playtest 2026-11-16: at 380 × 56 with "Mash E or punch
+-- (F)!" it covered half of a small window; the key strip has the keys)
+local PROMPT_W, PROMPT_H = 240, 28
 local _prompt
 local function prompt(text, color, seconds)
 	local pg = LocalPlayer:FindFirstChild("PlayerGui")
@@ -276,7 +279,7 @@ local function prompt(text, color, seconds)
 		-- the phase toast; 70 % wide at mid-height it covered the ITEMS button,
 		-- the key list and the toast in small windows (Studio ui-layout 2026-10-30)
 		t.Position = UDim2.fromScale(0.5, 0.56)
-		t.Size = UDim2.new(0, 380, 0, 56)
+		t.Size = UDim2.new(0, PROMPT_W, 0, PROMPT_H)
 		t.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 		t.BackgroundTransparency = 0.25
 		t.TextScaled = true
@@ -294,10 +297,10 @@ local function prompt(text, color, seconds)
 	local left = TouchLayout.gridLeft(pg)
 	if left then
 		t.Position = UDim2.new(0, left / 2, 0.56, 0)
-		t.Size = UDim2.new(0, math.min(380, left - 24), 0, 56)
+		t.Size = UDim2.new(0, math.min(PROMPT_W, left - 24), 0, PROMPT_H)
 	else
 		t.Position = UDim2.fromScale(0.5, 0.56)
-		t.Size = UDim2.new(0, 380, 0, 56)
+		t.Size = UDim2.new(0, PROMPT_W, 0, PROMPT_H)
 	end
 	t.Visible = true
 	local token = {}
@@ -704,8 +707,8 @@ local function onGrab(thiefId, victimId, info)
 		_wriggle[vChar] = os.clock() + window
 	end
 	if victim == LocalPlayer then
-		prompt(("⚠️ %s is stealing from you!  Mash %s or punch (%s)! (0/%d)"):format(nameOf(thiefId),
-			InputHints.key("defend"), InputHints.key("punch"), Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), window + 0.3)
+		prompt(("⚠️ %s steals! %s ×%d"):format(nameOf(thiefId), InputHints.key("defend"), Constants.STEAL_DEFEND_PRESSES),
+			Color3.fromRGB(255, 210, 80), window + 0.3)
 		shake(0.02, 0.3)
 	end
 	report("farmfx", { what = "grab", drawn = reached and vChar ~= nil })
@@ -722,9 +725,10 @@ local function onSwat(victimId, thiefId, info)
 	if victim == LocalPlayer then
 		local n = info and info.presses or 0
 		local done = n >= Constants.STEAL_DEFEND_PRESSES
-		prompt(done and "🛡️ DEFENDED!" or ("⚠️ %s is stealing!  Mash %s or punch (%s)! (%d/%d)"):format(
-			nameOf(thiefId), InputHints.key("defend"), InputHints.key("punch"), n, Constants.STEAL_DEFEND_PRESSES),
-			done and Color3.fromRGB(120, 230, 140) or Color3.fromRGB(255, 210, 80), done and 1 or 0.8)
+		-- defended: the "🛡️ DEFENDED!" over your head says it (the same
+		-- word mid-screen as well filled the view)
+		prompt(done and "" or ("⚠️ %s steals! %s %d/%d"):format(nameOf(thiefId), InputHints.key("defend"), n,
+			Constants.STEAL_DEFEND_PRESSES), Color3.fromRGB(255, 210, 80), done and 0.01 or 0.8)
 	end
 	report("farmfx", { what = "swat", drawn = swatted })
 end

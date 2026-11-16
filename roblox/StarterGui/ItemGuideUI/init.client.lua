@@ -277,7 +277,9 @@ card.Name             = "NewItem"
 -- phase toast's, the steal warning's and the effect words' (Studio
 -- ui-layout 2026-10-30: the card sat on all three)
 local CARD_AT = UDim2.new(1, -12, 1, -100)
-card.Size             = UDim2.new(0, 320, 0, 64)
+-- small (playtest 2026-11-16: at 320 × 64 it took a corner of a small
+-- window on every pickup); J opens the whole guide
+card.Size             = UDim2.new(0, 220, 0, 42)
 card.AnchorPoint      = Vector2.new(1, 1)
 card.Position         = CARD_AT
 card.BackgroundTransparency = 1
@@ -298,15 +300,15 @@ local faceStroke = Instance.new("UIStroke")
 faceStroke.Thickness = 2
 faceStroke.Color     = GOLD
 faceStroke.Parent    = face
-local cardIcon = label(face, "", UDim2.new(0, 44, 0, 44), UDim2.new(0, 10, 0, 10), Enum.Font.GothamBold)
+local cardIcon = label(face, "", UDim2.new(0, 30, 0, 30), UDim2.new(0, 6, 0, 6), Enum.Font.GothamBold)
 cardIcon.TextXAlignment = Enum.TextXAlignment.Center
-local cardTitle = label(face, "", UDim2.new(1, -70, 0, 22), UDim2.new(0, 62, 0, 8), Enum.Font.GothamBlack, GOLD)
-local cardText = label(face, "", UDim2.new(1, -70, 0, 18), UDim2.new(0, 62, 0, 34), Enum.Font.GothamMedium)
+local cardTitle = label(face, "", UDim2.new(1, -46, 0, 15), UDim2.new(0, 40, 0, 5), Enum.Font.GothamBlack, GOLD)
+local cardText = label(face, "", UDim2.new(1, -46, 0, 13), UDim2.new(0, 40, 0, 23), Enum.Font.GothamMedium)
 local _cardToken = 0
 
 local REVEAL_AFTER = 0.45   -- s face down
 local TURN = 0.14           -- s for each half of the turn
-local SHOW_NEW, SHOW_AGAIN = 4, 2.6
+local SHOW_NEW, SHOW_AGAIN = 3, 1.6
 
 _hideCard = function() card.Visible = false; _cardToken += 1 end
 
@@ -323,7 +325,7 @@ local function faceUp(name, cfg, isNew)
 	cardIcon.Text = cfg.icon or "❔"
 	cardTitle.Text = (isNew and "NEW: " or "") .. name .. "  (" .. (TAB_NAME[cfg.slotType] or "") .. ")"
 	cardTitle.TextColor3 = RARITY_COLOUR[cfg.rarity] or GOLD
-	cardText.Text = InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability") .. "   " .. InputHints.tag("guide") .. " all items"
+	cardText.Text = InputHints.key("item") .. ": " .. (ItemBlurbs.ABILITY[name] or "no ability")
 	face.BackgroundColor3 = PANEL
 	faceStroke.Color = RARITY_COLOUR[cfg.rarity] or GOLD
 end
@@ -331,7 +333,8 @@ end
 local function showCard(name, isNew)
 	local cfg = ItemConfig[name]
 	if not cfg then return end
-	faceDown()
+	-- the "???" turn only for a new item; a known one shows at once
+	if isNew then faceDown() else faceUp(name, cfg, false) end
 	face.Size = UDim2.fromScale(1, 1)
 	_cardToken += 1
 	local token = _cardToken
@@ -355,7 +358,7 @@ local function showCard(name, isNew)
 	card.Position = at + UDim2.new(0, 40, 0, 0)
 	TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Back), { Position = at }):Play()
 	task.delay(REVEAL_AFTER, function()
-		if token ~= _cardToken then return end
+		if token ~= _cardToken or not isNew then return end
 		local shut = TweenService:Create(face, TweenInfo.new(TURN, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
 			{ Size = UDim2.fromScale(0, 1) })
 		shut:Play()
@@ -365,7 +368,7 @@ local function showCard(name, isNew)
 		TweenService:Create(face, TweenInfo.new(TURN + 0.06, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
 			{ Size = UDim2.fromScale(1, 1) }):Play()
 	end)
-	task.delay(REVEAL_AFTER + (isNew and SHOW_NEW or SHOW_AGAIN), function()
+	task.delay(isNew and REVEAL_AFTER + SHOW_NEW or SHOW_AGAIN, function()
 		if token == _cardToken then card.Visible = false end
 	end)
 end

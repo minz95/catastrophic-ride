@@ -16,6 +16,7 @@ local KeyInput     = require(ReplicatedStorage.Shared.KeyInput)   -- keyboard + 
 local VehicleController = require(ReplicatedStorage.Shared.VehicleController)
 local RaceProgress = require(ReplicatedStorage.Shared.RaceProgress)
 local AbilitySlots = require(ReplicatedStorage.Shared.AbilitySlots)
+local RaceCamera   = require(ReplicatedStorage.Shared.RaceCamera)
 local SoundFx      = require(ReplicatedStorage.Shared.SoundFx)
 local InputHints   = require(ReplicatedStorage.Shared.InputHints)
 local TouchDrive   = require(ReplicatedStorage.Shared.TouchDrive)
@@ -916,13 +917,41 @@ end)
 -- The only race camera (Modules/CameraController leaves racing alone):
 -- behind the chassis' nose (LookVector is the nose for car, boat and plane
 -- alike), a little further back and higher at speed.
+-- what the camera looks through: see-through parts, loose ones (riders,
+-- items) and other cars (a car passing would pull the camera in)
+local _camParams = RaycastParams.new()
+_camParams.FilterType = Enum.RaycastFilterType.Exclude
+_camParams.IgnoreWater = true
+_camParams.RespectCanCollide = true
+local function _camSeeThrough(part)
+	if part.Transparency >= 0.5 or not part.Anchored then return true end   -- SKY's glass fence is 0.6
+	local model = part:FindFirstAncestorOfClass("Model")
+	while model do
+		if model.Name:sub(1, 8) == "Vehicle_" then return true end
+		model = model:FindFirstAncestorOfClass("Model")
+	end
+	return false
+end
+
 local function _updateCamera()
 	if not _vehicle or not _vehicle.PrimaryPart then return end
 	local primary = _vehicle.PrimaryPart
 	local lookDir = primary.CFrame.LookVector
 	local vel     = primary.AssemblyLinearVelocity.Magnitude
 	local camPos  = primary.Position - lookDir * (12 + vel * 0.04) + Vector3.new(0, 5 + vel * 0.02, 0)
-	Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(camPos, primary.Position + Vector3.new(0, 1.5, 0)), 0.12)
+	local focus   = primary.Position + Vector3.new(0, 1.5, 0)
+	local cf      = Camera.CFrame:Lerp(CFrame.new(camPos, focus), 0.12)
+	-- in front of any wall between the car and the camera (Shared/RaceCamera:
+	-- in a bend the wall used to fill the screen)
+	local exclude = { _vehicle }
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p.Character then table.insert(exclude, p.Character) end
+	end
+	_camParams.FilterDescendantsInstances = exclude
+	local pos = RaceCamera.unblock(focus, cf.Position, function(origin, dir)
+		return workspace:Raycast(origin, dir, _camParams)
+	end, _camSeeThrough)
+	Camera.CFrame = pos == cf.Position and cf or CFrame.new(pos, focus)
 end
 
 -- ─── Speedometer update ───────────────────────────────────────────────────────
