@@ -51,7 +51,9 @@ local PHASE_GUIDES = {
 			{ key = "B",          act = "shop",   short = "Shop",   desc = "Shop: looks for this round's car" },
 			{ key = "J",          act = "guide",  short = "Items",  desc = "Item guide: what every item does" },
 		},
-		tip = "Grab the items with icons and names, or rob other players!\nRarity: grey (Common) < green (Uncommon) < blue (Rare) < purple (Epic)",
+		-- one line (playtest 2026-11-16, "the screen is covered in text"): the
+		-- keys are on the key strip, rarity on every item's card (J)
+		tip = "Grab junk for your ride, or rob your friends!",
 	},
 	CRAFTING = {
 		title = "🔧  CRAFTING PHASE",
@@ -121,7 +123,7 @@ local function _keysFor(guide)
 	return out
 end
 
--- ─── Floating toast (shows at phase start, auto-hides after 6s) ──────────────
+-- ─── Floating toast (shows at phase start, auto-hides after TOAST_SECONDS) ──────────────
 
 local toastFrame = Instance.new("Frame")
 toastFrame.Name              = "Toast"
@@ -267,6 +269,7 @@ end
 -- the toast slides in from and out to here: from Y 40 it passed over the
 -- phase timer (Y 14-60) on the way (Studio first-minute 2026-11-11)
 local TOAST_FROM_Y = 64
+local TOAST_SECONDS = 3.5   -- on screen; click it to close it sooner
 local _toastTimer  = nil
 local _toastHideTimer = nil
 
@@ -345,8 +348,8 @@ local function _showToast(phase)
 		Position = UDim2.new(0.5, -180, 0, 80)
 	}):Play()
 
-	-- Auto-hide after 7 s
-	local show = 7
+	-- Auto-hide: it stood 7 s over the farm while the round had begun
+	local show = TOAST_SECONDS
 	if _toastTimer then pcall(task.cancel, _toastTimer) end
 	_toastTimer = task.delay(show, function()
 		_toastTimer = nil

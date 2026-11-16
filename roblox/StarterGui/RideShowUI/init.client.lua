@@ -1,9 +1,9 @@
 -- RideShowUI
 -- The ride show (server: RideShowManager): when RESULTS opens with two or
 -- more players who raced, their rides stand side by side over the results
--- for RIDE_SHOW.SECONDS. Each card: the ride with its driver, the items,
--- the grade and the four bars (Shared/RideRating: compare yours with your
--- friends'), and a vote button (not on your own). The winner gets a 🏆 and
+-- for RIDE_SHOW.SECONDS. Each card: the ride with its driver filling it,
+-- the grade (Shared/RideRating) in its corner, the name and a vote button
+-- (not on your own). Items and bars are on the crafting screen. The winner gets a 🏆 and
 -- coins; 📸 makes a "vs" picture of all of them to share (Shared/Snapshot).
 
 local Players           = game:GetService("Players")
@@ -99,20 +99,9 @@ local snapBtn = Snapshot.button(stage, UDim2.fromOffset(220, 46), UDim2.new(0.5,
 	Snapshot.card(rides, #rides > 1 and "WHOSE RIDE IS FUNNIER?" or "MY JUNK RIDE")
 end)
 
-local function bar(parent, y, lab, value)
-	label(parent, lab, UDim2.new(0.42, 0, 0, 14), UDim2.new(0, 0, 0, y), Enum.Font.GothamBold, Color3.fromRGB(190, 190, 210))
-	local back = Instance.new("Frame")
-	back.Size = UDim2.new(0.56, 0, 0, 8)
-	back.Position = UDim2.new(0.44, 0, 0, y + 3)
-	back.BackgroundColor3 = Color3.fromRGB(50, 50, 75)
-	back.BorderSizePixel = 0
-	back.Parent = parent
-	local fill = Instance.new("Frame")
-	fill.Size = UDim2.fromScale(math.clamp(value or 0, 0.03, 1), 1)
-	fill.BackgroundColor3 = Color3.fromRGB(110, 210, 130)
-	fill.BorderSizePixel = 0
-	fill.Parent = back
-end
+-- under each ride: its name (22) and the vote button
+local BUTTON_H = 34
+local FOOT_H = 22 + BUTTON_H + 18
 
 local function vote(userId)
 	if userId == LocalPlayer.UserId then return end
@@ -137,48 +126,44 @@ local function card(entry, i, n, biome)
 	if mine then
 		local st = Instance.new("UIStroke"); st.Color = GOLD; st.Thickness = 3; st.Parent = f
 	end
+	-- the ride fills the card (playtest 2026-11-16: under half a card, with
+	-- items and four bars in small English below, every ride looked alike
+	-- and nothing was funny); under it only the name, the grade and the vote
 	local viewSlot = Instance.new("Frame")
 	viewSlot.BackgroundTransparency = 1
-	viewSlot.Size = UDim2.new(1, -12, 0.46, 0)
+	viewSlot.Size = UDim2.new(1, -12, 1, -(6 + FOOT_H))
 	viewSlot.Position = UDim2.new(0, 6, 0, 6)
 	viewSlot.ClipsDescendants = true
 	viewSlot.Parent = f
 	local p = Players:GetPlayerByUserId(entry.userId)
 	local view = RideCard.view(viewSlot, entry.model, p and p.Character)
 	if view then local vc = Instance.new("UICorner"); vc.CornerRadius = UDim.new(0, 10); vc.Parent = view end
-	local votes = label(viewSlot, "", UDim2.new(0.5, 0, 0, 24), UDim2.new(0.5, -6, 0, 4), nil, GOLD)
+	local votes = label(viewSlot, "", UDim2.new(0.5, 0, 0, 28), UDim2.new(0.5, -6, 0, 4), nil, GOLD)
 	votes.TextXAlignment = Enum.TextXAlignment.Right
 	votes.ZIndex = 3
 	local rating = RideRating.rate(entry.slots or {}, biome)
 	entry.grade = rating.grade
-	local info = Instance.new("Frame")
-	info.BackgroundTransparency = 1
-	info.Size = UDim2.new(1, -16, 0.54, -12)
-	info.Position = UDim2.new(0, 8, 0.46, 10)
-	info.Parent = f
-	label(info, (mine and "YOU · " or "") .. entry.name, UDim2.new(1, -44, 0, 20), UDim2.new(0, 0, 0, 0))
-	label(info, RideCard.items(entry.slots), UDim2.new(1, -44, 0, 16), UDim2.new(0, 0, 0, 22), Enum.Font.GothamBold,
-		Color3.fromRGB(190, 200, 235))
-	local g = label(info, rating.grade, UDim2.fromOffset(38, 38), UDim2.new(1, -38, 0, 0), nil, GOLD)
-	g.BackgroundTransparency = 0
+	local g = label(viewSlot, rating.grade, UDim2.fromOffset(34, 34), UDim2.new(0, 6, 0, 6), nil, GOLD)
+	g.BackgroundTransparency = 0.2
 	g.BackgroundColor3 = Color3.fromRGB(44, 44, 70)
+	g.ZIndex = 3
 	local gc = Instance.new("UICorner"); gc.CornerRadius = UDim.new(0, 8); gc.Parent = g
-	for k, b in ipairs(RideRating.BARS) do
-		bar(info, 42 + (k - 1) * 17, b.label, rating.bars[b.key])
-	end
+	local name = label(f, (mine and "YOU · " or "") .. entry.name, UDim2.new(1, -16, 0, 22),
+		UDim2.new(0, 8, 1, -(FOOT_H - 4)))
+	name.ZIndex = 2
 	local button
 	if mine then
-		label(info, "YOUR RIDE", UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 1, -30), nil, GOLD)
+		label(f, "YOUR RIDE", UDim2.new(1, -16, 0, BUTTON_H), UDim2.new(0, 8, 1, -(BUTTON_H + 8)), nil, GOLD)
 	else
 		button = Instance.new("TextButton")
-		button.Size = UDim2.new(1, 0, 0, 34)
-		button.Position = UDim2.new(0, 0, 1, -34)
+		button.Size = UDim2.new(1, -16, 0, BUTTON_H)
+		button.Position = UDim2.new(0, 8, 1, -(BUTTON_H + 8))
 		button.BackgroundColor3 = Color3.fromRGB(230, 120, 40)
 		button.Text = "🤣 FUNNIEST"
 		button.TextColor3 = Color3.new(1, 1, 1)
 		button.TextScaled = true
 		button.Font = Enum.Font.GothamBlack
-		button.Parent = info
+		button.Parent = f
 		local bc = Instance.new("UICorner"); bc.CornerRadius = UDim.new(0, 8); bc.Parent = button
 		button.Activated:Connect(function() vote(entry.userId) end)
 	end

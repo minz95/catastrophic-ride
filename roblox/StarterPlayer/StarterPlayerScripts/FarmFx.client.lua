@@ -760,7 +760,10 @@ local function onGrabEnd(thiefId, victimId, info)
 		end
 	end
 	if victim == LocalPlayer and result ~= "defended" and result ~= "escaped" and result ~= "punched" then
-		prompt(result == "stolen" and "😱 An item was stolen!" or "", Color3.fromRGB(255, 120, 120), result == "stolen" and 1.5 or 0.01)
+		-- clear the steal warning. A robbed player's own "😱 ROBBED!" over the
+		-- head and the stolen sound tell it: the old mid-screen "item was
+		-- stolen" line covered the farm (playtest 2026-11-16)
+		prompt("", Color3.fromRGB(255, 120, 120), 0.01)
 	end
 	report("farmfx", { what = "grabEnd", result = result, drawn = tChar ~= nil })
 end
