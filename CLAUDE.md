@@ -450,7 +450,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   every player's ride (the parked car model and its slots, RemoteEvents
   `RideShow` open / votes / closed) and `StarterGui/RideShowUI` lays them
   side by side over the results for `SECONDS` (ride and driver via
-  `Shared/RideCard`, grade and bars from RideRating); everyone votes the
+  `Shared/RideCard` filling the card, the RideRating grade in its corner,
+  name and vote under it: with items and bars under a small ride every
+  ride looked alike, playtest 2026-11-16); everyone votes the
   funniest but their own (`VoteRide`, `Shared/RideVote`), the winner gets
   `COINS` (telemetry `ride_vote`, in the soak ledger). Counts cross the
   remote as a list (sparse number keys do not). 📸 (`Shared/Snapshot`: a
@@ -633,7 +635,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   hold Q emotes, B shop, J item guide. TutorialUI keeps the phase's keys on screen (`KeyStrip`,
   bottom-left, growing up; the SHOP / ITEMS buttons move up clear of it:
   `Shared/SideButtons`; the FARMING toast leaves the keys to the strip,
-  CRAFTING and RACING show no toast). Screen overlaps: `sim.py run
+  CRAFTING and RACING show no toast; FARMING's is one line for
+  `TOAST_SECONDS`, and a robbed player gets only ROBBED! over the head, no
+  mid-screen line: the farm was covered in text, playtest 2026-11-16). Screen overlaps: `sim.py run
   ui-layout` (a whole round; the bot client reports every visible
   element's box, check `uiOverlap`) and `python3 tools/studio/ui_overlap.py`
   (overlaps at that window and recomputed for 1920×1080 … 1024×640; Roblox's

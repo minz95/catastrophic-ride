@@ -1988,7 +1988,7 @@
       "tags": [
         "video"
       ],
-      "_why": "footage for the Korean 'Discord with friends' reel (2026-11-16): the filmer rides a Toilet (Rocket, Balloon Bunch, Propeller Hat), the four race bots new rides (botLoadouts); craftShow: the filmer builds its loadout on the crafting screen item by item; the bots' rides join the ride show, where they and the filmer vote (rideShowBots); resultsHold keeps the match through the show. The screen must be awake and unlocked",
+      "_why": "footage for the Korean 'Discord with friends' reel (2026-11-16): the filmer rides a Toilet (Rocket, Balloon Bunch, Propeller Hat), the four race bots rides that differ at a glance in shape and colour (botLoadouts: duck, red sofa, rocking horse, cart; 2026-11-16 the fridge, washer, chair and bin all read as grey boxes); craftShow: the filmer builds its loadout on the crafting screen item by item; the bots' rides join the ride show, where they and the filmer vote (rideShowBots); resultsHold keeps the match through the show. The screen must be awake and unlocked",
       "opts": {
         "biome": "FOREST",
         "players": 1,
@@ -2025,24 +2025,24 @@
         ],
         "botLoadouts": [
           {
-            "BODY": "Refrigerator",
-            "ENGINE": "Kettle",
-            "SPECIAL": "Pizza",
+            "BODY": "Rubber Duck",
+            "ENGINE": "Toaster",
+            "SPECIAL": "Watermelon",
             "HEAD": "Cactus"
           },
           {
-            "BODY": "Washing Machine",
+            "BODY": "Red Sofa",
             "ENGINE": "Fire Extinguisher",
-            "SPECIAL": "Watermelon"
-          },
-          {
-            "BODY": "Office Chair",
-            "ENGINE": "Toaster",
             "SPECIAL": "Umbrella",
             "HEAD": "Flower"
           },
           {
-            "BODY": "Trash Can",
+            "BODY": "Rocking Horse",
+            "ENGINE": "Kettle",
+            "SPECIAL": "Pizza"
+          },
+          {
+            "BODY": "Shopping Cart",
             "ENGINE": "Drill",
             "SPECIAL": "Soda Bottle"
           }

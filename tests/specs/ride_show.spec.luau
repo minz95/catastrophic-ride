@@ -106,12 +106,17 @@ R.describe("ride show at RESULTS", function()
 end)
 
 R.describe("ride show and snapshot on screen", function()
-	R.it("the show draws each ride with its grade and bars, votes, and has 📸; the showroom has 📸 too", function()
+	R.it("the show draws each ride big with its grade, votes, and has 📸; the showroom has 📸 too", function()
 		local ui = fs.readFile("roblox/StarterGui/RideShowUI/init.client.lua")
 		for _, needle in ipairs({ "RideCard.view(viewSlot", "RideRating.rate(", "RemoteEvents.VoteRide:FireServer",
 			"if mine then", "Snapshot.card(rides", "🏆 FUNNIEST RIDE" }) do
 			R.expect(ui:find(needle, 1, true) ~= nil).toBe(true, needle)
 		end
+		-- the ride fills the card; no small English bars or item lists under it
+		-- (playtest 2026-11-16: every ride looked alike)
+		R.expect(ui:find("RideRating.BARS", 1, true)).toBe(nil)
+		R.expect(ui:find("RideCard.items(entry.slots), UDim2", 1, true)).toBe(nil)
+		R.expect(ui:find("viewSlot.Size = UDim2.new(1, -12, 1, -(6 + FOOT_H))", 1, true) ~= nil).toBe(true)
 		local craft = fs.readFile("roblox/StarterGui/CraftingUI/init.client.lua")
 		R.expect(craft:find('Snapshot.card({ {', 1, true) ~= nil).toBe(true)
 		local snap = fs.readFile("roblox/ReplicatedStorage/Shared/Snapshot.lua")

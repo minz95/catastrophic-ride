@@ -244,6 +244,20 @@ R.describe("friends and the first look (client sources)", function()
 		R.expect(src:find("-180, 0, 40)", 1, true)).toBe(nil)
 	end)
 
+	R.it("the farm is not covered in text: a short toast, one line, no mid-screen 'stolen' line", function()
+		-- playtest 2026-11-16: the toast stood 7 s with two lines of tips, and
+		-- "An item was stolen!" sat in the middle of the farm
+		local src = fs.readFile("roblox/StarterGui/TutorialUI/init.client.lua")
+		local secs = tonumber(src:match("local TOAST_SECONDS = ([%d.]+)"))
+		R.expect(secs ~= nil and secs <= 4).toBe(true)
+		R.expect(src:find("local show = TOAST_SECONDS", 1, true) ~= nil).toBe(true)
+		local tip = src:match('FARMING = {.-tip = "(.-)",')
+		R.expect(tip ~= nil and tip:find("\\n", 1, true) == nil and #tip <= 60).toBe(true, tip)
+		local fx = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/FarmFx.client.lua")
+		R.expect(fx:find("An item was stolen", 1, true)).toBe(nil)
+		R.expect(fx:find('"😱 ROBBED!"', 1, true) ~= nil).toBe(true)
+	end)
+
 	R.it("the client arrow follows the server's StarterItems event", function()
 		local src = fs.readFile("roblox/StarterPlayer/StarterPlayerScripts/StarterArrow.client.lua")
 		R.expect(src:find("RemoteEvents.StarterItems.OnClientEvent", 1, true) ~= nil).toBe(true)
