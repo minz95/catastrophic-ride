@@ -266,7 +266,8 @@ function MatchHarness.start(args, endTest)
 				-- a moment for what happens at RESULTS (rewards) to be logged;
 				-- a layout dump (every 2 s on the client) needs the results
 				-- screen up long enough to be taken (ui-weather missed it)
-				task.delay(args.uiDump and 5 or 1, function() finish("rounds complete") end)
+				-- resultsHold: seconds of RESULTS kept for a recording (the ride show)
+				task.delay(args.uiDump and 5 or tonumber(args.resultsHold) or 1, function() finish("rounds complete") end)
 			end
 		end
 	end)

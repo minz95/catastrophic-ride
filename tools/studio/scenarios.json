@@ -1983,6 +1983,80 @@
       "checks": {}
     },
     {
+      "name": "record-bmat",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the Korean 'Discord with friends' reel (2026-11-16): record-forest-store with new rides only (none from the earlier reels) for the filmer and the four race bots (botLoadouts), and the bots' rides in the ride show, where they and the filmer vote (rideShowBots). The screen must be awake and unlocked; resultsHold keeps the match through the show (the first take ended 1 s into RESULTS)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "fillBots": 5,
+        "driverProfiles": [
+          "average"
+        ],
+        "farmProfiles": [
+          "filmer"
+        ],
+        "shop": [
+          [
+            "ride_rainbow",
+            "move_kick"
+          ]
+        ],
+        "durations": {
+          "FARMING": 40,
+          "CRAFTING": 15,
+          "RACING": 240,
+          "RESULTS": 25
+        },
+        "maxSeconds": 520,
+        "loadouts": [
+          [
+            {
+              "BODY": "Rocking Horse",
+              "ENGINE": "Lawn Mower",
+              "SPECIAL": "Teddy Bear",
+              "HEAD": "Propeller Hat"
+            }
+          ]
+        ],
+        "botLoadouts": [
+          {
+            "BODY": "Refrigerator",
+            "ENGINE": "Kettle",
+            "SPECIAL": "Pizza",
+            "HEAD": "Cactus"
+          },
+          {
+            "BODY": "Washing Machine",
+            "ENGINE": "Fire Extinguisher",
+            "SPECIAL": "Watermelon"
+          },
+          {
+            "BODY": "Office Chair",
+            "ENGINE": "Toaster",
+            "SPECIAL": "Balloon Bunch",
+            "HEAD": "Flower"
+          },
+          {
+            "BODY": "Trash Can",
+            "ENGINE": "Drill",
+            "SPECIAL": "Soda Bottle"
+          }
+        ],
+        "rideShowBots": 4,
+        "resultsHold": 20
+      },
+      "record": {
+        "delay": 15,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
       "name": "record-ocean",
       "kind": "match",
       "tags": [

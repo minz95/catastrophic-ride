@@ -448,7 +448,10 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   remote as a list (sparse number keys do not). 📸 (`Shared/Snapshot`: a
   full-screen card with the game's name, CaptureService screenshot, then
   the share sheet or the gallery) is on the show and in the crafting
-  showroom.
+  showroom. Filming (Studio records one client, a lone player gets no
+  show): harness `rideShowBots` = n puts n race bots' rides in and they vote,
+  `botLoadouts[k]` fixes race bot k's build; the bot client votes through
+  RideShowUI (LocalPlayer attribute `RideVoteFor`). `sim.py run record-bmat`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

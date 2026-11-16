@@ -243,6 +243,12 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 	if phase ~= Constants.PHASES.RESULTS then screen.Enabled = false end
 end)
 
+-- A harness bot client votes like a press (BotDriver sets RideVoteFor).
+LocalPlayer:GetAttributeChangedSignal("RideVoteFor"):Connect(function()
+	local id = LocalPlayer:GetAttribute("RideVoteFor")
+	if type(id) == "number" and _cards[id] then vote(id) end
+end)
+
 game:GetService("RunService").Heartbeat:Connect(function()
 	if not screen.Enabled or not _endsAt then return end
 	local left = _endsAt - workspace:GetServerTimeNow()

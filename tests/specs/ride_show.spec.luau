@@ -120,6 +120,21 @@ R.describe("ride show and snapshot on screen", function()
 		R.expect(snap:find("PromptSaveCapturesToGallery(", 1, true) ~= nil).toBe(true)
 	end)
 
+	R.it("no UIGradient on a ViewportFrame: it tints the 3D ride (cards came out nearly black, 2026-11-16)", function()
+		for _, path in ipairs({ "roblox/ReplicatedStorage/Shared/RideCard.lua", "roblox/StarterGui/CraftingUI/init.client.lua",
+			"roblox/StarterGui/LobbyUI/init.client.lua", "roblox/StarterGui/ShopUI/init.client.lua",
+			"roblox/ReplicatedStorage/Shared/Snapshot.lua", "roblox/StarterGui/RideShowUI/init.client.lua" }) do
+			local src = fs.readFile(path)
+			local views = {}
+			for name in src:gmatch("local%s+([%w_]+)%s*=%s*Instance%.new%(\"ViewportFrame\"%)") do views[name] = true end
+			for grad in src:gmatch("local%s+([%w_]+)%s*=%s*Instance%.new%(\"UIGradient\"%)") do
+				for target in src:gmatch(grad .. "%.Parent%s*=%s*([%w_]+)") do
+					R.expect(views[target] == nil).toBe(true, path .. ": " .. grad .. " on the viewport " .. target)
+				end
+			end
+		end
+	end)
+
 	R.it("RideCard lists the items BODY first", function()
 		local env = Loader.boot()
 		local RideCard = env.requirePath("ReplicatedStorage.Shared.RideCard")

@@ -193,6 +193,10 @@ function RaceBots.spawn(biome, count, gridCFrames, firstSlot)
 		local data = SessionManager.getData(proxy)
 		local farmed = data and #data.inventory > 0
 		local slots = farmed and CraftingRules.autoSlots(data.inventory, ItemConfig) or RaceBots.randomSlots(_rng)
+		-- Studio filming: harness `botLoadouts[k]` fixes bot k's build (nil live)
+		local harness = require(script.Parent.HarnessConfig).peek()
+		local fixed = harness and type(harness.botLoadouts) == "table" and harness.botLoadouts[k]
+		if type(fixed) == "table" then slots = table.clone(fixed) end
 		local stats = statsFor(slots, biome)
 		local paints = Cosmetics.ITEMS.paint
 		local paint = paints[_rng:NextInteger(1, #paints)]
