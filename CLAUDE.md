@@ -42,7 +42,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   of every turn, dropped wherever they would stand inside the lane (inside of
   turns). No track crosses itself (a crossing leaves the fence open; SKY's
   old figure-8 let flyers slip out there). `wallGapHalfWidth` > 0 adds doorways
-  (currently 0 everywhere: continuous walls).
+  (currently 0 everywhere: continuous walls). A piece ends where its LANE
+  SIDE leaves the lane (`boundaryRuns` `face`, cut found exactly): cut by
+  its middle line, its corner stood up to 1.5 studs into the next stretch
+  at every bend and cars hugging the wall caught on it (playtest
+  2026-11-16; spec "no wall corner sticks into the lane").
 - Look of a map or a drop without Studio: `tools/scene_dump.luau` +
   `tools/scene_render.py` (PNG). Layout and where simulated drivers
   slip out: `lune run tools/topview.luau <BIOME>` + `python3 tools/topview.py

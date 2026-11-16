@@ -111,6 +111,10 @@ function BiomeSpecs.map(biome, cfg)
 			R.expect(dist).toBeLessThan(runoff - 8)
 		end)
 
+		R.it("no wall corner sticks into the lane at a bend (cars hugging the wall caught on them)", function()
+			R.expect(MapChecks.wallCorners(intended, cfg.isWall, 0.3)).toBeEmpty("wall corners in the lane")
+		end)
+
 		R.it("walls have no holes wider than a doorway, outside of turns included", function()
 			R.expect(MapChecks.wallGaps(intended, cfg.isWall, cfg.wallOffset, cfg.doorway + 1))
 				.toBeEmpty("holes in the wall wider than " .. cfg.doorway .. " studs")

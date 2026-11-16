@@ -175,6 +175,36 @@ function MapChecks.wallIntrusions(w, isWall, margin)
 	return lines
 end
 
+--- Wall corners that stick more than `tol` studs into the lane, deepest
+-- first. A box's lane-side corner standing in the next stretch at a bend is
+-- an edge a car hugging the wall catches on (playtest 2026-11-16).
+function MapChecks.wallCorners(w, isWall, tol)
+	tol = tol or 0.3
+	local half = w.track.width / 2
+	local out = {}
+	for _, ob in ipairs(w.obstacles) do
+		if isWall(ob.name) and not MapChecks.isEndWall(w, ob) then
+			for _, c in ipairs(MapQuery.corners(ob)) do
+				local p = w.geo:project(c[1], c[2])
+				if w.geo.hasHeights then
+					p = w.geo:project(c[1], c[2], nil, nil, roadY(w, p.s))
+				end
+				local depth = half - p.dist
+				if depth > tol and atRoad(w, ob, p.s, c[1], c[2]) then
+					table.insert(out, { depth = depth, s = p.s, name = ob.name })
+				end
+			end
+		end
+	end
+	table.sort(out, function(a, b) return a.depth > b.depth end)
+	local lines = {}
+	for k = 1, math.min(10, #out) do
+		table.insert(lines, string.format("%s corner %.2f studs into the lane at s=%d", out[k].name, out[k].depth, out[k].s))
+	end
+	if #out > 10 then table.insert(lines, (#out - 10) .. " more") end
+	return lines
+end
+
 --- Wall layout rule: every stretch TrackGeometry:boundaryRuns returns for a
 -- segment must touch that segment (t in [0, len]). A stretch that only exists
 -- past a node crossed another part of the lane and stands alone as a spur
