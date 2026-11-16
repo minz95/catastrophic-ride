@@ -31,11 +31,13 @@ screen.Parent       = LocalPlayer.PlayerGui
 local X, X_TOUCH = 264, 312
 local slot = Instance.new("Frame")
 slot.Name                   = "InviteSlot"
-slot.Size                   = UDim2.new(0, 170, 0, 64)   -- the button and the coin hint under it
+-- one small pill, the coins in it (playtest 2026-11-16: 170 × 40 with a
+-- hint line under it was one more big thing over the farm)
+slot.Size                   = UDim2.new(0, 150, 0, 26)
 slot.BackgroundTransparency = 1
 slot.Visible                = false
 slot.Parent                 = screen
-Invite.button(slot, UDim2.new(0, 0, 0, 0), UDim2.new(1, 0, 0, 40), false, Invite.TEXT)
+Invite.button(slot, UDim2.new(0, 0, 0, 0), UDim2.new(1, 0, 1, 0), true, "👥 INVITE")
 
 SideButtons.keepClear(slot, screen, X, X_TOUCH)
 
