@@ -2,7 +2,10 @@
 -- How an avatar sits on its ride (Cosmetics "pose", earned through
 -- Shared/Achievements). Angles in degrees about the parent part's axes
 -- (X right, Y up, -Z forward), the same convention as FarmFx's poses:
--- an arm hanging down turns forward with +X, up over the head at ~170.
+-- an arm hanging down turns forward with +X, up over the head at ~170;
+-- about Z a right arm goes out to the side with +, a left arm with -
+-- (CFrame.Angles(x, y, z) turns about Z first). An elbow turns in its
+-- upper arm's axes.
 -- StarterPlayerScripts/RidePoseFx holds them on every seated rider whose
 -- player has the attribute RidePose; still copies (SeatedCopy) take them
 -- through `applyStill`.
@@ -19,11 +22,11 @@ RidePoses.JOINTS = {
 
 RidePoses.POSES = {
 	-- both arms straight up, a roller-coaster rider
-	handsup = { right = { 165, 0, -15 }, left = { 165, 0, 15 } },
+	handsup = { right = { 165, 0, 15 }, left = { 165, 0, -15 } },
 	-- leaning back, one hand behind the head, the other arm resting out
-	lean = { waist = { 14, 0, 0 }, right = { 150, 0, -40 }, rightElbow = { 110, 0, 0 }, left = { 20, 0, 50 } },
+	lean = { waist = { 14, 0, 0 }, right = { 170, 0, 20 }, rightElbow = { -100, 0, -60 }, left = { 20, 0, -50 } },
 	-- arms out to the sides, elbows up: a strongman flex
-	flex = { right = { 0, 0, -90 }, left = { 0, 0, 90 }, rightElbow = { 0, 0, 100 }, leftElbow = { 0, 0, -100 } },
+	flex = { right = { 0, 0, 90 }, left = { 0, 0, -90 }, rightElbow = { 0, 0, 100 }, leftElbow = { 0, 0, -100 } },
 }
 
 local function rot(deg)

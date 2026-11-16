@@ -90,6 +90,28 @@ R.describe("Achievements rules", function()
 		R.expect(Cosmetics.suggest({ coins = 0, level = 99, owned = all })).toBe(nil)
 	end)
 
+	R.it("ride poses point the arms where their names say (an arm hanging down, turned by the pose)", function()
+		local RP = env.requirePath("ReplicatedStorage.Shared.RidePoses")
+		local roblox = require("@lune/roblox")
+		local function arm(deg)
+			local cf = roblox.CFrame.Angles(math.rad(deg[1]), math.rad(deg[2]), math.rad(deg[3]))
+			return cf:VectorToWorldSpace(roblox.Vector3.new(0, -1, 0))
+		end
+		-- Hands Up: both arms up, each on its own side (2026-11-17: the first
+		-- angles crossed them inward)
+		local hu = RP.get("handsup")
+		R.expect(arm(hu.right).Y > 0.8 and arm(hu.right).X > 0.1).toBe(true, tostring(arm(hu.right)))
+		R.expect(arm(hu.left).Y > 0.8 and arm(hu.left).X < -0.1).toBe(true, tostring(arm(hu.left)))
+		-- Flex: arms straight out to the sides, not across the chest
+		local fl = RP.get("flex")
+		R.expect(arm(fl.right).X > 0.9).toBe(true, tostring(arm(fl.right)))
+		R.expect(arm(fl.left).X < -0.9).toBe(true, tostring(arm(fl.left)))
+		-- Cool Lean: the right arm up, the left one resting out to the left
+		local ln = RP.get("lean")
+		R.expect(arm(ln.right).Y > 0.8).toBe(true)
+		R.expect(arm(ln.left).X < -0.3).toBe(true)
+	end)
+
 	R.it("every ride pose names joints RidePoses knows", function()
 		local RP = env.requirePath("ReplicatedStorage.Shared.RidePoses")
 		for _, it in ipairs(Cosmetics.ITEMS.pose) do
