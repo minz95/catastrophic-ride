@@ -296,6 +296,9 @@ task.spawn(function()
 	pcall(function() placeId = game.PlaceId or 0 end)
 	pcall(function() studio = RunService:IsStudio() end)
 	_mode = Places.mode(placeId, studio, workspace:GetAttribute("HubTest") == true, _harness ~= nil)
+	if _harness and type(_harness.lobbyTour) == "table" and _harness.lobbyTour.hub then
+		_mode = "hub"   -- TestHarness/LobbyTour walks the hub (teleports fail in Studio)
+	end
 	ReplicatedStorage:SetAttribute("PlaceMode", _mode)
 	if _mode == "hub" then
 		-- Junk Town only: no rounds here, start pads send groups to the race place

@@ -790,4 +790,15 @@ task.spawn(function()
 	if not ok then report("client_error", { message = "LobbyFilm: " .. tostring(err), script = "LobbyFilmClient" }) end
 end)
 
+-- The lobby tour (TestHarness/LobbyTour): this client walks Junk Town.
+task.spawn(function()
+	if not LocalPlayer:GetAttribute("LobbyTour") then
+		LocalPlayer:GetAttributeChangedSignal("LobbyTour"):Wait()
+	end
+	local ok, err = pcall(function()
+		require(script.Parent:WaitForChild("Modules"):WaitForChild("LobbyTourClient")).run(report)
+	end)
+	if not ok then report("client_error", { message = "LobbyTour: " .. tostring(err), script = "LobbyTourClient" }) end
+end)
+
 report("ready", { farm = LocalPlayer:GetAttribute("BotFarmProfile"), driver = driverName })

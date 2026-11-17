@@ -11,7 +11,7 @@
 -- on this server, else through the store (`claimFor` when they come back).
 -- A worn ride is a still copy welded round the avatar like a ride-on
 -- costume (WEAR_LENGTH long, its seat at the waist), massless and touching
--- nothing; off while racing.
+-- nothing; off for the race and the results.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -170,7 +170,9 @@ function LegendShop.refresh(player)
 	local id = rec and rec.legendOn
 	local ride = id and rec.legend and rec.legend[id]
 	local phase = require(ServerScriptService.GameManager).getPhase()
-	if not ride or phase == Constants.PHASES.RACING then return end
+	-- off for the race and the results: the avatar sits in the race car
+	-- (a ride-on round a seated driver stuck through the parked car)
+	if not ride or phase == Constants.PHASES.RACING or phase == Constants.PHASES.RESULTS then return end
 	LegendShop.wear(character, ride, id)
 end
 
@@ -218,7 +220,9 @@ function LegendShop.wear(character, ride, id)
 	end
 	-- turned where the avatar faces, the seat over its middle
 	local hum = character:FindFirstChildOfClass("Humanoid")
+	-- the legs' length under the torso: HipHeight on R15, 0 on R6 (legs 2)
 	local hip = hum and hum.HipHeight or 2
+	if hip < 0.5 then hip = 2 end
 	local seatAt = seat and seat.Position or pivot.Position
 	local seatRot = seat and (seat.CFrame - seat.Position) or CFrame.new()
 	local yaw = CFrame.lookAt(Vector3.zero, Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z))

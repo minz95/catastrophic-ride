@@ -1,0 +1,1229 @@
+{
+ "checks": [
+  {
+   "level": "info",
+   "message": "27 of 27 stops reached"
+  }
+ ],
+ "commit": "4e8452c",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-11-17T08:53:45.255Z,1.255365,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-17T08:53:46.017Z,2.017313,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-17T08:53:46.885Z,2.885270,6c207000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"2e69b37b-da06-4315-9ac1-69fb9967865e\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-11-17T08:54:46.018Z,62.018887,6c207000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-17T08:55:12.177Z,88.177078,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-17T08:55:12.177Z,88.177147,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-17T08:55:12.351Z,88.351128,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-17T08:55:12.351Z,88.351181,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-17T08:55:13.883Z,89.883873,6c207000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"2e69b37b-da06-4315-9ac1-69fb9967865e\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "driverProfiles": [
+   "average"
+  ],
+  "farmProfiles": [
+   "filmer"
+  ],
+  "lobbyDelay": 450,
+  "lobbyTour": {},
+  "maxSeconds": 480,
+  "players": 1,
+  "rounds": 1
+ },
+ "ranAt": "2026-11-17T17:55:17+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "average"
+    ],
+    "farmProfiles": [
+     "filmer"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 60,
+    "RACING": 240,
+    "RESULTS": 5
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 450,
+   "lobbyTour": [],
+   "maxSeconds": 480,
+   "players": 1,
+   "rounds": 1
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "lobby tour",
+  "errors": [],
+  "harness": "match",
+  "rounds": [],
+  "summary": "Bot match: 0 round(s), end: lobby tour, server errors: 0, client errors: 0\n  events: bot_joined=1 bot_ready=1 bot_sound=13 bot_tour_done=1 bot_tour_stop=27 server_perf=35",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 44.8,
+     "kind": "server_perf",
+     "memMb": 2486,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.008
+    },
+    {
+     "heartbeatHz": 58.4,
+     "kind": "server_perf",
+     "memMb": 2483,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 4.025
+    },
+    {
+     "driver": "average",
+     "farm": "filmer",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 4.342,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "filmer"
+     },
+     "kind": "bot_ready",
+     "t": 4.524,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.9993857499212027,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 5.691,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.36356637487188,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 5.924,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4903827500529587,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 5.974,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.490441166330129,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 5.974,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4906086665578187,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 5.974,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4906220831908286,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 5.974,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 55.5,
+     "kind": "server_perf",
+     "memMb": 2512,
+     "phase": "LOBBY",
+     "physicsFps": 58.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 63.2,
+     "t": 6.042
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2563,
+     "phase": "LOBBY",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 15.9,
+     "t": 8.058
+    },
+    {
+     "heartbeatHz": 58.9,
+     "kind": "server_perf",
+     "memMb": 2622,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.5,
+     "t": 10.058
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2595,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 1.6,
+     "t": 12.075
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 11.361831249669194,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 13.888,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58,
+     "kind": "server_perf",
+     "memMb": 2619,
+     "phase": "LOBBY",
+     "physicsFps": 59.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 21.9,
+     "t": 14.091
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2620,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 1.9,
+     "t": 16.108
+    },
+    {
+     "data": {
+      "at": [
+       2599,
+       203,
+       37
+      ],
+      "i": 1,
+      "jumps": 0,
+      "left": 0.6,
+      "minY": 3.2,
+      "name": "arch",
+      "path": "Success",
+      "reached": true,
+      "secs": 1.5
+     },
+     "kind": "bot_tour_stop",
+     "t": 17.474,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2622,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.5,
+     "t": 18.125
+    },
+    {
+     "data": {
+      "at": [
+       2607,
+       203,
+       11
+      ],
+      "i": 2,
+      "jumps": 0,
+      "left": 1.1,
+      "minY": 3.2,
+      "name": "fountain",
+      "path": "Success",
+      "reached": true,
+      "secs": 1.8
+     },
+     "kind": "bot_tour_stop",
+     "t": 19.374,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2623,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 20.14
+    },
+    {
+     "data": {
+      "at": [
+       2614,
+       203,
+       -13
+      ],
+      "i": 3,
+      "jumps": 0,
+      "left": 1.1,
+      "minY": 3.2,
+      "name": "tv",
+      "path": "Success",
+      "reached": true,
+      "secs": 2.3
+     },
+     "kind": "bot_tour_stop",
+     "t": 21.69,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2624,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 22.141
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 20.957713541574776,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 23.407,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 21.073719791602343,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 23.524,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2598,
+       203,
+       -31
+      ],
+      "i": 4,
+      "jumps": 0,
+      "left": 1.6,
+      "minY": 3.2,
+      "name": "stage",
+      "path": "Success",
+      "reached": true,
+      "secs": 2.4
+     },
+     "kind": "bot_tour_stop",
+     "t": 24.124,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2624,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 24.157
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2625,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 26.174
+    },
+    {
+     "data": {
+      "at": [
+       2631,
+       203,
+       -37
+      ],
+      "i": 5,
+      "jumps": 0,
+      "left": 1.8,
+      "minY": 3.2,
+      "name": "trophy1",
+      "path": "Success",
+      "reached": true,
+      "secs": 2.2
+     },
+     "kind": "bot_tour_stop",
+     "t": 26.374,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2638,
+       203,
+       -33
+      ],
+      "i": 6,
+      "jumps": 0,
+      "left": 0.3,
+      "minY": 3.2,
+      "name": "trophy2",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.6
+     },
+     "kind": "bot_tour_stop",
+     "t": 27.073,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2641,
+       203,
+       -28
+      ],
+      "i": 7,
+      "jumps": 0,
+      "left": 0.8,
+      "minY": 3.2,
+      "name": "trophy3",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.5
+     },
+     "kind": "bot_tour_stop",
+     "t": 27.64,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2562,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 28.174
+    },
+    {
+     "data": {
+      "at": [
+       2645,
+       203,
+       -22
+      ],
+      "i": 8,
+      "jumps": 0,
+      "left": 0.9,
+      "minY": 3.2,
+      "name": "trophy4",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.6
+     },
+     "kind": "bot_tour_stop",
+     "t": 28.291,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2647,
+       203,
+       -14
+      ],
+      "i": 9,
+      "jumps": 0,
+      "left": 0.1,
+      "minY": 3.1,
+      "name": "trophy5",
+      "path": "Success",
+      "reached": true,
+      "secs": 1.5
+     },
+     "kind": "bot_tour_stop",
+     "t": 29.823,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2561,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 30.19
+    },
+    {
+     "data": {
+      "at": [
+       2649,
+       203,
+       -9
+      ],
+      "i": 10,
+      "jumps": 0,
+      "left": 1.4,
+      "minY": 3.2,
+      "name": "trophy6",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.8
+     },
+     "kind": "bot_tour_stop",
+     "t": 30.657,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2649,
+       203,
+       -1
+      ],
+      "i": 11,
+      "jumps": 0,
+      "left": 0.3,
+      "minY": 3.2,
+      "name": "trophy7",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.6
+     },
+     "kind": "bot_tour_stop",
+     "t": 31.357,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2649,
+       203,
+       6
+      ],
+      "i": 12,
+      "jumps": 0,
+      "left": 0.7,
+      "minY": 3.2,
+      "name": "trophy8",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.6
+     },
+     "kind": "bot_tour_stop",
+     "t": 31.957,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2562,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 32.191
+    },
+    {
+     "data": {
+      "at": [
+       2648,
+       203,
+       12
+      ],
+      "i": 13,
+      "jumps": 0,
+      "left": 1.4,
+      "minY": 3.2,
+      "name": "trophy9",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.5
+     },
+     "kind": "bot_tour_stop",
+     "t": 32.54,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2561,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 34.208
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 31.8905330831185,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 34.341,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 31.940256374888122,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 34.39,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 31.99056962504983,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 34.44,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2562,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 36.223
+    },
+    {
+     "data": {
+      "at": [
+       2591,
+       203,
+       6
+      ],
+      "i": 14,
+      "jumps": 0,
+      "left": 0.8,
+      "minY": 3.2,
+      "name": "npc_mayor",
+      "path": "Success",
+      "reached": true,
+      "secs": 5
+     },
+     "kind": "bot_tour_stop",
+     "t": 37.623,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Climbing",
+      "path": "Workspace.Player1.HumanoidRootPart.Climbing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 35.57344358321279,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 38.023,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2563,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 38.224
+    },
+    {
+     "data": {
+      "at": [
+       2567,
+       203,
+       -7
+      ],
+      "i": 15,
+      "jumps": 0,
+      "left": 0.9,
+      "minY": 3.2,
+      "name": "npc_gran",
+      "path": "Success",
+      "reached": true,
+      "secs": 2.3
+     },
+     "kind": "bot_tour_stop",
+     "t": 40.023,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2564,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 40.24
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2565,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 42.257
+    },
+    {
+     "data": {
+      "at": [
+       2585,
+       203,
+       20
+      ],
+      "i": 16,
+      "jumps": 0,
+      "left": 1.6,
+      "minY": 3.1,
+      "name": "npc_penny",
+      "path": "Success",
+      "reached": true,
+      "secs": 4
+     },
+     "kind": "bot_tour_stop",
+     "t": 44.123,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2566,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 44.273
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2567,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 46.274
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2569,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 48.29
+    },
+    {
+     "data": {
+      "at": [
+       2640,
+       203,
+       -15
+      ],
+      "i": 17,
+      "jumps": 0,
+      "left": 0.7,
+      "minY": 3.2,
+      "name": "npc_plunger",
+      "path": "Success",
+      "reached": true,
+      "secs": 5.3
+     },
+     "kind": "bot_tour_stop",
+     "t": 49.489,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2570,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 50.306
+    },
+    {
+     "data": {
+      "at": [
+       2625,
+       203,
+       -8
+      ],
+      "i": 18,
+      "jumps": 0,
+      "left": 0.1,
+      "minY": 3.2,
+      "name": "npc_tom",
+      "path": "Success",
+      "reached": true,
+      "secs": 1.6
+     },
+     "kind": "bot_tour_stop",
+     "t": 51.139,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2571,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 52.325
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2571,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 54.339
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2572,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 56.356
+    },
+    {
+     "data": {
+      "at": [
+       2552,
+       203,
+       38
+      ],
+      "i": 19,
+      "jumps": 0,
+      "left": 0.2,
+      "minY": 3.1,
+      "name": "npc_sam",
+      "path": "Success",
+      "reached": true,
+      "secs": 6.3
+     },
+     "kind": "bot_tour_stop",
+     "t": 57.456,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2573,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.3,
+     "t": 58.357
+    },
+    {
+     "data": {
+      "at": [
+       2560,
+       203,
+       24
+      ],
+      "i": 20,
+      "jumps": 0,
+      "left": 1.9,
+      "minY": 3.1,
+      "name": "legend1",
+      "path": "Success",
+      "reached": true,
+      "secs": 1.8
+     },
+     "kind": "bot_tour_stop",
+     "t": 59.322,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2557,
+       203,
+       14
+      ],
+      "i": 21,
+      "jumps": 0,
+      "left": 0.9,
+      "minY": 3,
+      "name": "legend2",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.9
+     },
+     "kind": "bot_tour_stop",
+     "t": 60.305,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2574,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 2.9,
+     "t": 60.373
+    },
+    {
+     "data": {
+      "at": [
+       2555,
+       203,
+       6
+      ],
+      "i": 22,
+      "jumps": 0,
+      "left": 1.9,
+      "minY": 3.2,
+      "name": "legend3",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.7
+     },
+     "kind": "bot_tour_stop",
+     "t": 61.022,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2555,
+       203,
+       -3
+      ],
+      "i": 23,
+      "jumps": 0,
+      "left": 1.7,
+      "minY": 3.2,
+      "name": "legend4",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.8
+     },
+     "kind": "bot_tour_stop",
+     "t": 61.856,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2576,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.6,
+     "t": 62.389
+    },
+    {
+     "data": {
+      "at": [
+       2557,
+       203,
+       -14
+      ],
+      "i": 24,
+      "jumps": 0,
+      "left": 0.2,
+      "minY": 3.2,
+      "name": "legend5",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.8
+     },
+     "kind": "bot_tour_stop",
+     "t": 62.672,
+     "userId": -1
+    },
+    {
+     "data": {
+      "at": [
+       2560,
+       203,
+       -22
+      ],
+      "i": 25,
+      "jumps": 0,
+      "left": 1.1,
+      "minY": 3.2,
+      "name": "legend6",
+      "path": "Success",
+      "reached": true,
+      "secs": 0.7
+     },
+     "kind": "bot_tour_stop",
+     "t": 63.373,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2577,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 64.39
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2578,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 66.406
+    },
+    {
+     "data": {
+      "at": [
+       2579,
+       203,
+       26
+      ],
+      "i": 26,
+      "jumps": 0,
+      "left": 0.3,
+      "minY": 3.2,
+      "name": "shop",
+      "path": "Success",
+      "reached": true,
+      "secs": 3.7
+     },
+     "kind": "bot_tour_stop",
+     "t": 67.173,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2578,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 68.423
+    },
+    {
+     "data": {
+      "at": [
+       2599,
+       204,
+       53
+      ],
+      "i": 27,
+      "jumps": 0,
+      "left": 0.7,
+      "minY": 3.2,
+      "name": "spawn",
+      "path": "Success",
+      "reached": true,
+      "secs": 2.4
+     },
+     "kind": "bot_tour_stop",
+     "t": 69.638,
+     "userId": -1
+    },
+    {
+     "data": [],
+     "kind": "bot_tour_done",
+     "t": 69.638,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 0.4,
+     "t": 70.439
+    }
+   ],
+   "samplesTotal": 0
+  },
+  "timedOut": false
+ },
+ "scenario": "lobby-tour",
+ "studioExit": 0,
+ "summary": "Bot match: 0 round(s), end: lobby tour, server errors: 0, client errors: 0\n  events: bot_joined=1 bot_ready=1 bot_sound=13 bot_tour_done=1 bot_tour_stop=27 server_perf=35\nserver: ; memory max 2625 MB",
+ "wallSeconds": 93.6
+}
