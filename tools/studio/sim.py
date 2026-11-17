@@ -548,10 +548,12 @@ def check(sc, report):
                     r.get("round"), len(players), want)))
             if players and done / len(players) < c.get("finishRate", 0):
                 out.append(("fail", "round %s: %d of %d finished" % (r.get("round"), done, len(players))))
-        if not report.get("rounds") and "lobbyFilm" not in sc["opts"]:   # the lobby reel ends in LOBBY
+        if not report.get("rounds") and "lobbyFilm" not in sc["opts"] and "lobbyTour" not in sc["opts"]:   # the lobby reel ends in LOBBY
             out.append(("fail", "no round completed"))
         if "lobbyFilm" in sc["opts"] and report.get("endReason") not in ("lobby film", "toilet ad"):
             out.append(("fail", "lobby film did not finish: %s" % report.get("endReason")))
+        if "lobbyTour" in sc["opts"]:
+            out += check_lobby_tour(sc, report)
         for r in report.get("rounds", []):
             out += check_farm(c, r, report)
         events = (report.get("telemetry") or {}).get("events") or []
@@ -645,6 +647,46 @@ def check(sc, report):
                     out.append(("fail", "round %s: %d racers got no reward at RESULTS" % (r.get("round"), len(missing))))
         out += check_driving(c, events)
         out += check_after_finish(c, events)
+    return out
+
+
+def check_lobby_tour(sc, report):
+    """Junk Town walked stop by stop (TestHarness/LobbyTour)."""
+    out = []
+    if report.get("endReason") != "lobby tour":
+        out.append(("fail", "lobby tour did not finish: %s" % report.get("endReason")))
+    events = (report.get("telemetry") or {}).get("events") or []
+    stops = [e["data"] for e in events if e.get("kind") == "bot_tour_stop"]
+    for s in stops:
+        if not s.get("reached"):
+            out.append(("fail", "could not reach %s (%.1f studs left after %.1f s, at %s, path %s, %d retries; near %s)" % (
+                s.get("name"), s.get("left", -1), s.get("secs", 0), s.get("at"), s.get("path"), s.get("jumps", 0), s.get("near"))))
+        elif s.get("jumps", 0) > 2:
+            out.append(("warn", "%s: reached after %d path retries (something in the way)" % (s.get("name"), s.get("jumps"))))
+        if s.get("minY") is not None and s["minY"] < -4:
+            out.append(("fail", "fell on the way to %s (%.1f under the plaza)" % (s.get("name"), s["minY"])))
+    out.append(("info", "%d of %d stops reached" % (sum(1 for s in stops if s.get("reached")), len(stops))))
+    if sc["opts"]["lobbyTour"].get("hub"):
+        hubs = [e["data"] for e in events if e.get("kind") == "bot_tour_hub"]
+        if not hubs:
+            out.append(("fail", "no hub report"))
+        else:
+            h = hubs[0]
+            if h.get("mode") != "hub":
+                out.append(("fail", "PlaceMode %s, not hub" % h.get("mode")))
+            if h.get("play") != "ok":
+                out.append(("fail", "PLAY: %s" % h.get("play")))
+            seen = h.get("seen") or []
+            if not any(x.get("pad") == "race" for x in seen):
+                out.append(("fail", "PLAY did not put the walker on the race pad"))
+            if not any((x.get("status") or "").startswith("LEAVING IN") for x in seen):
+                out.append(("fail", "the lobby screen never counted down"))
+            kinds = [t.get("kind") for t in h.get("travel") or [] if isinstance(t, dict)]
+            if "leaving" not in kinds or "failed" not in kinds:
+                out.append(("fail", "travel messages %s (Studio: leaving, then failed)" % kinds))
+            if any(x.get("pill") for x in seen):
+                out.append(("fail", "the NEXT TRACK pill shows in the hub"))
+            out.append(("info", "hub: %s" % [(x.get("t"), x.get("pad"), x.get("status")) for x in seen[:10]]))
     return out
 
 

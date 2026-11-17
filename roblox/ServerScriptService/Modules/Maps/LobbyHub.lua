@@ -671,6 +671,8 @@ local function plainRig(shirt)
 	return char
 end
 
+LobbyHub.NPC_BLOCK = V(2.6, 6, 0)   -- the post round a townsperson: width (X = Z), height
+
 local function npcs(m)
 	local Players = game:GetService("Players")
 	local ShopHat = require(ServerScriptService.Modules.ShopHat)
@@ -696,9 +698,21 @@ local function npcs(m)
 		local hip = hum and hum.HipHeight or 2
 		local standAt = feet + V(0, hip + (root and root.Size.Y / 2 or 1), 0)
 		rig:PivotTo(LobbyLayout.facingCentre(standAt))
+		-- the body is looked through; an invisible post blocks the way (a body
+		-- whose torso collided and limbs did not let a walker into it, stuck
+		-- for good: Studio lobby-tour 2026-11-17, at Tom)
 		for _, p in ipairs(rig:GetDescendants()) do
-			if p:IsA("BasePart") then p.Anchored = p == root end
+			if p:IsA("BasePart") then
+				p.Anchored = p == root
+				p.CanCollide = false
+			end
 		end
+		local post = part(m, "NpcBlock", V(LobbyHub.NPC_BLOCK.X, LobbyHub.NPC_BLOCK.Y, LobbyHub.NPC_BLOCK.X),
+			CF(feet + V(0, LobbyHub.NPC_BLOCK.Y / 2, 0)), C(255, 255, 255), "SmoothPlastic")
+		post.Transparency = 1
+		post.CanQuery = false
+		post.CanTouch = false
+		post:SetAttribute("Npc", n.id)
 		rig.Parent = m
 		pcall(ShopHat.wear, rig, n.hat)
 		if root then
@@ -791,6 +805,14 @@ function LobbyHub.setWinner(hub, src)
 	local nameLbl = spot and spot:FindFirstChild("Name", true)
 	local votesLbl = spot and spot:FindFirstChild("Votes", true)
 	if not src or not live then
+		-- the sign back where it was built
+		local header = hub:FindFirstChild("HallHeader", true)
+		local base = header and header:GetAttribute("BaseBottom")
+		if base then
+			local hcf, hsize = header:GetBoundingBox()
+			header:PivotTo(header:GetPivot() + V(0, base - (hcf.Position.Y - hsize.Y / 2), 0))
+		end
+		if spot then spot.CFrame = CF(LobbyLayout.STAGE.at + V(0, LobbyLayout.STAGE.height + 9, 0)) end
 		if nameLbl then nameLbl.Text = "Win the vote to be here!" end
 		if votesLbl then votesLbl.Text = "" end
 		return nil

@@ -279,6 +279,13 @@ function MatchHarness.start(args, endTest)
 		end)
 	end
 
+	-- Junk Town walked with real physics (TestHarness/LobbyTour)
+	if args.lobbyTour then
+		task.spawn(function()
+			require(script.Parent.LobbyTour).run(args, function(reason) finish(reason) end)
+		end)
+	end
+
 	task.delay(args.maxSeconds or 900, function()
 		report.timedOut = true
 		finish("timeout after " .. tostring(args.maxSeconds or 900) .. "s")

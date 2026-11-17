@@ -2268,6 +2268,54 @@
       "checks": {}
     },
     {
+      "name": "hub-tour",
+      "kind": "match",
+      "tags": [
+        "lobby"
+      ],
+      "_why": "the hub place in Studio (2026-11-17, release check of lobby phase 2): the same walk in hub mode plus each start pad, then PLAY: the pad counts down on the lobby screen, Studio refuses the teleport and the player is told (TestHarness/LobbyTour { hub = true })",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 450,
+        "maxSeconds": 480,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "lobbyTour": {
+          "hub": true
+        }
+      },
+      "checks": {}
+    },
+    {
+      "name": "lobby-tour",
+      "kind": "match",
+      "tags": [
+        "lobby"
+      ],
+      "_why": "Junk Town with real physics (2026-11-17, release check of lobby phase 1): a bot client wearing a Legend Ride walks to every stop (stage, Legend pads, trophies, shop, townsfolk, TV, fountain, arch); each must be reached without falling (TestHarness/LobbyTour)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 450,
+        "maxSeconds": 480,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "lobbyTour": {}
+      },
+      "checks": {}
+    },
+    {
       "name": "record-toilet",
       "kind": "match",
       "tags": [

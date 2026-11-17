@@ -488,7 +488,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   price in coins). Every sale pays the owner ROYALTY coins (at once on the
   same server, the notice naming the buyer and "n/50 sold", else `royalty_<userId>` in the store, claimed when they
   are back: `LegendManager`). Owned rides (`rec.legend`, worn `rec.legendOn`)
-  ride round the avatar's waist outside races like a ride-on costume
+  ride round the avatar's waist outside races and results like a ride-on costume
   (a still copy WEAR_LENGTH long, its seat at the waist, massless, seat
   disabled; the 0.5× copy hid between the legs). Shop tab 🚗 Legend; notices `LegendUpdate`.
   Spec `legend_rides`.
@@ -658,7 +658,14 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   ← JUNK TOWN in the race place (`PlaceAction`). Studio and harness
   sessions always play rounds (teleports do not work there; workspace
   attribute HubTest shows the hub). Spec `places`; steps in
-  `docs/launch.md` 2c.
+  `docs/launch.md` 2c. Release check of both phases: spec
+  `lobby_scenarios` (every phase, R6, full server, crowded pads, leaving
+  or failing mid-departure, an hour of the hub with every script) and
+  Studio `sim.py run lobby-tour` / `hub-tour` (TestHarness/LobbyTour: a
+  bot wearing a Legend Ride pathfinds to every stop; hub: the pads,
+  PLAY, the countdown, Studio's refused teleport). Townsfolk bodies are
+  looked through, an invisible post (`LobbyHub.NPC_BLOCK`) blocks the
+  way: a half-solid body trapped a walker for good.
 - Aimed abilities ("nearest") take the nearest car within
   `ABILITY_REACH.NEAR`, else the car ahead within AHEAD (a leader was never
   hit: Studio, 51 bot abilities, none on the leading player); race bots
