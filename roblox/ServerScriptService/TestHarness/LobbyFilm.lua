@@ -14,6 +14,7 @@
 -- The client half (camera and walking) is BotDriver's lobby film, timed
 -- from the same ReplicatedStorage attribute FilmT0 (server time).
 -- Nothing is saved: LegendStore stays in memory (memoryOnly).
+-- `lobbyFilm = { story = "toilet" }` plays TestHarness/ToiletAd instead.
 
 local Players             = game:GetService("Players")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
@@ -92,6 +93,8 @@ local function rig(c, i)
 	return model
 end
 
+LobbyFilm._rig = rig
+
 -- Where things stand (the client, LobbyFilmClient, uses the same): the
 -- filmer in front of their pad (F), the crowd round F on SLOTS (degrees
 -- from the way to the plaza's centre, RING studs out), the front open for
@@ -145,6 +148,10 @@ function LobbyFilm.run(args, done)
 	if not rec then done("no filmer") return end
 	player:SetAttribute("LobbyFilm", true)
 	task.wait(opts.settle or 4)   -- the hub and the models built, the camera on the client
+	if opts.story == "toilet" then   -- the toilet ride reel (TestHarness/ToiletAd)
+		require(script.Parent.ToiletAd).run(player, rec, done)
+		return
+	end
 
 	-- some other Legend Rides on the pads (older, selling)
 	for i, sm in ipairs({ { "Bo", { BODY = "Rubber Duck", ENGINE = "Rocket" } }, { "Cy", { BODY = "Shopping Cart", SPECIAL = "Balloon Bunch" } } }) do

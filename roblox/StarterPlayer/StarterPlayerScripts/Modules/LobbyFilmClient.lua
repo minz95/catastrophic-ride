@@ -26,6 +26,9 @@ function LobbyFilmClient.run(report)
 	local function W(x, y, z) return O + Vector3.new(x, y, z) end
 
 	while not ReplicatedStorage:GetAttribute("FilmT0") do task.wait(0.1) end
+	if ReplicatedStorage:GetAttribute("FilmStory") == "toilet" then   -- TestHarness/ToiletAd
+		return require(script.Parent.ToiletAdClient).run(report)
+	end
 	local T0 = ReplicatedStorage:GetAttribute("FilmT0")
 	local function now() return workspace:GetServerTimeNow() - T0 end
 	local function waitUntil(t) while now() < t do task.wait() end end

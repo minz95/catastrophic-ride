@@ -434,6 +434,17 @@ R.describe("Junk Town in a server", function()
 			string.format("bottom %.2f stage %.2f", cf.Position.Y - size.Y / 2, L.STAGE.at.Y + L.STAGE.height))
 		R.expect((Vector3.new(cf.Position.X, 0, cf.Position.Z) - Vector3.new(L.STAGE.at.X, 0, L.STAGE.at.Z)).Magnitude < 3).toBe(true)
 		R.expect(hub:FindFirstChild("WinnerSpot", true):FindFirstChild("Name", true).Text).toBe("🏆 Ann")
+		-- readable from the plaza (reel 2026-11-17: "can't even tell it's a
+		-- toilet"): WINNER_LENGTH long, on the stage; the name and the sign
+		-- over it, not behind it
+		local long = math.max(size.X, size.Z)
+		R.expect(math.abs(long - L.WINNER_LENGTH) < 0.5).toBe(true, string.format("length %.1f", long))
+		R.expect(long <= L.STAGE.radius * 2).toBe(true)
+		local top = cf.Position.Y + size.Y / 2
+		R.expect(hub:FindFirstChild("WinnerSpot", true).Position.Y > top).toBe(true, "name over the statue")
+		local header = hub:FindFirstChild("HallHeader", true)
+		local hcf, hsize = header:GetBoundingBox()
+		R.expect(hcf.Position.Y - hsize.Y / 2 > top).toBe(true, "the HALL OF FAME sign over the statue")
 		R.expect(live:FindFirstChild("Legend_1") ~= nil).toBe(true)
 		local pad = hub:FindFirstChild("LegendPad_1", true)
 		R.expect(pad:FindFirstChildWhichIsA("ProximityPrompt"):GetAttribute("Opens")).toBe("legend")

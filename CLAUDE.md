@@ -488,8 +488,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   price in coins). Every sale pays the owner ROYALTY coins (at once on the
   same server, the notice naming the buyer and "n/50 sold", else `royalty_<userId>` in the store, claimed when they
   are back: `LegendManager`). Owned rides (`rec.legend`, worn `rec.legendOn`)
-  ride round the avatar's waist outside races (a still copy at SCALE,
-  massless, seat disabled). Shop tab 🚗 Legend; notices `LegendUpdate`.
+  ride round the avatar's waist outside races like a ride-on costume
+  (a still copy WEAR_LENGTH long, its seat at the waist, massless, seat
+  disabled; the 0.5× copy hid between the legs). Shop tab 🚗 Legend; notices `LegendUpdate`.
   Spec `legend_rides`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
@@ -621,7 +622,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Lobby reel footage: `sim.py run record-lobby` (TestHarness/LobbyFilm:
   the filmer wins the vote, a made-up crowd envies and buys copies;
   camera and walk in StarterPlayerScripts/Modules/LobbyFilmClient; nothing
-  is saved, LegendStore.memoryOnly), cut `kr-hof` in cuts.json. Everyone
+  is saved, LegendStore.memoryOnly), cut `kr-hof` in cuts.json. The toilet reel (the user's storyboard: a
+  plain hangout map, the hall of fame, a dead-serious ad studio, a dance):
+  `sim.py run record-toilet` (TestHarness/ToiletAd, Modules/ToiletAdClient),
+  cut `kr-toilet`. The statue is `LobbyLayout.WINNER_LENGTH` long whatever
+  the ride, its name and the HALL OF FAME header lifted over it (at 2× a
+  toilet read as a toy). Everyone
   respawns there (`Player.RespawnLocation` = LobbySpawn): the LOBBY reload,
   joiners during RACING / RESULTS (they watch from it), and a reset on the
   farm (FarmRescue takes them back). A net puts anyone fallen off or over

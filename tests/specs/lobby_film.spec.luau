@@ -50,6 +50,37 @@ R.describe("Lobby film (Studio reel)", function()
 		R.expect(rec.coins >= #LobbyFilm.SALES * 250).toBe(true)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
+
+	R.it("the toilet ad: the sets, the statue of the filmer's ride, the friend buys a copy, the lights come back", function()
+		local srv = Server.boot({ players = 1, harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 300 },
+			scripts = { "ServerScriptService.GameManager", "ServerScriptService.LobbyManager", "ServerScriptService.ProgressionManager" } })
+		srv.advance(1)
+		local e = srv.env
+		local LobbyFilm = e.requirePath("ServerScriptService.TestHarness.LobbyFilm")
+		local ToiletAd = e.requirePath("ServerScriptService.TestHarness.ToiletAd")
+		local Lighting = e.game:GetService("Lighting")
+		Lighting.ClockTime = 14
+		local doneWith
+		e.mock.task.spawn(function()
+			LobbyFilm.run({ lobbyFilm = { story = "toilet" } }, function(reason) doneWith = reason end)
+		end)
+		srv.advance(12 + 30)
+		R.expect(Lighting.ClockTime).toBe(0)   -- the ad studio, lights down
+		srv.advance(ToiletAd.LENGTH)
+		R.expect(doneWith).toBe("toilet ad")
+		R.expect(Lighting.ClockTime).toBe(14)
+		local RS = e.game:GetService("ReplicatedStorage")
+		R.expect(RS:GetAttribute("FilmStory")).toBe("toilet")
+		local sets = e.workspace:FindFirstChild("FilmSets")
+		R.expect(sets:FindFirstChild("Hangout") ~= nil and sets:FindFirstChild("AdStudio") ~= nil).toBe(true)
+		local p = srv.players[1]
+		R.expect(p.Character:FindFirstChild("LegendRide") ~= nil).toBe(true, "the filmer wears the original")
+		local friend = sets:FindFirstChild(ToiletAd.FRIEND.name)
+		R.expect(friend and friend:FindFirstChild("LegendRide") ~= nil).toBe(true, "the friend wears a copy")
+		local winner = e.game:GetService("ReplicatedStorage"):FindFirstChild("HallOfFame"):FindFirstChild("Winner")
+		R.expect(winner:GetAttribute("UserId")).toBe(p.UserId)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
 end)
 
 return R
