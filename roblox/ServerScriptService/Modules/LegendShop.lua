@@ -9,8 +9,9 @@
 --
 -- Every sale pays the original's owner ROYALTY coins: at once when they are
 -- on this server, else through the store (`claimFor` when they come back).
--- A worn ride is a small still copy (SCALE) welded round the avatar's
--- waist, massless and touching nothing; off while racing.
+-- A worn ride is a still copy welded round the avatar like a ride-on
+-- costume (WEAR_LENGTH long, its seat at the waist), massless and touching
+-- nothing; off while racing.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -175,6 +176,28 @@ end
 
 --- Builds owned ride `ride` (a record's `legend` entry) round `character`'s
 -- waist with its tag. Returns the model, or nil.
+-- The world box of a model's visible parts (a ride hides its chassis):
+-- lowest corner, size; nil when nothing shows.
+local function visibleBox(model)
+	local lo, hi = nil, nil
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") and d.Transparency < 1 then
+			local h = d.Size / 2
+			for _, sx in ipairs({ -1, 1 }) do
+				for _, sy in ipairs({ -1, 1 }) do
+					for _, sz in ipairs({ -1, 1 }) do
+						local w = (d.CFrame * CFrame.new(h.X * sx, h.Y * sy, h.Z * sz)).Position
+						lo = lo and lo:Min(w) or w
+						hi = hi and hi:Max(w) or w
+					end
+				end
+			end
+		end
+	end
+	if not lo then return nil end
+	return lo, hi - lo
+end
+
 function LegendShop.wear(character, ride, id)
 	local root = character:FindFirstChild("HumanoidRootPart")
 	if not root then return nil end
@@ -186,9 +209,14 @@ function LegendShop.wear(character, ride, id)
 	end
 	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
 	local pivot = seat and seat.CFrame or model:GetPivot()
-	require(ServerScriptService.Modules.ModelScale).scale(model, L.SCALE, pivot)
-	-- stand the avatar in it: facing where they face, the seat over their
-	-- feet, the car on the ground
+	-- a ride-on costume: WEAR_LENGTH long whatever the ride (the old 0.5×
+	-- copy of a short toilet hid between the legs, reel 2026-11-17)
+	local _, size0 = visibleBox(model)
+	local long = size0 and math.max(size0.X, size0.Z) or 0
+	if long > 0 then
+		require(ServerScriptService.Modules.ModelScale).scale(model, L.WEAR_LENGTH / long, pivot)
+	end
+	-- turned where the avatar faces, the seat over its middle
 	local hum = character:FindFirstChildOfClass("Humanoid")
 	local hip = hum and hum.HipHeight or 2
 	local seatAt = seat and seat.Position or pivot.Position
@@ -196,11 +224,16 @@ function LegendShop.wear(character, ride, id)
 	local yaw = CFrame.lookAt(Vector3.zero, Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z))
 	local turn = CFrame.new(seatAt) * yaw * seatRot:Inverse() * CFrame.new(-seatAt)
 	model:PivotTo(turn * model:GetPivot())
+	-- the seat's top at the waist (legs inside the ride, the body out of the
+	-- seat), lifted if that put the ride into the floor
+	local waistY = root.Position.Y - root.Size.Y / 2
+	local feetY = waistY - hip
 	seatAt = seat and seat.Position or model:GetPivot().Position
-	local cf, size = model:GetBoundingBox()
-	local feetY = root.Position.Y - root.Size.Y / 2 - hip
-	local move = Vector3.new(root.Position.X - seatAt.X, feetY - (cf.Position.Y - size.Y / 2), root.Position.Z - seatAt.Z)
-	model:PivotTo(CFrame.new(move) * model:GetPivot())
+	local seatTop = seat and (seat.Position.Y + seat.Size.Y / 2) or nil
+	local lo = visibleBox(model)
+	local dy = seatTop and (waistY - seatTop) or (lo and feetY - lo.Y or 0)
+	if lo and lo.Y + dy < feetY then dy = feetY - lo.Y end
+	model:PivotTo(CFrame.new(root.Position.X - seatAt.X, dy, root.Position.Z - seatAt.Z) * model:GetPivot())
 	for _, d in ipairs(model:GetDescendants()) do
 		if d:IsA("BasePart") then
 			d.Anchored = false

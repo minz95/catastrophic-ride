@@ -370,19 +370,42 @@ local function stage(m)
 		local a = i / 12 * math.pi * 2
 		tyre(m, CF(p + V(math.cos(a) * (st.radius + 1.6), 0.65, math.sin(a) * (st.radius + 1.6))), 3.2)
 	end
-	-- the backdrop: planks with the sign, three giant forks as a crown on top
-	local back = part(m, "Backdrop", V(32, 14, 1), CF(p + V(0, 7, -st.radius - 3)), C(205, 160, 105), "WoodPlanks")
-	sign(back, {
-		{ text = "🏆 HALL OF FAME", color = C(150, 70, 20), share = 0.55 },
-		{ text = "THE FUNNIEST RIDE OF THE LAST VOTE", color = C(90, 50, 30), share = 0.3, font = Enum.Font.GothamBold },
-	}, nil, Enum.NormalId.Back)
+	-- the backdrop: planks; the sign and three giant forks as a crown on a
+	-- header board that setWinner lifts over whatever statue stands there
+	part(m, "Backdrop", V(32, 14, 1), CF(p + V(0, 7, -st.radius - 3)), C(205, 160, 105), "WoodPlanks")
+	local header = Instance.new("Model")
+	header.Name = "HallHeader"
+	local board = part(header, "HallSign", V(34, 7, 1), CF(p + V(0, 17.5, -st.radius - 3)), C(150, 30, 45), "WoodPlanks")
+	sign(board, {
+		{ text = "🏆 HALL OF FAME", color = C(255, 214, 60), share = 0.6 },
+		{ text = "THE FUNNIEST RIDE OF THE LAST VOTE", color = C(255, 245, 225), share = 0.3, font = Enum.Font.GothamBold },
+	}, C(150, 30, 45), Enum.NormalId.Back)
 	for k = -1, 1 do
-		local fx = p + V(k * 9, 14, -st.radius - 3)
-		part(m, "ForkHandle", V(0.8, 6, 0.5), CF(fx + V(0, 3, 0)), C(205, 210, 220), "Metal")
-		part(m, "ForkHead", V(3, 0.8, 0.5), CF(fx + V(0, 6.2, 0)), C(205, 210, 220), "Metal")
+		local fx = p + V(k * 11, 21, -st.radius - 3)
+		part(header, "ForkHandle", V(0.8, 6, 0.5), CF(fx + V(0, 3, 0)), C(205, 210, 220), "Metal")
+		part(header, "ForkHead", V(3, 0.8, 0.5), CF(fx + V(0, 6.2, 0)), C(205, 210, 220), "Metal")
 		for t = -1, 1 do
-			part(m, "Tine", V(0.4, 2.6, 0.4), CF(fx + V(t * 1.1, 7.8, 0)), C(205, 210, 220), "Metal")
+			part(header, "Tine", V(0.4, 2.6, 0.4), CF(fx + V(t * 1.1, 7.8, 0)), C(205, 210, 220), "Metal")
 		end
+	end
+	header.PrimaryPart = board
+	do
+		local hcf, hsize = header:GetBoundingBox()
+		header:SetAttribute("BaseBottom", hcf.Position.Y - hsize.Y / 2)
+	end
+	header.Parent = m
+	-- lights on the statue from the front corners
+	for _, x in ipairs({ -1, 1 }) do
+		local lamp = deco(part(m, "StageLight", V(1, 1, 1), CF(p + V(x * 14, 18, st.radius + 2)), C(255, 255, 255)))
+		lamp.Transparency = 1
+		local l = Instance.new("SpotLight")
+		l.Face = Enum.NormalId.Front
+		l.Angle = 50
+		l.Range = 40
+		l.Brightness = 3
+		l.Color = C(255, 240, 210)
+		l.Parent = lamp
+		lamp.CFrame = CFrame.lookAt(lamp.Position, p + V(0, 6, 0))
 	end
 	local spot = deco(part(m, "WinnerSpot", V(1, 1, 1), CF(p + V(0, st.height + 9, 0)), C(255, 255, 255)))
 	spot.Transparency = 1
@@ -776,9 +799,23 @@ function LobbyHub.setWinner(hub, src)
 	copy.Name = "Winner"
 	local st = LobbyLayout.STAGE
 	local ModelScale = require(ServerScriptService.Modules.ModelScale)
-	ModelScale.scale(copy, LobbyLayout.WINNER_SCALE)   -- a statue: big on a big stage
-	ModelScale.standOn(copy, st.at, st.at.Y + st.height, A(0, math.rad(180), 0))   -- nose to the spawn
+	-- a statue: WINNER_LENGTH long whatever the ride, on the stage, nose to the spawn
+	local _, size0 = copy:GetBoundingBox()
+	local long = math.max(size0.X, size0.Z)
+	if long > 0 then ModelScale.scale(copy, LobbyLayout.WINNER_LENGTH / long) end
+	ModelScale.standOn(copy, st.at, st.at.Y + st.height, A(0, math.rad(180), 0))
 	copy.Parent = live
+	-- the name just over it, the sign over that
+	local cf, size = copy:GetBoundingBox()
+	local top = cf.Position.Y + size.Y / 2
+	if spot then spot.CFrame = CF(st.at.X, top + 3, st.at.Z) end
+	local header = hub:FindFirstChild("HallHeader", true)
+	if header then
+		local hcf, hsize = header:GetBoundingBox()
+		local bottom = hcf.Position.Y - hsize.Y / 2
+		local want = math.max(header:GetAttribute("BaseBottom") or bottom, top + 4)
+		header:PivotTo(header:GetPivot() + V(0, want - bottom, 0))
+	end
 	if nameLbl then nameLbl.Text = "🏆 " .. tostring(src:GetAttribute("Name") or "?") end
 	if votesLbl then
 		local v = tonumber(src:GetAttribute("Votes")) or 0

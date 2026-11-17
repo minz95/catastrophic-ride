@@ -8,6 +8,7 @@ local Loader = require("../lib/loader")
 local Server = require("../lib/server")
 local fs = require("@lune/fs")
 local CFrame = require("@lune/roblox").CFrame
+local Vector3 = require("@lune/roblox").Vector3
 
 R.describe("Legend Rides rules", function()
 	local env = Loader.boot()
@@ -215,6 +216,31 @@ R.describe("Legend Rides in a server", function()
 			if d:IsA("VehicleSeat") and not d.Disabled then table.insert(bad, "seat on") end
 		end
 		R.expect(bad).toBeEmpty("worn ride parts")
+		-- a ride-on costume (reel 2026-11-17: the 0.5× copy hid between the
+		-- legs): WEAR_LENGTH long, its seat at the waist, never in the floor
+		local lo, hi = nil, nil
+		for _, d in ipairs(worn:GetDescendants()) do
+			if d:IsA("BasePart") and d.Transparency < 1 then
+				local h = d.Size / 2
+				for _, sx in ipairs({ -1, 1 }) do for _, sy in ipairs({ -1, 1 }) do for _, sz in ipairs({ -1, 1 }) do
+					local w = (d.CFrame * CFrame.new(h.X * sx, h.Y * sy, h.Z * sz)).Position
+					lo = lo and lo:Min(w) or w
+					hi = hi and hi:Max(w) or w
+				end end end
+			end
+		end
+		local size = hi - lo
+		R.expect(math.abs(math.max(size.X, size.Z) - e.requirePath("ReplicatedStorage.Shared.Constants").LEGEND.WEAR_LENGTH) < 0.15)
+			.toBe(true, string.format("length %.2f", math.max(size.X, size.Z)))
+		local waist = root.Position.Y - root.Size.Y / 2
+		local feet = waist - 2
+		local seat = worn:FindFirstChildWhichIsA("VehicleSeat", true)
+		R.expect(seat ~= nil).toBe(true)
+		local seatTop = seat.Position.Y + seat.Size.Y / 2
+		R.expect(seatTop >= waist - 0.3).toBe(true, string.format("seat %.2f under the waist %.2f", seatTop, waist))
+		R.expect(lo.Y >= feet - 0.01).toBe(true, string.format("bottom %.2f under the feet %.2f", lo.Y, feet))
+		local mid = (lo + hi) / 2
+		R.expect(Vector3.new(mid.X - root.Position.X, 0, mid.Z - root.Position.Z).Magnitude < size.Magnitude * 0.35).toBe(true, "round the avatar")
 		local tag = worn:FindFirstChild("LegendTag", true)
 		R.expect(tag ~= nil).toBe(true)
 		R.expect(tag:FindFirstChildWhichIsA("TextLabel").Text).toBe("⭐ ORIGINAL")

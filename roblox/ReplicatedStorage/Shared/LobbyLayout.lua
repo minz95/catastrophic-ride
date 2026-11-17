@@ -28,7 +28,7 @@ LobbyLayout.BOARD = O + V(20, 0, -20)                -- an old TV turned to the 
 LobbyLayout.FOUNTAIN = O + V(0, 0, 4)
 LobbyLayout.ARCH = O + V(0, 0, 40)                   -- "WELCOME TO JUNK TOWN", walked through from the spawn
 LobbyLayout.STAGE = { at = O + V(0, 0, -50), radius = 15, height = 2.5 }
-LobbyLayout.WINNER_SCALE = 2   -- the vote winner's ride and rider on the stage
+LobbyLayout.WINNER_LENGTH = 22   -- studs: the vote winner's ride and rider on the stage, any ride (2× read as a toy)
 
 -- Legend Rides: an arc on the west side, every pedestal facing the centre
 LobbyLayout.LEGEND_SLOTS = 6

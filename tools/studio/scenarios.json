@@ -2266,6 +2266,35 @@
         "chunk": 10
       },
       "checks": {}
+    },
+    {
+      "name": "record-toilet",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the toilet ride reel (2026-11-17 storyboard): TestHarness/ToiletAd plays a timeline in LOBBY: a plain hangout map where the filmer, wearing their vote-winning toilet ride, chats with a friend NPC; the hall of fame statue; a dark ad studio (turntable, runway, the collection); both in toilets, dancing. Camera and walk: Modules/ToiletAdClient. Nothing is saved. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 200,
+        "maxSeconds": 200,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "lobbyFilm": {
+          "story": "toilet"
+        }
+      },
+      "record": {
+        "delay": 10,
+        "chunk": 10
+      },
+      "checks": {}
     }
   ]
 }

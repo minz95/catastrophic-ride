@@ -100,9 +100,10 @@ Constants.RIDE_SHOW = { MIN_PLAYERS = 2, SECONDS = 12, COINS = 30, VOTE_GAP = 0.
 -- days or LIMIT copies, whichever ends first (Shared/LegendRides,
 -- Modules/LegendStore). COINS buys one (or the Robux product
 -- Products.LEGEND); each sale pays the original's owner ROYALTY coins.
--- Owned rides are worn round the waist outside races at SCALE.
+-- Owned rides are worn round the waist outside races like a ride-on
+-- costume: WEAR_LENGTH studs long, the seat at the waist.
 -- SHOWN: listings in the shop at a time; POLL: s between store reads.
-Constants.LEGEND = { COINS = 2500, LIMIT = 50, DAYS = 7, ROYALTY = 250, SCALE = 0.5, SHOWN = 6, POLL = 60,
+Constants.LEGEND = { COINS = 2500, LIMIT = 50, DAYS = 7, ROYALTY = 250, WEAR_LENGTH = 5.5, SHOWN = 6, POLL = 60,
 	KEEP = 30 }
 
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────

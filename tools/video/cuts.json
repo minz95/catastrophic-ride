@@ -1120,6 +1120,156 @@
           "who": "f2"
         }
       ]
+    },
+    "kr-toilet": {
+      "_why": "Korean reel 2026-11-17, the user's storyboard: in some plain map a friend (voice chat) sees my avatar wearing a toilet → 'what is that, I want one' → 'my ride won the race vote, I built it, good luck getting one' → 'what's that?' → the hall of fame statue → 'insane lol' → a dead-serious car ad (limited, worn round the waist, the comfort of really riding, the new collection) → logo → both in toilets, dancing (record-toilet, TestHarness/ToiletAd). who: me, f1 (friend), ad (narrator). Build --clean + .srt for CapCut TTS",
+      "format": "9x16",
+      "lang": "ko",
+      "segments": [
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 6.8,
+          "dur": 2.9,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "head": "보이스챗 중",
+          "title": "친구: 그거 뭐냐?",
+          "say": "엥 그거 뭐냐? 나도 갖고 싶어",
+          "who": "f1",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 12.2,
+          "dur": 2.4,
+          "zoom": 1.6,
+          "cx": 0.47,
+          "head": "투표 1등 차",
+          "title": "내가 만든 변기차",
+          "say": "이거 레이싱에서 차량 투표 1등한 거임",
+          "who": "me"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 14.6,
+          "dur": 2.4,
+          "zoom": 1.6,
+          "cx": 0.47,
+          "head": "투표 1등 차",
+          "title": "구하기 힘듦ㅋ",
+          "say": "내가 만든 거라 구하기 힘들걸ㅋ",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 17.1,
+          "dur": 2.0,
+          "zoom": 1.6,
+          "cx": 0.55,
+          "head": "???",
+          "title": "그게 뭔데",
+          "say": "헐 그게 뭔데?",
+          "who": "f1",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 20.4,
+          "dur": 2.6,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "HALL OF FAME",
+          "title": "명예의 전당"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 23.0,
+          "dur": 2.4,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "HALL OF FAME",
+          "title": "동상까지 세워줌",
+          "say": "쩐다 뭐냐ㅋㅋㅋㅋ",
+          "who": "f1",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 28.3,
+          "dur": 3.2,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "LEGEND RIDES",
+          "title": "단 50대 한정",
+          "say": "한정 수량. 단 50대.",
+          "who": "ad"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 31.6,
+          "dur": 2.6,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "LEGEND RIDES",
+          "title": "허리에 착용 가능",
+          "say": "허리에 착용 가능.",
+          "who": "ad"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 34.3,
+          "dur": 3.8,
+          "zoom": 1.4,
+          "cx": 0.5,
+          "head": "LEGEND RIDES",
+          "title": "진짜 차를 탄 듯한 편안함",
+          "say": "진짜 차에 탑승해 달리는 듯한 편안함.",
+          "who": "ad"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 38.6,
+          "dur": 3.0,
+          "zoom": 1.4,
+          "cx": 0.5,
+          "head": "NEW COLLECTION",
+          "title": "신상 자동차 컬렉션",
+          "say": "신상 자동차 컬렉션을 만나보세요.",
+          "who": "ad"
+        },
+        {
+          "card": true,
+          "bg": "#0B0B10",
+          "dur": 2.2,
+          "head": "ROBLOX · 무료",
+          "title": "Catastrophic\nRide",
+          "color": "#FFD23C",
+          "say": "캐타스트로픽 라이드.",
+          "who": "ad"
+        },
+        {
+          "take": "record-toilet",
+          "fit": "black",
+          "t": 44.6,
+          "dur": 4.4,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "결국",
+          "title": "샀다ㅋㅋ",
+          "color": "#FFD23C"
+        }
+      ]
     }
   }
 }
