@@ -12,6 +12,9 @@
 -- Command bar, in the published place (edit mode), then File > Publish:
 --   require(game.ServerScriptService.Modules.StoreModelBake)()
 -- Run it again after store_models.py changes StoreModelData.
+--
+-- Junk Town's models (Shared/LobbyModels, Modules/LobbyModelData) go the same
+-- way into ServerStorage.LobbyModels, where Maps/LobbyHub takes them.
 
 local ServerStorage       = game:GetService("ServerStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -33,9 +36,29 @@ return function()
 			table.insert(failed, name)
 		end
 	end
+	local LobbyModels    = require(game:GetService("ReplicatedStorage").Shared.LobbyModels)
+	local LobbyModelData = require(ServerScriptService.Modules.LobbyModelData)
+	local lobby = ServerStorage:FindFirstChild("LobbyModels")
+	if not lobby then
+		lobby = Instance.new("Folder")
+		lobby.Name = "LobbyModels"
+		lobby.Parent = ServerStorage
+	end
+	local lobbyDone = 0
+	for key in pairs(LobbyModels) do
+		local model = LobbyModelData[key] and ItemDataModel.build(key, LobbyModelData[key])
+		if model then
+			local old = lobby:FindFirstChild(key)
+			if old then old:Destroy() end
+			model.Parent = lobby
+			lobbyDone += 1
+		elseif LobbyModelData[key] then
+			table.insert(failed, "lobby " .. key)
+		end   -- no data: refused by store_models.py (unions, a mesh that does not load)
+	end
 	table.sort(done); table.sort(failed)
-	local msg = ("[StoreModelBake] %d models in %s; failed: %s"):format(
-		#done, folder:GetFullName(), #failed > 0 and table.concat(failed, ", ") or "none")
+	local msg = ("[StoreModelBake] %d models in %s, %d in %s; failed: %s"):format(
+		#done, folder:GetFullName(), lobbyDone, lobby:GetFullName(), #failed > 0 and table.concat(failed, ", ") or "none")
 	print(msg)
-	return #done, failed
+	return #done + lobbyDone, failed
 end

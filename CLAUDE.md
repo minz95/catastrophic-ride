@@ -601,12 +601,34 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   them. Bots talk in chat bubbles (`Shared/BotTalk`, FarmBots `say` →
   FarmAction "say" → FarmFx `DisplayBubble`; `BOTS.FARM.TALK` keeps it to
   one line on the farm at a time). Spec `rare_mark`.
-- The lobby is the first screen (2026-11-12, players left within a
-  second of a dark panel saying "waiting"): LobbyUI turns a junk ride per
-  biome (`ShopPreview.buildShowcase` → `ReplicatedStorage.LobbyShowcase`,
-  built first at boot) with a copy of your avatar on the middle one
-  (`Shared/SeatedCopy`, the crafting showroom's too), rolls the next track
-  like a roulette until BiomeSelected, and counts down to the round.
+- The lobby is Junk Town (2026-11-17, "walk around, chat, see the hall of
+  fame, shop, like a Roblox room"; before: a full-screen card, and before
+  that a dark "waiting" panel players left within a second): a plaza on a
+  floating island far from every track (`Shared/LobbyLayout`, built by
+  `Modules/Maps/LobbyHub`, filled by `LobbyManager`). The town round it
+  (houses and trees beyond a wooden fence, lamps, benches, the shop,
+  barrels, crates, a junk pile, scrap cars) is approved Creator Store models
+  (`Shared/LobbyModels`, "it is all rectangles", 2026-11-17): `python3
+  tools/studio/store_models.py --set lobby` → `Modules/LobbyModelData`,
+  baked by the same StoreModelBake into `ServerStorage.LobbyModels` (Studio
+  builds them from data); a missing model falls back to the part-built look.
+  Spec `lobby_hub` places stand-ins for them (on the ground or stacked,
+  houses outside the fence, nothing overlapping). Everyone
+  respawns there (`Player.RespawnLocation` = LobbySpawn): the LOBBY reload,
+  joiners during RACING / RESULTS (they watch from it), and a reset on the
+  farm (FarmRescue takes them back). A net puts anyone fallen off or over
+  the fence back on the spawn. In it: an old TV with the next track and
+  the countdown (server text), the hall of fame stage (`HallOfFame.onChanged`
+  → setWinner), Legend Rides on pads (`LegendStore.onChanged` → setLegends,
+  prompt Opens = "legend"), the trophy room (every achievement's reward,
+  Opens = "awards"), the cardboard-box shop (Opens = "shop"), the old
+  line-up of junk rides (ReplicatedStorage.LobbyShowcase), and townsfolk
+  to talk to (`Shared/LobbyNpcs`, prompt Talk = id; tips that must stay
+  true to the game). Clients: `StarterPlayerScripts/LobbyHubClient`
+  (opens the shop on a tab, speech box and chat bubbles, idle chatter);
+  LobbyUI is only a HUD (countdown, next-track roulette, players, INVITE).
+  MapManager gives the lobby clear daylight. Spec `lobby_hub` plays the
+  situations (each phase's joiners, resets, falls, whole rounds).
   Someone who joins during a race watches it (`SpectateCam`: behind a car,
   click / tap for the next one).
 - Aimed abilities ("nearest") take the nearest car within

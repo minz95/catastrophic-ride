@@ -1898,6 +1898,19 @@
       "checks": {}
     },
     {
+      "name": "promo-lobby",
+      "kind": "promo",
+      "tags": [
+        "ui"
+      ],
+      "_why": "Junk Town, the lobby hub (2026-11-17): the plaza from the spawn and from above, the hall of fame stage with a sample winner, Legend Rides on their pads, the trophy room, the cardboard-box shop with its keeper, the old TV board. Written to reports/lobby/ (git-ignored), never the store pictures. The screen must be awake and unlocked",
+      "opts": {
+        "hold": 2,
+        "lobby": true
+      },
+      "checks": {}
+    },
+    {
       "name": "record-forest",
       "kind": "match",
       "tags": [

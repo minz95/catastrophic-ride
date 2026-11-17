@@ -4,7 +4,8 @@
 -- meshes the game's owner owns; these belong to their creators. Studio (your
 -- login) loads them, so Modules/StoreModelBake builds them there into
 -- ServerStorage, saved with the place, and ItemModelPreloader takes a model
--- found there before the data.
+-- found there before the data. Junk Town's lobby models go the same way
+-- (ServerStorage.LobbyModels, 2026-11-17).
 local R = require("../lib/runner")
 local Loader = require("../lib/loader")
 
@@ -22,11 +23,23 @@ R.describe("Creator Store items baked into the place", function()
 		end)
 		local StoreModels = env.requirePath("ReplicatedStorage.Shared.StoreModels")
 		local count, failed = env.requirePath("ServerScriptService.Modules.StoreModelBake")()
+		local LobbyModels = env.requirePath("ReplicatedStorage.Shared.LobbyModels")
+		local LobbyModelData = env.requirePath("ServerScriptService.Modules.LobbyModelData")
 		local want = 0
 		for _ in pairs(StoreModels) do want += 1 end
+		for key in pairs(LobbyModels) do
+			if LobbyModelData[key] then want += 1 end   -- no data: refused by store_models.py
+		end
 		R.expect(count).toBe(want)
 		R.expect(failed).toBeEmpty("items the bake could not build")
 		local ServerStorage = env.game:GetService("ServerStorage")
+		-- Junk Town's models, where Maps/LobbyHub looks for them
+		local lobby = ServerStorage:FindFirstChild("LobbyModels")
+		for key in pairs(LobbyModelData) do
+			R.expect(LobbyModels[key] ~= nil).toBe(true, key .. " has data but is not in the approved list")
+			local m = lobby and lobby:FindFirstChild(key)
+			R.expect(m ~= nil and m:FindFirstChildWhichIsA("BasePart", true) ~= nil).toBe(true, "lobby " .. key)
+		end
 		local folder = ServerStorage:FindFirstChild("ItemMeshes") or ServerStorage
 		for name in pairs(StoreModels) do
 			local m = folder:FindFirstChild(name)

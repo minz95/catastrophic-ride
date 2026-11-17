@@ -1,13 +1,15 @@
 -- LobbyUI/init.client.lua
--- The first screen a player sees: the game's name, what you do in it, a
--- line-up of junk rides turning (your own avatar on the middle one), the
--- next track spinning like a roulette until it is drawn, and a big
--- countdown to the round. Players and INVITE FRIENDS on the side.
+-- The lobby's heads-up display. The lobby itself is Junk Town, a plaza
+-- players walk around (2026-11-17: "explore, chat, see the hall of fame,
+-- shop, like a Roblox room"; LobbyManager, Modules/Maps/LobbyHub): the
+-- hall of fame stage, Legend Rides, the trophy room, the shop booth, the
+-- townsfolk to talk to. This screen only adds what the plaza cannot say:
+-- the next track spinning like a roulette until it is drawn, the countdown
+-- to the round, who is here and INVITE FRIENDS. Nothing covers the world.
 --
--- History (2026-11-12): it was a dark panel over the world with an empty
--- player list, "Biome: ?" and a line saying it waits for players (the solo lobby starts
--- by itself after 8 s): nothing said "this looks fun" and new players left
--- within a second.
+-- History: 2026-11-12 a dark panel saying "waiting" (players left within a
+-- second) became a bright full-screen card with a line-up of junk rides;
+-- 2026-11-17 the card gave way to the plaza.
 
 local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
@@ -18,21 +20,17 @@ local GuiService        = game:GetService("GuiService")
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
-local SeatedCopy   = require(ReplicatedStorage.Shared.SeatedCopy)
-local RidePoses    = require(ReplicatedStorage.Shared.RidePoses)
 local LocalPlayer  = Players.LocalPlayer
 
-local GOLD   = Color3.fromRGB(255, 214, 60)
 local WHITE  = Color3.new(1, 1, 1)
 local INK    = Color3.fromRGB(24, 20, 48)
-local TAGLINE = "🛒 GRAB JUNK  →  🔧 BUILD A RIDE  →  🏁 RACE!"
+local HINT   = "Explore Junk Town: 🏆 hall of fame · 🚗 Legend Rides · 🛒 shop · talk to the locals"
 local BIOMES = {
 	{ key = "FOREST", text = "🌲 FOREST", color = Color3.fromRGB(70, 170, 70) },
 	{ key = "OCEAN",  text = "🌊 OCEAN",  color = Color3.fromRGB(40, 120, 230) },
 	{ key = "SKY",    text = "☁️ SKY",    color = Color3.fromRGB(140, 90, 230) },
 }
 local ROULETTE_STEP = 0.12   -- s per biome while the draw is open
-local SPIN_STEP = 1 / 20     -- the line-up redraws 20 times a second (phones)
 
 -- This script runs again after every respawn, but its ScreenGui
 -- (ResetOnSpawn = false) survives: drop the old copy so it is not shown twice.
@@ -68,175 +66,7 @@ local function stroke(parent, thickness, color)
 	return s
 end
 
--- ── Backdrop: bright, not a dark veil ────────────────────────────────────────
-local bg = Instance.new("Frame")
-bg.Name             = "Background"
-bg.Size             = UDim2.fromScale(1, 1)
-bg.BackgroundColor3 = WHITE
-bg.BackgroundTransparency = 0.08
-bg.BorderSizePixel  = 0
-bg.Parent           = screen
-local grad = Instance.new("UIGradient")
-grad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(46, 120, 235)),
-	ColorSequenceKeypoint.new(0.6, Color3.fromRGB(110, 80, 220)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(235, 90, 150)),
-})
-grad.Rotation = 90
-grad.Parent = bg
-
--- ── Title and what you do ────────────────────────────────────────────────────
-local title = Instance.new("TextLabel")
-title.Name                   = "Title"
-title.AnchorPoint            = Vector2.new(0.5, 0)
-title.BackgroundTransparency = 1
-title.Text                   = "CATASTROPHIC RIDE"
-title.TextColor3             = GOLD
-title.TextScaled             = true
-title.Font                   = Enum.Font.GothamBlack
-title.Parent                 = bg
-stroke(title, 3)
-
-local tagline = Instance.new("TextLabel")
-tagline.Name                   = "Tagline"
-tagline.AnchorPoint            = Vector2.new(0.5, 0)
-tagline.BackgroundTransparency = 1
-tagline.Text                   = TAGLINE
-tagline.TextColor3             = WHITE
-tagline.TextScaled             = true
-tagline.Font                   = Enum.Font.GothamBlack
-tagline.Parent                 = bg
-stroke(tagline, 2)
-
--- ── The line-up (server: Modules/ShopPreview.buildShowcase) ─────────────────
-local view = Instance.new("ViewportFrame")
-view.Name                   = "Showcase"
-view.AnchorPoint            = Vector2.new(0.5, 0)
-view.BackgroundTransparency = 1
-view.Ambient                = Color3.fromRGB(170, 170, 185)
-view.LightColor             = Color3.fromRGB(255, 250, 240)
-view.LightDirection         = Vector3.new(-1, -2, -0.8)
-view.Parent                 = bg
-local viewCam = Instance.new("Camera")
-viewCam.FieldOfView = 34
-viewCam.Parent = view
-view.CurrentCamera = viewCam
-
-local _world, _turning = nil, {}   -- _turning: { { group, pivot } }
-
-local function seatMe(group, vehicle)
-	local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat", true)
-	local char = LocalPlayer.Character
-	if not seat or not char or not char:FindFirstChild("Head") then return end
-	local old = group:FindFirstChild("Me")
-	if old then old:Destroy() end
-	local rider = SeatedCopy.rider(seat, group, char)
-	local plain = rider and vehicle:FindFirstChild("Rider")   -- the server's stand-in driver
-	if plain then plain:Destroy() end
-	if rider then
-		rider.Name = "Me"
-		pcall(SeatedCopy.wearHat, vehicle, rider)
-		pcall(RidePoses.applyStill, rider, LocalPlayer:GetAttribute("RidePose"))
-	end
-end
-
-local function buildLineup()
-	local folder = ReplicatedStorage:FindFirstChild("LobbyShowcase")
-	if not folder then return false end
-	if _world then _world:Destroy() end
-	_turning = {}
-	local world = Instance.new("WorldModel")   -- lets the avatar's joints pose
-	world.Parent = view
-	_world = world
-	-- OCEAN left, FOREST (with you on it) in the middle, SKY right
-	local order = { "2_OCEAN", "1_FOREST", "3_SKY" }
-	local copies, widths = {}, {}
-	for k, name in ipairs(order) do
-		local src = folder:FindFirstChild(name)
-		if src then
-			local group = Instance.new("Model")
-			group.Name = name
-			local copy = src:Clone()
-			copy.Parent = group
-			if k == 2 then pcall(seatMe, group, copy) end
-			group.Parent = world
-			local _, size = group:GetBoundingBox()
-			table.insert(copies, group)
-			table.insert(widths, math.max(size.X, size.Z))
-		end
-	end
-	if #copies == 0 then return false end
-	local gap, total = 2, 0
-	for _, w in ipairs(widths) do total += w end
-	total += gap * (#widths - 1)
-	local x = -total / 2
-	local top = 0
-	for i, group in ipairs(copies) do
-		local cf, size = group:GetBoundingBox()
-		local at = Vector3.new(x + widths[i] / 2, size.Y / 2, 0)
-		group:TranslateBy(at - cf.Position)   -- its box centred on `at`, standing on Y 0
-		group.WorldPivot = CFrame.new(at)
-		top = math.max(top, size.Y)
-		table.insert(_turning, { group = group, at = at, phase = i * 1.3 })
-		x += widths[i] + gap
-	end
-	-- frame them all: the width decides (the view is wide)
-	local aspect = math.max(view.AbsoluteSize.X, 1) / math.max(view.AbsoluteSize.Y, 1)
-	local halfH = math.rad(viewCam.FieldOfView / 2)
-	local halfW = math.atan(math.tan(halfH) * aspect)
-	local dist = math.max((total / 2 + 1) / math.tan(halfW), (top / 2 + 1.5) / math.tan(halfH)) + 4
-	local centre = Vector3.new(0, top * 0.42, 0)
-	viewCam.CFrame = CFrame.lookAt(centre + Vector3.new(0, dist * 0.32, dist), centre)
-	return true
-end
-
-task.spawn(function()
-	local folder = ReplicatedStorage:WaitForChild("LobbyShowcase", 60)
-	if folder then pcall(buildLineup) end
-end)
-LocalPlayer.CharacterAdded:Connect(function(char)
-	char:WaitForChild("Head", 10)
-	task.wait(1)   -- accessories and clothes
-	if screen.Enabled then pcall(buildLineup) end
-end)
-
-local _spinAt = 0
-RunService.RenderStepped:Connect(function()
-	if not screen.Enabled or #_turning == 0 then return end
-	local t = os.clock()
-	if t - _spinAt < SPIN_STEP then return end
-	_spinAt = t
-	for _, sp in ipairs(_turning) do
-		if sp.group.Parent then
-			sp.group:PivotTo(CFrame.new(sp.at) * CFrame.Angles(0, t * 0.7 + sp.phase, 0))
-		end
-	end
-end)
-
--- ── Next track: a roulette until the server draws it ─────────────────────────
-local biomePill = Instance.new("Frame")
-biomePill.Name             = "BiomePill"
-biomePill.AnchorPoint      = Vector2.new(0.5, 0)
-biomePill.BackgroundColor3 = BIOMES[1].color
-biomePill.BorderSizePixel  = 0
-biomePill.Parent           = bg
-corner(biomePill, 12)
-stroke(biomePill, 3, WHITE)
-local biomeLabel = Instance.new("TextLabel")
-biomeLabel.Name                   = "BiomeLabel"
-biomeLabel.Size                   = UDim2.new(1, -16, 1, -6)
-biomeLabel.Position               = UDim2.new(0, 8, 0, 3)
-biomeLabel.BackgroundTransparency = 1
-biomeLabel.Text                   = "NEXT TRACK: " .. BIOMES[1].text
-biomeLabel.TextColor3             = WHITE
-biomeLabel.TextScaled             = true
-biomeLabel.Font                   = Enum.Font.GothamBlack
-biomeLabel.Parent                 = biomePill
-stroke(biomeLabel, 2)
-
-local _drawn, _rollAt, _rollI = nil, 0, 1
-
--- ── Countdown ───────────────────────────────────────────────────────────────
+-- ── Countdown (top centre) ───────────────────────────────────────────────────
 local countPill = Instance.new("Frame")
 countPill.Name             = "Countdown"
 countPill.AnchorPoint      = Vector2.new(0.5, 0)
@@ -244,7 +74,7 @@ countPill.BackgroundColor3 = INK
 countPill.BackgroundTransparency = 0.15
 countPill.BorderSizePixel  = 0
 countPill.ClipsDescendants = true
-countPill.Parent           = bg
+countPill.Parent           = screen
 corner(countPill, 14)
 local countFill = Instance.new("Frame")
 countFill.Name             = "Fill"
@@ -266,14 +96,53 @@ statusLabel.ZIndex                 = 2
 statusLabel.Parent                 = countPill
 stroke(statusLabel, 2)
 
--- ── Players + invite, on the side ───────────────────────────────────────────
+-- ── Next track: a roulette until the server draws it ─────────────────────────
+local biomePill = Instance.new("Frame")
+biomePill.Name             = "BiomePill"
+biomePill.AnchorPoint      = Vector2.new(0.5, 0)
+biomePill.BackgroundColor3 = BIOMES[1].color
+biomePill.BorderSizePixel  = 0
+biomePill.Parent           = screen
+corner(biomePill, 12)
+stroke(biomePill, 3, WHITE)
+local biomeLabel = Instance.new("TextLabel")
+biomeLabel.Name                   = "BiomeLabel"
+biomeLabel.Size                   = UDim2.new(1, -16, 1, -6)
+biomeLabel.Position               = UDim2.new(0, 8, 0, 3)
+biomeLabel.BackgroundTransparency = 1
+biomeLabel.Text                   = "NEXT TRACK: " .. BIOMES[1].text
+biomeLabel.TextColor3             = WHITE
+biomeLabel.TextScaled             = true
+biomeLabel.Font                   = Enum.Font.GothamBlack
+biomeLabel.Parent                 = biomePill
+stroke(biomeLabel, 2)
+
+local _drawn, _rollAt, _rollI = nil, 0, 1
+
+-- ── What there is to do (bottom centre, small) ───────────────────────────────
+local hint = Instance.new("TextLabel")
+hint.Name                   = "Hint"
+hint.AnchorPoint            = Vector2.new(0.5, 1)
+hint.BackgroundColor3       = INK
+hint.BackgroundTransparency = 0.4
+hint.Text                   = HINT
+hint.TextColor3             = WHITE
+hint.TextScaled             = true
+hint.Font                   = Enum.Font.GothamBold
+hint.Parent                 = screen
+corner(hint, 8)
+local hintPad = Instance.new("UIPadding")
+hintPad.PaddingLeft, hintPad.PaddingRight = UDim.new(0, 8), UDim.new(0, 8)
+hintPad.Parent = hint
+
+-- ── Players + invite (top right, compact) ────────────────────────────────────
 local listFrame = Instance.new("Frame")
 listFrame.Name             = "PlayerList"
 listFrame.AnchorPoint      = Vector2.new(1, 0)
 listFrame.BackgroundColor3 = INK
 listFrame.BackgroundTransparency = 0.35
 listFrame.BorderSizePixel  = 0
-listFrame.Parent           = bg
+listFrame.Parent           = screen
 corner(listFrame, 10)
 
 local listTitle = Instance.new("TextLabel")
@@ -287,7 +156,7 @@ listTitle.Font                   = Enum.Font.GothamBold
 listTitle.TextXAlignment         = Enum.TextXAlignment.Left
 listTitle.Parent                 = listFrame
 
-local INVITE_H = 38
+local INVITE_H = 34
 local scrollFrame = Instance.new("ScrollingFrame")
 scrollFrame.Name                = "Scroll"
 scrollFrame.Size                = UDim2.new(1, -10, 1, -30 - INVITE_H - 12)
@@ -315,7 +184,7 @@ local function _buildPlayerList()
 	for i, player in ipairs(Players:GetPlayers()) do
 		local row = Instance.new("TextLabel")
 		row.Name                   = "Row_" .. player.UserId
-		row.Size                   = UDim2.new(1, 0, 0, 22)
+		row.Size                   = UDim2.new(1, 0, 0, 20)
 		row.BackgroundColor3       = (player == LocalPlayer) and Color3.fromRGB(80, 100, 150) or Color3.fromRGB(45, 45, 75)
 		row.BackgroundTransparency = 0.25
 		row.BorderSizePixel        = 0
@@ -336,103 +205,6 @@ Players.PlayerAdded:Connect(_buildPlayerList)
 Players.PlayerRemoving:Connect(function() task.defer(_buildPlayerList) end)
 _buildPlayerList()
 
--- ── Hall of fame (server: Modules/HallOfFame): the latest ride show winner,
--- their own avatar on their ride, on the left (the player list's mirror).
-local fameFrame = Instance.new("Frame")
-fameFrame.Name             = "HallOfFame"
-fameFrame.BackgroundColor3 = INK
-fameFrame.BackgroundTransparency = 0.35
-fameFrame.BorderSizePixel  = 0
-fameFrame.Visible          = false
-fameFrame.Parent           = bg
-corner(fameFrame, 10)
-
-local fameTitle = Instance.new("TextLabel")
-fameTitle.Name                   = "Title"
-fameTitle.Size                   = UDim2.new(1, -12, 0, 22)
-fameTitle.Position               = UDim2.new(0, 6, 0, 4)
-fameTitle.BackgroundTransparency = 1
-fameTitle.Text                   = "🏆 FUNNIEST RIDE"
-fameTitle.TextColor3             = GOLD
-fameTitle.TextScaled             = true
-fameTitle.Font                   = Enum.Font.GothamBlack
-fameTitle.Parent                 = fameFrame
-
-local fameView = Instance.new("ViewportFrame")
-fameView.Name                   = "Ride"
-fameView.Size                   = UDim2.new(1, -8, 1, -30 - 44)
-fameView.Position               = UDim2.new(0, 4, 0, 28)
-fameView.BackgroundTransparency = 1
-fameView.Ambient                = Color3.fromRGB(170, 170, 185)
-fameView.LightColor             = Color3.fromRGB(255, 250, 240)
-fameView.LightDirection         = Vector3.new(-1, -2, -0.8)
-fameView.Parent                 = fameFrame
-local fameCam = Instance.new("Camera")
-fameCam.FieldOfView = 34
-fameCam.Parent = fameView
-fameView.CurrentCamera = fameCam
-
-local fameName = Instance.new("TextLabel")
-fameName.Name                   = "Winner"
-fameName.Size                   = UDim2.new(1, -12, 0, 22)
-fameName.Position               = UDim2.new(0, 6, 1, -44)
-fameName.BackgroundTransparency = 1
-fameName.TextColor3             = WHITE
-fameName.TextScaled             = true
-fameName.Font                   = Enum.Font.GothamBold
-fameName.Parent                 = fameFrame
-
-local fameVotes = Instance.new("TextLabel")
-fameVotes.Name                   = "Votes"
-fameVotes.Size                   = UDim2.new(1, -12, 0, 16)
-fameVotes.Position               = UDim2.new(0, 6, 1, -21)
-fameVotes.BackgroundTransparency = 1
-fameVotes.TextColor3             = Color3.fromRGB(200, 200, 230)
-fameVotes.TextScaled             = true
-fameVotes.Font                   = Enum.Font.Gotham
-fameVotes.Parent                 = fameFrame
-
-local _fame = nil   -- { group, at } turning
-
-local function buildFame()
-	local folder = ReplicatedStorage:FindFirstChild("HallOfFame")
-	local src = folder and folder:FindFirstChild("Winner")
-	for _, c in ipairs(fameView:GetChildren()) do
-		if c:IsA("WorldModel") then c:Destroy() end
-	end
-	_fame = nil
-	fameFrame.Visible = src ~= nil
-	if not src then return end
-	local world = Instance.new("WorldModel")
-	world.Parent = fameView
-	local group = Instance.new("Model")
-	src:Clone().Parent = group
-	group.Parent = world
-	local cf, size = group:GetBoundingBox()
-	group:TranslateBy(Vector3.new(0, size.Y / 2, 0) - cf.Position)
-	group.WorldPivot = CFrame.new(0, size.Y / 2, 0)
-	_fame = { group = group, at = Vector3.new(0, size.Y / 2, 0) }
-	local r = math.max(size.X, size.Y, size.Z) / 2 + 1
-	local dist = r / math.tan(math.rad(fameCam.FieldOfView / 2)) + 2
-	local centre = Vector3.new(0, size.Y * 0.45, 0)
-	fameCam.CFrame = CFrame.lookAt(centre + Vector3.new(0, dist * 0.3, dist), centre)
-	fameName.Text = tostring(src:GetAttribute("Name") or "?")
-	local v = tonumber(src:GetAttribute("Votes")) or 0
-	fameVotes.Text = string.format("%d vote%s", v, v == 1 and "" or "s")
-end
-
-task.spawn(function()
-	local folder = ReplicatedStorage:WaitForChild("HallOfFame", 120)
-	if not folder then return end
-	pcall(buildFame)
-	folder.ChildAdded:Connect(function() task.defer(function() pcall(buildFame) end) end)
-end)
-
-RunService.RenderStepped:Connect(function()
-	if not screen.Enabled or not _fame or not _fame.group.Parent then return end
-	_fame.group:PivotTo(CFrame.new(_fame.at) * CFrame.Angles(0, os.clock() * 0.6, 0))
-end)
-
 -- ── Layout: from the screen's size (phones are ~400 px tall) ────────────────
 local function clamp(v, lo, hi) return math.max(lo, math.min(hi, v)) end
 local function layout()
@@ -440,28 +212,20 @@ local function layout()
 	if w < 10 or h < 10 then return end
 	local inset = GuiService.TopbarInset.Height
 	local small = h < 520
-	local top = inset + 6
-	local titleH = clamp(h * 0.1, 34, 76)
-	title.Size, title.Position = UDim2.new(0, math.min(w * 0.6, titleH * 9), 0, titleH), UDim2.new(0.5, 0, 0, top)
-	local tagH = clamp(h * 0.045, 15, 28)
-	tagline.Size = UDim2.new(0, math.min(w * 0.62, tagH * 26), 0, tagH)
-	tagline.Position = UDim2.new(0.5, 0, 0, top + titleH + 2)
-	local countH = clamp(h * 0.1, 40, 62)
-	local countW = math.min(w * 0.42, 460)
-	countPill.Size, countPill.Position = UDim2.new(0, countW, 0, countH), UDim2.new(0.5, 0, 1, -countH - 12)
-	local pillH = clamp(h * 0.07, 28, 46)
-	biomePill.Size = UDim2.new(0, math.min(w * 0.36, pillH * 8), 0, pillH)
-	biomePill.Position = UDim2.new(0.5, 0, 1, -countH - 12 - pillH - 8)
-	local viewTop = top + titleH + tagH + 8
-	local viewBottom = h - countH - 12 - pillH - 14
-	local listW = small and 150 or 200
-	view.Size = UDim2.new(0, math.max(w - 2 * (listW + 24), w * 0.5), 0, math.max(viewBottom - viewTop, 60))
-	view.Position = UDim2.new(0.5, 0, 0, viewTop)
-	listFrame.Size = UDim2.new(0, listW, 0, math.max(viewBottom - viewTop, 120))
-	listFrame.Position = UDim2.new(1, -12, 0, viewTop)
-	fameFrame.Size = listFrame.Size
-	fameFrame.Position = UDim2.new(0, 12, 0, viewTop)
-	task.defer(function() pcall(buildLineup) end)
+	local top = inset + 8
+	local countH = clamp(h * 0.07, 30, 48)
+	local countW = math.min(w * 0.36, 380)
+	countPill.Size, countPill.Position = UDim2.new(0, countW, 0, countH), UDim2.new(0.5, 0, 0, top)
+	local pillH = clamp(h * 0.05, 24, 36)
+	biomePill.Size = UDim2.new(0, math.min(w * 0.3, pillH * 8), 0, pillH)
+	biomePill.Position = UDim2.new(0.5, 0, 0, top + countH + 6)
+	local hintH = clamp(h * 0.035, 16, 24)
+	hint.Size = UDim2.new(0, math.min(w * 0.7, hintH * 34), 0, hintH)
+	hint.Position = UDim2.new(0.5, 0, 1, -10)
+	hint.Visible = not small   -- phones: the plaza's own signs say it
+	local listW = small and 140 or 180
+	listFrame.Size = UDim2.new(0, listW, 0, clamp(h * 0.4, 150, 300))
+	listFrame.Position = UDim2.new(1, -12, 0, top)
 end
 screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)
 layout()
@@ -514,7 +278,6 @@ RemoteEvents.PhaseChanged.OnClientEvent:Connect(function(phase)
 		end
 		screen.Enabled = true
 		_buildPlayerList()
-		pcall(buildLineup)
 	else
 		screen.Enabled = false
 	end
