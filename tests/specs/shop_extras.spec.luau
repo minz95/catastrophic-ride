@@ -201,10 +201,10 @@ R.describe("shop pictures (Modules/ShopPreview)", function()
 		end
 		local fs = require("@lune/fs")
 		local lobby = fs.readFile("roblox/StarterGui/LobbyUI/init.client.lua")
-		R.expect(lobby:find('vehicle:FindFirstChild("Rider")', 1, true) ~= nil).toBe(true)   -- you replace the stand-in
-		R.expect(lobby:find('"LobbyShowcase"', 1, true) ~= nil).toBe(true)
-		R.expect(lobby:find("SeatedCopy.rider(", 1, true) ~= nil).toBe(true)
 		R.expect(lobby:find("Waiting for players", 1, true)).toBe(nil)   -- the round starts by itself
+		-- the line-up stands in Junk Town (LobbyManager → Maps/LobbyHub.setShowcase)
+		local mgr = fs.readFile("roblox/ServerScriptService/LobbyManager.server.lua")
+		R.expect(mgr:find('watch("LobbyShowcase"', 1, true) ~= nil).toBe(true)
 		local shopMgr = fs.readFile("roblox/ServerScriptService/ShopManager.server.lua")
 		R.expect(shopMgr:find("buildShowcase()", 1, true) ~= nil).toBe(true)
 	end)

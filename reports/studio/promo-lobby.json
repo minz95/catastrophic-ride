@@ -1,0 +1,55 @@
+{
+ "checks": [],
+ "commit": "ae7f506",
+ "dirty": true,
+ "kind": "promo",
+ "logErrors": [
+  "2026-11-17T01:53:49.074Z,1.074246,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-17T01:53:49.787Z,1.787171,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-17T01:53:50.723Z,2.723303,6e2cb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e5875f96-31b4-4095-988a-fbbecdee04d3\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-11-17T01:53:59.283Z,11.283950,6f11f000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-11-17T01:53:59.563Z,11.563760,6de03000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "ilureReason: Unknown adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset is not approved for the requester adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "ilureReason: Unknown adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset is not approved for the requester adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-11-17T01:54:38.631Z,50.631939,6e2cb000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"e5875f96-31b4-4095-988a-fbbecdee04d3\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "hold": 2,
+  "lobby": true,
+  "token": "a0238705e0a9428c844275d8843cef27"
+ },
+ "ranAt": "2026-11-17T10:54:43+0900",
+ "report": {
+  "errors": [],
+  "shots": [
+   {
+    "name": "lobby_overview"
+   },
+   {
+    "name": "lobby_stage"
+   },
+   {
+    "name": "lobby_legend"
+   },
+   {
+    "name": "lobby_trophies"
+   },
+   {
+    "name": "lobby_shop"
+   },
+   {
+    "name": "lobby_tv"
+   },
+   {
+    "name": "lobby_spawn"
+   }
+  ],
+  "summary": "promo: 7 shots, 0 errors"
+ },
+ "scenario": "promo-lobby",
+ "studioExit": 0,
+ "summary": "promo: 7 shots, 0 errors",
+ "wallSeconds": 54.6
+}

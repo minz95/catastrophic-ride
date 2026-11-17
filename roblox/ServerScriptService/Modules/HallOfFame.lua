@@ -26,6 +26,12 @@ HallOfFame.POLL = 180
 HallOfFame.MAX_SLOT_KEYS = 12
 
 local _latest = nil   -- the entry on show
+local _listeners = {}
+
+--- `fn(model)` after a winner was built (the lobby's stage).
+function HallOfFame.onChanged(fn)
+	table.insert(_listeners, fn)
+end
 HallOfFame.live = false   -- the DataStore is used (set by start)
 
 local STRIP = { "BaseScript", "BodyMover", "Constraint", "ParticleEmitter", "Trail", "Beam", "Sound",
@@ -137,6 +143,7 @@ function HallOfFame.build(e)
 	end
 	folder:ClearAllChildren()
 	model.Parent = folder
+	for _, fn in ipairs(_listeners) do task.spawn(fn, model) end
 	return model
 end
 

@@ -2,7 +2,7 @@
 -- The lobby's hall of fame (2026-11-16: "the winning ride with its driver
 -- in the lobby"): RideShowManager hands the vote's winner to
 -- Modules/HallOfFame, which builds the ride still with the winner seated
--- into ReplicatedStorage.HallOfFame; LobbyUI shows it beside the line-up.
+-- into ReplicatedStorage.HallOfFame; Junk Town's stage shows it (LobbyManager).
 local R = require("../lib/runner")
 local Loader = require("../lib/loader")
 local Server = require("../lib/server")
@@ -65,11 +65,10 @@ R.describe("hall of fame", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 
-	R.it("the lobby shows it on the left and wears my pose on my own copy", function()
-		local ui = fs.readFile("roblox/StarterGui/LobbyUI/init.client.lua")
-		R.expect(ui:find('WaitForChild("HallOfFame"', 1, true) ~= nil).toBe(true)
-		R.expect(ui:find("fameFrame.Size = listFrame.Size", 1, true) ~= nil).toBe(true)
-		R.expect(ui:find('RidePoses.applyStill, rider, LocalPlayer:GetAttribute("RidePose")', 1, true) ~= nil).toBe(true)
+	R.it("the lobby shows it on Junk Town's stage (LobbyManager → Maps/LobbyHub.setWinner)", function()
+		local mgr = fs.readFile("roblox/ServerScriptService/LobbyManager.server.lua")
+		R.expect(mgr:find("HallOfFame.onChanged", 1, true) ~= nil).toBe(true)
+		R.expect(mgr:find("LobbyHub.setWinner(hub, model)", 1, true) ~= nil).toBe(true)
 	end)
 end)
 

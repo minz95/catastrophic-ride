@@ -22,6 +22,12 @@ LegendStore.KEY = "listings"
 LegendStore.FOLDER = "LegendRides"
 
 local _list = {}
+local _listeners = {}
+
+--- `fn()` after the listings or their pictures change (the lobby's pads).
+function LegendStore.onChanged(fn)
+	table.insert(_listeners, fn)
+end
 local _memRoyalty = {}   -- userId → { coins, sales, title } when the store is down
 
 local function store()
@@ -68,6 +74,7 @@ function LegendStore.buildModels()
 	for _, c in ipairs(folder:GetChildren()) do
 		if not open[c.Name] then c:Destroy() end
 	end
+	for _, fn in ipairs(_listeners) do task.spawn(fn) end
 end
 
 --- Reads the listings again (every Constants.LEGEND.POLL s).

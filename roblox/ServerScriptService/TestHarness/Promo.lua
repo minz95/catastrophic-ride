@@ -202,6 +202,22 @@ local function scenes()
 	end })
 	hero("reel_bicycle", "SKY", sky:progressAt(n26[1], n26[2], nil, nil, n26[3]), "bicycle", 4)
 	hero("reel_hotdog", "FOREST", geoF:progressAt(r[1], r[2]) + F.jumpRampSize[3] / 2 + 10, "hotdog", 5, 6, 8)
+	-- Junk Town, the lobby hub (args.lobby; never the store pictures): the
+	-- plaza filled with a sample hall-of-fame winner and Legend Rides.
+	local function lobbyShot(name, eye, look)
+		table.insert(list, { name = name, biome = "FOREST", lobby = true, setup = function()
+			local LobbyLayout = require(ReplicatedStorage.Shared.LobbyLayout)
+			local O = LobbyLayout.ORIGIN
+			return CFrame.lookAt(O + eye, O + look)
+		end })
+	end
+	lobbyShot("lobby_overview", Vector3.new(0, 40, 96), Vector3.new(0, 0, -12))
+	lobbyShot("lobby_stage", Vector3.new(6, 9, -20), Vector3.new(0, 5, -52))
+	lobbyShot("lobby_legend", Vector3.new(-16, 8, 4), Vector3.new(-50, 3, 0))
+	lobbyShot("lobby_trophies", Vector3.new(26, 7, 0), Vector3.new(54, 4, -16))
+	lobbyShot("lobby_shop", Vector3.new(-2, 7, 14), Vector3.new(-22, 4, 30))
+	lobbyShot("lobby_tv", Vector3.new(2, 7, 2), Vector3.new(22, 7, -20))
+	lobbyShot("lobby_spawn", Vector3.new(0, 6, 64), Vector3.new(0, 4, 20))
 	return list
 end
 
@@ -225,6 +241,38 @@ local function showBiome(biome, weather)
 			if d:IsA("BillboardGui") or d:IsA("SurfaceGui") then d.Enabled = false end
 		end
 	end
+end
+
+--- Junk Town with something in it: the hub (LobbyManager builds it in a
+-- running server; built here otherwise), a sample vote winner on the stage,
+-- three Legend Rides on the pads, the junk ride line-up.
+function Promo.fillLobby()
+	local LobbyHub = require(ServerScriptService.Modules.Maps.LobbyHub)
+	local HallOfFame = require(ServerScriptService.Modules.HallOfFame)
+	local LegendStore = require(ServerScriptService.Modules.LegendStore)
+	local LegendRides = require(ReplicatedStorage.Shared.LegendRides)
+	local hub = workspace:FindFirstChild(LobbyHub.NAME) or LobbyHub.build(workspace)
+	local winner = HallOfFame.entry(1, "Ann", "FOREST", { BODY = "Toilet", ENGINE = "Rocket", SPECIAL = "Balloon Bunch" }, 4,
+		{ hat = "hat_junkcrown", pose = "pose_handsup" })
+	local model = HallOfFame.build(winner)
+	if model then LobbyHub.setWinner(hub, model) end
+	local samples = {
+		{ 2, "Bo", { BODY = "Rubber Duck", ENGINE = "Rocket" } },
+		{ 3, "Cy", { BODY = "Shopping Cart", SPECIAL = "Balloon Bunch" } },
+		{ 4, "Di", { BODY = "Red Sofa", ENGINE = "Fan" } },
+	}
+	local shown = {}
+	for i, sm in ipairs(samples) do
+		local l = LegendRides.listing(HallOfFame.entry(sm[1], sm[2], "FOREST", sm[3], 3, {}), os.time() - i)
+		l.sold = ({ 37, 12, 48 })[i]
+		LegendStore.add(l)
+		table.insert(shown, { id = l.id, title = l.title, sold = l.sold, limit = l.limit, daysLeft = 7 - i })
+	end
+	LobbyHub.setLegends(hub, shown, ReplicatedStorage:FindFirstChild("LegendRides"))
+	local showcase = ReplicatedStorage:FindFirstChild("LobbyShowcase")
+		or require(ServerScriptService.Modules.ShopPreview).buildShowcase(20)
+	LobbyHub.setShowcase(hub, showcase)
+	return hub
 end
 
 function Promo.run(args)
@@ -254,7 +302,8 @@ function Promo.run(args)
 	-- as no client runs)
 	local list = {}
 	for _, sc in ipairs(scenes()) do
-		if (not args.only or table.find(args.only, sc.name)) and (sc.reel or false) == (args.reel or false) then
+		if (not args.only or table.find(args.only, sc.name)) and (sc.reel or false) == (args.reel or false)
+			and (sc.lobby or false) == (args.lobby or false) then
 			if args.weather then
 				for w in pairs(Weather.CHOICES[sc.biome] or {}) do
 					if w ~= Weather.CLEAR then
@@ -267,9 +316,17 @@ function Promo.run(args)
 			end
 		end
 	end
+	if args.lobby then Promo.fillLobby() end
 	for _, sc in ipairs(list) do
 		do
-			showBiome(sc.biome, sc.weather)
+			if sc.lobby then
+				for prop, value in pairs(Weather.lighting(LightingPresets.FOREST, "FOREST", Weather.CLEAR)) do
+					pcall(function() Lighting[prop] = value end)
+				end
+				Weather.applySky(Lighting, workspace:FindFirstChildOfClass("Terrain"), "FOREST", Weather.CLEAR)
+			else
+				showBiome(sc.biome, sc.weather)
+			end
 			local folder = Instance.new("Folder")
 			folder.Name = "Promo_" .. sc.name
 			folder.Parent = workspace

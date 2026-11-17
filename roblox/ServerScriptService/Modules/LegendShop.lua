@@ -155,21 +155,6 @@ end
 
 -- ── Wearing ──────────────────────────────────────────────────────────────────
 
-local function scaleModel(model, s, pivot)
-	for _, d in ipairs(model:GetDescendants()) do
-		if d:IsA("BasePart") then
-			local rel = pivot:ToObjectSpace(d.CFrame)
-			d.Size = d.Size * s
-			d.CFrame = pivot * (CFrame.new(rel.Position * s) * (rel - rel.Position))
-		elseif d:IsA("SpecialMesh") then
-			d.Scale = d.Scale * s
-			d.Offset = d.Offset * s
-		elseif d:IsA("Attachment") then
-			d.Position = d.Position * s
-		end
-	end
-end
-
 --- Puts `player`'s worn Legend Ride round their waist (or takes it off).
 function LegendShop.refresh(player)
 	local character = player.Character
@@ -190,7 +175,7 @@ function LegendShop.refresh(player)
 	end
 	local seat = model:FindFirstChildWhichIsA("VehicleSeat", true)
 	local pivot = seat and seat.CFrame or model:GetPivot()
-	scaleModel(model, L.SCALE, pivot)
+	require(ServerScriptService.Modules.ModelScale).scale(model, L.SCALE, pivot)
 	-- stand the avatar in it: facing where they face, the seat over their
 	-- feet, the car on the ground
 	local hum = character:FindFirstChildOfClass("Humanoid")

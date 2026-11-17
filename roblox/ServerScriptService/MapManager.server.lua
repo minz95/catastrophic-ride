@@ -140,6 +140,15 @@ GameManager.onPhaseChanged(function(phase, biome)
 		-- at LOBBY, not on a RESULTS-length timer: a shortened RESULTS let
 		-- that timer fire during the next FARMING (no track at RACING)
 		_currentBiome = nil
+		-- Junk Town (LobbyManager) under a clear day sky, whatever the last
+		-- round's weather was
+		local preset = LIGHTING_PRESETS.FOREST
+		if preset then
+			for prop, value in pairs(Weather.lighting(preset, "FOREST", Weather.CLEAR)) do
+				pcall(function() Lighting[prop] = value end)
+			end
+			Weather.applySky(Lighting, workspace:FindFirstChildOfClass("Terrain"), "FOREST", Weather.CLEAR)
+		end
 	end
 end)
 

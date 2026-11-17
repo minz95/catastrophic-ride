@@ -51,6 +51,7 @@ SHEET_DIR = os.path.join(ROOT, "reports", "vehicles", "gallery")
 # the Studio view, git-ignored (large). tools/video/cut.py edits them.
 VIDEO_DIR = os.path.join(ROOT, "reports", "video", "raw")
 REEL_DIR = os.path.join(ROOT, "reports", "video", "stills")   # promo-rides: reel close-ups (git-ignored)
+LOBBY_DIR = os.path.join(ROOT, "reports", "lobby")             # promo-lobby: Junk Town views (git-ignored)
 
 
 def _is_client_frame(px):
@@ -247,7 +248,8 @@ def run_promo_studio(cmd, token, t0, timeout):
                 # weather looks (promo-weather) are checks, not store pictures
                 out = store_image(raw, name, icon=(name == "icon"),
                                   out_dir=WEATHER_DIR if name.startswith("weather_")
-                                  else REEL_DIR if name.startswith("reel_") else None)
+                                  else REEL_DIR if name.startswith("reel_")
+                                  else LOBBY_DIR if name.startswith("lobby_") else None)
                 print("  shot %s → %s" % (name, os.path.relpath(out, ROOT) if out else "(no Studio view found: screen asleep or locked?)"), flush=True)
     if proc.poll() is None:
         proc.terminate()
