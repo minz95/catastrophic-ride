@@ -55,6 +55,8 @@
 --   AchievementAction   → ("state" | "ugc", key?) → { result, list? }  (RemoteFunction; ShopUI Awards tab)
 --   LegendUpdate        → server→client ({ kind = "listed" | "royalty" | "refund", title, … }) -- Legend Rides (Modules/LegendShop)
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
+--   TravelUpdate        → server→client ({ kind = "leaving" | "failed", text }) -- a teleport between places (Modules/PlaceTeleport)
+--   PlaceAction         → ("play" | "hub") → "ok" | "denied: …"  (RemoteFunction; LobbyUI: onto the race pad / back to the hub)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -109,6 +111,7 @@ local EVENTS = {
 	"VoteRide",
 	"AchievementUpdate",
 	"LegendUpdate",
+	"TravelUpdate",
 }
 
 local FUNCTIONS = {
@@ -127,6 +130,7 @@ local FUNCTIONS = {
 	"UseRaceTrick",
 	"GetChallenges",
 	"AchievementAction",
+	"PlaceAction",
 }
 
 local RemoteEvents = {}

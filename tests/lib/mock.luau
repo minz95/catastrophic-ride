@@ -239,6 +239,7 @@ local SIGNAL_NAMES = {
 	Activated = true,
 	Error = true,
 	MessageOut = true,
+	TeleportInitFailed = true,
 }
 
 -- Roblox callback members are write-only; reading one throws in the engine.
@@ -676,6 +677,14 @@ function methods:GetBoundingBox()
 		return CFrame.new(), Vector3.zero
 	end
 	return CFrame.new((lo + hi) / 2), hi - lo
+end
+
+-- TeleportOptions (Modules/PlaceTeleport): the data travels with the options
+function methods:SetTeleportData(data)
+	rawset(self, "_teleportData", data)
+end
+function methods:GetTeleportData()
+	return rawget(self, "_teleportData")
 end
 
 function methods:GetService(name)

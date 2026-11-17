@@ -76,6 +76,13 @@ Constants.SOLO_TEST_MODE = false -- true: start 5 s after the first player, prin
 -- load in and to shop), set once when the second player arrives.
 Constants.LOBBY = { MAX_WAIT = 10, FILL_SECONDS = 15 }
 
+-- Start pads in the hub place (Shared/Places, Shared/Departure,
+-- DepartureManager): whoever stands on a pad leaves together SECONDS after
+-- the first stepped on (a pad empties: the clock stops). RADIUS / HEIGHT:
+-- the space over a pad that counts. PENDING: s a player sent off is not
+-- sent again (the teleport is loading). GAP: s between two PlaceAction calls.
+Constants.DEPART = { SECONDS = 8, RADIUS = 5, HEIGHT = 8, PENDING = 30, CHECK = 0.25, GAP = 1.5 }
+
 -- The shop screen (ShopUI, rules in Shared/ShopTiming) shows the phase
 -- clock; under WARN_AT s it turns red. In CRAFTING it closes itself once at
 -- CRAFT_CLOSE_AT s left so the player can finish the car (the draft is kept

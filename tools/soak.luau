@@ -43,6 +43,7 @@ local SCRIPTS = {
 	"ServerScriptService.AchievementManager",
 	"ServerScriptService.LegendManager",
 	"ServerScriptService.LobbyManager",
+	"ServerScriptService.DepartureManager",
 }
 
 local day = 20759

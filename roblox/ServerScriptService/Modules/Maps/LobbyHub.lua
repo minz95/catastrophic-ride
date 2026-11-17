@@ -821,6 +821,36 @@ function LobbyHub.setLegends(hub, list, folder)
 	end
 end
 
+--- The hub place's start pads (Shared/Departure) where the junk ride show
+-- stands in a round server: a pad each, its name and a status line over it.
+function LobbyHub.departurePads(hub)
+	local Departure = require(ReplicatedStorage.Shared.Departure)
+	local Constants = require(ReplicatedStorage.Shared.Constants)
+	local pads = {}
+	for i, d in ipairs(Departure.PADS) do
+		local spot = LobbyLayout.SHOWCASE[i]
+		if not spot then break end
+		local public = d.kind == "public"
+		local pad = cyl(hub, "Depart_" .. d.id, Constants.DEPART.RADIUS * 2, 0.6, CF(spot + V(0, 0.3, 0)),
+			public and C(70, 200, 100) or C(120, 140, 255), "SmoothPlastic")
+		pad:SetAttribute("Pad", d.id)
+		deco(cyl(hub, "DepartRim", Constants.DEPART.RADIUS * 2 + 0.6, 0.4, CF(spot + V(0, 0.25, 0)),
+			C(255, 255, 255), "Neon"))
+		tag(pad, { { name = "Title", text = d.title, color = C(255, 255, 255) },
+			{ name = "Sub", text = d.sub, font = Enum.Font.Gotham },
+			{ name = "Status", text = "step on!", color = C(255, 214, 60) } }, 7, 60, 8)
+		pads[d.id] = pad
+	end
+	return pads
+end
+
+--- A start pad's status line ("step on!", "3 on pad · leaving in 5").
+function LobbyHub.setPad(hub, id, text)
+	local pad = hub:FindFirstChild("Depart_" .. id)
+	local status = pad and pad:FindFirstChild("Status", true)
+	if status then status.Text = text end
+end
+
 --- The three junk rides of the old 2D lobby (ReplicatedStorage.LobbyShowcase).
 function LobbyHub.setShowcase(hub, folder)
 	local live = hub:FindFirstChild("Live")
