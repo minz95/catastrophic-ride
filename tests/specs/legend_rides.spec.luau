@@ -112,6 +112,15 @@ R.describe("Legend Rides in a server", function()
 		R.expect(bRec.legendOn).toBe(l.id)
 		R.expect(oRec.coins).toBe(C.LEGEND.ROYALTY)
 		R.expect(res.state.legend.listings[1].sold).toBe(1)
+		-- the owner is told who bought it and how many are sold
+		local told
+		for _, c in ipairs(rawget(RE.LegendUpdate, "_calls") or {}) do
+			if c.method == "FireClient" and c.args[1] == owner and c.args[2].kind == "royalty" then told = c.args[2] end
+		end
+		R.expect(told ~= nil).toBe(true, "royalty notice")
+		R.expect(told.buyer).toBe(buyer.DisplayName)
+		R.expect(told.sold).toBe(1)
+		R.expect(told.limit).toBe(C.LEGEND.LIMIT)
 		R.expect(act(buyer, "legend_buy", l.id).result).toBe("denied: owned")
 		srv.advance(0.2)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")

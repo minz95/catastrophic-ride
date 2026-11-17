@@ -980,6 +980,146 @@
           "say": "너네도 친구 데려와서 해봐"
         }
       ]
+    },
+    "kr-hof": {
+      "_why": "Korean reel 2026-11-17, the hall of fame in Junk Town: friends on Discord see the vote winner's giant statue, ask about the Junk Crown (not for sale: an achievement), the original Legend Ride round the waist, the crowd buying numbered copies while every sale pays the winner (record-lobby, TestHarness/LobbyFilm). 'who' = speaker (me, f1, f2) for the voice track. Build --clean + .srt for CapCut TTS",
+      "format": "9x16",
+      "lang": "ko",
+      "segments": [
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 12.5,
+          "dur": 2.6,
+          "zoom": 1.9,
+          "head": "로비 명예의 전당",
+          "title": "무대에 변기 동상?",
+          "say": "야 무대에 저 거대한 변기 뭐냐ㅋㅋ",
+          "who": "f1",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 15.2,
+          "dur": 3.0,
+          "zoom": 2.3,
+          "head": "HALL OF FAME",
+          "title": "투표 1등 = 나",
+          "say": "나임ㅋ 투표 1등하면 저기 올라감",
+          "who": "me"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 26.5,
+          "dur": 2.9,
+          "zoom": 2.2,
+          "cx": 0.55,
+          "head": "업적 보상",
+          "title": "이 왕관 판매 안 함",
+          "say": "그 왕관 어디서 샀어? 나도 살래",
+          "who": "f2",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 29.3,
+          "dur": 2.2,
+          "zoom": 2.2,
+          "cx": 0.55,
+          "head": "업적 보상",
+          "title": "못 삼ㅋ",
+          "say": "못 사ㅋㅋ 업적 깨야 줌",
+          "who": "me"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 32.0,
+          "dur": 2.4,
+          "zoom": 1.45,
+          "cx": 0.72,
+          "head": "LEGEND RIDE",
+          "title": "뒤에 있는 게 내 차",
+          "say": "근데 뒤에 저 변기차는 뭔데",
+          "who": "f1"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 34.6,
+          "dur": 3.3,
+          "zoom": 2.0,
+          "cx": 0.86,
+          "head": "LEGEND RIDE",
+          "title": "50대 한정 판매",
+          "say": "내 차가 상점에 50대 한정으로 풀림",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 40.0,
+          "dur": 3.7,
+          "zoom": 1.25,
+          "cx": 1.0,
+          "head": "판매 알림",
+          "title": "팔릴 때마다 +250코인",
+          "say": "하나 팔릴 때마다 나한테 250코인 들어옴ㅋㅋ",
+          "who": "me"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 46.0,
+          "dur": 2.6,
+          "zoom": 1.25,
+          "cx": 1.0,
+          "head": "판매 알림",
+          "title": "가만히 있어도 돈 들어옴",
+          "say": "와 사람들 진짜 사네",
+          "who": "f2",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 53.0,
+          "dur": 2.4,
+          "zoom": 1.9,
+          "cx": 0.45,
+          "head": "SHOP",
+          "title": "2500코인짜리 차",
+          "say": "2500코인?? 미쳤냐ㅋㅋ",
+          "who": "f1"
+        },
+        {
+          "take": "record-lobby",
+          "fit": "black",
+          "t": 61.0,
+          "dur": 3.0,
+          "zoom": 1.9,
+          "cx": 0.55,
+          "head": "부러우면",
+          "title": "투표 1등 하세요",
+          "say": "부러우면 투표 1등 해ㅋ",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "card": true,
+          "bg": "#1C1830",
+          "dur": 2.4,
+          "head": "ROBLOX · 무료",
+          "title": "Catastrophic\nRide",
+          "color": "#FFD23C",
+          "say": "아 나도 할래",
+          "who": "f2"
+        }
+      ]
     }
   }
 }

@@ -703,7 +703,9 @@ RemoteEvents.LegendUpdate.OnClientEvent:Connect(function(m)
 		Notice.show("🚗 Your ride is a Legend!", string.format("%s is on sale in the shop: %d copies, %d days. Yours is the original, free.",
 			tostring(m.title), m.limit or 0, m.days or 0), 10)
 	elseif m.kind == "royalty" then
-		Notice.show("🚗 Someone bought your ride!", string.format("%s: %d sold, +%d coins", tostring(m.title), m.sales or 1, m.coins or 0), 8)
+		local who = type(m.buyer) == "string" and m.buyer or "Someone"
+		local sold = m.sold and m.limit and string.format("%d/%d sold", m.sold, m.limit) or string.format("%d sold", m.sales or 1)
+		Notice.show("🚗 " .. who .. " bought your ride!", string.format("%s: %s, +%d coins", tostring(m.title), sold, m.coins or 0), 8)
 	elseif m.kind == "refund" then
 		Notice.show("🚗 Sold out", string.format("%s sold out first: you got %d coins instead", tostring(m.title), m.coins or 0), 8)
 	end

@@ -2239,6 +2239,33 @@
         "chunk": 10
       },
       "checks": {}
+    },
+    {
+      "name": "record-lobby",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the Korean hall of fame reel (2026-11-17): the match stays in LOBBY while TestHarness/LobbyFilm plays its timeline: the filmer wins the vote (Junk Crown, the hall of fame statue, the original Legend Ride round the waist), a crowd of made-up players envies it at the stage and the Legend pad and buys numbered copies one by one (royalty notices); the filmer's camera and walk are Modules/LobbyFilmClient. Nothing is saved. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 200,
+        "maxSeconds": 260,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "lobbyFilm": {}
+      },
+      "record": {
+        "delay": 10,
+        "chunk": 10
+      },
+      "checks": {}
     }
   ]
 }

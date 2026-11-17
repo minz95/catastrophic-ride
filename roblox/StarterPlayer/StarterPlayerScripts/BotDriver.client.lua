@@ -779,4 +779,15 @@ task.spawn(function()
 	end
 end)
 
+-- The lobby reel (TestHarness/LobbyFilm): this client walks and films it.
+task.spawn(function()
+	if not LocalPlayer:GetAttribute("LobbyFilm") then
+		LocalPlayer:GetAttributeChangedSignal("LobbyFilm"):Wait()
+	end
+	local ok, err = pcall(function()
+		require(script.Parent:WaitForChild("Modules"):WaitForChild("LobbyFilmClient")).run(report)
+	end)
+	if not ok then report("client_error", { message = "LobbyFilm: " .. tostring(err), script = "LobbyFilmClient" }) end
+end)
+
 report("ready", { farm = LocalPlayer:GetAttribute("BotFarmProfile"), driver = driverName })

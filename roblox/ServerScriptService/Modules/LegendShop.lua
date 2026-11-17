@@ -40,20 +40,24 @@ local function tell(player, msg)
 	pcall(function() RemoteEvents.LegendUpdate:FireClient(player, msg) end)
 end
 
---- Pays the owner of listing `l` for one sale.
-local function payOwner(l)
+--- Pays the owner of listing `l` for one sale to `buyer` (a name, may be
+-- nil); an owner on this server is told who bought it and how many are sold.
+local function payOwner(l, buyer)
 	local owner = Players:GetPlayerByUserId(l.ownerId)
 	local rec = owner and PlayerStore.get(owner)
 	if rec then
 		rec.coins += L.ROYALTY
 		coinsStat(owner, rec)
 		PlayerStore.saveSoon(owner)
-		tell(owner, { kind = "royalty", title = l.title, sales = 1, coins = L.ROYALTY })
+		local cur = LegendStore.find(l.id)
+		tell(owner, { kind = "royalty", title = l.title, sales = 1, coins = L.ROYALTY,
+			sold = cur and cur.sold or nil, limit = l.limit, buyer = buyer })
 	else
 		LegendStore.royalty(l.ownerId, L.ROYALTY, l.title)
 	end
 	Telemetry.record("legend_royalty", { userId = l.ownerId, id = l.id, coins = L.ROYALTY, online = rec ~= nil })
 end
+LegendShop.payOwner = payOwner
 
 --- Coins earned while away, paid when the owner is back.
 function LegendShop.claimFor(player)
@@ -89,7 +93,7 @@ local function bought(player, rec, l, pay)
 	local cur = LegendStore.find(l.id)
 	LegendRides.give(rec, l, false, cur and cur.sold or nil)
 	rec.legendOn = l.id   -- on at once: the point of buying it
-	payOwner(l)
+	payOwner(l, player.DisplayName)
 	Telemetry.record("legend_buy", { userId = player.UserId, id = l.id, pay = pay, result = "ok" })
 	task.defer(LegendShop.refresh, player)
 end
@@ -165,8 +169,15 @@ function LegendShop.refresh(player)
 	local id = rec and rec.legendOn
 	local ride = id and rec.legend and rec.legend[id]
 	local phase = require(ServerScriptService.GameManager).getPhase()
+	if not ride or phase == Constants.PHASES.RACING then return end
+	LegendShop.wear(character, ride, id)
+end
+
+--- Builds owned ride `ride` (a record's `legend` entry) round `character`'s
+-- waist with its tag. Returns the model, or nil.
+function LegendShop.wear(character, ride, id)
 	local root = character:FindFirstChild("HumanoidRootPart")
-	if not ride or not root or phase == Constants.PHASES.RACING then return end
+	if not root then return nil end
 	local HallOfFame = require(ServerScriptService.Modules.HallOfFame)
 	local model = HallOfFame.buildStill(ride)
 	if not model then return end
@@ -238,6 +249,7 @@ function LegendShop.refresh(player)
 	model.Name = LegendShop.WORN
 	model:SetAttribute("LegendId", id)
 	model.Parent = character
+	return model
 end
 
 return LegendShop

@@ -63,6 +63,12 @@ local function seatWinner(model, e)
 		local ok, d = pcall(Players.GetHumanoidDescriptionFromUserId, Players, e.userId)
 		if ok then desc = d end
 	end
+	if not desc then   -- the winner here (a Studio test player has no user id): the look they have on
+		local p = Players:GetPlayerByUserId(e.userId)
+		local hum = p and p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+		local ok, d = pcall(function() return hum and hum:GetAppliedDescription() end)
+		if ok and d then desc = d end
+	end
 	local pose = e.look.pose and Cosmetics.get(e.look.pose)
 	local rider = SeatedRider.seat(model, model, nil,
 		{ still = true, fallback = true, description = desc, pose = pose and pose.pose })

@@ -73,7 +73,7 @@ LobbyLayout.FENCE_RADIUS = 74.5   -- the fence models, just inside the invisible
 LobbyLayout.LAMPS = 8          -- fork street lamps round the plaza, bunting between them
 LobbyLayout.LAMP_RADIUS = 34
 LobbyLayout.TREES = { O + V(-6, 0, 26), O + V(14, 0, 18), O + V(-36, 0, -30), O + V(30, 0, -44),
-	O + V(-40, 0, 18), O + V(-20, 0, -40) }
+	O + V(-30, 0, 6), O + V(-20, 0, -40) }
 -- benches round the fountain, facing it (east, west, north)
 LobbyLayout.BENCHES = { O + V(15, 0, 4), O + V(-15, 0, 4), O + V(0, 0, -10) }
 LobbyLayout.STALL = O + V(-38, 0, 52)          -- a snack stall by Sticky Sam
