@@ -89,6 +89,28 @@ in Studio or harness sessions), once per player per server, checking
 `UserHasBadgeAsync` first. Pictures: `python3 tools/store_art.py` (Twemoji,
 CC-BY 4.0, in `assets/badges/twemoji/`).
 
+## 2c. Two places: Junk Town hub + race place (lobby phase 2)
+
+The start place (74883519312765) cannot change, so it becomes the hub and
+the rounds move to a second place. The code is the same build in both
+(`Shared/Places`); `Places.RACE = 0` keeps today's one-place game.
+
+1. **you** Creator Dashboard → the experience → Places → **Create a place**
+   (or Studio: Asset Manager → Places → Add New Place). Name it "Race".
+   Copy its place id.
+2. **repo** `Shared/Places.lua`: `Places.RACE = <that id>`; merge.
+3. **you** Open the **Race** place in Studio, Rojo Connect, run the bake
+   (`StoreModelBake`), Publish. Game Settings for that place: max players 10.
+4. **you** Open the start place, Rojo Connect, bake, Publish. Its server
+   size can be bigger (Creator Dashboard → place → Server size, e.g. 30):
+   it is only the town.
+5. **you** Join live with a friend: both on a 👥 PRIVATE RACE pad →
+   8 s → same new server; 🏁 RACE pad or ▶ PLAY → a race server; between
+   rounds ← JUNK TOWN goes back. Teleports never work in Studio.
+
+From then on every release is published to **both** places (race first).
+To undo: `Places.RACE = 0`, publish the start place again.
+
 ## 3. Store page
 
 Everything below is ready to paste. Creator Dashboard → the experience →

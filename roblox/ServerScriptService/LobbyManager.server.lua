@@ -5,6 +5,8 @@
 -- shows the next track, the countdown and who is in; the hall of fame
 -- stage, the Legend Rides pads and the junk ride show follow what the
 -- server has (ReplicatedStorage.HallOfFame / LegendRides / LobbyShowcase).
+-- In the hub place (Shared/Places) start pads stand where the junk rides
+-- would (DepartureManager runs them) and the TV points at them.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -107,7 +109,12 @@ end)
 -- ── The TV board ─────────────────────────────────────────────────────────────
 
 local TRACK_NAMES = { FOREST = "🌲 FOREST", OCEAN = "🌊 OCEAN", SKY = "☁ SKY" }
+local _mode = nil   -- Shared/Places, once GameManager decided
 local function updateBoard()
+	if _mode == "hub" then
+		LobbyHub.setBoard(hub, "🏁 RACE PADS", "step on a pad!", string.format("%d in town", #Players:GetPlayers()))
+		return
+	end
 	local p = phase()
 	local players = string.format("%d / %d players", #Players:GetPlayers(), Constants.MAX_PLAYERS)
 	if p == Constants.PHASES.LOBBY then
@@ -169,6 +176,14 @@ end
 LegendStore.onChanged(function() pcall(legends) end)
 pcall(legends)
 
-watch("LobbyShowcase", function(folder)
-	LobbyHub.setShowcase(hub, folder)
+-- the hub place has start pads where a round server shows the junk rides
+task.spawn(function()
+	_mode = GameManager.placeMode()
+	if _mode == "hub" then
+		LobbyHub.departurePads(hub)
+	else
+		watch("LobbyShowcase", function(folder)
+			LobbyHub.setShowcase(hub, folder)
+		end)
+	end
 end)

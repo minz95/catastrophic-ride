@@ -7,6 +7,11 @@
 -- the next track spinning like a roulette until it is drawn, the countdown
 -- to the round, who is here and INVITE FRIENDS. Nothing covers the world.
 --
+-- With two places (Shared/Places): in the hub there is no round to count
+-- down to; the pill says to step on a start pad (and counts down once you
+-- are on one: player attributes DepartPad / DepartAt), ▶ PLAY puts you on
+-- the race pad. In the race place ← JUNK TOWN goes back to the hub.
+--
 -- History: 2026-11-12 a dark panel saying "waiting" (players left within a
 -- second) became a bright full-screen card with a line-up of junk rides;
 -- 2026-11-17 the card gave way to the plaza.
@@ -20,11 +25,14 @@ local GuiService        = game:GetService("GuiService")
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local PhaseClock   = require(ReplicatedStorage.Shared.PhaseClock)
 local Constants    = require(ReplicatedStorage.Shared.Constants)
+local Departure    = require(ReplicatedStorage.Shared.Departure)
+local Notice       = require(ReplicatedStorage.Shared.Notice)
 local LocalPlayer  = Players.LocalPlayer
 
 local WHITE  = Color3.new(1, 1, 1)
 local INK    = Color3.fromRGB(24, 20, 48)
 local HINT   = "Explore Junk Town: 🏆 hall of fame · 🚗 Legend Rides · 🛒 shop · talk to the locals"
+local HUB_HINT = "🏁 Step on a pad to race · 🏆 hall of fame · 🚗 Legend Rides · 🛒 shop · talk to the locals"
 local BIOMES = {
 	{ key = "FOREST", text = "🌲 FOREST", color = Color3.fromRGB(70, 170, 70) },
 	{ key = "OCEAN",  text = "🌊 OCEAN",  color = Color3.fromRGB(40, 120, 230) },
@@ -119,6 +127,40 @@ stroke(biomeLabel, 2)
 
 local _drawn, _rollAt, _rollI = nil, 0, 1
 
+local function placeMode()
+	return ReplicatedStorage:GetAttribute("PlaceMode") or "single"
+end
+
+-- ── Travel (two places): ▶ PLAY in the hub, ← JUNK TOWN in the race place ───
+local travelBtn = Instance.new("TextButton")
+travelBtn.Name             = "Travel"
+travelBtn.AnchorPoint      = Vector2.new(0.5, 0)
+travelBtn.BackgroundColor3 = Color3.fromRGB(70, 200, 100)
+travelBtn.BorderSizePixel  = 0
+travelBtn.Text             = "▶ PLAY"
+travelBtn.TextColor3       = WHITE
+travelBtn.TextScaled       = true
+travelBtn.Font             = Enum.Font.GothamBlack
+travelBtn.Visible          = false
+travelBtn.Parent           = screen
+corner(travelBtn, 12)
+stroke(travelBtn, 3, WHITE)
+local _going = nil   -- text while a teleport loads
+travelBtn.Activated:Connect(function()
+	local action = placeMode() == "hub" and "play" or "hub"
+	local ok, res = pcall(function() return RemoteEvents.PlaceAction:InvokeServer(action) end)
+	if ok and res == "ok" and action == "hub" then _going = "OFF TO JUNK TOWN…" end
+end)
+RemoteEvents.TravelUpdate.OnClientEvent:Connect(function(m)
+	if type(m) ~= "table" then return end
+	if m.kind == "leaving" then
+		_going = placeMode() == "hub" and "OFF TO THE RACE!" or "OFF TO JUNK TOWN…"
+	elseif m.kind == "failed" then
+		_going = nil
+		Notice.show("Couldn't travel", tostring(m.text or ""))
+	end
+end)
+
 -- ── What there is to do (bottom centre, small) ───────────────────────────────
 local hint = Instance.new("TextLabel")
 hint.Name                   = "Hint"
@@ -180,7 +222,8 @@ local function _buildPlayerList()
 	for _, child in ipairs(scrollFrame:GetChildren()) do
 		if child:IsA("TextLabel") then child:Destroy() end
 	end
-	listTitle.Text = string.format("Players %d / %d", #Players:GetPlayers(), Constants.MAX_PLAYERS)
+	listTitle.Text = placeMode() == "hub" and string.format("In town: %d", #Players:GetPlayers())
+		or string.format("Players %d / %d", #Players:GetPlayers(), Constants.MAX_PLAYERS)
 	for i, player in ipairs(Players:GetPlayers()) do
 		local row = Instance.new("TextLabel")
 		row.Name                   = "Row_" .. player.UserId
@@ -226,7 +269,28 @@ local function layout()
 	local listW = small and 140 or 180
 	listFrame.Size = UDim2.new(0, listW, 0, clamp(h * 0.4, 150, 300))
 	listFrame.Position = UDim2.new(1, -12, 0, top)
+	local mode = placeMode()
+	travelBtn.Visible = mode == "hub" or mode == "race"
+	biomePill.Visible = mode ~= "hub"
+	hint.Text = mode == "hub" and HUB_HINT or HINT
+	if mode == "hub" then
+		travelBtn.Text = "▶ PLAY"
+		travelBtn.BackgroundColor3 = Color3.fromRGB(70, 200, 100)
+		travelBtn.AnchorPoint = Vector2.new(0.5, 0)
+		travelBtn.Size = UDim2.new(0, math.min(w * 0.3, 220), 0, clamp(h * 0.07, 34, 52))
+		travelBtn.Position = UDim2.new(0.5, 0, 0, top + countH + 8)
+	else
+		travelBtn.Text = "← JUNK TOWN"
+		travelBtn.BackgroundColor3 = Color3.fromRGB(120, 140, 255)
+		travelBtn.AnchorPoint = Vector2.new(1, 0)
+		travelBtn.Size = UDim2.new(0, listW, 0, 34)
+		travelBtn.Position = UDim2.new(1, -12, 0, top + listFrame.Size.Y.Offset + 8)
+	end
 end
+ReplicatedStorage:GetAttributeChangedSignal("PlaceMode"):Connect(function()
+	layout()
+	_buildPlayerList()
+end)
 screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(layout)
 layout()
 
@@ -235,6 +299,25 @@ local _longest = nil   -- the countdown's start (for the bar)
 RunService.Heartbeat:Connect(function()
 	if not screen.Enabled then return end
 	local left = PhaseClock.remaining(nil)
+	if _going then
+		statusLabel.Text = _going
+		countFill.Size = UDim2.fromScale(1, 1)
+		return
+	end
+	if placeMode() == "hub" then
+		-- no round here: step on a start pad (DepartureManager counts down)
+		local pad = Departure.pad(LocalPlayer:GetAttribute("DepartPad") or "")
+		local at = LocalPlayer:GetAttribute("DepartAt")
+		if pad and at then
+			local l = math.max(0, at - workspace:GetServerTimeNow())
+			statusLabel.Text = string.format("LEAVING IN %d", math.ceil(l))
+			countFill.Size = UDim2.fromScale(1 - l / Constants.DEPART.SECONDS, 1)
+		else
+			statusLabel.Text = "STEP ON A 🏁 PAD TO RACE"
+			countFill.Size = UDim2.fromScale(0, 1)
+		end
+		return
+	end
 	if left and left > 0 then
 		_longest = math.max(_longest or 0, left)
 		statusLabel.Text = string.format("RACE STARTS IN %d", math.ceil(left))

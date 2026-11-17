@@ -639,6 +639,20 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   situations (each phase's joiners, resets, falls, whole rounds).
   Someone who joins during a race watches it (`SpectateCam`: behind a car,
   click / tap for the next one).
+- Two places (lobby phase 2, 2026-11-17, "a lobby place; a group on a
+  start pad goes to a new server together"): `Shared/Places` (HUB = the
+  start place, RACE = the round place, 0 = one place as before). GameManager
+  sets ReplicatedStorage `PlaceMode` ("single" | "hub" | "race"); in "hub"
+  no round ever starts: Junk Town with three start pads where the junk ride
+  show stands (`Shared/Departure`, `LobbyHub.departurePads`,
+  `DepartureManager`): whoever stands on a pad leaves together
+  `DEPART.SECONDS` after the first stepped on, in one TeleportAsync
+  (`Modules/PlaceTeleport`; 🏁 RACE = a public race server, 👥 PRIVATE =
+  a reserved one). LobbyUI: ▶ PLAY (onto the race pad) in the hub,
+  ← JUNK TOWN in the race place (`PlaceAction`). Studio and harness
+  sessions always play rounds (teleports do not work there; workspace
+  attribute HubTest shows the hub). Spec `places`; steps in
+  `docs/launch.md` 2c.
 - Aimed abilities ("nearest") take the nearest car within
   `ABILITY_REACH.NEAR`, else the car ahead within AHEAD (a leader was never
   hit: Studio, 51 bot abilities, none on the leading player); race bots

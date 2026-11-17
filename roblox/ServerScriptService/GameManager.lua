@@ -16,6 +16,7 @@ local BiomeConfig   = require(ServerScriptService.Modules.BiomeConfig)
 local HarnessConfig = require(ServerScriptService.Modules.HarnessConfig)
 local Telemetry     = require(ServerScriptService.Modules.Telemetry)
 local Weather       = require(ReplicatedStorage.Shared.Weather)
+local Places        = require(ReplicatedStorage.Shared.Places)
 
 local GameManager = {}
 
@@ -28,6 +29,7 @@ local _callbacks     = {}    -- registered via onPhaseChanged()
 local _harness       = nil   -- HarnessConfig.get() result; nil in normal play
 local _round         = 0
 local _weather       = Weather.CLEAR   -- this round's (Shared/Weather)
+local _mode          = nil   -- Shared/Places: "single" | "hub" | "race", set at boot
 
 -- ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -55,6 +57,12 @@ end
 
 function GameManager.getRound()
 	return _round
+end
+
+--- This server's place mode (Shared/Places), waiting for the boot to decide.
+function GameManager.placeMode()
+	while _mode == nil do task.wait(0.1) end
+	return _mode
 end
 
 local _lastResults = nil
@@ -284,6 +292,16 @@ end
 
 task.spawn(function()
 	_harness = HarnessConfig.get()
+	local placeId, studio = 0, false
+	pcall(function() placeId = game.PlaceId or 0 end)
+	pcall(function() studio = RunService:IsStudio() end)
+	_mode = Places.mode(placeId, studio, workspace:GetAttribute("HubTest") == true, _harness ~= nil)
+	ReplicatedStorage:SetAttribute("PlaceMode", _mode)
+	if _mode == "hub" then
+		-- Junk Town only: no rounds here, start pads send groups to the race place
+		_transition(Constants.PHASES.LOBBY)
+		return
+	end
 	if _harness and _harness.autoStart == false then
 		print("[GameManager] Harness autoStart=false — game loop not started")
 		return
