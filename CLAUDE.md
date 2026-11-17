@@ -486,7 +486,7 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Bought with coins or the Robux product `Products.LEGEND` (the shop
   remembers the picked listing; sold out by the time Roblox pays → its
   price in coins). Every sale pays the owner ROYALTY coins (at once on the
-  same server, else `royalty_<userId>` in the store, claimed when they
+  same server, the notice naming the buyer and "n/50 sold", else `royalty_<userId>` in the store, claimed when they
   are back: `LegendManager`). Owned rides (`rec.legend`, worn `rec.legendOn`)
   ride round the avatar's waist outside races (a still copy at SCALE,
   massless, seat disabled). Shop tab 🚗 Legend; notices `LegendUpdate`.
@@ -551,7 +551,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the taunter also get it on screen; race bots taunt the player they just
   passed). Studio: `sim.py run race-tricks`. Hats (shop "hat"): parts from
   `Shared/HatDesigns` welded on the avatar's head by `Modules/ShopHat`
-  (massless, no collision), hidden while a crafted HEAD item is worn.
+  (massless, no collision), hidden while a crafted HEAD item is worn; over
+  big hair it sits on the hair (`hairLift`, at most HAIR_LIFT_MAX: the
+  Junk Crown vanished in long hair).
 - Who races: everyone present when RACING starts except players with the
   `Spectating` attribute (joined during RACING / RESULTS); whoever still has
   no car at GO becomes a spectator. Never count cars at the RACING
@@ -613,7 +615,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   baked by the same StoreModelBake into `ServerStorage.LobbyModels` (Studio
   builds them from data); a missing model falls back to the part-built look.
   Spec `lobby_hub` places stand-ins for them (on the ground or stacked,
-  houses outside the fence, nothing overlapping). Everyone
+  houses outside the fence, nothing overlapping). In LOBBY every race map
+  is hidden (MapManager, also once the maps are built at boot): SKY's
+  checkpoint labels (AlwaysOnTop, 1 500 studs) floated over the plaza.
+  Lobby reel footage: `sim.py run record-lobby` (TestHarness/LobbyFilm:
+  the filmer wins the vote, a made-up crowd envies and buys copies;
+  camera and walk in StarterPlayerScripts/Modules/LobbyFilmClient; nothing
+  is saved, LegendStore.memoryOnly), cut `kr-hof` in cuts.json. Everyone
   respawns there (`Player.RespawnLocation` = LobbySpawn): the LOBBY reload,
   joiners during RACING / RESULTS (they watch from it), and a reset on the
   farm (FarmRescue takes them back). A net puts anyone fallen off or over

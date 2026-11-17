@@ -140,6 +140,10 @@ GameManager.onPhaseChanged(function(phase, biome)
 		-- at LOBBY, not on a RESULTS-length timer: a shortened RESULTS let
 		-- that timer fire during the next FARMING (no track at RACING)
 		_currentBiome = nil
+		-- every map hidden: everyone is in Junk Town, and SKY's checkpoint
+		-- labels (seen through walls from 1 500 studs) floated over it
+		-- (Studio 2026-11-17, "CP 2" above the Legend pads)
+		MapVisibility.applyPhase(_getMapsFolder(), nil, nil)
 		-- Junk Town (LobbyManager) under a clear day sky, whatever the last
 		-- round's weather was
 		local preset = LIGHTING_PRESETS.FOREST
@@ -183,7 +187,14 @@ local function _hideBaseplate()
 	end
 end
 
-task.defer(_cacheTransparencies)
+task.defer(function()
+	_cacheTransparencies()
+	-- the first lobby starts before the maps are built: hide them now
+	local phase = GameManager.getPhase()
+	if phase == nil or phase == Constants.PHASES.LOBBY then
+		MapVisibility.applyPhase(_getMapsFolder(), nil, nil)
+	end
+end)
 task.defer(_hideBaseplate)
 
 return MapManager

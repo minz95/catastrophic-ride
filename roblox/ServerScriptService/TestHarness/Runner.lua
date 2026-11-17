@@ -192,6 +192,7 @@ function Runner.runMatch(opts)
 		uiDump = opts.uiDump,       -- bots report their screen layout (BotDriver "ui")
 		weather = opts.weather,     -- Shared/Weather key or "random" (default clear)
 		farmBots = opts.farmBots,   -- overrides of Constants.BOTS.FARM for the server farm bots (FarmBots.start)
+		lobbyFilm = opts.lobbyFilm, -- the lobby reel's timeline in LOBBY (TestHarness/LobbyFilm, record-lobby)
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

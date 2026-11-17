@@ -299,6 +299,28 @@ R.describe("shop hats (Modules/ShopHat)", function()
 		R.expect(bad).toBeEmpty("hat designs")
 	end)
 
+	R.it("a hat sits on top of big hair, not inside it (the Junk Crown vanished in long hair)", function()
+		local function lowest(model)
+			local y = math.huge
+			for _, p in ipairs(model:GetChildren()) do y = math.min(y, p.Position.Y) end
+			return y
+		end
+		local bald = character()
+		local plain = lowest(ShopHat.wear(bald, "hat_crown"))
+		local m, head = character()
+		local acc = env.mock.Instance.new("Accessory")
+		acc.AccessoryType = roblox2.Enum.AccessoryType.Hair
+		local handle = env.mock.Instance.new("Part")
+		handle.Name = "Handle"
+		handle.Size = Vector3.new(1.6, 2.2, 1.6)   -- hair piled 1.1 over the head's middle + 0.6 → ~0.9 over its top
+		handle.CFrame = head.CFrame * CFrame.new(0, 0.6, 0)
+		handle.Parent = acc
+		acc.Parent = m
+		local lifted = lowest(ShopHat.wear(m, "hat_crown"))
+		R.expect(lifted - plain > 0.4).toBe(true, string.format("lift %.2f", lifted - plain))
+		R.expect(lifted - plain <= ShopHat.HAIR_LIFT_MAX + 1e-6).toBe(true)
+	end)
+
 	R.it("a worn hat is welded to the head, massless, collides with nothing, and replaces the last one", function()
 		local m, head = character()
 		local hat = ShopHat.wear(m, "hat_crown")

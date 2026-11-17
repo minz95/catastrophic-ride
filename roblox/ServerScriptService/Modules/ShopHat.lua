@@ -89,6 +89,29 @@ local function hideOwnHats(character, hide)
 	end
 end
 
+-- How far the top of the avatar's hair sits over the head's top (studs, at
+-- most HAIR_LIFT_MAX): a shop hat goes on the hair, not into it (Studio
+-- 2026-11-17: the Junk Crown vanished in long blonde hair).
+ShopHat.HAIR_LIFT_MAX = 1.2
+local function hairLift(character, head)
+	local headTop = head.Position.Y + head.Size.Y / 2
+	local top = headTop
+	for _, acc in ipairs(character:GetChildren()) do
+		if acc:IsA("Accessory") then
+			local ok, t = pcall(function() return acc.AccessoryType end)
+			local handle = acc:FindFirstChild("Handle")
+			if ok and t == Enum.AccessoryType.Hair and handle and handle:IsA("BasePart")
+				and math.abs(handle.Position.X - head.Position.X) < head.Size.X * 2
+				and math.abs(handle.Position.Z - head.Position.Z) < head.Size.Z * 2 then
+				-- a mesh's box is loose round the hair: most of its height is hair
+				top = math.max(top, handle.Position.Y + handle.Size.Y / 2 * 0.8)
+			end
+		end
+	end
+	return math.clamp(top - headTop, 0, ShopHat.HAIR_LIFT_MAX)
+end
+ShopHat._hairLift = hairLift
+
 local function headOf(character)
 	local head = character and character:FindFirstChild("Head")
 	return head and head:IsA("BasePart") and head or nil
@@ -107,7 +130,7 @@ function ShopHat.wear(character, id)
 	hideOwnHats(character, design ~= nil)
 	if not design then return nil end
 	local scale = math.min(head.Size.X, head.Size.Y, head.Size.Z) / HatDesigns.HEAD
-	local model = ShopHat.build(design, head.CFrame * CFrame.new(0, head.Size.Y / 2, 0), scale)
+	local model = ShopHat.build(design, head.CFrame * CFrame.new(0, head.Size.Y / 2 + hairLift(character, head), 0), scale)
 	for _, p in ipairs(model:GetChildren()) do
 		local w = Instance.new("WeldConstraint")
 		w.Part0, w.Part1 = head, p

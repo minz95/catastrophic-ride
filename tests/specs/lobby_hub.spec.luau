@@ -306,8 +306,21 @@ R.describe("Junk Town in a server", function()
 		R.expect(L.onPlaza(rootOf(late).Position)).toBe(true)
 	end)
 
+	-- race map labels seen from Junk Town (SKY's checkpoint labels are seen
+	-- through walls from 1 500 studs: "CP 2" over the Legend pads, Studio)
+	local function mapLabels(srv)
+		local lit = {}
+		for _, d in ipairs(srv.env.workspace:FindFirstChild("Maps"):GetDescendants()) do
+			if d:IsA("BillboardGui") and d.Enabled and d.AlwaysOnTop then
+				table.insert(lit, d.Parent and d.Parent.Name or "?")
+			end
+		end
+		return lit
+	end
+
 	R.it("a whole round: plaza → farm at FARMING → back on the plaza at the next LOBBY; the board follows", function()
 		local srv, L, hub = boot({ lobbyDelay = 4 })
+		R.expect(mapLabels(srv)).toBeEmpty("map labels on in the first lobby")
 		local p = srv.players[1]
 		local screen = hub:FindFirstChild("Screen")
 		local function line(name) return screen:FindFirstChild(name, true).Text end
@@ -328,6 +341,7 @@ R.describe("Junk Town in a server", function()
 		srv.advance(2)   -- the lobby lasts lobbyDelay (4 s): still in it
 		R.expect(srv.GameManager.getPhase()).toBe("LOBBY")
 		R.expect(L.onPlaza(rootOf(p).Position)).toBe(true)
+		R.expect(mapLabels(srv)).toBeEmpty("map labels on in the next lobby")
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 

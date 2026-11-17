@@ -219,14 +219,14 @@ local function ground(m)
 	local I = LobbyLayout.ISLAND_RADIUS
 	cyl(m, "Grass", I * 2, 4, CF(O - V(0, 2, 0)), C(130, 200, 110), "Grass")
 	cyl(m, "Plaza", R * 1.55, 4.04, CF(O - V(0, 2, 0)), C(240, 222, 190), "Cobblestone")
-	cyl(m, "Centre", 30, 4.08, CF(O - V(0, 2, 0)), C(255, 240, 215), "SmoothPlastic")
+	cyl(m, "Centre", 30, 4.08, CF(O - V(0, 2, 0)), C(250, 235, 210), "CeramicTiles")
 	-- bottle caps set in the paving, all colours
 	local rnd = Random.new(7)
 	for i = 1, 40 do
 		local a = rnd:NextNumber(0, math.pi * 2)
 		local r = rnd:NextNumber(17, R * 0.75)
 		local p = O + V(math.cos(a) * r, 0.02, math.sin(a) * r)
-		deco(cyl(m, "BottleCap", 2.4, 0.2, CF(p), PASTEL[i % #PASTEL + 1], "SmoothPlastic"))
+		deco(cyl(m, "BottleCap", 2.4, 0.2, CF(p), PASTEL[i % #PASTEL + 1], "Metal"))
 	end
 	-- the island under it
 	cyl(m, "Rock1", I * 1.9, 10, CF(O - V(0, 9, 0)), C(130, 115, 100), "Slate")
@@ -268,7 +268,7 @@ end
 -- ── Welcome arch ─────────────────────────────────────────────────────────────
 
 local function tyre(m, cf, d)
-	local t = cyl(m, "Tyre", d or 4, 1.3, cf, C(35, 35, 40), "SmoothPlastic")
+	local t = cyl(m, "Tyre", d or 4, 1.3, cf, C(35, 35, 40), "Rubber")
 	deco(cyl(m, "Hub", (d or 4) * 0.45, 1.34, cf, C(190, 195, 205), "Metal"))
 	return t
 end
@@ -283,7 +283,7 @@ local function arch(m)
 			for k = 0, 5 do tyre(m, CF(base + V(x, 0.65 + k * 1.3, 0))) end
 		end
 	end
-	local board = part(m, "WelcomeSign", V(22, 3.2, 0.6), at(base + V(0, 9.2, 0), 180), C(205, 160, 105), "Wood")
+	local board = part(m, "WelcomeSign", V(22, 3.2, 0.6), at(base + V(0, 9.2, 0), 180), C(205, 160, 105), "WoodPlanks")
 	sign(board, { { text = "WELCOME TO JUNK TOWN", color = C(90, 50, 30) } })
 	sign(board, { { text = "WELCOME TO JUNK TOWN", color = C(90, 50, 30) } }, nil, Enum.NormalId.Back)
 	for i = 0, 6 do   -- little light bulbs along the top
@@ -300,7 +300,7 @@ local function spawnPad(m)
 	s.Size = V(12, 1, 12)
 	s.CFrame = CF(LobbyLayout.SPAWN + V(0, 0.5, 0))
 	s.Color = C(225, 50, 55)
-	s.Material = Enum.Material.SmoothPlastic
+	s.Material = Enum.Material.Metal
 	s.Neutral = true
 	s.Duration = 0
 	s.TopSurface = Enum.SurfaceType.Smooth
@@ -308,7 +308,7 @@ local function spawnPad(m)
 	for i = 0, 15 do   -- the cap's crimped edge
 		local a = i / 16 * math.pi * 2
 		deco(part(m, "Crimp", V(1.4, 1.2, 0.5), CF(LobbyLayout.SPAWN + V(math.cos(a) * 6.6, 0.6, math.sin(a) * 6.6))
-			* A(0, -a + math.pi / 2, 0), C(200, 40, 45), "SmoothPlastic"))
+			* A(0, -a + math.pi / 2, 0), C(200, 40, 45), "Metal"))
 	end
 	return s
 end
@@ -317,7 +317,7 @@ end
 
 local function fountain(m)
 	local p = LobbyLayout.FOUNTAIN
-	part(m, "Tub", V(12, 3, 6), CF(p + V(0, 2.3, 0)), C(250, 250, 252), "SmoothPlastic")
+	part(m, "Tub", V(12, 3, 6), CF(p + V(0, 2.3, 0)), C(250, 250, 252), "Marble")
 	local water = part(m, "Water", V(11, 0.4, 5), CF(p + V(0, 3.7, 0)), C(110, 190, 255), "Glass")
 	water.Transparency = 0.25
 	for _, x in ipairs({ -5, 5 }) do
@@ -328,8 +328,8 @@ local function fountain(m)
 	-- the tap at one end, the duck afloat
 	cyl(m, "Tap", 0.5, 3, CF(p + V(-5.4, 5, 0)), C(200, 205, 215), "Metal")
 	part(m, "Spout", V(1.6, 0.5, 0.5), CF(p + V(-4.8, 6.4, 0)), C(200, 205, 215), "Metal")
-	deco(ball(m, "Duck", 1.4, CF(p + V(1.5, 4.4, 0.5)), C(255, 214, 30)))
-	deco(ball(m, "DuckHead", 0.9, CF(p + V(1.1, 5.3, 0.5)), C(255, 214, 30)))
+	deco(ball(m, "Duck", 1.4, CF(p + V(1.5, 4.4, 0.5)), C(255, 214, 30), "Rubber"))
+	deco(ball(m, "DuckHead", 0.9, CF(p + V(1.1, 5.3, 0.5)), C(255, 214, 30), "Rubber"))
 	deco(part(m, "Beak", V(0.5, 0.25, 0.4), CF(p + V(0.55, 5.25, 0.5)), C(255, 130, 20)))
 end
 
@@ -341,7 +341,7 @@ local function board(m)
 	local yaw = face - face.Position
 	for k = 0, 1 do tyre(m, CF(p + V(0, 0.65 + k * 1.3, 0)) , 6) end
 	local tvAt = CF(p + V(0, 2.6 + 5, 0)) * yaw
-	part(m, "TV", V(15, 10, 8), tvAt, C(150, 100, 60), "Wood")
+	part(m, "TV", V(15, 10, 8), tvAt, C(150, 100, 60), "WoodPlanks")
 	local screen = part(m, "Screen", V(12, 7.6, 0.4), tvAt * CF(-1, 0.4, -4.05), C(30, 40, 45), "SmoothPlastic")
 	sign(screen, {
 		{ name = "Title", text = "NEXT RACE", color = C(255, 214, 60), share = 0.22 },
@@ -350,7 +350,7 @@ local function board(m)
 		{ name = "Players", text = "", color = C(200, 210, 230), share = 0.2, font = Enum.Font.GothamBold },
 	}, C(20, 30, 35))
 	for k = 0, 1 do   -- knobs
-		deco(cyl(m, "Knob", 1.1, 0.4, tvAt * CF(6, 2 - k * 2.6, -4.1) * A(math.pi / 2, 0, 0), C(60, 50, 45)))
+		deco(cyl(m, "Knob", 1.1, 0.4, tvAt * CF(6, 2 - k * 2.6, -4.1) * A(math.pi / 2, 0, 0), C(60, 50, 45), "Rubber"))
 	end
 	for _, s in ipairs({ -1, 1 }) do   -- rabbit-ear antennas
 		deco(part(m, "Antenna", V(0.2, 6, 0.2), tvAt * CF(s * 1.6, 7.4, 0) * A(0, 0, math.rad(-s * 28)), C(190, 195, 205), "Metal"))
@@ -364,14 +364,14 @@ end
 local function stage(m)
 	local st = LobbyLayout.STAGE
 	local p = st.at
-	cyl(m, "Stage", st.radius * 2, st.height, CF(p + V(0, st.height / 2, 0)), C(40, 40, 45), "SmoothPlastic")
+	cyl(m, "Stage", st.radius * 2, st.height, CF(p + V(0, st.height / 2, 0)), C(165, 30, 45), "Carpet")
 	cyl(m, "StageRim", st.radius * 2 + 0.6, 0.5, CF(p + V(0, st.height - 0.2, 0)), C(255, 200, 40), "Foil")
 	for i = 0, 11 do   -- tyres round its foot
 		local a = i / 12 * math.pi * 2
 		tyre(m, CF(p + V(math.cos(a) * (st.radius + 1.6), 0.65, math.sin(a) * (st.radius + 1.6))), 3.2)
 	end
 	-- the backdrop: planks with the sign, three giant forks as a crown on top
-	local back = part(m, "Backdrop", V(32, 14, 1), CF(p + V(0, 7, -st.radius - 3)), C(205, 160, 105), "Wood")
+	local back = part(m, "Backdrop", V(32, 14, 1), CF(p + V(0, 7, -st.radius - 3)), C(205, 160, 105), "WoodPlanks")
 	sign(back, {
 		{ text = "🏆 HALL OF FAME", color = C(150, 70, 20), share = 0.55 },
 		{ text = "THE FUNNIEST RIDE OF THE LAST VOTE", color = C(90, 50, 30), share = 0.3, font = Enum.Font.GothamBold },
@@ -413,7 +413,7 @@ local function garage(m)
 	-- loose crates in front of the wall
 	storeModel(m, "crates", CF(wallAt + V(5, 0, -26)) * A(0, math.rad(80), 0), 5, true)
 	storeModel(m, "crate", CF(wallAt + V(6, 0, 25)) * A(0, math.rad(20), 0), 4, true)
-	local s = part(m, "LegendSign", V(26, 4, 0.6), CF(wallAt + V(2.8, 12, 0)) * A(0, math.rad(90), 0), C(40, 35, 60), "SmoothPlastic")
+	local s = part(m, "LegendSign", V(26, 4, 0.6), CF(wallAt + V(2.8, 12, 0)) * A(0, math.rad(90), 0), C(40, 35, 60), "Fabric")
 	sign(s, { { text = "🚗 LEGEND RIDES", color = C(255, 214, 60), share = 0.6 },
 		{ text = "vote winners' rides · few copies · few days", color = C(230, 230, 245), share = 0.4, font = Enum.Font.GothamBold } },
 		C(40, 35, 60), Enum.NormalId.Back)
@@ -432,13 +432,13 @@ local REWARD_ICON = { pose = "🙌", trail = "✨" }
 
 local function trophyRoom(m)
 	local house = O + V(72, 0, -14)
-	ball(m, "Teapot", 22, CF(house + V(0, 10, 0)), C(110, 200, 190), "SmoothPlastic")
-	cyl(m, "TeapotLid", 10, 2, CF(house + V(0, 20.5, 0)), C(110, 200, 190), "SmoothPlastic")
+	ball(m, "Teapot", 22, CF(house + V(0, 10, 0)), C(110, 200, 190), "CeramicTiles")
+	cyl(m, "TeapotLid", 10, 2, CF(house + V(0, 20.5, 0)), C(110, 200, 190), "CeramicTiles")
 	ball(m, "TeapotKnob", 2.4, CF(house + V(0, 22.5, 0)), C(255, 200, 40), "Foil")
-	part(m, "Spout", V(10, 3, 3), CF(house + V(-4, 9, -12)) * A(0, math.rad(60), math.rad(30)), C(110, 200, 190))
+	part(m, "Spout", V(10, 3, 3), CF(house + V(-4, 9, -12)) * A(0, math.rad(60), math.rad(30)), C(110, 200, 190), "CeramicTiles")
 	local door = part(m, "Door", V(0.4, 7, 5), CF(house + V(-10.6, 3.5, 0)), C(150, 100, 60), "Wood")
 	door.CanCollide = false
-	local s = part(m, "TrophySign", V(24, 4, 0.6), CF(house + V(-12, 24, 0)) * A(0, math.rad(90), 0), C(255, 245, 225), "SmoothPlastic")
+	local s = part(m, "TrophySign", V(24, 4, 0.6), CF(house + V(-12, 24, 0)) * A(0, math.rad(90), 0), C(255, 245, 225), "Plaster")
 	sign(s, { { text = "🏆 TROPHY ROOM", color = C(30, 120, 110), share = 0.6 },
 		{ text = "earn them · nobody can buy them", color = C(90, 70, 50), share = 0.4, font = Enum.Font.GothamBold } },
 		C(255, 245, 225))   -- the front (-Z, turned to -X): towards the plaza
@@ -446,13 +446,13 @@ local function trophyRoom(m)
 	for i, a in ipairs(Achievements.LIST) do
 		if i > LobbyLayout.TROPHY_SLOTS then break end
 		local p = LobbyLayout.trophySpot(i)
-		cyl(m, "Stool", 3.6, 3, CF(p + V(0, 1.5, 0)), C(255, 200, 40), "Foil")
+		cyl(m, "Stool", 3.6, 3, CF(p + V(0, 1.5, 0)), C(230, 175, 50), "Metal")
 		local it = Cosmetics.get(a.reward)
 		local design = it and it.hat and HatDesigns.get(it.hat)
 		local headAt = p + V(0, 4.1, 0)
 		local holder
 		if design then
-			holder = ball(m, "Head", 2, LobbyLayout.facingCentre(headAt), C(240, 210, 170))
+			holder = ball(m, "Head", 2, LobbyLayout.facingCentre(headAt), C(240, 225, 205), "Plaster")
 			local hat = ShopHat.build(design, LobbyLayout.facingCentre(headAt + V(0, 1, 0)), 2 / HatDesigns.HEAD)
 			for _, hp in ipairs(hat:GetChildren()) do
 				if hp:IsA("BasePart") then hp.Anchored = true end
@@ -479,8 +479,8 @@ local function shop(m)
 	local yaw = face - face.Position
 	local cf = CF(p) * yaw
 	if storeModel(m, "shop_awning", cf * CF(0, 0, 2), 13, true) then
-		local counter = part(m, "Counter", V(10, 3.4, 1.6), cf * CF(0, 1.7, -7.4), C(150, 100, 60), "Wood")
-		local s = part(m, "ShopSign", V(8, 2, 0.4), cf * CF(0, 4.4, -8.3), C(255, 245, 225), "SmoothPlastic")
+		local counter = part(m, "Counter", V(10, 3.4, 1.6), cf * CF(0, 1.7, -7.4), C(150, 100, 60), "WoodPlanks")
+		local s = part(m, "ShopSign", V(8, 2, 0.4), cf * CF(0, 4.4, -8.3), C(255, 245, 225), "Plaster")
 		sign(s, { { text = "🛒 SHOP", color = C(200, 60, 60) } })
 		prompt(counter, "Open shop", "Junk Town Shop", "shop")
 		return

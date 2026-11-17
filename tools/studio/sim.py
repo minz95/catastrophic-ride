@@ -548,8 +548,10 @@ def check(sc, report):
                     r.get("round"), len(players), want)))
             if players and done / len(players) < c.get("finishRate", 0):
                 out.append(("fail", "round %s: %d of %d finished" % (r.get("round"), done, len(players))))
-        if not report.get("rounds"):
+        if not report.get("rounds") and "lobbyFilm" not in sc["opts"]:   # the lobby reel ends in LOBBY
             out.append(("fail", "no round completed"))
+        if "lobbyFilm" in sc["opts"] and report.get("endReason") != "lobby film":
+            out.append(("fail", "lobby film did not finish: %s" % report.get("endReason")))
         for r in report.get("rounds", []):
             out += check_farm(c, r, report)
         events = (report.get("telemetry") or {}).get("events") or []

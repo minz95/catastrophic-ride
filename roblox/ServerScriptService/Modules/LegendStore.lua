@@ -30,7 +30,10 @@ function LegendStore.onChanged(fn)
 end
 local _memRoyalty = {}   -- userId → { coins, sales, title } when the store is down
 
+LegendStore.memoryOnly = false   -- set by the lobby film (TestHarness/LobbyFilm): nothing it sells is kept
+
 local function store()
+	if LegendStore.memoryOnly then error("memory only") end
 	return game:GetService("DataStoreService"):GetDataStore(LegendStore.NAME)
 end
 
