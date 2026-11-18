@@ -703,7 +703,7 @@ RemoteEvents.LegendUpdate.OnClientEvent:Connect(function(m)
 	if type(m) ~= "table" then return end
 	if m.kind == "listed" then
 		SoundFx.play("CRAFT_COMPLETE")
-		Notice.show("🚗 Your ride is a Legend!", string.format("%s is on sale in the shop: %d copies, %d days. Yours is the original, free.",
+		Notice.show("🚗 Your ride is a Legend!", string.format("%s is on the used-car lot on Auto Street: %d copies, %d days. Yours is the original, free.",
 			tostring(m.title), m.limit or 0, m.days or 0), 10)
 	elseif m.kind == "royalty" then
 		local who = type(m.buyer) == "string" and m.buyer or "Someone"
@@ -724,6 +724,8 @@ RemoteEvents.LegendUpdate.OnClientEvent:Connect(function(m)
 				tostring(m.title), m.price or 0, m.coins or 0), 6)
 		elseif m.reason == "denied: owned" then
 			Notice.show("🚗 Already yours", tostring(m.title) .. " is in your garage: ride it from the shop's 🚗 tab.", 6)
+		elseif m.reason == "denied: sold out" or m.reason == "denied: ended" then
+			Notice.show("🚗 Gone!", tostring(m.title) .. " just left the lot. Another one will park soon.", 6)
 		end
 	end
 end)

@@ -56,7 +56,7 @@ function LobbyTourClient.run(report)
 	end
 
 	for i, s in ipairs(cfg.stops) do
-		local target = Vector3.new(s.x, cfg.y, s.z)
+		local target = Vector3.new(s.x, s.y or cfg.y, s.z)
 		local hum, root = parts(true)
 		local t0 = os.clock()
 		local deadline = t0 + cfg.timeout

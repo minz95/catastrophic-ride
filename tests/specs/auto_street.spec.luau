@@ -84,16 +84,51 @@ R.describe("Auto Street: the cars and where they stand", function()
 		R.expect(L.inTown(O + Vector3.new(-200, 2, 90))).toBe(false)       -- past the south wall
 		R.expect(L.inTown(O + Vector3.new(-90, 2, 40))).toBe(false)        -- the island's houses
 		R.expect(L.inTown(O + Vector3.new(-200, -30, 0))).toBe(false)      -- fell off
-		-- the salesman stands in the showroom, off the plinths
+		-- the salesman stands in the showroom off the plinths, the dealers on the lot clear of the cars
+		local U = L.USED_LOT
 		for _, n in ipairs(Npcs.LIST) do
 			if n.street then
 				local p = n.at
-				R.expect(L.inRect(b, p.X, p.Z)).toBe(true, n.id)
+				R.expect(L.inRect(b, p.X, p.Z) or L.inRect(U.box, p.X, p.Z)).toBe(true, n.id)
 				for i = 1, L.CAR_SLOTS do
 					local q = L.carSpot(i) - O
 					R.expect(math.abs(p.X - q.X) > S.plinth.X / 2 + 1 or math.abs(p.Z - q.Z) > S.plinth.Z / 2 + 1).toBe(true, n.id)
 				end
+				for i = 1, L.USED_SLOTS do
+					local q = L.usedSpot(i) - O
+					R.expect(math.abs(p.X - q.X) > 3.5 or math.abs(p.Z - q.Z) > 6).toBe(true, n.id)
+				end
 			end
+		end
+	end)
+
+	R.it("the used-car lot: bays in back-to-back rows on the gravel, more on the tower deck up the ramp; one bay per kept listing", function()
+		local U = L.USED_LOT
+		local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+		R.expect(L.USED_SLOTS).toBe(Constants.LEGEND.KEEP)
+		local T = U.tower
+		for i = 1, L.USED_SLOTS do
+			local p, north = L.usedSpot(i)
+			local d = p - O
+			if d.Y > 1 then
+				R.expect(math.abs(d.Y - T.deck) < 0.01).toBe(true)
+				R.expect(L.inRect(T.box, d.X, d.Z + (north and -3.5 or 3.5))).toBe(true, "deck bay " .. i)
+			else
+				R.expect(L.inRect(U.box, d.X, d.Z - 3.5) and L.inRect(U.box, d.X, d.Z + 3.5)).toBe(true, "bay " .. i)
+				R.expect(L.inRect(T.box, d.X, d.Z)).toBe(false, "bay " .. i .. " under the tower")
+			end
+			R.expect(L.onStreet(p + Vector3.new(0, 3, 0))).toBe(true, "bay " .. i)
+		end
+		local first, firstNorth = L.usedSpot(1)
+		R.expect(firstNorth).toBe(true)   -- the newest faces the road, by the entrance
+		R.expect(math.abs(first.X - O.X - U.entranceX) < 16).toBe(true)
+		-- the ramp climbs from the lot to the deck's edge
+		R.expect(T.ramp.x0).toBe(T.box[2])
+		R.expect(L.inRect(U.box, T.ramp.x1, T.ramp.z0)).toBe(true)
+		-- offices stand behind the rows
+		for _, x in ipairs(U.offices) do
+			R.expect(U.officeZ - 3 > U.rows[2] + 6).toBe(true)
+			R.expect(L.inRect(U.box, x, U.officeZ + 3)).toBe(true)
 		end
 	end)
 end)
@@ -252,6 +287,101 @@ R.describe("Junk Motors in a server", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 
+	-- puts `n` vote winners' rides on sale (newest last), owners not on this server
+	local function listWinners(srv, n)
+		local e = srv.env
+		local HallOfFame = e.requirePath("ServerScriptService.Modules.HallOfFame")
+		local LegendShop = e.requirePath("ServerScriptService.Modules.LegendShop")
+		local LegendStore = e.requirePath("ServerScriptService.Modules.LegendStore")
+		LegendStore.memoryOnly = true
+		local bodies = { "Toilet", "Bathtub", "Piano", "Red Sofa", "Shopping Cart", "Rubber Duck", "Refrigerator", "Old TV" }
+		local out = {}
+		for k = 1, n do
+			local ent = HallOfFame.entry(9000 + k, "Winner" .. k, "FOREST", { BODY = bodies[(k - 1) % #bodies + 1], ENGINE = "Rocket" }, k, {})
+			table.insert(out, LegendShop.listWinner(ent))
+			srv.advance(1.1)   -- a listing's time is whole seconds: one a second keeps the order
+		end
+		srv.advance(2)
+		return out
+	end
+	local function usedCar(hub, i)
+		return hub:FindFirstChild("Live"):FindFirstChild("Used_" .. i)
+	end
+	local function usedPrompt(hub, id, action)
+		for _, c in ipairs(hub:FindFirstChild("Live"):GetChildren()) do
+			if c:GetAttribute("Legend") == id then
+				for _, d in ipairs(c:GetDescendants()) do
+					if d:IsA("ProximityPrompt") and d:GetAttribute("CarAction") == action then return d end
+				end
+			end
+		end
+		return nil
+	end
+
+	R.it("the used-car lot fills with the vote winners' rides, newest JUST IN by the entrance; the plaza pads keep the newest six", function()
+		local srv, m = boot()
+		local hub = m.hub
+		R.expect(hub:FindFirstChild("LotEmptySign").Transparency).toBe(0)
+		local listed = listWinners(srv, 8)
+		R.expect(hub:FindFirstChild("LotEmptySign").Transparency).toBe(1)
+		for i = 1, 8 do R.expect(usedCar(hub, i) ~= nil).toBe(true, "bay " .. i) end
+		R.expect(usedCar(hub, 9)).toBe(nil)
+		-- the newest first, its card says JUST IN
+		R.expect(usedCar(hub, 1):GetAttribute("Legend")).toBe(listed[8].id)
+		local tagText = {}
+		for _, d in ipairs(usedCar(hub, 1):GetDescendants()) do
+			if d:IsA("TextLabel") then table.insert(tagText, d.Text) end
+		end
+		R.expect(table.concat(tagText, "|"):find("JUST IN!", 1, true) ~= nil).toBe(true)
+		R.expect(table.concat(tagText, "|"):find("Built by Winner8", 1, true) ~= nil).toBe(true)
+		R.expect(table.concat(tagText, "|"):find("2,500", 1, true) ~= nil).toBe(true)
+		local pads = 0
+		for _, c in ipairs(hub:FindFirstChild("Live"):GetChildren()) do
+			if c.Name:sub(1, 7) == "Legend_" then pads += 1 end
+		end
+		R.expect(pads).toBe(6)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("buying on the lot: coins, the numbered copy round your waist, the builder's royalty kept for them; trying on first is free", function()
+		local srv, m = boot()
+		local hub = m.hub
+		local p = srv.players[1]
+		local rec = m.PlayerStore.get(p)
+		local listed = listWinners(srv, 3)
+		local id = listed[2].id
+		rec.coins = 3000
+		usedPrompt(hub, id, "try").Triggered:Fire(p)
+		srv.advance(0.5)
+		R.expect(worn(p)).toBe("try:" .. id)
+		R.expect(rec.coins).toBe(3000)
+		usedPrompt(hub, id, "buy").Triggered:Fire(p)
+		srv.advance(1)
+		R.expect(rec.coins).toBe(3000 - m.Constants.LEGEND.COINS)
+		R.expect(rec.legend[id] ~= nil and rec.legend[id].serial).toBe(1)
+		R.expect(worn(p)).toBe(id)
+		R.expect(notices(m, "car_bought")).toBe(1)
+		-- the lot shows the sale on the card
+		srv.advance(2)
+		local text = {}
+		for _, d in ipairs(hub:FindFirstChild("Live"):GetDescendants()) do
+			if d:IsA("TextLabel") then table.insert(text, d.Text) end
+		end
+		R.expect(table.concat(text, "|"):find("Sold 1/50", 1, true) ~= nil).toBe(true)
+		-- again: already yours; short of coins for another
+		rec.coins = 3000
+		usedPrompt(hub, id, "buy").Triggered:Fire(p)
+		srv.advance(1)
+		R.expect(rec.coins).toBe(3000)
+		rec.coins = 100
+		usedPrompt(hub, listed[1].id, "buy").Triggered:Fire(p)
+		srv.advance(1)
+		R.expect(rec.coins).toBe(100)
+		R.expect(rec.legend[listed[1].id]).toBe(nil)
+		R.expect(notices(m, "car_denied")).toBe(2)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
 	R.it("walking down Auto Street and into the showroom keeps you there; past its walls or off the lot you go back to the spawn", function()
 		local srv, m = boot()
 		local L, O = m.L, m.L.ORIGIN
@@ -263,6 +393,10 @@ R.describe("Junk Motors in a server", function()
 		rootOf(p).CFrame = CFrame.new(O + Vector3.new(-280, 3, 6))
 		srv.advance(2)
 		R.expect(L.onStreet(rootOf(p).Position)).toBe(true)
+		-- up on the parking tower's deck
+		rootOf(p).CFrame = CFrame.new(O + Vector3.new(-280, L.USED_LOT.tower.deck + 3, 38))
+		srv.advance(2)
+		R.expect(rootOf(p).Position.Y > O.Y + L.USED_LOT.tower.deck).toBe(true)
 		-- over the south wall: back to the plaza
 		rootOf(p).CFrame = CFrame.new(O + Vector3.new(-200, 3, 90))
 		srv.advance(2)

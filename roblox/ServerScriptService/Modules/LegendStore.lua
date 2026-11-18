@@ -62,7 +62,8 @@ function LegendStore.buildModels()
 		folder.Parent = ReplicatedStorage
 	end
 	local open = {}
-	for _, l in ipairs(LegendRides.active(_list, now())) do
+	-- every listing on sale (up to KEEP): the used-car lot shows them all
+	for _, l in ipairs(LegendRides.active(_list, now(), Constants.LEGEND.KEEP)) do
 		open[l.id] = true
 		if not folder:FindFirstChild(l.id) then
 			local HallOfFame = require(ServerScriptService.Modules.HallOfFame)

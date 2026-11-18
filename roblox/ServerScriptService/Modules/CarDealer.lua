@@ -1,5 +1,7 @@
 -- CarDealer.lua
--- Junk Motors (Shared/NewCars): the new car showroom on Auto Street. Each
+-- Junk Motors (Shared/NewCars): the new car showroom on Auto Street, and
+-- Junk Auto Mart, the used-car lot across the road (the vote winners'
+-- Legend Rides, `handleUsed`; the same try / buy prompts). Each
 -- car stands on a plinth with two prompts (LobbyHub, attribute CarAction):
 --   "try"  wear it round the waist for Constants.NEW_CARS.TRY_SECONDS
 --   "buy"  pay its price in coins; it is yours and on at once
@@ -21,7 +23,7 @@ local Telemetry = require(ServerScriptService.Modules.Telemetry)
 local CarDealer = {}
 CarDealer.FOLDER = "NewCars"
 
-local _trying = {}   -- userId → { item, token }
+local _trying = {}   -- userId → { ride, key, token }
 
 local function itemConfig()
 	return require(ServerScriptService.Modules.ItemConfig)
@@ -37,10 +39,12 @@ local function coinsStat(player, rec)
 	if c then c.Value = rec.coins end
 end
 
---- The item `player` is trying on now, or nil.
+--- What `player` is trying on now: the ride (a Legend Ride's shape) and
+-- its key ("try:<item>" | "try:<listing id>"), or nil.
 function CarDealer.trying(player)
 	local t = _trying[player.UserId]
-	return t and t.item or nil
+	if not t then return nil end
+	return t.ride, t.key
 end
 
 local function stopTrying(player)
@@ -48,6 +52,18 @@ local function stopTrying(player)
 		_trying[player.UserId] = nil
 		require(ServerScriptService.Modules.LegendShop).refresh(player)
 	end
+end
+
+--- Wears `ride` round `player`'s waist for TRY_SECONDS (`key` names it),
+-- then their own ride again. A new try-on restarts the clock.
+function CarDealer.tryOn(player, ride, key)
+	local token = {}
+	_trying[player.UserId] = { ride = ride, key = key, token = token }
+	require(ServerScriptService.Modules.LegendShop).refresh(player)
+	task.delay(Constants.NEW_CARS.TRY_SECONDS, function()
+		local t = _trying[player.UserId]
+		if t and t.token == token then stopTrying(player) end
+	end)
 end
 
 --- Showroom actions: "try" | "buy" with an item. Returns "ok" or "denied: …".
@@ -58,16 +74,10 @@ function CarDealer.handle(player, rec, action, item)
 	if not price then return "denied: unknown" end
 	local LegendShop = require(ServerScriptService.Modules.LegendShop)
 	if action == "try" then
-		local token = {}
-		_trying[player.UserId] = { item = item, token = token }
-		LegendShop.refresh(player)
+		CarDealer.tryOn(player, NewCars.ride(item, true), "try:" .. item)
 		tell(player, { kind = "car_try", title = item, price = price, seconds = Constants.NEW_CARS.TRY_SECONDS,
 			owned = NewCars.owns(rec, item) })
 		Telemetry.record("car_try", { userId = player.UserId, item = item })
-		task.delay(Constants.NEW_CARS.TRY_SECONDS, function()
-			local t = _trying[player.UserId]
-			if t and t.token == token then stopTrying(player) end
-		end)
 		return "ok"
 	elseif action == "buy" then
 		local res = NewCars.buy(cfg, rec, item)
@@ -89,11 +99,47 @@ function CarDealer.handle(player, rec, action, item)
 	return "denied: bad action"
 end
 
+--- The used-car lot (Junk Auto Mart): "try" | "buy" Legend Ride listing
+-- `id`. Buying goes through the shop (Modules/LegendShop: coins, the copy's
+-- number, the builder's royalty). Returns "ok" or "denied: …".
+function CarDealer.handleUsed(player, rec, action, id)
+	if type(id) ~= "string" or #id > 64 then return "denied: bad id" end
+	local LegendStore = require(ServerScriptService.Modules.LegendStore)
+	local l = LegendStore.find(id)
+	if not l then return "denied: unknown" end
+	local price = Constants.LEGEND.COINS
+	if action == "try" then
+		CarDealer.tryOn(player, { title = l.title, ownerName = l.ownerName, biome = l.biome, slots = l.slots,
+			look = l.look, trying = true }, "try:" .. id)
+		local owned = (rec.legend and rec.legend[id] ~= nil) or l.ownerId == player.UserId
+		tell(player, { kind = "car_try", title = l.title, price = price, seconds = Constants.NEW_CARS.TRY_SECONDS,
+			owned = owned })
+		Telemetry.record("car_try", { userId = player.UserId, legend = id })
+		return "ok"
+	elseif action == "buy" then
+		local res = require(ServerScriptService.Modules.Shop).handle(player, "legend_buy", id).result
+		if res ~= "ok" then
+			tell(player, { kind = "car_denied", title = l.title, reason = res, price = price, coins = rec.coins })
+			return res
+		end
+		_trying[player.UserId] = nil
+		require(ServerScriptService.Modules.LegendShop).refresh(player)
+		tell(player, { kind = "car_bought", title = l.title, price = price })
+		return "ok"
+	end
+	return "denied: bad action"
+end
+
 --- A showroom prompt was used (LobbyManager wires them).
-function CarDealer.prompt(player, action, item)
+function CarDealer.prompt(player, action, item, used)
 	local rec = PlayerStore.get(player)
 	if not rec then return "denied: loading" end
-	local res = CarDealer.handle(player, rec, action, item)
+	local res
+	if used then
+		res = CarDealer.handleUsed(player, rec, action, item)
+	else
+		res = CarDealer.handle(player, rec, action, item)
+	end
 	local Shop = require(ServerScriptService.Modules.Shop)
 	pcall(function() RemoteEvents.ShopUpdated:FireClient(player, Shop.state(rec)) end)
 	return res

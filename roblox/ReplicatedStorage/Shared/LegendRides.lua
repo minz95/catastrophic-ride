@@ -59,14 +59,15 @@ function LegendRides.tag(owned)
 	return "LEGEND"
 end
 
---- The listings still on sale, newest first, at most SHOWN.
-function LegendRides.active(list, now)
+--- The listings still on sale, newest first, at most `limit` (default
+-- SHOWN: the shop and the plaza's pads; the used-car lot shows more).
+function LegendRides.active(list, now, limit)
 	local out = {}
 	for _, l in ipairs(list or {}) do
 		if LegendRides.isOpen(l, now) then table.insert(out, l) end
 	end
 	table.sort(out, function(a, b) return a.at > b.at end)
-	while #out > L.SHOWN do table.remove(out) end
+	while #out > (limit or L.SHOWN) do table.remove(out) end
 	return out
 end
 

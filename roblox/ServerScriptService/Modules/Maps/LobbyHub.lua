@@ -805,16 +805,131 @@ local function street(m)
 	sign(board, { { text = "🚗 AUTO STREET", color = C(255, 255, 255), share = 0.62 },
 		{ text = "JUNK MOTORS · NEW CARS", color = C(255, 225, 150), share = 0.38, font = Enum.Font.GothamBold } }, red)
 	sign(board, { { text = "JUNK TOWN PLAZA", color = C(255, 255, 255) } }, red, Enum.NormalId.Back)
-	-- street lamps along the road, trees and benches on the open south side
+	-- street lamps along the road, benches on the showroom's side, a few trees
 	for k, x in ipairs({ -128, -168, -208, -248, -288 }) do
 		storeModel(m, "lamp_plain", CF(O + V(x, 0, k % 2 == 0 and 12 or -13)) * A(0, math.rad(90), 0), 13, false)
 	end
-	for i, p in ipairs({ V(-140, 0, 34), V(-176, 0, 52), V(-214, 0, 30), V(-252, 0, 50), V(-286, 0, 28), V(-128, 0, 54) }) do
+	for _, x in ipairs({ -188, -228 }) do
+		storeModel(m, "bench", CF(O + V(x, 0, -15.5)), 3.4, true)
+	end
+	for i, p in ipairs({ V(-122, 0, -40), V(-122, 0, -66), V(-286, 0, -68) }) do
 		storeModel(m, TREE_KINDS[i % 3 + 1], CF(O + p) * A(0, math.rad(i * 53), 0), 16 + (i % 2) * 4, false)
 	end
-	for _, x in ipairs({ -158, -198, -238 }) do
-		storeModel(m, "bench", CF(O + V(x, 0, 15)) * A(0, math.rad(180), 0), 3.4, true)
+end
+
+-- Junk Auto Mart: the used-car lot (LobbyLayout.USED_LOT). The cars come
+-- and go with the listings (LobbyHub.setUsedCars); built here is the lot:
+-- gravel and parking lines, the arch, a guard booth and the directory
+-- kiosk, the dealers' container offices, a car wash, bunting, and the
+-- parking tower (a deck up a ramp, a garage under it).
+LobbyHub.DEALERS = { "HONEST HANK'S", "LUCKY LOT", "RUSTY & SONS" }
+
+local function usedLot(m)
+	local U = LobbyLayout.USED_LOT
+	local b = U.box
+	slab(m, "LotGravel", b, 0.05, 0.3, C(150, 145, 140), "Pebble")
+	-- parking lines either side of every outdoor bay
+	for col = 0, U.columns do
+		local x = U.firstX + (col - 0.5) * U.stepX
+		for row, z in ipairs(U.rows) do
+			deco(part(m, "BayLine", V(0.3, 0.02, 7), CF(O + V(x, 0.06, z)), C(245, 245, 245), "SmoothPlastic"))
+		end
 	end
+	-- the way in: an arch, the guard's booth, the directory kiosk
+	local ex = U.entranceX
+	for _, dx in ipairs({ -6, 6 }) do
+		cyl(m, "ArchPost", 1, 13, CF(O + V(ex + dx, 6.5, b[3] + 1)), C(250, 190, 40), "Metal")
+	end
+	local arch = part(m, "MartSign", V(14, 3, 0.5), CF(O + V(ex, 12, b[3] + 1)), C(250, 190, 40), "Metal")
+	sign(arch, { { text = "JUNK AUTO MART", color = C(40, 30, 20), share = 0.6 },
+		{ text = "USED LEGEND RIDES", color = C(120, 40, 20), share = 0.4, font = Enum.Font.GothamBold } }, C(250, 190, 40))
+	sign(arch, { { text = "THANK YOU, COME AGAIN", color = C(40, 30, 20) } }, C(250, 190, 40), Enum.NormalId.Back)
+	part(m, "GuardBooth", V(4, 7, 4), CF(O + V(ex + 9, 3.5, b[3] + 6)), C(235, 235, 240), "SmoothPlastic")
+	local gw = part(m, "GuardWindow", V(3, 2, 0.2), CF(O + V(ex + 9, 4.6, b[3] + 3.9)), C(150, 200, 230), "Glass")
+	gw.Transparency = 0.3
+	part(m, "Barrier", V(0.4, 0.4, 7), CF(O + V(ex + 6.5, 3, b[3] + 5)) * A(math.rad(-60), 0, 0), C(230, 60, 50), "SmoothPlastic")
+	local kiosk = part(m, "Kiosk", V(3.4, 6, 0.8), CF(O + V(ex - 9, 3, b[3] + 4)), C(40, 45, 55), "Metal")
+	local dirLines = { { text = "LOT DIRECTORY", color = C(255, 214, 60), share = 0.2 } }
+	for i, d in ipairs(LobbyHub.DEALERS) do
+		table.insert(dirLines, { text = d, color = C(255, 255, 255), share = 0.18, font = Enum.Font.GothamBold })
+	end
+	table.insert(dirLines, { text = "TOWER: UP THE RAMP", color = C(150, 220, 255), share = 0.18, font = Enum.Font.GothamBold })
+	sign(kiosk, dirLines, C(40, 45, 55))
+	-- the dealers' container offices, each with its row of cars in front
+	local tones = { C(60, 120, 190), C(200, 80, 60), C(70, 150, 90) }
+	for i, x in ipairs(U.offices) do
+		local cf = CF(O + V(x, 0, U.officeZ))
+		part(m, "Office", V(12, 7, 6), cf * CF(0, 3.5, 0), tones[i], "CorrodedMetal")
+		part(m, "OfficeDoor", V(2.4, 5, 0.2), cf * CF(-3, 2.5, -3.05), C(60, 60, 70), "Metal")
+		local w = part(m, "OfficeWindow", V(4, 2.4, 0.2), cf * CF(2.2, 4, -3.05), C(170, 210, 235), "Glass")
+		w.Transparency = 0.25
+		local plate = part(m, "OfficeSign", V(10, 1.6, 0.3), cf * CF(0, 8, -2.6), C(255, 250, 235), "SmoothPlastic")
+		sign(plate, { { text = LobbyHub.DEALERS[i], color = tones[i] } }, C(255, 250, 235))
+	end
+	-- a car wash by the entrance
+	local wx, wz = ex + 2, U.officeZ
+	for _, dz in ipairs({ -4, 4 }) do
+		part(m, "WashFrame", V(10, 0.8, 0.8), CF(O + V(wx, 9, wz + dz)), C(60, 140, 220), "Metal")
+		for _, dx in ipairs({ -4.6, 4.6 }) do
+			part(m, "WashPost", V(0.8, 9, 0.8), CF(O + V(wx + dx, 4.5, wz + dz)), C(60, 140, 220), "Metal")
+		end
+	end
+	for _, dx in ipairs({ -3, 3 }) do
+		deco(cyl(m, "WashBrush", 2.4, 7, CF(O + V(wx + dx, 4.3, wz)), C(80, 170, 255), "Fabric"))
+	end
+	local wash = part(m, "WashSign", V(9, 1.6, 0.3), CF(O + V(wx, 10.4, wz - 4.4)), C(255, 255, 255), "SmoothPlastic")
+	sign(wash, { { text = "CAR WASH", color = C(60, 140, 220) } }, C(255, 255, 255))
+	-- bunting over the front of the lot, pole to pole
+	local poles = { O + V(b[2] - 3, 0, b[3] + 1), O + V(U.firstX + U.columns * U.stepX, 0, b[3] + 1) }
+	for _, p in ipairs(poles) do cyl(m, "FlagPole", 0.5, 12, CF(p + V(0, 6, 0)), C(220, 220, 225), "Metal") end
+	local a0, a1 = poles[1] + V(0, 11.5, 0), poles[2] + V(0, 11.5, 0)
+	local n = 22
+	for k = 1, n - 1 do
+		local t = k / n
+		local q = a0 + (a1 - a0) * t - V(0, math.sin(t * math.pi) * 2.5, 0)
+		deco(part(m, "Pennant", V(0.06, 1.2, 1.2), CF(q - V(0, 0.6, 0)) * A(math.rad(45), 0, 0), PASTEL[k % #PASTEL + 1]))
+	end
+	deco(part(m, "PennantString", V((a1 - a0).Magnitude, 0.08, 0.08), CF((a0 + a1) / 2 - V(0, 1.6, 0)), C(250, 250, 250)))
+	-- the parking tower: a deck up a ramp, rails round it, a garage under it
+	local T = U.tower
+	local tb = T.box
+	local deck = part(m, "TowerDeck", V(tb[2] - tb[1], 1, tb[4] - tb[3]),
+		CF(O + V((tb[1] + tb[2]) / 2, T.deck - 0.5, (tb[3] + tb[4]) / 2)), C(170, 170, 175), "Concrete")
+	for _, x in ipairs({ tb[1] + 1, (tb[1] + tb[2]) / 2, tb[2] - 1 }) do
+		for _, z in ipairs({ tb[3] + 1, tb[4] - 1 }) do
+			part(m, "TowerPillar", V(1.6, T.deck - 1, 1.6), CF(O + V(x, (T.deck - 1) / 2, z)), C(160, 160, 165), "Concrete")
+		end
+	end
+	local R = T.ramp
+	local rampLen = math.sqrt((R.x1 - R.x0) ^ 2 + T.deck ^ 2)
+	part(m, "TowerRamp", V(R.z1 - R.z0, 1, rampLen),
+		CF(O + V((R.x0 + R.x1) / 2, T.deck / 2 - 0.5, (R.z0 + R.z1) / 2))
+			* A(0, math.rad(-90), 0) * A(-math.atan2(T.deck, R.x1 - R.x0), 0, 0), C(170, 170, 175), "Concrete")
+	local function rail(a, c)
+		local len = (c - a).Magnitude
+		part(m, "TowerRail", V(0.4, 3, len), CFrame.lookAt(O + (a + c) / 2, O + c) + V(0, T.deck + 1.5, 0),
+			C(250, 190, 40), "Metal")
+	end
+	rail(V(tb[1], 0, tb[3]), V(tb[2], 0, tb[3]))           -- north
+	rail(V(tb[1], 0, tb[3]), V(tb[1], 0, tb[4]))           -- west
+	rail(V(tb[1], 0, tb[4]), V(tb[2], 0, tb[4]))           -- south
+	rail(V(tb[2], 0, tb[3]), V(tb[2], 0, R.z0))            -- east, open where the ramp comes up
+	local towerSign = part(m, "TowerSign", V(20, 2.4, 0.4), CF(O + V((tb[1] + tb[2]) / 2, T.deck + 4.6, tb[3])), C(40, 45, 55), "Metal")
+	sign(towerSign, { { text = "MORE UPSTAIRS", color = C(255, 214, 60) } }, C(40, 45, 55))
+	-- under the deck: a garage with a car lift
+	for _, dx in ipairs({ -4, 4 }) do
+		part(m, "LiftPost", V(0.8, 6, 0.8), CF(O + V(-278 + dx, 3, 34)), C(220, 60, 50), "Metal")
+	end
+	part(m, "LiftArm", V(9, 0.5, 4), CF(O + V(-278, 3.2, 34)), C(80, 80, 90), "Metal")
+	local garageSign = part(m, "GarageSign", V(9, 1.8, 0.3), CF(O + V(-278, T.deck - 2.2, tb[3] + 0.4)), C(255, 255, 255))
+	sign(garageSign, { { text = "GARAGE", color = C(220, 60, 50) } }, C(255, 255, 255), Enum.NormalId.Back)
+	sign(garageSign, { { text = "GARAGE", color = C(220, 60, 50) } }, C(255, 255, 255))
+	-- before any ride is on sale, the lot says how one gets here
+	local empty = part(m, "LotEmptySign", V(10, 3, 0.3), CF(O + V(U.firstX - 30, 3.5, b[3] + 2.5)), C(255, 250, 235))
+	sign(empty, { { text = "WIN THE RIDE SHOW VOTE", color = C(120, 40, 20), share = 0.55 },
+		{ text = "and your ride parks right here", color = C(60, 50, 40), share = 0.45, font = Enum.Font.GothamBold } },
+		C(255, 250, 235))
+	deco(empty)
 end
 
 -- Junk Motors: a glass showroom on the road's north side, every new car
@@ -929,6 +1044,7 @@ function LobbyHub.build(parent)
 	shop(m)
 	street(m)
 	showroom(m)
+	usedLot(m)
 	for i, h in ipairs(LobbyLayout.HOUSES) do
 		local cf = rim(h.angle, LobbyLayout.HOUSE_RADIUS)
 		if not storeModel(m, h.model, cf, h.height, true) then
@@ -1088,6 +1204,99 @@ function LobbyHub.setNewCars(hub, folder)
 			copy.Parent = live
 		end
 	end
+end
+
+--- Junk Auto Mart's cars: `list` = the open Legend Ride listings, newest
+-- first ({ id, title, ownerName, biome, votes, sold, limit, daysLeft }),
+-- `folder` = ReplicatedStorage.LegendRides (their pictures), `price` in
+-- coins, `onPrompt(player, action, id)` for the "try" / "buy" prompts.
+-- Each car stands nose out with its price on the roof and an inspection
+-- card in front; the newest is "JUST IN" by the entrance.
+local BIOME_WORD = { FOREST = "FOREST", OCEAN = "OCEAN", SKY = "SKY" }
+function LobbyHub.setUsedCars(hub, list, folder, price, onPrompt)
+	local live = hub:FindFirstChild("Live")
+	if not live then return end
+	for _, c in ipairs(live:GetChildren()) do
+		if c.Name:sub(1, 5) == "Used_" then c:Destroy() end
+	end
+	local Constants = require(ReplicatedStorage.Shared.Constants)
+	local ModelScale = require(ServerScriptService.Modules.ModelScale)
+	local shown = 0
+	for i, l in ipairs(list) do
+		if i > LobbyLayout.USED_SLOTS then break end
+		local src = folder and folder:FindFirstChild(l.id)
+		if src then
+			shown += 1
+			local spot, north = LobbyLayout.usedSpot(i)
+			local face = north and CF() or A(0, math.pi, 0)   -- the nose (-Z) out to the walkway
+			local holder = Instance.new("Model")
+			holder.Name = "Used_" .. i
+			local copy = still(src:Clone())
+			copy.Name = "Car"
+			local _, size0 = copy:GetBoundingBox()
+			local long = math.max(size0.X, size0.Z)
+			if long > 0 then ModelScale.scale(copy, Constants.NEW_CARS.SHOW_LENGTH / long) end
+			-- the long side across the bay (front to back)
+			local _, s1 = copy:GetBoundingBox()
+			local turn = s1.X > s1.Z and A(0, math.rad(90), 0) or CF()
+			ModelScale.standOn(copy, spot, spot.Y + 0.06, face * turn)
+			copy.Parent = holder
+			local _, size = copy:GetBoundingBox()
+			local out = north and V(0, 0, -1) or V(0, 0, 1)
+			local half = math.max(size.X, size.Z) / 2
+			-- a stand in front of the nose: the price written by hand on a
+			-- yellow card on top (on the roof it floated over tall engines),
+			-- the inspection card under it
+			local standAt = spot + out * (half + 1.4)
+			deco(part(holder, "CardPost", V(0.25, 5.2, 0.25), CF(standAt + V(0, 2.6, 0)), C(60, 60, 70), "Metal"))
+			local card = part(holder, "PriceCard", V(3, 1.4, 0.15), CF(standAt + V(0, 5, 0)) * face * A(0, math.pi, 0),
+				C(255, 220, 40), "SmoothPlastic")
+			deco(card)
+			local priceText = tostring(price):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+			sign(card, { { text = priceText, color = C(220, 30, 30), font = Enum.Font.PermanentMarker } }, C(255, 220, 40),
+				Enum.NormalId.Back)
+			local board = part(holder, "RecordCard", V(2.6, 2, 0.15),
+				CF(standAt + V(0, 3, 0)) * face * A(0, math.pi, 0) * A(math.rad(-20), 0, 0), C(250, 250, 245), "SmoothPlastic")
+			board.CanCollide = false
+			sign(board, {
+				{ text = "INSPECTION RECORD", color = C(30, 60, 140), share = 0.2 },
+				{ text = "Built by " .. tostring(l.ownerName), color = C(40, 40, 50), share = 0.16, font = Enum.Font.GothamBold },
+				{ text = string.format("Won the vote · %s · %d votes", BIOME_WORD[l.biome or ""] or "?", l.votes or 0),
+					color = C(40, 40, 50), share = 0.16, font = Enum.Font.Gotham },
+				{ text = string.format("Sold %d/%d · %d days left", l.sold or 0, l.limit or 0, l.daysLeft or 0),
+					color = C(40, 40, 50), share = 0.16, font = Enum.Font.Gotham },
+				{ text = string.format("TOTAL %s coins", priceText), color = C(200, 30, 30), share = 0.2 },
+			}, C(250, 250, 245), Enum.NormalId.Back)
+			local lines = { { text = tostring(l.title), color = C(255, 214, 60) },
+				{ text = string.format("%s coins · %d/%d sold", priceText, l.sold or 0, l.limit or 0), font = Enum.Font.Gotham } }
+			if i == 1 then table.insert(lines, 1, { text = "JUST IN!", color = C(255, 140, 40) }) end
+			tag(board, lines, 5.5, 30, 6)
+			for _, a in ipairs({ { "try", "Try on" }, { "buy", string.format("Buy · %s coins", priceText) } }) do
+				local pp = prompt(board, a[2], tostring(l.title), nil)
+				pp:SetAttribute("CarAction", a[1])
+				pp:SetAttribute("Legend", l.id)
+				pp.MaxActivationDistance = 7
+				if a[1] == "buy" then
+					pp.HoldDuration = 0.8
+					pp.KeyboardKeyCode = Enum.KeyCode.F
+					pp.GamepadKeyCode = Enum.KeyCode.ButtonY
+				end
+				if onPrompt then
+					pp.Triggered:Connect(function(player) onPrompt(player, a[1], l.id) end)
+				end
+			end
+			holder:SetAttribute("Legend", l.id)
+			holder.Parent = live
+		end
+	end
+	-- the "win the vote" sign only on an empty lot
+	local empty = hub:FindFirstChild("LotEmptySign")
+	if empty then
+		empty.Transparency = shown == 0 and 0 or 1
+		local g = empty:FindFirstChildWhichIsA("SurfaceGui")
+		if g then g.Enabled = shown == 0 end
+	end
+	return shown
 end
 
 --- The hub place's start pads (Shared/Departure) where the junk ride show
