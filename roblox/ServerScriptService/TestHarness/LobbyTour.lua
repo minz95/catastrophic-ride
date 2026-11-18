@@ -4,7 +4,8 @@
 -- (scenarios lobby-tour, hub-tour): the match stays in LOBBY while the bot
 -- client (Modules/LobbyTourClient) walks to every place a player goes:
 -- the stage, each Legend pad, each trophy, the shop counter, every
--- townsperson, the TV, round the fountain and through the arch, then (hub)
+-- townsperson, the TV, round the fountain and through the arch, out the
+-- west gate down Auto Street and through Junk Motors, then (hub)
 -- onto each start pad and presses ▶ PLAY. It wears a Legend Ride all the
 -- way (a ride-on must not catch on anything). Each stop is reported
 -- (`bot_tour_stop`: reached, distance left, seconds, lowest Y); the hub part
@@ -33,9 +34,24 @@ function LobbyTour.stops(LobbyLayout, LobbyNpcs, Departure, hub)
 	local st = LobbyLayout.STAGE
 	add("stage", st.at + Vector3.new(0, 0, st.radius + 4))
 	for i = 1, LobbyLayout.TROPHY_SLOTS do add("trophy" .. i, inward(LobbyLayout.trophySpot(i), 4)) end
-	for _, n in ipairs(LobbyNpcs.LIST) do add("npc_" .. n.id, inward(O + n.at, 3)) end
+	for _, n in ipairs(LobbyNpcs.LIST) do
+		if not n.street then add("npc_" .. n.id, inward(O + n.at, 3)) end
+	end
 	for i = 1, LobbyLayout.LEGEND_SLOTS do add("legend" .. i, inward(LobbyLayout.legendSpot(i), 7)) end
 	add("shop", inward(LobbyLayout.SHOP, 9))
+	-- out of the west gate: Auto Street and the Junk Motors showroom
+	local V3 = Vector3.new
+	add("gate", O + V3(-82, 0, 0))
+	add("street", O + V3(-200, 0, 0))
+	add("motors_door", O + V3(-150, 0, -16))
+	for _, n in ipairs(LobbyNpcs.LIST) do
+		if n.street then add("npc_" .. n.id, O + n.at + V3(-3, 0, 0)) end
+	end
+	local S = LobbyLayout.SHOWROOM
+	add("motors_aisle", O + V3(-200, 0, (S.rows[1] + S.rows[2]) / 2))
+	add("motors_back", O + V3(-262, 0, (S.rows[2] + S.rows[3]) / 2))
+	add("motors_out", O + V3(-250, 0, -15))
+	add("gate_back", O + V3(-66, 0, 0))
 	if hub then
 		for i, d in ipairs(Departure.PADS) do
 			local p = LobbyLayout.SHOWCASE[i]

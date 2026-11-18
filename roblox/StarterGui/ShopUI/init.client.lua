@@ -172,7 +172,7 @@ local TAB_HINTS = {
 	hat    = "On your avatar all game. Looks only.",
 	trick  = "Racing: press T (or BOMB) once a race: the car ahead hops and slows.",
 	awards = "Not for sale: reach a goal and its hat, trail or ride pose is yours.",
-	legend = "Rides that won the vote, few copies for a few days. Their winners got them free. Ride one round the farm.",
+	legend = "Rides that won the vote, few copies for a few days, and your cars from Junk Motors on Auto Street. Ride one round town.",
 }
 local tabBtns = {}
 for i, key in ipairs(TABS) do
@@ -545,8 +545,9 @@ local function legendCard(l, order, owned)
 	card.LayoutOrder      = order
 	card.Parent           = grid
 	corner(card)
-	local folder = ReplicatedStorage:FindFirstChild("LegendRides")
-	local src = folder and folder:FindFirstChild(l.id)
+	-- a new car's picture is its showroom still (Modules/CarDealer)
+	local folder = ReplicatedStorage:FindFirstChild(l.new and "NewCars" or "LegendRides")
+	local src = folder and folder:FindFirstChild(l.new and tostring(l.item) or l.id)
 	if src then
 		spinView(card, src)
 	else
@@ -557,7 +558,9 @@ local function legendCard(l, order, owned)
 	end
 	label(card, l.title, UDim2.new(1, -12, 0, 18), UDim2.new(0, 6, 0, 88), Enum.Font.GothamBold, GOLD)
 	local line
-	if owned then
+	if owned and l.new then
+		line = "New from Junk Motors"
+	elseif owned then
 		line = l.original and "⭐ ORIGINAL: you won the vote" or (tostring(l.tag) .. "  ·  by " .. tostring(l.ownerName))
 	else
 		line = string.format("%d/%d sold  ·  %dd left", l.sold, l.limit, l.daysLeft)
@@ -708,6 +711,20 @@ RemoteEvents.LegendUpdate.OnClientEvent:Connect(function(m)
 		Notice.show("🚗 " .. who .. " bought your ride!", string.format("%s: %s, +%d coins", tostring(m.title), sold, m.coins or 0), 8)
 	elseif m.kind == "refund" then
 		Notice.show("🚗 Sold out", string.format("%s sold out first: you got %d coins instead", tostring(m.title), m.coins or 0), 8)
+	-- Junk Motors (Modules/CarDealer)
+	elseif m.kind == "car_try" then
+		Notice.show("🚗 Trying on: " .. tostring(m.title), m.owned and string.format("%d s. It's yours already: ride it from the shop.", m.seconds or 0)
+			or string.format("%d s. Like it? Buy it for %d coins at its stand.", m.seconds or 0, m.price or 0), 6)
+	elseif m.kind == "car_bought" then
+		SoundFx.play("CRAFT_COMPLETE")
+		Notice.show("🚗 " .. tostring(m.title) .. " is yours!", "You're riding it now. Change rides in the shop's 🚗 tab.", 8)
+	elseif m.kind == "car_denied" then
+		if m.reason == "denied: coins" then
+			Notice.show("🚗 Not enough coins", string.format("%s costs %d coins. You have %d. Race to earn more!",
+				tostring(m.title), m.price or 0, m.coins or 0), 6)
+		elseif m.reason == "denied: owned" then
+			Notice.show("🚗 Already yours", tostring(m.title) .. " is in your garage: ride it from the shop's 🚗 tab.", 6)
+		end
 	end
 end)
 

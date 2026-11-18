@@ -492,6 +492,22 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (a still copy WEAR_LENGTH long, its seat at the waist, massless, seat
   disabled; the 0.5× copy hid between the legs). Shop tab 🚗 Legend; notices `LegendUpdate`.
   Spec `legend_rides`.
+- Auto Street and Junk Motors (2026-11-18, "a dealership: buy the car you
+  want at a fixed price, not gacha; worn round the waist"): the plaza's
+  fence opens at the west gate (`LobbyLayout.GATE_ANGLE`, the Legend pads
+  three either side) onto a walled lane and lot (`LobbyLayout.STREET`,
+  `onStreet` / `inTown`: LobbyManager's net and respawn checks take both).
+  The glass showroom (`LobbyLayout.SHOWROOM`, `carSpot`) shows every
+  rideable item as a new car (`Shared/NewCars.catalog`, priced by rarity in
+  `Constants.NEW_CARS`), built once at boot into `ReplicatedStorage.NewCars`
+  (`Modules/CarDealer.buildStills`, also the shop cards' pictures) and put
+  on plinths by `LobbyHub.setNewCars`. Each plinth's prompts (attribute
+  `CarAction` "try" / "buy", `Car` = item) go to `CarDealer.prompt`: a
+  try-on is worn for TRY_SECONDS, a buy takes the coins, sets `rec.cars`
+  and `rec.legendOn = "car:<item>"`. New cars are worn like Legend Rides
+  (`LegendShop.worn`) and listed in the shop's 🚗 tab. The salesman is a
+  townsperson with `street = true` (off the plaza). The south side of the
+  lot is open ground for the used-car lot. Spec `auto_street`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

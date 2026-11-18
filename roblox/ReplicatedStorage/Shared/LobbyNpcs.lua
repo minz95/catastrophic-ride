@@ -5,6 +5,7 @@
 -- (prompt "Talk", attribute Talk = id; LobbyHubClient shows the line and a
 -- chat bubble over their head). `idle` lines are said now and then to
 -- whoever is near. Lines are tips that are true in the game, or jokes.
+-- `face`: the spot (offset from ORIGIN) they look at; else the plaza's centre.
 
 local LobbyNpcs = {}
 
@@ -85,6 +86,19 @@ LobbyNpcs.LIST = {
 			"Rare loot glows over your head. Everyone can see it. Everyone.",
 		},
 		idle = { "Psst.", "Nice shoes. Shame if someone... never mind." },
+	},
+	{   -- in Junk Motors on Auto Street (street = true: off the plaza)
+		id = "vinnie", name = "Vinnie Wheels", title = "Junk Motors Sales", street = true,
+		at = V(-134, 0, -25), face = V(-150, 0, -12), hat = "hat_top", shirt = Color3.fromRGB(230, 60, 70),
+		lines = {
+			"Welcome to Junk Motors! Every car brand new, the price right on the stand. No lucky draws.",
+			"Try one on at its stand. Walk around in it. Looking is free!",
+			"Like it? Buy it at the stand and you're riding it out the door.",
+			"The cheap ones are by the door. The further in you walk, the fancier it gets.",
+			"Got a few cars? Swap rides any time in the shop's car tab. Press B.",
+			"New cars are for looking good in town. Your race car still comes from the farm's junk.",
+		},
+		idle = { "Fresh off the lot!", "Step inside, step inside!" },
 	},
 }
 

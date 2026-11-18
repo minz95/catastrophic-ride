@@ -29,7 +29,8 @@ function Progression.newRecord()
 		referred = {},   -- friends whose first visit paid an invite bonus: { ["<userId>"] = true }
 		achievements = nil, -- Shared/Achievements: { progress, done, seen }
 		legend = {},     -- Legend Rides owned (Shared/LegendRides): { [id] = { title, slots, … } }
-		legendOn = nil,  -- the Legend Ride worn, or nil
+		legendOn = nil,  -- the ride worn: a Legend Ride id, "car:<item>" (a new car), or nil
+		cars = {},       -- new cars bought at Junk Motors (Shared/NewCars): { [item] = true }
 	}
 end
 

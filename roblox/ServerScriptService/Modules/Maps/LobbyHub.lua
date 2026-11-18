@@ -236,10 +236,18 @@ end
 
 -- ── Fence: an invisible wall and colourful planks on it ──────────────────────
 
+-- true when a piece at `angle` (degrees) on a circle of `radius`, `half`
+-- studs either side, would stand in the gate to Auto Street
+local function inGate(angle, radius, half)
+	local d = math.abs((angle - LobbyLayout.GATE_ANGLE + 180) % 360 - 180)
+	return math.rad(d) * radius < LobbyLayout.GATE_HALF + half
+end
+
 local function fence(m)
 	local n = 36
 	for i = 0, n - 1 do
 		local a = i / n * 360
+		if inGate(a, LobbyLayout.WALL_RADIUS, 0) then continue end   -- the way to Auto Street
 		local cf = rim(a, LobbyLayout.WALL_RADIUS, LobbyLayout.WALL_HEIGHT / 2)
 		local wall = part(m, "Wall", V(14, LobbyLayout.WALL_HEIGHT, 2), cf, C(255, 255, 255), "SmoothPlastic")
 		wall.Transparency = 1
@@ -261,7 +269,9 @@ local function fenceModels(m)
 	local n = math.floor(2 * math.pi * r / piece)
 	for i = 0, n - 1 do
 		local a = (i + 0.5) / n * 360
-		storeModel(m, "fence", rim(a, r), 3.6, false)   -- its length (X) runs along the rim
+		if not inGate(a, r, piece / 2) then
+			storeModel(m, "fence", rim(a, r), 3.6, false)   -- its length (X) runs along the rim
+		end
 	end
 end
 
@@ -420,22 +430,25 @@ local function garage(m)
 	local pads = {}
 	-- a wall of wooden crates behind the arc, the sign on it
 	local wallAt = O + V(-70, 0, 0)
+	-- (two stacks, the way to the Auto Street gate open between them)
 	if source("crate") then   -- shipping crates, stacked a little crooked
-		for k = 0, 3 do
-			storeModel(m, "crate", CF(wallAt + V(1, 0, (k - 1.5) * 10)) * A(0, math.rad(k % 2 == 0 and 3 or -2), 0), 5.4, true)
+		for k, z in ipairs({ -23, -13, 13, 23 }) do
+			storeModel(m, "crate", CF(wallAt + V(3, 0, z)) * A(0, math.rad(k % 2 == 0 and 3 or -2), 0), 5.4, true)
 		end
-		for k = 0, 2 do
-			storeModel(m, "crate", CF(wallAt + V(1.3, 5.4, (k - 1) * 10)) * A(0, math.rad(k == 1 and -4 or 2), 0), 5, true)
+		for k, z in ipairs({ -18, 18 }) do
+			storeModel(m, "crate", CF(wallAt + V(3.3, 5.4, z)) * A(0, math.rad(k == 1 and -4 or 2), 0), 5, true)
 		end
 	else
-		for k = -2, 2 do
-			part(m, "Crate", V(5, 5, 9), CF(wallAt + V(0, 2.5, k * 9)), C(190, 140, 85), "WoodPlanks")
-			part(m, "Crate", V(5, 5, 9), CF(wallAt + V(0, 7.5, k * 9 + 4.5)), C(175, 125, 75), "WoodPlanks")
+		for _, z in ipairs({ -22.5, -13.5, 13.5, 22.5 }) do
+			part(m, "Crate", V(5, 5, 9), CF(wallAt + V(0, 2.5, z)), C(190, 140, 85), "WoodPlanks")
+		end
+		for _, z in ipairs({ -18, 18 }) do
+			part(m, "Crate", V(5, 5, 9), CF(wallAt + V(0, 7.5, z)), C(175, 125, 75), "WoodPlanks")
 		end
 	end
 	-- loose crates in front of the wall
-	storeModel(m, "crates", CF(wallAt + V(5, 0, -26)) * A(0, math.rad(80), 0), 5, true)
-	storeModel(m, "crate", CF(wallAt + V(6, 0, 25)) * A(0, math.rad(20), 0), 4, true)
+	storeModel(m, "crates", CF(wallAt + V(7, 0, -33)) * A(0, math.rad(80), 0), 5, true)
+	storeModel(m, "crate", CF(wallAt + V(7, 0, 31)) * A(0, math.rad(20), 0), 4, true)
 	local s = part(m, "LegendSign", V(26, 4, 0.6), CF(wallAt + V(2.8, 12, 0)) * A(0, math.rad(90), 0), C(40, 35, 60), "Fabric")
 	sign(s, { { text = "🚗 LEGEND RIDES", color = C(255, 214, 60), share = 0.6 },
 		{ text = "vote winners' rides · few copies · few days", color = C(230, 230, 245), share = 0.4, font = Enum.Font.GothamBold } },
@@ -697,7 +710,8 @@ local function npcs(m)
 		local feet = O + n.at
 		local hip = hum and hum.HipHeight or 2
 		local standAt = feet + V(0, hip + (root and root.Size.Y / 2 or 1), 0)
-		rig:PivotTo(LobbyLayout.facingCentre(standAt))
+		local look = n.face and O + n.face + V(0, standAt.Y - O.Y, 0)
+		rig:PivotTo(look and CFrame.lookAt(standAt, look) or LobbyLayout.facingCentre(standAt))
 		-- the body is looked through; an invisible post blocks the way (a body
 		-- whose torso collided and limbs did not let a walker into it, stuck
 		-- for good: Studio lobby-tour 2026-11-17, at Tom)
@@ -725,6 +739,174 @@ local function npcs(m)
 	end
 end
 
+-- ── Auto Street (Shared/LobbyLayout.STREET, 2026-11-18) ──────────────────────
+
+local RARITY_COLOUR = {
+	Common = C(200, 200, 200), Uncommon = C(80, 200, 80), Rare = C(100, 160, 255), Epic = C(200, 100, 255),
+}
+LobbyHub.RARITY_COLOUR = RARITY_COLOUR
+
+-- a block over rectangle `r` ({ x0, x1, z0, z1 } off ORIGIN), `h` thick, its
+-- top `top` studs over the plaza floor
+local function slab(m, name, r, top, h, colour, material)
+	return part(m, name, V(r[2] - r[1], h, r[4] - r[3]),
+		CF(O + V((r[1] + r[2]) / 2, top - h / 2, (r[3] + r[4]) / 2)), colour, material)
+end
+
+-- an invisible wall from `a` to `b` (offsets off ORIGIN on the floor) with a
+-- low wooden rail along it
+local function wallLine(m, a, b, rail)
+	local H = LobbyLayout.STREET.wallHeight
+	local len = (b - a).Magnitude
+	local mid = O + (a + b) / 2
+	local look = CFrame.lookAt(mid, O + b)
+	local w = part(m, "StreetWall", V(2, H, len), look + V(0, H / 2, 0), C(255, 255, 255))
+	w.Transparency = 1
+	w.CanQuery = false
+	if rail ~= false then
+		for _, y in ipairs({ 1.4, 2.6 }) do
+			deco(part(m, "Rail", V(0.3, 0.35, len), look + V(0, y, 0), C(150, 105, 70), "Wood"))
+		end
+		for k = 0, math.floor(len / 16) do
+			local at = a + (b - a).Unit * math.min(k * 16, len)
+			deco(part(m, "Post", V(0.6, 3.2, 0.6), CF(O + at + V(0, 1.6, 0)), C(130, 90, 60), "Wood"))
+		end
+	end
+	return w
+end
+
+local function street(m)
+	local S = LobbyLayout.STREET
+	local L, T, R = S.lane, S.lot, S.road
+	-- ground: the lane over the island's edge and the lot past it, rock under
+	slab(m, "StreetGrass", { L[1], -90, L[3], L[4] }, -0.03, 4, C(130, 200, 110), "Grass")
+	slab(m, "StreetGrass", T, -0.03, 4, C(130, 200, 110), "Grass")
+	slab(m, "StreetRock", { T[1] + 6, T[2] - 6, T[3] + 6, T[4] - 6 }, -4, 14, C(115, 100, 88), "Slate")
+	slab(m, "Road", R, 0.06, 0.2, C(70, 70, 78), "Asphalt")
+	for x = R[2] - 14, R[1] + 8, -14 do   -- the dashed middle line
+		deco(part(m, "RoadLine", V(6, 0.02, 0.5), CF(O + V(x, 0.07, 0)), C(250, 210, 60), "SmoothPlastic"))
+	end
+	-- walls round it all; only the gate opens onto the plaza
+	wallLine(m, V(-70, 0, -L[4]), V(L[1] + 2, 0, -L[4]))
+	wallLine(m, V(-70, 0, L[4]), V(L[1] + 2, 0, L[4]))
+	wallLine(m, V(T[2], 0, L[4]), V(T[2], 0, T[4]))
+	wallLine(m, V(T[2], 0, T[3]), V(T[2], 0, -L[4]))
+	wallLine(m, V(T[2], 0, T[4]), V(T[1], 0, T[4]))
+	wallLine(m, V(T[2], 0, T[3]), V(T[1], 0, T[3]))
+	wallLine(m, V(T[1], 0, T[3]), V(T[1], 0, T[4]))
+	-- the gate: two posts and a sign over the way out of the fence
+	local gx = -LobbyLayout.WALL_RADIUS - 1
+	for _, z in ipairs({ -LobbyLayout.GATE_HALF - 1.5, LobbyLayout.GATE_HALF + 1.5 }) do
+		cyl(m, "GatePost", 1.2, 19, CF(O + V(gx, 9.5, z)), C(205, 210, 220), "Metal")
+	end
+	-- Junk Motors red, over the dark Legend Rides sign in front of it
+	local red = C(200, 40, 50)
+	local board = part(m, "StreetSign", V(19, 3.6, 0.6), at(O + V(gx, 17, 0), -90), red, "Metal")
+	sign(board, { { text = "🚗 AUTO STREET", color = C(255, 255, 255), share = 0.62 },
+		{ text = "JUNK MOTORS · NEW CARS", color = C(255, 225, 150), share = 0.38, font = Enum.Font.GothamBold } }, red)
+	sign(board, { { text = "JUNK TOWN PLAZA", color = C(255, 255, 255) } }, red, Enum.NormalId.Back)
+	-- street lamps along the road, trees and benches on the open south side
+	for k, x in ipairs({ -128, -168, -208, -248, -288 }) do
+		storeModel(m, "lamp_plain", CF(O + V(x, 0, k % 2 == 0 and 12 or -13)) * A(0, math.rad(90), 0), 13, false)
+	end
+	for i, p in ipairs({ V(-140, 0, 34), V(-176, 0, 52), V(-214, 0, 30), V(-252, 0, 50), V(-286, 0, 28), V(-128, 0, 54) }) do
+		storeModel(m, TREE_KINDS[i % 3 + 1], CF(O + p) * A(0, math.rad(i * 53), 0), 16 + (i % 2) * 4, false)
+	end
+	for _, x in ipairs({ -158, -198, -238 }) do
+		storeModel(m, "bench", CF(O + V(x, 0, 15)) * A(0, math.rad(180), 0), 3.4, true)
+	end
+end
+
+-- Junk Motors: a glass showroom on the road's north side, every new car
+-- (Shared/NewCars) on a white plinth with its name, price, and the prompts
+-- "Try on" (E) and "Buy" (F, held); LobbyManager wires them to CarDealer.
+local function showroom(m)
+	local NewCars = require(ReplicatedStorage.Shared.NewCars)
+	local ItemConfig = require(ReplicatedStorage.Shared.ItemConfig)
+	local S = LobbyLayout.SHOWROOM
+	local x0, x1, z0, z1 = S.box[1], S.box[2], S.box[3], S.box[4]
+	local H = S.height
+	local white, glassC = C(238, 238, 244), C(190, 225, 255)
+	local floor = slab(m, "ShowroomFloor", S.box, 0.2, 0.6, C(245, 245, 250), "Marble")
+	floor.Reflectance = 0.12
+	part(m, "ShowroomWall", V(x1 - x0, H, 1), CF(O + V((x0 + x1) / 2, H / 2, z0 - 0.5)), white, "SmoothPlastic")
+	for _, x in ipairs({ x0 - 0.5, x1 + 0.5 }) do
+		part(m, "ShowroomWall", V(1, H, z1 - z0 + 2), CF(O + V(x, H / 2, (z0 + z1) / 2)), white, "SmoothPlastic")
+	end
+	-- the glass front, open at the doors
+	local function glass(xa, xb, ya, yb)
+		local g = part(m, "ShowroomGlass", V(xb - xa, yb - ya, 0.4), CF(O + V((xa + xb) / 2, (ya + yb) / 2, z1 + 0.2)),
+			glassC, "Glass")
+		g.Transparency = 0.65
+		g.CastShadow = false
+		return g
+	end
+	local doors = table.clone(S.doors)
+	table.sort(doors)
+	local from, w = x0, S.doorWidth
+	for _, d in ipairs(doors) do
+		glass(from, d - w / 2, 0, H)
+		glass(d - w / 2, d + w / 2, 10, H)   -- over the doorway
+		for _, s2 in ipairs({ -1, 1 }) do
+			part(m, "DoorFrame", V(0.6, H, 0.8), CF(O + V(d + s2 * w / 2, H / 2, z1 + 0.2)), C(60, 60, 70), "Metal")
+		end
+		from = d + w / 2
+	end
+	glass(from, x1, 0, H)
+	part(m, "ShowroomRoof", V(x1 - x0 + 2, 1, z1 - z0 + 3), CF(O + V((x0 + x1) / 2, H + 0.5, (z0 + z1) / 2 + 0.5)),
+		white, "SmoothPlastic")
+	local fascia = part(m, "MotorsSign", V(70, 5, 0.6), CF(O + V((x0 + x1) / 2, H + 3.5, z1 + 0.6)), C(200, 40, 50), "SmoothPlastic")
+	sign(fascia, { { text = "JUNK MOTORS", color = C(255, 255, 255), share = 0.66 },
+		{ text = "NEW CARS · FIXED PRICES", color = C(255, 225, 150), share = 0.34, font = Enum.Font.GothamBold } },
+		C(200, 40, 50), Enum.NormalId.Back)
+	-- light strips under the roof over each walkway
+	for _, z in ipairs({ (z1 + S.rows[1]) / 2 - 1.5, (S.rows[1] + S.rows[2]) / 2, (S.rows[2] + S.rows[3]) / 2, (S.rows[3] + z0) / 2 }) do
+		local strip = deco(part(m, "LightStrip", V(x1 - x0 - 6, 0.3, 1), CF(O + V((x0 + x1) / 2, H - 0.2, z)), C(255, 255, 250), "Neon"))
+		local light = Instance.new("SurfaceLight")
+		light.Face = Enum.NormalId.Bottom
+		light.Range = 18
+		light.Angle = 120
+		light.Brightness = 1.2
+		light.Parent = strip
+	end
+	-- the cars' plinths, cheapest by the door; a banner over each rarity
+	local catalog = NewCars.catalog(ItemConfig)
+	local spans = {}
+	for i, c in ipairs(catalog) do
+		if i > LobbyLayout.CAR_SLOTS then break end
+		local spot = LobbyLayout.carSpot(i)
+		local colour = RARITY_COLOUR[c.rarity] or C(255, 255, 255)
+		local plinth = part(m, "CarPad_" .. i, S.plinth, CF(spot + V(0, 0.2 + S.plinth.Y / 2, 0)), C(250, 250, 252), "Marble")
+		plinth.Reflectance = 0.2
+		plinth:SetAttribute("Car", c.item)
+		deco(part(m, "PlinthGlow", V(S.plinth.X + 0.4, 0.15, S.plinth.Z + 0.4), CF(spot + V(0, 0.27, 0)), colour, "Neon"))
+		tag(plinth, { { text = c.item, color = colour }, { text = string.format("%d coins", c.price), font = Enum.Font.GothamBold } },
+			5.5, 26, 5)
+		local try = prompt(plinth, "Try on", c.item, nil)
+		try:SetAttribute("CarAction", "try")
+		try:SetAttribute("Car", c.item)
+		try.MaxActivationDistance = 7
+		local buy = prompt(plinth, string.format("Buy · %d coins", c.price), c.item, nil)
+		buy:SetAttribute("CarAction", "buy")
+		buy:SetAttribute("Car", c.item)
+		buy.MaxActivationDistance = 7
+		buy.HoldDuration = 0.8
+		buy.KeyboardKeyCode = Enum.KeyCode.F
+		buy.GamepadKeyCode = Enum.KeyCode.ButtonY
+		local sp = spans[c.rarity] or { lo = spot.X, hi = spot.X, price = c.price }
+		sp.lo, sp.hi = math.min(sp.lo, spot.X), math.max(sp.hi, spot.X)
+		spans[c.rarity] = sp
+	end
+	for rarity, sp in pairs(spans) do
+		local banner = deco(part(m, "TierBanner", V(sp.hi - sp.lo + 8, 2.4, 0.3),
+			CF(O + V((sp.lo + sp.hi) / 2 - O.X, H - 2.2, z1 - 1.2)), RARITY_COLOUR[rarity] or white, "SmoothPlastic"))
+		sign(banner, { { text = string.format("%s · %d COINS", rarity:upper(), sp.price), color = C(30, 30, 40) } },
+			RARITY_COLOUR[rarity], Enum.NormalId.Back)
+		sign(banner, { { text = string.format("%s · %d COINS", rarity:upper(), sp.price), color = C(30, 30, 40) } },
+			RARITY_COLOUR[rarity])
+	end
+end
+
 -- ── Build ────────────────────────────────────────────────────────────────────
 
 --- Builds Junk Town into `parent` (workspace). Returns the model; its
@@ -745,6 +927,8 @@ function LobbyHub.build(parent)
 	garage(m)
 	trophyRoom(m)
 	shop(m)
+	street(m)
+	showroom(m)
 	for i, h in ipairs(LobbyLayout.HOUSES) do
 		local cf = rim(h.angle, LobbyLayout.HOUSE_RADIUS)
 		if not storeModel(m, h.model, cf, h.height, true) then
@@ -876,6 +1060,32 @@ function LobbyHub.setLegends(hub, list, folder)
 					6, 20, 6)
 				prompt(pad, "Buy", l.title, "legend")
 			end   -- an empty pad says nothing: the garage's sign does
+		end
+	end
+end
+
+--- Junk Motors' cars on their plinths: `folder` = ReplicatedStorage.NewCars
+-- (a still per item, Modules/CarDealer), each SHOW_LENGTH long, side on
+-- to the walkway, nose into the shop.
+function LobbyHub.setNewCars(hub, folder)
+	local live = hub:FindFirstChild("Live")
+	if not live or not folder then return end
+	for _, c in ipairs(live:GetChildren()) do
+		if c.Name:sub(1, 7) == "NewCar_" then c:Destroy() end
+	end
+	local Constants = require(ReplicatedStorage.Shared.Constants)
+	local ModelScale = require(ServerScriptService.Modules.ModelScale)
+	for _, pad in ipairs(hub:GetChildren()) do
+		local item = pad:IsA("BasePart") and pad:GetAttribute("Car")
+		local src = item and folder:FindFirstChild(item)
+		if src then
+			local copy = still(src:Clone())
+			copy.Name = "NewCar_" .. item
+			local _, size = copy:GetBoundingBox()
+			local long = math.max(size.X, size.Z)
+			if long > 0 then ModelScale.scale(copy, Constants.NEW_CARS.SHOW_LENGTH / long) end
+			ModelScale.standOn(copy, pad.Position, pad.Position.Y + pad.Size.Y / 2, A(0, math.rad(90), 0))
+			copy.Parent = live
 		end
 	end
 end

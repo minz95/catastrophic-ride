@@ -171,6 +171,10 @@ local function defaults(className)
 	if className == "StringValue" then
 		d.Value = ""
 	end
+	if className == "SpecialMesh" then   -- read by ModelScale (worn and shown rides)
+		d.Scale = Vector3.new(1, 1, 1)
+		d.Offset = Vector3.new(0, 0, 0)
+	end
 	return d
 end
 

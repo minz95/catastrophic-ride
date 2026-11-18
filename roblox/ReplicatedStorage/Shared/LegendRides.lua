@@ -49,8 +49,11 @@ function LegendRides.give(rec, l, original, serial)
 		look = l.look, original = original == true, serial = serial, limit = l.limit }
 end
 
---- The tag a ride carries: "⭐ ORIGINAL" or "#7/50".
+--- The tag a ride carries: "⭐ ORIGINAL" or "#7/50" ("JUNK MOTORS" on a
+-- new car, "TRYING ON" during a try-on).
 function LegendRides.tag(owned)
+	if owned.trying then return "TRYING ON" end
+	if owned.new then return "JUNK MOTORS" end   -- a new car (Shared/NewCars)
 	if owned.original then return "⭐ ORIGINAL" end
 	if owned.serial then return string.format("#%d/%d", owned.serial, owned.limit or Constants.LEGEND.LIMIT) end
 	return "LEGEND"

@@ -4,7 +4,9 @@
 -- so the LOBBY reload and anyone joining mid-round land there; the old TV
 -- shows the next track, the countdown and who is in; the hall of fame
 -- stage, the Legend Rides pads and the junk ride show follow what the
--- server has (ReplicatedStorage.HallOfFame / LegendRides / LobbyShowcase).
+-- server has (ReplicatedStorage.HallOfFame / LegendRides / LobbyShowcase);
+-- out of the west gate, Auto Street and Junk Motors' new cars
+-- (ReplicatedStorage.NewCars, Modules/CarDealer).
 -- In the hub place (Shared/Places) start pads stand where the junk rides
 -- would (DepartureManager runs them) and the TV points at them.
 
@@ -23,9 +25,10 @@ local spawnPad = hub:FindFirstChild("LobbySpawn")
 
 -- ── Players land on the plaza ────────────────────────────────────────────────
 
+-- on the plaza or out on Auto Street
 local function onPlaza(character)
 	local root = character and character:FindFirstChild("HumanoidRootPart")
-	return root ~= nil and LobbyLayout.onPlaza(root.Position)
+	return root ~= nil and LobbyLayout.inTown(root.Position)
 end
 
 --- Puts `player`'s character on the spawn (a little apart from others).
@@ -85,7 +88,7 @@ end)
 -- the fence) while the plaza is where they should be goes back on the
 -- spawn before the engine's fall height kills them.
 local FALL_BELOW = 25    -- studs under the floor
-local NEAR = 300         -- studs from the plaza's centre, sideways
+local NEAR = 400         -- studs from the plaza's centre, sideways (Auto Street reaches ~310)
 task.spawn(function()
 	while true do
 		task.wait(0.5)
@@ -97,7 +100,8 @@ task.spawn(function()
 				if root and not seated then
 					local o = LobbyLayout.ORIGIN
 					local side = Vector3.new(root.Position.X - o.X, 0, root.Position.Z - o.Z).Magnitude
-					if side < NEAR and (root.Position.Y < o.Y - FALL_BELOW or side > LobbyLayout.RADIUS + 4) then
+					local out = side > LobbyLayout.RADIUS + 4 and not LobbyLayout.onStreet(root.Position)
+					if side < NEAR and (root.Position.Y < o.Y - FALL_BELOW or out) then
 						toPlaza(p)
 					end
 				end
@@ -175,6 +179,21 @@ end
 -- the store says when listings or sold counts change (every POLL s it reads them)
 LegendStore.onChanged(function() pcall(legends) end)
 pcall(legends)
+
+-- Junk Motors: the cars (built once at boot) on their plinths, the
+-- plinths' prompts to the dealer
+local CarDealer = require(ServerScriptService.Modules.CarDealer)
+for _, d in ipairs(hub:GetDescendants()) do
+	if d:IsA("ProximityPrompt") and d:GetAttribute("CarAction") then
+		d.Triggered:Connect(function(player)
+			CarDealer.prompt(player, d:GetAttribute("CarAction"), d:GetAttribute("Car"))
+		end)
+	end
+end
+watch(CarDealer.FOLDER, function(folder)
+	LobbyHub.setNewCars(hub, folder)
+end)
+task.spawn(CarDealer.buildStills)
 
 -- the hub place has start pads where a round server shows the junk rides
 task.spawn(function()
