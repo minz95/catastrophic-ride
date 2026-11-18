@@ -100,6 +100,41 @@ LobbyNpcs.LIST = {
 		},
 		idle = { "Fresh off the lot!", "Step inside, step inside!" },
 	},
+	-- Junk Auto Mart's dealers, each in front of their office (LobbyHub.DEALERS)
+	{
+		id = "hank", name = "Honest Hank", title = "Used Legends", street = true,
+		at = V(-152, 0, 46), face = V(-152, 0, 30), hat = "hat_crown", shirt = Color3.fromRGB(60, 120, 190),
+		lines = {
+			"Every car on this lot won the ride show vote. Real race history, real junk!",
+			"The price on the roof is the whole price. No hidden fees. I'm honest, it says so on my office.",
+			"Fifty copies each, then it's gone for good. Don't sleep on it!",
+			"Buy it at the card in front and you're riding it off the lot.",
+			"Psst. The one by the entrance just came in. Fresh from the race!",
+		},
+		idle = { "Psst! Got a ride for you!", "Step right up!" },
+	},
+	{
+		id = "lucy", name = "Lucky Lucy", title = "Used Legends", street = true,
+		at = V(-184, 0, 46), face = V(-184, 0, 30), hat = "hat_party", shirt = Color3.fromRGB(200, 80, 60),
+		lines = {
+			"Read the card at the front: who built it, where it won, how many are sold.",
+			"Win the vote and your ride parks right here. Front row, JUST IN sign and all.",
+			"The builder gets coins every time a copy sells. Not bad for a toilet with wheels.",
+			"Try it on first. Free! Walk around in it, see if it suits you.",
+		},
+		idle = { "Today only! Every day.", "Lucky you, lucky me!" },
+	},
+	{
+		id = "rex", name = "Rusty Rex", title = "Used Legends", street = true,
+		at = V(-216, 0, 46), face = V(-216, 0, 30), hat = "hat_viking", shirt = Color3.fromRGB(70, 150, 90),
+		lines = {
+			"This one? Only driven on Sundays. By a duck. Okay, Mondays too.",
+			"More cars upstairs in the tower. Take the ramp!",
+			"A week on the lot, then it's gone. Every car here is on the clock.",
+			"Short on coins? Win races and come back every day. That's how it works around here.",
+		},
+		idle = { "She's a beauty. Mostly.", "Kick the tyres, go on!" },
+	},
 }
 
 local _byId = {}

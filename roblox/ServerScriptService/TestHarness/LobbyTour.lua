@@ -5,7 +5,8 @@
 -- client (Modules/LobbyTourClient) walks to every place a player goes:
 -- the stage, each Legend pad, each trophy, the shop counter, every
 -- townsperson, the TV, round the fountain and through the arch, out the
--- west gate down Auto Street and through Junk Motors, then (hub)
+-- west gate down Auto Street, through Junk Motors and the used-car lot (up
+-- the tower's ramp), then (hub)
 -- onto each start pad and presses ▶ PLAY. It wears a Legend Ride all the
 -- way (a ride-on must not catch on anything). Each stop is reported
 -- (`bot_tour_stop`: reached, distance left, seconds, lowest Y); the hub part
@@ -19,11 +20,11 @@ local HttpService         = game:GetService("HttpService")
 
 local LobbyTour = {}
 
---- The stops: { name, x, z } on the plaza floor, in walking order.
+--- The stops: { name, x, y, z } (y: the floor there), in walking order.
 function LobbyTour.stops(LobbyLayout, LobbyNpcs, Departure, hub)
 	local O = LobbyLayout.ORIGIN
 	local list = {}
-	local function add(name, p) table.insert(list, { name = name, x = p.X, z = p.Z }) end
+	local function add(name, p) table.insert(list, { name = name, x = p.X, z = p.Z, y = p.Y }) end
 	local function inward(p, d)
 		local c = Vector3.new(O.X, p.Y, O.Z)
 		return p + (c - p).Unit * d
@@ -45,12 +46,24 @@ function LobbyTour.stops(LobbyLayout, LobbyNpcs, Departure, hub)
 	add("street", O + V3(-200, 0, 0))
 	add("motors_door", O + V3(-150, 0, -16))
 	for _, n in ipairs(LobbyNpcs.LIST) do
-		if n.street then add("npc_" .. n.id, O + n.at + V3(-3, 0, 0)) end
+		if n.street and n.at.Z < 0 then add("npc_" .. n.id, O + n.at + V3(-3, 0, 0)) end
 	end
 	local S = LobbyLayout.SHOWROOM
 	add("motors_aisle", O + V3(-200, 0, (S.rows[1] + S.rows[2]) / 2))
 	add("motors_back", O + V3(-262, 0, (S.rows[2] + S.rows[3]) / 2))
 	add("motors_out", O + V3(-250, 0, -15))
+	-- across the road: the used-car lot, its dealers, up the tower's ramp
+	local U = LobbyLayout.USED_LOT
+	add("lot_entrance", O + V3(U.entranceX, 0, U.box[3] + 3))
+	add("lot_front", O + V3(-200, 0, U.box[3] + 2))
+	add("lot_aisle", O + V3(-170, 0, (U.rows[2] + U.officeZ) / 2))
+	for _, n in ipairs(LobbyNpcs.LIST) do
+		if n.street and n.at.Z > 0 then add("npc_" .. n.id, O + n.at + V3(0, 0, -3)) end
+	end
+	local T = U.tower
+	add("ramp_foot", O + V3(T.ramp.x1 + 4, 0, (T.ramp.z0 + T.ramp.z1) / 2))
+	add("deck", O + V3(-280, T.deck, (T.rows[1] + T.rows[2]) / 2))
+	add("lot_out", O + V3(U.entranceX, 0, U.box[3] + 3))
 	add("gate_back", O + V3(-66, 0, 0))
 	if hub then
 		for i, d in ipairs(Departure.PADS) do

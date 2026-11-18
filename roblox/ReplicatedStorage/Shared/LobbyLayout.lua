@@ -87,8 +87,8 @@ LobbyLayout.SCRAP_CARS = { O + V(50, 0, 38), O + V(-20, 0, 60) }
 -- ── Auto Street (2026-11-18) ────────────────────────────────────────────────
 -- Out of the west gate (the fence open at 180°) a lane leads past the
 -- island's edge onto a wide lot: the road runs west, Junk Motors' glass
--- showroom stands on its north side (new cars, Shared/NewCars), the south
--- side is open ground. Rectangles are { x0, x1, z0, z1 } offsets from
+-- showroom stands on its north side (new cars, Shared/NewCars), Junk Auto
+-- Mart's used cars (the vote winners' Legend Rides) on its south side. Rectangles are { x0, x1, z0, z1 } offsets from
 -- ORIGIN (x0 < x1, z0 < z1); invisible walls close everything but the gate.
 LobbyLayout.GATE_ANGLE = 180
 LobbyLayout.GATE_HALF = 7            -- studs: half the gap in the fence
@@ -118,6 +118,44 @@ function LobbyLayout.carSpot(i)
 	return O + V(S.firstX + col * S.stepX, 0, S.rows[row])
 end
 LobbyLayout.CAR_SLOTS = LobbyLayout.SHOWROOM.columns * #LobbyLayout.SHOWROOM.rows
+
+-- Junk Auto Mart, the used-car lot on the road's south side (2026-11-18,
+-- after Korean used-car markets: cars packed nose-out in rows, a price on
+-- the roof, an inspection card at the front, dealers' container offices,
+-- a parking tower with more upstairs, a directory kiosk at the entrance).
+-- It sells the vote winners' Legend Rides; the newest stands first, by
+-- the entrance ("JUST IN").
+LobbyLayout.USED_LOT = {
+	box = { -296, -118, 16, 62 },    -- the gravel lot (z0 on the road side)
+	entranceX = -128,                -- the arch over the way in from the road
+	rows = { 24, 34 },               -- back to back: the first faces the road (north), the second the offices
+	firstX = -140, stepX = -8, columns = 12,
+	offices = { -152, -184, -216 },  -- x of the dealers' container offices (z = officeZ), 4 columns each
+	officeZ = 52,
+	tower = { box = { -294, -262, 22, 58 }, deck = 9,     -- upstairs: a deck 9 studs up
+		rows = { 30, 44 }, columns = { -270, -280, -290 },   -- the first row faces north, the second south
+		ramp = { x0 = -262, x1 = -232, z0 = 52, z1 = 58 } }, -- up from the east (x1, ground) to the deck (x0)
+}
+
+--- Where used car `i` stands: its floor spot and whether its nose points
+-- north (-Z). 1 … columns × 2 outdoors (column-major from the entrance,
+-- the road-side row first), then the tower deck.
+function LobbyLayout.usedSpot(i)
+	local U = LobbyLayout.USED_LOT
+	local outdoor = U.columns * #U.rows
+	if i <= outdoor then
+		local col = (i - 1) // #U.rows
+		local row = (i - 1) % #U.rows + 1
+		return O + V(U.firstX + col * U.stepX, 0, U.rows[row]), row == 1
+	end
+	local T = U.tower
+	local k = i - outdoor - 1
+	local col = k // #T.rows
+	local row = k % #T.rows + 1
+	return O + V(T.columns[col + 1], T.deck, T.rows[row]), row == 1
+end
+LobbyLayout.USED_SLOTS = LobbyLayout.USED_LOT.columns * #LobbyLayout.USED_LOT.rows
+	+ #LobbyLayout.USED_LOT.tower.columns * #LobbyLayout.USED_LOT.tower.rows
 
 local function inRect(r, dx, dz)
 	return dx >= r[1] and dx <= r[2] and dz >= r[3] and dz <= r[4]

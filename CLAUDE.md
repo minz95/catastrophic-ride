@@ -506,8 +506,17 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   try-on is worn for TRY_SECONDS, a buy takes the coins, sets `rec.cars`
   and `rec.legendOn = "car:<item>"`. New cars are worn like Legend Rides
   (`LegendShop.worn`) and listed in the shop's 🚗 tab. The salesman is a
-  townsperson with `street = true` (off the plaza). The south side of the
-  lot is open ground for the used-car lot. Spec `auto_street`.
+  townsperson with `street = true` (off the plaza). Across the road, Junk
+  Auto Mart (`LobbyLayout.USED_LOT`, `usedSpot`): every open Legend Ride
+  listing (`LegendRides.active(list, now, USED_SLOTS)`, pictures for up to
+  KEEP built by LegendStore) parked nose out in back-to-back rows and on
+  the parking tower's deck (up a ramp), newest "JUST IN" by the entrance,
+  each with a stand in front: the price card and the inspection card
+  (builder, biome, votes, sold, days left) with Try on / Buy prompts
+  (`LobbyHub.setUsedCars` → `CarDealer.handleUsed`: buying goes through
+  `Shop.handle("legend_buy")`, so the copy number and royalty are the
+  shop's). Three dealers stand by their offices. The plaza's six pads still
+  show the newest six. Spec `auto_street`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

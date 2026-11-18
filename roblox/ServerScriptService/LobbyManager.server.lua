@@ -166,15 +166,23 @@ do   -- a winner built before this script started
 	if w then LobbyHub.setWinner(hub, w) end
 end
 
+local function onUsedPrompt(player, action, id)
+	require(ServerScriptService.Modules.CarDealer).prompt(player, action, id, true)
+end
+
 local function legends()
 	local folder = ReplicatedStorage:FindFirstChild("LegendRides")
 	local nowT = os.time()
 	local shown = {}
-	for _, l in ipairs(LegendRides.active(LegendStore.list(), nowT)) do
-		table.insert(shown, { id = l.id, title = l.title, sold = l.sold or 0, limit = l.limit,
-			daysLeft = math.max(0, math.ceil((l.endsAt - nowT) / 86400)) })
+	-- every one on sale goes on the used-car lot; the newest SHOWN on the plaza's pads too
+	for _, l in ipairs(LegendRides.active(LegendStore.list(), nowT, LobbyLayout.USED_SLOTS)) do
+		table.insert(shown, { id = l.id, title = l.title, ownerName = l.ownerName, biome = l.biome, votes = l.votes,
+			sold = l.sold or 0, limit = l.limit, daysLeft = math.max(0, math.ceil((l.endsAt - nowT) / 86400)) })
 	end
-	LobbyHub.setLegends(hub, shown, folder)
+	LobbyHub.setUsedCars(hub, shown, folder, Constants.LEGEND.COINS, onUsedPrompt)
+	local pads = {}
+	for i = 1, math.min(#shown, Constants.LEGEND.SHOWN) do pads[i] = shown[i] end
+	LobbyHub.setLegends(hub, pads, folder)
 end
 -- the store says when listings or sold counts change (every POLL s it reads them)
 LegendStore.onChanged(function() pcall(legends) end)

@@ -169,8 +169,8 @@ end
 --- What `player` wears round the waist: a car they are trying on at Junk
 -- Motors, else their worn Legend Ride or new car. Returns ride, id.
 function LegendShop.worn(player, rec)
-	local trying = require(ServerScriptService.Modules.CarDealer).trying(player)
-	if trying then return NewCars.ride(trying, true), "try:" .. trying end
+	local trying, key = require(ServerScriptService.Modules.CarDealer).trying(player)
+	if trying then return trying, key end
 	local id = rec and rec.legendOn
 	local car = NewCars.itemOf(id)
 	if car then
