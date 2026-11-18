@@ -38,8 +38,9 @@ local function toPlaza(player)
 	local root = character and character:FindFirstChild("HumanoidRootPart")
 	if not root then return end
 	_spread += 1
+	-- rings round the spawn, wider as more come (a hub of 100 lands at once)
 	local a = _spread * 2.4
-	local r = 2 + (_spread % 3) * 1.5
+	local r = 2 + (_spread % 5) * 1.6
 	local pos = LobbyLayout.SPAWN + Vector3.new(math.cos(a) * r, 4, math.sin(a) * r)
 	pcall(function()
 		character:PivotTo(CFrame.lookAt(pos, Vector3.new(LobbyLayout.ORIGIN.X, pos.Y, LobbyLayout.ORIGIN.Z)))

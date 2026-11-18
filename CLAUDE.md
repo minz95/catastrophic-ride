@@ -313,7 +313,8 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   Toilet Paper slipstream also work against race bots (RacingManager
   `_onBotContact`, `_slotsOf`): most live races are one player and bots,
   and a Shopping Cart or Cactus did nothing there.
-- A server over `MAX_PLAYERS` (the dashboard's server size must be 10):
+- A server over `MAX_PLAYERS` (the dashboard's server size must be 10; with
+  two places that is the race place, the hub is `HUB_MAX_PLAYERS` = 100):
   players past the 10 grid slots get no car and watch (CraftingManager);
   they used to get a car off the track.
 - Jumps (FOREST): `VehicleController` flies the car an arcade arc
@@ -688,7 +689,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   or failing mid-departure, an hour of the hub with every script) and
   Studio `sim.py run lobby-tour` / `hub-tour` (TestHarness/LobbyTour: a
   bot wearing a Legend Ride pathfinds to every stop; hub: the pads,
-  PLAY, the countdown, Studio's refused teleport). Townsfolk bodies are
+  PLAY, the countdown, Studio's refused teleport). The hub also has a
+  "coming soon" pad per next series game (`Departure.SOON`,
+  `LobbyLayout.SOON`, send nobody). Townsfolk bodies are
   looked through, an invisible post (`LobbyHub.NPC_BLOCK`) blocks the
   way: a half-solid body trapped a walker for good.
 - Aimed abilities ("nearest") take the nearest car within

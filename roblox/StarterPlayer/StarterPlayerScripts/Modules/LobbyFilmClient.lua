@@ -29,6 +29,9 @@ function LobbyFilmClient.run(report)
 	if ReplicatedStorage:GetAttribute("FilmStory") == "toilet" then   -- TestHarness/ToiletAd
 		return require(script.Parent.ToiletAdClient).run(report)
 	end
+	if ReplicatedStorage:GetAttribute("FilmStory") == "usedcar" then  -- TestHarness/UsedCarAd
+		return require(script.Parent.UsedCarAdClient).run(report)
+	end
 	local T0 = ReplicatedStorage:GetAttribute("FilmT0")
 	local function now() return workspace:GetServerTimeNow() - T0 end
 	local function waitUntil(t) while now() < t do task.wait() end end

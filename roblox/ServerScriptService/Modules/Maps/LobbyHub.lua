@@ -449,7 +449,8 @@ local function garage(m)
 	-- loose crates in front of the wall
 	storeModel(m, "crates", CF(wallAt + V(7, 0, -33)) * A(0, math.rad(80), 0), 5, true)
 	storeModel(m, "crate", CF(wallAt + V(7, 0, 31)) * A(0, math.rad(20), 0), 4, true)
-	local s = part(m, "LegendSign", V(26, 4, 0.6), CF(wallAt + V(2.8, 12, 0)) * A(0, math.rad(90), 0), C(40, 35, 60), "Fabric")
+	-- low over the way to the gate, so the AUTO STREET sign shows over it
+	local s = part(m, "LegendSign", V(26, 4, 0.6), CF(wallAt + V(2.8, 9.2, 0)) * A(0, math.rad(90), 0), C(40, 35, 60), "Fabric")
 	sign(s, { { text = "🚗 LEGEND RIDES", color = C(255, 214, 60), share = 0.6 },
 		{ text = "vote winners' rides · few copies · few days", color = C(230, 230, 245), share = 0.4, font = Enum.Font.GothamBold } },
 		C(40, 35, 60), Enum.NormalId.Back)
@@ -848,7 +849,8 @@ local function usedLot(m)
 	local gw = part(m, "GuardWindow", V(3, 2, 0.2), CF(O + V(ex + 9, 4.6, b[3] + 3.9)), C(150, 200, 230), "Glass")
 	gw.Transparency = 0.3
 	part(m, "Barrier", V(0.4, 0.4, 7), CF(O + V(ex + 6.5, 3, b[3] + 5)) * A(math.rad(-60), 0, 0), C(230, 60, 50), "SmoothPlastic")
-	local kiosk = part(m, "Kiosk", V(3.4, 6, 0.8), CF(O + V(ex - 9, 3, b[3] + 4)), C(40, 45, 55), "Metal")
+	-- the directory stands by the guard's booth, clear of the first car's stand
+	local kiosk = part(m, "Kiosk", V(3.4, 6, 0.8), CF(O + V(ex + 6, 3, b[3] + 14)), C(40, 45, 55), "Metal")
 	local dirLines = { { text = "LOT DIRECTORY", color = C(255, 214, 60), share = 0.2 } }
 	for i, d in ipairs(LobbyHub.DEALERS) do
 		table.insert(dirLines, { text = d, color = C(255, 255, 255), share = 0.18, font = Enum.Font.GothamBold })
@@ -1317,6 +1319,23 @@ function LobbyHub.departurePads(hub)
 		tag(pad, { { name = "Title", text = d.title, color = C(255, 255, 255) },
 			{ name = "Sub", text = d.sub, font = Enum.Font.Gotham },
 			{ name = "Status", text = "step on!", color = C(255, 214, 60) } }, 7, 60, 8)
+		pads[d.id] = pad
+	end
+	-- the series' next games: grey pads that send nobody yet
+	for i, d in ipairs(Departure.SOON) do
+		local spot = LobbyLayout.SOON[i]
+		if not spot then break end
+		local pad = cyl(hub, "Soon_" .. d.id, Constants.DEPART.RADIUS * 2, 0.6, CF(spot + V(0, 0.3, 0)), C(150, 150, 160), "SmoothPlastic")
+		pad:SetAttribute("Soon", d.id)
+		for k = 0, 11 do   -- a dashed rim
+			local a = k / 12 * math.pi * 2
+			deco(part(hub, "SoonDash", V(1.6, 0.35, 0.4),
+				CFrame.lookAt(spot + V(math.cos(a), 0, math.sin(a)) * Constants.DEPART.RADIUS + V(0, 0.65, 0),
+					spot + V(math.cos(a + 0.1), 0, math.sin(a + 0.1)) * Constants.DEPART.RADIUS + V(0, 0.65, 0)) * A(0, math.pi / 2, 0),
+				C(255, 214, 60), "Neon"))
+		end
+		tag(pad, { { name = "Title", text = d.title, color = C(255, 255, 255) },
+			{ name = "Sub", text = d.sub, color = C(255, 214, 60), font = Enum.Font.GothamBold } }, 7, 60, 8)
 		pads[d.id] = pad
 	end
 	return pads

@@ -50,6 +50,7 @@ R.describe("Junk Town layout", function()
 			{ "arch R", L.ARCH + Vector3.new(9, 0, 0), 2.2 },
 		}
 		for i, p in ipairs(L.SHOWCASE) do table.insert(spots, { "show" .. i, p, 5 }) end
+		for i, p in ipairs(L.SOON) do table.insert(spots, { "soon" .. i, p, 5 }) end
 		for i = 1, L.LEGEND_SLOTS do table.insert(spots, { "legend" .. i, L.legendSpot(i), 4.5 }) end
 		for i = 1, L.TROPHY_SLOTS do table.insert(spots, { "trophy" .. i, L.trophySpot(i), 1.9 }) end
 		for i, p in ipairs(L.TREES) do table.insert(spots, { "tree" .. i, p, 1 }) end

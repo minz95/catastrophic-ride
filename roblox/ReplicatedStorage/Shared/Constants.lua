@@ -82,6 +82,10 @@ Constants.LOBBY = { MAX_WAIT = 10, FILL_SECONDS = 15 }
 -- the space over a pad that counts. PENDING: s a player sent off is not
 -- sent again (the teleport is loading). GAP: s between two PlaceAction calls.
 Constants.DEPART = { SECONDS = 8, RADIUS = 5, HEIGHT = 8, PENDING = 30, CHECK = 0.25, GAP = 1.5 }
+-- The hub place's server size (Creator Dashboard → the start place →
+-- Server size): Junk Town for everyone, no race grid (2026-11-18, "100 in
+-- town"). The race place stays at MAX_PLAYERS (its grid).
+Constants.HUB_MAX_PLAYERS = 100
 
 -- The shop screen (ShopUI, rules in Shared/ShopTiming) shows the phase
 -- clock; under WARN_AT s it turns red. In CRAFTING it closes itself once at

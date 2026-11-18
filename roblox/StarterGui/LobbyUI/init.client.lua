@@ -222,7 +222,7 @@ local function _buildPlayerList()
 	for _, child in ipairs(scrollFrame:GetChildren()) do
 		if child:IsA("TextLabel") then child:Destroy() end
 	end
-	listTitle.Text = placeMode() == "hub" and string.format("In town: %d", #Players:GetPlayers())
+	listTitle.Text = placeMode() == "hub" and string.format("In town: %d / %d", #Players:GetPlayers(), Constants.HUB_MAX_PLAYERS)
 		or string.format("Players %d / %d", #Players:GetPlayers(), Constants.MAX_PLAYERS)
 	for i, player in ipairs(Players:GetPlayers()) do
 		local row = Instance.new("TextLabel")

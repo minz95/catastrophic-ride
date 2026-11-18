@@ -550,7 +550,7 @@ def check(sc, report):
                 out.append(("fail", "round %s: %d of %d finished" % (r.get("round"), done, len(players))))
         if not report.get("rounds") and "lobbyFilm" not in sc["opts"] and "lobbyTour" not in sc["opts"]:   # the lobby reel ends in LOBBY
             out.append(("fail", "no round completed"))
-        if "lobbyFilm" in sc["opts"] and report.get("endReason") not in ("lobby film", "toilet ad"):
+        if "lobbyFilm" in sc["opts"] and report.get("endReason") not in ("lobby film", "toilet ad", "usedcar ad"):
             out.append(("fail", "lobby film did not finish: %s" % report.get("endReason")))
         if "lobbyTour" in sc["opts"]:
             out += check_lobby_tour(sc, report)

@@ -1270,6 +1270,246 @@
           "color": "#FFD23C"
         }
       ]
+    },
+    "kr-usedcar": {
+      "_why": "Korean reel 2026-11-18, the user's idea: a skit, 'anyone want a used car in Roblox?': walked into the map, there's a used-car dealer, tried to haggle, in the end bought a Rubber Duck at a price I liked and rode it around; ends 'buy a used car and race with me!'. The game has no haggling: the dealer turns every offer down (the lot's price is the total) and a brand new duck across the road costs the last offer, 1,200 (record-usedcar, TestHarness/UsedCarAd). who: me, dl (dealer). Build --clean + .srt for CapCut TTS",
+      "format": "9x16",
+      "lang": "ko",
+      "segments": [
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 6.3,
+          "dur": 3.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "로블록스에서",
+          "title": "중고차 뽑으실 분?",
+          "say": "로블록스에서 중고차 뽑으실 분?",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 9.2,
+          "dur": 4.4,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "마을 옆에",
+          "title": "중고차 단지 생김",
+          "say": "마을 옆에 중고차 단지가 생겼대서 가봄",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 14.4,
+          "dur": 2.5,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "딜러 등장",
+          "title": "사장님~ 차 보러 오셨어요?",
+          "say": "사장님~ 차 보러 오셨어요?",
+          "who": "dl",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 17.0,
+          "dur": 2.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "나",
+          "title": "그냥 구경 좀...",
+          "say": "그냥 구경 좀...",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 19.0,
+          "dur": 2.5,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "JUST IN",
+          "title": "방금 들어온 투표 1등 차",
+          "say": "방금 들어온 투표 1등 차예요!",
+          "who": "dl",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 21.5,
+          "dur": 2.5,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "점검기록부",
+          "title": "총액 2,500코인",
+          "say": "점검기록부도 깔끔하네",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 24.0,
+          "dur": 1.6,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "천 코인에 안 돼요?",
+          "say": "천 코인에 안 돼요?",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 25.6,
+          "dur": 2.4,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "총액 2,500. 수수료 없어요",
+          "say": "총액 2,500이에요 사장님~",
+          "who": "dl",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 28.0,
+          "dur": 1.8,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "오늘 가져갈게요. 1,500?",
+          "say": "오늘 바로 가져갈게요. 1,500?",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 29.8,
+          "dur": 2.2,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "투표 1등 차예요! 50대 한정!",
+          "say": "투표 1등 한 차예요! 50대 한정!",
+          "who": "dl",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 32.0,
+          "dur": 1.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "...1,200?",
+          "say": "그럼 1,200?",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 33.0,
+          "dur": 2.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "가격 협상",
+          "title": "장난하세요?!",
+          "say": "장난하세요?!",
+          "who": "dl",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 35.0,
+          "dur": 2.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "결국",
+          "title": "협상 결렬",
+          "say": "협상 결렬...",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 37.0,
+          "dur": 3.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "근데 길 건너 신차 매장에",
+          "title": "새 러버덕이 1,200??",
+          "say": "근데 길 건너에 새 러버덕이 1,200?",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 40.0,
+          "dur": 4.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "시착",
+          "title": "일단 입어봄",
+          "say": "일단 입어봄. 편하다",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 44.0,
+          "dur": 2.0,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "구매 완료",
+          "title": "1,200에 샀다ㅋㅋ",
+          "say": "1,200에 샀다ㅋㅋ",
+          "who": "me",
+          "color": "#FFD23C"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 46.0,
+          "dur": 4.5,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "중고차보다 싼 신차ㅋㅋ",
+          "title": "타고 다니는 중"
+        },
+        {
+          "card": true,
+          "bg": "#0B0B10",
+          "dur": 2.2,
+          "head": "ROBLOX · 무료",
+          "title": "Catastrophic\nRide",
+          "color": "#FFD23C",
+          "say": "캐타스트로픽 라이드.",
+          "who": "me"
+        },
+        {
+          "take": "record-usedcar",
+          "fit": "black",
+          "t": 50.5,
+          "dur": 2.8,
+          "zoom": 1.5,
+          "cx": 0.5,
+          "head": "오늘의 결론",
+          "title": "중고차 뽑고\n같이 달리실 분!",
+          "say": "중고차 뽑고 같이 달리실 분!",
+          "who": "me",
+          "color": "#FFD23C"
+        }
+      ]
     }
   }
 }

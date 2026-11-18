@@ -14,7 +14,8 @@
 -- The client half (camera and walking) is BotDriver's lobby film, timed
 -- from the same ReplicatedStorage attribute FilmT0 (server time).
 -- Nothing is saved: LegendStore stays in memory (memoryOnly).
--- `lobbyFilm = { story = "toilet" }` plays TestHarness/ToiletAd instead.
+-- `lobbyFilm = { story = "toilet" }` plays TestHarness/ToiletAd instead,
+-- `{ story = "usedcar" }` TestHarness/UsedCarAd.
 
 local Players             = game:GetService("Players")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
@@ -150,6 +151,10 @@ function LobbyFilm.run(args, done)
 	task.wait(opts.settle or 4)   -- the hub and the models built, the camera on the client
 	if opts.story == "toilet" then   -- the toilet ride reel (TestHarness/ToiletAd)
 		require(script.Parent.ToiletAd).run(player, rec, done)
+		return
+	end
+	if opts.story == "usedcar" then  -- the used-car reel (TestHarness/UsedCarAd)
+		require(script.Parent.UsedCarAd).run(player, rec, done)
 		return
 	end
 
