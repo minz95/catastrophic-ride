@@ -15,6 +15,14 @@ Departure.PADS = {
 	{ id = "party2", kind = "private", title = "👥 PRIVATE RACE", sub = "just who's on the pad" },
 }
 
+-- The series' next games (2026-11-18: Junk Town is the hub of the
+-- Catastrophic series): pads that say "coming soon" and send nobody yet.
+-- A game that opens becomes a PADS entry (its own place in Shared/Places).
+Departure.SOON = {
+	{ id = "day",     title = "CATASTROPHIC DAY",     sub = "coming soon" },
+	{ id = "kitchen", title = "CATASTROPHIC KITCHEN", sub = "coming soon" },
+}
+
 function Departure.pad(id)
 	for _, p in ipairs(Departure.PADS) do
 		if p.id == id then return p end

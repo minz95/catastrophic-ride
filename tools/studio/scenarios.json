@@ -2343,6 +2343,35 @@
         "chunk": 10
       },
       "checks": {}
+    },
+    {
+      "name": "record-usedcar",
+      "kind": "match",
+      "tags": [
+        "video"
+      ],
+      "_why": "footage for the used-car reel (2026-11-18, the user's idea: a skit, 'anyone want a used car in Roblox?': out of Junk Town's west gate to the used-car lot, Hank the dealer, three offers turned down (the price on the card is the total), across the road a brand new Rubber Duck for 1,200, try it on, buy it, ride it down the street). TestHarness/UsedCarAd + Modules/UsedCarAdClient. Nothing is saved. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 200,
+        "maxSeconds": 200,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "lobbyFilm": {
+          "story": "usedcar"
+        }
+      },
+      "record": {
+        "delay": 10,
+        "chunk": 10
+      },
+      "checks": {}
     }
   ]
 }

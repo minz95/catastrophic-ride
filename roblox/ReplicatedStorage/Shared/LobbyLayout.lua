@@ -51,6 +51,8 @@ end
 
 LobbyLayout.SHOP = O + V(-26, 0, 34)
 LobbyLayout.SHOWCASE = { O + V(20, 0, 44), O + V(32, 0, 37), O + V(42, 0, 27) }
+-- the hub's "coming soon" pads (Shared/Departure.SOON), east of the start pads
+LobbyLayout.SOON = { O + V(44, 0, 6), O + V(42, 0, -8) }
 
 -- the town round the plaza: houses on the grass outside the fence (angle from
 -- +X, degrees; `model` a Shared/LobbyModels key, `height` in studs), clear of

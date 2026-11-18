@@ -270,6 +270,41 @@ R.describe("the hub place in every situation (lobby phase 2)", function()
 		R.expect(calls[2].options.ShouldReserveServer).toBe(true)
 	end)
 
+	R.it("a full hub of 100 (Constants.HUB_MAX_PLAYERS): all in town; 25 on the race pad leave 10, 10, 5; the coming-soon pads send nobody", function()
+		local srv, hub, calls = boot({ players = 100 })
+		local e = srv.env
+		local L = e.requirePath("ReplicatedStorage.Shared.LobbyLayout")
+		local Constants = e.requirePath("ReplicatedStorage.Shared.Constants")
+		local Departure = e.requirePath("ReplicatedStorage.Shared.Departure")
+		R.expect(#srv.players).toBe(Constants.HUB_MAX_PLAYERS)
+		srv.advance(3)
+		local out = 0
+		for _, p in ipairs(srv.players) do
+			if not (rootOf(p) and L.inTown(rootOf(p).Position)) then out += 1 end
+		end
+		R.expect(out).toBe(0)
+		-- two on each "coming soon" pad: nothing happens
+		for i, d in ipairs(Departure.SOON) do
+			local soon = hub:FindFirstChild("Soon_" .. d.id)
+			R.expect(soon ~= nil).toBe(true, d.id)
+			standOn(srv.players[90 + i * 2], soon, 1)
+			standOn(srv.players[91 + i * 2], soon, 2)
+		end
+		local pad = hub:FindFirstChild("Depart_race")
+		for i = 1, 25 do
+			standOn(srv.players[i], pad, i)
+			srv.advance(0.1)
+		end
+		srv.advance(8 * 3 + 6)
+		local sizes = {}
+		for _, c in ipairs(calls) do table.insert(sizes, #c.players) end
+		R.expect(table.concat(sizes, ",")).toBe("10,10,5")
+		local onPad = {}
+		for i = 1, 25 do onPad[srv.players[i].UserId] = true end
+		for _, id in ipairs(sentIds(calls)) do R.expect(onPad[id]).toBe(true, "sent from off the pad: " .. id) end
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
 	R.it("someone leaving during the countdown, or after being sent, breaks nothing; the rest still go", function()
 		local srv, hub, calls = boot({ players = 3 })
 		local pad = hub:FindFirstChild("Depart_race")
