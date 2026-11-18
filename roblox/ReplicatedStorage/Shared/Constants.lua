@@ -106,6 +106,18 @@ Constants.RIDE_SHOW = { MIN_PLAYERS = 2, SECONDS = 12, COINS = 30, VOTE_GAP = 0.
 Constants.LEGEND = { COINS = 2500, LIMIT = 50, DAYS = 7, ROYALTY = 250, WEAR_LENGTH = 5.5, SHOWN = 6, POLL = 60,
 	KEEP = 30 }
 
+-- ─── New cars (Shared/NewCars, Modules/CarDealer) ─────────────────────────
+-- Junk Motors on Auto Street (2026-11-18, "a dealership where you buy the
+-- car you want at a fixed price, not gacha"): every rideable item as a new
+-- car, priced by rarity in coins, worn round the waist like a Legend Ride.
+-- TRY_SECONDS: a try-on lasts this long; SHOW_LENGTH: studs a car on the
+-- showroom floor is long.
+Constants.NEW_CARS = {
+	PRICE = { Common = 500, Uncommon = 800, Rare = 1200, Epic = 2000 },
+	TRY_SECONDS = 15,
+	SHOW_LENGTH = 6.5,
+}
+
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────
 -- A friend who joins through your invite for the first time (never played
 -- a round) pays you COINS, for up to MAX_REWARDED friends.

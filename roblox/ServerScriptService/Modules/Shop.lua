@@ -12,6 +12,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Achievements = require(ReplicatedStorage.Shared.Achievements)
 local Cosmetics = require(ReplicatedStorage.Shared.Cosmetics)
 local LegendRides = require(ReplicatedStorage.Shared.LegendRides)
+local NewCars = require(ReplicatedStorage.Shared.NewCars)
 local Products = require(ReplicatedStorage.Shared.Products)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local Analytics = require(ServerScriptService.Modules.Analytics)
@@ -37,9 +38,11 @@ function Shop.state(rec)
 	for _, p in ipairs(Products.available()) do
 		table.insert(packs, { id = p.id, name = p.name, coins = p.coins, robux = p.robux })
 	end
+	-- the 🚗 tab: Legend Rides on sale, then every ride you own (new cars from Junk Motors too)
+	local legend = LegendRides.view(require(ServerScriptService.Modules.LegendStore).list(), rec, nil, os.time())
+	for _, c in ipairs(NewCars.owned(rec)) do table.insert(legend.owned, c) end
 	return { coins = rec.coins, level = rec.level, owned = owned, equipped = rec.equipped or {}, packs = packs,
-		achievements = Achievements.view(rec),
-		legend = LegendRides.view(require(ServerScriptService.Modules.LegendStore).list(), rec, nil, os.time()),
+		achievements = Achievements.view(rec), legend = legend,
 		legendRobux = Products.LEGEND.id ~= 0 and Products.LEGEND.robux or nil }
 end
 

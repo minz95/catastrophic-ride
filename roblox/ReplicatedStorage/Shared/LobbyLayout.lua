@@ -7,7 +7,9 @@
 --
 --   north   🏆 hall of fame stage (the vote winner's ride, life size)
 --   centre  a bathtub fountain; the "next race" board (an old TV) north-east of it
---   west    🚗 Legend Rides on pedestals (buy in the shop)
+--   west    🚗 Legend Rides on pedestals (buy in the shop), split by the
+--           gate to Auto Street: the road out west, Junk Motors (new cars)
+--           on its north side
 --   east    the trophy room: every achievement's reward on a pedestal
 --   south   spawn; 🛒 shop booth (left) and the junk ride show (right)
 --   round   a fence, and the town's houses and trees on the grass beyond it
@@ -30,12 +32,14 @@ LobbyLayout.ARCH = O + V(0, 0, 40)                   -- "WELCOME TO JUNK TOWN", 
 LobbyLayout.STAGE = { at = O + V(0, 0, -50), radius = 15, height = 2.5 }
 LobbyLayout.WINNER_LENGTH = 22   -- studs: the vote winner's ride and rider on the stage, any ride (2× read as a toy)
 
--- Legend Rides: an arc on the west side, every pedestal facing the centre
+-- Legend Rides: an arc on the west side, every pedestal facing the centre,
+-- three either side of the way to the Auto Street gate (180°)
 LobbyLayout.LEGEND_SLOTS = 6
 LobbyLayout.LEGEND_SCALE = 0.75
+local LEGEND_ANGLES = { 150, 160, 170, 190, 200, 210 }
 function LobbyLayout.legendSpot(i)
-	local a = math.rad(150 + (i - 1) * 12)   -- angle from +X: 150° (south-west) … 210° (north-west)
-	return O + V(math.cos(a) * 52, 0, math.sin(a) * 52)
+	local a = math.rad(LEGEND_ANGLES[i])     -- angle from +X: 150° (south-west) … 210° (north-west)
+	return O + V(math.cos(a) * 60, 0, math.sin(a) * 60)
 end
 
 -- the trophy room: a mirror arc on the east side
@@ -79,6 +83,58 @@ LobbyLayout.BENCHES = { O + V(15, 0, 4), O + V(-15, 0, 4), O + V(0, 0, -10) }
 LobbyLayout.STALL = O + V(-38, 0, 52)          -- a snack stall by Sticky Sam
 LobbyLayout.JUNK_PILE = O + V(-38, 0, -50)
 LobbyLayout.SCRAP_CARS = { O + V(50, 0, 38), O + V(-20, 0, 60) }
+
+-- ── Auto Street (2026-11-18) ────────────────────────────────────────────────
+-- Out of the west gate (the fence open at 180°) a lane leads past the
+-- island's edge onto a wide lot: the road runs west, Junk Motors' glass
+-- showroom stands on its north side (new cars, Shared/NewCars), the south
+-- side is open ground. Rectangles are { x0, x1, z0, z1 } offsets from
+-- ORIGIN (x0 < x1, z0 < z1); invisible walls close everything but the gate.
+LobbyLayout.GATE_ANGLE = 180
+LobbyLayout.GATE_HALF = 7            -- studs: half the gap in the fence
+LobbyLayout.STREET = {
+	lane = { -116, -74, -12, 12 },   -- gate to the lot, between the houses
+	lot = { -300, -114, -74, 64 },   -- the ground round the road and the showroom
+	road = { -300, -74, -9, 9 },     -- the road itself (the lane is its first stretch)
+	wallHeight = 14,
+}
+LobbyLayout.SHOWROOM = {
+	box = { -272, -128, -62, -20 },  -- walls; the glass front faces the road (z1)
+	height = 16,
+	doors = { -150, -250 },          -- x of the two doorways in the glass front
+	doorWidth = 10,
+	-- the cars: columns east (cheap, by the door) to west, three rows
+	rows = { -30, -41, -52 },        -- z of each row's middle
+	firstX = -140, stepX = -11, columns = 12,
+	plinth = Vector3.new(8, 0.6, 5),
+}
+
+--- Where showroom car `i` stands (1 … columns × rows; column-major from
+-- the east end, front row first): the plinth's centre on the floor.
+function LobbyLayout.carSpot(i)
+	local S = LobbyLayout.SHOWROOM
+	local col = (i - 1) // #S.rows
+	local row = (i - 1) % #S.rows + 1
+	return O + V(S.firstX + col * S.stepX, 0, S.rows[row])
+end
+LobbyLayout.CAR_SLOTS = LobbyLayout.SHOWROOM.columns * #LobbyLayout.SHOWROOM.rows
+
+local function inRect(r, dx, dz)
+	return dx >= r[1] and dx <= r[2] and dz >= r[3] and dz <= r[4]
+end
+LobbyLayout.inRect = inRect
+
+--- True when `pos` is on Auto Street (the lane, the lot or the showroom).
+function LobbyLayout.onStreet(pos)
+	local dx, dz = pos.X - O.X, pos.Z - O.Z
+	local S = LobbyLayout.STREET
+	return (inRect(S.lane, dx, dz) or inRect(S.lot, dx, dz)) and pos.Y > O.Y - 6 and pos.Y < O.Y + 40
+end
+
+--- True anywhere a player may walk in Junk Town: the plaza or Auto Street.
+function LobbyLayout.inTown(pos)
+	return LobbyLayout.onPlaza(pos) or LobbyLayout.onStreet(pos)
+end
 
 --- Turned to look at the plaza's centre from `at` (Y kept).
 function LobbyLayout.facingCentre(at)

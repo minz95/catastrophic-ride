@@ -19,6 +19,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local Constants = require(ReplicatedStorage.Shared.Constants)
 local LegendRides = require(ReplicatedStorage.Shared.LegendRides)
+local NewCars = require(ReplicatedStorage.Shared.NewCars)
 local Products = require(ReplicatedStorage.Shared.Products)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local LegendStore = require(ServerScriptService.Modules.LegendStore)
@@ -104,7 +105,12 @@ function LegendShop.handle(player, rec, action, id)
 	if type(id) ~= "string" or #id > 64 then return "denied: bad id" end
 	local nowT = os.time()
 	if action == "legend_ride" then
-		if id ~= "" and not (rec.legend and rec.legend[id]) then return "denied: not owned" end
+		local car = NewCars.itemOf(id)
+		if car then
+			if not NewCars.owns(rec, car) then return "denied: not owned" end
+		elseif id ~= "" and not (rec.legend and rec.legend[id]) then
+			return "denied: not owned"
+		end
 		rec.legendOn = id ~= "" and id or nil
 		PlayerStore.saveSoon(player)
 		LegendShop.refresh(player)
@@ -160,15 +166,28 @@ end
 
 -- ── Wearing ──────────────────────────────────────────────────────────────────
 
---- Puts `player`'s worn Legend Ride round their waist (or takes it off).
+--- What `player` wears round the waist: a car they are trying on at Junk
+-- Motors, else their worn Legend Ride or new car. Returns ride, id.
+function LegendShop.worn(player, rec)
+	local trying = require(ServerScriptService.Modules.CarDealer).trying(player)
+	if trying then return NewCars.ride(trying, true), "try:" .. trying end
+	local id = rec and rec.legendOn
+	local car = NewCars.itemOf(id)
+	if car then
+		if NewCars.owns(rec, car) then return NewCars.ride(car), id end
+		return nil, nil
+	end
+	return id and rec.legend and rec.legend[id], id
+end
+
+--- Puts `player`'s worn ride round their waist (or takes it off).
 function LegendShop.refresh(player)
 	local character = player.Character
 	if not character then return end
 	local old = character:FindFirstChild(LegendShop.WORN)
 	if old then old:Destroy() end
 	local rec = PlayerStore.get(player)
-	local id = rec and rec.legendOn
-	local ride = id and rec.legend and rec.legend[id]
+	local ride, id = LegendShop.worn(player, rec)
 	local phase = require(ServerScriptService.GameManager).getPhase()
 	-- off for the race and the results: the avatar sits in the race car
 	-- (a ride-on round a seated driver stuck through the parked car)

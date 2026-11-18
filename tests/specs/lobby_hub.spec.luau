@@ -53,7 +53,9 @@ R.describe("Junk Town layout", function()
 		for i = 1, L.LEGEND_SLOTS do table.insert(spots, { "legend" .. i, L.legendSpot(i), 4.5 }) end
 		for i = 1, L.TROPHY_SLOTS do table.insert(spots, { "trophy" .. i, L.trophySpot(i), 1.9 }) end
 		for i, p in ipairs(L.TREES) do table.insert(spots, { "tree" .. i, p, 1 }) end
-		for _, n in ipairs(Npcs.LIST) do table.insert(spots, { "npc " .. n.id, O + n.at, 1.5 }) end
+		for _, n in ipairs(Npcs.LIST) do
+			if not n.street then table.insert(spots, { "npc " .. n.id, O + n.at, 1.5 }) end
+		end
 		for i = 0, L.LAMPS - 1 do
 			local a = (i + 0.5) / L.LAMPS * math.pi * 2
 			table.insert(spots, { "lamp" .. i, O + Vector3.new(math.cos(a), 0, math.sin(a)) * L.LAMP_RADIUS, 1 })
@@ -273,7 +275,7 @@ R.describe("Junk Town in a server", function()
 				if nearest(b) < L.WALL_RADIUS - 2 then table.insert(bad, b.key .. string.format(" in the plaza (%.1f)", nearest(b))) end
 				if farthest(b) > L.ISLAND_RADIUS + 4 then table.insert(bad, b.key .. string.format(" off the island (%.1f)", farthest(b))) end
 				if b.half.Y * 2 > 26 then table.insert(bad, b.key .. " too tall") end
-			elseif b.solid and farthest(b) > L.WALL_RADIUS then
+			elseif b.solid and farthest(b) > L.WALL_RADIUS and not L.onStreet(b.mid) then
 				table.insert(bad, b.key .. string.format(" past the wall (%.1f)", farthest(b)))
 			end
 		end
