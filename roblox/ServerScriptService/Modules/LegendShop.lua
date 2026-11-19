@@ -192,6 +192,8 @@ function LegendShop.refresh(player)
 	-- off for the race and the results: the avatar sits in the race car
 	-- (a ride-on round a seated driver stuck through the parked car)
 	if not ride or phase == Constants.PHASES.RACING or phase == Constants.PHASES.RESULTS then return end
+	-- off at the Junk Grand Prix too: the avatar sits in the GP car (GpManager)
+	if player:GetAttribute("GpCar") then return end
 	LegendShop.wear(character, ride, id)
 end
 

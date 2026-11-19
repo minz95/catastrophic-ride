@@ -286,6 +286,13 @@ function MatchHarness.start(args, endTest)
 		end)
 	end
 
+	-- the Junk Grand Prix driven on autopilot (TestHarness/GpTest)
+	if args.gp then
+		task.spawn(function()
+			require(script.Parent.GpTest).run(args, function(reason) finish(reason) end)
+		end)
+	end
+
 	task.delay(args.maxSeconds or 900, function()
 		report.timedOut = true
 		finish("timeout after " .. tostring(args.maxSeconds or 900) .. "s")

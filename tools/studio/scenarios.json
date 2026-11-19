@@ -2293,6 +2293,37 @@
       "checks": {}
     },
     {
+      "name": "gp-drive",
+      "kind": "match",
+      "tags": [
+        "lobby",
+        "gp"
+      ],
+      "_why": "the Junk Grand Prix with real physics (2026-11-19, 'F1 thrills, box box, nearly rolling over'): the bot client gets a car, enters at the desk, waits for the lights and drives the out lap and the timed laps on autopilot (GpClient GpAuto, Shared/GpDriver), boxing for tyres when the radio calls it; the bots lap with it. Reports lap times, pit stops, resets and rollovers (TestHarness/GpTest). The screen must be awake and unlocked (recorded)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 360,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "gp": {
+          "car": "Toilet",
+          "skill": 0.92
+        }
+      },
+      "record": {
+        "delay": 12,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
       "name": "lobby-tour",
       "kind": "match",
       "tags": [
