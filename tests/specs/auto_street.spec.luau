@@ -186,7 +186,7 @@ R.describe("Junk Motors in a server", function()
 		end
 		local walls = 0
 		for _, d in ipairs(hub:GetChildren()) do if d.Name == "StreetWall" then walls += 1 end end
-		R.expect(walls).toBe(7)
+		R.expect(walls).toBe(8)   -- the west wall in two, open onto the Junk GP grandstand
 		for _, c in ipairs(cat) do
 			local pp = prompts(hub, c.item)
 			R.expect(pp.try ~= nil and pp.buy ~= nil).toBe(true, c.item)

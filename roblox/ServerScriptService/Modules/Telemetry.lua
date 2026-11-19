@@ -36,6 +36,13 @@
 --   legend_list      Modules/LegendShop     { userId, id, title }   (a vote winner's ride on sale)
 --   legend_buy       Modules/LegendShop     { userId, id, pay = "coins" | "robux", result }
 --   legend_royalty   Modules/LegendShop     { userId, id, coins, online }
+--   gp_enter         GpManager              { userId, car, box, top, grip, stability }   (Junk Grand Prix)
+--   gp_denied        GpManager              { userId, reason = closed | no_car | full | loading | build }
+--   gp_lap           GpManager              { userId, lap, time, valid }
+--   gp_pit           GpManager              { userId, seconds }
+--   gp_reset         GpManager              { userId, reason = flip | stuck | off_grounds }
+--   gp_done          GpManager              { userId, best, rank, pits, resets }
+--   gp_end           GpManager              { userId, reason, laps, best }
 --   ability_probe    Modules/EffectFx       { userId, effect, from, y0, yMax, yMin, v0, vMax, vMin,
 --                                            maxSpeed0, maxSpeedMid, turn0, turnMid, lift0, window }  (detailed only)
 

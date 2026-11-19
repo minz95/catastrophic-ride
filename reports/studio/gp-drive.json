@@ -1,0 +1,10332 @@
+{
+ "checks": [
+  {
+   "level": "fail",
+   "message": "no round completed"
+  }
+ ],
+ "commit": "c10a2fd",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 200 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-11-19T02:55:05.959Z,61.959839,6f8df000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-19T02:56:05.960Z,121.960594,6f8df000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-19T02:57:05.963Z,181.963211,6f6d3000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-19T02:58:04.910Z,240.910538,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-19T02:58:04.910Z,240.910614,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-19T02:58:05.043Z,241.043533,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-19T02:58:05.043Z,241.043640,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-19T02:58:05.963Z,241.963715,6f8df000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-19T02:58:07.643Z,243.643463,6f6d3000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"af73778f-ad81-44a5-91d1-98907f6356fe\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "driverProfiles": [
+   "average"
+  ],
+  "farmProfiles": [
+   "filmer"
+  ],
+  "gp": {
+   "car": "Toilet",
+   "skill": 0.92
+  },
+  "lobbyDelay": 600,
+  "maxSeconds": 360,
+  "players": 1,
+  "rounds": 1
+ },
+ "ranAt": "2026-11-19T11:58:13+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "average"
+    ],
+    "farmProfiles": [
+     "filmer"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 60,
+    "RACING": 240,
+    "RESULTS": 5
+   },
+   "gp": {
+    "car": "Toilet",
+    "skill": 0.92
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 600,
+   "maxSeconds": 360,
+   "players": 1,
+   "rounds": 1
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "gp run done",
+  "errors": [],
+  "harness": "match",
+  "rounds": [],
+  "summary": "Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0\n  events: bot_gp_enter=1 bot_gp_sample=178 bot_joined=1 bot_ready=1 bot_sound=29 gp_bot_reset=9 gp_bot_sample=492 gp_done=1 gp_end=1 gp_enter=1 gp_lap=3 gp_pit=1 gp_reset=3 server_perf=104",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 5.6,
+     "kind": "server_perf",
+     "memMb": 2402,
+     "phase": "LOBBY",
+     "physicsFps": 12.5,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.495
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 3.51,
+     "x": -399,
+     "z": -4
+    },
+    {
+     "driver": "average",
+     "farm": "filmer",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 3.763,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "filmer"
+     },
+     "kind": "bot_ready",
+     "t": 4.015,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Lap Lenny.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.355823333375156,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Lap Lenny.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.355861666612327,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Vroom Vera.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3559579998254776,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Vroom Vera.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3559641665779054,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Nitro Nell.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3560193330049515,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Nitro Nell.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.356025249697268,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Turbo Tom.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.356075041461736,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Turbo Tom.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3560802498832345,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Skid Sid.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3561119167134166,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Skid Sid.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3561169165186584,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112779173",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.GpGrandstand.GpStandRoof.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.356286874972284,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112779173",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.GpGrandstand.GpStandRoof.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.3562929583713412,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 4.265,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.5833629998378456,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 4.499,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 28.4,
+     "kind": "server_perf",
+     "memMb": 2454,
+     "phase": "LOBBY",
+     "physicsFps": 31.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 531.9,
+     "t": 4.5
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 2.6727734580636024,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 4.582,
+     "userId": -1
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Turbo Tom",
+     "real": 44,
+     "t": 5.824,
+     "x": -393,
+     "z": -45
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.08367145806551,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 6.048,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.083687083330005,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 6.048,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.083747250027955,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 6.048,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.083757416345179,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 6.048,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2498,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 254.7,
+     "t": 6.515
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Vroom Vera",
+     "real": 0,
+     "t": 7.626,
+     "x": -399,
+     "z": -26
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Turbo Tom",
+     "real": 44,
+     "t": 7.832,
+     "x": -392,
+     "z": -94
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2507,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 11.2,
+     "t": 8.517
+    },
+    {
+     "box": 1,
+     "car": "Toilet",
+     "grip": 92,
+     "kind": "gp_enter",
+     "stability": 1.04,
+     "t": 8.533,
+     "top": 100,
+     "userId": -1
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "flip",
+     "t": 9.382,
+     "x": -390,
+     "z": -162
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Vroom Vera",
+     "real": 44,
+     "t": 9.632,
+     "x": -392,
+     "z": -93
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 8.185653499793261,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 10.099,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112787430",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 8.185687083285302,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 10.099,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9119186275",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 8.185697041451931,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 10.099,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9119186275",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.Cars.GpCar_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 8.18570449994877,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 10.099,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "ok"
+     },
+     "kind": "bot_gp_enter",
+     "t": 10.099,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2519,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 7.5,
+     "t": 10.533
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Lap Lenny",
+     "real": 0,
+     "t": 10.649,
+     "x": -399,
+     "z": -48
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Vroom Vera",
+     "real": 44,
+     "t": 11.632,
+     "x": -375,
+     "z": -175
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112782019",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 9.739431166555732,
+      "volume": 0.5
+     },
+     "kind": "bot_sound",
+     "t": 11.649,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112782019",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 9.73946841666475,
+      "volume": 0.5
+     },
+     "kind": "bot_sound",
+     "t": 11.649,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.6,
+     "kind": "server_perf",
+     "memMb": 2535,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 86907.3,
+     "t": 12.546
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Lap Lenny",
+     "real": 44,
+     "t": 12.666,
+     "x": -394,
+     "z": -104
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 12.7,
+     "x": -360,
+     "z": -150
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 52,
+     "t": 13.632,
+     "x": -405,
+     "z": -259
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "flip",
+     "t": 14.015,
+     "x": -382,
+     "z": -176
+    },
+    {
+     "heartbeatHz": 58.8,
+     "kind": "server_perf",
+     "memMb": 2609,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 15.3,
+     "t": 14.55
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 14.649,
+     "x": -399,
+     "z": -70
+    },
+    {
+     "cmd": 47,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 47,
+     "t": 14.683,
+     "x": -368,
+     "z": -184
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 0,
+      "leg": 6,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 99,
+      "x": -2.7,
+      "y": 1.7,
+      "z": 56.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 14.865,
+     "userId": -1
+    },
+    {
+     "kind": "gp_reset",
+     "reason": "off_grounds",
+     "t": 14.882,
+     "userId": -1,
+     "x": -3,
+     "y": 1,
+     "z": 56
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 63,
+     "t": 15.648,
+     "x": -552,
+     "z": -251
+    },
+    {
+     "data": {
+      "actual": 20,
+      "br": 0,
+      "cmd": 21,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 20,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 99,
+      "x": -360,
+      "y": 1,
+      "z": 74.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 15.882,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 28,
+      "br": 0,
+      "cmd": 29,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 28,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 99,
+      "x": -360,
+      "y": 1,
+      "z": 68.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 17.122,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 37.2,
+     "kind": "server_perf",
+     "memMb": 2583,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.7,
+     "t": 17.128
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 57,
+     "t": 17.13,
+     "x": -396,
+     "z": -255
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Nitro Nell",
+     "real": 44,
+     "t": 17.13,
+     "x": -395,
+     "z": -112
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 17.434,
+     "x": -360,
+     "z": -166
+    },
+    {
+     "cmd": 61,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 61,
+     "t": 17.649,
+     "x": -591,
+     "z": -208
+    },
+    {
+     "data": {
+      "actual": 56,
+      "br": 0,
+      "cmd": 56,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 56,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 99,
+      "x": -360,
+      "y": 1,
+      "z": 21.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 18.149,
+     "userId": -1
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Skid Sid",
+     "real": 0,
+     "t": 18.649,
+     "x": -399,
+     "z": -92
+    },
+    {
+     "heartbeatHz": 60.3,
+     "kind": "server_perf",
+     "memMb": 2578,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.1,
+     "t": 19.133
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 77,
+     "t": 19.133,
+     "x": -540,
+     "z": -254
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 53,
+     "t": 19.133,
+     "x": -364,
+     "z": -192
+    },
+    {
+     "data": {
+      "actual": 75,
+      "br": 0,
+      "cmd": 75,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 75,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 99,
+      "x": -360,
+      "y": 1,
+      "z": -45.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 19.165,
+     "userId": -1
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 51,
+     "t": 19.449,
+     "x": -376,
+     "z": -243
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 59,
+     "t": 19.666,
+     "x": -623,
+     "z": -93
+    },
+    {
+     "data": {
+      "actual": 88,
+      "br": 0,
+      "cmd": 88,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 88,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 99,
+      "x": -360,
+      "y": 1,
+      "z": -128.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 20.164,
+     "userId": -1
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "pit",
+     "name": "Skid Sid",
+     "real": 44,
+     "t": 20.667,
+     "x": -395,
+     "z": -151
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2583,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 21.148
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 73,
+     "t": 21.148,
+     "x": -593,
+     "z": -145
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 68,
+     "t": 21.148,
+     "x": -437,
+     "z": -258
+    },
+    {
+     "data": {
+      "actual": 79,
+      "br": 0,
+      "cmd": 79,
+      "leg": 0,
+      "load": 0.92,
+      "pit": false,
+      "real": 79,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 98,
+      "x": -364.7,
+      "y": 1.1,
+      "z": -218.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 21.181,
+     "userId": -1
+    },
+    {
+     "cmd": 86,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 86,
+     "t": 21.466,
+     "x": -492,
+     "z": -256
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 53,
+     "t": 21.681,
+     "x": -773,
+     "z": -98
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 57,
+      "leg": 0,
+      "load": 0.39,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 97,
+      "x": -408.4,
+      "y": 1,
+      "z": -256.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 22.181,
+     "userId": -1
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 60,
+     "t": 22.683,
+     "x": -373,
+     "z": -243
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2584,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 23.15
+    },
+    {
+     "cmd": 78,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 78,
+     "t": 23.15,
+     "x": -691,
+     "z": -89
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 58,
+     "t": 23.15,
+     "x": -579,
+     "z": -234
+    },
+    {
+     "data": {
+      "actual": 75,
+      "br": 0,
+      "cmd": 76,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 75,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 97,
+      "x": -475.4,
+      "y": 1,
+      "z": -255.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 23.183,
+     "userId": -1
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 59,
+     "t": 23.481,
+     "x": -592,
+     "z": -204
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 23.683,
+     "x": -802,
+     "z": -213
+    },
+    {
+     "data": {
+      "actual": 66,
+      "br": 0,
+      "cmd": 66,
+      "leg": 0,
+      "load": 0.61,
+      "pit": false,
+      "real": 66,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 96,
+      "x": -553.4,
+      "y": 1.1,
+      "z": -249.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 24.183,
+     "userId": -1
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 79,
+     "t": 24.683,
+     "x": -496,
+     "z": -256
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2584,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 25.166
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 66,
+     "t": 25.166,
+     "x": -803,
+     "z": -142
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 56,
+     "t": 25.166,
+     "x": -605,
+     "z": -107
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 0,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.5,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 96,
+      "x": -590.9,
+      "y": 1,
+      "z": -205.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 25.198,
+     "userId": -1
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 51,
+     "t": 25.482,
+     "x": -615,
+     "z": -89
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 83,
+     "t": 25.7,
+     "x": -893,
+     "z": -268
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 0.3,
+      "cmd": 63,
+      "leg": 0,
+      "load": 0.5,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 95,
+      "x": -593.3,
+      "y": 1.1,
+      "z": -133.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 26.214,
+     "userId": -1
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 68,
+     "t": 26.7,
+     "x": -593,
+     "z": -191
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 27.182
+    },
+    {
+     "cmd": 61,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 61,
+     "t": 27.182,
+     "x": -830,
+     "z": -263
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 27.182,
+     "x": -624,
+     "z": -68
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 0,
+      "cmd": 64,
+      "leg": 0,
+      "load": 0.65,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 94,
+      "x": -629.6,
+      "y": 1.1,
+      "z": -90.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 27.231,
+     "userId": -1
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 1,
+     "t": 27.483,
+     "x": -622,
+     "z": -65
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 80,
+     "t": 27.716,
+     "x": -1075,
+     "z": -250
+    },
+    {
+     "data": {
+      "actual": 81,
+      "br": 0,
+      "cmd": 81,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 81,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 94,
+      "x": -702.8,
+      "y": 1,
+      "z": -88.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 28.232,
+     "userId": -1
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 66,
+     "t": 28.715,
+     "x": -641,
+     "z": -89
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 29.198
+    },
+    {
+     "cmd": 87,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 87,
+     "t": 29.198,
+     "x": -983,
+     "z": -265
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 29.198,
+     "x": -622,
+     "z": -69
+    },
+    {
+     "data": {
+      "actual": 55,
+      "br": 0.394838288121635,
+      "cmd": 55,
+      "leg": 0,
+      "load": 0.6,
+      "pit": false,
+      "real": 55,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 93,
+      "x": -777,
+      "y": 1.1,
+      "z": -99.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 29.248,
+     "userId": -1
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 29.5,
+     "x": -620,
+     "z": -65
+    },
+    {
+     "cmd": 99,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 99,
+     "t": 29.733,
+     "x": -1132,
+     "z": -97
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 77,
+     "t": 31.024,
+     "x": -748,
+     "z": -91
+    },
+    {
+     "data": {
+      "actual": 63,
+      "br": 0,
+      "cmd": 64,
+      "leg": 0,
+      "load": 0.49,
+      "pit": false,
+      "real": 63,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 93,
+      "x": -801.5,
+      "y": 1,
+      "z": -137.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 31.064,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 10.2,
+     "t": 31.199
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 89,
+     "t": 31.199,
+     "x": -1077,
+     "z": -249
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 31.199,
+     "x": -622,
+     "z": -69
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 31.515,
+     "x": -620,
+     "z": -65
+    },
+    {
+     "cmd": 111,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 111,
+     "t": 31.748,
+     "x": -1130,
+     "z": 19
+    },
+    {
+     "data": {
+      "actual": 67,
+      "br": 1,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.36,
+      "pit": false,
+      "real": 67,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 92,
+      "x": -801.3,
+      "y": 1,
+      "z": -214.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 32.064,
+     "userId": -1
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 75,
+     "t": 33.033,
+     "x": -802,
+     "z": -186
+    },
+    {
+     "data": {
+      "actual": 59,
+      "br": 0,
+      "cmd": 59,
+      "leg": 0,
+      "load": 0.8,
+      "pit": false,
+      "real": 59,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 92,
+      "x": -826.2,
+      "y": 1.1,
+      "z": -261.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 33.065,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 33.215
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 33.216,
+     "x": -1131,
+     "z": -84
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 33.216,
+     "x": -621,
+     "z": -69
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 33.515,
+     "x": -619,
+     "z": -65
+    },
+    {
+     "cmd": 91,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 91,
+     "t": 33.749,
+     "x": -1128,
+     "z": 244
+    },
+    {
+     "data": {
+      "actual": 77,
+      "br": 0,
+      "cmd": 78,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 77,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 91,
+      "x": -894.7,
+      "y": 1,
+      "z": -266.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 34.066,
+     "userId": -1
+    },
+    {
+     "cmd": 70,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 70,
+     "t": 35.049,
+     "x": -865,
+     "z": -269
+    },
+    {
+     "data": {
+      "actual": 90,
+      "br": 0,
+      "cmd": 90,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 90,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 91,
+      "x": -980.8,
+      "y": 1,
+      "z": -264.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 35.081,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.1,
+     "t": 35.216
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 35.216,
+     "x": -1130,
+     "z": 106
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 35.216,
+     "x": -620,
+     "z": -69
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 35.516,
+     "x": -618,
+     "z": -66
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 64,
+     "t": 35.765,
+     "x": -1037,
+     "z": 286
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 90,
+      "x": -1069,
+      "y": 1.1,
+      "z": -251.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 36.08,
+     "userId": -1
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 90,
+     "t": 37.049,
+     "x": -1034,
+     "z": -263
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.7,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 89,
+      "x": -1124.9,
+      "y": 1.1,
+      "z": -187.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 37.097,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2627,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28,
+     "t": 37.231
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 67,
+     "t": 37.231,
+     "x": -1108,
+     "z": 283
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 37.231,
+     "x": -618,
+     "z": -69
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 37.533,
+     "x": -616,
+     "z": -66
+    },
+    {
+     "cmd": 49,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 49,
+     "t": 37.765,
+     "x": -903,
+     "z": 265
+    },
+    {
+     "data": {
+      "actual": 95,
+      "br": 0,
+      "cmd": 95,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 95,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 88,
+      "x": -1131.1,
+      "y": 1,
+      "z": -97
+     },
+     "kind": "bot_gp_sample",
+     "t": 38.097,
+     "userId": -1
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 90,
+     "t": 39.05,
+     "x": -1132,
+     "z": -144
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 88,
+      "x": -1130,
+      "y": 1,
+      "z": 2.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 39.115,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2629,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 39.233
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 74,
+     "t": 39.233,
+     "x": -990,
+     "z": 284
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 39.233,
+     "x": -618,
+     "z": -70
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 39.548,
+     "x": -616,
+     "z": -66
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 77,
+     "t": 39.766,
+     "x": -795,
+     "z": 285
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 88,
+      "x": -1130,
+      "y": 1,
+      "z": 104.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 40.131,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 88,
+      "x": -1130.1,
+      "y": 1,
+      "z": 121.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 41.27,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.3,
+     "kind": "server_perf",
+     "memMb": 2640,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28,
+     "t": 41.272
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 62,
+     "t": 41.273,
+     "x": -915,
+     "z": 265
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 41.273,
+     "x": -618,
+     "z": -70
+    },
+    {
+     "cmd": 98,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 98,
+     "t": 41.273,
+     "x": -1130,
+     "z": -20
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 41.564,
+     "x": -616,
+     "z": -66
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 52,
+     "t": 41.782,
+     "x": -718,
+     "z": 273
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0.7932831680187,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 87,
+      "x": -1129.5,
+      "y": 1.1,
+      "z": 230.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 42.297,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 92,
+      "br": 0,
+      "cmd": 92,
+      "leg": 0,
+      "load": 0.9,
+      "pit": false,
+      "real": 92,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 87,
+      "x": -1126.8,
+      "y": 1.1,
+      "z": 248.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 43.47,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 33.6,
+     "kind": "server_perf",
+     "memMb": 2627,
+     "phase": "LOBBY",
+     "physicsFps": 34.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.1,
+     "t": 43.472
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "stuck",
+     "t": 43.472,
+     "x": -616,
+     "z": -66
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 43.474,
+     "x": -851,
+     "z": 284
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Nitro Nell",
+     "reason": "stuck",
+     "t": 43.474,
+     "x": -618,
+     "z": -70
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 43.474,
+     "x": -1130,
+     "z": 108
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 43.782,
+     "x": -599,
+     "z": -110
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 68,
+     "t": 43.782,
+     "x": -698,
+     "z": 219
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 43.782,
+     "x": -599,
+     "z": -110
+    },
+    {
+     "data": {
+      "actual": 50,
+      "br": 0,
+      "cmd": 50,
+      "leg": 0,
+      "load": 0.55,
+      "pit": false,
+      "real": 50,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 85,
+      "x": -1080.9,
+      "y": 1.1,
+      "z": 295.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 44.498,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 37.5,
+     "kind": "server_perf",
+     "memMb": 2600,
+     "phase": "LOBBY",
+     "physicsFps": 38.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.3,
+     "t": 46.057
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 54,
+     "t": 46.057,
+     "x": -632,
+     "z": -90
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 57,
+     "t": 46.057,
+     "x": -699,
+     "z": 118
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 72,
+     "t": 46.058,
+     "x": -733,
+     "z": 280
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 44,
+     "t": 46.058,
+     "x": -625,
+     "z": -91
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 79,
+     "t": 46.058,
+     "x": -1120,
+     "z": 269
+    },
+    {
+     "data": {
+      "actual": 59,
+      "br": 0,
+      "cmd": 60,
+      "leg": 0,
+      "load": 0.14,
+      "pit": false,
+      "real": 59,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 85,
+      "x": -1049.5,
+      "y": 1.1,
+      "z": 289.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 46.097,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 78,
+      "br": 0,
+      "cmd": 78,
+      "leg": 0,
+      "load": 0.53,
+      "pit": false,
+      "real": 78,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 85,
+      "x": -975.8,
+      "y": 1.1,
+      "z": 283.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 47.098,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2599,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 48.064
+    },
+    {
+     "cmd": 49,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 49,
+     "t": 48.064,
+     "x": -775,
+     "z": -98
+    },
+    {
+     "cmd": 85,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 85,
+     "t": 48.064,
+     "x": -593,
+     "z": 78
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 77,
+     "t": 48.064,
+     "x": -700,
+     "z": 166
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 65,
+     "t": 48.064,
+     "x": -762,
+     "z": -94
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 69,
+     "t": 48.064,
+     "x": -1017,
+     "z": 285
+    },
+    {
+     "data": {
+      "actual": 58,
+      "br": 0.4386748470067232,
+      "cmd": 57,
+      "leg": 0,
+      "load": 0.89,
+      "pit": false,
+      "real": 58,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 84,
+      "x": -911.2,
+      "y": 1.1,
+      "z": 265
+     },
+     "kind": "bot_gp_sample",
+     "t": 48.098,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 55,
+      "br": 0,
+      "cmd": 55,
+      "leg": 0,
+      "load": 0.35,
+      "pit": false,
+      "real": 55,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 83,
+      "x": -864.2,
+      "y": 1.1,
+      "z": 281.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 49.114,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 68,
+      "br": 0,
+      "cmd": 69,
+      "leg": 0,
+      "load": 0.08,
+      "pit": false,
+      "real": 68,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 83,
+      "x": -817.9,
+      "y": 1.1,
+      "z": 286.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 50.852,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 39,
+     "kind": "server_perf",
+     "memMb": 2633,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 50.854
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 72,
+     "t": 50.854,
+     "x": -802,
+     "z": -200
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 50.854,
+     "x": -518,
+     "z": 136
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 65,
+     "t": 50.854,
+     "x": -649,
+     "z": 77
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 79,
+     "t": 50.854,
+     "x": -802,
+     "z": -196
+    },
+    {
+     "cmd": 46,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 46,
+     "t": 50.854,
+     "x": -896,
+     "z": 267
+    },
+    {
+     "data": {
+      "actual": 70,
+      "br": 0,
+      "cmd": 70,
+      "leg": 0,
+      "load": 0.67,
+      "pit": false,
+      "real": 70,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 83,
+      "x": -736.9,
+      "y": 1.1,
+      "z": 281.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 51.882,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 36.6,
+     "kind": "server_perf",
+     "memMb": 2631,
+     "phase": "LOBBY",
+     "physicsFps": 37.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.8,
+     "t": 53.337
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 55,
+     "t": 53.337,
+     "x": -820,
+     "z": -286
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 53.337,
+     "x": -510,
+     "z": 250
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 55,
+     "t": 53.337,
+     "x": -540,
+     "z": 88
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 54,
+     "t": 53.338,
+     "x": -821,
+     "z": -283
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 66,
+     "t": 53.338,
+     "x": -815,
+     "z": 286
+    },
+    {
+     "data": {
+      "actual": 53,
+      "br": 0,
+      "cmd": 53,
+      "leg": 0,
+      "load": 0.69,
+      "pit": false,
+      "real": 53,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 82,
+      "x": -711.5,
+      "y": 1.1,
+      "z": 267.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 53.364,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 70,
+      "br": 0,
+      "cmd": 70,
+      "leg": 0,
+      "load": 0.07,
+      "pit": false,
+      "real": 70,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 82,
+      "x": -697.7,
+      "y": 1,
+      "z": 205.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 54.381,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2635,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 55.347
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 55.347,
+     "x": -818,
+     "z": -289
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 60,
+     "t": 55.347,
+     "x": -392,
+     "z": 280
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 75,
+     "t": 55.347,
+     "x": -519,
+     "z": 215
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 55.347,
+     "x": -819,
+     "z": -285
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 56,
+     "t": 55.347,
+     "x": -701,
+     "z": 246
+    },
+    {
+     "data": {
+      "actual": 68,
+      "br": 1,
+      "cmd": 66,
+      "leg": 0,
+      "load": 0.38,
+      "pit": false,
+      "real": 68,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 81,
+      "x": -699.3,
+      "y": 1,
+      "z": 128.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 55.396,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.8,
+     "kind": "server_perf",
+     "memMb": 2632,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 57.355
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 57.355,
+     "x": -818,
+     "z": -289
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 83,
+     "t": 57.355,
+     "x": -357,
+     "z": 215
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 75,
+     "t": 57.355,
+     "x": -480,
+     "z": 281
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 57.356,
+     "x": -819,
+     "z": -285
+    },
+    {
+     "cmd": 76,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 76,
+     "t": 57.356,
+     "x": -700,
+     "z": 172
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 59,
+      "leg": 0,
+      "load": 0.76,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 81,
+      "x": -673.6,
+      "y": 1.1,
+      "z": 82.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 57.369,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 77,
+      "br": 0,
+      "cmd": 77,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 77,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 80,
+      "x": -600.7,
+      "y": 1.1,
+      "z": 78.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 58.398,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 59.365
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 59.365,
+     "x": -818,
+     "z": -289
+    },
+    {
+     "cmd": 111,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 111,
+     "t": 59.365,
+     "x": -361,
+     "z": 13
+    },
+    {
+     "cmd": 76,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 76,
+     "t": 59.365,
+     "x": -361,
+     "z": 238
+    },
+    {
+     "cmd": 8,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 59.365,
+     "x": -819,
+     "z": -285
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 65,
+     "t": 59.365,
+     "x": -650,
+     "z": 77
+    },
+    {
+     "data": {
+      "actual": 51,
+      "br": 0.3,
+      "cmd": 50,
+      "leg": 0,
+      "load": 0.64,
+      "pit": false,
+      "real": 51,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 80,
+      "x": -536.4,
+      "y": 1.1,
+      "z": 91.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 59.398,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 66,
+      "br": 0,
+      "cmd": 67,
+      "leg": 0,
+      "load": 0.32,
+      "pit": false,
+      "real": 66,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 79,
+      "x": -517.2,
+      "y": 1,
+      "z": 136
+     },
+     "kind": "bot_gp_sample",
+     "t": 61.265,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 39.7,
+     "kind": "server_perf",
+     "memMb": 2633,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 62.254
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "stuck",
+     "t": 62.255,
+     "x": -818,
+     "z": -289
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 89,
+     "t": 62.255,
+     "x": -362,
+     "z": -205
+    },
+    {
+     "cmd": 93,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 93,
+     "t": 62.255,
+     "x": -361,
+     "z": 68
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Nitro Nell",
+     "reason": "stuck",
+     "t": 62.255,
+     "x": -819,
+     "z": -285
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 50,
+     "t": 62.255,
+     "x": -527,
+     "z": 100
+    },
+    {
+     "data": {
+      "actual": 72,
+      "br": 0,
+      "cmd": 73,
+      "leg": 0,
+      "load": 0.4,
+      "pit": false,
+      "real": 72,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 79,
+      "x": -518.5,
+      "y": 1.1,
+      "z": 215.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 62.28,
+     "userId": -1
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 62.565,
+     "x": -805,
+     "z": -243
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 0,
+     "t": 62.565,
+     "x": -805,
+     "z": -243
+    },
+    {
+     "data": {
+      "actual": 72,
+      "br": 0,
+      "cmd": 72,
+      "leg": 0,
+      "load": 0.77,
+      "pit": false,
+      "real": 72,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 78,
+      "x": -486.4,
+      "y": 1.1,
+      "z": 276.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 63.28,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.1,
+     "t": 64.264
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 74,
+     "t": 64.264,
+     "x": -458,
+     "z": -257
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 64.264,
+     "x": -360,
+     "z": -123
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 69,
+     "t": 64.264,
+     "x": -515,
+     "z": 236
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 0,
+      "cmd": 64,
+      "leg": 0,
+      "load": 0.49,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 77,
+      "x": -415.9,
+      "y": 1,
+      "z": 289.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 64.297,
+     "userId": -1
+    },
+    {
+     "cmd": 78,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 78,
+     "t": 64.582,
+     "x": -881,
+     "z": -268
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 64,
+     "t": 64.582,
+     "x": -866,
+     "z": -268
+    },
+    {
+     "data": {
+      "actual": 74,
+      "br": 0,
+      "cmd": 74,
+      "leg": 0,
+      "load": 0.83,
+      "pit": false,
+      "real": 74,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 76,
+      "x": -364.3,
+      "y": 1.1,
+      "z": 249.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 65.315,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 39.4,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 67.103
+    },
+    {
+     "cmd": 84,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 84,
+     "t": 67.104,
+     "x": -1031,
+     "z": -263
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 54,
+     "t": 67.104,
+     "x": -584,
+     "z": -227
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 67.104,
+     "x": -403,
+     "z": -256
+    },
+    {
+     "cmd": 92,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 92,
+     "t": 67.104,
+     "x": -995,
+     "z": -265
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 62,
+     "t": 67.104,
+     "x": -407,
+     "z": 287
+    },
+    {
+     "data": {
+      "actual": 82,
+      "br": 0,
+      "cmd": 83,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 82,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 75,
+      "x": -358.1,
+      "y": 1,
+      "z": 184.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 67.131,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 93,
+      "br": 0,
+      "cmd": 93,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 93,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 75,
+      "x": -360.1,
+      "y": 1,
+      "z": 88.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 68.148,
+     "userId": -1
+    },
+    {
+     "kind": "gp_lap",
+     "lap": 1,
+     "t": 68.865,
+     "time": 50.86515212059021,
+     "userId": -1,
+     "valid": true
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.9,
+     "t": 69.114
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 81,
+     "t": 69.114,
+     "x": -1130,
+     "z": -166
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 53,
+     "t": 69.115,
+     "x": -608,
+     "z": -103
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 71,
+     "t": 69.115,
+     "x": -549,
+     "z": -252
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 89,
+     "t": 69.115,
+     "x": -1129,
+     "z": -174
+    },
+    {
+     "cmd": 88,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 88,
+     "t": 69.115,
+     "x": -359,
+     "z": 158
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 75,
+      "x": -360.1,
+      "y": 1,
+      "z": -8.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 69.147,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 75,
+      "x": -360,
+      "y": 1,
+      "z": -29.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 70.347,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.9,
+     "t": 71.13
+    },
+    {
+     "cmd": 105,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 105,
+     "t": 71.13,
+     "x": -1131,
+     "z": -62
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 79,
+     "t": 71.13,
+     "x": -676,
+     "z": -88
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 66,
+     "t": 71.131,
+     "x": -592,
+     "z": -203
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 100,
+     "t": 71.131,
+     "x": -1131,
+     "z": -69
+    },
+    {
+     "cmd": 96,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 96,
+     "t": 71.131,
+     "x": -361,
+     "z": 56
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 74,
+      "x": -360,
+      "y": 1,
+      "z": -137.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 71.364,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 95,
+      "br": 0,
+      "cmd": 95,
+      "leg": 0,
+      "load": 0.33,
+      "pit": false,
+      "real": 95,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 74,
+      "x": -360.3,
+      "y": 1,
+      "z": -186.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 72.831,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2635,
+     "phase": "LOBBY",
+     "physicsFps": 32.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 13.5,
+     "t": 73.132
+    },
+    {
+     "cmd": 119,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 119,
+     "t": 73.132,
+     "x": -1130,
+     "z": 61
+    },
+    {
+     "cmd": 61,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 61,
+     "t": 73.132,
+     "x": -763,
+     "z": -94
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 60,
+     "t": 73.132,
+     "x": -595,
+     "z": -126
+    },
+    {
+     "cmd": 106,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 106,
+     "t": 73.132,
+     "x": -1130,
+     "z": 44
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 73.132,
+     "x": -360,
+     "z": -51
+    },
+    {
+     "data": {
+      "actual": 55,
+      "br": 0,
+      "cmd": 55,
+      "leg": 0,
+      "load": 0.6,
+      "pit": false,
+      "real": 55,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 73,
+      "x": -392.7,
+      "y": 1,
+      "z": -251.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 73.847,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.5,
+     "kind": "server_perf",
+     "memMb": 2630,
+     "phase": "LOBBY",
+     "physicsFps": 36.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 25.9,
+     "t": 75.189
+    },
+    {
+     "cmd": 115,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 115,
+     "t": 75.189,
+     "x": -1131,
+     "z": 200
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 60,
+     "t": 75.189,
+     "x": -802,
+     "z": -137
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 69,
+     "t": 75.189,
+     "x": -648,
+     "z": -88
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 75.189,
+     "x": -1131,
+     "z": 165
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 75.19,
+     "x": -360,
+     "z": -165
+    },
+    {
+     "data": {
+      "actual": 58,
+      "br": 0,
+      "cmd": 59,
+      "leg": 0,
+      "load": 0.32,
+      "pit": false,
+      "real": 58,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 73,
+      "x": -413.8,
+      "y": 1,
+      "z": -256.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 75.212,
+     "userId": -1
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "flip",
+     "t": 75.881,
+     "x": -1122,
+     "z": 265
+    },
+    {
+     "data": {
+      "actual": 78,
+      "br": 0,
+      "cmd": 78,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 78,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 72,
+      "x": -488.3,
+      "y": 1,
+      "z": -255.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 76.23,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2629,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.1,
+     "t": 77.197
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 55,
+     "t": 77.197,
+     "x": -821,
+     "z": -258
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 56,
+     "t": 77.197,
+     "x": -790,
+     "z": -110
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 50,
+     "t": 77.197,
+     "x": -1073,
+     "z": 292
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 63,
+     "t": 77.197,
+     "x": -432,
+     "z": -258
+    },
+    {
+     "data": {
+      "actual": 60,
+      "br": 0,
+      "cmd": 60,
+      "leg": 0,
+      "load": 0.58,
+      "pit": false,
+      "real": 60,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 72,
+      "x": -563.5,
+      "y": 1,
+      "z": -245.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 77.247,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 68,
+      "br": 0,
+      "cmd": 68,
+      "leg": 0,
+      "load": 0.36,
+      "pit": false,
+      "real": 68,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 71,
+      "x": -592.2,
+      "y": 1,
+      "z": -194.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 78.248,
+     "userId": -1
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 79.197,
+     "x": -1126,
+     "z": 266
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 100,
+     "t": 79.197,
+     "x": -980,
+     "z": -265
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 54,
+     "t": 79.197,
+     "x": -807,
+     "z": -239
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 62,
+     "t": 79.198,
+     "x": -937,
+     "z": 271
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 57,
+     "t": 79.198,
+     "x": -572,
+     "z": -240
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2599,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.9,
+     "t": 79.214
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 58,
+      "leg": 0,
+      "load": 0.54,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 71,
+      "x": -595.2,
+      "y": 1.1,
+      "z": -124.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 79.246,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 59,
+      "br": 0,
+      "cmd": 59,
+      "leg": 0,
+      "load": 0.82,
+      "pit": false,
+      "real": 59,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 70,
+      "x": -616,
+      "y": 1.1,
+      "z": -96.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 80.863,
+     "userId": -1
+    },
+    {
+     "cmd": 45,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 45,
+     "t": 81.213,
+     "x": -1107,
+     "z": 283
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 80,
+     "t": 81.213,
+     "x": -1076,
+     "z": -249
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 69,
+     "t": 81.213,
+     "x": -861,
+     "z": -269
+    },
+    {
+     "cmd": 47,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 47,
+     "t": 81.213,
+     "x": -882,
+     "z": 275
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 71,
+     "t": 81.213,
+     "x": -593,
+     "z": -178
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2599,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.9,
+     "t": 81.231
+    },
+    {
+     "data": {
+      "actual": 77,
+      "br": 0,
+      "cmd": 78,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 77,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 69,
+      "x": -688.6,
+      "y": 1,
+      "z": -88.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 81.88,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 1,
+      "cmd": 62,
+      "leg": 0,
+      "load": 0.64,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 69,
+      "x": -767.3,
+      "y": 1.1,
+      "z": -95.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 82.897,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 40.1,
+     "kind": "server_perf",
+     "memMb": 2601,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.7,
+     "t": 84.17
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 79,
+     "t": 84.17,
+     "x": -995,
+     "z": 284
+    },
+    {
+     "cmd": 99,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 99,
+     "t": 84.17,
+     "x": -1131,
+     "z": -94
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 90,
+     "t": 84.17,
+     "x": -1027,
+     "z": -264
+    },
+    {
+     "cmd": 78,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 78,
+     "t": 84.17,
+     "x": -746,
+     "z": 283
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 69,
+     "t": 84.17,
+     "x": -654,
+     "z": -88
+    },
+    {
+     "data": {
+      "actual": 55,
+      "br": 0,
+      "cmd": 55,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 55,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 69,
+      "x": -783.2,
+      "y": 1.1,
+      "z": -103.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 84.197,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 71,
+      "leg": 0,
+      "load": 0.13,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 68,
+      "x": -802.7,
+      "y": 1,
+      "z": -164.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 85.213,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2598,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 86.18
+    },
+    {
+     "cmd": 39,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 39,
+     "t": 86.18,
+     "x": -884,
+     "z": 273
+    },
+    {
+     "cmd": 115,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 115,
+     "t": 86.18,
+     "x": -1130,
+     "z": 128
+    },
+    {
+     "cmd": 93,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 93,
+     "t": 86.18,
+     "x": -1132,
+     "z": -139
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 80,
+     "t": 86.18,
+     "x": -699,
+     "z": 179
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 53,
+     "t": 86.18,
+     "x": -791,
+     "z": -112
+    },
+    {
+     "data": {
+      "actual": 52,
+      "br": 0.3,
+      "cmd": 52,
+      "leg": 0,
+      "load": 0.47,
+      "pit": false,
+      "real": 52,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 68,
+      "x": -804.5,
+      "y": 1.1,
+      "z": -234.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 86.231,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 66,
+      "br": 0,
+      "cmd": 66,
+      "leg": 0,
+      "load": 0.5,
+      "pit": false,
+      "real": 66,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 67,
+      "x": -846.7,
+      "y": 1,
+      "z": -267.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 87.231,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2598,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 88.198
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 81,
+     "t": 88.198,
+     "x": -763,
+     "z": 285
+    },
+    {
+     "cmd": 49,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 49,
+     "t": 88.198,
+     "x": -1094,
+     "z": 297
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 88.198,
+     "x": -1130,
+     "z": 52
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 68,
+     "t": 88.198,
+     "x": -651,
+     "z": 77
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 51,
+     "t": 88.198,
+     "x": -806,
+     "z": -239
+    },
+    {
+     "data": {
+      "actual": 82,
+      "br": 0,
+      "cmd": 83,
+      "leg": 0,
+      "load": 0.06,
+      "pit": false,
+      "real": 82,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 66,
+      "x": -923.1,
+      "y": 1,
+      "z": -265.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 88.246,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 93,
+      "br": 0,
+      "cmd": 93,
+      "leg": 0,
+      "load": 0.32,
+      "pit": false,
+      "real": 93,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 66,
+      "x": -1013.1,
+      "y": 1,
+      "z": -264.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 89.263,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2598,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 90.213
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 69,
+     "t": 90.213,
+     "x": -698,
+     "z": 212
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 83,
+     "t": 90.213,
+     "x": -971,
+     "z": 282
+    },
+    {
+     "cmd": 93,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 93,
+     "t": 90.213,
+     "x": -1128,
+     "z": 243
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 54,
+     "t": 90.213,
+     "x": -525,
+     "z": 105
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 83,
+     "t": 90.213,
+     "x": -928,
+     "z": -266
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.74,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 65,
+      "x": -1095.3,
+      "y": 1.1,
+      "z": -234.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 90.279,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 85,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.73,
+      "pit": false,
+      "real": 85,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 65,
+      "x": -1099.4,
+      "y": 1.1,
+      "z": -230.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 91.329,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 17.5,
+     "kind": "server_perf",
+     "memMb": 2601,
+     "phase": "LOBBY",
+     "physicsFps": 23,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.6,
+     "t": 92.952
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 74,
+     "t": 92.953,
+     "x": -700,
+     "z": 142
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 58,
+     "t": 92.953,
+     "x": -916,
+     "z": 264
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 92.953,
+     "x": -1094,
+     "z": 296
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 74,
+     "t": 92.953,
+     "x": -518,
+     "z": 163
+    },
+    {
+     "cmd": 91,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 91,
+     "t": 92.953,
+     "x": -1007,
+     "z": -265
+    },
+    {
+     "data": {
+      "actual": 88,
+      "br": 0,
+      "cmd": 88,
+      "leg": 0,
+      "load": 0.6,
+      "pit": false,
+      "real": 88,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 64,
+      "x": -1128.1,
+      "y": 1,
+      "z": -176.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 92.979,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 96,
+      "br": 0,
+      "cmd": 96,
+      "leg": 0,
+      "load": 0.03,
+      "pit": false,
+      "real": 96,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 64,
+      "x": -1130.6,
+      "y": 1,
+      "z": -76.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 93.996,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2598,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 94.964
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 75,
+     "t": 94.964,
+     "x": -632,
+     "z": 76
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 71,
+     "t": 94.964,
+     "x": -812,
+     "z": 286
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 77,
+     "t": 94.965,
+     "x": -970,
+     "z": 282
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 79,
+     "t": 94.965,
+     "x": -463,
+     "z": 287
+    },
+    {
+     "cmd": 87,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 87,
+     "t": 94.965,
+     "x": -1130,
+     "z": -167
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 63,
+      "x": -1130,
+      "y": 1,
+      "z": 22.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 95.978,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2628,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 96.981
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 51,
+     "t": 96.981,
+     "x": -522,
+     "z": 110
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 56,
+     "t": 96.981,
+     "x": -700,
+     "z": 243
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 57,
+     "t": 96.981,
+     "x": -858,
+     "z": 283
+    },
+    {
+     "cmd": 82,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 82,
+     "t": 96.981,
+     "x": -359,
+     "z": 222
+    },
+    {
+     "cmd": 99,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 99,
+     "t": 96.981,
+     "x": -1130,
+     "z": 25
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 63,
+      "x": -1130.1,
+      "y": 1,
+      "z": 131.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 96.996,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0.8021698524812919,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0.76,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 62,
+      "x": -1129.4,
+      "y": 1.1,
+      "z": 231.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 97.995,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 35.3,
+     "kind": "server_perf",
+     "memMb": 2631,
+     "phase": "LOBBY",
+     "physicsFps": 41.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.2,
+     "t": 99.388
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 67,
+     "t": 99.388,
+     "x": -519,
+     "z": 213
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 72,
+     "t": 99.388,
+     "x": -700,
+     "z": 134
+    },
+    {
+     "cmd": 78,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 78,
+     "t": 99.389,
+     "x": -757,
+     "z": 284
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 100,
+     "t": 99.389,
+     "x": -361,
+     "z": 87
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 99.389,
+     "x": -1131,
+     "z": 172
+    },
+    {
+     "data": {
+      "actual": 80,
+      "br": 0,
+      "cmd": 80,
+      "leg": 0,
+      "load": 0.8,
+      "pit": false,
+      "real": 80,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 62,
+      "x": -1121,
+      "y": 1.1,
+      "z": 266.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 99.413,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 50,
+      "br": 0,
+      "cmd": 50,
+      "leg": 0,
+      "load": 0.57,
+      "pit": false,
+      "real": 50,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 60,
+      "x": -1072.8,
+      "y": 1.1,
+      "z": 298.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 100.396,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2628,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27,
+     "t": 101.396
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 57,
+     "t": 101.396,
+     "x": -435,
+     "z": 291
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 80,
+     "t": 101.396,
+     "x": -615,
+     "z": 77
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 73,
+     "t": 101.396,
+     "x": -699,
+     "z": 190
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 101.396,
+     "x": -360,
+     "z": -126
+    },
+    {
+     "cmd": 46,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 46,
+     "t": 101.396,
+     "x": -1079,
+     "z": 302
+    },
+    {
+     "data": {
+      "actual": 70,
+      "br": 0,
+      "cmd": 70,
+      "leg": 0,
+      "load": 0.21,
+      "pit": false,
+      "real": 70,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 60,
+      "x": -1013.1,
+      "y": 1.1,
+      "z": 284.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 101.414,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 65,
+      "br": 0,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.02,
+      "pit": false,
+      "real": 65,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 59,
+      "x": -939.6,
+      "y": 1,
+      "z": 273
+     },
+     "kind": "bot_gp_sample",
+     "t": 102.413,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2628,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 103.397
+    },
+    {
+     "cmd": 86,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 86,
+     "t": 103.397,
+     "x": -357,
+     "z": 209
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 64,
+     "t": 103.397,
+     "x": -518,
+     "z": 128
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 63,
+     "t": 103.397,
+     "x": -661,
+     "z": 78
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 58,
+     "t": 103.397,
+     "x": -412,
+     "z": -257
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 74,
+     "t": 103.397,
+     "x": -972,
+     "z": 282
+    },
+    {
+     "data": {
+      "actual": 44,
+      "br": 0,
+      "cmd": 44,
+      "leg": 0,
+      "load": 0.07,
+      "pit": false,
+      "real": 44,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 59,
+      "x": -887,
+      "y": 1,
+      "z": 271.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 103.429,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 48,
+      "br": 0,
+      "cmd": 49,
+      "leg": 0,
+      "load": 0.21,
+      "pit": false,
+      "real": 48,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 59,
+      "x": -878,
+      "y": 1,
+      "z": 276.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 104.629,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 60,
+      "br": 0,
+      "cmd": 61,
+      "leg": 0,
+      "load": 0.22,
+      "pit": false,
+      "real": 60,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 58,
+      "x": -840.3,
+      "y": 1,
+      "z": 285.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 106.253,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 19.2,
+     "kind": "server_perf",
+     "memMb": 2632,
+     "phase": "LOBBY",
+     "physicsFps": 22.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.9,
+     "t": 106.255
+    },
+    {
+     "cmd": 106,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 106,
+     "t": 106.255,
+     "x": -360,
+     "z": 110
+    },
+    {
+     "cmd": 76,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 76,
+     "t": 106.255,
+     "x": -520,
+     "z": 205
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 77,
+     "t": 106.256,
+     "x": -589,
+     "z": 79
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 79,
+     "t": 106.256,
+     "x": -482,
+     "z": -256
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 58,
+     "t": 106.256,
+     "x": -909,
+     "z": 264
+    },
+    {
+     "data": {
+      "actual": 73,
+      "br": 0,
+      "cmd": 74,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 73,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 58,
+      "x": -792,
+      "y": 1,
+      "z": 285.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 107.895,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.3,
+     "kind": "server_perf",
+     "memMb": 2598,
+     "phase": "LOBBY",
+     "physicsFps": 32.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.2,
+     "t": 108.263
+    },
+    {
+     "cmd": 120,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 120,
+     "t": 108.263,
+     "x": -361,
+     "z": -16
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 108.263,
+     "x": -494,
+     "z": 271
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 55,
+     "t": 108.263,
+     "x": -527,
+     "z": 101
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 59,
+     "t": 108.263,
+     "x": -566,
+     "z": -245
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 56,
+     "t": 108.263,
+     "x": -860,
+     "z": 282
+    },
+    {
+     "data": {
+      "actual": 54,
+      "br": 0.5131554305257957,
+      "cmd": 53,
+      "leg": 0,
+      "load": 0.64,
+      "pit": false,
+      "real": 54,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 58,
+      "x": -717.4,
+      "y": 1.1,
+      "z": 272.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 108.912,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 66,
+      "br": 0,
+      "cmd": 66,
+      "leg": 0,
+      "load": 0.22,
+      "pit": false,
+      "real": 66,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 57,
+      "x": -697.4,
+      "y": 1,
+      "z": 221.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 109.912,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2594,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 110.28
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 64,
+     "t": 110.281,
+     "x": -369,
+     "z": -230
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 68,
+     "t": 110.281,
+     "x": -373,
+     "z": 264
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 73,
+     "t": 110.281,
+     "x": -514,
+     "z": 240
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 57,
+     "t": 110.281,
+     "x": -597,
+     "z": -121
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 56,
+     "t": 110.281,
+     "x": -723,
+     "z": 276
+    },
+    {
+     "data": {
+      "actual": 80,
+      "br": 0,
+      "cmd": 81,
+      "leg": 0,
+      "load": 0.06,
+      "pit": false,
+      "real": 80,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 57,
+      "x": -699.6,
+      "y": 1,
+      "z": 158.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 111.935,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2597,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.2,
+     "t": 112.296
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 50,
+     "t": 112.296,
+     "x": -413,
+     "z": -258
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 89,
+     "t": 112.296,
+     "x": -355,
+     "z": 180
+    },
+    {
+     "cmd": 78,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 78,
+     "t": 112.296,
+     "x": -453,
+     "z": 290
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 71,
+     "t": 112.297,
+     "x": -650,
+     "z": -88
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 63,
+     "t": 112.297,
+     "x": -698,
+     "z": 224
+    },
+    {
+     "data": {
+      "actual": 51,
+      "br": 0,
+      "cmd": 52,
+      "leg": 0,
+      "load": 0.63,
+      "pit": false,
+      "real": 51,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 56,
+      "x": -687.3,
+      "y": 1.1,
+      "z": 93.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 112.762,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 71,
+      "leg": 0,
+      "load": 0.13,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 55,
+      "x": -629.8,
+      "y": 1,
+      "z": 77
+     },
+     "kind": "bot_gp_sample",
+     "t": 113.761,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2594,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28,
+     "t": 114.312
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 57,
+     "t": 114.312,
+     "x": -557,
+     "z": -249
+    },
+    {
+     "cmd": 113,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 113,
+     "t": 114.313,
+     "x": -361,
+     "z": -29
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 80,
+     "t": 114.313,
+     "x": -358,
+     "z": 210
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 55,
+     "t": 114.313,
+     "x": -792,
+     "z": -112
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 50,
+     "t": 114.313,
+     "x": -687,
+     "z": 93
+    },
+    {
+     "data": {
+      "actual": 60,
+      "br": 0.44556675882611074,
+      "cmd": 59,
+      "leg": 0,
+      "load": 0.47,
+      "pit": false,
+      "real": 60,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 55,
+      "x": -555.6,
+      "y": 1.1,
+      "z": 82.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 114.763,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 60,
+      "br": 0,
+      "cmd": 61,
+      "leg": 0,
+      "load": 0.46,
+      "pit": false,
+      "real": 60,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 54,
+      "x": -519,
+      "y": 1,
+      "z": 119.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 115.779,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2594,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.5,
+     "t": 116.313
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 64,
+     "t": 116.313,
+     "x": -592,
+     "z": -145
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 64,
+     "t": 116.313,
+     "x": -371,
+     "z": -233
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 116.313,
+     "x": -361,
+     "z": 33
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 52,
+     "t": 116.313,
+     "x": -807,
+     "z": -241
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 62,
+     "t": 116.313,
+     "x": -558,
+     "z": 82
+    },
+    {
+     "data": {
+      "actual": 78,
+      "br": 0,
+      "cmd": 79,
+      "leg": 0,
+      "load": 0.16,
+      "pit": false,
+      "real": 78,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 54,
+      "x": -519,
+      "y": 1,
+      "z": 190.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 116.779,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 71,
+      "leg": 0,
+      "load": 0.7,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 53,
+      "x": -502.5,
+      "y": 1.1,
+      "z": 261.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 117.795,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2563,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.3,
+     "t": 118.329
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 81,
+     "t": 118.329,
+     "x": -677,
+     "z": -88
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 83,
+     "t": 118.329,
+     "x": -486,
+     "z": -256
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 118.329,
+     "x": -360,
+     "z": -158
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 89,
+     "t": 118.329,
+     "x": -940,
+     "z": -266
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 77,
+     "t": 118.329,
+     "x": -519,
+     "z": 184
+    },
+    {
+     "data": {
+      "actual": 67,
+      "br": 0.3146793222000319,
+      "cmd": 67,
+      "leg": 0,
+      "load": 0.43,
+      "pit": false,
+      "real": 67,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 52,
+      "x": -437.4,
+      "y": 1,
+      "z": 291.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 118.795,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 68,
+      "br": 0,
+      "cmd": 68,
+      "leg": 0,
+      "load": 0.76,
+      "pit": false,
+      "real": 68,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 52,
+      "x": -376.9,
+      "y": 1.1,
+      "z": 269
+     },
+     "kind": "bot_gp_sample",
+     "t": 119.812,
+     "userId": -1
+    },
+    {
+     "cmd": 49,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 49,
+     "t": 120.329,
+     "x": -797,
+     "z": -120
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 65,
+     "t": 120.329,
+     "x": -592,
+     "z": -202
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 64,
+     "t": 120.329,
+     "x": -430,
+     "z": -259
+    },
+    {
+     "cmd": 85,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 85,
+     "t": 120.329,
+     "x": -1108,
+     "z": -221
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 73,
+     "t": 120.329,
+     "x": -448,
+     "z": 293
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2566,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 120.345
+    },
+    {
+     "data": {
+      "actual": 79,
+      "br": 0,
+      "cmd": 80,
+      "leg": 0,
+      "load": 0.19,
+      "pit": false,
+      "real": 79,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 51,
+      "x": -357,
+      "y": 1,
+      "z": 204.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 121.722,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 87,
+      "br": 0,
+      "cmd": 88,
+      "leg": 0,
+      "load": 0.06,
+      "pit": false,
+      "real": 87,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 50,
+      "x": -359.4,
+      "y": 1,
+      "z": 147.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 123.316,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 20.8,
+     "kind": "server_perf",
+     "memMb": 2563,
+     "phase": "LOBBY",
+     "physicsFps": 23,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 19.7,
+     "t": 123.317
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 77,
+     "t": 123.318,
+     "x": -802,
+     "z": -196
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 54,
+     "t": 123.318,
+     "x": -596,
+     "z": -123
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 80,
+     "t": 123.318,
+     "x": -514,
+     "z": -255
+    },
+    {
+     "cmd": 95,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 95,
+     "t": 123.318,
+     "x": -1132,
+     "z": -124
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 64,
+     "t": 123.318,
+     "x": -380,
+     "z": 272
+    },
+    {
+     "data": {
+      "actual": 96,
+      "br": 0,
+      "cmd": 96,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 96,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 50,
+      "x": -360.1,
+      "y": 1,
+      "z": 47.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 124.345,
+     "userId": -1
+    },
+    {
+     "kind": "gp_lap",
+     "lap": 2,
+     "t": 124.713,
+     "time": 55.84794092178345,
+     "userId": -1,
+     "valid": true
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2561,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 125.33
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 73,
+     "t": 125.33,
+     "x": -863,
+     "z": -269
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 89,
+     "t": 125.33,
+     "x": -716,
+     "z": -90
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 74,
+     "t": 125.33,
+     "x": -593,
+     "z": -170
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 125.33,
+     "x": -1130,
+     "z": 85
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 90,
+     "t": 125.33,
+     "x": -361,
+     "z": 119
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 50,
+      "x": -360,
+      "y": 1,
+      "z": -53.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 125.363,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 49,
+      "x": -360,
+      "y": 1,
+      "z": -155.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 126.378,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.6,
+     "kind": "server_perf",
+     "memMb": 2564,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.3,
+     "t": 127.386
+    },
+    {
+     "cmd": 101,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 101,
+     "t": 127.386,
+     "x": -964,
+     "z": -265
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 51,
+     "t": 127.386,
+     "x": -788,
+     "z": -107
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 59,
+     "t": 127.386,
+     "x": -611,
+     "z": -100
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 127.386,
+     "x": -1131,
+     "z": 207
+    },
+    {
+     "cmd": 98,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 98,
+     "t": 127.386,
+     "x": -361,
+     "z": 12
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 49,
+      "x": -360,
+      "y": 1,
+      "z": -160.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 127.411,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 58,
+      "br": 0,
+      "cmd": 58,
+      "leg": 0,
+      "load": 0.74,
+      "pit": false,
+      "real": 58,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 48,
+      "x": -379,
+      "y": 1.1,
+      "z": -244.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 128.429,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2561,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.3,
+     "t": 129.395
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 73,
+     "t": 129.395,
+     "x": -1113,
+     "z": -215
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 52,
+     "t": 129.395,
+     "x": -804,
+     "z": -233
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 74,
+     "t": 129.395,
+     "x": -754,
+     "z": -92
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 58,
+     "t": 129.395,
+     "x": -1056,
+     "z": 293
+    },
+    {
+     "cmd": 96,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 96,
+     "t": 129.395,
+     "x": -361,
+     "z": -190
+    },
+    {
+     "data": {
+      "actual": 65,
+      "br": 0,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.07,
+      "pit": false,
+      "real": 65,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 48,
+      "x": -433.7,
+      "y": 1,
+      "z": -257.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 129.429,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 72,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 47,
+      "x": -456.5,
+      "y": 1,
+      "z": -256.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 130.746,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 20.6,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 23,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.6,
+     "t": 132.354
+    },
+    {
+     "cmd": 91,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 91,
+     "t": 132.355,
+     "x": -1132,
+     "z": -129
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 65,
+     "t": 132.355,
+     "x": -848,
+     "z": -271
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 62,
+     "t": 132.355,
+     "x": -802,
+     "z": -134
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 81,
+     "t": 132.355,
+     "x": -977,
+     "z": 283
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 53,
+     "t": 132.355,
+     "x": -391,
+     "z": -257
+    },
+    {
+     "data": {
+      "actual": 81,
+      "br": 0,
+      "cmd": 82,
+      "leg": 0,
+      "load": 0.06,
+      "pit": false,
+      "real": 81,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 47,
+      "x": -511.3,
+      "y": 1,
+      "z": -254.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 132.378,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 58,
+      "br": 0,
+      "cmd": 58,
+      "leg": 0,
+      "load": 0.74,
+      "pit": false,
+      "real": 58,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 46,
+      "x": -579.5,
+      "y": 1.1,
+      "z": -232.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 133.395,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 134.363
+    },
+    {
+     "cmd": 122,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 122,
+     "t": 134.363,
+     "x": -1130,
+     "z": 94
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 94,
+     "t": 134.363,
+     "x": -1021,
+     "z": -264
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 134.363,
+     "x": -822,
+     "z": -259
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 56,
+     "t": 134.363,
+     "x": -865,
+     "z": 281
+    },
+    {
+     "cmd": 82,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 82,
+     "t": 134.363,
+     "x": -522,
+     "z": -255
+    },
+    {
+     "data": {
+      "actual": 74,
+      "br": 0,
+      "cmd": 74,
+      "leg": 0,
+      "load": 0.05,
+      "pit": false,
+      "real": 74,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 46,
+      "x": -592.4,
+      "y": 1,
+      "z": -169.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 134.396,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 56,
+      "br": 0,
+      "cmd": 56,
+      "leg": 0,
+      "load": 0.73,
+      "pit": false,
+      "real": 56,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 45,
+      "x": -604.6,
+      "y": 1.1,
+      "z": -105.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 135.411,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2593,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 136.378
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 55,
+     "t": 136.378,
+     "x": -1106,
+     "z": 289
+    },
+    {
+     "cmd": 86,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 86,
+     "t": 136.378,
+     "x": -1133,
+     "z": -162
+    },
+    {
+     "cmd": 85,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 85,
+     "t": 136.378,
+     "x": -969,
+     "z": -265
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 59,
+     "t": 136.378,
+     "x": -724,
+     "z": 276
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 72,
+     "t": 136.378,
+     "x": -593,
+     "z": -170
+    },
+    {
+     "data": {
+      "actual": 73,
+      "br": 0,
+      "cmd": 73,
+      "leg": 0,
+      "load": 0.15,
+      "pit": false,
+      "real": 73,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 44,
+      "x": -664.5,
+      "y": 1,
+      "z": -87
+     },
+     "kind": "bot_gp_sample",
+     "t": 136.428,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 79,
+      "br": 1,
+      "cmd": 77,
+      "leg": 0,
+      "load": 0.43,
+      "pit": false,
+      "real": 79,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 44,
+      "x": -745.9,
+      "y": 1.1,
+      "z": -90.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 137.446,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2593,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 138.38
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 79,
+     "t": 138.38,
+     "x": -1001,
+     "z": 284
+    },
+    {
+     "cmd": 112,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 112,
+     "t": 138.38,
+     "x": -1130,
+     "z": 41
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 89,
+     "t": 138.38,
+     "x": -1122,
+     "z": -200
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 83,
+     "t": 138.38,
+     "x": -700,
+     "z": 153
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 67,
+     "t": 138.38,
+     "x": -656,
+     "z": -84
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 57,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 43,
+      "x": -796.5,
+      "y": 1.1,
+      "z": -120
+     },
+     "kind": "bot_gp_sample",
+     "t": 138.461,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 76,
+      "br": 0,
+      "cmd": 76,
+      "leg": 0,
+      "load": 0.02,
+      "pit": false,
+      "real": 76,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 43,
+      "x": -801.8,
+      "y": 1,
+      "z": -187.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 139.477,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 140.396
+    },
+    {
+     "cmd": 38,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 38,
+     "t": 140.396,
+     "x": -886,
+     "z": 272
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 81,
+     "t": 140.396,
+     "x": -1124,
+     "z": 262
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 140.396,
+     "x": -1130,
+     "z": -15
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 74,
+     "t": 140.396,
+     "x": -629,
+     "z": 76
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 53,
+     "t": 140.396,
+     "x": -791,
+     "z": -111
+    },
+    {
+     "data": {
+      "actual": 52,
+      "br": 0,
+      "cmd": 53,
+      "leg": 0,
+      "load": 0.7,
+      "pit": false,
+      "real": 52,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 42,
+      "x": -811.3,
+      "y": 1.1,
+      "z": -248.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 140.478,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 63,
+      "br": 0,
+      "cmd": 64,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 63,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 42,
+      "x": -839.6,
+      "y": 1.1,
+      "z": -266.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 142.062,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2592,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.3,
+     "t": 142.396
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 57,
+     "t": 142.396,
+     "x": -836,
+     "z": 286
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 44,
+     "t": 142.396,
+     "x": -1084,
+     "z": 308
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 142.396,
+     "x": -1130,
+     "z": 88
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 56,
+     "t": 142.396,
+     "x": -549,
+     "z": 84
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 71,
+     "t": 142.397,
+     "x": -803,
+     "z": -176
+    },
+    {
+     "data": {
+      "actual": 81,
+      "br": 0,
+      "cmd": 81,
+      "leg": 0,
+      "load": 0.08,
+      "pit": false,
+      "real": 81,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 41,
+      "x": -918,
+      "y": 1,
+      "z": -265.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 143.079,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.3,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 37,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.5,
+     "t": 144.436
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 77,
+     "t": 144.436,
+     "x": -753,
+     "z": 284
+    },
+    {
+     "cmd": 46,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 46,
+     "t": 144.436,
+     "x": -1036,
+     "z": 307
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 144.436,
+     "x": -1131,
+     "z": 194
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 66,
+     "t": 144.436,
+     "x": -518,
+     "z": 134
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 51,
+     "t": 144.436,
+     "x": -809,
+     "z": -246
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.05,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 41,
+      "x": -951.5,
+      "y": 1,
+      "z": -265
+     },
+     "kind": "bot_gp_sample",
+     "t": 144.46,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.57,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 41,
+      "x": -1048.1,
+      "y": 1.1,
+      "z": -259.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 145.478,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2593,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 146.446
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 73,
+     "t": 146.446,
+     "x": -698,
+     "z": 203
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 57,
+     "t": 146.446,
+     "x": -921,
+     "z": 265
+    },
+    {
+     "cmd": 40,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 40,
+     "t": 146.446,
+     "x": -1070,
+     "z": 306
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 72,
+     "t": 146.446,
+     "x": -490,
+     "z": 274
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 80,
+     "t": 146.446,
+     "x": -931,
+     "z": -266
+    },
+    {
+     "data": {
+      "actual": 86,
+      "br": 0,
+      "cmd": 86,
+      "leg": 0,
+      "load": 0.71,
+      "pit": false,
+      "real": 86,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 40,
+      "x": -1115.6,
+      "y": 1.1,
+      "z": -209.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 146.477,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 93,
+      "br": 0,
+      "cmd": 93,
+      "leg": 0,
+      "load": 0.08,
+      "pit": false,
+      "real": 93,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 39,
+      "x": -1131.8,
+      "y": 1,
+      "z": -122
+     },
+     "kind": "bot_gp_sample",
+     "t": 147.494,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 32.2,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28,
+     "t": 148.552
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 52,
+     "t": 148.552,
+     "x": -699,
+     "z": 117
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 52,
+     "t": 148.552,
+     "x": -867,
+     "z": 280
+    },
+    {
+     "cmd": 45,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 45,
+     "t": 148.552,
+     "x": -1028,
+     "z": 290
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 64,
+     "t": 148.552,
+     "x": -409,
+     "z": 288
+    },
+    {
+     "cmd": 92,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 92,
+     "t": 148.552,
+     "x": -1035,
+     "z": -263
+    },
+    {
+     "data": {
+      "actual": 94,
+      "br": 0,
+      "cmd": 94,
+      "leg": 0,
+      "load": 0.03,
+      "pit": false,
+      "real": 94,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 39,
+      "x": -1131.6,
+      "y": 1,
+      "z": -112.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 148.577,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 99,
+      "br": 0,
+      "cmd": 99,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 99,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 38,
+      "x": -1130,
+      "y": 1,
+      "z": -7.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 149.595,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 36.1,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 37.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.8,
+     "t": 150.985
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 71,
+     "t": 150.985,
+     "x": -640,
+     "z": 76
+    },
+    {
+     "cmd": 84,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 84,
+     "t": 150.985,
+     "x": -765,
+     "z": 285
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 67,
+     "t": 150.985,
+     "x": -938,
+     "z": 272
+    },
+    {
+     "cmd": 84,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 84,
+     "t": 150.985,
+     "x": -357,
+     "z": 200
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 83,
+     "t": 150.985,
+     "x": -1132,
+     "z": -189
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 38,
+      "x": -1130,
+      "y": 1,
+      "z": 36
+     },
+     "kind": "bot_gp_sample",
+     "t": 151.011,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 38,
+      "x": -1130.1,
+      "y": 1,
+      "z": 143.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 152.028,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 36.3,
+     "kind": "server_perf",
+     "memMb": 2591,
+     "phase": "LOBBY",
+     "physicsFps": 37.5,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.9,
+     "t": 153.433
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 44,
+     "t": 153.433,
+     "x": -538,
+     "z": 89
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 58,
+     "t": 153.434,
+     "x": -698,
+     "z": 238
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 56,
+     "t": 153.434,
+     "x": -860,
+     "z": 282
+    },
+    {
+     "cmd": 101,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 101,
+     "t": 153.434,
+     "x": -361,
+     "z": 54
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 90,
+     "t": 153.434,
+     "x": -1131,
+     "z": -60
+    },
+    {
+     "data": {
+      "actual": 100,
+      "br": 0,
+      "cmd": 100,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 100,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 38,
+      "x": -1130.1,
+      "y": 1,
+      "z": 188.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 153.461,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 66,
+      "br": 0.3993325150064919,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.69,
+      "pit": false,
+      "real": 66,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 37,
+      "x": -1112.8,
+      "y": 1.1,
+      "z": 283.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 154.477,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.2,
+     "t": 155.445
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 64,
+     "t": 155.445,
+     "x": -519,
+     "z": 211
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 48,
+     "t": 155.445,
+     "x": -693,
+     "z": 101
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 155.445,
+     "x": -722,
+     "z": 275
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 155.445,
+     "x": -360,
+     "z": -160
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 155.445,
+     "x": -1131,
+     "z": 136
+    },
+    {
+     "data": {
+      "actual": 25,
+      "br": 0,
+      "cmd": 25,
+      "leg": 0,
+      "load": 0.37,
+      "pit": false,
+      "real": 25,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1074.9,
+      "y": 0.8,
+      "z": 305.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 155.493,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 16,
+      "br": 0,
+      "cmd": 24,
+      "leg": 0,
+      "load": 0.02,
+      "pit": false,
+      "real": 19,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1052.8,
+      "y": 0.8,
+      "z": 301
+     },
+     "kind": "bot_gp_sample",
+     "t": 156.494,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 16,
+      "br": 0,
+      "cmd": 24,
+      "leg": 0,
+      "load": 0.02,
+      "pit": false,
+      "real": 20,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1052.2,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 157.5,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.6,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 41.3,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.9,
+     "t": 157.502
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 60,
+     "t": 157.502,
+     "x": -492,
+     "z": 273
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 69,
+     "t": 157.502,
+     "x": -637,
+     "z": 73
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 66,
+     "t": 157.502,
+     "x": -698,
+     "z": 217
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 58,
+     "t": 157.502,
+     "x": -382,
+     "z": -248
+    },
+    {
+     "cmd": 92,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 92,
+     "t": 157.502,
+     "x": -1128,
+     "z": 249
+    },
+    {
+     "data": {
+      "actual": 14,
+      "br": 0,
+      "cmd": 22,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 18,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1031.6,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 158.527,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 37.4,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 38.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 160.088
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 55,
+     "t": 160.089,
+     "x": -395,
+     "z": 282
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 48,
+     "t": 160.089,
+     "x": -531,
+     "z": 95
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 53,
+     "t": 160.089,
+     "x": -693,
+     "z": 102
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 80,
+     "t": 160.089,
+     "x": -488,
+     "z": -256
+    },
+    {
+     "cmd": 30,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 29,
+     "t": 160.089,
+     "x": -1073,
+     "z": 312
+    },
+    {
+     "data": {
+      "actual": 14,
+      "br": 0,
+      "cmd": 22,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 17,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1020.9,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 160.128,
+     "userId": -1
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "crash",
+     "t": 160.962,
+     "x": -361,
+     "z": 239
+    },
+    {
+     "data": {
+      "actual": 13,
+      "br": 0,
+      "cmd": 21,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 17,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1002.1,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 161.128,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 35.5,
+     "kind": "server_perf",
+     "memMb": 2565,
+     "phase": "LOBBY",
+     "physicsFps": 36.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.5,
+     "t": 162.45
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 81,
+     "t": 162.45,
+     "x": -519,
+     "z": 184
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 71,
+     "t": 162.45,
+     "x": -614,
+     "z": 77
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 58,
+     "t": 162.45,
+     "x": -583,
+     "z": -229
+    },
+    {
+     "cmd": 38,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 38,
+     "t": 162.45,
+     "x": -1030,
+     "z": 295
+    },
+    {
+     "data": {
+      "actual": 13,
+      "br": 0,
+      "cmd": 22,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 17,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -995.7,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 162.476,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 13,
+      "br": 0,
+      "cmd": 21,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 16,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -977.1,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 163.494,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 34.9,
+     "kind": "server_perf",
+     "memMb": 2556,
+     "phase": "LOBBY",
+     "physicsFps": 36.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 21.4,
+     "t": 164.769
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 164.77,
+     "x": -492,
+     "z": 274
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 53,
+     "t": 164.77,
+     "x": -528,
+     "z": 100
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 65,
+     "t": 164.77,
+     "x": -594,
+     "z": -133
+    },
+    {
+     "cmd": 70,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 70,
+     "t": 164.77,
+     "x": -952,
+     "z": 278
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -975.2,
+      "y": 0.7,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 164.81,
+     "userId": -1
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 165.079,
+     "x": -368,
+     "z": 257
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -975.2,
+      "y": 0.7,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 166.467,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.3,
+     "kind": "server_perf",
+     "memMb": 2560,
+     "phase": "LOBBY",
+     "physicsFps": 32.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 12.1,
+     "t": 166.777
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 60,
+     "t": 166.777,
+     "x": -422,
+     "z": 300
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 71,
+     "t": 166.777,
+     "x": -518,
+     "z": 166
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 66,
+     "t": 166.777,
+     "x": -635,
+     "z": -88
+    },
+    {
+     "cmd": 43,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 43,
+     "t": 166.777,
+     "x": -892,
+     "z": 266
+    },
+    {
+     "cmd": 45,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 45,
+     "t": 167.094,
+     "x": -360,
+     "z": 232
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -975.2,
+      "y": 0.7,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 168.144,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 32.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20,
+     "t": 168.778
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 65,
+     "t": 168.778,
+     "x": -367,
+     "z": 268
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 73,
+     "t": 168.778,
+     "x": -512,
+     "z": 246
+    },
+    {
+     "cmd": 86,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 86,
+     "t": 168.778,
+     "x": -718,
+     "z": -90
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 59,
+     "t": 168.778,
+     "x": -842,
+     "z": 285
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -975.2,
+      "y": 0.7,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 169.836,
+     "userId": -1
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 75,
+     "t": 169.839,
+     "x": -360,
+     "z": 176
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 32.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 23.9,
+     "t": 170.794
+    },
+    {
+     "cmd": 82,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 82,
+     "t": 170.794,
+     "x": -352,
+     "z": 191
+    },
+    {
+     "cmd": 76,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 76,
+     "t": 170.794,
+     "x": -451,
+     "z": 297
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 54,
+     "t": 170.794,
+     "x": -789,
+     "z": -109
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 79,
+     "t": 170.794,
+     "x": -765,
+     "z": 285
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 8,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 35,
+      "x": -975.2,
+      "y": 0.8,
+      "z": 301.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 170.86,
+     "userId": -1
+    },
+    {
+     "kind": "gp_reset",
+     "reason": "stuck",
+     "t": 171.728,
+     "userId": -1,
+     "x": -976,
+     "y": 1,
+     "z": 301
+    },
+    {
+     "cmd": 116,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 116,
+     "t": 171.845,
+     "x": -360,
+     "z": -24
+    },
+    {
+     "heartbeatHz": 31.8,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.6,
+     "t": 172.869
+    },
+    {
+     "cmd": 101,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 101,
+     "t": 172.869,
+     "x": -361,
+     "z": 84
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 67,
+     "t": 172.869,
+     "x": -380,
+     "z": 275
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 77,
+     "t": 172.869,
+     "x": -803,
+     "z": -181
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 52,
+     "t": 172.869,
+     "x": -702,
+     "z": 258
+    },
+    {
+     "data": {
+      "actual": 6,
+      "br": 0,
+      "cmd": 0,
+      "leg": 0,
+      "load": 0,
+      "pit": false,
+      "real": 8,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 35,
+      "x": -1000.1,
+      "y": 1.1,
+      "z": 284.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 172.911,
+     "userId": -1
+    },
+    {
+     "cmd": 108,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 108,
+     "t": 173.861,
+     "x": -360,
+     "z": -156
+    },
+    {
+     "data": {
+      "actual": 30,
+      "br": 0,
+      "cmd": 31,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 30,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 35,
+      "x": -984.5,
+      "y": 1.1,
+      "z": 284.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 173.91,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.3,
+     "t": 174.879
+    },
+    {
+     "cmd": 116,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 116,
+     "t": 174.879,
+     "x": -360,
+     "z": -140
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 89,
+     "t": 174.879,
+     "x": -360,
+     "z": 121
+    },
+    {
+     "cmd": 72,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 72,
+     "t": 174.879,
+     "x": -863,
+     "z": -270
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 67,
+     "t": 174.88,
+     "x": -700,
+     "z": 128
+    },
+    {
+     "data": {
+      "actual": 47,
+      "br": 0,
+      "cmd": 48,
+      "leg": 0,
+      "load": 0.42,
+      "pit": false,
+      "real": 47,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 34,
+      "x": -960.2,
+      "y": 1.1,
+      "z": 283
+     },
+     "kind": "bot_gp_sample",
+     "t": 176.165,
+     "userId": -1
+    },
+    {
+     "cmd": 34,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 34,
+     "t": 176.167,
+     "x": -385,
+     "z": -249
+    },
+    {
+     "data": {
+      "actual": 54,
+      "br": 1,
+      "cmd": 53,
+      "leg": 0,
+      "load": 0.68,
+      "pit": false,
+      "real": 54,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 34,
+      "x": -903.4,
+      "y": 1.1,
+      "z": 264
+     },
+     "kind": "bot_gp_sample",
+     "t": 176.527,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 21.4,
+     "t": 176.894
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 60,
+     "t": 176.894,
+     "x": -371,
+     "z": -237
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 176.894,
+     "x": -361,
+     "z": 19
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 90,
+     "t": 176.894,
+     "x": -954,
+     "z": -265
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 56,
+     "t": 176.894,
+     "x": -672,
+     "z": 79
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 57,
+      "leg": 0,
+      "load": 0.33,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 33,
+      "x": -858,
+      "y": 1,
+      "z": 282.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 177.543,
+     "userId": -1
+    },
+    {
+     "cmd": 75,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 75,
+     "t": 178.55,
+     "x": -465,
+     "z": -256
+    },
+    {
+     "data": {
+      "actual": 57,
+      "br": 0,
+      "cmd": 58,
+      "leg": 0,
+      "load": 0.38,
+      "pit": false,
+      "real": 57,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 33,
+      "x": -854,
+      "y": 1,
+      "z": 283.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 179.555,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 15.7,
+     "kind": "server_perf",
+     "memMb": 2565,
+     "phase": "LOBBY",
+     "physicsFps": 22.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 6.6,
+     "t": 179.557
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 51,
+     "t": 179.558,
+     "x": -402,
+     "z": -266
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 94,
+     "t": 179.558,
+     "x": -360,
+     "z": -57
+    },
+    {
+     "cmd": 94,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 94,
+     "t": 179.558,
+     "x": -1030,
+     "z": -263
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 66,
+     "t": 179.558,
+     "x": -624,
+     "z": 71
+    },
+    {
+     "data": {
+      "actual": 76,
+      "br": 0,
+      "cmd": 77,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 76,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 33,
+      "x": -781.3,
+      "y": 1,
+      "z": 285.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 179.61,
+     "userId": -1
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 62,
+     "t": 180.561,
+     "x": -550,
+     "z": -251
+    },
+    {
+     "data": {
+      "actual": 53,
+      "br": 0.3,
+      "cmd": 53,
+      "leg": 0,
+      "load": 0.67,
+      "pit": false,
+      "real": 53,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 32,
+      "x": -714.5,
+      "y": 1.1,
+      "z": 270.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 180.611,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.3,
+     "kind": "server_perf",
+     "memMb": 2592,
+     "phase": "LOBBY",
+     "physicsFps": 60.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.3,
+     "t": 181.561
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 71,
+     "t": 181.561,
+     "x": -541,
+     "z": -253
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 67,
+     "t": 181.561,
+     "x": -372,
+     "z": -238
+    },
+    {
+     "cmd": 92,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 92,
+     "t": 181.561,
+     "x": -1133,
+     "z": -143
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 57,
+     "t": 181.561,
+     "x": -517,
+     "z": 118
+    },
+    {
+     "data": {
+      "actual": 64,
+      "br": 0,
+      "cmd": 65,
+      "leg": 0,
+      "load": 0.28,
+      "pit": false,
+      "real": 64,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 32,
+      "x": -697.5,
+      "y": 1,
+      "z": 226.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 182.443,
+     "userId": -1
+    },
+    {
+     "cmd": 71,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 71,
+     "t": 182.577,
+     "x": -592,
+     "z": -152
+    },
+    {
+     "data": {
+      "actual": 78,
+      "br": 0.6539030459242028,
+      "cmd": 77,
+      "leg": 0,
+      "load": 0.12,
+      "pit": false,
+      "real": 78,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 31,
+      "x": -699.8,
+      "y": 1,
+      "z": 147.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 183.46,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.8,
+     "t": 183.562
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 74,
+     "t": 183.562,
+     "x": -598,
+     "z": -160
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 73,
+     "t": 183.562,
+     "x": -483,
+     "z": -256
+    },
+    {
+     "cmd": 106,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 106,
+     "t": 183.562,
+     "x": -1130,
+     "z": 60
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 69,
+     "t": 183.562,
+     "x": -509,
+     "z": 253
+    },
+    {
+     "data": {
+      "actual": 52,
+      "br": 0,
+      "cmd": 52,
+      "leg": 0,
+      "load": 0.66,
+      "pit": false,
+      "real": 52,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 31,
+      "x": -685.1,
+      "y": 1.1,
+      "z": 91
+     },
+     "kind": "bot_gp_sample",
+     "t": 184.46,
+     "userId": -1
+    },
+    {
+     "cmd": 77,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 77,
+     "t": 184.579,
+     "x": -666,
+     "z": -88
+    },
+    {
+     "data": {
+      "actual": 61,
+      "br": 0,
+      "cmd": 62,
+      "leg": 0,
+      "load": 0.66,
+      "pit": false,
+      "real": 61,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 30,
+      "x": -662.5,
+      "y": 1.1,
+      "z": 78
+     },
+     "kind": "bot_gp_sample",
+     "t": 185.899,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 35,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 41.2,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 185.901
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 57,
+     "t": 185.901,
+     "x": -622,
+     "z": -86
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 60,
+     "t": 185.901,
+     "x": -580,
+     "z": -235
+    },
+    {
+     "cmd": 107,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 107,
+     "t": 185.901,
+     "x": -1130,
+     "z": 212
+    },
+    {
+     "cmd": 65,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 65,
+     "t": 185.901,
+     "x": -430,
+     "z": 307
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 63,
+     "t": 186.595,
+     "x": -756,
+     "z": -92
+    },
+    {
+     "data": {
+      "actual": 79,
+      "br": 0,
+      "cmd": 79,
+      "leg": 0,
+      "load": 0.01,
+      "pit": false,
+      "real": 79,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 30,
+      "x": -586.8,
+      "y": 1,
+      "z": 79
+     },
+     "kind": "bot_gp_sample",
+     "t": 186.928,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.1,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 187.911
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 54,
+     "t": 187.911,
+     "x": -728,
+     "z": -81
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 187.911,
+     "x": -601,
+     "z": -111
+    },
+    {
+     "cmd": 39,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 39,
+     "t": 187.911,
+     "x": -1062,
+     "z": 306
+    },
+    {
+     "cmd": 31,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 31,
+     "t": 187.912,
+     "x": -365,
+     "z": 279
+    },
+    {
+     "data": {
+      "actual": 51,
+      "br": 0,
+      "cmd": 52,
+      "leg": 0,
+      "load": 0.66,
+      "pit": false,
+      "real": 51,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 29,
+      "x": -529.1,
+      "y": 1.1,
+      "z": 97.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 187.944,
+     "userId": -1
+    },
+    {
+     "cmd": 79,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 79,
+     "t": 188.595,
+     "x": -802,
+     "z": -182
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 71,
+      "leg": 0,
+      "load": 0.05,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 29,
+      "x": -517.2,
+      "y": 1,
+      "z": 157.6
+     },
+     "kind": "bot_gp_sample",
+     "t": 188.961,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 0,
+      "cmd": 72,
+      "leg": 0,
+      "load": 0.04,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 29,
+      "x": -517.3,
+      "y": 1,
+      "z": 158.7
+     },
+     "kind": "bot_gp_sample",
+     "t": 189.966,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.6,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.8,
+     "t": 189.968
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 51,
+     "t": 189.968,
+     "x": -788,
+     "z": -109
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 64,
+     "t": 189.968,
+     "x": -658,
+     "z": -78
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 55,
+     "t": 189.968,
+     "x": -1016,
+     "z": 287
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 59,
+     "t": 189.968,
+     "x": -361,
+     "z": 227
+    },
+    {
+     "cmd": 45,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 45,
+     "t": 190.611,
+     "x": -809,
+     "z": -245
+    },
+    {
+     "data": {
+      "actual": 70,
+      "br": 0,
+      "cmd": 70,
+      "leg": 0,
+      "load": 0.6,
+      "pit": false,
+      "real": 70,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 28,
+      "x": -514,
+      "y": 1.1,
+      "z": 238.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 190.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 75,
+      "br": 0,
+      "cmd": 76,
+      "leg": 0,
+      "load": 0.64,
+      "pit": false,
+      "real": 75,
+      "surface": "road",
+      "thr": 1,
+      "tyre": 27,
+      "x": -465.7,
+      "y": 1.1,
+      "z": 289.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 191.977,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 191.977
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 51,
+     "t": 191.978,
+     "x": -804,
+     "z": -230
+    },
+    {
+     "cmd": 56,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 56,
+     "t": 191.978,
+     "x": -790,
+     "z": -110
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 44,
+     "t": 191.978,
+     "x": -893,
+     "z": 267
+    },
+    {
+     "cmd": 90,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 90,
+     "t": 191.978,
+     "x": -361,
+     "z": 70
+    },
+    {
+     "cmd": 88,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 88,
+     "t": 193.2,
+     "x": -909,
+     "z": -267
+    },
+    {
+     "data": {
+      "actual": 71,
+      "br": 1,
+      "cmd": 66,
+      "leg": 1,
+      "load": 0.64,
+      "pit": false,
+      "real": 71,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 27,
+      "x": -446.4,
+      "y": 1.1,
+      "z": 294.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 193.227,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 32.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.3,
+     "t": 193.994
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 62,
+     "t": 193.994,
+     "x": -839,
+     "z": -275
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 67,
+     "t": 193.994,
+     "x": -807,
+     "z": -173
+    },
+    {
+     "cmd": 63,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 63,
+     "t": 193.994,
+     "x": -838,
+     "z": 285
+    },
+    {
+     "cmd": 98,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 98,
+     "t": 193.994,
+     "x": -361,
+     "z": -34
+    },
+    {
+     "data": {
+      "actual": 46,
+      "br": 0.3,
+      "cmd": 45,
+      "leg": 1,
+      "load": 0.28,
+      "pit": false,
+      "real": 46,
+      "surface": "road",
+      "thr": 0,
+      "tyre": 26,
+      "x": -396.5,
+      "y": 1,
+      "z": 280.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 194.243,
+     "userId": -1
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 73,
+     "t": 195.617,
+     "x": -1049,
+     "z": -260
+    },
+    {
+     "data": {
+      "actual": 45,
+      "br": 0,
+      "cmd": 46,
+      "leg": 1,
+      "load": 0.26,
+      "pit": false,
+      "real": 45,
+      "surface": "road",
+      "thr": 0.4,
+      "tyre": 26,
+      "x": -383,
+      "y": 1,
+      "z": 267.4
+     },
+     "kind": "bot_gp_sample",
+     "t": 195.643,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 31.2,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.8,
+     "t": 196.01
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 55,
+     "t": 196.01,
+     "x": -905,
+     "z": -288
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 54,
+     "t": 196.01,
+     "x": -808,
+     "z": -243
+    },
+    {
+     "cmd": 82,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 82,
+     "t": 196.01,
+     "x": -755,
+     "z": 284
+    },
+    {
+     "cmd": 100,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 100,
+     "t": 196.01,
+     "x": -361,
+     "z": -144
+    },
+    {
+     "data": {
+      "actual": 44,
+      "br": 0,
+      "cmd": 44,
+      "leg": 2,
+      "load": 0.64,
+      "pit": false,
+      "real": 44,
+      "surface": "pit",
+      "thr": 0.4,
+      "tyre": 26,
+      "x": -367,
+      "y": 1.1,
+      "z": 221.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 196.659,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 44,
+      "br": 0,
+      "cmd": 44,
+      "leg": 3,
+      "load": 0.41,
+      "pit": false,
+      "real": 44,
+      "surface": "pit",
+      "thr": 0.4,
+      "tyre": 25,
+      "x": -379.5,
+      "y": 1,
+      "z": 200.3
+     },
+     "kind": "bot_gp_sample",
+     "t": 198.2,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 33.2,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 38.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 198.202
+    },
+    {
+     "cmd": 76,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 76,
+     "t": 198.202,
+     "x": -1129,
+     "z": -175
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 64,
+     "t": 198.202,
+     "x": -971,
+     "z": -269
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 64,
+     "t": 198.203,
+     "x": -872,
+     "z": -276
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 59,
+     "t": 198.203,
+     "x": -699,
+     "z": 241
+    },
+    {
+     "cmd": 57,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 57,
+     "t": 198.203,
+     "x": -376,
+     "z": -248
+    },
+    {
+     "data": {
+      "actual": 42,
+      "br": 0,
+      "cmd": 42,
+      "leg": 4,
+      "load": 0.34,
+      "pit": false,
+      "real": 42,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 24,
+      "x": -407.6,
+      "y": 0.8,
+      "z": 164
+     },
+     "kind": "bot_gp_sample",
+     "t": 199.226,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 200.211
+    },
+    {
+     "cmd": 117,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 117,
+     "t": 200.211,
+     "x": -1130,
+     "z": 28
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 80,
+     "t": 200.211,
+     "x": -1119,
+     "z": -221
+    },
+    {
+     "cmd": 88,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 88,
+     "t": 200.212,
+     "x": -1028,
+     "z": -264
+    },
+    {
+     "cmd": 51,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 51,
+     "t": 200.212,
+     "x": -693,
+     "z": 102
+    },
+    {
+     "cmd": 28,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 28,
+     "t": 200.212,
+     "x": -453,
+     "z": -276
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 8,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 24,
+      "x": -406.7,
+      "y": 1,
+      "z": 162.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 200.244,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 24,
+      "x": -405.8,
+      "y": 1,
+      "z": 162.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 202.217,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.8,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 41.4,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 202.219
+    },
+    {
+     "cmd": 125,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 125,
+     "t": 202.219,
+     "x": -1131,
+     "z": 161
+    },
+    {
+     "cmd": 60,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 58,
+     "t": 202.219,
+     "x": -1158,
+     "z": -156
+    },
+    {
+     "cmd": 88,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 88,
+     "t": 202.219,
+     "x": -1114,
+     "z": -224
+    },
+    {
+     "cmd": 68,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 68,
+     "t": 202.219,
+     "x": -639,
+     "z": 74
+    },
+    {
+     "cmd": 47,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 47,
+     "t": 202.219,
+     "x": -487,
+     "z": -258
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 23,
+      "x": -405.2,
+      "y": 1,
+      "z": 162.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 203.876,
+     "userId": -1
+    },
+    {
+     "kind": "gp_bot_reset",
+     "name": "Turbo Tom",
+     "reason": "flip",
+     "t": 204.11,
+     "x": -1123,
+     "z": 262
+    },
+    {
+     "heartbeatHz": 31.3,
+     "kind": "server_perf",
+     "memMb": 2591,
+     "phase": "LOBBY",
+     "physicsFps": 32.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 13.2,
+     "t": 204.226
+    },
+    {
+     "cmd": 59,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 59,
+     "t": 204.226,
+     "x": -1158,
+     "z": -94
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 50,
+     "t": 204.226,
+     "x": -1156,
+     "z": -150
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 62,
+     "t": 204.226,
+     "x": -557,
+     "z": 82
+    },
+    {
+     "cmd": 64,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 64,
+     "t": 204.226,
+     "x": -552,
+     "z": -251
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 8,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 23,
+      "x": -404.3,
+      "y": 1,
+      "z": 162.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 204.894,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.1,
+     "t": 206.226
+    },
+    {
+     "cmd": 89,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 89,
+     "t": 206.226,
+     "x": -1129,
+     "z": 42
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 50,
+     "t": 206.227,
+     "x": -1133,
+     "z": -74
+    },
+    {
+     "cmd": 81,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 81,
+     "t": 206.227,
+     "x": -519,
+     "z": 189
+    },
+    {
+     "cmd": 44,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 44,
+     "t": 206.227,
+     "x": -612,
+     "z": -167
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 9,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 23,
+      "x": -403.5,
+      "y": 1,
+      "z": 162.9
+     },
+     "kind": "bot_gp_sample",
+     "t": 206.759,
+     "userId": -1
+    },
+    {
+     "kind": "gp_reset",
+     "reason": "stuck",
+     "t": 207.75,
+     "userId": -1,
+     "x": -404,
+     "y": 1,
+     "z": 162
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 0,
+      "cmd": 8,
+      "leg": 4,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 23,
+      "x": -403.3,
+      "y": 1,
+      "z": 162.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 207.777,
+     "userId": -1
+    },
+    {
+     "kind": "gp_pit",
+     "seconds": 2.823517598976664,
+     "t": 207.859,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9117703983",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.GpCrew.Part.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 205.96792112477124,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 207.876,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9117703983",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.GpCrew.Part.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 205.96794783324003,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 207.876,
+     "userId": -1
+    },
+    {
+     "cmd": 0,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 0,
+     "t": 208.06,
+     "x": -1126,
+     "z": 266
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 32.7,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 15.2,
+     "t": 208.227
+    },
+    {
+     "cmd": 105,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 105,
+     "t": 208.227,
+     "x": -1131,
+     "z": 148
+    },
+    {
+     "cmd": 70,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 70,
+     "t": 208.227,
+     "x": -1130,
+     "z": -8
+    },
+    {
+     "cmd": 70,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 70,
+     "t": 208.228,
+     "x": -501,
+     "z": 264
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 48,
+     "t": 208.228,
+     "x": -601,
+     "z": -124
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 6,
+      "load": 0,
+      "pit": true,
+      "real": 0,
+      "surface": "pit",
+      "thr": 0,
+      "tyre": 23,
+      "x": -399.1,
+      "y": 1,
+      "z": 149.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 208.793,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 6,
+      "load": 0,
+      "pit": true,
+      "real": 0,
+      "surface": "pit",
+      "thr": 0,
+      "tyre": 23,
+      "x": -399.1,
+      "y": 1,
+      "z": 149.8
+     },
+     "kind": "bot_gp_sample",
+     "t": 210.232,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9117703983",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.GpCrew.Part.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 208.326200499665,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 210.232,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9117703983",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.GpCrew.Part.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 208.32623679144308,
+      "volume": 0.6000000238418579
+     },
+     "kind": "bot_sound",
+     "t": 210.232,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.8,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 37.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27,
+     "t": 210.234
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 48,
+     "t": 210.234,
+     "x": -1099,
+     "z": 285
+    },
+    {
+     "cmd": 85,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 85,
+     "t": 210.234,
+     "x": -1126,
+     "z": 259
+    },
+    {
+     "cmd": 83,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 83,
+     "t": 210.235,
+     "x": -1131,
+     "z": 76
+    },
+    {
+     "cmd": 67,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 67,
+     "t": 210.235,
+     "x": -432,
+     "z": 298
+    },
+    {
+     "cmd": 52,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 52,
+     "t": 210.235,
+     "x": -615,
+     "z": -69
+    },
+    {
+     "data": {
+      "actual": 16,
+      "br": 0,
+      "cmd": 16,
+      "leg": 6,
+      "load": 0.05,
+      "pit": false,
+      "real": 16,
+      "surface": "pit",
+      "thr": 1,
+      "tyre": 99,
+      "x": -398.8,
+      "y": 1,
+      "z": 145.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 211.259,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60.2,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.4,
+     "t": 212.243
+    },
+    {
+     "cmd": 84,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 84,
+     "t": 212.243,
+     "x": -983,
+     "z": 284
+    },
+    {
+     "cmd": 25,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 25,
+     "t": 212.243,
+     "x": -1082,
+     "z": 311
+    },
+    {
+     "cmd": 87,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 87,
+     "t": 212.243,
+     "x": -1126,
+     "z": 258
+    },
+    {
+     "cmd": 86,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 86,
+     "t": 212.243,
+     "x": -357,
+     "z": 195
+    },
+    {
+     "cmd": 25,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 25,
+     "t": 212.243,
+     "x": -654,
+     "z": -72
+    },
+    {
+     "data": {
+      "actual": 44,
+      "br": 0,
+      "cmd": 44,
+      "leg": 7,
+      "load": 0.03,
+      "pit": false,
+      "real": 44,
+      "surface": "pit",
+      "thr": 0.4,
+      "tyre": 99,
+      "x": -393,
+      "y": 1,
+      "z": 114.5
+     },
+     "kind": "bot_gp_sample",
+     "t": 212.26,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 43,
+      "br": 0,
+      "cmd": 43,
+      "leg": 7,
+      "load": 0.02,
+      "pit": false,
+      "real": 43,
+      "surface": "grass",
+      "thr": 1,
+      "tyre": 99,
+      "x": -386.5,
+      "y": 0.8,
+      "z": 70.2
+     },
+     "kind": "bot_gp_sample",
+     "t": 213.275,
+     "userId": -1
+    },
+    {
+     "kind": "gp_lap",
+     "lap": 3,
+     "t": 214.143,
+     "time": 89.43058705329895,
+     "userId": -1,
+     "valid": false
+    },
+    {
+     "best": 50.86515212059021,
+     "kind": "gp_done",
+     "pits": 1,
+     "rank": 1,
+     "resets": 3,
+     "t": 214.143,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.5,
+     "t": 214.259
+    },
+    {
+     "cmd": 38,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 38,
+     "t": 214.259,
+     "x": -885,
+     "z": 272
+    },
+    {
+     "cmd": 74,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 74,
+     "t": 214.259,
+     "x": -995,
+     "z": 283
+    },
+    {
+     "cmd": 19,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 19,
+     "t": 214.259,
+     "x": -1073,
+     "z": 311
+    },
+    {
+     "cmd": 105,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 105,
+     "t": 214.259,
+     "x": -361,
+     "z": -3
+    },
+    {
+     "cmd": 70,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 70,
+     "t": 214.259,
+     "x": -745,
+     "z": -92
+    },
+    {
+     "data": {
+      "actual": 37,
+      "br": 1,
+      "cmd": 36,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 37,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -382.5,
+      "y": 0.8,
+      "z": 27.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 214.276,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 215.276,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.5,
+     "t": 216.259
+    },
+    {
+     "cmd": 82,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 82,
+     "t": 216.259,
+     "x": -765,
+     "z": 285
+    },
+    {
+     "cmd": 42,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 42,
+     "t": 216.259,
+     "x": -879,
+     "z": 267
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 48,
+     "t": 216.259,
+     "x": -1022,
+     "z": 284
+    },
+    {
+     "cmd": 84,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 84,
+     "t": 216.26,
+     "x": -363,
+     "z": -211
+    },
+    {
+     "cmd": 48,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 48,
+     "t": 216.26,
+     "x": -825,
+     "z": -159
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 216.275,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 217.658,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 30.9,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 32.5,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.4,
+     "t": 218.261
+    },
+    {
+     "cmd": 45,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 45,
+     "t": 218.261,
+     "x": -708,
+     "z": 263
+    },
+    {
+     "cmd": 66,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 66,
+     "t": 218.261,
+     "x": -824,
+     "z": 286
+    },
+    {
+     "cmd": 69,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 69,
+     "t": 218.261,
+     "x": -958,
+     "z": 280
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 54,
+     "t": 218.261,
+     "x": -401,
+     "z": -264
+    },
+    {
+     "cmd": 34,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 34,
+     "t": 218.261,
+     "x": -825,
+     "z": -202
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 218.66,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 219.675,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.8,
+     "t": 220.276
+    },
+    {
+     "cmd": 62,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 62,
+     "t": 220.276,
+     "x": -700,
+     "z": 131
+    },
+    {
+     "cmd": 50,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 50,
+     "t": 220.277,
+     "x": -698,
+     "z": 258
+    },
+    {
+     "cmd": 58,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 58,
+     "t": 220.277,
+     "x": -851,
+     "z": 282
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 73,
+     "t": 220.277,
+     "x": -542,
+     "z": -253
+    },
+    {
+     "cmd": 53,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 53,
+     "t": 220.277,
+     "x": -818,
+     "z": -283
+    },
+    {
+     "best": 50.86515212059021,
+     "kind": "gp_end",
+     "laps": 3,
+     "reason": "done",
+     "t": 221.169,
+     "userId": -1
+    },
+    {
+     "data": {
+      "actual": 0,
+      "br": 1,
+      "cmd": 0,
+      "leg": 7,
+      "load": 0,
+      "pit": false,
+      "real": 0,
+      "surface": "grass",
+      "thr": 0,
+      "tyre": 99,
+      "x": -381.7,
+      "y": 0.8,
+      "z": 16.1
+     },
+     "kind": "bot_gp_sample",
+     "t": 221.426,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 219.51234504161403,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 221.426,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 28.2,
+     "t": 222.293
+    },
+    {
+     "cmd": 80,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Turbo Tom",
+     "real": 80,
+     "t": 222.293,
+     "x": -620,
+     "z": 77
+    },
+    {
+     "cmd": 54,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Vroom Vera",
+     "real": 54,
+     "t": 222.293,
+     "x": -689,
+     "z": 153
+    },
+    {
+     "cmd": 55,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Lap Lenny",
+     "real": 55,
+     "t": 222.293,
+     "x": -714,
+     "z": 272
+    },
+    {
+     "cmd": 73,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Nitro Nell",
+     "real": 73,
+     "t": 222.293,
+     "x": -594,
+     "z": -149
+    },
+    {
+     "cmd": 24,
+     "kind": "gp_bot_sample",
+     "mode": "track",
+     "name": "Skid Sid",
+     "real": 24,
+     "t": 222.293,
+     "x": -856,
+     "z": -286
+    }
+   ],
+   "samplesTotal": 0
+  },
+  "timedOut": false
+ },
+ "scenario": "gp-drive",
+ "studioExit": 0,
+ "summary": "Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0\n  events: bot_gp_enter=1 bot_gp_sample=178 bot_joined=1 bot_ready=1 bot_sound=29 gp_bot_reset=9 gp_bot_sample=492 gp_done=1 gp_end=1 gp_enter=1 gp_lap=3 gp_pit=1 gp_reset=3 server_perf=104\nserver: ; memory max 2640 MB",
+ "wallSeconds": 248.8
+}

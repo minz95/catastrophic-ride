@@ -175,6 +175,16 @@ SoundConfig.SFX = {
 	TIMER_LOW           = { id = BLIP,   volume = 0.35, pitch = 1.3 },
 }
 
+-- ─── Junk Grand Prix (GpClient, GpCircuit) ───────────────────────────────────
+-- Loops are pitched by the client (engine: gear and rpm; other cars: their speed).
+SoundConfig.GP = {
+	ENGINE  = { id = "rbxassetid://9112787430", volume = 0.35 },  -- Go Kart Engine Constant 1 (PSE): pitched up it screams
+	SCREECH = { id = "rbxassetid://9119186275", volume = 0.4 },   -- Skids Tire Screeches On Dirt Pavement 4 (PSE)
+	WRENCH  = { id = "rbxassetid://9117703983", volume = 0.6 },   -- Pneumatic Impact Wrench Drill On Off 1 (PSE)
+	CROWD   = { id = "rbxassetid://9112779173", volume = 0.35 },  -- Festival Of Fools 1 (PSE): huge crowd cheering, loop
+	REV     = { id = "rbxassetid://9112782019", volume = 0.5 },   -- Formula One Race Car 1 (PSE): idle, revs (on the grid)
+}
+
 -- Ids that must never come back (spec playtest_polish).
 SoundConfig.BANNED = { "258057783", "6026984224", "9120873997" }
 

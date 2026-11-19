@@ -98,7 +98,8 @@ task.spawn(function()
 				local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
 				local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
 				local seated = hum and hum.SeatPart ~= nil
-				if root and not seated then
+				-- (a Junk Grand Prix driver is on the circuit, not lost: GpManager)
+				if root and not seated and not p:GetAttribute("GpCar") then
 					local o = LobbyLayout.ORIGIN
 					local side = Vector3.new(root.Position.X - o.X, 0, root.Position.Z - o.Z).Magnitude
 					local out = side > LobbyLayout.RADIUS + 4 and not LobbyLayout.onStreet(root.Position)

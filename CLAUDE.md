@@ -518,6 +518,34 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   `Shop.handle("legend_buy")`, so the copy number and royalty are the
   shop's). Three dealers stand by their offices. The plaza's six pads still
   show the newest six. Spec `auto_street`.
+- Junk Grand Prix (2026-11-19, "a bought car earns a race; F1 thrills,
+  box box, the release of nearly rolling over"): an open circuit west of
+  Auto Street (`Shared/GpLayout`: corners as data, rounded into the
+  centerline; `Modules/Maps/GpCircuit` builds road, kerbs, gravel,
+  barriers, pit lane, 12 garages, gantry, grandstand, the gate). The
+  gate's desk (prompt GpAction "enter") takes only players who own a car
+  (`GpCars.ownsAny`); the grandstand is walk-in for anyone
+  (`LobbyLayout.STREET.stand`, a gap in the lot's west wall; seats).
+  `GpManager`: a garage box (1 … MAX_CARS; bots have 8-12), the ride built
+  by VehicleBuilder (`Modules/GpCars`, helmet on), five lights, an out lap
+  and `Constants.GP.LAPS` timed laps (`Shared/GpTiming` on the server from
+  the car's position: sectors in order, track limits, purple / green /
+  yellow), then back at the gate with the best lap on the TOP LAPS board
+  (ReplicatedStorage `GpBoard`) and in `rec.gp`. Stopping on your box's
+  mark after the timing started is a pit stop (GpEvent "pit", the crew
+  drawn for all: "crew"). The car is the build's own: `Shared/GpCar.spec`
+  spreads its RideRating bars wide (`Constants.GP`; unlike a round's
+  ±1.5 %) and its shape (visible width / height) sets STABILITY: one pure
+  step (`GpCar.step`: grip limit, slides, tyre wear, rollover load; kerbs
+  lower the limit; a crash throws it over) runs on the driver's client
+  (`StarterPlayerScripts/GpClient`, the car's network owner) and for the
+  server's bots (`Modules/GpBots` with `Shared/GpDriver`). A rollover lets
+  the movers go and physics tumbles the car; the client asks GpAction
+  "reset" (the server also resets stuck or flung cars). Open only in the
+  hub place (or harness `gp`); elsewhere the desk says it opens with the
+  new Junk Town. Offline laps: `lune run tools/gp_sim.luau`; layout PNG:
+  `lune run tools/gp_layout.luau && python3 tools/gp_layout.py`; Studio:
+  `sim.py run gp-drive` (autopilot run, GpClient attribute GpAuto). Spec `gp`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

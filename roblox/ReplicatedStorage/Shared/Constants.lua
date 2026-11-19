@@ -122,6 +122,59 @@ Constants.NEW_CARS = {
 	SHOW_LENGTH = 6.5,
 }
 
+-- ─── Junk Grand Prix (Shared/GpLayout, GpCar, GpTiming; GpManager) ──────────
+-- The town's open circuit for players who own a car. Unlike a round's race
+-- (RACE_SPEED: every build within ±1.5 %), the car's build decides a lot
+-- here: its RideRating bars (FOREST) are spread over TOP / ACCEL / GRIP, and
+-- its shape (width over height) over STABILITY. Speeds in studs/s.
+Constants.GP = {
+	LAPS = 3,                 -- timed laps after the out lap, then back to town
+	MAX_CARS = 7,             -- players on the circuit at once (boxes 1-7; the bots have 8-12)
+	BOTS = 5,                 -- always lapping
+	TOP = { 95, 155 },        -- top speed: the worst … best speed bar
+	ACCEL = { 24, 54 },       -- from standstill, studs/s²: the accel bar
+	GRIP = { 58, 98 },        -- lateral grip, studs/s²: the handling bar
+	BRAKE = 82,
+	TURN = 2.4,               -- rad/s the nose can turn at low speed
+	OVERDRIVE = 1.45,         -- steering can ask this much more than the grip (and slide)
+	OVERSTEER = 1.25,         -- the nose turns this much past the grip while sliding
+	TRAVEL_FOLLOW = 9,        -- how fast the path follows the nose within the grip
+	SLIDE_SCRUB = 55,         -- speed lost per radian of slide per second
+	DRAG = 0.12,              -- coasting: share of top speed lost per second
+	CRAWL = 18,               -- grass and gravel never slow a car below this
+	STABILITY = { 0.92, 1.5 },-- rollover margin over the grip: tall narrow … low wide
+	SHAPE = { 0.55, 1.5 },    -- width / height that maps onto STABILITY
+	FLIP_HOLD = 0.3,          -- s over the rollover limit before it goes over
+	LIFT_AT = 0.85,           -- share of the rollover limit where a wheel lifts (warning)
+	LEAN = 0.14,              -- body roll at the grip limit (rad)
+	LIFT_LEAN = 0.42,         -- body roll with a wheel up (rad)
+	CRASH_DROP = 48,          -- speed lost in one hit that throws the car over
+	TYRE = { MIN_GRIP = 0.5, BASE = 0.004, LOAD = 0.012, SLIDE = 0.03, BOX_AT = 0.45 },
+	SURFACE = {               -- grip × / rollover limit × / extra drag / top speed ×
+		road   = { grip = 1,    roll = 1,    drag = 0,  top = 1 },
+		kerb   = { grip = 0.92, roll = 0.8,  drag = 0,  top = 1 },
+		grass  = { grip = 0.55, roll = 1,    drag = 25, top = 0.55 },
+		gravel = { grip = 0.4,  roll = 0.9,  drag = 60, top = 0.35 },
+		pit    = { grip = 1,    roll = 1,    drag = 0,  top = 1 },
+	},
+	TRACK_LIMIT = 21,         -- |lateral| past this (road half 14 + kerb + a car) spoils the lap
+	PIT_LIMIT = 45,
+	PIT_STOP = 2.4,           -- s for the crew, plus up to PIT_JITTER
+	PIT_JITTER = 0.6,
+	PIT_STOP_RADIUS = 6,      -- studs from the box mark, under PIT_STOP_SPEED
+	PIT_STOP_SPEED = 6,
+	LIGHTS = { STEP = 0.8, HOLD = { 0.4, 1.4 } },   -- five red lights, then out
+	RESET_SETTLED = 2.2,      -- s at rest upside down before the marshals put it back
+	RESET_MAX = 5,            -- s after a flip at most
+	STUCK = 8,                -- s without progress → back on the road
+	KMH = 2.1,                -- shown speed = studs/s × KMH
+	GEARS = 8,
+	BOT_PIT_EVERY = 6,        -- laps
+	BOT_SKILL = { 0.86, 0.97 },
+	BOARD = 10,               -- best laps on the board
+	DONE_SECONDS = 7,         -- the results card, then back to town
+}
+
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────
 -- A friend who joins through your invite for the first time (never played
 -- a round) pays you COINS, for up to MAX_REWARDED friends.

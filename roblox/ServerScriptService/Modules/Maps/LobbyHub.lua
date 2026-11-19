@@ -794,7 +794,10 @@ local function street(m)
 	wallLine(m, V(T[2], 0, T[3]), V(T[2], 0, -L[4]))
 	wallLine(m, V(T[2], 0, T[4]), V(T[1], 0, T[4]))
 	wallLine(m, V(T[2], 0, T[3]), V(T[1], 0, T[3]))
-	wallLine(m, V(T[1], 0, T[3]), V(T[1], 0, T[4]))
+	-- the west wall, open at the road's end onto the Junk GP grandstand's walk
+	local gap = S.standGap
+	wallLine(m, V(T[1], 0, T[3]), V(T[1], 0, gap[1]))
+	wallLine(m, V(T[1], 0, gap[2]), V(T[1], 0, T[4]))
 	-- the gate: two posts and a sign over the way out of the fence
 	local gx = -LobbyLayout.WALL_RADIUS - 1
 	for _, z in ipairs({ -LobbyLayout.GATE_HALF - 1.5, LobbyLayout.GATE_HALF + 1.5 }) do

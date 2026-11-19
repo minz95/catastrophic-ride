@@ -497,6 +497,28 @@ spot with its track section; the RESULTS report lists them per section.
   round loop. Not done: a general speed / teleport check on characters
   and cars (positions are the client's), server-side guard slow.
 
+- **2026-11-19 — Junk Grand Prix: a bought car earns a race.** The
+  user's idea: owning a car (a Junk Motors new car or a Legend Ride) lets
+  you into the town's racing experience, an open F1-style circuit west of
+  Auto Street; "feel like an F1 driver, the release of driving on the edge
+  of rolling over"; box box with a crew; the car's real Catastrophic Ride
+  performance, no items. Decided with the user: an open track (anyone with
+  a car drops in, bots lap all the time), one run = out lap + 3 timed laps
+  then back in town; performance differences "very large" (the opposite
+  of a round's ±1.5 %: here the build is the point, it makes players want
+  a better car); tyre wear and a crew stop; real rollovers. Anyone may
+  walk into the grandstand and sit; the track only through the gate's
+  desk with a car. How: `Shared/GpCar` is one pure driving step (grip
+  limit, slides, tyre wear, a rollover limit = grip × STABILITY from the
+  car's width over height, kerbs lower it, a crash throws it over) for the
+  player's client, the server's bots and the offline sim; a rollover lets
+  the movers go and Roblox physics tumbles the car (landing on its wheels
+  drives on). `tools/gp_sim.luau` (offline laps): the best build ~36 s,
+  a Junk Motors car ~43 s, the weakest ~50 s; tall cars lift a wheel at
+  the limit and go over when held there. Open: tuning by feel in a real
+  playtest; it is open only in the hub place (phase 2), whose race place
+  the user has not made yet.
+
 ## Open questions (from the reports, not decided)
 
 Simulated matches (12 per biome, 6 bots, `reports/<biome>/summary.md`):

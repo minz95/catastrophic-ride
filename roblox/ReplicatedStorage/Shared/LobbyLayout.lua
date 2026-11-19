@@ -99,6 +99,11 @@ LobbyLayout.STREET = {
 	lot = { -300, -114, -74, 64 },   -- the ground round the road and the showroom
 	road = { -300, -74, -9, 9 },     -- the road itself (the lane is its first stretch)
 	wallHeight = 14,
+	-- the Junk GP grandstand (Shared/GpLayout.GRANDSTAND) and the walk behind
+	-- it, through the gap in the lot's west wall at the road's end: anyone may
+	-- watch; the track itself only through the gate's desk with a car
+	stand = { -331, -300, -172, 182 },
+	standGap = { -9, 9 },            -- z of the way through the west wall
 }
 LobbyLayout.SHOWROOM = {
 	box = { -272, -128, -62, -20 },  -- walls; the glass front faces the road (z1)
@@ -164,11 +169,13 @@ local function inRect(r, dx, dz)
 end
 LobbyLayout.inRect = inRect
 
---- True when `pos` is on Auto Street (the lane, the lot or the showroom).
+--- True when `pos` is on Auto Street (the lane, the lot, the showroom or the
+-- Junk GP grandstand).
 function LobbyLayout.onStreet(pos)
 	local dx, dz = pos.X - O.X, pos.Z - O.Z
 	local S = LobbyLayout.STREET
-	return (inRect(S.lane, dx, dz) or inRect(S.lot, dx, dz)) and pos.Y > O.Y - 6 and pos.Y < O.Y + 40
+	return (inRect(S.lane, dx, dz) or inRect(S.lot, dx, dz) or inRect(S.stand, dx, dz))
+		and pos.Y > O.Y - 6 and pos.Y < O.Y + 40
 end
 
 --- True anywhere a player may walk in Junk Town: the plaza or Auto Street.

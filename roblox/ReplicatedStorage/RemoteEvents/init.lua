@@ -57,6 +57,9 @@
 --   UseRaceTrick        → () → "ok" | "denied: …"  (RACING, the equipped race trick, AbilityManager)
 --   TravelUpdate        → server→client ({ kind = "leaving" | "failed", text }) -- a teleport between places (Modules/PlaceTeleport)
 --   PlaceAction         → ("play" | "hub") → "ok" | "denied: …"  (RemoteFunction; LobbyUI: onto the race pad / back to the hub)
+--   GpEvent             → server→client ({ kind, … }) -- Junk Grand Prix (GpManager → GpClient): "session", "lights",
+--                          "sector", "lap", "limits", "radio", "pit", "reset", "done", "denied"; to all: "crew"
+--   GpAction            → ("leave" | "reset") → "ok" | "denied: …"  (RemoteFunction; GpClient)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -112,6 +115,7 @@ local EVENTS = {
 	"AchievementUpdate",
 	"LegendUpdate",
 	"TravelUpdate",
+	"GpEvent",
 }
 
 local FUNCTIONS = {
@@ -131,6 +135,7 @@ local FUNCTIONS = {
 	"GetChallenges",
 	"AchievementAction",
 	"PlaceAction",
+	"GpAction",
 }
 
 local RemoteEvents = {}
