@@ -229,7 +229,8 @@ function GpFilm.camera(dt, s, out)
 	elseif name == "visor" then
 		pos, at, fov, follow = hp + face * (4.2 - ht * 0.3) + up * 0.2, hp, 40, true
 	elseif name == "crew" then
-		pos, at, fov = p + V(13, 8, -7), p + V(0, 1, 0), 52
+		-- low, from the pit wall side: the wheels coming off and going on
+		pos, at, fov = p + rt * 7.5 + look * 1.2 + up * 1.4, p + up * 0.2 - rt * 0.4, 50
 	elseif name == "pitexit" then
 		if not _fixed then _fixed = p + look * 45 + V(8, 3, 0) end
 		pos, at, fov = _fixed, p + up * 1.5, 30

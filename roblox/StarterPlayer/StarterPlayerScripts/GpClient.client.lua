@@ -345,76 +345,219 @@ local function drive(dt)
 end
 
 -- ── Crews (everyone in town sees them) ──────────────────────────────────────
+-- A stop that reads as a tyre change (reel feedback 2026-11-19: "they stood
+-- there and left; nobody can tell it is a tyre change"): a crewman kneels at
+-- each wheel with a wheel gun, the old tyre comes off and is laid down,
+-- the new one (a yellow sidewall) goes on; the lollipop, and a stopwatch
+-- over the car. Few people: ten round a small car hid the wheels.
 
-local CREW = { { -3.5, -3.5 }, { 3.5, -3.5 }, { -3.5, 3.5 }, { 3.5, 3.5 } }
+local CREW_PART = { Anchored = true, CanCollide = false, CanQuery = false, CanTouch = false, CastShadow = false }
+local function part(parent, size, cf, colour, shape, material)
+	local q = Instance.new("Part")
+	for k, v in pairs(CREW_PART) do q[k] = v end
+	q.Size, q.CFrame, q.Color = size, cf, colour
+	if shape then q.Shape = shape end
+	if material then q.Material = material end
+	q.Parent = parent
+	return q
+end
+
+-- feet at cf's origin, facing cf's look
 local function crewMember(parent, cf, colour)
 	local m = Instance.new("Model")
 	m.Name = "Crew"
-	local function p(size, off, col, shape)
-		local q = Instance.new("Part")
-		q.Size = size
-		q.CFrame = cf * off
-		q.Color = col
-		q.Anchored = true
-		q.CanCollide = false
-		q.CanQuery = false
-		q.CanTouch = false
-		q.CastShadow = false
-		if shape then q.Shape = shape end
-		q.Parent = m
-		return q
-	end
-	p(V(1.6, 2, 1), CFrame.new(0, 2.6, 0), colour)
-	p(V(1.5, 1.5, 1.5), CFrame.new(0, 4.3, 0), colour, Enum.PartType.Ball)
-	p(V(1.2, 0.4, 0.3), CFrame.new(0, 4.35, -0.65), Color3.fromRGB(20, 20, 26))
-	p(V(0.7, 1.6, 0.7), CFrame.new(-0.45, 0.8, 0), Color3.fromRGB(30, 30, 36))
-	p(V(0.7, 1.6, 0.7), CFrame.new(0.45, 0.8, 0), Color3.fromRGB(30, 30, 36))
-	m.PrimaryPart = m:GetChildren()[1]
+	local dark = Color3.fromRGB(30, 30, 36)
+	part(m, V(1.6, 2, 1), cf * CFrame.new(0, 2.6, 0), colour)
+	part(m, V(1.5, 1.5, 1.5), cf * CFrame.new(0, 4.3, 0), colour, Enum.PartType.Ball)
+	part(m, V(1.2, 0.4, 0.3), cf * CFrame.new(0, 4.35, -0.65), Color3.fromRGB(20, 20, 26))
+	part(m, V(0.7, 1.6, 0.7), cf * CFrame.new(-0.45, 0.8, 0), dark)
+	part(m, V(0.7, 1.6, 0.7), cf * CFrame.new(0.45, 0.8, 0), dark)
+	-- arms out in front (holding a gun, a tyre or the jack)
+	part(m, V(0.45, 0.45, 1.5), cf * CFrame.new(-0.6, 3.1, -0.75), colour)
+	part(m, V(0.45, 0.45, 1.5), cf * CFrame.new(0.6, 3.1, -0.75), colour)
 	m.Parent = parent
 	return m
+end
+
+-- move every part of a model from one base frame to another
+local function moveModel(m, from, to, secs)
+	for _, limb in ipairs(m:GetChildren()) do
+		if limb:IsA("BasePart") then
+			local rel = from:ToObjectSpace(limb.CFrame)
+			TweenService:Create(limb, TweenInfo.new(secs, Enum.EasingStyle.Quad), { CFrame = to * rel }):Play()
+		end
+	end
+end
+
+local function tween(p, secs, cf)
+	TweenService:Create(p, TweenInfo.new(secs, Enum.EasingStyle.Quad), { CFrame = cf }):Play()
+end
+
+-- a tyre (axis along the frame's X, like the car's wheels); new ones wear a yellow sidewall
+local function tyre(parent, cf, r, width, new)
+	local m = Instance.new("Model")
+	m.Name = new and "NewTyre" or "OldTyre"
+	local rubber = new and Color3.fromRGB(28, 28, 30) or Color3.fromRGB(70, 66, 62)
+	local main = part(m, V(width, r * 2, r * 2), cf, rubber, Enum.PartType.Cylinder, Enum.Material.SmoothPlastic)
+	if new then
+		part(m, V(width + 0.06, r * 1.7, r * 1.7), cf, Color3.fromRGB(255, 205, 30), Enum.PartType.Cylinder)
+		part(m, V(width + 0.12, r * 1.45, r * 1.45), cf, rubber, Enum.PartType.Cylinder)
+	end
+	part(m, V(width + 0.18, r * 0.9, r * 0.9), cf, Color3.fromRGB(150, 150, 158), Enum.PartType.Cylinder, Enum.Material.Metal)
+	m.PrimaryPart = main
+	m.Parent = parent
+	return m
+end
+
+local function tweenModel(m, secs, cf)
+	moveModel(m, m.PrimaryPart.CFrame, cf, secs)
+end
+
+-- the car's four wheels: { cf, r, width, side (±1 along the car's right), parts to hide }
+local function wheelsOf(car)
+	local chassis = car and car.PrimaryPart
+	if not chassis then return {} end
+	local wheels = {}
+	for _, d in ipairs(car:GetDescendants()) do
+		local tag, side = d.Name:match("^Wheel(%a-)([LR])$")
+		if d:IsA("BasePart") and (tag == "Front" or tag == "Rear") then
+			local hide = { d }
+			local hub = car:FindFirstChild("Hub" .. tag .. side, true)
+			if hub and hub:IsA("BasePart") then table.insert(hide, hub) end
+			table.insert(wheels, { cf = d.CFrame, r = d.Size.Y / 2, width = d.Size.X,
+				side = side == "L" and -1 or 1, hide = hide })
+		end
+	end
+	if #wheels == 4 then return wheels end
+	-- an item for wheels: work on the chassis' corners
+	wheels = {}
+	local c, h = chassis.CFrame, chassis.Size / 2
+	for _, fz in ipairs({ -1, 1 }) do
+		for _, sx in ipairs({ -1, 1 }) do
+			local r = math.clamp(h.Y, 0.6, 1.2)
+			local at = c * CFrame.new(sx * (h.X + 0.3), -h.Y + r - 0.2, fz * (h.Z - r - 0.2))
+			table.insert(wheels, { cf = at * CFrame.Angles(0, 0, 0), r = r, width = 0.6, side = sx, hide = {} })
+		end
+	end
+	return wheels
+end
+
+local function stopwatch(chassis, seconds)
+	local gui = Instance.new("BillboardGui")
+	gui.Size = UDim2.fromOffset(170, 54)
+	gui.StudsOffsetWorldSpace = V(0, 7, 0)
+	gui.AlwaysOnTop = true
+	gui.LightInfluence = 0
+	gui.Adornee = chassis
+	local bg = Instance.new("Frame")
+	bg.Size = UDim2.fromScale(1, 1)
+	bg.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+	bg.BackgroundTransparency = 0.15
+	bg.Parent = gui
+	Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 6)
+	local function label(y, h, font, colour)
+		local t = Instance.new("TextLabel")
+		t.BackgroundTransparency = 1
+		t.Position, t.Size = UDim2.fromScale(0, y), UDim2.fromScale(1, h)
+		t.Font, t.TextScaled, t.TextColor3 = font, true, colour
+		t.Parent = bg
+		return t
+	end
+	local head = label(0.04, 0.36, Enum.Font.GothamBold, Color3.fromRGB(255, 205, 30))
+	head.Text = "PIT STOP · NEW TYRES"
+	local clock = label(0.4, 0.56, Enum.Font.GothamBlack, Color3.fromRGB(255, 255, 255))
+	gui.Parent = chassis
+	local t0 = os.clock()
+	local conn
+	conn = RunService.Heartbeat:Connect(function()
+		local t = math.min(os.clock() - t0, seconds)
+		clock.Text = string.format("%.1f s", t)
+		if t >= seconds then
+			clock.TextColor3 = Color3.fromRGB(60, 220, 90)
+			conn:Disconnect()
+			task.delay(1.6, function() gui:Destroy() end)
+		end
+	end)
 end
 
 local function pitCrew(box, seconds, car)
 	local stop = O + GpLayout.box(box)
 	local _, garage = GpLayout.box(box)
+	local chassis = car and car.PrimaryPart
 	local folder = Instance.new("Folder")
 	folder.Name = "GpCrew"
 	folder.Parent = workspace
 	local colour = Color3.fromHSV(((box * 0.13) % 1), 0.75, 0.9)
 	local home = O + garage
+	local carCf = chassis and chassis.CFrame or CFrame.lookAt(stop, stop + V(0, 0, -1))
+	local look = Vector3.new(carCf.LookVector.X, 0, carCf.LookVector.Z).Unit
+	local right = look:Cross(V(0, 1, 0))
+	local wheels = wheelsOf(car)
+	local ground = (#wheels > 0 and wheels[1].cf.Position.Y - wheels[1].r) or stop.Y
+	local IN = 0.35                         -- the crew runs in
+	local OFF = seconds * 0.2               -- old tyres off by …
+	local ON = seconds * 0.55               -- … new ones on by
 	local members = {}
-	for k, off in ipairs(CREW) do
-		local at = stop + V(off[1] * 1.15, 0, off[2])
-		local m = crewMember(folder, CFrame.lookAt(home, at), colour)
-		members[k] = { m = m, at = CFrame.lookAt(at, stop) * CFrame.new(0, -0.9, 0), home = CFrame.lookAt(home, at) }
-		for _, limb in ipairs(m:GetChildren()) do
-			local rel = members[k].home:ToObjectSpace(limb.CFrame)
-			TweenService:Create(limb, TweenInfo.new(0.35, Enum.EasingStyle.Quad), { CFrame = members[k].at * rel }):Play()
-		end
+	local function come(at, face)
+		local from = CFrame.lookAt(V(home.X, ground, home.Z), V(at.X, ground, at.Z))
+		local m = crewMember(folder, from, colour)
+		local to = face
+		moveModel(m, from, to, IN)
+		table.insert(members, { m = m, at = to, home = from })
+		return m
+	end
+	for _, w in ipairs(wheels) do
+		local hubP = w.cf.Position
+		local out = right * w.side
+		-- kneeling past the wheel's end, the gun on the hub (not in front of it:
+		-- the wheel shows from the side)
+		local ends = (hubP - carCf.Position):Dot(look) >= 0 and 1 or -1
+		local spot = V(hubP.X, ground, hubP.Z) + out * (w.width / 2 + 1.3) + look * ends * 1.7
+		local kneel = CFrame.lookAt(spot, V(hubP.X, ground, hubP.Z)) * CFrame.new(0, -1.1, 0) * CFrame.Angles(math.rad(-15), 0, 0)
+		come(spot, kneel)
+		local gun = part(folder, V(0.4, 0.4, 1.1), CFrame.lookAt(home, hubP), Color3.fromRGB(110, 110, 120), nil, Enum.Material.Metal)
+		local gunAt = hubP + out * (w.width / 2 + 0.6) + look * ends * 0.5
+		tween(gun, IN, CFrame.lookAt(gunAt, hubP + look * ends * 0.5))
+		-- the new tyre, rolled in and waiting beside the wheel
+		local ready = hubP + out * (w.width / 2 + 1.5) - look * ends * 1.2
+		local newT = tyre(folder, w.cf.Rotation + home + V(0, w.r, 0), w.r, w.width, true)
+		tweenModel(newT, IN, w.cf.Rotation + ready)
+		task.delay(IN, function()
+			if not folder.Parent then return end
+			-- off comes the old one
+			for _, p in ipairs(w.hide) do p.LocalTransparencyModifier = 1 end
+			local oldT = tyre(folder, w.cf, w.r, w.width, false)
+			tweenModel(oldT, OFF, w.cf + out * (w.width + 1.6))
+			task.delay(OFF, function()
+				if not oldT.Parent then return end
+				-- out and laid down, clear of the new one
+				tweenModel(oldT, 0.45, (w.cf + out * (w.width + 2.6) + look * ends * 0.6 - V(0, w.r * 0.7, 0)) * CFrame.Angles(0, 0, math.rad(90)))
+				-- on goes the new one
+				tweenModel(newT, ON - OFF, w.cf)
+			end)
+		end)
+		task.delay(seconds - 0.05, function()
+			for _, p in ipairs(w.hide) do p.LocalTransparencyModifier = 0 end
+			if newT.Parent then newT:Destroy() end
+			if gun.Parent then tween(gun, 0.4, CFrame.lookAt(home, hubP)) end
+		end)
+	end
+	if chassis then
+		stopwatch(chassis, seconds)
 	end
 	-- the lollipop in front of the car
-	local lolly = Instance.new("Part")
-	lolly.Shape = Enum.PartType.Cylinder
-	lolly.Size = V(0.3, 2.4, 2.4)
-	lolly.CFrame = CFrame.new(stop + V(0, 5, -7)) * CFrame.Angles(0, math.rad(90), 0)
-	lolly.Color = Color3.fromRGB(220, 30, 30)
-	lolly.Anchored, lolly.CanCollide, lolly.CanQuery = true, false, false
-	lolly.Parent = folder
-	-- the wheel guns
+	local lolly = part(folder, V(0.3, 2.4, 2.4), CFrame.new(stop + V(0, 5, -7)) * CFrame.Angles(0, math.rad(90), 0),
+		Color3.fromRGB(220, 30, 30), Enum.PartType.Cylinder)
+	-- the wheel guns: off, then on
 	local gun = sound(SoundConfig.GP.WRENCH, lolly)
 	gun.RollOffMaxDistance = 150
-	gun:Play()
-	task.delay(seconds * 0.55, function() if gun.Parent then gun:Play() end end)
+	task.delay(IN, function() if gun.Parent then gun:Play() end end)
+	task.delay(IN + ON, function() if gun.Parent then gun:Play() end end)
 	task.delay(math.max(0.4, seconds - 0.3), function()
 		if lolly.Parent then lolly.Color = Color3.fromRGB(40, 200, 80) end
 	end)
 	task.delay(seconds, function()
-		for _, e in ipairs(members) do
-			for _, limb in ipairs(e.m:GetChildren()) do
-				local rel = e.at:ToObjectSpace(limb.CFrame)
-				TweenService:Create(limb, TweenInfo.new(0.4, Enum.EasingStyle.Quad), { CFrame = e.home * rel }):Play()
-			end
-		end
+		for _, e in ipairs(members) do moveModel(e.m, e.at, e.home, 0.4) end
 		task.delay(0.6, function() folder:Destroy() end)
 	end)
 end
