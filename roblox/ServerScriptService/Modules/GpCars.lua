@@ -152,6 +152,16 @@ function GpCars.wearHelmet(character, colour)
 	return model
 end
 
+--- True when `character` wears the helmet on its head (not left behind
+-- on an old head).
+function GpCars.hasHelmet(character)
+	local h = character and character:FindFirstChild(GpCars.HELMET)
+	local head = character and character:FindFirstChild("Head")
+	local shell = h and h:FindFirstChild("Shell")
+	if not (head and shell) then return false end
+	return (shell.Position - head.Position).Magnitude < 3
+end
+
 function GpCars.takeOffHelmet(character)
 	local h = character and character:FindFirstChild(GpCars.HELMET)
 	if h then h:Destroy() end

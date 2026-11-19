@@ -1510,6 +1510,159 @@
           "color": "#FFD23C"
         }
       ]
+    },
+    "en-gp": {
+      "_why": "English reel 2026-11-19, the user's idea: 'film it like an F1 race, helmets on, dead serious and absurd, no lines, English narration; the famous box, box; Top Gun'. Take record-gp (TestHarness/GpTest gp.film, Modules/GpFilm directs the camera). Hard cuts, letterboxed footage; build --clean, the .srt is the narration for CapCut's English TTS; music, radio graphic and titles in CapCut",
+      "format": "9x16",
+      "lang": "en",
+      "segments": [
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 5.0,
+          "dur": 3.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "In a world where cars are made of junk..."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 9.6,
+          "dur": 3.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "one driver dared to sit down."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 16.1,
+          "dur": 4.8,
+          "zoom": 1.45,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Five lights."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 21.0,
+          "dur": 2.6,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Lights out... and away we go."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 29.0,
+          "dur": 2.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 37.0,
+          "dur": 2.6,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "No fear. No limits."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 49.6,
+          "dur": 2.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Just plumbing."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 69.9,
+          "dur": 3.4,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Two wheels. One dream.",
+          "speed": 0.6
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 92.5,
+          "dur": 2.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 108.4,
+          "dur": 1.8,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Box, box."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 113.0,
+          "dur": 3.0,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "Two point six seconds."
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 115.4,
+          "dur": 1.6,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 152.0,
+          "dur": 2.4,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true
+        },
+        {
+          "take": "record-gp",
+          "fit": "black",
+          "t": 162.0,
+          "dur": 3.6,
+          "zoom": 1.7,
+          "cx": 0.5,
+          "hard": true,
+          "say": "This is the Junk Grand Prix."
+        },
+        {
+          "card": true,
+          "bg": "#000000",
+          "dur": 3.4,
+          "y": 0.4,
+          "title": "JUNK GRAND PRIX",
+          "sub": "Buy a car. Earn the track.",
+          "say": "Buy a car. Earn the track."
+        }
+      ]
     }
   }
 }

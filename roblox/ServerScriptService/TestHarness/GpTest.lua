@@ -4,7 +4,9 @@
 -- enters at the desk and drives a whole run on autopilot (GpClient with
 -- player attribute GpAuto: Shared/GpDriver at `gp.skill`, into the pits
 -- when the tyres call for it). Reports every lap, pit stop, reset and
--- rollover (Telemetry gp_*), then ends the match.
+-- rollover (Telemetry gp_*), then ends the match. `gp.film` = the reel
+-- (scenario record-gp): StarterPlayerScripts/Modules/GpFilm directs the
+-- camera, the lights wait `gp.hold` s for the helmet shot.
 
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
@@ -28,7 +30,7 @@ function GpTest.run(args, done)
 	local car = opts.car or "Toilet"
 	rec.cars = { [car] = true }
 	rec.legendOn = "car:" .. car
-	player:SetAttribute("GpAuto", HttpService:JSONEncode({ skill = opts.skill or 0.92, camera = opts.camera }))
+	player:SetAttribute("GpAuto", HttpService:JSONEncode({ skill = opts.skill or 0.92, camera = opts.camera, film = opts.film }))
 	Telemetry.onRecord(function(kind, fields)
 		if kind == "gp_lap" then
 			print(string.format("[GpTest] lap %d  %.3f s  %s", fields.lap or 0, fields.time or 0, fields.valid and "valid" or "DELETED"))

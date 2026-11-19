@@ -39,6 +39,7 @@ local O = LobbyLayout.ORIGIN
 local V = Vector3.new
 
 local _enabled = false
+local _filmHold = 0     -- harness gp.film: seconds in the garage before the lights (the helmet shot)
 local _circuit
 local _sessions = {}   -- userId → session
 local _board = {}      -- key → { name, time, car, bot }
@@ -156,7 +157,7 @@ local function enter(player)
 	GpCars.wearHelmet(char, TEAM[(box - 1) % #TEAM + 1])
 	local seat = car:FindFirstChildWhichIsA("VehicleSeat", true)
 	local t = now()
-	local lightsAt = t + 1.5
+	local lightsAt = t + 1.5 + _filmHold
 	local outAt = lightsAt + 5 * G.LIGHTS.STEP + G.LIGHTS.HOLD[1] + math.random() * (G.LIGHTS.HOLD[2] - G.LIGHTS.HOLD[1])
 	local s = {
 		player = player, car = car, box = box, spec = spec, title = ride.title,
@@ -311,6 +312,12 @@ local function stepSession(s, dt)
 	local hum = char and char:FindFirstChildOfClass("Humanoid")
 	if not hum or (hum.Health or 100) <= 0 then return endSession(s, "died") end
 	local seat = car:FindFirstChildWhichIsA("VehicleSeat", true)
+	-- the helmet stays on (a character that respawned just after entering
+	-- was seated without one: Studio record-gp 2026-11-19)
+	if not GpCars.hasHelmet(char) then
+		GpCars.takeOffHelmet(char)
+		GpCars.wearHelmet(char, TEAM[(s.box - 1) % #TEAM + 1])
+	end
 	if s.released then
 		-- out of the seat (Space, a reset): put back in it, or out after a while
 		if seat and seat.Occupant ~= hum then
@@ -407,6 +414,9 @@ task.spawn(function()
 	_enabled = isEnabled()
 	local okH, harness = pcall(function() return require(Modules.HarnessConfig).get() end)
 	harnessRun = okH and harness ~= nil
+	if harnessRun and type(harness.gp) == "table" and harness.gp.film then
+		_filmHold = tonumber(harness.gp.hold) or 7
+	end
 	ReplicatedStorage:SetAttribute("GpOpen", _enabled)
 	hookPrompt(_circuit)
 	publishBoard()

@@ -297,6 +297,8 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
     dur = seg["dur"]
     fade = min(0.25, dur / 4)
     tail = "fade=t=in:st=0:d=%.2f,fade=t=out:st=%.2f:d=%.2f" % (fade, dur - fade, fade)
+    if seg.get("hard"):
+        tail = "null"   # a hard cut (trailers): no fade in or out
     if seg.get("card"):
         still = os.path.join(work, "card_%02d.png" % k)
         card_image(size, seg, still)

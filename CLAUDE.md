@@ -546,6 +546,12 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   new Junk Town. Offline laps: `lune run tools/gp_sim.luau`; layout PNG:
   `lune run tools/gp_layout.luau && python3 tools/gp_layout.py`; Studio:
   `sim.py run gp-drive` (autopilot run, GpClient attribute GpAuto). Spec `gp`.
+  The helmet is checked every session step (`GpCars.hasHelmet`): a character that
+  respawned just after entering raced bareheaded. Reel footage: `sim.py run record-gp`
+  (gp.film: `StarterPlayerScripts/Modules/GpFilm` directs the camera: visor, gantry
+  lights, T-cam, trackside telephoto, the face, a forced two-wheel lift and box call on
+  lap 2, the crew, the line; the lights wait `gp.hold` s), cut `en-gp` (English
+  narration .srt for CapCut TTS; `"hard": true` segments cut without fades).
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events
