@@ -1512,12 +1512,12 @@
       ]
     },
     "en-gp": {
-      "_why": "English reel 2026-11-19, the user's idea: 'film it like an F1 race, helmets on, dead serious and absurd, no lines, English narration; the famous box, box; Top Gun'. Take record-gp (TestHarness/GpTest gp.film, Modules/GpFilm directs the camera). Hard cuts, letterboxed footage; build --clean, the .srt is the narration for CapCut's English TTS; music, radio graphic and titles in CapCut",
+      "_why": "English reel 2026-11-19, the user's idea: 'film it like an F1 race, helmets on, dead serious and absurd, no lines, English narration; the famous box, box; Top Gun'. Take record-gp (TestHarness/GpTest gp.film, Modules/GpFilm directs the camera). Hard cuts, letterboxed footage; build --clean, the .srt is the narration for CapCut's English TTS; music, radio graphic and titles in CapCut. Take 3 (record-gp, gp.pit 2.6) gives the tyre change seen from the wheels; the rest is take 2 (record-gp-take2)",
       "format": "9x16",
       "lang": "en",
       "segments": [
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 5.0,
           "dur": 3.0,
@@ -1527,7 +1527,7 @@
           "say": "In a world where cars are made of junk..."
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 9.6,
           "dur": 3.0,
@@ -1537,17 +1537,16 @@
           "say": "one driver dared to sit down."
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
-          "t": 16.1,
-          "dur": 4.8,
+          "t": 18.5,
+          "dur": 2.4,
           "zoom": 1.45,
           "cx": 0.5,
-          "hard": true,
-          "say": "Five lights."
+          "hard": true
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 21.0,
           "dur": 2.6,
@@ -1557,7 +1556,7 @@
           "say": "Lights out... and away we go."
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 29.0,
           "dur": 2.0,
@@ -1566,7 +1565,7 @@
           "hard": true
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 37.0,
           "dur": 2.6,
@@ -1576,7 +1575,7 @@
           "say": "No fear. No limits."
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 49.6,
           "dur": 2.0,
@@ -1586,7 +1585,7 @@
           "say": "Just plumbing."
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 69.9,
           "dur": 3.4,
@@ -1597,7 +1596,7 @@
           "speed": 0.6
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 92.5,
           "dur": 2.0,
@@ -1606,7 +1605,7 @@
           "hard": true
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 108.4,
           "dur": 1.8,
@@ -1618,7 +1617,7 @@
         {
           "take": "record-gp",
           "fit": "black",
-          "t": 113.0,
+          "t": 109.8,
           "dur": 3.0,
           "zoom": 1.7,
           "cx": 0.5,
@@ -1628,14 +1627,14 @@
         {
           "take": "record-gp",
           "fit": "black",
-          "t": 115.4,
+          "t": 112.8,
           "dur": 1.6,
           "zoom": 1.7,
           "cx": 0.5,
           "hard": true
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 152.0,
           "dur": 2.4,
@@ -1644,7 +1643,7 @@
           "hard": true
         },
         {
-          "take": "record-gp",
+          "take": "record-gp-take2",
           "fit": "black",
           "t": 162.0,
           "dur": 3.6,

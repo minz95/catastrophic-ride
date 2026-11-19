@@ -2347,7 +2347,8 @@
           "car": "Toilet",
           "skill": 0.95,
           "film": true,
-          "hold": 12
+          "hold": 12,
+          "pit": 2.6
         }
       },
       "record": {

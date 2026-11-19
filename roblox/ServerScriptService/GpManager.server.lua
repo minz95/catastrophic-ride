@@ -40,6 +40,7 @@ local V = Vector3.new
 
 local _enabled = false
 local _filmHold = 0     -- harness gp.film: seconds in the garage before the lights (the helmet shot)
+local _filmPit = nil    -- harness gp.pit: the stop's seconds (the reel's narration names it)
 local _circuit
 local _sessions = {}   -- userId → session
 local _board = {}      -- key → { name, time, car, bot }
@@ -291,7 +292,7 @@ end
 local function pitStop(s)
 	s.pitting = true
 	s.pits += 1
-	local secs = G.PIT_STOP + math.random() * G.PIT_JITTER
+	local secs = _filmPit or (G.PIT_STOP + math.random() * G.PIT_JITTER)
 	send(s.player, { kind = "pit", phase = "stop", seconds = secs })
 	sendAll({ kind = "crew", box = s.box, seconds = secs, car = s.car })
 	Telemetry.record("gp_pit", { userId = s.player.UserId, seconds = secs })
@@ -416,6 +417,7 @@ task.spawn(function()
 	harnessRun = okH and harness ~= nil
 	if harnessRun and type(harness.gp) == "table" and harness.gp.film then
 		_filmHold = tonumber(harness.gp.hold) or 7
+		_filmPit = tonumber(harness.gp.pit)
 	end
 	ReplicatedStorage:SetAttribute("GpOpen", _enabled)
 	hookPrompt(_circuit)

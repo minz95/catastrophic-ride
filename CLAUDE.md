@@ -551,7 +551,11 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   (gp.film: `StarterPlayerScripts/Modules/GpFilm` directs the camera: visor, gantry
   lights, T-cam, trackside telephoto, the face, a forced two-wheel lift and box call on
   lap 2, the crew, the line; the lights wait `gp.hold` s), cut `en-gp` (English
-  narration .srt for CapCut TTS; `"hard": true` segments cut without fades).
+  narration .srt for CapCut TTS; `"hard": true` segments cut without fades;
+  `gp.pit` fixes the stop's seconds, the narration names them). The pit stop reads as
+  a tyre change (GpClient `pitCrew`: a man kneeling at each wheel with a gun, the old
+  tyre off and laid down, a new one with a yellow sidewall on, a stopwatch over the car;
+  ten crew round a small car hid the wheels, and GpFilm's crew shot is low at the wheels).
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events
