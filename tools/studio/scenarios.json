@@ -2324,6 +2324,39 @@
       "checks": {}
     },
     {
+      "name": "record-gp",
+      "kind": "match",
+      "tags": [
+        "video",
+        "gp"
+      ],
+      "_why": "footage for the Junk Grand Prix reel (2026-11-19, the user's idea: 'film it like an F1 race, helmets on, dead serious and absurd, no lines, English narration; the famous box, box'): the gp-drive run (Toilet, autopilot) with StarterPlayerScripts/Modules/GpFilm directing the camera (visor in the garage, the gantry lights, T-cam, trackside telephoto, the face from a camera car, the box call, the crew, a lift on two wheels on lap 2, the line). Cut en-gp. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 330,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "gp": {
+          "car": "Toilet",
+          "skill": 0.95,
+          "film": true,
+          "hold": 12
+        }
+      },
+      "record": {
+        "delay": 8,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
       "name": "lobby-tour",
       "kind": "match",
       "tags": [

@@ -30,6 +30,7 @@ local TouchDrive = require(ReplicatedStorage.Shared.TouchDrive)
 local InputHints = require(ReplicatedStorage.Shared.InputHints)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local GpHud = require(script.Parent:WaitForChild("Modules"):WaitForChild("GpHud"))
+local GpFilm = require(script.Parent.Modules:WaitForChild("GpFilm"))
 
 local LocalPlayer = Players.LocalPlayer
 local G = Constants.GP
@@ -112,6 +113,7 @@ local _camPos, _shakeT = nil, 0
 local function noise(t, k) return math.noise(t * 7.3, k * 13.1, 0.5) end
 
 local function updateCamera(dt, out)
+	if GpFilm.camera(dt, _s, out) then return end   -- filming (TestHarness/GpTest gp.film)
 	local cam = workspace.CurrentCamera
 	local s = _s
 	local chassis = s.chassis
@@ -233,7 +235,8 @@ local function autoInput(s, x, z, yaw)
 			return { throttle = 0, brake = 1, steer = 0 }
 		end
 		if not stopLeg and d < 10 then s.leg += 1 end
-		local want = stopLeg and math.min(G.PIT_LIMIT, math.max(4, d * 1.2)) or G.PIT_LIMIT
+		-- slower into the box (at the limit it ran on into the garage: Studio record-gp)
+		local want = stopLeg and math.min(G.PIT_LIMIT, math.max(4, d * 1.2)) or (s.leg == 4 and 28 or G.PIT_LIMIT)
 		return GpDriver.toward(s.driver, st, x, z, yaw, target.X, target.Z, want, math.max(d, 8))
 	end
 	local input, p = GpDriver.input(s.driver, st, x, z, yaw)
@@ -305,13 +308,14 @@ local function drive(dt)
 		if s.sounds then s.sounds.screech.Volume = 0 end
 		return
 	end
+	local filmRise = GpFilm.adjust(s, out, inPit, chassis)
 	local bv, bav, gyro, susp = movers(chassis)
 	if bv then bv.Velocity = V(-math.sin(out.travelYaw), 0, -math.cos(out.travelYaw)) * out.speed end
 	if bav then bav.AngularVelocity = V(0, out.yawRate, 0) end
 	if gyro then gyro.CFrame = CFrame.fromEulerAnglesYXZ(0, yaw, 0) * CFrame.Angles(0, 0, -out.lean) end
 	if susp and hit then
 		local bump = (surface == "kerb") and (math.random() * 0.22) or 0
-		local y = hit.Position.Y + chassis.Size.Y / 2 + 0.2 + bump
+		local y = hit.Position.Y + chassis.Size.Y / 2 + 0.2 + bump + filmRise
 		susp.Position = V(chassis.Position.X, y, chassis.Position.Z)
 		if susp.MaxForce.Y == 0 then susp.MaxForce = V(0, 4e4, 0) end
 	end
@@ -328,6 +332,7 @@ local function drive(dt)
 	local boxCall = st.tyre < G.TYRE.BOX_AT and not s.lastLap
 	if boxCall and not s.boxCalled then
 		s.boxCalled = true
+		GpFilm.event("boxcall")
 		GpHud.radio("Box, box. Box this lap. Stop on your yellow mark in the pit lane.", 5)
 	end
 	GpHud.dash(out.speed * G.KMH, out.gear, out.rpm, st.tyre, boxCall)
@@ -481,6 +486,7 @@ local function startSession(msg)
 		lapStart = nil, best = msg.best, title = msg.title,
 	}
 	_s = s
+	GpFilm.event("session", { lightsAt = msg.lightsAt })
 	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 	if hum then pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false) end) end
 	s.sounds = {
@@ -502,11 +508,13 @@ local function startSession(msg)
 			while workspace:GetServerTimeNow() < at do task.wait() end
 			if _s ~= s then rev:Destroy() return end
 			GpHud.lights(k)
+			GpFilm.event("light", k)
 			if k == 3 then rev:Play() end
 		end
 		while workspace:GetServerTimeNow() < msg.outAt do task.wait() end
 		if _s ~= s then rev:Destroy() return end
 		GpHud.lights("out")
+		GpFilm.event("out")
 		GpHud.banner("LIGHTS OUT AND AWAY WE GO!", Color3.fromRGB(255, 255, 255), 2.2)
 		GpHud.radio("Out lap. Warm the tyres, mind the pit limiter.", 4)
 		task.wait(1.2)
@@ -569,6 +577,7 @@ RemoteEvents.GpEvent.OnClientEvent:Connect(function(msg)
 		else
 			s.lastLap = true
 			s.finishedAt = os.clock()
+			GpFilm.event("finish")
 			GpHud.banner("CHEQUERED FLAG", Color3.fromRGB(255, 255, 255), 3)
 		end
 	elseif kind == "start" then
@@ -582,10 +591,12 @@ RemoteEvents.GpEvent.OnClientEvent:Connect(function(msg)
 	elseif kind == "pit" then
 		if msg.phase == "stop" then
 			s.pitting = true
+			GpFilm.event("pit")
 			GpHud.banner("PIT STOP", Color3.fromRGB(255, 220, 60), msg.seconds)
 		else
 			s.pitting = false
 			s.pitDone = true
+			GpFilm.event("pitgo")
 			s.st.tyre = 1
 			s.boxCalled = false
 			GpHud.banner(string.format("%.1f s STOP!", msg.seconds or 0), Color3.fromRGB(80, 230, 120), 2)
@@ -660,6 +671,7 @@ local function autoStart()
 	local ok, cfg = pcall(function() return HttpService:JSONDecode(raw) end)
 	_auto = ok and cfg or { skill = 0.92 }
 	if _auto.camera then _camMode = _auto.camera end
+	if _auto.film then GpFilm.start() end
 	task.spawn(function()
 		-- (a character still loading is turned away: try again)
 		for _ = 1, 15 do

@@ -456,6 +456,11 @@ R.describe("Junk GP in a server", function()
 		-- the car with them, back on the plaza at the lights)
 		local root = p.Character.HumanoidRootPart
 		R.expect(m.Lobby.onPlaza(root.Position)).toBe(false)
+		-- a lost helmet goes back on (Studio record-gp: a character that
+		-- respawned just after entering raced bareheaded)
+		p.Character:FindFirstChild("GpHelmet"):Destroy()
+		srv.advance(0.5)
+		R.expect(p.Character:FindFirstChild("GpHelmet") ~= nil).toBe(true)
 		-- a second player gets another box
 		srv.players[2]:SetAttribute("x", 1)
 		m.PlayerStore.get(srv.players[2]).cars = { Toilet = true }
