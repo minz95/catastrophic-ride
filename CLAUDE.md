@@ -617,7 +617,9 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   down and bumps it; luge.whoop throws the rider at a lip once), cut
   `en-luge` (`"look": "vhs"` in cuts.json: a 4:3 picture, sunset titles,
   starburst badges, the VCR's PLAY, a tape's softness, colour bleed, grain,
-  scanlines, the camcorder's date; .srt = the announcer for CapCut's TTS).
+  scanlines, the camcorder's date; .srt = the announcer for CapCut's TTS); cut `kr-luge` the same in a 90s Korean TV ad's style
+  (`"lang": "ko"` with look vhs: gold titles in a red and a white outline, a
+  Nanum Brush line, a red starburst, a sky-blue ray card `bg: "burst"`).
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

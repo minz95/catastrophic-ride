@@ -1664,7 +1664,7 @@
       ]
     },
     "en-luge": {
-      "_why": "English ad 2026-11-20, the user's idea: 'the luge: come and play at Junk Town resort! a theme park ad, antique, like an old 80s commercial'. Take record-luge (TestHarness/LugeTest luge.film, Modules/LugeFilm directs the camera, Modules/LugeCrowd the guests). look vhs: a 4:3 picture, sunset titles, a tape's softness, colour bleed, grain, scanlines, the camcorder's date; build --clean, the .srt is the announcer's lines for CapCut's English TTS; a retro jingle in CapCut",
+      "_why": "English ad 2026-11-20, the user's idea: 'the luge: come and play at Junk Town resort! a theme park ad, antique, like an old 80s commercial'. Take record-luge (TestHarness/LugeTest luge.film, Modules/LugeFilm directs the camera, Modules/LugeCrowd the guests). look vhs: a 4:3 picture, sunset titles, a tape's softness, colour bleed, grain, scanlines, the camcorder's date; build --clean, the .srt is the announcer's lines for CapCut's English TTS; a retro jingle in CapCut. 2026-11-20 CapCut: 'an 80s American funk-style ad' (Chad Bro, a funk track): the announcer's lines a little groovier",
       "format": "9x16",
       "lang": "en",
       "look": "vhs",
@@ -1678,7 +1678,7 @@
           "osd": "PLAY ▶",
           "osdY": 0.06,
           "script": "Tired of the same\nold weekend?",
-          "say": "Tired of the same old weekend?"
+          "say": "Hey you! Tired of the same old weekend?"
         },
         {
           "take": "record-luge",
@@ -1691,7 +1691,7 @@
           "y": 0.06,
           "script": "Come on down to",
           "title": "JUNK TOWN\nRESORT!",
-          "say": "Then come on down... to Junk Town Resort!"
+          "say": "Then get on down... to Junk Town Resort!"
         },
         {
           "take": "record-luge",
@@ -1703,7 +1703,7 @@
           "hard": true,
           "y": 0.08,
           "script": "Scenic chairlift!",
-          "say": "Ride our scenic chairlift..."
+          "say": "Ride the groovy chairlift..."
         },
         {
           "take": "record-luge",
@@ -1718,7 +1718,7 @@
           "badge": "NEW!",
           "badgeX": 0.78,
           "badgeY": 0.78,
-          "say": "...to the brand-new Alpine Luge!"
+          "say": "...to the brand-new Alpine Luge! Yeah!"
         },
         {
           "take": "record-luge",
@@ -1741,7 +1741,7 @@
           "hard": true,
           "y": 0.08,
           "script": "7 hairpin turns!",
-          "say": "...and zoom down seven hairpin turns!"
+          "say": "...and slide down seven funky hairpins!"
         },
         {
           "take": "record-luge",
@@ -1765,7 +1765,7 @@
           "badge": "BONK!",
           "badgeX": 0.76,
           "badgeY": 0.76,
-          "say": "Bring the whole family!"
+          "say": "Bump into your buddies! Bonk!"
         },
         {
           "take": "record-luge",
@@ -1797,7 +1797,145 @@
           "script": "Visit",
           "title": "JUNK TOWN\nRESORT",
           "sub": "Bring your car! Bring a friend!\nCatastrophic Ride on Roblox",
-          "say": "Junk Town Resort. Bring your car... and bring a friend!"
+          "say": "Junk Town Resort! Bring your car, bring a friend... and get down!"
+        }
+      ]
+    },
+    "kr-luge": {
+      "_why": "Korean ad 2026-11-20, the user's idea: 'the same luge ad in a 90s Korean TV ad style'. The en-luge footage with look vhs in Korean (overlay_retro lang ko: gold titles in a red and a white outline, a brush line, a red starburst, a sky-blue ray card); build --clean, the .srt is the narrator's lines for CapCut's Korean TTS",
+      "format": "9x16",
+      "lang": "ko",
+      "look": "vhs",
+      "stamp": "1996. 7. 20",
+      "segments": [
+        {
+          "card": true,
+          "bg": "burst",
+          "dur": 2.8,
+          "y": 0.1,
+          "osd": "PLAY ▶",
+          "osdY": 0.06,
+          "script": "지루한 주말은\n이제 그만!",
+          "say": "지루한 주말은, 이제 그만!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 2.0,
+          "dur": 3.4,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.06,
+          "script": "온 가족 나들이는",
+          "title": "정크타운\n리조트!",
+          "say": "온 가족이 함께! 정크타운 리조트로 오세요!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 6.2,
+          "dur": 3.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "하늘을 나는 리프트!",
+          "say": "하늘을 나는 리프트를 타고~"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 10.0,
+          "dur": 3.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.06,
+          "badgeX": 0.78,
+          "badgeY": 0.78,
+          "title": "알파인 루지",
+          "badge": "국내\n최초!",
+          "say": "국내 최초! 알파인 루지!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 20.6,
+          "dur": 1.8,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "say": "꽉 잡으세요~!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 40.0,
+          "dur": 2.6,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "구불구불 일곱 굽이!",
+          "say": "구불구불 일곱 굽이를 쌩쌩!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 124.0,
+          "dur": 2.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 104.0,
+          "dur": 3.4,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "badgeX": 0.76,
+          "badgeY": 0.76,
+          "badge": "쿵!",
+          "say": "친구랑 쿵! 부딪혀도 즐거워요!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 28.0,
+          "dur": 2.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 59.0,
+          "dur": 2.6,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "남녀노소 누구나!",
+          "say": "남녀노소 누구나 즐거운!"
+        },
+        {
+          "card": true,
+          "bg": "burst",
+          "dur": 4.4,
+          "y": 0.1,
+          "script": "놀러 오세요~",
+          "title": "정크타운\n리조트",
+          "sub": "내 차 끌고, 친구 데리고!\n로블록스 Catastrophic Ride",
+          "say": "정크타운 리조트! 내 차 끌고, 친구랑 놀러 오세요~!"
         }
       ]
     }
