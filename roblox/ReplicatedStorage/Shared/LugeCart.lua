@@ -92,7 +92,8 @@ function LugeCart.step(spec, st, input, ctx)
 	-- the trough is a U: toward a side its wall turns the cart back in
 	-- (nothing in the middle; most at the lip). Without it a person on a
 	-- keyboard, a moment late, weaved from lip to lip and over (luge_sim)
-	if not st.off then
+	if (st.loose or 0) > 0 then st.loose -= dt end
+	if not st.off and (st.loose or 0) <= 0 then
 		local lat0 = at.lateral or 0
 		local w = math.clamp(math.abs(lat0) / math.max(LugeCart.edge(spec), 0.5), 0, 1) ^ 2
 		if w > 0 then
@@ -103,7 +104,7 @@ function LugeCart.step(spec, st, input, ctx)
 			yawRate += math.clamp((latV0 - wantLat) / math.max(v, 4), -1, 1) * L.TROUGH.GUIDE * w
 		end
 	end
-	if (st.align or 0) > 0 then
+	if (st.align or 0) > 0 and (st.loose or 0) <= 0 then
 		-- just off a lip: the nose swings back along the trough
 		st.align -= dt
 		yawRate += math.clamp(wrap(at.yaw - yaw) * L.ALIGN, -L.ALIGN, L.ALIGN)

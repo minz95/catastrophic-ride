@@ -1,0 +1,3872 @@
+{
+ "checks": [
+  {
+   "level": "fail",
+   "message": "no round completed"
+  }
+ ],
+ "commit": "5d95218",
+ "dirty": true,
+ "kind": "match",
+ "logErrors": [
+  "2026-11-20T08:09:57.661Z,2.661699,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-20T08:09:58.704Z,3.704577,6dcb7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"8ee3d52a-8c01-48fc-a690-d85092310432\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
+  "2026-11-20T08:10:57.662Z,62.662930,6daab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-20T08:11:57.664Z,122.664162,6daab000,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-11-20T08:12:38.744Z,163.744583,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-20T08:12:38.744Z,163.744659,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-20T08:12:39.303Z,164.303421,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-20T08:12:39.303Z,164.303467,3a460c0,6,Error [FLog::UIThreadNotifier] connection received error '1'",
+  "2026-11-20T08:12:41.067Z,166.067993,6daab000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"8ee3d52a-8c01-48fc-a690-d85092310432\",\"status\":400,\"message\":\"Place does not exist.\"}"
+ ],
+ "opts": {
+  "biome": "FOREST",
+  "driverProfiles": [
+   "average"
+  ],
+  "farmProfiles": [
+   "filmer"
+  ],
+  "lobbyDelay": 600,
+  "luge": {
+   "crowd": 7,
+   "follow": true,
+   "riders": [
+    {
+     "car": "Rubber Duck",
+     "film": true,
+     "runs": 2,
+     "skill": 0.95,
+     "whoop": {
+      "run": 1,
+      "s": 655
+     }
+    }
+   ]
+  },
+  "maxSeconds": 300,
+  "players": 1,
+  "rounds": 1
+ },
+ "ranAt": "2026-11-20T17:12:45+0900",
+ "report": {
+  "args": {
+   "biome": "FOREST",
+   "bots": {
+    "driverProfiles": [
+     "average"
+    ],
+    "farmProfiles": [
+     "filmer"
+    ]
+   },
+   "durations": {
+    "CRAFTING": 20,
+    "FARMING": 60,
+    "RACING": 240,
+    "RESULTS": 5
+   },
+   "harness": "match",
+   "joinTimeout": 90,
+   "lobbyDelay": 600,
+   "luge": {
+    "crowd": 7,
+    "follow": true,
+    "riders": [
+     {
+      "car": "Rubber Duck",
+      "film": true,
+      "runs": 2,
+      "skill": 0.95,
+      "whoop": {
+       "run": 1,
+       "s": 655
+      }
+     }
+    ]
+   },
+   "maxSeconds": 300,
+   "players": 1,
+   "rounds": 1
+  },
+  "botNotes": [],
+  "clientErrors": [],
+  "endReason": "luge done leave",
+  "errors": [],
+  "harness": "match",
+  "rounds": [],
+  "summary": "Bot match: 0 round(s), end: luge done leave, server errors: 0, client errors: 0\n  events: bot_joined=1 bot_luge_bumped=50 bot_luge_enter_try=1 bot_luge_finish=2 bot_luge_hop=1 bot_luge_sample=90 bot_ready=1 bot_sound=39 luge_bump=50 luge_end=1 luge_enter=1 luge_go=2 luge_run=2 server_perf=71",
+  "telemetry": {
+   "dropped": 0,
+   "events": [
+    {
+     "heartbeatHz": 35.9,
+     "kind": "server_perf",
+     "memMb": 2410,
+     "phase": "LOBBY",
+     "physicsFps": 52.9,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 2.112
+    },
+    {
+     "heartbeatHz": 55.8,
+     "kind": "server_perf",
+     "memMb": 2440,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 0,
+     "recvKbps": 0,
+     "sendKbps": 0,
+     "t": 4.118
+    },
+    {
+     "driver": "average",
+     "farm": "filmer",
+     "kind": "bot_joined",
+     "name": "Player1",
+     "t": 4.759,
+     "userId": -1
+    },
+    {
+     "data": {
+      "driver": "average",
+      "farm": "filmer"
+     },
+     "kind": "bot_ready",
+     "t": 5.151,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest6.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409326541237533,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest6.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409356791526079,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest3.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4093905412591994,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest3.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409401416312903,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest2.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409429416526109,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest2.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4094357499852777,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4094601664692163,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409466083161533,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest5.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4094867915846407,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest5.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.40949241630733,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest4.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.40951683325693,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest4.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4095224579796195,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest7.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409608833026141,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.LugeGuest7.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4096210412681103,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112779173",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.GpGrandstand.GpStandRoof.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.409730041399598,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9112779173",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.JunkGP.GpGrandstand.GpStandRoof.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 3.4097373746335506,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 5.977,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 54.3,
+     "kind": "server_perf",
+     "memMb": 2474,
+     "phase": "LOBBY",
+     "physicsFps": 59.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 43.1,
+     "t": 6.141
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.195483458228409,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 6.835,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Effects",
+      "id": "rbxassetid://9116394545",
+      "looped": false,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.195520333014429,
+      "volume": 0.3499999940395355
+     },
+     "kind": "bot_sound",
+     "t": 6.835,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.195581624750048,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 6.835,
+     "userId": -1
+    },
+    {
+     "data": {
+      "group": "Music",
+      "id": "rbxassetid://122548743506590",
+      "looped": true,
+      "name": "Sound",
+      "path": "SoundService.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.195591832976788,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 6.835,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.282066791318357,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 6.835,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 4.379720166325569,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 6.885,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 58.7,
+     "kind": "server_perf",
+     "memMb": 2525,
+     "phase": "LOBBY",
+     "physicsFps": 59.6,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.3,
+     "t": 8.165
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_jump_land.mp3",
+      "looped": false,
+      "name": "Landing",
+      "path": "Workspace.Player1.HumanoidRootPart.Landing",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 5.717768041417003,
+      "volume": 1
+     },
+     "kind": "bot_sound",
+     "t": 8.201,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 5.752194874919951,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 8.234,
+     "userId": -1
+    },
+    {
+     "car": "Rubber Duck",
+     "kind": "luge_enter",
+     "t": 8.839,
+     "userId": -1
+    },
+    {
+     "data": {
+      "result": "ok"
+     },
+     "kind": "bot_luge_enter_try",
+     "t": 8.885,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 6.412795124575496,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 8.901,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 6.412818083073944,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 8.901,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 6.795987583231181,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 9.285,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125955982",
+      "looped": true,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 6.796009666286409,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 9.285,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.3,
+     "kind": "server_perf",
+     "memMb": 2605,
+     "phase": "LOBBY",
+     "physicsFps": 60.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.2,
+     "t": 10.168
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2606,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.6,
+     "t": 12.172
+    },
+    {
+     "heartbeatHz": 58,
+     "kind": "server_perf",
+     "memMb": 2625,
+     "phase": "LOBBY",
+     "physicsFps": 59.1,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 25.5,
+     "t": 14.186
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2568,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.4,
+     "t": 16.202
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2571,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 29.7,
+     "t": 18.219
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2572,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.1,
+     "t": 20.235
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2573,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.4,
+     "t": 22.252
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2575,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35,
+     "t": 24.269
+    },
+    {
+     "heartbeatHz": 59,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 33.3,
+     "t": 26.284
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.2,
+     "t": 28.302
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125935023",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 26.145457666367292,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 28.634,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125935023",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 26.145510707981884,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 28.634,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125935023",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 26.847136583179235,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 29.334,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9125935023",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.Camera.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 26.84736349992454,
+      "volume": 0.44999998807907104
+     },
+     "kind": "bot_sound",
+     "t": 29.334,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 33.1,
+     "t": 30.318
+    },
+    {
+     "kind": "luge_go",
+     "ready": true,
+     "slot": 1,
+     "t": 30.75,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 0,
+      "lat": -2.8,
+      "off": false,
+      "real": 0,
+      "s": 5,
+      "surface": "LugeTrough",
+      "x": -150.6,
+      "y": 92.5,
+      "z": -458.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 30.8,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 23,
+      "lat": -0.3,
+      "off": false,
+      "real": 23,
+      "s": 18,
+      "surface": "LugeTrough",
+      "x": -164.3,
+      "y": 91.3,
+      "z": -459
+     },
+     "kind": "bot_luge_sample",
+     "t": 31.817,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 37.7,
+     "t": 32.334
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": 0.1,
+      "off": false,
+      "real": 19,
+      "s": 40,
+      "surface": "LugeTrough",
+      "x": -185.9,
+      "y": 91.2,
+      "z": -456.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 32.833,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 16,
+      "lat": 0,
+      "off": false,
+      "real": 17,
+      "s": 58,
+      "surface": "LugeTrough",
+      "x": -204.3,
+      "y": 91.2,
+      "z": -453.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 33.85,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2579,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.7,
+     "t": 34.336
+    },
+    {
+     "data": {
+      "cmd": 14,
+      "lat": -0.1,
+      "off": false,
+      "real": 14,
+      "s": 74,
+      "surface": "LugeTrough",
+      "x": -219.9,
+      "y": 91.2,
+      "z": -450.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 34.851,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 13,
+      "lat": -0.1,
+      "off": false,
+      "real": 14,
+      "s": 88,
+      "surface": "LugeTrough",
+      "x": -234,
+      "y": 91.2,
+      "z": -448.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 35.868,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2580,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.8,
+     "t": 36.352
+    },
+    {
+     "data": {
+      "cmd": 14,
+      "lat": 0,
+      "off": false,
+      "real": 14,
+      "s": 102,
+      "surface": "LugeTrough",
+      "x": -247.8,
+      "y": 91.2,
+      "z": -446.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 36.867,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 16,
+      "lat": -0.6,
+      "off": false,
+      "real": 16,
+      "s": 117,
+      "surface": "LugeTrough",
+      "x": -262,
+      "y": 91.1,
+      "z": -444
+     },
+     "kind": "bot_luge_sample",
+     "t": 37.867,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2580,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.7,
+     "t": 38.368
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 1,
+      "off": false,
+      "real": 21,
+      "s": 138,
+      "surface": "LugeTrough",
+      "x": -273.1,
+      "y": 88.6,
+      "z": -428.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 38.867,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.4,
+      "off": false,
+      "real": 22,
+      "s": 161,
+      "surface": "LugeTrough",
+      "x": -261.8,
+      "y": 86,
+      "z": -411.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 39.868,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2581,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.8,
+     "t": 40.385
+    },
+    {
+     "data": {
+      "cmd": 41,
+      "lat": 0.4,
+      "off": false,
+      "real": 41,
+      "s": 193,
+      "surface": "LugeTrough",
+      "x": -230,
+      "y": 82.3,
+      "z": -406
+     },
+     "kind": "bot_luge_sample",
+     "t": 40.884,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 33,
+      "lat": -0.1,
+      "off": false,
+      "real": 33,
+      "s": 235,
+      "surface": "LugeTrough",
+      "x": -188,
+      "y": 79.3,
+      "z": -400
+     },
+     "kind": "bot_luge_sample",
+     "t": 41.901,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2581,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.6,
+     "t": 42.402
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": 0.2,
+      "off": false,
+      "real": 19,
+      "s": 260,
+      "surface": "LugeTrough",
+      "x": -163.2,
+      "y": 78.2,
+      "z": -395.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 42.9,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.8,
+      "off": false,
+      "real": 21,
+      "s": 283,
+      "surface": "LugeTrough",
+      "x": -149.3,
+      "y": 75.9,
+      "z": -381.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 43.916,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2583,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.7,
+     "t": 44.417
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.1,
+      "off": false,
+      "real": 21,
+      "s": 305,
+      "surface": "LugeTrough",
+      "x": -158.9,
+      "y": 73.3,
+      "z": -363.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 44.916,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 39,
+      "lat": -0.9,
+      "off": false,
+      "real": 38,
+      "s": 335,
+      "surface": "LugeTrough",
+      "x": -188.6,
+      "y": 69.9,
+      "z": -359.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 45.934,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2584,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.6,
+     "t": 46.419
+    },
+    {
+     "data": {
+      "cmd": 36,
+      "lat": 0.9,
+      "off": false,
+      "real": 37,
+      "s": 377,
+      "surface": "LugeTrough",
+      "x": -228.7,
+      "y": 66.1,
+      "z": -351
+     },
+     "kind": "bot_luge_sample",
+     "t": 46.949,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": -0.2,
+      "off": false,
+      "real": 20,
+      "s": 404,
+      "surface": "LugeTrough",
+      "x": -255.4,
+      "y": 65.2,
+      "z": -346.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 47.949,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.5,
+     "t": 48.434
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.2,
+      "off": false,
+      "real": 21,
+      "s": 426,
+      "surface": "LugeTrough",
+      "x": -271.8,
+      "y": 63.4,
+      "z": -335.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 48.951,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.2,
+     "t": 49.384,
+     "x": -273,
+     "z": -334
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9113537815",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 46.92672362457961,
+      "volume": 0.38373392820358276
+     },
+     "kind": "bot_sound",
+     "t": 49.416,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9113537815",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 46.92675087461248,
+      "volume": 0.38373392820358276
+     },
+     "kind": "bot_sound",
+     "t": 49.416,
+     "userId": -1
+    },
+    {
+     "data": {
+      "power": 1.2560089810681498
+     },
+     "kind": "bot_luge_bumped",
+     "t": 49.416,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.6,
+     "t": 49.751,
+     "x": -273,
+     "z": -325
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9113537815",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 47.27673949999735,
+      "volume": 0.3447088897228241
+     },
+     "kind": "bot_sound",
+     "t": 49.766,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxassetid://9113537815",
+      "looped": false,
+      "name": "Sound",
+      "path": "Workspace.AlpineLuge.Carts.Luge_Player1.Chassis.Sound",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 47.276790499687195,
+      "volume": 0.3447088897228241
+     },
+     "kind": "bot_sound",
+     "t": 49.766,
+     "userId": -1
+    },
+    {
+     "data": {
+      "power": 0.6706332178718983
+     },
+     "kind": "bot_luge_bumped",
+     "t": 49.766,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": -0.4,
+      "off": false,
+      "real": 22,
+      "s": 449,
+      "surface": "LugeTrough",
+      "x": -266.8,
+      "y": 60.6,
+      "z": -315
+     },
+     "kind": "bot_luge_sample",
+     "t": 49.967,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.6,
+     "t": 50.117,
+     "x": -270,
+     "z": -318
+    },
+    {
+     "data": {
+      "power": 0.6272325184521172
+     },
+     "kind": "bot_luge_bumped",
+     "t": 50.134,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.9,
+     "t": 50.435
+    },
+    {
+     "data": {
+      "cmd": 38,
+      "lat": 0.8,
+      "off": false,
+      "real": 37,
+      "s": 478,
+      "surface": "LugeTrough",
+      "x": -239.2,
+      "y": 57.3,
+      "z": -306.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 50.968,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 37,
+      "lat": -0.1,
+      "off": false,
+      "real": 37,
+      "s": 521,
+      "surface": "LugeTrough",
+      "x": -196.1,
+      "y": 52.7,
+      "z": -299.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 51.982,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 34.6,
+     "t": 52.437
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3.1,
+     "t": 52.484,
+     "x": -188,
+     "z": -299
+    },
+    {
+     "data": {
+      "power": 3.1900408753937803
+     },
+     "kind": "bot_luge_bumped",
+     "t": 52.517,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 2.9,
+     "t": 52.851,
+     "x": -177,
+     "z": -299
+    },
+    {
+     "data": {
+      "power": 2.930170345960081
+     },
+     "kind": "bot_luge_bumped",
+     "t": 52.883,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": 0.1,
+      "off": false,
+      "real": 21,
+      "s": 550,
+      "surface": "LugeTrough",
+      "x": -167.5,
+      "y": 52.1,
+      "z": -297.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 53,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 2,
+     "t": 53.218,
+     "x": -169,
+     "z": -298
+    },
+    {
+     "data": {
+      "power": 2.0044887850567092
+     },
+     "kind": "bot_luge_bumped",
+     "t": 53.251,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 53.585,
+     "x": -162,
+     "z": -297
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 53.616,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.9,
+     "t": 53.951,
+     "x": -155,
+     "z": -293
+    },
+    {
+     "data": {
+      "power": 0.9831114986431362
+     },
+     "kind": "bot_luge_bumped",
+     "t": 53.966,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 23,
+      "lat": -0.2,
+      "off": false,
+      "real": 23,
+      "s": 573,
+      "surface": "LugeTrough",
+      "x": -150,
+      "y": 50.3,
+      "z": -286.6
+     },
+     "kind": "bot_luge_sample",
+     "t": 54.016,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.7,
+     "t": 54.317,
+     "x": -150,
+     "z": -287
+    },
+    {
+     "data": {
+      "power": 1.7715949148080472
+     },
+     "kind": "bot_luge_bumped",
+     "t": 54.332,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 31,
+     "t": 54.45
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.6,
+     "t": 54.67,
+     "x": -149,
+     "z": -279
+    },
+    {
+     "data": {
+      "power": 1.659004139885167
+     },
+     "kind": "bot_luge_bumped",
+     "t": 54.699,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.2,
+      "off": false,
+      "real": 21,
+      "s": 595,
+      "surface": "LugeTrough",
+      "x": -155.5,
+      "y": 47.6,
+      "z": -266.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 55.016,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 55.033,
+     "x": -152,
+     "z": -271
+    },
+    {
+     "data": {
+      "power": 1.4959591522976983
+     },
+     "kind": "bot_luge_bumped",
+     "t": 55.066,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.5,
+     "t": 55.402,
+     "x": -158,
+     "z": -266
+    },
+    {
+     "data": {
+      "power": 0.5619729520913844
+     },
+     "kind": "bot_luge_bumped",
+     "t": 55.433,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 39,
+      "lat": -0.9,
+      "off": false,
+      "real": 39,
+      "s": 625,
+      "surface": "LugeTrough",
+      "x": -184.3,
+      "y": 44.2,
+      "z": -259.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 56.034,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 27.6,
+     "t": 56.451
+    },
+    {
+     "data": {
+      "cmd": 37,
+      "lat": 0,
+      "off": false,
+      "real": 37,
+      "s": 669,
+      "surface": "LugeTrough",
+      "x": -227.7,
+      "y": 40.6,
+      "z": -254
+     },
+     "kind": "bot_luge_sample",
+     "t": 57.051,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3.7,
+     "t": 57.783,
+     "x": -243,
+     "z": -252
+    },
+    {
+     "data": {
+      "power": 3.717660966924722
+     },
+     "kind": "bot_luge_bumped",
+     "t": 57.801,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": -0.1,
+      "off": false,
+      "real": 20,
+      "s": 697,
+      "surface": "LugeTrough",
+      "x": -255.7,
+      "y": 39.4,
+      "z": -249.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 58.067,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 2.2,
+     "t": 58.134,
+     "x": -252,
+     "z": -251
+    },
+    {
+     "data": {
+      "power": 2.2241908772617074
+     },
+     "kind": "bot_luge_bumped",
+     "t": 58.166,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 24.5,
+     "t": 58.466
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 58.484,
+     "x": -259,
+     "z": -249
+    },
+    {
+     "data": {
+      "power": 1.475175784155288
+     },
+     "kind": "bot_luge_bumped",
+     "t": 58.499,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.2,
+     "t": 58.851,
+     "x": -266,
+     "z": -246
+    },
+    {
+     "data": {
+      "power": 1.2294742182054985
+     },
+     "kind": "bot_luge_bumped",
+     "t": 58.866,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.2,
+      "off": false,
+      "real": 22,
+      "s": 720,
+      "surface": "LugeTrough",
+      "x": -272.3,
+      "y": 37.4,
+      "z": -237.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 59.066,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.6,
+     "t": 59.218,
+     "x": -272,
+     "z": -240
+    },
+    {
+     "data": {
+      "power": 1.6130161280506956
+     },
+     "kind": "bot_luge_bumped",
+     "t": 59.233,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.5,
+     "t": 59.585,
+     "x": -274,
+     "z": -232
+    },
+    {
+     "data": {
+      "power": 1.5584750166042567
+     },
+     "kind": "bot_luge_bumped",
+     "t": 59.615,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.3,
+     "t": 59.951,
+     "x": -272,
+     "z": -224
+    },
+    {
+     "data": {
+      "power": 1.357372991820736
+     },
+     "kind": "bot_luge_bumped",
+     "t": 59.984,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 23,
+      "lat": -0.3,
+      "off": false,
+      "real": 23,
+      "s": 743,
+      "surface": "LugeTrough",
+      "x": -265.8,
+      "y": 34.7,
+      "z": -216.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 60.065,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 60.316,
+     "x": -266,
+     "z": -217
+    },
+    {
+     "data": {
+      "power": 1.435263085008005
+     },
+     "kind": "bot_luge_bumped",
+     "t": 60.349,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2583,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.5,
+     "t": 60.484
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 60.683,
+     "x": -258,
+     "z": -214
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 60.715,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 41,
+      "lat": 0.8,
+      "off": false,
+      "real": 41,
+      "s": 773,
+      "surface": "LugeTrough",
+      "x": -236.3,
+      "y": 31.2,
+      "z": -210.6
+     },
+     "kind": "bot_luge_sample",
+     "t": 61.066,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 36,
+      "lat": -0.1,
+      "off": false,
+      "real": 36,
+      "s": 818,
+      "surface": "LugeTrough",
+      "x": -192.6,
+      "y": 27.6,
+      "z": -204.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 62.082,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2583,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.2,
+     "t": 62.485
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": 0.1,
+      "off": false,
+      "real": 20,
+      "s": 845,
+      "surface": "LugeTrough",
+      "x": -165.5,
+      "y": 26.4,
+      "z": -200.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 63.1,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3.6,
+     "t": 63.101,
+     "x": -172,
+     "z": -202
+    },
+    {
+     "data": {
+      "power": 3.611454337496723
+     },
+     "kind": "bot_luge_bumped",
+     "t": 63.116,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.5,
+     "t": 63.466,
+     "x": -164,
+     "z": -200
+    },
+    {
+     "data": {
+      "power": 1.5257187576297515
+     },
+     "kind": "bot_luge_bumped",
+     "t": 63.482,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.9,
+     "t": 63.816,
+     "x": -158,
+     "z": -198
+    },
+    {
+     "data": {
+      "power": 0.9530162136457538
+     },
+     "kind": "bot_luge_bumped",
+     "t": 63.849,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.6,
+      "off": false,
+      "real": 22,
+      "s": 868,
+      "surface": "LugeTrough",
+      "x": -149.5,
+      "y": 24.3,
+      "z": -187
+     },
+     "kind": "bot_luge_sample",
+     "t": 64.117,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.2,
+     "t": 64.166,
+     "x": -152,
+     "z": -193
+    },
+    {
+     "data": {
+      "power": 1.2679679469657337
+     },
+     "kind": "bot_luge_bumped",
+     "t": 64.183,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2585,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.1,
+     "t": 64.499
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 64.517,
+     "x": -150,
+     "z": -185
+    },
+    {
+     "data": {
+      "power": 1.4630647563769215
+     },
+     "kind": "bot_luge_bumped",
+     "t": 64.55,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.6,
+     "t": 64.883,
+     "x": -150,
+     "z": -177
+    },
+    {
+     "data": {
+      "power": 1.6065893265222102
+     },
+     "kind": "bot_luge_bumped",
+     "t": 64.915,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0,
+      "off": false,
+      "real": 22,
+      "s": 891,
+      "surface": "LugeTrough",
+      "x": -157.3,
+      "y": 21.5,
+      "z": -167.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 65.132,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 65.233,
+     "x": -155,
+     "z": -170
+    },
+    {
+     "data": {
+      "power": 1.4610783916483643
+     },
+     "kind": "bot_luge_bumped",
+     "t": 65.25,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 65.599,
+     "x": -162,
+     "z": -166
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 65.616,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 41,
+      "lat": -0.7,
+      "off": false,
+      "real": 41,
+      "s": 923,
+      "surface": "LugeTrough",
+      "x": -188.3,
+      "y": 17.9,
+      "z": -161.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 66.149,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2586,
+     "phase": "LOBBY",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 14.1,
+     "t": 66.5
+    },
+    {
+     "data": {
+      "cmd": 35,
+      "lat": 0,
+      "off": false,
+      "real": 36,
+      "s": 966,
+      "surface": "LugeTrough",
+      "x": -230.9,
+      "y": 14.5,
+      "z": -155.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 67.149,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3.8,
+     "t": 68.084,
+     "x": -250,
+     "z": -153
+    },
+    {
+     "data": {
+      "power": 3.8887094530509247
+     },
+     "kind": "bot_luge_bumped",
+     "t": 68.117,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": -0.2,
+      "off": false,
+      "real": 22,
+      "s": 992,
+      "surface": "LugeTrough",
+      "x": -257.2,
+      "y": 13.4,
+      "z": -151.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 68.149,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 68.45,
+     "x": -258,
+     "z": -152
+    },
+    {
+     "data": {
+      "power": 1.4199850090486077
+     },
+     "kind": "bot_luge_bumped",
+     "t": 68.482,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2587,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 13.6,
+     "t": 68.517
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0.7,
+     "t": 68.815,
+     "x": -265,
+     "z": -149
+    },
+    {
+     "data": {
+      "power": 0.7702867060473464
+     },
+     "kind": "bot_luge_bumped",
+     "t": 68.85,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.7,
+      "off": false,
+      "real": 22,
+      "s": 1016,
+      "surface": "LugeTrough",
+      "x": -272.8,
+      "y": 11.2,
+      "z": -137.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 69.165,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 69.182,
+     "x": -271,
+     "z": -143
+    },
+    {
+     "data": {
+      "power": 1.4030381564363843
+     },
+     "kind": "bot_luge_bumped",
+     "t": 69.216,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.5,
+     "t": 69.549,
+     "x": -273,
+     "z": -135
+    },
+    {
+     "data": {
+      "power": 1.5589089726145402
+     },
+     "kind": "bot_luge_bumped",
+     "t": 69.582,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.4,
+     "t": 69.9,
+     "x": -273,
+     "z": -127
+    },
+    {
+     "data": {
+      "power": 1.4729072932102754
+     },
+     "kind": "bot_luge_bumped",
+     "t": 69.915,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0,
+      "off": false,
+      "real": 22,
+      "s": 1039,
+      "surface": "LugeTrough",
+      "x": -264.5,
+      "y": 8.5,
+      "z": -117.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 70.165,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.6,
+     "t": 70.267,
+     "x": -268,
+     "z": -121
+    },
+    {
+     "data": {
+      "power": 1.619889203269404
+     },
+     "kind": "bot_luge_bumped",
+     "t": 70.282,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.6,
+     "t": 70.534
+    },
+    {
+     "a": "LugeGuest1",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 70.634,
+     "x": -260,
+     "z": -116
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 70.648,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 42,
+      "lat": 0.6,
+      "off": false,
+      "real": 42,
+      "s": 1071,
+      "surface": "LugeTrough",
+      "x": -233.1,
+      "y": 4.8,
+      "z": -111.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 71.166,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 47,
+      "lat": -0.3,
+      "off": false,
+      "real": 47,
+      "s": 1119,
+      "surface": "LugeTrough",
+      "x": -185.1,
+      "y": 1.2,
+      "z": -103.6
+     },
+     "kind": "bot_luge_sample",
+     "t": 72.182,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2588,
+     "phase": "LOBBY",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.5,
+     "t": 72.55
+    },
+    {
+     "car": "Rubber Duck",
+     "kind": "luge_run",
+     "pb": true,
+     "t": 72.7,
+     "time": 41.94863986968994,
+     "userId": -1
+    },
+    {
+     "data": {
+      "hops": 0,
+      "runs": 1,
+      "scrapes": 0,
+      "time": 41.94863986968994
+     },
+     "kind": "bot_luge_finish",
+     "t": 72.732,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 29,
+      "lat": 0.1,
+      "off": false,
+      "real": 30,
+      "s": 1161,
+      "surface": "LugeTrough",
+      "x": -143.2,
+      "y": 1.2,
+      "z": -99.6
+     },
+     "kind": "bot_luge_sample",
+     "t": 73.199,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 0,
+      "lat": 0,
+      "off": false,
+      "real": 0,
+      "s": 1170,
+      "surface": "LugeDeck",
+      "x": -134.5,
+      "y": 1.4,
+      "z": -99
+     },
+     "kind": "bot_luge_sample",
+     "t": 74.215,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.9,
+     "t": 74.567
+    },
+    {
+     "data": {
+      "cmd": 0,
+      "lat": 0,
+      "off": false,
+      "real": 0,
+      "s": 1170,
+      "surface": "LugeDeck",
+      "x": -134.5,
+      "y": 1.4,
+      "z": -99
+     },
+     "kind": "bot_luge_sample",
+     "t": 75.215,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.1,
+     "t": 76.567
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 25.2,
+     "t": 78.582
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.7,
+     "t": 80.584
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2590,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.6,
+     "t": 82.598
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2591,
+     "phase": "LOBBY",
+     "physicsFps": 59.8,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 84.6
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2591,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.8,
+     "t": 86.615
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2589,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 88.617
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.9,
+     "t": 90.631
+    },
+    {
+     "heartbeatHz": 59.4,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 29.7,
+     "t": 92.633
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.3,
+     "t": 94.633
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 33.4,
+     "t": 96.649
+    },
+    {
+     "kind": "luge_go",
+     "ready": true,
+     "slot": 1,
+     "t": 97.167,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 0,
+      "lat": -2.9,
+      "off": false,
+      "real": 0,
+      "s": 5,
+      "surface": "LugeTrough",
+      "x": -150.6,
+      "y": 92.5,
+      "z": -458.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 97.198,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 23,
+      "lat": -0.3,
+      "off": false,
+      "real": 23,
+      "s": 18,
+      "surface": "LugeTrough",
+      "x": -164.2,
+      "y": 91.3,
+      "z": -459
+     },
+     "kind": "bot_luge_sample",
+     "t": 98.216,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 37.7,
+     "t": 98.667
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": 0.1,
+      "off": false,
+      "real": 19,
+      "s": 39,
+      "surface": "LugeTrough",
+      "x": -185.5,
+      "y": 91.2,
+      "z": -456.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 99.214,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 16,
+      "lat": 0,
+      "off": false,
+      "real": 17,
+      "s": 58,
+      "surface": "LugeTrough",
+      "x": -204,
+      "y": 91.2,
+      "z": -453.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 100.232,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 39,
+     "t": 100.681
+    },
+    {
+     "data": {
+      "cmd": 14,
+      "lat": -0.1,
+      "off": false,
+      "real": 14,
+      "s": 74,
+      "surface": "LugeTrough",
+      "x": -219.5,
+      "y": 91.2,
+      "z": -451
+     },
+     "kind": "bot_luge_sample",
+     "t": 101.231,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 14,
+      "lat": -0.1,
+      "off": false,
+      "real": 14,
+      "s": 88,
+      "surface": "LugeTrough",
+      "x": -233.4,
+      "y": 91.2,
+      "z": -448.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 102.231,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 39,
+     "t": 102.683
+    },
+    {
+     "data": {
+      "cmd": 13,
+      "lat": 0,
+      "off": false,
+      "real": 14,
+      "s": 102,
+      "surface": "LugeTrough",
+      "x": -247.2,
+      "y": 91.2,
+      "z": -446.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 103.231,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 16,
+      "lat": -0.5,
+      "off": false,
+      "real": 15,
+      "s": 116,
+      "surface": "LugeTrough",
+      "x": -261.6,
+      "y": 91.1,
+      "z": -444.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 104.247,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.8,
+     "t": 104.699
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 1,
+      "off": false,
+      "real": 21,
+      "s": 138,
+      "surface": "LugeTrough",
+      "x": -273.1,
+      "y": 88.7,
+      "z": -428.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 105.249,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.3,
+      "off": false,
+      "real": 22,
+      "s": 160,
+      "surface": "LugeTrough",
+      "x": -262.1,
+      "y": 86,
+      "z": -411.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 106.264,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.8,
+     "t": 106.715
+    },
+    {
+     "data": {
+      "cmd": 40,
+      "lat": 0.4,
+      "off": false,
+      "real": 40,
+      "s": 192,
+      "surface": "LugeTrough",
+      "x": -231.2,
+      "y": 82.4,
+      "z": -406.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 107.264,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 34,
+      "lat": -0.1,
+      "off": false,
+      "real": 34,
+      "s": 234,
+      "surface": "LugeTrough",
+      "x": -189.1,
+      "y": 79.3,
+      "z": -400.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 108.282,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.8,
+     "t": 108.732
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": 0.2,
+      "off": false,
+      "real": 20,
+      "s": 260,
+      "surface": "LugeTrough",
+      "x": -163.5,
+      "y": 78.3,
+      "z": -395.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 109.297,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.6,
+      "off": false,
+      "real": 21,
+      "s": 282,
+      "surface": "LugeTrough",
+      "x": -149.5,
+      "y": 76,
+      "z": -381.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 110.297,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.6,
+     "t": 110.749
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 2.3,
+     "t": 110.831,
+     "x": -150,
+     "z": -378
+    },
+    {
+     "data": {
+      "power": 2.3870564910109024
+     },
+     "kind": "bot_luge_bumped",
+     "t": 110.863,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 2.7,
+     "t": 111.198,
+     "x": -152,
+     "z": -370
+    },
+    {
+     "data": {
+      "power": 2.799281442175392
+     },
+     "kind": "bot_luge_bumped",
+     "t": 111.213,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 23,
+      "lat": -0.3,
+      "off": false,
+      "real": 23,
+      "s": 305,
+      "surface": "LugeTrough",
+      "x": -158.5,
+      "y": 73.4,
+      "z": -363.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 111.297,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.9,
+     "t": 111.549,
+     "x": -159,
+     "z": -364
+    },
+    {
+     "data": {
+      "power": 1.9342122776516188
+     },
+     "kind": "bot_luge_bumped",
+     "t": 111.564,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 111.914,
+     "x": -168,
+     "z": -362
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 111.93,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 40,
+      "lat": -1.1,
+      "off": false,
+      "real": 40,
+      "s": 337,
+      "surface": "LugeTrough",
+      "x": -190.6,
+      "y": 69.6,
+      "z": -359.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 112.315,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2544,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 38.7,
+     "t": 112.765
+    },
+    {
+     "data": {
+      "cmd": 35,
+      "lat": 0.8,
+      "off": false,
+      "real": 36,
+      "s": 378,
+      "surface": "LugeTrough",
+      "x": -230.1,
+      "y": 66,
+      "z": -350.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 113.314,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 4,
+     "t": 113.566,
+     "x": -231,
+     "z": -351
+    },
+    {
+     "data": {
+      "power": 4.083437358172482
+     },
+     "kind": "bot_luge_bumped",
+     "t": 113.581,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3.1,
+     "t": 113.933,
+     "x": -243,
+     "z": -349
+    },
+    {
+     "data": {
+      "power": 3.1935254053329043
+     },
+     "kind": "bot_luge_bumped",
+     "t": 113.963,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 3,
+     "t": 114.299,
+     "x": -252,
+     "z": -348
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": -0.3,
+      "off": false,
+      "real": 20,
+      "s": 405,
+      "surface": "LugeTrough",
+      "x": -257,
+      "y": 65.2,
+      "z": -346.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 114.332,
+     "userId": -1
+    },
+    {
+     "data": {
+      "power": 3.0369372683241194
+     },
+     "kind": "bot_luge_bumped",
+     "t": 114.332,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.9,
+     "t": 114.665,
+     "x": -260,
+     "z": -346
+    },
+    {
+     "data": {
+      "power": 1.9552551931882505
+     },
+     "kind": "bot_luge_bumped",
+     "t": 114.697,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2544,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.3,
+     "t": 114.781
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.9,
+     "t": 115.032,
+     "x": -267,
+     "z": -343
+    },
+    {
+     "data": {
+      "power": 1.9663616440031106
+     },
+     "kind": "bot_luge_bumped",
+     "t": 115.064,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.7,
+      "off": false,
+      "real": 22,
+      "s": 429,
+      "surface": "LugeTrough",
+      "x": -272.8,
+      "y": 63,
+      "z": -333
+     },
+     "kind": "bot_luge_sample",
+     "t": 115.348,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 1.3,
+     "t": 115.382,
+     "x": -272,
+     "z": -337
+    },
+    {
+     "data": {
+      "power": 1.3593753653247043
+     },
+     "kind": "bot_luge_bumped",
+     "t": 115.397,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 115.748,
+     "x": -273,
+     "z": -328
+    },
+    {
+     "data": {
+      "power": 0.07928939177077635
+     },
+     "kind": "bot_luge_bumped",
+     "t": 115.764,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 116.114,
+     "x": -270,
+     "z": -319
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 116.13,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.3,
+      "off": false,
+      "real": 21,
+      "s": 450,
+      "surface": "LugeTrough",
+      "x": -265.8,
+      "y": 60.4,
+      "z": -313.6
+     },
+     "kind": "bot_luge_sample",
+     "t": 116.364,
+     "userId": -1
+    },
+    {
+     "a": "LugeGuest2",
+     "b": "Player1",
+     "kind": "luge_bump",
+     "power": 0,
+     "t": 116.466,
+     "x": -264,
+     "z": -314
+    },
+    {
+     "data": {
+      "power": 0
+     },
+     "kind": "bot_luge_bumped",
+     "t": 116.498,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2544,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 34.6,
+     "t": 116.782
+    },
+    {
+     "data": {
+      "cmd": 36,
+      "lat": 0.6,
+      "off": false,
+      "real": 36,
+      "s": 477,
+      "surface": "LugeTrough",
+      "x": -239.8,
+      "y": 57.3,
+      "z": -307
+     },
+     "kind": "bot_luge_sample",
+     "t": 117.363,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 38,
+      "lat": -0.1,
+      "off": false,
+      "real": 38,
+      "s": 520,
+      "surface": "LugeTrough",
+      "x": -197.6,
+      "y": 52.8,
+      "z": -300
+     },
+     "kind": "bot_luge_sample",
+     "t": 118.381,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 30.5,
+     "t": 118.782
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": 0,
+      "off": false,
+      "real": 20,
+      "s": 549,
+      "surface": "LugeTrough",
+      "x": -168.7,
+      "y": 52.1,
+      "z": -297.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 119.397,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.5,
+      "off": false,
+      "real": 21,
+      "s": 571,
+      "surface": "LugeTrough",
+      "x": -150.9,
+      "y": 50.6,
+      "z": -288.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 120.414,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 26.8,
+     "t": 120.783
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.5,
+      "off": false,
+      "real": 21,
+      "s": 594,
+      "surface": "LugeTrough",
+      "x": -154.2,
+      "y": 47.9,
+      "z": -267.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 121.43,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 35,
+      "lat": -1,
+      "off": false,
+      "real": 34,
+      "s": 620,
+      "surface": "LugeTrough",
+      "x": -179.5,
+      "y": 44.7,
+      "z": -260.5
+     },
+     "kind": "bot_luge_sample",
+     "t": 122.447,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 22.5,
+     "t": 122.797
+    },
+    {
+     "data": {
+      "cmd": 35,
+      "lat": -2.3,
+      "off": false,
+      "real": 36,
+      "s": 659,
+      "surface": "LugeTrough",
+      "x": -217.4,
+      "y": 41,
+      "z": -253.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 123.43,
+     "userId": -1
+    },
+    {
+     "data": {
+      "power": 15.864740843210113,
+      "s": 664
+     },
+     "kind": "bot_luge_hop",
+     "t": 123.597,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 8,
+      "lat": -6.7,
+      "off": true,
+      "real": 9,
+      "s": 677,
+      "surface": "LugeGrass",
+      "x": -234.3,
+      "y": 40.2,
+      "z": -246.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 124.43,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18,
+     "t": 124.815
+    },
+    {
+     "data": {
+      "cmd": 14,
+      "lat": -2.4,
+      "off": false,
+      "real": 13,
+      "s": 686,
+      "surface": "LugeTrough",
+      "x": -244,
+      "y": 39.8,
+      "z": -249.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 125.447,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": -0.5,
+      "off": false,
+      "real": 19,
+      "s": 703,
+      "surface": "LugeTrough",
+      "x": -261.1,
+      "y": 39.3,
+      "z": -248.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 126.463,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18,
+     "t": 126.832
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 1,
+      "off": false,
+      "real": 21,
+      "s": 725,
+      "surface": "LugeTrough",
+      "x": -273.1,
+      "y": 36.8,
+      "z": -232.3
+     },
+     "kind": "bot_luge_sample",
+     "t": 127.463,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.4,
+      "off": false,
+      "real": 22,
+      "s": 748,
+      "surface": "LugeTrough",
+      "x": -261.6,
+      "y": 34.1,
+      "z": -215
+     },
+     "kind": "bot_luge_sample",
+     "t": 128.48,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2542,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.9,
+     "t": 128.847
+    },
+    {
+     "data": {
+      "cmd": 40,
+      "lat": 0.4,
+      "off": false,
+      "real": 40,
+      "s": 779,
+      "surface": "LugeTrough",
+      "x": -230.5,
+      "y": 30.5,
+      "z": -210.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 129.481,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 34,
+      "lat": -0.1,
+      "off": false,
+      "real": 34,
+      "s": 821,
+      "surface": "LugeTrough",
+      "x": -189.1,
+      "y": 27.4,
+      "z": -204.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 130.48,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2539,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.1,
+     "t": 130.847
+    },
+    {
+     "data": {
+      "cmd": 19,
+      "lat": 0.2,
+      "off": false,
+      "real": 20,
+      "s": 847,
+      "surface": "LugeTrough",
+      "x": -163.6,
+      "y": 26.4,
+      "z": -199.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 131.496,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.6,
+      "off": false,
+      "real": 21,
+      "s": 869,
+      "surface": "LugeTrough",
+      "x": -149.5,
+      "y": 24.1,
+      "z": -186.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 132.496,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2539,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.8,
+     "t": 132.865
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": 0.2,
+      "off": false,
+      "real": 21,
+      "s": 891,
+      "surface": "LugeTrough",
+      "x": -157.4,
+      "y": 21.5,
+      "z": -167.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 133.496,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 38,
+      "lat": -0.7,
+      "off": false,
+      "real": 38,
+      "s": 921,
+      "surface": "LugeTrough",
+      "x": -186.3,
+      "y": 18.1,
+      "z": -161.7
+     },
+     "kind": "bot_luge_sample",
+     "t": 134.513,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2540,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 18.3,
+     "t": 134.881
+    },
+    {
+     "data": {
+      "cmd": 36,
+      "lat": 0,
+      "off": false,
+      "real": 37,
+      "s": 964,
+      "surface": "LugeTrough",
+      "x": -228.9,
+      "y": 14.6,
+      "z": -155.8
+     },
+     "kind": "bot_luge_sample",
+     "t": 135.529,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 20,
+      "lat": -0.1,
+      "off": false,
+      "real": 20,
+      "s": 992,
+      "surface": "LugeTrough",
+      "x": -256.4,
+      "y": 13.5,
+      "z": -151.4
+     },
+     "kind": "bot_luge_sample",
+     "t": 136.546,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2540,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 16.9,
+     "t": 136.898
+    },
+    {
+     "data": {
+      "cmd": 22,
+      "lat": 0.1,
+      "off": false,
+      "real": 22,
+      "s": 1014,
+      "surface": "LugeTrough",
+      "x": -272.2,
+      "y": 11.4,
+      "z": -138.9
+     },
+     "kind": "bot_luge_sample",
+     "t": 137.563,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 21,
+      "lat": -0.5,
+      "off": false,
+      "real": 21,
+      "s": 1037,
+      "surface": "LugeTrough",
+      "x": -266,
+      "y": 8.8,
+      "z": -119
+     },
+     "kind": "bot_luge_sample",
+     "t": 138.579,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 60,
+     "kind": "server_perf",
+     "memMb": 2540,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 17.4,
+     "t": 138.914
+    },
+    {
+     "data": {
+      "cmd": 37,
+      "lat": 0.7,
+      "off": false,
+      "real": 37,
+      "s": 1065,
+      "surface": "LugeTrough",
+      "x": -238.6,
+      "y": 5.4,
+      "z": -112.2
+     },
+     "kind": "bot_luge_sample",
+     "t": 139.595,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 47,
+      "lat": -0.1,
+      "off": false,
+      "real": 47,
+      "s": 1110,
+      "surface": "LugeTrough",
+      "x": -194.5,
+      "y": 1.3,
+      "z": -105.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 140.596,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.9,
+     "kind": "server_perf",
+     "memMb": 2540,
+     "phase": "LOBBY",
+     "physicsFps": 59.9,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 20.9,
+     "t": 140.914
+    },
+    {
+     "car": "Rubber Duck",
+     "kind": "luge_run",
+     "pb": false,
+     "t": 141.348,
+     "time": 44.180543184280396,
+     "userId": -1
+    },
+    {
+     "data": {
+      "hops": 1,
+      "runs": 2,
+      "scrapes": 0,
+      "time": 44.180543184280396
+     },
+     "kind": "bot_luge_finish",
+     "t": 141.381,
+     "userId": -1
+    },
+    {
+     "data": {
+      "cmd": 34,
+      "lat": 0.1,
+      "off": false,
+      "real": 35,
+      "s": 1153,
+      "surface": "LugeTrough",
+      "x": -151.7,
+      "y": 1.2,
+      "z": -100.1
+     },
+     "kind": "bot_luge_sample",
+     "t": 141.614,
+     "userId": -1
+    },
+    {
+     "best": 41.94863986968994,
+     "kind": "luge_end",
+     "reason": "leave",
+     "runs": 2,
+     "t": 142.42,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 139.99896258302033,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 142.48,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_falling.ogg",
+      "looped": true,
+      "name": "FreeFalling",
+      "path": "Workspace.Player1.HumanoidRootPart.FreeFalling",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 140.00822612456977,
+      "volume": 0
+     },
+     "kind": "bot_sound",
+     "t": 142.495,
+     "userId": -1
+    },
+    {
+     "data": {
+      "id": "rbxasset://sounds/action_footsteps_plastic.mp3",
+      "looped": true,
+      "name": "Running",
+      "path": "Workspace.Player1.HumanoidRootPart.Running",
+      "phase": "LOBBY",
+      "shopOpen": false,
+      "t": 140.07413983298466,
+      "volume": 0.6499999761581421
+     },
+     "kind": "bot_sound",
+     "t": 142.562,
+     "userId": -1
+    },
+    {
+     "heartbeatHz": 59.5,
+     "kind": "server_perf",
+     "memMb": 2543,
+     "phase": "LOBBY",
+     "physicsFps": 60,
+     "players": 1,
+     "recvKbps": 0,
+     "sendKbps": 35.5,
+     "t": 142.93
+    }
+   ],
+   "samplesTotal": 0
+  },
+  "timedOut": false
+ },
+ "scenario": "record-luge",
+ "studioExit": 0,
+ "summary": "Bot match: 0 round(s), end: luge done leave, server errors: 0, client errors: 0\n  events: bot_joined=1 bot_luge_bumped=50 bot_luge_enter_try=1 bot_luge_finish=2 bot_luge_hop=1 bot_luge_sample=90 bot_ready=1 bot_sound=39 luge_bump=50 luge_end=1 luge_enter=1 luge_go=2 luge_run=2 server_perf=71\nserver: ; memory max 2625 MB",
+ "wallSeconds": 169.9
+}

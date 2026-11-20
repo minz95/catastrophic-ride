@@ -25,6 +25,7 @@ local TouchDrive = require(ReplicatedStorage.Shared.TouchDrive)
 local InputHints = require(ReplicatedStorage.Shared.InputHints)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
 local LugeHud = require(script.Parent:WaitForChild("Modules"):WaitForChild("LugeHud"))
+local LugeFilm = require(script.Parent.Modules:WaitForChild("LugeFilm"))
 
 local LocalPlayer = Players.LocalPlayer
 local L = Constants.LUGE
@@ -117,6 +118,14 @@ local _shake = 0
 local function updateCamera(dt, out)
 	local cam = workspace.CurrentCamera
 	local s = _s
+	-- filming (harness luge.film): the reel's director has the camera
+	local fcf, ffov = LugeFilm.camera(dt, s, out)
+	if fcf then
+		cam.CameraType = Enum.CameraType.Scriptable
+		cam.CFrame = fcf
+		cam.FieldOfView = ffov or 60
+		return
+	end
 	local chassis = s.chassis
 	if not chassis or not chassis.Parent then return end
 	cam.CameraType = Enum.CameraType.Scriptable
@@ -203,6 +212,24 @@ local function autoInput(s, x, z, yaw, at, dt)
 		end
 	end
 	local input = LugeDriver.input(s.driver, s.st, x, z, yaw, at, traffic)
+	-- the reel's slip off the side: once, on a chosen run, a hard pull
+	-- toward the low side of a straight (harness luge.whoop = { run, s })
+	local w = _auto.whoop
+	if w and not s.whooped and s.runs == (w.run or 1) and at.s >= (w.s or 600) and at.s < (w.s or 600) + 14 then
+		if not s.whoopSide then
+			-- toward the trough's lower side (onto the bank, not off a trestle): + steer = left
+			local rz = -math.sin(at.yaw)
+			s.whoopSide = (LugeLayout.ground(z + rz * 8) < LugeLayout.ground(z - rz * 8)) and -1 or 1
+		end
+		input.steer = s.whoopSide
+		input.brake = 0
+		-- (the trough turns a cart back in: for the film it is thrown at the lip)
+		if not s.whoopThrown then
+			s.whoopThrown = true
+			s.st.travelYaw = (s.st.travelYaw or yaw) + s.whoopSide * 0.55
+			s.st.loose = 1   -- (and the trough lets it go for a moment: LugeCart st.loose)
+		end
+	end
 	if _auto.keys then
 		s.queue = s.queue or {}
 		table.insert(s.queue, input)
@@ -235,6 +262,7 @@ local function drive(dt)
 	local x, z = chassis.Position.X - O.X, chassis.Position.Z - O.Z
 	local at = LugeLayout.at(x, z, chassis.Position.Y - O.Y, s.hint)
 	s.hint = at.seg
+	s.lastAt = at
 	local hit = ground(chassis)
 	local vel = chassis.AssemblyLinearVelocity
 	-- the real speed holds the command back (a tree, a post: no stored speed)
@@ -252,6 +280,8 @@ local function drive(dt)
 		if _auto then report("luge_scrape", { power = out.power, s = math.floor(at.s) }) end
 	elseif out.event == "hop" then
 		s.hops += 1
+		s.whooped = true
+		LugeFilm.event("hop")
 		_shake = 0.6
 		LugeHud.banner("WHOOPS!", Color3.fromRGB(255, 200, 80), 1.6, "steer back onto the track")
 		if _auto then report("luge_hop", { power = out.power, s = math.floor(at.s) }) end
@@ -347,7 +377,7 @@ local function startSession(msg)
 	local chassis = car and car.PrimaryPart
 	if not chassis then return end
 	local el = LugeHud.build()
-	LugeHud.show(true)
+	LugeHud.show(not LugeFilm.on)   -- (filming: a clean picture)
 	LugeHud.clock(nil, msg.best)
 	local s = { car = car, chassis = chassis, spec = msg.spec, st = LugeCart.newState(), best = msg.best, title = msg.title,
 		phase = "boarding", scrapes = 0, hops = 0, runs = 0 }
@@ -384,11 +414,13 @@ RemoteEvents.LugeEvent.OnClientEvent:Connect(function(msg)
 	if kind == "lift" then
 		s.phase = "lift"
 		s.liftAt, s.liftSecs = msg.at, msg.secs
+		LugeFilm.event("lift")
 		s.finished = false
 		LugeHud.lift(0)
 		LugeHud.clock(nil, s.best)
 	elseif kind == "gate" then
 		s.phase = "gate"
+		LugeFilm.event("gate")
 		LugeHud.lift(nil)
 		_camPos = nil
 		-- the bell, three times, then GO
@@ -403,6 +435,7 @@ RemoteEvents.LugeEvent.OnClientEvent:Connect(function(msg)
 		end)
 	elseif kind == "go" then
 		s.phase = "run"
+		LugeFilm.event("go")
 		s.st = LugeCart.newState()
 		s.hint = nil
 		s.runStart = os.clock()
@@ -427,6 +460,7 @@ RemoteEvents.LugeEvent.OnClientEvent:Connect(function(msg)
 		oneShot(SoundConfig.LUGE.BUMP, s.chassis, math.clamp(0.3 + (msg.power or 0) / 15, 0.3, 0.9), 0.9 + math.random() * 0.3)
 		if (msg.power or 0) > 3 then LugeHud.banner("BONK!", Color3.fromRGB(255, 160, 200), 0.8, msg.with and ("you and " .. msg.with) or nil) end
 		if _auto then report("luge_bumped", { power = msg.power }) end
+		LugeFilm.event("bump")
 	elseif kind == "reset" then
 		s.st = LugeCart.newState()
 		s.hint = nil
@@ -527,6 +561,7 @@ local function autoStart()
 	if not raw then return end
 	local ok, cfg = pcall(function() return HttpService:JSONDecode(raw) end)
 	_auto = ok and cfg or { skill = 0.95 }
+	if _auto.film then LugeFilm.start() end
 	task.spawn(function()
 		for _ = 1, 15 do
 			local ok2, res = pcall(function() return RemoteEvents.LugeAction:InvokeServer("enter") end)

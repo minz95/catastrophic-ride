@@ -38,6 +38,13 @@ FONT_BODY = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 # Korean cuts ("lang": "ko"): Apple SD Gothic Neo Bold (face 6 of the .ttc)
 FONT_KO = ("/System/Library/Fonts/AppleSDGothicNeo.ttc", 6)
 SIZES = {"16x9": (1920, 1080), "9x16": (1080, 1920)}
+# the 80s look (cuts with "look": "vhs"): titles, a script line, a TV's on-screen text
+FONT_RETRO = ("/System/Library/Fonts/Supplemental/Futura.ttc", 4)       # Futura Condensed ExtraBold
+FONT_RETRO_BODY = ("/System/Library/Fonts/Supplemental/Futura.ttc", 2)  # Futura Bold
+FONT_SCRIPT = "/System/Library/Fonts/Supplemental/Brush Script.ttf"
+FONT_VCR = "/System/Library/Fonts/Supplemental/Andale Mono.ttf"
+SUNSET = [(255, 240, 110), (255, 170, 50), (255, 80, 120), (170, 60, 210)]
+RETRO_BG = "#140C26"
 
 
 def ffmpeg():
@@ -226,11 +233,141 @@ def overlay(size, seg, path):
     im.save(path)
 
 
+def _gradient_text(im, x, y, text, font, colors, stroke, stroke_fill, shadow=None):
+    """Text filled top to bottom with `colors` (a sunset), a thick outline
+    and an offset shadow: an 80s title."""
+    from PIL import Image, ImageDraw
+    d = ImageDraw.Draw(im)
+    if shadow:
+        d.text((x + shadow[0], y + shadow[1]), text, font=font, fill=shadow[2], stroke_width=stroke, stroke_fill=shadow[2])
+    d.text((x, y), text, font=font, fill=stroke_fill, stroke_width=stroke, stroke_fill=stroke_fill)
+    box = [int(v) for v in d.textbbox((x, y), text, font=font)]
+    w, h = box[2] - box[0] + 2, box[3] - box[1] + 2
+    grad = Image.new("RGBA", (w, h))
+    gd = ImageDraw.Draw(grad)
+    n = len(colors) - 1
+    for row in range(h):
+        f = row / max(h - 1, 1) * n
+        i = min(int(f), n - 1)
+        t = f - i
+        c = tuple(int(colors[i][j] + (colors[i + 1][j] - colors[i][j]) * t) for j in range(3))
+        gd.line([(0, row), (w, row)], fill=c + (255,))
+    # a thin bright band across the middle: chrome
+    gd.line([(0, int(h * 0.52)), (w, int(h * 0.52))], fill=(255, 255, 255, 200), width=max(2, h // 30))
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).text((x - box[0], y - box[1]), text, font=font, fill=255)
+    im.paste(grad, (box[0], box[1]), mask)
+
+
+def overlay_retro(size, seg, path):
+    """The 80s look's words: a script line ("Come on down to"), a big sunset
+    title in Futura with a dark outline and a pink shadow, a white line under
+    it, a yellow starburst badge, a TV's on-screen text (top left)."""
+    from PIL import Image, ImageDraw
+    import math as _m
+    W, H = size
+    im = Image.new("RGBA", size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    y = int(H * seg.get("y", 0.08))
+    if seg.get("script"):
+        font = _fit_font(d, seg["script"], FONT_SCRIPT, int(W * 0.1), W * 0.86)
+        for line in seg["script"].split("\n"):
+            tw = d.textlength(line, font=font)
+            d.text(((W - tw) / 2 + 4, y + 5), line, font=font, fill=(255, 60, 150), stroke_width=4, stroke_fill=(255, 60, 150))
+            d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF", stroke_width=3, stroke_fill=(60, 20, 90))
+            y += int(font.size * 1.05)
+    if seg.get("title"):
+        font = _fit_font(d, seg["title"], FONT_RETRO, int(W * 0.15), W * 0.92)
+        for line in seg["title"].split("\n"):
+            tw = d.textlength(line, font=font)
+            _gradient_text(im, (W - tw) / 2, y, line, font, SUNSET, max(6, font.size // 11), (45, 15, 70),
+                           shadow=(8, 10, (255, 60, 150)))
+            y += int(font.size * 1.0)
+    if seg.get("sub"):
+        font = _fit_font(d, seg["sub"], FONT_RETRO_BODY, int(W * 0.06), W * 0.9)
+        y += int(font.size * 0.3)
+        for line in seg["sub"].split("\n"):
+            tw = d.textlength(line, font=font)
+            d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF", stroke_width=4, stroke_fill=(30, 60, 160))
+            y += int(font.size * 1.25)
+    if seg.get("badge"):
+        # a yellow starburst with red words, tilted
+        r = int(W * 0.13)
+        cx, cy = int(W * seg.get("badgeX", 0.8)), int(H * seg.get("badgeY", 0.72))
+        pts = []
+        for k in range(32):
+            a = k / 32 * 2 * _m.pi
+            rr = r if k % 2 == 0 else r * 0.78
+            pts.append((cx + _m.cos(a) * rr, cy + _m.sin(a) * rr))
+        d.polygon(pts, fill=(255, 225, 40), outline=(200, 40, 40))
+        font = _fit_font(d, seg["badge"], FONT_RETRO, int(r * 0.55), r * 1.5)
+        lines = seg["badge"].split("\n")
+        ty = cy - len(lines) * font.size * 0.55
+        for line in lines:
+            tw = d.textlength(line, font=font)
+            d.text((cx - tw / 2, ty), line, font=font, fill=(210, 30, 40))
+            ty += font.size * 1.05
+    if seg.get("osd"):
+        font = _truetype(FONT_VCR, int(W * 0.055))
+        text = seg["osd"]
+        play = text.endswith("\u25b6")   # the VCR font has no ▶: drawn
+        if play:
+            text = text[:-1].rstrip()
+        x0, y0 = int(W * 0.07), int(H * seg.get("osdY", 0.25))
+        d.text((x0, y0), text, font=font, fill="#FFFFFF", stroke_width=2, stroke_fill=(0, 0, 0, 120))
+        if play:
+            tx = x0 + d.textlength(text + " ", font=font)
+            sz = font.size * 0.8
+            d.polygon([(tx, y0 + font.size * 0.15), (tx, y0 + font.size * 0.15 + sz), (tx + sz * 0.85, y0 + font.size * 0.15 + sz / 2)],
+                      fill="#FFFFFF")
+    im.save(path)
+
+
+def sunset_card(size, path):
+    """An 80s sky: a sunset gradient, a striped sun, a purple grid floor."""
+    from PIL import Image, ImageDraw
+    W, H = size
+    im = Image.new("RGB", size)
+    d = ImageDraw.Draw(im)
+    top, mid, low = (30, 10, 60), (230, 70, 130), (255, 170, 60)
+    horizon = int(H * 0.62)
+    for row in range(horizon):
+        f = row / horizon
+        a, b, t = (top, mid, f / 0.6) if f < 0.6 else (mid, low, (f - 0.6) / 0.4)
+        d.line([(0, row), (W, row)], fill=tuple(int(a[j] + (b[j] - a[j]) * t) for j in range(3)))
+    # the sun, cut by stripes near the horizon
+    r = int(W * 0.3)
+    cx, cy = W // 2, horizon - int(r * 0.35)
+    for row in range(cy - r, horizon):
+        dy = row - cy
+        if abs(dy) > r:
+            continue
+        half = int((r * r - dy * dy) ** 0.5)
+        f = (row - (cy - r)) / (2 * r)
+        col = (255, int(235 - 120 * f), int(90 - 40 * f))
+        if row > cy and (row // 14) % 2 == 0 and row > cy + r * 0.1:
+            continue
+        d.line([(cx - half, row), (cx + half, row)], fill=col)
+    d.rectangle((0, horizon, W, H), fill=(25, 8, 45))
+    grid = (230, 60, 200)
+    for k in range(-14, 15):
+        d.line([(W / 2 + k * 40, horizon), (W / 2 + k * 400, H)], fill=grid, width=3)
+    y, step = horizon, 8
+    while y < H:
+        d.line([(0, y), (W, y)], fill=grid, width=3)
+        step *= 1.35
+        y += int(step)
+    im.save(path)
+
+
 def card_image(size, seg, path):
     """A still: a store picture (cropped to fill) or a colour, darkened at
     the edges so the text reads."""
     from PIL import Image, ImageDraw, ImageFilter
     W, H = size
+    if seg.get("bg") == "sunset":
+        sunset_card(size, path)
+        return
     if seg.get("image") and seg.get("fit") == "black":
         # the picture in the middle of a black frame, `zoom` × the width (sides
         # cut round cx), as the footage of a Korean reel sits
@@ -292,6 +429,8 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
     ov = os.path.join(work, "ov_%02d.png" % k)
     if lang == "ko":
         overlay_ko(size, {k2: v for k2, v in seg.items() if k2 != "say"} if clean else seg, ov)
+    elif seg.get("_retro"):
+        overlay_retro(size, clean_text(seg) if clean else seg, ov)
     else:
         overlay(size, clean_text(seg) if clean else seg, ov)
     dur = seg["dur"]
@@ -317,7 +456,16 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
     speed = seg.get("speed", 1.0)
     src_dur = dur * speed
     zoom = seg.get("zoom", 1.0)
-    if seg.get("fit") == "black":
+    if seg.get("fit") == "tv":
+        # a 4:3 picture across the frame's width, as an old TV ad (look vhs):
+        # zoom > 1 cuts in further, cx picks the part of the wide view, shift
+        # moves it down (share of the height)
+        tw, th = W, int(W * 3 / 4) // 2 * 2
+        y0 = int((H - th) / 2 + H * seg.get("shift", 0))
+        cx = seg.get("cx", 0.5)
+        vf = ("scale=-2:%d:flags=lanczos,crop=%d:%d:(iw-%d)*%.3f:(ih-%d)/2,pad=%d:%d:0:%d:color=%s"
+              % (int(th * zoom) // 2 * 2, tw, th, tw, cx, th, W, H, y0, RETRO_BG))
+    elif seg.get("fit") == "black":
         # the footage in the middle of a black frame (titles above, words below)
         fg_w = int(W * zoom) // 2 * 2
         shift = seg.get("shift", 0)
@@ -364,6 +512,32 @@ def srt(cut):
     return "\n".join(out)
 
 
+def vhs(src, out, size, work, stamp):
+    """An old tape: a softer picture (down and up again), colour bleeding
+    sideways, warm and saturated, grain, scanlines, a dark edge, and the
+    camcorder's date in the corner."""
+    from PIL import Image, ImageDraw
+    W, H = size
+    lines = os.path.join(work, "scanlines.png")
+    im = Image.new("RGBA", size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    for row in range(0, H, 4):
+        d.line([(0, row), (W, row)], fill=(0, 0, 0, 46), width=1)
+    if stamp:
+        font = _truetype(FONT_VCR, int(W * 0.045))
+        th = int(W * 3 / 4)
+        y = (H + th) // 2 - int(font.size * 1.6)
+        tw = d.textlength(stamp, font=font)
+        d.text((W - tw - int(W * 0.06), y), stamp, font=font, fill=(255, 190, 60), stroke_width=2, stroke_fill=(60, 20, 0))
+    im.save(lines)
+    fc = ("[0:v]scale=%d:%d:flags=bilinear,scale=%d:%d:flags=bilinear,rgbashift=rh=5:bh=-5:rv=1,"
+          "eq=saturation=1.28:contrast=1.06:brightness=0.015,colorbalance=rs=0.07:gs=0.02:bs=-0.07,"
+          "noise=alls=11:allf=t,vignette=angle=PI/4.5[v0];[v0][1:v]overlay=0:0,format=yuv420p[v]"
+          % (W // 2, H // 2, W, H))
+    run(["-i", src, "-i", lines, "-filter_complex", fc, "-map", "[v]", "-r", str(FPS),
+         "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-movflags", "+faststart", out])
+
+
 def build(names, clean=False):
     data = json.load(open(CUTS))
     cuts, fixes = data["cuts"], data.get("takes", {})
@@ -373,7 +547,8 @@ def build(names, clean=False):
             continue
         size = SIZES[cut["format"]]
         work = tempfile.mkdtemp(prefix="cut-%s-" % name)
-        segs = [segment(name, seg, k, size, work, takes, clean, fixes, cut.get("lang"))
+        retro = cut.get("look") == "vhs"
+        segs = [segment(name, dict(seg, _retro=True) if retro else seg, k, size, work, takes, clean, fixes, cut.get("lang"))
                 for k, seg in enumerate(cut["segments"])]
         lst = os.path.join(work, "list.txt")
         with open(lst, "w") as f:
@@ -384,7 +559,12 @@ def build(names, clean=False):
         if clean:
             with open(os.path.join(OUT, name + ".srt"), "w", encoding="utf-8") as f:
                 f.write(srt(cut))
-        run(["-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", "-movflags", "+faststart", out])
+        if retro:
+            joined = os.path.join(work, "joined.mp4")
+            run(["-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", joined])
+            vhs(joined, out, size, work, cut.get("stamp", "JUN 21 1986"))
+        else:
+            run(["-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", "-movflags", "+faststart", out])
         print("%s  %.1f s  %dx%d" % (os.path.relpath(out, ROOT), duration(out), size[0], size[1]))
 
 
