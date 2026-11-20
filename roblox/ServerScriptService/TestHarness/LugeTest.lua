@@ -41,7 +41,7 @@ function LugeTest.run(args, done)
 			running[player.UserId] = true
 			task.delay((i - 1) * (r.after or 1.5), function()
 				player:SetAttribute("LugeAuto", HttpService:JSONEncode({ skill = r.skill or 0.95, keys = r.keys, late = r.late,
-					blind = r.blind, runs = r.runs or opts.runs or 2 }))
+					blind = r.blind, runs = r.runs or opts.runs or 2, film = r.film, whoop = r.whoop }))
 			end)
 		end
 	end

@@ -48,6 +48,8 @@ local _hill
 local _sessions = {}   -- userId → session
 local _askedAt = {}
 local _bumpedAt = {}
+local _crowd = nil        -- harness luge.crowd: Modules/LugeCrowd (guests for filming)
+local _follow = false     -- harness luge.follow: a guest follows each player down (the reel's bump)
 
 local HELMETS = { Color3.fromRGB(240, 120, 40), Color3.fromRGB(60, 150, 230), Color3.fromRGB(240, 200, 40),
 	Color3.fromRGB(80, 190, 110), Color3.fromRGB(220, 80, 160) }
@@ -197,6 +199,7 @@ local function ride(s)
 	local yaw = math.atan2(-(Lf.top.X - Lf.bottom.X), -(Lf.top.Z - Lf.bottom.Z))
 	s.car:PivotTo(cartCF(chassis, Lf.bottom.X, Lf.bottom.Y, Lf.bottom.Z, yaw))
 	local parts = carrier(s)
+	if _crowd and _follow then pcall(_crowd.follow, s, 1.0) end
 	local secs = LugeLayout.liftLength() / L.LIFT_SPEED
 	send(s.player, { kind = "lift", secs = secs, at = now() })
 	local goal = cartCF(chassis, Lf.top.X, Lf.top.Y, Lf.top.Z, yaw)
@@ -353,6 +356,15 @@ local function contacts()
 	local folder = _hill and _hill:FindFirstChild("Carts")
 	if not folder then return end
 	local list, owner = {}, {}
+	if _crowd then
+		for _, b in ipairs(_crowd.riding()) do
+			local c = b.chassis
+			local look = c.CFrame.LookVector
+			local vel = c.AssemblyLinearVelocity
+			table.insert(list, { id = b.model, x = c.Position.X, z = c.Position.Z, vx = vel.X, vz = vel.Z,
+				yaw = math.atan2(-look.X, -look.Z), length = c.Size.Z, width = c.Size.X })
+		end
+	end
 	for _, s in pairs(_sessions) do
 		local c = s.chassis
 		if s.phase == "run" and c and c.Parent and not c.Anchored then
@@ -370,10 +382,18 @@ local function contacts()
 		if t - (_bumpedAt[key] or 0) >= L.BUMP.GAP then
 			_bumpedAt[key] = t
 			local sa, sb = owner[h.a], owner[h.b]
-			send(sa.player, { kind = "bump", x = h.ax, z = h.az, power = h.power, with = sb.player.DisplayName })
-			send(sb.player, { kind = "bump", x = h.bx, z = h.bz, power = h.power, with = sa.player.DisplayName })
+			local function nameOf(sess, model) return sess and sess.player.DisplayName or model.Name end
+			local function push(sess, model, dx, dz, other)
+				if sess then
+					send(sess.player, { kind = "bump", x = dx, z = dz, power = h.power, with = other })
+				elseif _crowd then
+					_crowd.knock(model, dx, dz)
+				end
+			end
+			push(sa, h.a, h.ax, h.az, nameOf(sb, h.b))
+			push(sb, h.b, h.bx, h.bz, nameOf(sa, h.a))
 			local p = h.a.PrimaryPart.Position
-			Telemetry.record("luge_bump", { a = sa.player.Name, b = sb.player.Name, power = math.floor(h.power * 10) / 10,
+			Telemetry.record("luge_bump", { a = nameOf(sa, h.a), b = nameOf(sb, h.b), power = math.floor(h.power * 10) / 10,
 				x = math.floor(p.X - O.X), z = math.floor(p.Z - O.Z) })
 		end
 	end
@@ -435,6 +455,23 @@ task.spawn(function()
 	_enabled = isEnabled()
 	ReplicatedStorage:SetAttribute("LugeOpen", _enabled)
 	hookPrompt(_hill)
+	-- filming (harness luge.crowd / luge.follow): guests on the hill
+	local okH, harness = pcall(function() return require(Modules.HarnessConfig).get() end)
+	local lugeOpts = okH and type(harness) == "table" and type(harness.luge) == "table" and harness.luge or nil
+	if _enabled and lugeOpts and (tonumber(lugeOpts.crowd) or 0) > 0 then
+		task.spawn(function()
+			local ServerStorage = game:GetService("ServerStorage")
+			local t0 = os.clock()
+			while os.clock() - t0 < 20 do
+				local f = ServerStorage:FindFirstChild("ItemModels")
+				if f and f:GetAttribute("Ready") then break end
+				task.wait(0.25)
+			end
+			_crowd = require(Modules.LugeCrowd)
+			_follow = lugeOpts.follow == true
+			_crowd.start(_hill:FindFirstChild("Carts") or _hill, tonumber(lugeOpts.crowd))
+		end)
+	end
 	RunService.Heartbeat:Connect(function()
 		local ok, err = pcall(contacts)
 		if not ok then warn("[LugeManager] contacts: " .. tostring(err)) end

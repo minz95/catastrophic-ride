@@ -611,6 +611,13 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   tools/luge_layout.py`; Studio `sim.py run luge-ride` (two riders, one
   catching the other) and `luge-wild` (careless, keyboards, off the trough).
   Spec `luge`.
+  Ad footage: `sim.py run record-luge` (harness luge.film: `StarterPlayerScripts/
+  Modules/LugeFilm` directs the camera; luge.crowd: `Modules/LugeCrowd`
+  server-driven guests round the hill, luge.follow: one follows the rider
+  down and bumps it; luge.whoop throws the rider at a lip once), cut
+  `en-luge` (`"look": "vhs"` in cuts.json: a 4:3 picture, sunset titles,
+  starburst badges, the VCR's PLAY, a tape's softness, colour bleed, grain,
+  scanlines, the camcorder's date; .srt = the announcer for CapCut's TTS).
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

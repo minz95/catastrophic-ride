@@ -1662,6 +1662,144 @@
           "say": "Buy a car. Earn the track."
         }
       ]
+    },
+    "en-luge": {
+      "_why": "English ad 2026-11-20, the user's idea: 'the luge: come and play at Junk Town resort! a theme park ad, antique, like an old 80s commercial'. Take record-luge (TestHarness/LugeTest luge.film, Modules/LugeFilm directs the camera, Modules/LugeCrowd the guests). look vhs: a 4:3 picture, sunset titles, a tape's softness, colour bleed, grain, scanlines, the camcorder's date; build --clean, the .srt is the announcer's lines for CapCut's English TTS; a retro jingle in CapCut",
+      "format": "9x16",
+      "lang": "en",
+      "look": "vhs",
+      "stamp": "JUN 21 1986",
+      "segments": [
+        {
+          "card": true,
+          "bg": "sunset",
+          "dur": 2.8,
+          "y": 0.1,
+          "osd": "PLAY ▶",
+          "osdY": 0.06,
+          "script": "Tired of the same\nold weekend?",
+          "say": "Tired of the same old weekend?"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 2.0,
+          "dur": 3.4,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.06,
+          "script": "Come on down to",
+          "title": "JUNK TOWN\nRESORT!",
+          "say": "Then come on down... to Junk Town Resort!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 6.2,
+          "dur": 3.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "Scenic chairlift!",
+          "say": "Ride our scenic chairlift..."
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 10.0,
+          "dur": 3.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.06,
+          "title": "ALPINE LUGE",
+          "badge": "NEW!",
+          "badgeX": 0.78,
+          "badgeY": 0.78,
+          "say": "...to the brand-new Alpine Luge!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 20.6,
+          "dur": 1.8,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "say": "Hold on to your hat..."
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 40.0,
+          "dur": 2.6,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "7 hairpin turns!",
+          "say": "...and zoom down seven hairpin turns!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 124.0,
+          "dur": 2.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 104.0,
+          "dur": 3.4,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "badge": "BONK!",
+          "badgeX": 0.76,
+          "badgeY": 0.76,
+          "say": "Bring the whole family!"
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 28.0,
+          "dur": 2.0,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08
+        },
+        {
+          "take": "record-luge",
+          "fit": "tv",
+          "t": 59.0,
+          "dur": 2.6,
+          "zoom": 1.0,
+          "cx": 0.5,
+          "hard": true,
+          "y": 0.08,
+          "script": "Fun for everyone!",
+          "say": "Fun for everyone!"
+        },
+        {
+          "card": true,
+          "bg": "sunset",
+          "dur": 4.4,
+          "y": 0.1,
+          "script": "Visit",
+          "title": "JUNK TOWN\nRESORT",
+          "sub": "Bring your car! Bring a friend!\nCatastrophic Ride on Roblox",
+          "say": "Junk Town Resort. Bring your car... and bring a friend!"
+        }
+      ]
     }
   }
 }

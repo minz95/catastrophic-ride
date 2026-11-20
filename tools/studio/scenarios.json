@@ -2458,6 +2458,40 @@
       "checks": {}
     },
     {
+      "name": "record-luge",
+      "kind": "match",
+      "tags": [
+        "video",
+        "luge"
+      ],
+      "_why": "footage for the Alpine Luge ad (2026-11-20, the user's idea: 'a theme park ad, come and play at Junk Town resort, antique, like an old 80s commercial'): one rider (Rubber Duck) rides twice with Modules/LugeFilm directing the camera (the resort from town, the chairlift, the zigzag from the air, the bell, front / hairpin / heli / chase / side shots, the finish); seven guests ride round (Modules/LugeCrowd), one follows the rider down and bumps it; on the second run the rider slips off onto the bank and back. Cut en-luge. The screen must be awake and unlocked",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 300,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "luge": {
+          "crowd": 7,
+          "follow": true,
+          "riders": [
+            { "car": "Rubber Duck", "skill": 0.95, "runs": 2, "film": true, "whoop": { "run": 1, "s": 655 } }
+          ]
+        }
+      },
+      "record": {
+        "delay": 10,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
       "name": "record-gp",
       "kind": "match",
       "tags": [

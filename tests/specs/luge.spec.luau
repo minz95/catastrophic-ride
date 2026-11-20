@@ -442,4 +442,30 @@ R.describe("Alpine Luge in a server", function()
 		R.expect(#events(m, b, "bump")).toBe(1)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
+
+	R.it("filming: guests ride the chairlift and come down by themselves; one follows a player and catches them", function()
+		local srv = Server.boot({
+			players = 1, scripts = SCRIPTS,
+			harness = { harness = "lune", biome = "FOREST", players = 1, lobbyDelay = 600, autoStart = false,
+				luge = { crowd = 3, follow = true } },
+		})
+		srv.advance(23)
+		local e = srv.env
+		local hill = e.workspace:FindFirstChild("AlpineLuge")
+		local Crowd = e.requirePath("ServerScriptService.Modules.LugeCrowd")
+		local guests = 0
+		for _, c in ipairs(hill.Carts:GetChildren()) do if c:GetAttribute("Guest") then guests += 1 end end
+		R.expect(guests).toBe(3)
+		-- the first is at the bottom of the lift: up and off within the lift's time
+		local hb = e.game:GetService("RunService").Heartbeat
+		local LL = e.requirePath("ReplicatedStorage.Shared.LugeLayout")
+		local secs = LL.liftLength() / e.requirePath("ReplicatedStorage.Shared.Constants").LUGE.LIFT_SPEED
+		local riding = 0
+		for _ = 1, math.ceil((secs + 4) * 10) do
+			srv.advance(0.1, 1 / 30, function() hb:Fire(1 / 30) end)
+			riding = math.max(riding, #Crowd.riding())
+		end
+		R.expect(riding >= 1).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
 end)
