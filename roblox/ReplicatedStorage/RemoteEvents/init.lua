@@ -59,7 +59,10 @@
 --   PlaceAction         → ("play" | "hub") → "ok" | "denied: …"  (RemoteFunction; LobbyUI: onto the race pad / back to the hub)
 --   GpEvent             → server→client ({ kind, … }) -- Junk Grand Prix (GpManager → GpClient): "session", "lights",
 --                          "sector", "lap", "limits", "radio", "pit", "reset", "done", "denied"; to all: "crew"
---   GpAction            → ("leave" | "reset") → "ok" | "denied: …"  (RemoteFunction; GpClient)
+--   GpAction            → ("leave" | "reset" | "ready" | "enter", why?) → "ok" | "denied: …"  (RemoteFunction; GpClient)
+--   LugeEvent           → server→client ({ kind, … }) -- Alpine Luge (LugeManager → LugeClient): "session", "lift",
+--                          "gate", "go", "finish", "reset", "bump", "ended", "denied"
+--   LugeAction          → ("enter" | "leave" | "reset" | "ready", why?) → "ok" | "denied: …"  (RemoteFunction; LugeClient)
 --
 -- RemoteFunctions (server-authoritative):
 --   RequestPickup       → itemId: string          → "ok" | "denied: <reason>"
@@ -116,6 +119,7 @@ local EVENTS = {
 	"LegendUpdate",
 	"TravelUpdate",
 	"GpEvent",
+	"LugeEvent",
 }
 
 local FUNCTIONS = {
@@ -136,6 +140,7 @@ local FUNCTIONS = {
 	"AchievementAction",
 	"PlaceAction",
 	"GpAction",
+	"LugeAction",
 }
 
 local RemoteEvents = {}

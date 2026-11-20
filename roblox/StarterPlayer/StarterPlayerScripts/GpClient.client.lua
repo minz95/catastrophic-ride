@@ -126,12 +126,23 @@ local function updateCamera(dt, out)
 	local f = math.clamp(v / s.spec.top, 0, 1.2)
 	local pos, at, fov
 	if s.flippedAt then
-		-- TV crash cam: held where the car went over, watching it tumble
-		s.crashCam = s.crashCam or (chassis.Position + V(0, 9, 0) - look * 22 + cf.RightVector * 14)
-		pos, at, fov = s.crashCam, chassis.Position, 55
+		-- TV crash cam: beside and behind the tumbling car, following it (held
+		-- where it went over, it filmed an empty road: the car carried on 60+
+		-- studs while it rolled, a dot in the distance; Studio gp-flip)
+		if not s.tumbleCam then
+			local vel = chassis.AssemblyLinearVelocity
+			local d = V(vel.X, 0, vel.Z)
+			s.tumbleCam = { dir = d.Magnitude > 2 and d.Unit or look, side = cf.RightVector }
+			_camPos = chassis.Position + V(0, 7, 0) - s.tumbleCam.dir * 11 + s.tumbleCam.side * 8
+		end
+		local want = chassis.Position + V(0, 6, 0) - s.tumbleCam.dir * 11 + s.tumbleCam.side * 8
+		_camPos = _camPos and _camPos:Lerp(want, 1 - math.exp(-7 * dt)) or want
+		-- (aimed above the car: it sits in the lower half, under the banner)
+		pos, at, fov = _camPos, chassis.Position + V(0, 3, 0), 62
 	elseif s.pitting then
-		-- the pit cam: from the garage side, the crew round the car
-		pos = chassis.Position + V(-16, 7, 10)
+		-- the pit cam: from the lane, the crew round the car (from the
+		-- garage side the garage's wall stood in front of it)
+		pos = chassis.Position + V(12, 6.5, 10)
 		at, fov = chassis.Position, 55
 	elseif _camMode == "onboard" then
 		local seat = s.car:FindFirstChildWhichIsA("VehicleSeat", true)
@@ -241,9 +252,12 @@ local function autoInput(s, x, z, yaw)
 		return GpDriver.toward(s.driver, st, x, z, yaw, target.X, target.Z, want, math.max(d, 8))
 	end
 	-- the other cars (bots), so the autopilot passes instead of ramming
+	-- (`blind`: it does not look, like a careless player: contacts)
 	local others = {}
-	for _, o in ipairs(GpLayout.traffic(s.chassis.Parent and s.chassis.Parent.Parent)) do
-		if o.model ~= s.chassis.Parent then table.insert(others, o) end
+	if not _auto.blind then
+		for _, o in ipairs(GpLayout.traffic(s.chassis.Parent and s.chassis.Parent.Parent)) do
+			if o.model ~= s.chassis.Parent then table.insert(others, o) end
+		end
 	end
 	s.traffic = others
 	local input, p = GpDriver.input(s.driver, st, x, z, yaw, others, s.dt)
@@ -259,6 +273,24 @@ local function drive(dt)
 	local chassis = s.chassis
 	if not chassis or not chassis.Parent then return end
 	if chassis.Anchored then
+		-- in the garage: make sure this client has its character in the seat
+		-- (it owns the character; where it thinks the root is, the car goes
+		-- when it is let go) and tell the server, which holds the lights
+		local char = LocalPlayer.Character
+		local root = char and char:FindFirstChild("HumanoidRootPart")
+		local hum = char and char:FindFirstChildOfClass("Humanoid")
+		local seat = s.car:FindFirstChildWhichIsA("VehicleSeat", true)
+		if root and seat then
+			local far = (root.Position - seat.Position).Magnitude > 6
+			if far and os.clock() - (s.pulledAt or 0) > 0.5 then
+				s.pulledAt = os.clock()
+				pcall(function() char:PivotTo(CFrame.new(seat.Position + V(0, 2.5, 0)) * root.CFrame.Rotation) end)
+			end
+			if not far and hum and hum.SeatPart == seat and not s.readySent then
+				s.readySent = true
+				task.spawn(function() RemoteEvents.GpAction:InvokeServer("ready") end)
+			end
+		end
 		updateCamera(dt, nil)
 		return
 	end
@@ -283,7 +315,7 @@ local function drive(dt)
 				report("gp_flip_end", { how = "saved", secs = math.floor(t * 10) / 10, minUp = s.flipMinUp, maxY = s.flipMaxY })
 				s.flipMinUp, s.flipMaxY = nil, nil
 			end
-			s.flippedAt, s.crashCam = nil, nil
+			s.flippedAt, s.crashCam, s.tumbleCam = nil, nil, nil
 			st.flipped, st.over = false, 0
 			st.speed = 0
 			takeHold(chassis)
@@ -313,8 +345,19 @@ local function drive(dt)
 	local actual = vel.X * tdx + vel.Z * tdz
 	s.dt = dt
 	local input = _auto and autoInput(s, x, z, yaw) or readInput(dt)
+	if _auto and _auto.keys then
+		-- like a person on a keyboard: the autopilot only presses and lets go
+		-- of W / S / A / D, and the input goes through the same easing
+		_keys.gas = input.throttle > 0.5
+		_keys.brake = input.brake > 0.3
+		_keys.left = input.steer > 0.3
+		_keys.right = input.steer < -0.3
+		input = readInput(dt)
+	end
 	if s.pitting or s.finishedAt then input = { throttle = 0, brake = 1, steer = 0 } end
-	local out = GpCar.step(s.spec, st, input, { dt = dt, yaw = yaw, surface = surface, actual = actual, pit = inPit })
+	local kick = s.kick
+	s.kick = nil
+	local out = GpCar.step(s.spec, st, input, { dt = dt, yaw = yaw, surface = surface, actual = actual, pit = inPit, kick = kick })
 	out.surface = surface
 	-- on the gas and going nowhere (nose in the armco; there is no reverse):
 	-- the marshals put it back
@@ -334,6 +377,17 @@ local function drive(dt)
 			cmd = math.floor(out.speed), actual = math.floor(actual), real = math.floor(V(vel.X, 0, vel.Z).Magnitude),
 			surface = surface, tyre = math.floor(st.tyre * 100), load = math.floor(out.load * 100) / 100,
 			leg = s.route and s.leg or 0, pit = s.pitting == true, thr = input.throttle, br = input.brake })
+	end
+	-- harness gp.flips: go over at these seconds after the start (to film and
+	-- check the real tumble and the marshals; the same path as a real one)
+	if _auto and _auto.flips and not out.flip then
+		s.releasedAt = s.releasedAt or os.clock()
+		local nextAt = _auto.flips[(s.flipsDone or 0) + 1]
+		if nextAt and os.clock() - s.releasedAt >= nextAt and st.speed > 30 then
+			s.flipsDone = (s.flipsDone or 0) + 1
+			out.flip = true
+			out.lean = (s.flipsDone % 2 == 0) and -0.4 or 0.4
+		end
 	end
 	if out.flip then
 		report("gp_flip", { load = out.load, crash = out.crash, speed = out.speed, surface = surface, x = x, z = z })
@@ -782,12 +836,34 @@ RemoteEvents.GpEvent.OnClientEvent:Connect(function(msg)
 			GpHud.banner(string.format("%.1f s STOP!", msg.seconds or 0), Color3.fromRGB(80, 230, 120), 2)
 			GpHud.radio("New tyres on. Go go go!", 3)
 		end
+	elseif kind == "bump" then
+		-- another car touched this one (GpManager, Shared/CarBump)
+		local k = s.kick or { x = 0, z = 0 }
+		s.kick = { x = k.x + (msg.x or 0), z = k.z + (msg.z or 0) }
+		_shakeT += 0.3
+		local snd = sound(SoundConfig.SFX.COLLISION, s.chassis)
+		snd.Volume = math.clamp(0.2 + (msg.power or 0) / 40, 0.2, 0.8)
+		snd:Play()
+		game:GetService("Debris"):AddItem(snd, 2)
+		if (msg.power or 0) > 12 then GpHud.radio("Contact! Are you okay?", 2) end
+		if _auto then report("gp_bumped", { power = msg.power, x = msg.x, z = msg.z }) end
+	elseif kind == "reseat" then
+		s.readySent = false
 	elseif kind == "reset" then
 		-- the autopilot: put back in the pits it drives out along the lane,
 		-- on the track its pit route starts over next lap
 		local cx, cz = GpLayout.offset(s.chassis.Position)
-		if _auto and GpLayout.inPit(cx, cz) then s.route, s.leg = pitRoute(s.box), 6 else s.route = nil end
-		s.flippedAt, s.crashCam, s.asked = nil, nil, false
+		if _auto and GpLayout.inPit(cx, cz) then
+			-- on with the pit route from the first point still ahead (north)
+			s.route = pitRoute(s.box)
+			s.leg = #s.route
+			for k = 6, #s.route do
+				if s.route[k].Z < cz - 4 then s.leg = k break end
+			end
+		else
+			s.route = nil
+		end
+		s.flippedAt, s.crashCam, s.tumbleCam, s.asked = nil, nil, nil, false
 		s.st.flipped, s.st.over, s.st.speed, s.st.travelYaw = false, 0, 0, nil
 		task.delay(0.35, function() if _s == s and s.chassis.Parent then takeHold(s.chassis) end end)
 		if msg.reason ~= "flip" then GpHud.radio("Marshals put you back on the road.", 3) end

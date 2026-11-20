@@ -168,6 +168,11 @@ Constants.GP = {
 	RESET_MAX = 5,            -- s after a flip at most
 	STUCK = 8,                -- s without progress → back on the road
 	PINNED = 3,               -- s on the gas without moving (nose in the armco: no reverse) → the marshals
+	-- car-to-car touches (Shared/CarBump, GpManager): the cars pass through
+	-- each other physically and the server pushes them apart; a player's car
+	-- (its client's) used to meet a bot's (the server's) as a wall
+	BUMP = { RESTITUTION = 0.5, MIN_PUSH = 3, MAX_PUSH = 20, GAP = 0.3 },
+	READY_WAIT = 2,           -- s the lights may wait for the client to say it sits in its car
 	-- going over: the movers let go and the car is thrown into a roll (Studio
 	-- gp-flip 2026-11-20: at SPIN 7 / UP 20 it was 0.2 s in the air, turned
 	-- under 30° and slid on its wheels; every "rollover" read as a skid)
@@ -178,6 +183,46 @@ Constants.GP = {
 	BOT_SKILL = { 0.86, 0.97 },
 	BOARD = 10,               -- best laps on the board
 	DONE_SECONDS = 7,         -- the results card, then back to town
+}
+
+-- ─── Alpine Luge (2026-11-20: "a luge corner beside it for the cars you buy;
+-- not F1 thrills but a cheerful ride down a winding road; friends may bump,
+-- a cart does not roll over but may slip off the side") ───────────────────
+-- Shared/LugeLayout (the hill, the trough, the chairlift), Shared/LugeCart
+-- (one pure step: gravity down the trough, brake, steering, the lips),
+-- LugeManager (sessions), StarterPlayerScripts/LugeClient.
+Constants.LUGE = {
+	WIDTH = 12,               -- the trough between its lips
+	GRAVITY = 200,            -- pull along the trough: × its grade (Roblox gravity ≈ 196)
+	ROLL = 1.8,               -- rolling resistance, studs/s²
+	DRAG = 0.003,            -- air: × speed²
+	TOP = 50,                 -- the cart's governor (a round's cars ~ 60-80, the GP 100+)
+	PUSH = { ACCEL = 7, UNTIL = 14 },   -- the gas paddles, only slowly (the start, the run-out)
+	BRAKE = 38,
+	GRIP = { 30, 40 },        -- sideways grip, studs/s²: the handling bar
+	TURN = 2.2,               -- rad/s the nose turns at a crawl
+	OVERDRIVE = 1.4,          -- steering asks this much over the grip (a slide)
+	OVERSTEER = 1.3,          -- the nose turns this much past the path while sliding
+	TRAVEL_FOLLOW = 7,        -- how fast the path follows the nose within the grip
+	SLIDE_SCRUB = 26,         -- speed lost per radian of slide per second
+	LEAN = 0.16,              -- rad the cart leans into a bend at the grip
+	BOUNCE = 0.35,            -- share of the sideways speed kept off a lip
+	SCRAPE = 0.05,            -- share of the speed lost scraping a lip
+	HOP = { LOW = 9, HIGH = 14 },    -- sideways speed that carries a cart over a lip (low; the high, banked outside of a hairpin)
+	HIGH_LIP_RADIUS = 20,     -- bends tighter than this (the hairpins) have a high, banked lip outside
+	TROUGH = { CENTER = 1, GUIDE = 7 },   -- the U-shaped trough turns a cart near a side back in: wanted sideways speed per stud out, how hard
+	ALIGN = 3,                -- rad/s the nose swings back along the trough after a bounce
+	ALIGN_SECONDS = 0.45,
+	OFF = { GRIP = 0.6, DRAG = 26, TOP = 12, GRAVITY = 0.5, RESET = 8, FAR = 16 },   -- on the grass beside it: slowed to a crawl (DRAG above TOP), half the hill's pull; steer back in
+	BUMP = { RESTITUTION = 0.5, MIN_PUSH = 2.5, MAX_PUSH = 9, GAP = 0.35 },   -- friendly: a hard ram (closing 17, Studio luge-wild) knocked both off a trestle at 16
+	LIFT_SPEED = 22,          -- studs/s up the chairlift
+	START_HOLD = 2.5,         -- s at the gate before the bar lifts
+	FINISH_HOLD = 3,          -- s past the line before the chairlift takes the cart again
+	MAX_CARTS = 10,
+	STUCK = 8,                -- s without progress → back in the trough
+	PINNED = 3,               -- s on the gas going nowhere → the marshals
+	READY_WAIT = 2,           -- s the gate waits for the client to say it sits in its cart
+	KMH = 2.1,
 }
 
 -- ─── Friend invites (Shared/Invite button, Modules/Referral) ─────────────

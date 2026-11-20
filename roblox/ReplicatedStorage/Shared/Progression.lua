@@ -32,6 +32,7 @@ function Progression.newRecord()
 		legendOn = nil,  -- the ride worn: a Legend Ride id, "car:<item>" (a new car), or nil
 		cars = {},       -- new cars bought at Junk Motors (Shared/NewCars): { [item] = true }
 		gp = {},         -- Junk Grand Prix: { best = seconds, car = title, runs = n }
+		luge = {},       -- Alpine Luge: { best = seconds, car = title, runs = n }
 	}
 end
 

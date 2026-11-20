@@ -195,6 +195,7 @@ function Runner.runMatch(opts)
 		lobbyFilm = opts.lobbyFilm, -- the lobby reel's timeline in LOBBY (TestHarness/LobbyFilm, record-lobby)
 		lobbyTour = opts.lobbyTour, -- Junk Town walked stop by stop, { hub = true } in hub mode (TestHarness/LobbyTour)
 		gp = opts.gp,               -- the Junk Grand Prix open; a bot client drives a run on autopilot (TestHarness/GpTest)
+		luge = opts.luge,           -- the Alpine Luge open; bot clients ride it on autopilot (TestHarness/LugeTest)
 		bots = {
 			farmProfiles = opts.farmProfiles or { "sweaty", "casual" },
 			driverProfiles = opts.driverProfiles or { "expert", "average", "novice" },

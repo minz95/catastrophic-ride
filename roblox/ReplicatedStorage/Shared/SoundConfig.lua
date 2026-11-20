@@ -185,6 +185,13 @@ SoundConfig.GP = {
 	REV     = { id = "rbxassetid://9112782019", volume = 0.5 },   -- Formula One Race Car 1 (PSE): idle, revs (on the grid)
 }
 
+SoundConfig.LUGE = {
+	ROLL   = { id = "rbxassetid://9125955982", volume = 0.45 },  -- Skateboard Start Constant Rolling Cu Wheels (PSE): pitched with speed
+	BELL   = { id = "rbxassetid://9125935023", volume = 0.6 },   -- Shop Door Bell Ceramic Mug Cowbell Hits Ring (PSE): the start gate
+	SCRAPE = { id = "rbxassetid://9118839359", volume = 0.5 },   -- Scraping Brisk Plastic Wood 13 (PSE): a lip
+	BUMP   = { id = "rbxassetid://9113537815", volume = 0.6 },   -- Boink Wet Suction Pop Blip Hollow 3 (PSE): a friend's cart
+}
+
 -- Ids that must never come back (spec playtest_polish).
 SoundConfig.BANNED = { "258057783", "6026984224", "9120873997" }
 

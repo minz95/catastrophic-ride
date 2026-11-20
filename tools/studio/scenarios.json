@@ -2345,7 +2345,110 @@
         ],
         "gp": {
           "car": "Toilet",
-          "skill": 1.4
+          "skill": 1.4,
+          "flips": [25, 70, 115]
+        }
+      },
+      "record": {
+        "delay": 12,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "gp-contact",
+      "kind": "match",
+      "tags": [
+        "gp"
+      ],
+      "_why": "two players at the Junk Grand Prix with the bots (2026-11-20, 'friends bump into each other; fix what the tests could not tell'): both autopilots blind to traffic, so they run into bots and each other (server CarBump pushes, GpEvent bump); player 1 drives like a keyboard (W/A/S/D pressed and let go through the same easing). Reports gp_bump, gp_release (ready, rider), gp_yank, flips and resets, laps",
+      "opts": {
+        "biome": "FOREST",
+        "players": 2,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 420,
+        "farmProfiles": [
+          "filmer",
+          "casual"
+        ],
+        "driverProfiles": [
+          "average",
+          "average"
+        ],
+        "gp": {
+          "drivers": [
+            { "car": "Toilet", "skill": 0.95, "keys": true, "blind": true, "flips": [45] },
+            { "car": "Rubber Duck", "skill": 0.9, "blind": true }
+          ]
+        }
+      },
+      "record": {
+        "delay": 12,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "luge-ride",
+      "kind": "match",
+      "tags": [
+        "luge"
+      ],
+      "_why": "the Alpine Luge with real physics (2026-11-20, 'a cheerful luge beside the GP; friends may bump, a cart may slip off; test it like the GP'): two bot clients take the booth, ride the chairlift and come down twice on autopilot; rider 1 slow and careful, rider 2 faster and blind close behind (it catches up and bumps; server CarBump, LugeEvent bump). Reports luge_* (lift, gate, run times, resets, bumps; the clients: scrapes, hops, samples)",
+      "opts": {
+        "biome": "FOREST",
+        "players": 2,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 420,
+        "farmProfiles": [
+          "filmer",
+          "casual"
+        ],
+        "driverProfiles": [
+          "average",
+          "average"
+        ],
+        "luge": {
+          "riders": [
+            { "car": "Toilet", "skill": 0.75, "runs": 2 },
+            { "car": "Rubber Duck", "skill": 1.15, "blind": true, "runs": 2, "after": 0.5 }
+          ]
+        }
+      },
+      "record": {
+        "delay": 12,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "luge-wild",
+      "kind": "match",
+      "tags": [
+        "luge"
+      ],
+      "_why": "the Alpine Luge ridden badly on purpose: a wide flat car (Pizza) and a tall one (Toilet) at 1.6x the grip, a keyboard a third of a second late, so they go over the lips onto the grass and the embankments; checks they get back in (or the marshals put them back) and nothing escapes the hill",
+      "opts": {
+        "biome": "FOREST",
+        "players": 2,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 360,
+        "farmProfiles": [
+          "filmer",
+          "casual"
+        ],
+        "driverProfiles": [
+          "average",
+          "average"
+        ],
+        "luge": {
+          "riders": [
+            { "car": "Pizza", "skill": 1.6, "keys": true, "late": 0.35, "blind": true, "runs": 1 },
+            { "car": "Toilet", "skill": 1.6, "keys": true, "late": 0.35, "blind": true, "runs": 1, "after": 6 }
+          ]
         }
       },
       "record": {

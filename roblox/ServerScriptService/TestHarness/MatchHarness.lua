@@ -286,6 +286,13 @@ function MatchHarness.start(args, endTest)
 		end)
 	end
 
+	-- the Alpine Luge ridden on autopilot (TestHarness/LugeTest)
+	if args.luge then
+		task.spawn(function()
+			require(script.Parent.LugeTest).run(args, function(reason) finish(reason) end)
+		end)
+	end
+
 	-- the Junk Grand Prix driven on autopilot (TestHarness/GpTest)
 	if args.gp then
 		task.spawn(function()

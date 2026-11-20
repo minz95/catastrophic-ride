@@ -231,7 +231,10 @@ end
 function GpLayout.inPit(x, z)
 	local P = GpLayout.PIT
 	local half = P.width / 2
-	if math.abs(x - P.x) <= half + 1 and z >= P.z0 - 2 and z <= P.z1 + 2 then return true end
+	-- the lane, its working half and the garages behind it (a car turning
+	-- onto its mark swings out a little: Studio, the pit lap was deleted for
+	-- "track limits" at x -405 … -409)
+	if x <= P.x + half + 3 and x >= math.min(P.garageX[1], P.garageX[2]) and z >= P.z0 - 2 and z <= P.z1 + 2 then return true end
 	-- the angled roads from the track's west edge to the lane's ends
 	for _, ends in ipairs({ { P.z1, P.entryZ }, { P.z0, P.exitZ } }) do
 		local zl, zt = ends[1], ends[2]
@@ -239,7 +242,7 @@ function GpLayout.inPit(x, z)
 		if z >= lo and z <= hi then
 			local f = (z - zl) / (zt - zl)
 			local cx = P.x + (-366 - P.x) * f
-			if math.abs(x - cx) <= half + 2 then return true end
+			if math.abs(x - cx) <= half + 5 then return true end   -- (a car swinging in wide: Studio, keyboard driving)
 		end
 	end
 	return false

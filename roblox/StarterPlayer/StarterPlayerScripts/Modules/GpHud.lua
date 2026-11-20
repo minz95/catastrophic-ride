@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 local GpTiming = require(ReplicatedStorage.Shared.GpTiming)
+local ScreenFit = require(ReplicatedStorage.Shared.ScreenFit)
 
 local GpHud = {}
 
@@ -40,16 +41,28 @@ end
 local function corner(p, r) make("UICorner", { CornerRadius = UDim.new(0, r or 6) }, p) return p end
 
 local _gui, _el
+GpHud.DESIGN = Vector2.new(1080, 640)   -- the screen the HUD is laid out for (px under the top bar)
 
 --- Builds (or rebuilds) the HUD. Returns the element table.
 function GpHud.build()
 	local pg = Players.LocalPlayer:WaitForChild("PlayerGui")
 	local old = pg:FindFirstChild("GpHud")
 	if old then old:Destroy() end
-	local gui = make("ScreenGui", { Name = "GpHud", ResetOnSpawn = false, IgnoreGuiInset = false, DisplayOrder = 20,
+	local screen = make("ScreenGui", { Name = "GpHud", ResetOnSpawn = false, IgnoreGuiInset = false, DisplayOrder = 20,
 		Enabled = false }, pg)
+	-- everything is laid out for a ~1080 × 640 screen and scaled down to fit
+	-- a smaller one (a phone, a small window: at full size the tower, clock,
+	-- dash and tyres covered the whole road)
+	local gui = make("Frame", { Name = "Root", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1) }, screen)
+	local fit = make("UIScale", { Name = "Fit" }, gui)
+	ScreenFit.watch(function()
+		local w, h, top = ScreenFit.view()
+		local k = math.clamp(math.min((h - top) / GpHud.DESIGN.Y, w / GpHud.DESIGN.X), 0.4, 1)
+		fit.Scale = k
+		gui.Size = UDim2.fromScale(1 / k, 1 / k)
+	end)
 	local el = {}
-	_gui, _el = gui, el
+	_gui, _el = screen, el
 
 	-- timing tower (top left)
 	local tower = corner(make("Frame", { Name = "Tower", Position = UDim2.new(0, 12, 0, 54), Size = UDim2.new(0, 230, 0, 230),
@@ -92,7 +105,8 @@ function GpHud.build()
 	end
 
 	-- the big message (lights out, track limits, chequered flag)
-	el.banner = label(gui, { Name = "Banner", AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.42, 0),
+	-- (high on the screen: at mid height it covered the car going over)
+	el.banner = label(gui, { Name = "Banner", AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.27, 0),
 		Size = UDim2.new(0.7, 0, 0, 54), TextStrokeTransparency = 0.2, Visible = false })
 
 	-- team radio (left middle)
