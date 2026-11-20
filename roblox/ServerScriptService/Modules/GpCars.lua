@@ -110,6 +110,7 @@ function GpCars.build(ride, cf, driverName)
 	local bav = chassis:FindFirstChild("DriveAngular")
 	if bav then bav.MaxTorque = Vector3.new(0, GpCars.MAX_FORCE, 0) end
 	chassis.Anchored = true
+	GpCars.passThrough(model, GpCars.GROUP)
 	return model, spec
 end
 
@@ -166,6 +167,25 @@ function GpCars.takeOffHelmet(character)
 	local h = character and character:FindFirstChild(GpCars.HELMET)
 	if h then h:Destroy() end
 end
+
+--- Puts every colliding part of `model` in collision group `name`, which
+-- passes through itself: cars of one track never touch physically, the
+-- server resolves their touches (Shared/CarBump).
+function GpCars.passThrough(model, name)
+	pcall(function()
+		local PhysicsService = game:GetService("PhysicsService")
+		if not PhysicsService:IsCollisionGroupRegistered(name) then
+			PhysicsService:RegisterCollisionGroup(name)
+		end
+		PhysicsService:CollisionGroupSetCollidable(name, name, false)
+	end)
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") and d.CanCollide then
+			pcall(function() d.CollisionGroup = name end)
+		end
+	end
+end
+GpCars.GROUP = "GpCar"
 
 --- Lets the car go (unanchored, its owner the driver; nil = the server).
 function GpCars.release(model, player)

@@ -24,6 +24,7 @@
 --     (down to TYRE.MIN_GRIP). A pit stop sets st.tyre back to 1.
 
 local Constants = require(script.Parent.Constants)
+local CarBump = require(script.Parent.CarBump)
 
 local GpCar = {}
 
@@ -61,7 +62,8 @@ end
 --- One step. input: { throttle 0..1, brake 0..1, steer -1..1 (+ = left) }.
 -- ctx: { dt, yaw (the nose; LookVector = (-sin, 0, -cos)), surface (a
 --   Constants.GP.SURFACE key), actual (real speed along the path; optional),
---   pit (true in the pit lane: the speed limiter) }.
+--   pit (true in the pit lane: the speed limiter), kick (optional { x, z }:
+--   a velocity change from a touch with another car, Shared/CarBump) }.
 -- Returns { speed, yawRate, travelYaw, slide, load, lift, flip, lean,
 --   grip, gear, rpm, crash }.
 function GpCar.step(spec, st, input, ctx)
@@ -78,6 +80,11 @@ function GpCar.step(spec, st, input, ctx)
 		end
 		st.lastActual = ctx.actual
 		v = math.clamp(v, ctx.actual - 8, ctx.actual + 8)
+	end
+	-- a touch from another car (CarBump, sent by the server): the speed
+	-- and the path change, the nose stays (a side hit opens a slide)
+	if ctx.kick then
+		v, st.travelYaw = CarBump.apply(v, st.travelYaw or ctx.yaw or 0, ctx.kick.x or 0, ctx.kick.z or 0)
 	end
 
 	-- speed

@@ -20,12 +20,14 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local RunService = game:GetService("RunService")
 
 local Constants = require(ReplicatedStorage.Shared.Constants)
 local GpLayout = require(ReplicatedStorage.Shared.GpLayout)
 local GpTiming = require(ReplicatedStorage.Shared.GpTiming)
 local LobbyLayout = require(ReplicatedStorage.Shared.LobbyLayout)
 local RemoteEvents = require(ReplicatedStorage.RemoteEvents)
+local CarBump = require(ReplicatedStorage.Shared.CarBump)
 
 local Modules = ServerScriptService.Modules
 local GpCars = require(Modules.GpCars)
@@ -187,9 +189,45 @@ local function enter(player)
 			lightsAt = lightsAt, outAt = outAt, best = s.myBest })
 		task.wait(math.max(0, outAt - now()))
 		if s.ended then return end
-		GpCars.release(car, player)
-		s.released = true
-		s.lastMoveAt = now()
+		-- the client says it sits in the car (it owns its character, and the
+		-- seated character's root leads the car's assembly: where the client
+		-- still thought it stood, on the plaza, the whole car went at
+		-- release; Studio, 2 runs in 4)
+		local waitFrom = now()
+		while not s.ready and now() - waitFrom < G.READY_WAIT and not s.ended do task.wait(0.05) end
+		if s.ended then return end
+		local boxCF = chassis.CFrame
+		local function letGo()
+			GpCars.release(car, player)
+			s.released = true
+			s.lastMoveAt = now()
+		end
+		letGo()
+		Telemetry.record("gp_release", { userId = player.UserId, ready = s.ready == true,
+			rider = (function()
+				local r = char:FindFirstChild("HumanoidRootPart")
+				return r and math.floor((r.Position - chassis.Position).Magnitude) or -1
+			end)() })
+		-- pulled away all the same: back in the box, seated again, let go
+		for _ = 1, 3 do
+			task.wait(0.6)
+			if s.ended or not chassis.Parent then return end
+			local moved = (chassis.Position - boxCF.Position).Magnitude
+			if moved < 30 then return end
+			Telemetry.record("gp_yank", { userId = player.UserId, moved = math.floor(moved) })
+			s.released = false
+			chassis.Anchored = true
+			car:PivotTo(boxCF)
+			local r = char:FindFirstChild("HumanoidRootPart")
+			if r and seat then
+				pcall(function() char:PivotTo(CFrame.new(seat.Position + V(0, 3, 0)) * r.CFrame.Rotation) end)
+				pcall(function() seat:Sit(hum) end)
+			end
+			send(player, { kind = "reseat" })
+			task.wait(0.5)
+			if s.ended then return end
+			letGo()
+		end
 	end)
 	rec.gp = rec.gp or {}
 	rec.gp.runs = (rec.gp.runs or 0) + 1
@@ -206,9 +244,16 @@ local function resetCar(s, reason)
 	s.lastReset = now()
 	local x, z = GpLayout.offset(chassis.Position)
 	local cf
-	-- in the pits, or flung off before the timing started (Studio: twice in
-	-- four runs the car turned up on the plaza at the lights): back in the box
-	if GpLayout.inPit(x, z) or (reason == "off_grounds" and not s.timing.started) then
+	-- in the pit lane: where it is, on the lane, facing out (back in the box
+	-- it was behind the line again and drove a 10 s "lap" over it: Studio
+	-- gp-flip); flung off before the timing started (the car turned up on
+	-- the plaza at the lights): back in the box
+	local P = GpLayout.PIT
+	if GpLayout.inPit(x, z) and z > P.z0 + 4 and z < P.z1 - 4 then
+		local y = rideHeight(chassis)
+		local pos = O + V(P.x + P.width / 4, 0, z)
+		cf = CFrame.lookAt(V(pos.X, y, pos.Z), V(pos.X, y, pos.Z - 10))
+	elseif GpLayout.inPit(x, z) or (reason == "off_grounds" and not s.timing.started) then
 		local stop = O + GpLayout.box(s.box)
 		local y = rideHeight(chassis)
 		cf = CFrame.lookAt(V(stop.X, y, stop.Z), V(stop.X, y, stop.Z - 10))
@@ -391,6 +436,10 @@ RemoteEvents.GpAction.OnServerInvoke = function(player, action, why)
 		return "ok"
 	elseif action == "enter" then
 		return enter(player)
+	elseif action == "ready" then
+		-- the client sees itself in its seat (the lights wait for it)
+		if s then s.ready = true end
+		return "ok"
 	end
 	return "denied: bad action"
 end
@@ -409,6 +458,54 @@ local function hookPrompt(circuit)
 				local ok, err = pcall(enter, player)
 				if not ok then warn("[GpManager] enter: " .. tostring(err)) end
 			end)
+		end
+	end
+end
+
+-- ── Car-to-car touches ───────────────────────────────────────────────────────
+-- The cars pass through each other (GpCars.passThrough); every frame the
+-- server finds touching pairs (Shared/CarBump) and pushes both apart: a
+-- bot's state directly (GpBots.knock), a player's through its client
+-- (GpEvent "bump", into GpCar's next step).
+
+local _bumpedAt = {}   -- "a|b" → time
+
+local function sessionOfCar(model)
+	for _, s in pairs(_sessions) do
+		if s.car == model then return s end
+	end
+end
+
+local function contacts()
+	local folder = _circuit and _circuit:FindFirstChild("Cars")
+	if not folder then return end
+	local list = {}
+	for _, m in ipairs(folder:GetChildren()) do
+		local c = m:IsA("Model") and m:GetAttribute("GpCar") and m.PrimaryPart
+		if c and not c.Anchored then
+			local look = c.CFrame.LookVector
+			local vel = c.AssemblyLinearVelocity
+			table.insert(list, { id = m, x = c.Position.X, z = c.Position.Z, vx = vel.X, vz = vel.Z,
+				yaw = math.atan2(-look.X, -look.Z), length = c.Size.Z, width = c.Size.X })
+		end
+	end
+	if #list < 2 then return end
+	local t = now()
+	for _, h in ipairs(CarBump.find(list, G.BUMP)) do
+		local key = h.a.Name .. "|" .. h.b.Name
+		if t - (_bumpedAt[key] or 0) >= G.BUMP.GAP then
+			_bumpedAt[key] = t
+			for _, side in ipairs({ { h.a, h.ax, h.az }, { h.b, h.bx, h.bz } }) do
+				local model, dx, dz = side[1], side[2], side[3]
+				if model:GetAttribute("Bot") then
+					GpBots.knock(model, dx, dz)
+				else
+					local s = sessionOfCar(model)
+					if s then send(s.player, { kind = "bump", x = dx, z = dz, power = h.power }) end
+				end
+			end
+			Telemetry.record("gp_bump", { a = h.a:GetAttribute("Driver"), b = h.b:GetAttribute("Driver"),
+				power = math.floor(h.power), x = math.floor(h.a.PrimaryPart.Position.X - O.X), z = math.floor(h.a.PrimaryPart.Position.Z - O.Z) })
 		end
 	end
 end
@@ -461,6 +558,10 @@ task.spawn(function()
 			end or nil,
 		})
 	end
+	RunService.Heartbeat:Connect(function()
+		local ok, err = pcall(contacts)
+		if not ok then warn("[GpManager] contacts: " .. tostring(err)) end
+	end)
 	-- every session ten times a second (timing, pits, resets)
 	local last = os.clock()
 	while true do

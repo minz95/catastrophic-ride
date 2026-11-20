@@ -572,6 +572,45 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   a tyre change (GpClient `pitCrew`: a man kneeling at each wheel with a gun, the old
   tyre off and laid down, a new one with a yellow sidewall on, a stopwatch over the car;
   ten crew round a small car hid the wheels, and GpFilm's crew shot is low at the wheels).
+  Cars touching (2026-11-20): GP cars pass through each other (collision
+  group GpCar, `GpCars.passThrough`); GpManager finds touching pairs every
+  frame (`Shared/CarBump`, `GP.BUMP`) and pushes both (bots `GpBots.knock`,
+  players GpEvent "bump" → GpCar `ctx.kick`): a player's car (its client's)
+  met a bot's (the server's) as a wall. The lights wait for the client to say
+  it sits in its car (GpAction "ready", `GP.READY_WAIT`): the seated root
+  leads the car's assembly, and where the client still thought it stood (the
+  plaza) the car went at release; a car pulled away all the same goes back
+  (telemetry `gp_yank`). The pit lane counts to the garage fronts (a pit lap
+  was deleted for track limits). The HUD (Modules/GpHud) is laid out for
+  1080 × 640 and scaled down to fit (it covered a small window); while you
+  drive the GP or ride the luge `StarterPlayerScripts/TrackFocus` turns the
+  town's screens off (NEXT TRACK, players, SHOP …; back on after). The pit
+  cam is on the lane side, the tumble cam follows the car. Studio: `gp-contact`
+  (two drivers, blind, one on a keyboard, a forced flip: harness `flips`).
+- Alpine Luge (2026-11-20, "a luge beside the GP for the cars you buy; not
+  F1, a cheerful winding ride down; friends may bump; slip off the side, not
+  roll over"): a grassy hill north of Junk Motors, east of the GP
+  (`Shared/LugeLayout`: the trough's corners as data, eight legs and seven
+  hairpins, its floor never under the hill nor dropping faster than
+  MAX_GRADE: trestles there; built by `Modules/Maps/LugeHill`). The ticket
+  booth in town (prompt LugeAction "enter", own a car) → `LugeManager`: your
+  car at the bottom station, helmet, up the chairlift (anchored, carried
+  frame by frame, a hanger to the cable), the gate (two slots, the bell,
+  waits for "ready"), down on your client (`Shared/LugeCart`: gravity along
+  the trough's grade, roll and air drag, a governor at TOP, the gas only
+  paddles, the brake; the U-shaped trough turns a cart near a side back in
+  (TROUGH); at a lip a scrape, faster sideways a hop onto the grass (crawl,
+  steer back in; the high banked walls outside hairpins hold more), never a
+  rollover), past the finish your time (rec.luge), FINISH_HOLD s, the lift
+  again; LEAVE back by the booth. Carts pass through each other (group
+  LugeCart) and bump through the server (`CarBump`, `LUGE.BUMP`, LugeEvent
+  "bump"). Client: `StarterPlayerScripts/LugeClient` + `Modules/LugeHud`
+  (it also swings the chairlift's chairs for everyone). Offline: `lune run
+  tools/luge_sim.luau` (careful to careless riders, keyboard a moment late,
+  two friends), layout PNG `lune run tools/luge_layout.luau && python3
+  tools/luge_layout.py`; Studio `sim.py run luge-ride` (two riders, one
+  catching the other) and `luge-wild` (careless, keyboards, off the trough).
+  Spec `luge`.
 - Daily challenges: `Shared/DailyChallenge` (three a UTC day from `POOL`,
   the same everywhere, coins each and `ALL_BONUS`; progress in the record's
   `challenges`), `ChallengeManager` counts Telemetry events

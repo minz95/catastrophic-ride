@@ -39,6 +39,16 @@
 --   gp_enter         GpManager              { userId, car, box, top, grip, stability }   (Junk Grand Prix)
 --   gp_denied        GpManager              { userId, reason = closed | no_car | full | loading | build }
 --   gp_lap           GpManager              { userId, lap, time, valid, counted (sectors in order, not too short), sectors }
+--   luge_enter       LugeManager            { userId, car }   (Alpine Luge)
+--   luge_denied      LugeManager            { userId, reason = closed | no_car | full | loading | build | racing }
+--   luge_go          LugeManager            { userId, slot, ready }
+--   luge_run         LugeManager            { userId, time, pb, car }
+--   luge_reset       LugeManager            { userId, reason = off | pinned | stuck | off_grounds | asked, x, z }
+--   luge_bump        LugeManager            { a, b, power, x, z }
+--   luge_end         LugeManager            { userId, reason, runs, best }
+--   gp_bump          GpManager              { a, b (drivers), power (closing speed), x, z }
+--   gp_release       GpManager              { userId, ready (the client said it sits), rider (root to chassis) }
+--   gp_yank          GpManager              { userId, moved }   (the car pulled away at release: put back, let go again)
 --   gp_invalid       GpManager              { userId, why = limits | jump, lateral / moved, dt, x, z }
 --   gp_pit           GpManager              { userId, seconds }
 --   gp_reset         GpManager              { userId, reason = flip | pinned | stuck | off_grounds }

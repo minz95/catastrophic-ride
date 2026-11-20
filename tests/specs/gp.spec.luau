@@ -202,6 +202,19 @@ R.describe("Junk GP: how a car drives (GpCar)", function()
 	end)
 end)
 
+R.describe("Junk GP: the pit lane", function()
+	local env = Loader.boot()
+	local L = env.requirePath("ReplicatedStorage.Shared.GpLayout")
+	R.it("covers the working lane and the garage fronts (a pit lap is not deleted for track limits there)", function()
+		R.expect(L.inPit(-394, 0)).toBe(true)
+		R.expect(L.inPit(-405, 173)).toBe(true)
+		R.expect(L.inPit(-409, 165)).toBe(true)
+		R.expect(L.inPit(-383.5, 189)).toBe(true)   -- swinging wide into the lane
+		R.expect(L.inPit(-360, 0)).toBe(false)   -- the main straight
+		R.expect(L.inPit(-500, 0)).toBe(false)
+	end)
+end)
+
 R.describe("Junk GP: lap timing (GpTiming)", function()
 	local env = Loader.boot()
 	local T = env.requirePath("ReplicatedStorage.Shared.GpTiming")
@@ -546,9 +559,10 @@ R.describe("Junk GP in a server", function()
 		R.expect(session ~= nil and session.laps == m.Constants.GP.LAPS).toBe(true)
 		local box = car:GetAttribute("Box")
 		R.expect(box >= 1 and box <= m.Constants.GP.MAX_CARS).toBe(true)
-		-- in the garage, held until the lights go out
+		-- in the garage, held until the lights go out, and until the client
+		-- says it sits in the car (READY_WAIT at most)
 		R.expect(car.PrimaryPart.Anchored).toBe(true)
-		srv.advance(8)
+		srv.advance(8.9)
 		R.expect(car.PrimaryPart.Anchored).toBe(false)
 		-- the lobby's net leaves a driver alone (Studio: it put the driver, and
 		-- the car with them, back on the plaza at the lights)
@@ -628,6 +642,75 @@ R.describe("Junk GP in a server", function()
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
 	end)
 
+	R.it("a bot running into a player's car: both are pushed (the player through its client), nobody stops dead", function()
+		local srv, m = boot()
+		local p = srv.players[1]
+		m.PlayerStore.get(p).cars = { Toilet = true }
+		prompt(m.circuit).Triggered:Fire(p)
+		R.expect(srv.invoke("GpAction", p, "ready")).toBe("ok")
+		srv.advance(9)   -- the player's car let go
+		local car = carOf(m, p)
+		local bot
+		for _, c in ipairs(m.circuit.Cars:GetChildren()) do
+			if c:GetAttribute("Bot") then bot = c break end
+		end
+		R.expect(bot ~= nil).toBe(true, "a bot")
+		-- the player's car just in front of the bot, which closes on it at 30
+		local bc = bot.PrimaryPart.CFrame
+		bot.PrimaryPart.Anchored = false
+		bot.PrimaryPart.AssemblyLinearVelocity = bc.LookVector * 30
+		car:PivotTo(bc * CFrame.new(0, 0, -(bot.PrimaryPart.Size.Z / 2 + car.PrimaryPart.Size.Z / 2) + 1))
+		local hb = srv.env.game:GetService("RunService").Heartbeat
+		hb:Fire(1 / 60)
+		local bumps = events(m, p, "bump")
+		R.expect(#bumps >= 1).toBe(true)
+		R.expect(bumps[1].power > 5).toBe(true, tostring(bumps[1].power))
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a car pulled away from its box at the lights goes back, is seated again and let go", function()
+		local srv, m = boot()
+		local p = srv.players[1]
+		m.PlayerStore.get(p).cars = { Toilet = true }
+		prompt(m.circuit).Triggered:Fire(p)
+		R.expect(srv.invoke("GpAction", p, "ready")).toBe("ok")
+		local car
+		for _ = 1, 100 do
+			srv.advance(0.1)
+			car = carOf(m, p)
+			if car and not car.PrimaryPart.Anchored then break end
+		end
+		local box = car.PrimaryPart.Position
+		-- what the client did in Studio: the car where it thought it stood
+		car:PivotTo(CFrame.new(box + Vector3.new(0, 0, -60)))
+		srv.advance(1.5)
+		R.expect(#events(m, p, "reseat")).toBe(1)
+		R.expect((car.PrimaryPart.Position - box).Magnitude < 5).toBe(true)
+		R.expect(car.PrimaryPart.Anchored).toBe(false)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
+	R.it("a car put back in the pit lane stays where it is on the lane, facing out (back in its box it crossed the line again)", function()
+		local srv, m = boot()
+		local p = srv.players[1]
+		m.PlayerStore.get(p).cars = { Toilet = true }
+		prompt(m.circuit).Triggered:Fire(p)
+		srv.invoke("GpAction", p, "ready")
+		srv.advance(9)
+		local car = carOf(m, p)
+		local O = m.Lobby.ORIGIN
+		local P = m.L.PIT
+		-- north of the line, in the lane (the way out)
+		car:PivotTo(CFrame.new(O.X + P.x, car.PrimaryPart.Position.Y, O.Z - 60))
+		srv.advance(2.5)
+		R.expect(srv.invoke("GpAction", p, "reset", "pinned")).toBe("ok")
+		srv.advance(0.5)
+		local pos = car.PrimaryPart.Position
+		R.expect(math.abs(pos.Z - (O.Z - 60)) < 1).toBe(true, tostring(pos.Z - O.Z))
+		R.expect(m.L.inPit(pos.X - O.X, pos.Z - O.Z)).toBe(true)
+		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+
 	R.it("a car off the grounds is put back on the road; LEAVE ends the run; leaving the game frees the box", function()
 		local srv, m = boot()
 		local p = srv.players[1]
@@ -664,5 +747,46 @@ R.describe("Junk GP in a server", function()
 		R.expect(events(m, p, "denied")[1].reason).toBe("closed")
 		R.expect(#m.circuit.Cars:GetChildren()).toBe(0)
 		R.expect(srv.mock.errors).toBeEmpty("server errors")
+	end)
+end)
+
+R.describe("Junk GP: cars touching (CarBump)", function()
+	local env = Loader.boot()
+	local CarBump = env.requirePath("ReplicatedStorage.Shared.CarBump")
+	local GpCar = env.requirePath("ReplicatedStorage.Shared.GpCar")
+	local Constants = env.requirePath("ReplicatedStorage.Shared.Constants")
+	local function car(id, x, z, vz, yaw)
+		return { id = id, x = x, z = z, vx = 0, vz = vz, yaw = yaw or 0, length = 8, width = 4 }
+	end
+
+	R.it("a car running into the back of a slower one slows, the one in front is pushed on; cars apart do not touch", function()
+		-- both face -Z (yaw 0); b is ahead (smaller z), a behind and faster
+		local hits = CarBump.find({ car("a", 0, 0, -60), car("b", 0, -7, -40) }, Constants.GP.BUMP)
+		R.expect(#hits).toBe(1)
+		local h = hits[1]
+		R.expect(h.az > 0).toBe(true)    -- a: pushed back (+Z)
+		R.expect(h.bz < 0).toBe(true)    -- b: pushed on (-Z)
+		R.expect(math.abs(h.power - 20) < 0.01).toBe(true)
+		R.expect(#CarBump.find({ car("a", 0, 0, -60), car("b", 0, -9, -40) })).toBe(0)
+		R.expect(#CarBump.find({ car("a", 0, 0, -60), car("b", 4.5, 0, -60) })).toBe(0)
+	end)
+
+	R.it("side by side they are pushed apart sideways, at least MIN_PUSH even when barely moving", function()
+		local hits = CarBump.find({ car("a", 0, 0, -50), car("b", 3, -1, -50) }, Constants.GP.BUMP)
+		R.expect(#hits).toBe(1)
+		R.expect(hits[1].ax < 0 and hits[1].bx > 0).toBe(true)
+		R.expect(math.abs(hits[1].bx) >= Constants.GP.BUMP.MIN_PUSH - 1e-6).toBe(true)
+		R.expect(math.abs(hits[1].az) < 1e-6).toBe(true)
+	end)
+
+	R.it("a push sideways opens a slide in GpCar (the nose stays); a push back slows the car, never reverses it", function()
+		local spec = GpCar.spec({ speed = 0.5, accel = 0.5, handling = 0.5 }, 1.2)
+		local st = GpCar.newState()
+		st.speed = 60
+		local out = GpCar.step(spec, st, { throttle = 0.5 }, { dt = 1 / 60, yaw = 0, kick = { x = 12, z = 0 } })
+		R.expect(out.slide > 0.1).toBe(true, tostring(out.slide))
+		local v, yaw = CarBump.apply(30, 0, 0, 50)
+		R.expect(v).toBe(0)
+		R.expect(yaw).toBe(0)
 	end)
 end)

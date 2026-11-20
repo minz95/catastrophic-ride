@@ -275,4 +275,20 @@ end
 
 function GpBots.list() return _bots end
 
+--- A touch from another car (GpManager, Shared/CarBump): bot `model`'s
+-- speed and path change by (dx, dz) studs/s.
+function GpBots.knock(model, dx, dz)
+	local CarBump = require(ReplicatedStorage.Shared.CarBump)
+	for _, bot in ipairs(_bots) do
+		if bot.model == model and not bot.flippedAt then
+			local st = bot.state
+			local chassis = model.PrimaryPart
+			local yaw = chassis and yawOf(chassis.CFrame) or 0
+			st.speed, st.travelYaw = CarBump.apply(st.speed or 0, st.travelYaw or yaw, dx, dz)
+			return true
+		end
+	end
+	return false
+end
+
 return GpBots
