@@ -21,6 +21,7 @@ add music in the editor you post with.
 Needs ffmpeg (on PATH, or `pip install imageio-ffmpeg`) and Pillow.
 """
 
+import glob
 import json
 import os
 import re
@@ -45,6 +46,13 @@ FONT_SCRIPT = "/System/Library/Fonts/Supplemental/Brush Script.ttf"
 FONT_VCR = "/System/Library/Fonts/Supplemental/Andale Mono.ttf"
 SUNSET = [(255, 240, 110), (255, 170, 50), (255, 80, 120), (170, 60, 210)]
 RETRO_BG = "#140C26"
+# the same look in Korean ("look": "vhs", "lang": "ko"): a 90s Korean TV ad's
+# yellow titles in a red and a white outline, a brush line (Nanum Brush Script,
+# a downloadable macOS font; Apple SD Gothic Neo when it is not there)
+FONT_KO_SCRIPT = next(iter(sorted(glob.glob(
+    "/System/Library/AssetsV2/com_apple_MobileAsset_Font*/*/AssetData/NanumScript.ttc"))), None)
+FONT_KO_SCRIPT = (FONT_KO_SCRIPT, 0) if FONT_KO_SCRIPT else FONT_KO
+GOLD = [(255, 252, 170), (255, 220, 20), (255, 150, 0)]
 
 
 def ffmpeg():
@@ -259,32 +267,46 @@ def _gradient_text(im, x, y, text, font, colors, stroke, stroke_fill, shadow=Non
     im.paste(grad, (box[0], box[1]), mask)
 
 
-def overlay_retro(size, seg, path):
+def overlay_retro(size, seg, path, lang=None):
     """The 80s look's words: a script line ("Come on down to"), a big sunset
     title in Futura with a dark outline and a pink shadow, a white line under
-    it, a yellow starburst badge, a TV's on-screen text (top left)."""
+    it, a yellow starburst badge, a TV's on-screen text (top left).
+    In Korean (lang "ko"), a 90s Korean ad: a brush line, gold titles in a
+    red and a white outline over a blue shadow, a red starburst."""
     from PIL import Image, ImageDraw
     import math as _m
     W, H = size
+    ko = lang == "ko"
     im = Image.new("RGBA", size, (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     y = int(H * seg.get("y", 0.08))
     if seg.get("script"):
-        font = _fit_font(d, seg["script"], FONT_SCRIPT, int(W * 0.1), W * 0.86)
+        font = _fit_font(d, seg["script"], FONT_KO_SCRIPT if ko else FONT_SCRIPT, int(W * (0.12 if ko else 0.1)), W * 0.86)
         for line in seg["script"].split("\n"):
             tw = d.textlength(line, font=font)
-            d.text(((W - tw) / 2 + 4, y + 5), line, font=font, fill=(255, 60, 150), stroke_width=4, stroke_fill=(255, 60, 150))
-            d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF", stroke_width=3, stroke_fill=(60, 20, 90))
+            if ko:
+                d.text(((W - tw) / 2 + 5, y + 6), line, font=font, fill=(20, 50, 160), stroke_width=5, stroke_fill=(20, 50, 160))
+                d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF", stroke_width=5, stroke_fill=(220, 30, 50))
+            else:
+                d.text(((W - tw) / 2 + 4, y + 5), line, font=font, fill=(255, 60, 150), stroke_width=4, stroke_fill=(255, 60, 150))
+                d.text(((W - tw) / 2, y), line, font=font, fill="#FFFFFF", stroke_width=3, stroke_fill=(60, 20, 90))
             y += int(font.size * 1.05)
     if seg.get("title"):
-        font = _fit_font(d, seg["title"], FONT_RETRO, int(W * 0.15), W * 0.92)
+        font = _fit_font(d, seg["title"], FONT_KO if ko else FONT_RETRO, int(W * (0.14 if ko else 0.15)), W * 0.88)
         for line in seg["title"].split("\n"):
             tw = d.textlength(line, font=font)
-            _gradient_text(im, (W - tw) / 2, y, line, font, SUNSET, max(6, font.size // 11), (45, 15, 70),
-                           shadow=(8, 10, (255, 60, 150)))
-            y += int(font.size * 1.0)
+            x = (W - tw) / 2
+            if ko:
+                st = max(6, font.size // 12)
+                d.text((x + 9, y + 11), line, font=font, fill=(20, 50, 160), stroke_width=st * 3, stroke_fill=(20, 50, 160))
+                d.text((x, y), line, font=font, fill="#FFFFFF", stroke_width=st * 3, stroke_fill="#FFFFFF")
+                _gradient_text(im, x, y, line, font, GOLD, st, (210, 20, 40))
+            else:
+                _gradient_text(im, x, y, line, font, SUNSET, max(6, font.size // 11), (45, 15, 70),
+                               shadow=(8, 10, (255, 60, 150)))
+            y += int(font.size * (1.18 if ko else 1.0))
     if seg.get("sub"):
-        font = _fit_font(d, seg["sub"], FONT_RETRO_BODY, int(W * 0.06), W * 0.9)
+        font = _fit_font(d, seg["sub"], FONT_KO if ko else FONT_RETRO_BODY, int(W * 0.06), W * 0.9)
         y += int(font.size * 0.3)
         for line in seg["sub"].split("\n"):
             tw = d.textlength(line, font=font)
@@ -299,13 +321,13 @@ def overlay_retro(size, seg, path):
             a = k / 32 * 2 * _m.pi
             rr = r if k % 2 == 0 else r * 0.78
             pts.append((cx + _m.cos(a) * rr, cy + _m.sin(a) * rr))
-        d.polygon(pts, fill=(255, 225, 40), outline=(200, 40, 40))
-        font = _fit_font(d, seg["badge"], FONT_RETRO, int(r * 0.55), r * 1.5)
+        d.polygon(pts, fill=(225, 30, 40) if ko else (255, 225, 40), outline=(255, 255, 255) if ko else (200, 40, 40))
+        font = _fit_font(d, seg["badge"], FONT_KO if ko else FONT_RETRO, int(r * (0.5 if ko else 0.55)), r * 1.45)
         lines = seg["badge"].split("\n")
         ty = cy - len(lines) * font.size * 0.55
         for line in lines:
             tw = d.textlength(line, font=font)
-            d.text((cx - tw / 2, ty), line, font=font, fill=(210, 30, 40))
+            d.text((cx - tw / 2, ty), line, font=font, fill=(255, 235, 40) if ko else (210, 30, 40))
             ty += font.size * 1.05
     if seg.get("osd"):
         font = _truetype(FONT_VCR, int(W * 0.055))
@@ -360,6 +382,26 @@ def sunset_card(size, path):
     im.save(path)
 
 
+def burst_card(size, path):
+    """A 90s Korean ad's card: sky-blue and white rays from a yellow sun."""
+    from PIL import Image, ImageDraw
+    import math as _m
+    W, H = size
+    im = Image.new("RGB", size, (40, 150, 235))
+    d = ImageDraw.Draw(im)
+    cx, cy, R = W / 2, H * 0.5, max(W, H) * 1.2
+    n = 28
+    for k in range(n):
+        if k % 2:
+            continue
+        a0, a1 = k / n * 2 * _m.pi, (k + 1) / n * 2 * _m.pi
+        d.polygon([(cx, cy), (cx + _m.cos(a0) * R, cy + _m.sin(a0) * R), (cx + _m.cos(a1) * R, cy + _m.sin(a1) * R)],
+                  fill=(120, 205, 255))
+    for r, col in ((W * 0.36, (255, 255, 255)), (W * 0.32, (255, 150, 0)), (W * 0.27, (255, 215, 40))):
+        d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=col)
+    im.save(path)
+
+
 def card_image(size, seg, path):
     """A still: a store picture (cropped to fill) or a colour, darkened at
     the edges so the text reads."""
@@ -367,6 +409,9 @@ def card_image(size, seg, path):
     W, H = size
     if seg.get("bg") == "sunset":
         sunset_card(size, path)
+        return
+    if seg.get("bg") == "burst":
+        burst_card(size, path)
         return
     if seg.get("image") and seg.get("fit") == "black":
         # the picture in the middle of a black frame, `zoom` × the width (sides
@@ -427,10 +472,10 @@ def segment(cut, seg, k, size, work, takes, clean=False, fixes=None, lang=None):
     W, H = size
     out = os.path.join(work, "seg_%02d.mp4" % k)
     ov = os.path.join(work, "ov_%02d.png" % k)
-    if lang == "ko":
+    if seg.get("_retro"):
+        overlay_retro(size, clean_text(seg) if clean else seg, ov, lang)
+    elif lang == "ko":
         overlay_ko(size, {k2: v for k2, v in seg.items() if k2 != "say"} if clean else seg, ov)
-    elif seg.get("_retro"):
-        overlay_retro(size, clean_text(seg) if clean else seg, ov)
     else:
         overlay(size, clean_text(seg) if clean else seg, ov)
     dur = seg["dur"]
