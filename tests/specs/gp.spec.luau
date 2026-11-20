@@ -153,9 +153,16 @@ R.describe("Junk GP: how a car drives (GpCar)", function()
 		local f2, l2 = bend(tall, 80, 0.9)
 		R.expect(f2).toBe(false)
 		R.expect(l2).toBe(true)
-		-- kerbs lower the limit: the middle car at the limit lifts a wheel on a kerb, not on the road
-		R.expect(select(2, bend(mid, 80, 1, "road"))).toBe(false)
-		R.expect(select(2, bend(mid, 80, 1, "kerb"))).toBe(true)
+		-- kerbs lower the limit: a middle car (width / height 1.25, an Old TV)
+		-- at the limit lifts a wheel on a kerb, not on the road
+		local middle = GpCar.spec({ speed = 0.5, accel = 0.5, handling = 0.5 }, 1.25)
+		R.expect(select(2, bend(middle, 80, 1, "road"))).toBe(false)
+		R.expect(select(2, bend(middle, 80, 1, "kerb"))).toBe(true)
+		-- the real cars (Studio gp-drive measured them): only the tallest can go
+		-- over on the road, a flat one never lifts even on a kerb
+		R.expect((bend(GpCar.spec({ handling = 0.5 }, 0.75), 80, 1))).toBe(true)              -- Toilet
+		R.expect((bend(GpCar.spec({ handling = 0.5 }, 1.05), 80, 1))).toBe(false)             -- Rubber Duck, road
+		R.expect(select(2, bend(GpCar.spec({ handling = 0.5 }, 1.66), 80, 1, "kerb"))).toBe(false)  -- Red Sofa
 	end)
 
 	R.it("asking for more than the grip slides the car and scrubs speed; worn tyres grip less", function()
@@ -337,6 +344,97 @@ R.describe("Junk GP: the simulated driver laps every bot build", function()
 		local tf = laps(fast, 0.9, 1)[1]
 		local ts = laps(slow, 0.9, 1)[1]
 		R.expect(ts - tf > 8).toBe(true, string.format("%.1f vs %.1f", tf, ts))
+	end)
+
+	R.it("a tall car at 0.95 of its grip laps three times without going over (the speed plan lines up with the road)", function()
+		-- nodes are 8 - 10 studs apart: the plan read by index / STEP was up
+		-- to 48 studs off, the bots came into corners too fast and the
+		-- tallest rolled at the same corner every lap (Studio gp-drive)
+		for _, slots in ipairs({ { BODY = "Toilet", ENGINE = "Rocket" }, { BODY = "Piano", ENGINE = "Rocket", SPECIAL = "Balloon Bunch" } }) do
+			local spec = GpCar.spec(RideRating.rate(slots, "FOREST").bars, 0.6)
+			local times, flips, off = laps(spec, 0.95, 3)
+			R.expect(#times).toBe(3)
+			R.expect(flips).toBe(0, slots.BODY)
+			R.expect(off < 1).toBe(true, string.format("%s off %.1f s", slots.BODY, off))
+		end
+	end)
+
+	-- cars on the circuit together through GpDriver's traffic; contacts =
+	-- two closer than 6 studs, passes = changes of order
+	local function together(list, seconds)
+		local geo = GpLayout.geometry()
+		local L = geo.length
+		local cars = {}
+		for i, c in ipairs(list) do
+			local x, z, dx, dz = geo:pointAt(1)
+			cars[i] = { spec = c.spec, st = GpCar.newState(), d = GpDriver.new(c.spec, c.skill),
+				x = x, z = z, yaw = math.atan2(-dx, -dz), startAt = c.startAt, s = 0, lateral = 0, dist = 0 }
+		end
+		local dt = 1 / 60
+		local contacts, flips, passes, near, order = 0, 0, 0, {}, {}
+		for t = 0, seconds, dt do
+			local live = {}
+			for _, c in ipairs(cars) do
+				if t >= c.startAt then table.insert(live, { car = c, s = c.s, lateral = c.lateral, speed = c.st.speed }) end
+			end
+			for _, c in ipairs(cars) do
+				if t >= c.startAt then
+					local others = {}
+					for _, o in ipairs(live) do if o.car ~= c then table.insert(others, o) end end
+					local input, p = GpDriver.input(c.d, c.st, c.x, c.z, c.yaw, others, dt)
+					local a = math.abs(p.lateral)
+					local r = GpCar.step(c.spec, c.st, input, { dt = dt, yaw = c.yaw, surface = a <= 14 and "road" or "kerb" })
+					if r.flip then flips += 1 c.st.flipped = false c.st.over = 0 end
+					c.yaw = GpCar.wrap(c.yaw + r.yawRate * dt)
+					c.x += -math.sin(r.travelYaw) * r.speed * dt
+					c.z += -math.cos(r.travelYaw) * r.speed * dt
+					c.dist += (p.s - c.s + L / 2) % L - L / 2
+					c.s, c.lateral = p.s, p.lateral
+				end
+			end
+			for i = 1, #cars do
+				for j = i + 1, #cars do
+					local a, b = cars[i], cars[j]
+					if t >= a.startAt and t >= b.startAt then
+						local key = i * 10 + j
+						local close = math.sqrt((a.x - b.x) ^ 2 + (a.z - b.z) ^ 2) < 6
+						if close and not near[key] then contacts += 1 end
+						near[key] = close
+						local ahead = a.dist > b.dist
+						if order[key] ~= nil and order[key] ~= ahead then passes += 1 end
+						order[key] = ahead
+					end
+				end
+			end
+		end
+		return contacts, flips, passes, cars, L
+	end
+
+	R.it("five bots together, the fastest starting last, close behind: they never touch or go over", function()
+		-- Studio 2026-11-19: without traffic sense they drove into each other
+		-- and were put back in pairs ("stuck" at the same moment)
+		local Bots = { { BODY = "Toilet", ENGINE = "Rocket" }, { BODY = "Piano", ENGINE = "Rocket", SPECIAL = "Balloon Bunch" },
+			{ BODY = "Bathtub", ENGINE = "Fan" }, { BODY = "Red Sofa", ENGINE = "Hair Dryer" }, { BODY = "Shopping Cart" } }
+		local S = Constants.GP.BOT_SKILL
+		local list = {}
+		for i, slots in ipairs(Bots) do
+			list[i] = { spec = GpCar.spec(RideRating.rate(slots, "FOREST").bars, 0.8),
+				skill = S[1] + (S[2] - S[1]) * (i - 1) / 4, startAt = (#Bots - i) * 1.5 }
+		end
+		local contacts, flips, _, cars, L = together(list, 200)
+		R.expect(contacts).toBe(0)
+		R.expect(flips).toBe(0)
+		for _, c in ipairs(cars) do R.expect(c.dist / L > 3.5).toBe(true, string.format("%.1f laps", c.dist / L)) end
+	end)
+
+	R.it("a fast car a second behind a slow one passes it without touching", function()
+		local slow = GpCar.spec({ speed = 0, accel = 0, handling = 0.2 }, 1.1)
+		local fast = GpCar.spec({ speed = 1, accel = 1, handling = 1 }, 1.1)
+		local contacts, flips, passes, cars = together({ { spec = slow, skill = 0.9, startAt = 0 }, { spec = fast, skill = 0.95, startAt = 1 } }, 120)
+		R.expect(contacts).toBe(0)
+		R.expect(flips).toBe(0)
+		R.expect(passes > 0).toBe(true)
+		R.expect(cars[2].dist > cars[1].dist).toBe(true)
 	end)
 end)
 
@@ -544,6 +642,12 @@ R.describe("Junk GP in a server", function()
 		R.expect(#resets).toBe(1)
 		R.expect(resets[1].reason).toBe("off_grounds")
 		R.expect(m.L.onCircuit(car.PrimaryPart.Position)).toBe(true)
+		-- a car pinned against the armco (the client asks: there is no reverse)
+		srv.advance(2.5)
+		R.expect(srv.invoke("GpAction", p, "reset", "pinned")).toBe("ok")
+		resets = events(m, p, "reset")
+		R.expect(#resets).toBe(2)
+		R.expect(resets[2].reason).toBe("pinned")
 		R.expect(srv.invoke("GpAction", p, "leave")).toBe("ok")
 		srv.advance(0.5)
 		R.expect(carOf(m, p)).toBe(nil)

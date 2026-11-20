@@ -206,7 +206,9 @@ local function resetCar(s, reason)
 	s.lastReset = now()
 	local x, z = GpLayout.offset(chassis.Position)
 	local cf
-	if GpLayout.inPit(x, z) then
+	-- in the pits, or flung off before the timing started (Studio: twice in
+	-- four runs the car turned up on the plaza at the lights): back in the box
+	if GpLayout.inPit(x, z) or (reason == "off_grounds" and not s.timing.started) then
 		local stop = O + GpLayout.box(s.box)
 		local y = rideHeight(chassis)
 		cf = CFrame.lookAt(V(stop.X, y, stop.Z), V(stop.X, y, stop.Z - 10))
@@ -223,8 +225,10 @@ local function resetCar(s, reason)
 	s.lastPos = nil
 	s.lastMoveAt = now()
 	send(s.player, { kind = "reset", reason = reason })
+	local root = s.player.Character and s.player.Character:FindFirstChild("HumanoidRootPart")
 	Telemetry.record("gp_reset", { userId = s.player.UserId, reason = reason, x = math.floor(x), z = math.floor(z),
-		y = math.floor(chassis.Position.Y - O.Y) })
+		y = math.floor(chassis.Position.Y - O.Y), started = s.timing.started,
+		rider = root and math.floor((root.Position - chassis.Position).Magnitude) or -1 })
 end
 
 local function finish(s)
@@ -280,10 +284,15 @@ local function onTiming(s, ev)
 		end
 		send(s.player, { kind = "lap", lap = ev.lap, time = ev.time, valid = ev.valid, colour = colour,
 			of = G.LAPS, best = s.best })
-		Telemetry.record("gp_lap", { userId = s.player.UserId, lap = ev.lap, time = ev.time, valid = ev.valid })
+		Telemetry.record("gp_lap", { userId = s.player.UserId, lap = ev.lap, time = ev.time, valid = ev.valid,
+			counted = ev.counted, sectors = (ev.sectors[1] and 1 or 0) + (ev.sectors[2] and 1 or 0) })
 		if s.lapsDone >= G.LAPS then finish(s) end
 	elseif ev.kind == "limits" then
 		send(s.player, { kind = "limits" })
+		local x, z = GpLayout.offset(s.car.PrimaryPart.Position)
+		local _, lateral = GpLayout.where(x, z)
+		Telemetry.record("gp_invalid", { userId = s.player.UserId, why = "limits", lateral = math.floor(lateral * 10) / 10,
+			x = math.floor(x), z = math.floor(z) })
 	elseif ev.kind == "start" then
 		send(s.player, { kind = "start" })
 	end
@@ -339,7 +348,11 @@ local function stepSession(s, dt)
 	if s.lastPos then
 		local moved = (V(pos.X, 0, pos.Z) - V(s.lastPos.X, 0, s.lastPos.Z)).Magnitude
 		-- a jump no car can make spoils the lap (G.TOP's best with room)
-		if moved > (G.TOP[2] * 1.5 + 20) * dt then s.timing.valid = false end
+		if moved > (G.TOP[2] * 1.5 + 20) * dt and s.timing.valid then
+			s.timing.valid = false
+			Telemetry.record("gp_invalid", { userId = player.UserId, why = "jump", moved = math.floor(moved), dt = math.floor(dt * 1000) / 1000,
+				x = math.floor(x), z = math.floor(z) })
+		end
 		if moved > 1.5 then s.lastMoveAt = t end
 	end
 	s.lastPos = pos
@@ -365,7 +378,7 @@ end
 -- ── Remotes and the prompt ──────────────────────────────────────────────────
 
 local _askedAt = {}
-RemoteEvents.GpAction.OnServerInvoke = function(player, action)
+RemoteEvents.GpAction.OnServerInvoke = function(player, action, why)
 	local s = _sessions[player.UserId]
 	if action == "leave" then
 		if s then endSession(s, "leave") return "ok" end
@@ -374,7 +387,7 @@ RemoteEvents.GpAction.OnServerInvoke = function(player, action)
 		if not s or not s.released or s.finished then return "denied: none" end
 		if now() - (_askedAt[player.UserId] or 0) < 2 or now() - s.lastReset < 2 then return "denied: wait" end
 		_askedAt[player.UserId] = now()
-		resetCar(s, "flip")
+		resetCar(s, why == "pinned" and "pinned" or "flip")
 		return "ok"
 	elseif action == "enter" then
 		return enter(player)

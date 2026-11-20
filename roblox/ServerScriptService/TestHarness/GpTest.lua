@@ -27,6 +27,24 @@ function GpTest.run(args, done)
 	until (rec and player.Character and player.Character:FindFirstChild("HumanoidRootPart")) or os.clock() - t0 > 60
 	if not rec then done("no gp player") return end
 	task.wait(4)   -- the circuit and the bots
+	-- gp.shapes: every Junk Motors car built once and measured (visible
+	-- width / height → stability: which cars can roll over at all)
+	if opts.shapes then
+		local GpCars = require(ServerScriptService.Modules.GpCars)
+		local NewCars = require(game:GetService("ReplicatedStorage").Shared.NewCars)
+		local ItemConfig = require(ServerScriptService.Modules.ItemConfig)
+		for _, c in ipairs(NewCars.catalog(ItemConfig)) do
+			local model, spec = GpCars.build(NewCars.ride(c.item), CFrame.new(0, 900, 0), "shape")
+			if model then
+				local shape, w, h = GpCars.shapeOf(model)
+				Telemetry.record("gp_shape", { item = c.item, shape = math.floor(shape * 100) / 100, w = math.floor(w * 10) / 10,
+					h = math.floor(h * 10) / 10, stability = math.floor(spec.stability * 100) / 100, top = math.floor(spec.top),
+					grip = math.floor(spec.grip) })
+				model:Destroy()
+			end
+			task.wait()
+		end
+	end
 	local car = opts.car or "Toilet"
 	rec.cars = { [car] = true }
 	rec.legendOn = "car:" .. car

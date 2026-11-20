@@ -543,7 +543,23 @@ lune run tools/report.luau   # regenerates reports/{forest,ocean,sky}/ (track.sv
   the movers go and physics tumbles the car; the client asks GpAction
   "reset" (the server also resets stuck or flung cars). Open only in the
   hub place (or harness `gp`); elsewhere the desk says it opens with the
-  new Junk Town. Offline laps: `lune run tools/gp_sim.luau`; layout PNG:
+  new Junk Town. Physics check (2026-11-20, "simulated enough? flipping"):
+  GpDriver's speed plan is read by distance (`nodeS` / `nodeAt`: nodes are
+  8-10 studs apart; read by index / STEP it was up to 48 studs off and the
+  bots rolled at the same corner every lap) and slower on worn tyres; it
+  sees the other cars (`GpLayout.traffic`, bots and the autopilot): passes
+  on the side with room, holds back behind, never moves onto a car
+  alongside (bots used to drive into each other and be reset in pairs).
+  `Constants.GP.SHAPE` matches the measured cars (`sim.py run gp-drive`,
+  gp.shapes: Toilet 0.75 … Pizza 3.6): only the Toilet can go over on the
+  road, tall ones on kerbs, flat ones never lift. Going over throws the car
+  into a real roll (`GP.TUMBLE`; the old impulse only skidded it on its
+  wheels), a car on the gas going nowhere (no reverse) asks the marshals
+  after `GP.PINNED` s, an off-grounds car before the timing starts goes back
+  to its box. Studio `sim.py run gp-flip` drives past the limit (gp.skill
+  1.4): gp_flip / gp_flip_sample (up vector) / gp_flip_end, resets, why a
+  lap was spoiled (`gp_invalid`). Offline laps: `lune run tools/gp_sim.luau`
+  (also five bots together); layout PNG:
   `lune run tools/gp_layout.luau && python3 tools/gp_layout.py`; Studio:
   `sim.py run gp-drive` (autopilot run, GpClient attribute GpAuto). Spec `gp`.
   The helmet is checked every session step (`GpCars.hasHelmet`): a character that

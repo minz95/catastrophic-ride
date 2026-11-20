@@ -2314,7 +2314,38 @@
         ],
         "gp": {
           "car": "Toilet",
-          "skill": 0.92
+          "skill": 0.92,
+          "shapes": true
+        }
+      },
+      "record": {
+        "delay": 12,
+        "chunk": 10
+      },
+      "checks": {}
+    },
+    {
+      "name": "gp-flip",
+      "kind": "match",
+      "tags": [
+        "gp"
+      ],
+      "_why": "a real rollover at the Junk Grand Prix (2026-11-20, 'has it been simulated enough? cars flipping and so on'): the gp-drive run with the autopilot driving past the car's limit (gp.skill > 1) in a tall car, so it lifts, goes over in Roblox physics (GpClient letGo) and is put back (landed upright: SAVED IT; else the reset); reports gp_flip, resets and whether the run still ends",
+      "opts": {
+        "biome": "FOREST",
+        "players": 1,
+        "rounds": 1,
+        "lobbyDelay": 600,
+        "maxSeconds": 420,
+        "farmProfiles": [
+          "filmer"
+        ],
+        "driverProfiles": [
+          "average"
+        ],
+        "gp": {
+          "car": "Toilet",
+          "skill": 1.4
         }
       },
       "record": {

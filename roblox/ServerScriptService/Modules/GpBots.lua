@@ -41,6 +41,8 @@ GpBots.STUCK = 6          -- s without moving before a bot is put back
 local _bots = {}
 local _conn
 local _hooks = {}
+local _folder
+local _traffic = {}   -- every GP car this frame: { model, s, lateral, speed }
 
 local V = Vector3.new
 local O = LobbyLayout.ORIGIN
@@ -87,8 +89,10 @@ local function flipOver(bot, chassis, lean)
 	local gyro = chassis:FindFirstChild("UprightGyro")
 	if gyro then gyro.MaxTorque = Vector3.zero end
 	local look = chassis.CFrame.LookVector
-	chassis.AssemblyAngularVelocity = look * ((lean >= 0) and -8 or 8)
-	chassis.AssemblyLinearVelocity += V(0, 22, 0)
+	local side = (lean or 0) >= 0 and 1 or -1
+	local T = Constants.GP.TUMBLE
+	chassis.AssemblyAngularVelocity = look * (-T.SPIN * side) + V(0, side * T.YAW, 0)
+	chassis.AssemblyLinearVelocity += V(0, T.UP, 0) + chassis.CFrame.RightVector * (T.SIDE * side)
 	bot.flippedAt = os.clock()
 end
 
@@ -151,7 +155,11 @@ local function stepBot(bot, dt, now)
 	local actual = vel.X * tdx + vel.Z * tdz
 	local input, p, surface, pit
 	if bot.mode == "track" then
-		input, p = GpDriver.input(bot.driver, st, x, z, yaw)
+		local others = {}
+		for _, o in ipairs(_traffic) do
+			if o.model ~= model then table.insert(others, o) end
+		end
+		input, p = GpDriver.input(bot.driver, st, x, z, yaw, others, dt)
 		surface = surfaceAt(p.lateral, p.seg)
 		-- in for tyres: on the main straight's approach after enough laps
 		local share = p.s / GpLayout.lapLength()
@@ -214,6 +222,7 @@ function GpBots.start(circuit, hooks)
 	GpBots.stop()
 	_hooks = hooks or {}
 	local folder = circuit:FindFirstChild("Cars") or circuit
+	_folder = folder
 	local SeatedRider = require(ServerScriptService.Modules.SeatedRider)
 	for i, b in ipairs(GpBots.LIST) do
 		if i > Constants.GP.BOTS then break end
@@ -247,6 +256,7 @@ function GpBots.start(circuit, hooks)
 	end
 	_conn = RunService.Heartbeat:Connect(function(dt)
 		local now = os.clock()
+		_traffic = GpLayout.traffic(_folder)
 		for _, bot in ipairs(_bots) do
 			local ok, err = pcall(stepBot, bot, math.min(dt, 0.05), now)
 			if not ok then warn("[GpBots] " .. tostring(err)) end
