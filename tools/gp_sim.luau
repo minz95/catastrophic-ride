@@ -74,3 +74,82 @@ for _, b in ipairs(builds) do
 end
 run("worst bars", GpCar.spec({ speed = 0, accel = 0, handling = 0 }, 1), 0.95)
 run("best bars", GpCar.spec({ speed = 1, accel = 1, handling = 1 }, 1), 0.95)
+
+-- ── Traffic: the five race bots on the circuit together ──────────────────────
+-- (Studio: bots without traffic sense drove into each other and were put
+-- back in pairs). Contacts = two cars closer than a car's length and width.
+local function traffic(seconds, shape, reverse, gap)
+	local geo = GpLayout.geometry()
+	local L = geo.length
+	local BOTS = {
+		{ "Turbo Tom", { BODY = "Toilet", ENGINE = "Rocket" } },
+		{ "Vroom Vera", { BODY = "Piano", ENGINE = "Rocket", SPECIAL = "Balloon Bunch" } },
+		{ "Lap Lenny", { BODY = "Bathtub", ENGINE = "Fan" } },
+		{ "Nitro Nell", { BODY = "Red Sofa", ENGINE = "Hair Dryer" } },
+		{ "Skid Sid", { BODY = "Shopping Cart" } },
+	}
+	local S = Constants.GP.BOT_SKILL
+	local cars = {}
+	for i, b in ipairs(BOTS) do
+		local spec = GpCar.spec(RideRating.rate(b[2], "FOREST").bars, shape)
+		local x, z, dx, dz = geo:pointAt(1)
+		table.insert(cars, { name = b[1], spec = spec, st = GpCar.newState(), d = GpDriver.new(spec, S[1] + (S[2] - S[1]) * (i - 1) / 4),
+			x = x, z = z, yaw = math.atan2(-dx, -dz), startAt = (reverse and (#BOTS - i) or (i - 1)) * (gap or 4), s = 0, lateral = 0, dist = 0, flips = 0, off = 0, lift = 0 })
+	end
+	local dt = 1 / 60
+	local contacts, passes, touching = 0, 0, {}
+	local order = {}
+	for t = 0, seconds, dt do
+		local list = {}
+		for _, c in ipairs(cars) do
+			if t >= c.startAt then table.insert(list, { car = c, s = c.s, lateral = c.lateral, speed = c.st.speed }) end
+		end
+		for _, c in ipairs(cars) do
+			if t >= c.startAt then
+				local others = {}
+				for _, o in ipairs(list) do if o.car ~= c then table.insert(others, o) end end
+				local input, p = GpDriver.input(c.d, c.st, c.x, c.z, c.yaw, others, dt)
+				local a = math.abs(p.lateral)
+				local surface = a <= 14 and "road" or (a <= 17 and "kerb" or "grass")
+				if a > Constants.GP.TRACK_LIMIT then c.off += dt end
+				local r = GpCar.step(c.spec, c.st, input, { dt = dt, yaw = c.yaw, surface = surface })
+				if r.flip then c.flips += 1 c.st.flipped = false c.st.over = 0 end
+				if r.lift then c.lift += dt end
+				c.yaw = GpCar.wrap(c.yaw + r.yawRate * dt)
+				c.x += -math.sin(r.travelYaw) * r.speed * dt
+				c.z += -math.cos(r.travelYaw) * r.speed * dt
+				local ds = (p.s - c.s + L / 2) % L - L / 2
+				c.dist += ds
+				c.s, c.lateral = p.s, p.lateral
+			end
+		end
+		-- contacts and passes
+		for i = 1, #cars do
+			for j = i + 1, #cars do
+				local a, b = cars[i], cars[j]
+				if t >= a.startAt and t >= b.startAt then
+					local key = i .. "-" .. j
+					local close = math.sqrt((a.x - b.x) ^ 2 + (a.z - b.z) ^ 2) < 6
+					if close and not touching[key] then
+						contacts += 1
+						if process.env.GP_DEBUG then
+							print(string.format("  contact t%.1f %s(s%.0f lat%.1f line%.1f v%.0f) %s(s%.0f lat%.1f line%.1f v%.0f)", t, a.name, a.s, a.lateral, a.d.line, a.st.speed, b.name, b.s, b.lateral, b.d.line, b.st.speed))
+						end
+					end
+					touching[key] = close
+					local ahead = a.dist > b.dist
+					if order[key] ~= nil and order[key] ~= ahead then passes += 1 end
+					order[key] = ahead
+				end
+			end
+		end
+	end
+	print(string.format("traffic %ds (shape %.1f, %s, %ss apart): contacts %d, passes %d", seconds, shape, reverse and "slowest first" or "fastest first", tostring(gap or 4), contacts, passes))
+	for _, c in ipairs(cars) do
+		print(string.format("  %-11s laps %.1f flips %d off %.1fs lift %.1fs", c.name, c.dist / L, c.flips, c.off, c.lift))
+	end
+	return contacts, passes, cars
+end
+traffic(300, 0.8)
+traffic(300, 0.8, true, 1.5)
+traffic(300, 1.2, true, 1.5)

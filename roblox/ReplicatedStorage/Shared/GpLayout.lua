@@ -206,6 +206,27 @@ function GpLayout.where(x, z, hint)
 	return p.s / geo.length, p.lateral, p.seg
 end
 
+--- Every GP car in `folder` (bots and players) for GpDriver's traffic:
+-- { model, s (along the lap), lateral, speed }. Cars still in their
+-- garage (anchored) and in the pit lane are left out.
+function GpLayout.traffic(folder)
+	local out = {}
+	if not folder then return out end
+	local L = GpLayout.lapLength()
+	for _, m in ipairs(folder:GetChildren()) do
+		local c = m:IsA("Model") and m:GetAttribute("GpCar") and m.PrimaryPart
+		if c and not c.Anchored then
+			local x, z = GpLayout.offset(c.Position)
+			if not GpLayout.inPit(x, z) then
+				local share, lateral = GpLayout.where(x, z)
+				local vel = c.AssemblyLinearVelocity
+				table.insert(out, { model = m, s = share * L, lateral = lateral, speed = Vector3.new(vel.X, 0, vel.Z).Magnitude })
+			end
+		end
+	end
+	return out
+end
+
 --- True when offset (x, z) is in the pit lane (lane, entry or exit road).
 function GpLayout.inPit(x, z)
 	local P = GpLayout.PIT

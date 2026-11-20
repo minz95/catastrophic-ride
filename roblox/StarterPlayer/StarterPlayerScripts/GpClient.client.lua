@@ -174,8 +174,9 @@ local function letGo(chassis, lean)
 	local look = chassis.CFrame.LookVector
 	local right = chassis.CFrame.RightVector
 	local side = (lean or 0) >= 0 and 1 or -1     -- a left bend throws it over to the right
-	chassis.AssemblyAngularVelocity = look * (-7 * side) + V(0, side * 1.5, 0)
-	chassis.AssemblyLinearVelocity += V(0, 20, 0) + right * (10 * side)
+	local T = G.TUMBLE
+	chassis.AssemblyAngularVelocity = look * (-T.SPIN * side) + V(0, side * T.YAW, 0)
+	chassis.AssemblyLinearVelocity += V(0, T.UP, 0) + right * (T.SIDE * side)
 end
 
 local function takeHold(chassis)
@@ -227,7 +228,7 @@ local function autoInput(s, x, z, yaw)
 	end
 	if s.route then
 		local target = s.route[s.leg]
-		if not target then s.route = nil return GpDriver.input(s.driver, st, x, z, yaw) end
+		if not target then s.route = nil return GpDriver.input(s.driver, st, x, z, yaw, s.traffic, s.dt) end
 		local d = math.sqrt((target.X - x) ^ 2 + (target.Z - z) ^ 2)
 		local stopLeg = s.leg == 5
 		if stopLeg and (s.pitting or d < 2) then
@@ -239,7 +240,13 @@ local function autoInput(s, x, z, yaw)
 		local want = stopLeg and math.min(G.PIT_LIMIT, math.max(4, d * 1.2)) or (s.leg == 4 and 28 or G.PIT_LIMIT)
 		return GpDriver.toward(s.driver, st, x, z, yaw, target.X, target.Z, want, math.max(d, 8))
 	end
-	local input, p = GpDriver.input(s.driver, st, x, z, yaw)
+	-- the other cars (bots), so the autopilot passes instead of ramming
+	local others = {}
+	for _, o in ipairs(GpLayout.traffic(s.chassis.Parent and s.chassis.Parent.Parent)) do
+		if o.model ~= s.chassis.Parent then table.insert(others, o) end
+	end
+	s.traffic = others
+	local input, p = GpDriver.input(s.driver, st, x, z, yaw, others, s.dt)
 	local share = p.s / GpLayout.lapLength()
 	if st.tyre < G.TYRE.BOX_AT and not s.lastLap and s.lap >= 1 and share > 0.9 and share < 0.97 then
 		s.route, s.leg, s.pitDone = pitRoute(s.box), 1, false
@@ -261,7 +268,21 @@ local function drive(dt)
 		local t = os.clock() - s.flippedAt
 		local up = chassis.CFrame.UpVector.Y
 		local still = chassis.AssemblyLinearVelocity.Magnitude < 4
+		-- harness runs: how far over it went (the car's up vector, lowest) and how it ended
+		if _auto then
+			s.flipMinUp = math.min(s.flipMinUp or 1, up)
+			s.flipMaxY = math.max(s.flipMaxY or -1e9, chassis.Position.Y - O.Y)
+			if os.clock() - (s.flipSampledAt or 0) >= 0.25 then
+				s.flipSampledAt = os.clock()
+				report("gp_flip_sample", { t = math.floor(t * 100) / 100, up = math.floor(up * 100) / 100,
+					y = math.floor((chassis.Position.Y - O.Y) * 10) / 10, v = math.floor(chassis.AssemblyLinearVelocity.Magnitude) })
+			end
+		end
 		if t > 1.2 and up > 0.85 and still then
+			if _auto then
+				report("gp_flip_end", { how = "saved", secs = math.floor(t * 10) / 10, minUp = s.flipMinUp, maxY = s.flipMaxY })
+				s.flipMinUp, s.flipMaxY = nil, nil
+			end
 			s.flippedAt, s.crashCam = nil, nil
 			st.flipped, st.over = false, 0
 			st.speed = 0
@@ -270,6 +291,10 @@ local function drive(dt)
 		elseif (still and t > G.RESET_SETTLED) or t > G.RESET_MAX then
 			if not s.asked then
 				s.asked = true
+				if _auto then
+					report("gp_flip_end", { how = "reset", secs = math.floor(t * 10) / 10, minUp = s.flipMinUp, maxY = s.flipMaxY, up = up })
+					s.flipMinUp, s.flipMaxY = nil, nil
+				end
 				task.spawn(function() RemoteEvents.GpAction:InvokeServer("reset") end)
 			end
 		end
@@ -286,10 +311,22 @@ local function drive(dt)
 	local vel = chassis.AssemblyLinearVelocity
 	local tdx, tdz = -math.sin(st.travelYaw or yaw), -math.cos(st.travelYaw or yaw)
 	local actual = vel.X * tdx + vel.Z * tdz
+	s.dt = dt
 	local input = _auto and autoInput(s, x, z, yaw) or readInput(dt)
 	if s.pitting or s.finishedAt then input = { throttle = 0, brake = 1, steer = 0 } end
 	local out = GpCar.step(s.spec, st, input, { dt = dt, yaw = yaw, surface = surface, actual = actual, pit = inPit })
 	out.surface = surface
+	-- on the gas and going nowhere (nose in the armco; there is no reverse):
+	-- the marshals put it back
+	if (input.throttle or 0) > 0.5 and math.abs(actual) < 2 and not inPit and not s.pitting then
+		s.pinnedFor = (s.pinnedFor or 0) + dt
+		if s.pinnedFor > G.PINNED then
+			s.pinnedFor = -2
+			task.spawn(function() RemoteEvents.GpAction:InvokeServer("reset", "pinned") end)
+		end
+	else
+		s.pinnedFor = math.max(0, s.pinnedFor or 0)
+	end
 	-- harness runs: a sample a second (tools/gp_trace.py draws them)
 	if _auto and os.clock() - (s.sampledAt or 0) >= 1 then
 		s.sampledAt = os.clock()

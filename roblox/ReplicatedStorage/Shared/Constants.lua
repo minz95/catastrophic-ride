@@ -143,7 +143,7 @@ Constants.GP = {
 	DRAG = 0.12,              -- coasting: share of top speed lost per second
 	CRAWL = 18,               -- grass and gravel never slow a car below this
 	STABILITY = { 0.92, 1.5 },-- rollover margin over the grip: tall narrow … low wide
-	SHAPE = { 0.55, 1.5 },    -- width / height that maps onto STABILITY
+	SHAPE = { 0.7, 1.7 },     -- width / height that maps onto STABILITY (Studio 2026-11-20: the 35 cars measure 0.75 Toilet … 3.6 Pizza; at 0.55 even the Toilet could not roll on the road)
 	FLIP_HOLD = 0.3,          -- s over the rollover limit before it goes over
 	LIFT_AT = 0.85,           -- share of the rollover limit where a wheel lifts (warning)
 	LEAN = 0.14,              -- body roll at the grip limit (rad)
@@ -167,6 +167,11 @@ Constants.GP = {
 	RESET_SETTLED = 2.2,      -- s at rest upside down before the marshals put it back
 	RESET_MAX = 5,            -- s after a flip at most
 	STUCK = 8,                -- s without progress → back on the road
+	PINNED = 3,               -- s on the gas without moving (nose in the armco: no reverse) → the marshals
+	-- going over: the movers let go and the car is thrown into a roll (Studio
+	-- gp-flip 2026-11-20: at SPIN 7 / UP 20 it was 0.2 s in the air, turned
+	-- under 30° and slid on its wheels; every "rollover" read as a skid)
+	TUMBLE = { SPIN = 10, UP = 34, SIDE = 10, YAW = 1.5 },
 	KMH = 2.1,                -- shown speed = studs/s × KMH
 	GEARS = 8,
 	BOT_PIT_EVERY = 6,        -- laps
