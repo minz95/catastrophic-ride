@@ -10,43 +10,31 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [api-analytics](api-analytics.json) | PASS | 81edf99+ | 2026-10-23T21:59 |
 | [bots-abilities](bots-abilities.json) | PASS | e58978d+ | 2026-10-24T02:41 |
 | [bots-fight](bots-fight.json) | PASS | 45ca943+ | 2026-10-24T11:39 |
-| [bots-forest](bots-forest.json) | PASS | 9a12141+ | 2026-11-12T15:37 |
+| [bots-forest](bots-forest.json) | PASS | a79d76e+ | 2026-10-26T02:14 |
 | [bots-ocean](bots-ocean.json) | PASS | dd59b30+ | 2026-10-29T02:37 |
 | [bots-sky](bots-sky.json) | PASS | 4f053ee+ | 2026-10-30T14:33 |
 | [craft-afk-3p](craft-afk-3p.json) | PASS | 15012db+ | 2026-10-23T21:53 |
 | [eject-ocean](eject-ocean.json) | PASS | 21d2d06+ | 2026-10-25T20:46 |
 | [escape-forest](escape-forest.json) | PASS | 9bae2bd+ | 2026-10-22T22:34 |
 | [escape-ocean](escape-ocean.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
-| [escape-sky](escape-sky.json) | PASS | 3e4154d+ | 2026-11-13T23:16 |
+| [escape-sky](escape-sky.json) | PASS | c90f06d+ | 2026-10-23T00:03 |
 | [farm-bots-steal](farm-bots-steal.json) | PASS | 0afde90+ | 2026-10-30T00:41 |
 | [farm-feel](farm-feel.json) | PASS | a32c0ea+ | 2026-10-30T00:18 |
 | [farm-forest-4p](farm-forest-4p.json) | FAIL | aeab89c+ | 2026-10-22T01:29 |
 | [farm-ocean-4p](farm-ocean-4p.json) | PASS | a7efc25 | 2026-10-20T04:24 |
 | [farm-sky-4p](farm-sky-4p.json) | PASS | a7efc25 | 2026-10-20T04:26 |
-| [fight-4p](fight-4p.json) | WARN | 3e4154d+ | 2026-11-13T23:28 |
-| [first-minute](first-minute.json) | PASS | 14e34df | 2026-11-11T17:22 |
+| [fight-4p](fight-4p.json) | PASS | 09194f2+ | 2026-10-24T02:12 |
 | [gallery-hats](gallery-hats.json) | PASS | 51193a6+ | 2026-10-24T19:33 |
 | [gallery-mobility](gallery-mobility.json) | PASS | 5b1f6b6+ | 2026-10-24T21:15 |
-| [gallery-rides](gallery-rides.json) | PASS | 1373054+ | 2026-11-16T17:02 |
-| [gallery-store](gallery-store.json) | PASS | ba116d4+ | 2026-11-13T22:11 |
+| [gallery-rides](gallery-rides.json) | PASS | 7169150+ | 2026-10-28T10:38 |
 | [gallery](gallery.json) | PASS | 83fee51+ | 2026-10-24T21:45 |
-| [gp-contact](gp-contact.json) | FAIL | cb3ac4d+ | 2026-11-20T15:52 |
-| [gp-drive](gp-drive.json) | FAIL | 87e93a3+ | 2026-11-20T14:25 |
-| [gp-flip](gp-flip.json) | FAIL | cb3ac4d+ | 2026-11-20T16:41 |
-| [hub-tour](hub-tour.json) | WARN | 4e8452c+ | 2026-11-17T17:59 |
 | [shop-4p](shop-4p.json) | FAIL | 9479ec7+ | 2026-10-28T10:01 |
 | [load-10p](load-10p.json) | FAIL | 62db88a+ | 2026-10-23T22:34 |
 | [load-8p](load-8p.json) | PASS | e9b4e9b+ | 2026-10-30T15:02 |
-| [lobby-tour](lobby-tour.json) | WARN | 4e8452c+ | 2026-11-17T17:55 |
-| [luge-ride](luge-ride.json) | FAIL | cb3ac4d+ | 2026-11-20T16:25 |
-| [luge-wild](luge-wild.json) | FAIL | cb3ac4d+ | 2026-11-20T16:17 |
 | [match-forest](match-forest.json) | FAIL | 9146466 | 2026-10-30T18:40 |
 | [match-ocean](match-ocean.json) | PASS | 9146466 | 2026-10-30T18:44 |
-| [match-sky](match-sky.json) | WARN | 3e4154d+ | 2026-11-13T23:25 |
-| [promo-lobby](promo-lobby.json) | PASS | ae7f506+ | 2026-11-17T10:54 |
-| [promo-rides](promo-rides.json) | PASS | cc236ac+ | 2026-11-14T02:13 |
-| [promo-weather](promo-weather.json) | PASS | b19bf4d+ | 2026-11-02T00:36 |
-| [promo](promo.json) | PASS | cafde7a | 2026-10-31T19:59 |
+| [match-sky](match-sky.json) | PASS | 9146466+ | 2026-10-30T18:47 |
+| [promo](promo.json) | PASS | 21d2d06+ | 2026-10-25T20:48 |
 | [race-forest-builds](race-forest-builds.json) | PASS | e47e961+ | 2026-10-24T23:23 |
 | [race-forest](race-forest.json) | PASS | e47e961+ | 2026-10-24T23:20 |
 | [race-ocean-builds](race-ocean-builds.json) | PASS | 9608317 | 2026-10-25T00:36 |
@@ -54,26 +42,18 @@ Real Roblox physics, run with `python3 tools/studio/sim.py run <scenario|tag>` (
 | [race-sky-builds](race-sky-builds.json) | PASS | 954581a+ | 2026-10-21T12:56 |
 | [race-sky](race-sky.json) | PASS | c90f06d+ | 2026-10-23T00:01 |
 | [race-tricks](race-tricks.json) | FAIL | bdc1f63+ | 2026-10-27T00:55 |
-| [record-bmat](record-bmat.json) | PASS | 70a93bf | 2026-11-16T21:02 |
-| [record-forest-store](record-forest-store.json) | PASS | 69f4fc5 | 2026-11-14T01:50 |
-| [record-forest](record-forest.json) | PASS | b95c932+ | 2026-11-12T02:49 |
-| [record-gp](record-gp.json) | FAIL | efbaf36+ | 2026-11-19T23:16 |
-| [record-lobby](record-lobby.json) | PASS | 85dca86+ | 2026-11-17T12:09 |
-| [record-luge](record-luge.json) | FAIL | 5d95218+ | 2026-11-20T17:12 |
-| [record-ocean](record-ocean.json) | PASS | b95c932+ | 2026-11-12T02:54 |
-| [record-sky](record-sky.json) | PASS | 9a12141+ | 2026-11-12T15:41 |
-| [record-toilet](record-toilet.json) | PASS | 05dd05b+ | 2026-11-17T17:15 |
-| [record-usedcar](record-usedcar.json) | PASS | a6a1527+ | 2026-11-18T15:44 |
+| [record-forest](record-forest.json) | PASS | b100838+ | 2026-10-26T09:46 |
+| [record-ocean](record-ocean.json) | PASS | 0391f38 | 2026-10-26T08:51 |
+| [record-sky](record-sky.json) | PASS | dd59b30 | 2026-10-29T02:30 |
 | [shop-4p](shop-4p.json) | WARN | cc85ba4+ | 2026-10-25T23:12 |
 | [shop-ui](shop-ui.json) | PASS | 6af091e+ | 2026-10-27T00:35 |
-| [showroom](showroom.json) | PASS | c245f46+ | 2026-11-14T02:26 |
+| [showroom](showroom.json) | PASS | 5b1f6b6+ | 2026-10-24T21:33 |
 | [sounds](sounds.json) | PASS | 7169150+ | 2026-10-28T10:37 |
 | [start-6p](start-6p.json) | FAIL | aeab89c+ | 2026-10-22T01:26 |
 | [steal-4p](steal-4p.json) | PASS | aa48bae+ | 2026-10-22T02:23 |
 | [steal-crowd-6p](steal-crowd-6p.json) | PASS | a7efc25 | 2026-10-20T04:33 |
 | [steal-defended-2p](steal-defended-2p.json) | PASS | aa48bae+ | 2026-10-22T02:21 |
-| [ui-layout](ui-layout.json) | FAIL | 4e8452c+ | 2026-11-17T18:07 |
-| [ui-weather](ui-weather.json) | FAIL | b0a36f9 | 2026-11-02T02:15 |
+| [ui-layout](ui-layout.json) | FAIL | 0aaf32d+ | 2026-10-30T12:16 |
 | [vehicles-forest](vehicles-forest.json) | PASS | f7b6b60+ | 2026-10-24T02:27 |
 | [vehicles-ocean](vehicles-ocean.json) | PASS | f7b6b60+ | 2026-10-24T02:28 |
 | [vehicles-sky](vehicles-sky.json) | PASS | f7b6b60+ | 2026-10-24T02:28 |
@@ -256,21 +236,21 @@ server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 231 kbps; CRAFTI
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 1 finished of 1
-    steal attempts: defended=5, denied: cooldown=1, denied: too late=7, denied: victim protected=2, denied: victim under attack=1, punched=2, stolen=5
-    -100003: picked 7, contests 1/1, stole 1, robbed 1, defences 0, items nil
-    -100001: picked 8, contests 0/2, stole 2, robbed 3, defences 0, items nil
-    -100002: picked 6, contests 1/2, stole 0, robbed 1, defences 0, items nil
-    -1: picked 11, contests 2/3, stole 2, robbed 0, defences 4, items 8 | craft submitted, rejected 0
-    #1 Player1 102.1s
-  events: ability=112 ability_probe=101 ability_target=4 boost=14 bot_ability=38 bot_blocked=2 bot_box_use=17 bot_camera=1 bot_craft=1 bot_defend=4 bot_drive=1 bot_farm=66 bot_farmfx=65 bot_fx=74 bot_guard=6 bot_hud=24 bot_joined=1 bot_pickup_denied=16 bot_punch=4 bot_ready=1 bot_respawn=4 bot_say=12 bot_screen=5 bot_show
-driving: 0 hits, 15 drift turbos, drops: Gas Can
-farm bots: 3 on the farm, 21 pickups, 20 punches thrown, 26 punches/steals on bots
-farm bots: 9 steals tried (3 stolen), 3 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2182
-bot abilities: 38 fired (Cup Noodle, Kite, Magic Wand, Racing Flag, Skateboard, Suitcase, Treadmill, Trophy)
-ability targets: 4, on bots 4
-bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 104.8s, 112.1s, 132.0s
-server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 45 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 2 kbps; RACING heartbeat 58-60 Hz, physics 59-60 fps, send max 23 kbps; memory max 2361 MB
+    steal attempts: none
+    -100003: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100001: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 9, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    #1 Player1 102.7s
+  events: ability=132 ability_probe=95 ability_target=2 boost=18 bot_ability=38 bot_blocked=1 bot_craft=1 bot_farm=21 bot_farmfx=1 bot_fx=55 bot_hud=23 bot_joined=1 bot_ready=1 bot_respawn=3 bot_screen=3 bot_showroom_spin=1 bot_spin_fx=65 checkpoint=2 cleanse=4 craft=1 craft_preview=2 drift_turbo=12 drop_placed=22 farm_bot=3 finish=4 harness_crafting=1 harness_round=1 hazard=35 hit_blocked=1 item_drop=1 item_dropped_world=1 item_pickup=30 item_wa
+driving: 0 hits, 12 drift turbos, drops: Cactus, Log, Pizza
+farm bots: 3 on the farm, 21 pickups, 0 punches thrown, 0 punches/steals on bots
+farm bots: 0 steals tried (0 stolen), 0 guards
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2319
+bot abilities: 38 fired (Backpack, Cactus, Flower, Log, Magnet, Pizza, Shopping Cart)
+ability targets: 2, on bots 2
+bots: 3 raced (average, novice, expert), 3 farmed their car, 3 finished: 105.7s, 113.5s, 125.4s
+server: FARMING heartbeat 43-60 Hz, physics 50-60 fps, send max 81 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 39 kbps; memory max 2295 MB
 ```
 
 ## bots-ocean — PASS
@@ -369,17 +349,8 @@ RaceSim OCEAN (shipped) — 5.4s wall time
 ## escape-sky — PASS
 
 ```
-RaceSim SKY (shipped) — 9.3s wall time
-  cases 72: drove out 56, needed a respawn 0, stuck 16
-    climb-left@300         STUCK at 340 respawns 0 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_3_1R
-    climb-right@300        STUCK at 333 respawns 0 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_3_2L
-    climb-left@1300        STUCK at 1314 respawns 1 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_6_2R
-    climb-right@1300       STUCK at 1328 respawns 1 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_6_0L
-    climb-left@2300        STUCK at 2344 respawns 1 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_9_1R
-    climb-right@2300       STUCK at 2293 respawns 1 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_8_20L
-    climb-left@3300        STUCK at 3284 respawns 1 blocked by ?
-    climb-right@3300       STUCK at 3343 respawns 1 blocked by Workspace.Maps.SkyMap.RaceTrack.SkyBarrier_12_0L
-    climb-l
+RaceSim SKY (shipped) — 7.5s wall time
+  cases 54: drove out 54, needed a respawn 0, stuck 0
 ```
 
 ## farm-bots-steal — PASS
@@ -461,36 +432,18 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
   events: bot_craft=4 bot_defend=7 bot_joined=4 bot_ready=4 bot_steal=13 contest_result=6 craft=4 harness_crafting=1 harness_round=1 item_drop=10 item_pickup=42 phase=3 race_progress=1 race_sample=3 race_start=1 speed_effect=2 steal_attempt=13 vehicle_spawn=3
 ```
 
-## fight-4p — WARN
+## fight-4p — PASS
 
 ```
 Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
-  round 1 (FOREST): 0 finished of 3
+  round 1 (FOREST): 0 finished of 4
     steal attempts: none
-    -3: picked 4, contests 1/1, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-    -2: picked 23, contests 11/12, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 0, contests 0/11, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
-  events: ability=1 bot_craft=3 bot_farmfx=114 bot_guard=14 bot_hud=138 bot_joined=3 bot_pickup_denied=22 bot_punch=194 bot_ready=3 bot_screen=6 bot_showroom_spin=3 bot_sound=195 box_rows=1 contest_result=12 craft=3 craft_preview=6 harness_crafting=1 harness_round=1 item_drop=19 item_dropped_world=19 item_pickup=27 item_wave=3 phase=3 punch=194 race_sample=6 race_start=1 server_perf=93 starter_items=3 vehicle_spawn=3
-server: FARMING heartbeat 45-60 Hz, physics 50-60 fps, send max 16 kbps; CRAFTING heartbeat 58-58 Hz, physics 60-60 fps, send max 10 kbps; memory max 2496 MB
-```
-- **warn** round 1: 3 of 4 players joined (Studio did not start every client)
-
-## first-minute — PASS
-
-```
-Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
-  round 1 (FOREST): 0 finished of 1
-    steal attempts: defended=2, stolen=2
-    -100003: picked 8, contests 1/1, stole 1, robbed 0, defences 0, items nil
-    -100001: picked 5, contests 1/2, stole 0, robbed 2, defences 0, items nil
-    -100002: picked 7, contests 0/1, stole 0, robbed 0, defences 0, items nil
-    -1: picked 7, contests 1/2, stole 1, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-  events: ability=1 bot_craft=1 bot_farm=29 bot_farmfx=41 bot_guard=2 bot_hud=13 bot_joined=1 bot_pickup_denied=10 bot_punch=1 bot_ready=1 bot_screen=2 bot_showroom_spin=1 bot_sound=40 bot_spin_fx=1 bot_steal=3 bot_ui=10 contest_result=3 craft=1 craft_preview=2 farm_bot=3 harness_crafting=1 harness_round=1 item_drop=1 item_dropped_world=1 item_pickup=27 item_wave=3 phase=3 punch=7 race_bot=3 race_sample=2 race_start=1 server_perf=18 starter_items=1 s
-farm bots: 3 on the farm, 20 pickups, 6 punches thrown, 7 punches/steals on bots
-farm bots: 1 steals tried (1 stolen), 2 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 0
-bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: 
-server: FARMING heartbeat 57-60 Hz, physics 59-60 fps, send max 37 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 7 kbps; memory max 2381 MB
+    -4: picked 14, contests 3/3, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 17, contests 2/2, stole 0, robbed 0, defences 0, items 7 | craft submitted, rejected 0
+    -1: picked 0, contests 0/3, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+    -3: picked 0, contests 0/2, stole 0, robbed 0, defences 0, items 0 | craft submitted, rejected 0
+  events: ability=2 bot_craft=4 bot_farmfx=96 bot_guard=21 bot_hud=183 bot_joined=4 bot_punch=130 bot_ready=4 bot_screen=8 contest_result=5 craft=4 harness_crafting=1 harness_round=1 item_drop=16 item_dropped_world=16 item_pickup=31 item_wave=3 phase=3 punch=130 race_sample=8 race_start=1 server_perf=52 vehicle_spawn=4
+server: FARMING heartbeat 54-60 Hz, physics 58-60 fps, send max 111 kbps; RACING heartbeat 59-59 Hz, physics 60-60 fps, send max 235 kbps; memory max 2287 MB
 ```
 
 ## gallery-hats — PASS
@@ -508,13 +461,7 @@ gallery: 15 vehicles, 25 shots, 12 riding their BODY item, 15 riders made, 15 se
 ## gallery-rides — PASS
 
 ```
-gallery: 3 vehicles, 5 shots, 3 riding their BODY item, 3 riders made, 3 seated, 0 hats worn, 0 loose wheels / paddles / propellers
-```
-
-## gallery-store — PASS
-
-```
-gallery: 45 vehicles, 30 shots, 45 riding their BODY item, 45 riders made, 45 seated, 0 hats worn, 0 loose wheels / paddles / propellers
+gallery: 12 vehicles, 20 shots, 12 riding their BODY item, 12 riders made, 12 seated, 0 hats worn, 0 loose wheels / paddles / propellers
 ```
 
 ## gallery — PASS
@@ -522,43 +469,6 @@ gallery: 45 vehicles, 30 shots, 45 riding their BODY item, 45 riders made, 45 se
 ```
 gallery: 81 vehicles, 54 shots, 75 riding their BODY item, 81 riders made, 81 seated, 15 hats worn, 0 loose wheels / paddles / propellers
 ```
-
-## gp-contact — FAIL
-
-```
-Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0
-  events: bot_gp_bumped=14 bot_gp_enter=2 bot_gp_flip=1 bot_gp_flip_end=1 bot_gp_flip_sample=9 bot_gp_sample=323 bot_joined=2 bot_ready=2 bot_sound=93 gp_bot_reset=1 gp_bot_sample=459 gp_bump=7 gp_done=2 gp_end=2 gp_enter=2 gp_invalid=1 gp_lap=6 gp_pit=2 gp_release=2 gp_reset=2 server_perf=96
-server: ; memory max 2635 MB
-```
-- **fail** no round completed
-
-## gp-drive — FAIL
-
-```
-Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0
-  events: bot_gp_enter=1 bot_gp_sample=151 bot_joined=1 bot_ready=1 bot_sound=32 gp_bot_sample=425 gp_done=1 gp_end=1 gp_enter=1 gp_lap=3 gp_pit=1 gp_shape=35 server_perf=90
-server: ; memory max 2556 MB
-```
-- **fail** no round completed
-
-## gp-flip — FAIL
-
-```
-Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0
-  events: bot_gp_enter=1 bot_gp_flip=3 bot_gp_flip_end=3 bot_gp_flip_sample=22 bot_gp_sample=181 bot_joined=1 bot_ready=1 bot_sound=33 gp_bot_sample=554 gp_done=1 gp_end=1 gp_enter=1 gp_invalid=1 gp_lap=3 gp_pit=1 gp_release=1 gp_reset=4 server_perf=115
-server: ; memory max 2661 MB
-```
-- **fail** no round completed
-
-## hub-tour — WARN
-
-```
-Bot match: 0 round(s), end: lobby tour, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_ready=1 bot_sound=13 bot_tour_done=1 bot_tour_hub=1 bot_tour_stop=30 depart=1 server_perf=46 travel_fail=1
-server: ; memory max 2554 MB
-```
-- **info** 30 of 30 stops reached
-- **info** hub: [(1, 'race', 'LEAVING IN 8'), (2, 'race', 'LEAVING IN 6'), (3, 'race', 'LEAVING IN 5'), (4, 'race', 'LEAVING IN 4'), (5, 'race', 'LEAVING IN 3'), (6, 'race', 'LEAVING IN 2'), (7, 'race', 'LEAVING IN 1'), (8, 'race', 'LEAVING IN 0'), (9, 'race', 'LEAVING IN 8'), (10, 'race', 'LEAVING IN 7')]
 
 ## shop-4p — FAIL
 
@@ -606,33 +516,6 @@ ability targets: 15, on bots 0
 server: FARMING heartbeat 47-60 Hz, physics 54-60 fps, send max 16808 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 19 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 58 kbps; memory max 2289 MB
 ```
 
-## lobby-tour — WARN
-
-```
-Bot match: 0 round(s), end: lobby tour, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_ready=1 bot_sound=13 bot_tour_done=1 bot_tour_stop=27 server_perf=35
-server: ; memory max 2625 MB
-```
-- **info** 27 of 27 stops reached
-
-## luge-ride — FAIL
-
-```
-Bot match: 0 round(s), end: luge done leave, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_luge_enter_try=1 bot_luge_finish=2 bot_luge_sample=94 bot_ready=1 bot_sound=18 luge_end=1 luge_enter=1 luge_go=2 luge_run=2 server_perf=115
-server: ; memory max 2562 MB
-```
-- **fail** no round completed
-
-## luge-wild — FAIL
-
-```
-Bot match: 0 round(s), end: luge done leave, server errors: 0, client errors: 0
-  events: bot_joined=2 bot_luge_bumped=12 bot_luge_enter_try=2 bot_luge_finish=2 bot_luge_hop=12 bot_luge_reset_seen=8 bot_luge_sample=136 bot_luge_scrape=48 bot_ready=2 bot_sound=71 luge_bump=6 luge_end=2 luge_enter=2 luge_go=2 luge_reset=8 luge_run=2 server_perf=54
-server: ; memory max 2602 MB
-```
-- **fail** no round completed
-
 ## match-forest — FAIL
 
 ```
@@ -676,43 +559,26 @@ spinning wheels / paddles / propellers: 4 cars (wheel), most turns 1471
 server: FARMING heartbeat 47-60 Hz, physics 50-60 fps, send max 187 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 4 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 20 kbps; memory max 2263 MB
 ```
 
-## match-sky — WARN
+## match-sky — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (SKY): 3 finished of 3
-    steal attempts: defended=2, denied: too far=2, denied: victim has nothing=1, stolen=2
-    -3: picked 9, contests 2/4, stole 1, robbed 0, defences 1, items 8 | craft submitted, rejected 0
-    -2: picked 14, contests 3/6, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-    -1: picked 9, contests 1/2, stole 1, robbed 1, defences 1, items 8 | craft submitted, rejected 0
-    #1 Player1 85.2s
-    #2 Player2 87.3s
-    #3 Player3 102.9s
-  events: ability=59 ability_probe=54 ability_target=1 boost=6 bot_box_use=7 bot_camera=3 bot_craft=3 bot_defend=4 bot_drive=3 bot_farmfx=144 bot_fx=117 bot_guard=3 bot_hud=91 bot_joined=3 bot_pickup_denied=151 bot_punch=13 bot_ready=3 bot_respawn=4 bot_screen=16 bot_showroom_spin=6 bot_sound=248 bot_spin_fx=158 bot_steal=7 box_pick=5 box_rows=1 box_use=7 checkpoint=6 contac
-driving: 2 hits (closing speed max 8, push max 6 studs/s), 0 drift turbos, drops: Bowling Ball, Gas Can, Pizza
-spinning wheels / paddles / propellers: 3 cars (prop), most turns 777
-updrafts: 9 lifts (0 bots), zones UpdraftZone_1, UpdraftZone_2, UpdraftZone_3, lift 14/8.3/8.6 studs
-ability targets: 1, on bots 0
-server: FARMING heartbeat 48-60 Hz, physics 51-60 fps, send max 10520 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 4 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 36 kbps; memory max 2508 MB
-```
-- **warn** round 1: 3 of 4 players joined (Studio did not start every client)
-
-## promo-lobby — PASS
-
-```
-promo: 7 shots, 0 errors
-```
-
-## promo-rides — PASS
-
-```
-promo: 6 shots, 0 errors
-```
-
-## promo-weather — PASS
-
-```
-promo: 6 shots, 0 errors
+  round 1 (SKY): 4 finished of 4
+    steal attempts: defended=5, denied: too far=1, denied: victim has nothing=1, stolen=2
+    -4: picked 9, contests 3/5, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
+    -2: picked 10, contests 3/6, stole 1, robbed 1, defences 1, items 8 | craft submitted, rejected 0
+    -1: picked 7, contests 2/4, stole 1, robbed 0, defences 3, items 8 | craft submitted, rejected 0
+    -3: picked 9, contests 2/5, stole 0, robbed 0, defences 1, items 8 | craft submitted, rejected 0
+    #1 Player1 84.1s
+    #2 Player4 85.1s
+    #3 Player2 87.0s
+    #4 Player3 98.4s
+  events: ability=102 ability_probe=84 ability_target=4 boost=8 bot_camera=4 bot_craft=4 bot_defend=7 bot_drive=4 bot_farmfx=217 bot_fx=272 bot_guard=6 bot_hud=122 bot_joined=4 bot_pickup_denied=69 bot_punch=21 bot_ready=4 bot_respawn=3 bot_screen=20 bot_s
+driving: 2 hits (closing speed max 34, push max 24 studs/s), 0 drift turbos, drops: Log, Magnifying Glass
+spinning wheels / paddles / propellers: 4 cars (prop), most turns 767
+updrafts: 11 lifts (0 bots), zones UpdraftZone_1, UpdraftZone_2, UpdraftZone_3, lift 13/13.9/8.3/9.2 studs
+ability targets: 4, on bots 0
+server: FARMING heartbeat 58-60 Hz, physics 60-60 fps, send max 35914 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 5 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 25 kbps; memory max 2192 MB
 ```
 
 ## promo — PASS
@@ -800,120 +666,50 @@ server: FARMING heartbeat 48-60 Hz, physics 54-60 fps, send max 122 kbps; CRAFTI
 ```
 - **fail** Pizza drop did not find the ground at (299, -2178)
 
-## record-bmat — PASS
-
-```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (FOREST): 1 finished of 1
-    steal attempts: denied: too far=2, denied: victim has nothing=3, punched=2, stolen=2
-    -100003: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -100004: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -100002: picked 7, contests 1/5, stole 1, robbed 1, defences 0, items nil
-    -1: picked 11, contests 4/5, stole 1, robbed 1, defences 0, items 8 | craft auto, rejected 0
-    -100001: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    #1 Player1 110.2s
-  events: ability=142 ability_probe=141 boost=17 bot_ability=63 bot_blocked=3 bot_box_use=3 bot_camera=1 bot_craft=1 bot_defend=1 bot_drive=1 bot_farm=37 bot_farmfx=36 bot_fx=86 bot_guard=1 bot_hud=35 bot_joined=1 bot_pickup_denied=10 bot_ready=1 bot_ride_fx=68 bot_say=6 bot_screen=2 bot_shop=2 bot_showroom_spi
-driving: 0 hits, 16 drift turbos, drops: Gas Can, Kettle, Pizza, Watermelon
-farm bots: 4 on the farm, 28 pickups, 5 punches thrown, 8 punches/steals on bots
-farm bots: 1 steals tried (1 stolen), 2 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2298
-bot abilities: 63 fired (Drill, Fire Extinguisher, Kettle, Pizza, Red Sofa, Rocking Horse, Rubber Duck, Shopping Cart, Soda Bottle, Toaster, Umbrella, Watermelon)
-bots: 4 raced (average, novice, expert, average), 4 farmed their car, 1 finished: 114.4s
-server: FARMING heartbeat 56-60 Hz, physics 59-60 fps, send max 501 kbps; CRAFTING heartbeat 55-60 Hz, physics 57-60 fps, send max 12 kbps; RACING heartbeat 55-60 Hz, physics 57-60 fps, send max 39 kbps; memory max 2566 MB
-```
-
-## record-forest-store — PASS
-
-```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (FOREST): 1 finished of 1
-    steal attempts: denied: cooldown=8, denied: too far=2, denied: too late=1, denied: victim protected=2, punched=5, stolen=8
-    -100003: picked 8, contests 1/3, stole 2, robbed 2, defences 0, items nil
-    -100004: picked 8, contests 4/4, stole 3, robbed 2, defences 0, items nil
-    -100002: picked 6, contests 2/5, stole 1, robbed 1, defences 0, items nil
-    -1: picked 9, contests 3/6, stole 1, robbed 2, defences 0, items 7 | craft auto, rejected 0
-    -100001: picked 8, contests 2/6, stole 1, robbed 1, defences 0, items nil
-    #1 Player1 110.9s
-  events: ability=214 ability_probe=149 ability_target=9 boost=19 bot_ability=57 bot_blocked=4 bot_box_use=2 bot_camera=1 bot_craft=1 bot_defend=2 bot_drive=1 bot_farm=89 bot_farmfx=58 bot_fx=102 bot_guard=2 bot_hud=28 bot_joined=1 bot_pickup_denied=10 bot_ready=1 bot_respaw
-driving: 4 hits (closing speed max 27, push max 21 studs/s), 19 drift turbos, drops: Gas Can, Watermelon
-farm bots: 4 on the farm, 30 pickups, 34 punches thrown, 47 punches/steals on bots
-farm bots: 9 steals tried (7 stolen), 4 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2235
-bot abilities: 57 fired (Alarm Clock, Drill, Flower, Mattress, Microwave, Rocking Horse, Teddy Bear, Treadmill, Watermelon, Wheelbarrow)
-ability targets: 9, on bots 9
-bots: 4 raced (average, novice, expert, average), 4 farmed their car, 3 finished: 108.8s, 108.8s, 119.0s
-server: FARMING heartbeat 52-60 Hz, physics 55-60 fps, send max 46 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 8 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 38 kbps; memory max 2570 MB
-```
-
 ## record-forest — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 1 finished of 1
-    steal attempts: denied: cooldown=1, denied: too far=4, denied: too late=1, denied: victim protected=1, punched=2, stolen=3
-    -100003: picked 8, contests 0/1, stole 1, robbed 1, defences 0, items nil
-    -100004: picked 8, contests 1/1, stole 0, robbed 1, defences 0, items nil
-    -100002: picked 7, contests 0/0, stole 1, robbed 0, defences 0, items nil
-    -1: picked 12, contests 3/5, stole 1, robbed 0, defences 0, items 8 | craft auto, rejected 0
-    -100001: picked 8, contests 1/3, stole 0, robbed 1, defences 0, items nil
-    #1 Player1 104.4s
-  events: ability=143 ability_probe=123 ability_target=2 boost=17 bot_ability=51 bot_blocked=2 bot_camera=1 bot_craft=1 bot_drive=1 bot_farm=51 bot_farmfx=45 bot_fx=88 bot_hud=28 bot_joined=1 bot_pickup_denied=20 bot_ready=1 bot_respawn=3 bot_ride_fx=66 bot_screen=3 bot_sho
-driving: 5 hits (closing speed max 60, push max 43 studs/s), 15 drift turbos, drops: Cactus, Gas Can
-farm bots: 4 on the farm, 31 pickups, 8 punches thrown, 20 punches/steals on bots
-farm bots: 4 steals tried (2 stolen), 5 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2150
-bot abilities: 51 fired (Alarm Clock, Bamboo Raft, Cactus, Camera, Compass, Flower, Gas Can, Life Preserver, Rubber Duck, Suitcase)
-ability targets: 2, on bots 2
-bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 105.2s, 108.7s, 112.7s, 129.0s
-server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 53 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 10 kbps; RACING heartbeat 58-60 Hz, physics 59-60 fps, send max 26 kbps; memory max 2383 MB
+    steal attempts: denied: cooldown=1, denied: too far=2, stolen=7
+    -100003: picked 8, contests 0/0, stole 1, robbed 1, defences 0, items nil
+    -100004: picked 7, contests 0/0, stole 2, robbed 1, defences 0, items nil
+    -100002: picked 8, contests 0/0, stole 1, robbed 2, defences 0, items nil
+    -1: picked 11, contests 1/1, stole 2, robbed 1, defences 0, items 8 | craft auto, rejected 0
+    -100001: picked 8, contests 0/1, stole 1, robbed 2, defences 0, items nil
+    #1 Player1 115.4s
+  events: ability=146 ability_probe=104 ability_target=9 boost=20 bot_ability=47 bot_blocked=3 bot_craft=1 bot_defend=1 bot_farm=40 bot_farmfx=28 bot_fx=80 bot_hud=27 bot_joined=1 bot_ready=1 bot_respawn=1 bot_ride_fx=64 bot_screen=3 bot_shop=2 bot_showroom_spin=8 bot_spin_fx=65 bot_steal=4 checkpoint=2 cleanse=5 contest_result=1 c
+driving: 0 hits, 9 drift turbos, drops: Cactus
+farm bots: 4 on the farm, 31 pickups, 2 punches thrown, 8 punches/steals on bots
+farm bots: 5 steals tried (5 stolen), 1 guards
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 2069
+bot abilities: 47 fired (Cactus, Fan, Flower, Kite, Magnet, Shopping Cart, Skateboard, Toilet Paper, Treadmill)
+ability targets: 9, on bots 9
+bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 104.7s, 117.3s, 122.5s, 124.9s
+server: FARMING heartbeat 56-60 Hz, physics 58-60 fps, send max 47 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 17 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 39 kbps; memory max 2310 MB
 ```
-
-## record-gp — FAIL
-
-```
-Bot match: 0 round(s), end: gp run done, server errors: 0, client errors: 0
-  events: bot_gp_enter=1 bot_gp_sample=152 bot_joined=1 bot_ready=1 bot_sound=32 gp_bot_reset=8 gp_bot_sample=432 gp_done=1 gp_end=1 gp_enter=1 gp_lap=3 gp_pit=1 server_perf=90
-server: ; memory max 2602 MB
-```
-- **fail** no round completed
-
-## record-lobby — PASS
-
-```
-Bot match: 0 round(s), end: lobby film, server errors: 0, client errors: 0
-  events: bot_farmfx=8 bot_film_hat_client=1 bot_joined=1 bot_ready=1 bot_sound=16 film_hat=3 legend_royalty=6 server_perf=40
-server: ; memory max 2599 MB
-```
-
-## record-luge — FAIL
-
-```
-Bot match: 0 round(s), end: luge done leave, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_luge_bumped=50 bot_luge_enter_try=1 bot_luge_finish=2 bot_luge_hop=1 bot_luge_sample=90 bot_ready=1 bot_sound=39 luge_bump=50 luge_end=1 luge_enter=1 luge_go=2 luge_run=2 server_perf=71
-server: ; memory max 2625 MB
-```
-- **fail** no round completed
 
 ## record-ocean — PASS
 
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (OCEAN): 1 finished of 1
-    steal attempts: defended=4, denied: too late=1, punched=1, stolen=4
-    -100003: picked 8, contests 2/2, stole 1, robbed 1, defences 0, items nil
-    -100004: picked 8, contests 3/3, stole 2, robbed 1, defences 0, items nil
-    -100002: picked 7, contests 2/8, stole 1, robbed 0, defences 0, items nil
-    -1: picked 8, contests 2/7, stole 0, robbed 0, defences 2, items 8 | craft auto, rejected 0
-    -100001: picked 8, contests 4/6, stole 0, robbed 2, defences 0, items nil
-    #1 Player1 100.6s
-  events: ability=159 ability_probe=111 boost=16 bot_ability=47 bot_camera=1 bot_craft=1 bot_defend=2 bot_drive=1 bot_farm=66 bot_farmfx=50 bot_fx=76 bot_hud=26 bot_joined=1 bot_pickup_denied=9 bot_ready=1 bot_respawn=2 bot_ride_fx=60 bot_screen=3 bot_shop=2 bot_showroom_spin=7 bot_sound=66 bot_spin_fx=60 checkpoint=2 cleanse=4 c
-driving: 1 hits (closing speed max 17, push max 12 studs/s), 7 drift turbos, drops: Kettle
-farm bots: 4 on the farm, 31 pickups, 18 punches thrown, 22 punches/steals on bots
-farm bots: 9 steals tried (4 stolen), 7 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1326
-bot abilities: 47 fired (Balloon Bunch, Bamboo Raft, Barrel, Drill, Flower, Hair Dryer, Lantern, Racing Flag, Suitcase, Trophy)
-bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 101.7s, 101.8s, 104.1s, 117.2s
-server: FARMING heartbeat 53-60 Hz, physics 55-60 fps, send max 69 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 8 kbps; RACING heartbeat 57-60 Hz, physics 58-60 fps, send max 30 kbps; memory max 2417 MB
+    steal attempts: defended=1, stolen=1
+    -100003: picked 8, contests 0/0, stole 0, robbed 1, defences 0, items nil
+    -100004: picked 7, contests 0/0, stole 1, robbed 0, defences 0, items nil
+    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    -1: picked 9, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0
+    -100001: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
+    #1 Player1 101.4s
+  events: ability=140 ability_probe=99 ability_target=8 boost=15 bot_ability=54 bot_craft=1 bot_farm=31 bot_farmfx=10 bot_fx=69 bot_hud=26 bot_joined=1 bot_ready=1 bot_respawn=1 bot_ride_fx=57 bot_screen=10 bot_shop=2 bot_showroom_spin=7 bot_spin_fx=57 checkpoint=2 cleanse=8 craft=1 craft_preview=2 drift_turbo=2 drop_placed=15 farm_bot=4 finish=5 harness_craft
+driving: 0 hits, 2 drift turbos, drops: Gas Can, Magnifying Glass, Pizza
+farm bots: 4 on the farm, 29 pickups, 0 punches thrown, 2 punches/steals on bots
+farm bots: 2 steals tried (1 stolen), 0 guards
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1283
+bot abilities: 54 fired (Bamboo Raft, Fan, Flower, Gas Can, Magnifying Glass, Pizza, Red Sofa, Shopping Cart, Toilet Paper)
+ability targets: 8, on bots 7
+bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 98.1s, 100.2s, 100.5s, 109.7s
+server: FARMING heartbeat 52-60 Hz, physics 54-60 fps, send max 92 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 12 kbps; RACING heartbeat 58-60 Hz, physics 60-60 fps, send max 27 kbps; memory max 2325 MB
 ```
 
 ## record-sky — PASS
@@ -921,38 +717,22 @@ server: FARMING heartbeat 53-60 Hz, physics 55-60 fps, send max 69 kbps; CRAFTIN
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (SKY): 1 finished of 1
-    steal attempts: defended=3, denied: cooldown=2, denied: too far=3, denied: too late=2, denied: victim has nothing=1, denied: victim under attack=2, punched=1, stolen=5
-    -100003: picked 9, contests 1/3, stole 1, robbed 1, defences 0, items nil
-    -100004: picked 6, contests 0/1, stole 2, robbed 0, defences 0, items nil
-    -100002: picked 8, contests 5/6, stole 0, robbed 2, defences 0, items nil
-    -1: picked 14, contests 4/4, stole 0, robbed 2, defences 1, items 8 | craft auto, rejected 0
-    -100001: picked 2, contests 0/6, stole 2, robbed 0, defences 0, items nil
-    #1 Player1 82.2s
-  events: ability=136 ability_probe=85 boost=8 bot_ability=47 bot_box_use=2 bot_camera=1 bot_craft=1 bot_defend=3 bot_drive=1 bot_farm=53 bot_farmfx=61 bot_fx=59 bot_hud=27 bot_joined=1 bot_pickup_denied=19 bot_ready=1 bot_respawn=2 
-driving: 1 hits (closing speed max 47, push max 33 studs/s), 0 drift turbos, drops: Cactus, Gas Can, Kettle, Log, Pizza
-farm bots: 4 on the farm, 25 pickups, 9 punches thrown, 21 punches/steals on bots
-farm bots: 8 steals tried (5 stolen), 4 guards
-spinning wheels / paddles / propellers: 1 cars (prop), most turns 720
-updrafts: 14 lifts (11 bots), zones UpdraftZone_1, UpdraftZone_2, UpdraftZone_3, lift 12.8/13.2/13.4/13.6/15.5 studs
-bot abilities: 47 fired (Bamboo Raft, Cactus, Drill, Fan, Flower, Kettle, Log, Pizza, Rubber Duck, Suitcase)
-bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 82.5s, 85.1s, 85.5s, 99.2s
-server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 63 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 4 kbps; RACING heartbeat 57-60 Hz, physics 59-60 fps, send max 97 kbps; memory max 2371 MB
-```
-
-## record-toilet — PASS
-
-```
-Bot match: 0 round(s), end: toilet ad, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_ready=1 bot_sound=7 server_perf=30
-server: ; memory max 2572 MB
-```
-
-## record-usedcar — PASS
-
-```
-Bot match: 0 round(s), end: usedcar ad, server errors: 0, client errors: 0
-  events: bot_joined=1 bot_ready=1 bot_sound=9 bot_usedcar_ad_client=1 car_buy=1 car_try=1 server_perf=31
-server: ; memory max 2623 MB
+    steal attempts: defended=3, denied: too far=7, denied: too late=3, denied: victim under attack=1, stolen=5
+    -100003: picked 8, contests 1/1, stole 1, robbed 2, defences 0, items nil
+    -100004: picked 7, contests 0/0, stole 1, robbed 1, defences 0, items nil
+    -100002: picked 7, contests 1/1, stole 2, robbed 1, defences 0, items nil
+    -1: picked 0, contests 0/1, stole 0, robbed 0, defences 0, items 0 | craft auto, rejected 0
+    -100001: picked 8, contests 0/1, stole 1, robbed 1, defences 0, items nil
+    #1 Player1 139.2s
+  events: ability=149 ability_probe=82 boost=9 bot_ability=69 bot_camera=1 bot_craft=1 bot_drive=1 bot_farm=40 bot_farmfx=35 bot_fx=53 bot_hud=22 bot_joined=1 bot_ready=1 bot_respawn=2 bot_ride_fx=62 bot_screen=4 bot_shop=2 bot_showroom_spin=7 bot_spin_fx=61 bot_steal=11 checkpoint=2 contest_r
+driving: 0 hits, 0 drift turbos, drops: Cactus, Gas Can, Pizza
+farm bots: 4 on the farm, 30 pickups, 1 punches thrown, 20 punches/steals on bots
+farm bots: 7 steals tried (5 stolen), 1 guards
+spinning wheels / paddles / propellers: 1 cars (prop), most turns 1112
+updrafts: 14 lifts (11 bots), zones UpdraftZone_1, UpdraftZone_2, UpdraftZone_3, lift 11.4/12.6/13/15.6/8.3 studs
+bot abilities: 69 fired (Backpack, Bamboo Raft, Barrel, Cactus, Fan, Gas Can, Hair Dryer, Lantern, Pizza, Red Sofa)
+bots: 4 raced (average, novice, expert, average), 4 farmed their car, 4 finished: 139.6s, 139.7s, 139.8s, 154.5s
+server: FARMING heartbeat 26-60 Hz, physics 32-60 fps, send max 17827 kbps; CRAFTING heartbeat 37-38 Hz, physics 38-39 fps, send max 4 kbps; RACING heartbeat 34-40 Hz, physics 36-41 fps, send max 32 kbps; memory max 2379 MB
 ```
 
 ## shop-4p — WARN
@@ -995,10 +775,10 @@ server: FARMING heartbeat 56-60 Hz, physics 57-60 fps, send max 27 kbps; CRAFTIN
 Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors: 0
   round 1 (FOREST): 0 finished of 1
     steal attempts: none
-    -1: picked 11, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0
-  events: ability=1 bot_craft=1 bot_farmfx=11 bot_hud=35 bot_joined=1 bot_pickup_denied=21 bot_ready=1 bot_screen=2 bot_showroom_spin=16 bot_sound=26 bot_spin_fx=1 box_rows=1 craft=1 craft_preview=2 harness_crafting=1 harness_round=1 item_drop=3 item_dropped_world=3 item_pickup=11 item_wave=3 phase=3 race_sample=2 race_start=1 server_perf=39 starter_items=1 vehicle_spawn=1
+    -1: picked 12, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft auto, rejected 0
+  events: ability=1 bot_craft=1 bot_farmfx=4 bot_hud=35 bot_joined=1 bot_ready=1 bot_screen=2 bot_showroom_spin=15 bot_spin_fx=1 craft=1 craft_preview=2 harness_crafting=1 harness_round=1 item_drop=4 item_dropped_world=4 item_pickup=12 item_wave=3 phase=3 race_sample=2 race_start=1 server_perf=38 vehicle_spawn=1
 spinning wheels / paddles / propellers: 1 cars (wheel), most turns 0
-server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 30 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 24 kbps; memory max 2540 MB
+server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 24 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 19 kbps; memory max 2263 MB
 ```
 
 ## sounds — PASS
@@ -1073,46 +853,24 @@ Bot match: 1 round(s), end: stopAfter CRAFTING, server errors: 0, client errors:
 ```
 Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
   round 1 (FOREST): 0 finished of 1
-    steal attempts: stolen=1
-    -100003: picked 7, contests 0/0, stole 1, robbed 0, defences 0, items nil
-    -100001: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -100002: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
-    -1: picked 12, contests 0/0, stole 0, robbed 1, defences 0, items 8 | craft submitted, rejected 0
-  events: ability=115 ability_probe=85 ability_target=1 boost=14 bot_ability=35 bot_blocked=2 bot_box_use=2 bot_camera=1 bot_craft=1 bot_defend=1 bot_drive=1 bot_farm=22 bot_farmfx=16 bot_fx=55 bot_hud=13 bot_joined=1 bot_pickup_denied=18 bot_ready=1 bot_say=3 bot_screen=3 bot_showroom_spin=1 bot_sound=50 bot_spin_fx=49 bot_ui=43 box_pick=7 box_rows=1 box_use=7 checkpoint=2 contact=1 craft=1 craft_preview=2 drift_turbo=12 drop_placed=20 farm_bot=3 farm_rescue=1 h
-driving: 0 hits, 12 drift turbos, drops: Bowling Ball, Gas Can, Magnifying Glass
-farm bots: 3 on the farm, 21 pickups, 0 punches thrown, 0 punches/steals on bots
-farm bots: 1 steals tried (1 stolen), 0 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1804
-bot abilities: 35 fired (Backpack, Bowling Ball, Drill, Gas Can, Magnifying Glass, Old Tire, Rubber Duck, Washing Machine)
-ability targets: 1, on bots 1
-bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: 
-server: FARMING heartbeat 58-60 Hz, physics 59-60 fps, send max 65 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 14 kbps; RACING heartbeat 54-60 Hz, physics 56-60 fps, send max 23 kbps; memory max 2649 MB
-```
-- **fail** FARMING: InviteUI/InviteSlot overlaps TutorialUI/Toast at 1024x640 (82x23 px), 915x336 (136x23 px)
-- **fail** FARMING: EffectOverlay/TextLabel overlaps InviteUI/InviteSlot at 915x336 (150x8 px)
-- **fail** RACING: RaceOverlay/RaceCountdown overlaps RaceOverlay/RaceIntroBanner at 915x336 (260x12 px)
-
-## ui-weather — FAIL
-
-```
-Bot match: 1 round(s), end: rounds complete, server errors: 0, client errors: 0
-  round 1 (OCEAN): 0 finished of 1
-    steal attempts: denied: cooldown=1, punched=1, stolen=1
-    -100003: picked 8, contests 1/1, stole 0, robbed 0, defences 0, items nil
+    steal attempts: denied: cooldown=1, denied: too late=3, punched=1, stolen=1
+    -100003: picked 7, contests 0/0, stole 0, robbed 0, defences 0, items nil
     -100001: picked 6, contests 0/2, stole 1, robbed 0, defences 0, items nil
-    -100002: picked 8, contests 2/3, stole 0, robbed 1, defences 0, items nil
-    -1: picked 8, contests 0/0, stole 0, robbed 0, defences 0, items 8 | craft submitted, rejected 0
-  events: ability=103 ability_probe=81 ability_target=5 boost=12 bot_ability=31 bot_camera=1 bot_craft=1 bot_drive=1 bot_farm=28 bot_farmfx=18 bot_fx=67 bot_hud=13 bot_joined=1 bot_pickup_denied=11 bot_ready=1 bot_screen=3 bot_showroom_spin=1 bot_sound=45 bot_spin_fx=49 bot_ui=43 checkpoint=2 contact=6 contest_result=3 craft=1 craft_preview=2 drift_turbo=7 drop_placed=8 farm_bot=3 farm_rescue=1 harness_crafting=1 harness_round=1 hazar
-driving: 2 hits (closing speed max 16, push max 12 studs/s), 7 drift turbos, drops: Log
-farm bots: 3 on the farm, 22 pickups, 2 punches thrown, 5 punches/steals on bots
+    -100002: picked 7, contests 0/1, stole 0, robbed 0, defences 0, items nil
+    -1: picked 5, contests 3/3, stole 0, robbed 1, defences 0, items 4 | craft submitted, rejected 0
+  events: ability=95 ability_probe=81 boost=12 bot_ability=32 bot_blocked=2 bot_camera=1 bot_craft=1 bot_defend=1 bot_drive=1 bot_farm=30 bot_farmfx=20 bot_fx=66 bot_hud=13 bot_joined=1 bot_pickup_denied=6 bot_punch=1 bot_ready=1 bot_screen=2 bot_showroom_spin=1 bot_sound=67 bot_spin_fx=47 bot_ui=38 checkpoint=2 contest_result=3 craft=1 craft_preview=2 drift_turbo=12 drop_placed=5 farm_bot=3 harness_crafting=1 har
+driving: 2 hits (closing speed max 26, push max 19 studs/s), 12 drift turbos, drops: Log
+farm bots: 3 on the farm, 20 pickups, 3 punches thrown, 5 punches/steals on bots
 farm bots: 2 steals tried (1 stolen), 1 guards
-spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1215
-bot abilities: 31 fired (Life Preserver, Magic Wand, Racing Flag, Skateboard, Treadmill)
-ability targets: 5, on bots 5
+spinning wheels / paddles / propellers: 1 cars (wheel), most turns 1821
+bot abilities: 32 fired (Alarm Clock, Cardboard Box, Log, Racing Flag, Rocket, Rubber Duck, Suitcase, Umbrella)
 bots: 3 raced (average, novice, expert), 3 farmed their car, 0 finished: 
-server: FARMING heartbeat 55-60 Hz, physics 56-60 fps, send max 29 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 11 kbps; RACING heartbeat 59-60 Hz, physics 60-60 fps, send max 56 kbps; memory max 2364 MB
+server: FARMING heartbeat 46-60 Hz, physics 51-60 fps, send max 75 kbps; CRAFTING heartbeat 60-60 Hz, physics 60-60 fps, send max 49 kbps; RACING heartbeat 58-60 Hz, physics 59-60 fps, send max 25 kbps; memory max 2265 MB
 ```
-- **fail** FARMING: EffectOverlay/TextLabel overlaps TutorialUI/Toast at 1024x640 (360x38 px), 1280x720 (360x29 px)
+- **fail** FARMING: FarmFxPrompt/Text overlaps ItemGuideUI/OpenGuide at 1024x640 (102x39 px), 1280x720 (63x37 px)
+- **fail** FARMING: FarmFxPrompt/Text overlaps TutorialUI/KeyStrip at 915x478 (40x8 px)
+- **fail** FARMING: FarmFxPrompt/Text overlaps TutorialUI/Toast at 915x478 (360x22 px)
+- **fail** CRAFTING: CraftingUI/Panel overlaps CraftingUI/Showroom at 1024x640 (23x476 px), 1280x720 (23x476 px)
 
 ## vehicles-forest — PASS
 

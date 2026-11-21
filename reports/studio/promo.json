@@ -1,25 +1,25 @@
 {
  "checks": [],
- "commit": "cafde7a",
- "dirty": false,
+ "commit": "21d2d06",
+ "dirty": true,
  "kind": "promo",
  "logErrors": [
-  "2026-10-31T10:58:47.979Z,0.979602,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
-  "2026-10-31T10:58:48.109Z,1.109402,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-31T10:58:48.143Z,1.143731,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
-  "2026-10-31T10:58:48.976Z,1.976840,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
-  "2026-10-31T10:58:49.787Z,2.787210,6e203000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f03b9261-d703-423c-80de-af6e2110fb25\",\"status\":400,\"message\":\"Place does not exist.\"}",
+  "2026-10-25T11:47:32.925Z,0.925374,3a460c0,6,Error [FLog::Error] Redundant Flag ID: VideoApi",
+  "2026-10-25T11:47:33.065Z,1.065396,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-25T11:47:33.102Z,1.102027,3a460c0,6,Error [FLog::CreateGraphicsEngine] Potential graphics modes:",
+  "2026-10-25T11:47:33.828Z,1.828732,3a460c0,6,Error [FLog::InterprocessReadWriteLock] InterprocessReadWriteLock::lockImpl failed with Failed to lock file for RobloxStudioPluginOTADownloadLock with error Resource temporarily unavailable",
+  "2026-10-25T11:47:34.663Z,2.663265,6dab7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"0ac477a1-81d0-4bc4-b924-6526d2b5c56c\",\"status\":400,\"message\":\"Place does not exist.\"}",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-31T10:58:58.924Z,11.924319,6ea33000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
-  "2026-10-31T10:58:59.163Z,12.163833,6f1fb000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
+  "2026-10-25T11:47:43.507Z,11.507986,6dab7000,6,Error [FLog::SecretsUtils] Failed to parse local secrets",
+  "2026-10-25T11:47:43.732Z,11.732234,6efdf000,6,Error [DFLog::PresetChatManager] PresetChatManager fetch error: HttpError (status=403)",
   "3IncorrectAssetType adBatchHttpStatusCode: 0 adBatchHttpErrorCode: OK adIndividualItemCode: 403 contentRepresentationSpecifier:  wasModerated: true adResolutionErrorMessage: Asset type does not match requested type adBatchJsonParsingError:  cdnHttpStatusCode: 0 cdnHttpErrorCode: OK cdnErrorMessage: ",
-  "2026-10-31T10:59:26.239Z,39.239685,6dd5f000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"f03b9261-d703-423c-80de-af6e2110fb25\",\"status\":400,\"message\":\"Place does not exist.\"}"
+  "2026-10-25T11:48:10.568Z,38.568111,6dab7000,6,Error [FLog::UserHeartbeats] HTTP Request user-heartbeats-api/action-report failed: {\"sessionId\":\"0ac477a1-81d0-4bc4-b924-6526d2b5c56c\",\"status\":400,\"message\":\"Place does not exist.\"}"
  ],
  "opts": {
   "hold": 2,
-  "token": "f236c0f217404ff5bfae00323d470841"
+  "token": "4679cc39e2714e2387888b56840a7f4e"
  },
- "ranAt": "2026-10-31T19:59:27+0900",
+ "ranAt": "2026-10-25T20:48:14+0900",
  "report": {
   "errors": [],
   "shots": [
@@ -48,5 +48,5 @@
  "scenario": "promo",
  "studioExit": 0,
  "summary": "promo: 6 shots, 0 errors",
- "wallSeconds": 40.3
+ "wallSeconds": 42.3
 }
