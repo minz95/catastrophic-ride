@@ -51,7 +51,7 @@ History → restore the previous version (publishing is reversible).
 | Maturity & compliance questionnaire | fill in (cartoon fighting: punches, no blood) | required before public |
 | Privacy | Private → Friends → Public | invite friends first, then open |
 | Private servers | On, free or 10 R$ | friends groups keep playing together |
-| Communication → Enable Microphone (voice chat) | **On** | players hang out and race talking (spatial: you hear who is near you in Junk Town). One switch for the experience, so the hub and the race place both get it. Only players Roblox has age-checked with voice turned on speak; the rest keep text chat. Nothing in code: `VoiceChatService.EnableDefaultVoice` is on by default |
+| Studio File → Experience Settings → Communication → Enable Voice Chat | **On**, then publish | (voice needs servers of 100 or fewer: hub 100, race place 10) players hang out and race talking (spatial: you hear who is near you in Junk Town). One switch for the experience, so the hub and the race place both get it. Only players Roblox has age-checked with voice turned on speak; the rest keep text chat. Nothing in code: `VoiceChatService.EnableDefaultVoice` is on by default |
 
 ## 2. Robux coin packs (optional at launch)
 
