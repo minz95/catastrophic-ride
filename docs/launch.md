@@ -51,6 +51,7 @@ History → restore the previous version (publishing is reversible).
 | Maturity & compliance questionnaire | fill in (cartoon fighting: punches, no blood) | required before public |
 | Privacy | Private → Friends → Public | invite friends first, then open |
 | Private servers | On, free or 10 R$ | friends groups keep playing together |
+| Communication → Enable Microphone (voice chat) | **On** | players hang out and race talking (spatial: you hear who is near you in Junk Town). One switch for the experience, so the hub and the race place both get it. Only players Roblox has age-checked with voice turned on speak; the rest keep text chat. Nothing in code: `VoiceChatService.EnableDefaultVoice` is on by default |
 
 ## 2. Robux coin packs (optional at launch)
 
@@ -178,7 +179,7 @@ Studio view gives sharper pictures. Videos for social posts: `reports/video/`
 | Private servers | On, free (friend groups) |
 | Allow copying | Off |
 | Chat | On (TextChatService, Roblox filters it) |
-| Voice chat | Off (not needed) |
+| Voice chat | On (spatial voice; Roblox decides who may speak) |
 
 **Maturity & Compliance questionnaire** (what this game has; the answers
 decide the content label, most likely Mild):
@@ -195,9 +196,9 @@ decide the content label, most likely Mild):
 | Gambling / random paid items | No (coin packs give a fixed amount; the shop sells chosen items) |
 | Real-money trading | No |
 | Free-form user creation | No (players build from fixed items) |
-| Social hangout | No |
+| Social hangout | Yes (Junk Town: walk around, chat, shops) |
 | Text chat | Yes (Roblox default chat) |
-| Voice chat | No |
+| Voice chat | Yes (spatial voice, Roblox's own) |
 | Political / religious content | No |
 | Ads, sponsored content | No |
 
